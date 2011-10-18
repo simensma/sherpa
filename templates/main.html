@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id="grid"> 
+  <div id="body">
+    <div id="content">    
+            <div class="mod modTabs">
+    <ul class="tabs">
+        <li><a href="#komdegut">Kom deg ut</a></li>
+        <li><a href="#fellesturer">Fellesturer</a></li>
+        <li><a href="#hytter">Hytter</a></li>
+        <li><a href="#stier">Stier</a></li>
+        <li><a href="#barn">Barn</a></li>
+        <li><a href="#ungdom">Ungdom</a></li>
+        <li><a href="#seniorer">Seniorer</a></li>
+        <li><a href="#fjellsport">Fjellsport</a></li>
+        <li><a href="#trilleturer">Trilleturer</a></li>     
+    </ul>   
+    <div class="tab_container"> 
+        <div id="komdegut" class="tab_content komdegut darkRed">
+    <div class="inner-content">
+        <div class="uiMedia">
+            <img class="img" src="/ux-content/frontelements/komdegut.jpg" alt="Kom deg ut-dagen bilde"/>
+            <div class="item">
+                <h2>Kom deg ut-dagen</h2>
+                
+        
+        <p class="txt_i txt_upp">Søndag 4. september</p>
+        <p>Kom deg ut-dagen arrangeres over hele landet søndag 4. september. Her kan du være med på turer og aktiviteter for store og små.</p>
+        <p>Barn og voksne, ungdom og eldre, hyperaktive friluftslivsentusiaster og blide sofagriser, eksperter og nybegynnere - vi har tilbud for alle på Kom deg ut- dagen!</p>
+        <p><a class="uiButton uiButtonLight" href="#">Finn et arrangement der du bor</a></p><br />
+        <p>Vi samarbeider med<br /><br /><a href="#"><img src="/ux-content/frontelements/one-call-logo-negative.png" /></a> <a class="logoNegative" href="#"><img src="/ux-content/frontelements/norsk-tipping-negative.png" /></a></p>
+        
+                </div>
+                                    
+        
+                    
+                                
+        </div>
+    </div>
+  <div class="mod c4">
+    <h2>Ved å bli medlem</h2>
+    <ul class="uiListStyle">
+        <li>støtter du arbeidet med å merke 20.000 km turstier over hele landet</li>
+        <li>bidrar du til å for sikkerhet i fjellet</li>
+        <li>blir du del av et sunt, aktivt fellesskap</li>
+    </ul>
+        <div class="uiMedia">
+            <a href="{% url member.views.index %}" class="img button">Bli medlem</a>           
+            <a href="{% url member.views.index %}">Priser og fordeler</a><br />
+            <a href="{% url member.views.index %}">Medlemsservice</a><br />            
+        </div>
+</div>
+  <div class="mod c4">
+    <h2>Minner fra i fjor</h2>
+    <a href="#">
+        <img src="/ux-content/frontelements/video-minner.png">
+    </a>
+</div>
+  <div class="mod c4">
+    <h2>Tips og råd</h2>
+    <blockquote>Selv på korte turer er 
+                førstehjelpspakken 
+                obligatorisk i sekken.
+    </blockquote><br />
+    <a href="http://ut.no" class="">Se flere tips og råd på ut.no</a>           
+</div>
+  
+</div>
+        <div id="fellesturer" class="tab_content fellesturer ">
+    <div class="inner-content">
+        <div class="uiMedia">
+            <img class="img" src="/ux-content/frontelements/fellesturer.jpg" alt="Fellesturer bilde"/>
+            <div class="item">
+                <h2>Fellesturer</h2>
+                
+        
+            <p>Et aktivt uteliv er viktig for å gi barna en god fysisk og psykisk helse.</p>
+            <p>Gjennom Barnas Turlag treffer dere andre barnefamilier, og barna kan glede seg over å treffe andre barn på tur.</p>
+            <p>Barn fra 0 til 12 år kan være med i Barnas Turlag, og det koster 100 kr i året.</p>
+            <p>Barnas Turlag arrangerer dagsturer i nærområdet der du bor, lavvo- og hytteturer, fisketurer eller klatrekvelder, villmarksleire og helgeturer hvor barna reiser med eller uten foresatte.</p>
+        
+                </div>
+                                    
+        
+            <div class="item">
+            <h3>Finn fellesturer der du er:</h3>
+            <form>
+                <input type="text" /><a class="buttonLigth">Søk</a>
+            </form>
+            </div>
+                    
+                                
+        </div>
+    </div>
+  <div class="mod c4">
+    <h2>Ved å bli medlem</h2>
+    <ul class="uiListStyle">
+        <li>støtter du arbeidet med å merke 20.000 km turstier over hele landet</li>
+        <li>bidrar du til å for sikkerhet i fjellet</li>
+        <li>blir du del av et sunt, aktivt fellesskap</li>
+    </ul>
+        <div class="uiMedia">
+            <a href="{% url member.views.index %}" class="img button">Bli medlem</a>           
+            <a href="{% url member.views.index %}">Priser og fordeler</a><br />
+            <a href="{% url member.views.index %}">Medlemsservice</a><br />            
+        </div>
+</div>
+  <div class="mod c4">
+    <h2>Minner fra i fjor</h2>
+    <a href="#">
+        <img src="/ux-content/frontelements/video-minner.png">
+    </a>
+</div>
+  <div class="mod c4">
+    <h2>Tips og råd</h2>
+    <blockquote>Selv på korte turer er 
+                førstehjelpspakken 
+                obligatorisk i sekken.
+    </blockquote><br />
+    <a href="http://ut.no" class="">Se flere tips og råd på ut.no</a>           
+</div>
+  
+</div>
+        <div id="" class="tab_content  ">
+    <div class="inner-content">
+        <div class="uiMedia">
+            <img class="img" src="/ux-content/frontelements/.jpg" alt=" bilde"/>
+            <div class="item">
+                <h2></h2>
+                            </div>
+                            
+        </div>
+    </div>
+  <div class="mod c4">
+    <h2>Ved å bli medlem</h2>
+    <ul class="uiListStyle">
+        <li>støtter du arbeidet med å merke 20.000 km turstier over hele landet</li>
+        <li>bidrar du til å for sikkerhet i fjellet</li>
+        <li>blir du del av et sunt, aktivt fellesskap</li>
+    </ul>
+        <div class="uiMedia">
+            <a href="{% url member.views.index %}" class="img button">Bli medlem</a>           
+            <a href="{% url member.views.index %}">Priser og fordeler</a><br />
+            <a href="{% url member.views.index %}">Medlemsservice</a><br />            
+        </div>
+</div>
+  <div class="mod c4">
+    <h2>Minner fra i fjor</h2>
+    <a href="#">
+        <img src="/ux-content/frontelements/video-minner.png">
+    </a>
+</div>
+  <div class="mod c4">
+    <h2>Tips og råd</h2>
+    <blockquote>Selv på korte turer er 
+                førstehjelpspakken 
+                obligatorisk i sekken.
+    </blockquote><br />
+    <a href="http://ut.no" class="">Se flere tips og råd på ut.no</a>           
+</div>
+  
+</div>
+        
+        <div id="barn" class="tab_content barn ">
+    <div class="inner-content">
+        <div class="uiMedia">
+            <img class="img" src="/ux-content/frontelements/barn.jpg" alt="Barn bilde"/>
+            <div class="item">
+                <h2>Barn</h2>
+                
+        
+            <p>Et aktivt uteliv er viktig for å gi barna en god fysisk og psykisk helse.</p>
+        
+                </div>
+                            
+        </div>
+    </div>
+  <div class="mod c4">
+    <h2>Ved å bli medlem</h2>
+    <ul class="uiListStyle">
+        <li>støtter du arbeidet med å merke 20.000 km turstier over hele landet</li>
+        <li>bidrar du til å for sikkerhet i fjellet</li>
+        <li>blir du del av et sunt, aktivt fellesskap</li>
+    </ul>
+        <div class="uiMedia">
+            <a href="{% url member.views.index %}" class="img button">Bli medlem</a>           
+            <a href="{% url member.views.index %}">Priser og fordeler</a><br />
+            <a href="{% url member.views.index %}">Medlemsservice</a><br />            
+        </div>
+</div>
+  <div class="mod c4">
+    <h2>Minner fra i fjor</h2>
+    <a href="#">
+        <img src="/ux-content/frontelements/video-minner.png">
+    </a>
+</div>
+  <div class="mod c4">
+    <h2>Tips og råd</h2>
+    <blockquote>Selv på korte turer er 
+                førstehjelpspakken 
+                obligatorisk i sekken.
+    </blockquote><br />
+    <a href="http://ut.no" class="">Se flere tips og råd på ut.no</a>           
+</div>
+  
+</div>
+        
+    </div>
+</div>            <img style=" margin:20px 0; "src="/img/dummy/blogg-nyheter.png" />
+    </div>
+  </div>
+</div>
+{% endblock %}
