@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Forsiden{% endblock %} | Turistforeningen</title>
-    <link rel="stylesheet" href="/css/screen.css" media="screen" />
-    <script src="/js/modernizr-1.7.min.js"></script>
-    <script src="/js/jquery-1.5.1.min.js"></script>
-    <script src="/js/custom.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/screen.css" media="screen" />
+    <script src="{{ STATIC_URL }}js/modernizr-1.7.min.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery-1.5.1.min.js"></script>
+    <script src="{{ STATIC_URL }}js/custom.js"></script>
 </head>
 <body>
 <header id="mainHeader">
@@ -35,28 +35,28 @@
             <div class="socialmedia">
     <div class="mod c3">
         <div class="uiMedia">
-            <img class="img" src="/img/icon/social/turistforeningen.png" alt="Turistforeningen">
+            <img class="img" src="{{ STATIC_URL }}img/icon/social/turistforeningen.png" alt="Turistforeningen">
             <h3>Kontakt oss</h3>
             E-post eller telefon
         </div>
     </div>
     <div class="mod c3">
         <div class="uiMedia">
-            <img class="img" src="/img/icon/social/facebook.png" alt="Turistforeningen">
+            <img class="img" src="{{ STATIC_URL }}img/icon/social/facebook.png" alt="Turistforeningen">
             <h3>Facebook</h3>
             Følg oss
         </div>
     </div>
     <div class="mod c3">
         <div class="uiMedia">
-            <img class="img" src="/img/icon/social/twitter.png" alt="Turistforeningen">
+            <img class="img" src="{{ STATIC_URL }}img/icon/social/twitter.png" alt="Turistforeningen">
             <h3>Twitter</h3>
             Snakk med oss
         </div>  
     </div>
     <div class="mod c3">
         <div class="uiMedia">
-            <img class="img" src="/img/icon/social/youtube.png" alt="Turistforeningen">
+            <img class="img" src="{{ STATIC_URL }}img/icon/social/youtube.png" alt="Turistforeningen">
             <h3>You tube</h3>
             Se våre filmer
         </div>  
@@ -109,7 +109,7 @@
                 <li><a href="#">Organisasjonen</a></li>
             </ul>
         </div>
-            <img src="/img/dummy/samarbeid.png" />
+            <img src="{{ STATIC_URL }}img/dummy/samarbeid.png" />
     </div>
     </footer> 
     </body>
