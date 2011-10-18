@@ -3,7 +3,7 @@
 <div id="grid">
   <div id="body">
     <div class="path">
-  <a href="/">Forsiden</a> / <strong>Kurs</strong></div>
+  <a href="{% url home.views.index %}">Forsiden</a> / <strong>Kurs</strong></div>
     <div id="content">
             <div id="context">
           
@@ -12,7 +12,7 @@
     
         </div>
         <div class="inner">
-          <a href="/kurs/turleder/">Bli turleder</a>
+          <a href="{% url training.views.hikeleader %}">Bli turleder</a>
             </div>        
     </div>    
   </div>
