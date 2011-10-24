@@ -104,6 +104,7 @@ INSTALLED_APPS = (
     'training',
     'member',
     'about',
+    'page',
 )
 
 # A sample logging configuration. The only tangible logging
