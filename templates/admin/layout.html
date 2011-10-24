@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Forsiden{% endblock %} | Turistforeningen</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
+</head>
+<body>
+<header>
+  <nav>
+    <ul>
+      <li><a href="{% url admin.views.index %}" class="">Admin-forside</a></li>
+      <li><a href="{% url admin.views.page_list %}" class="">Nyheter / sider</a></li>
+      <li><a href="{% url admin.views.index %}" class="">Aktiviteter</a></li>
+      <li><a href="{% url admin.views.index %}" class="">Ruter</a></li>
+      <li><a href="{% url admin.views.index %}" class="">Annonser</a></li>
+    </ul>
+  </nav>
+</header>
+{% block body %}{% endblock %}
+<footer>
+</footer> 
+
+</body>
+</html>

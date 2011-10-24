@@ -105,6 +105,7 @@ INSTALLED_APPS = (
     'member',
     'about',
     'page',
+    'admin',
 )
 
 # A sample logging configuration. The only tangible logging
