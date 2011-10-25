@@ -5,11 +5,17 @@
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
 <h1>Artikler</h1>
+{% if not pages %}
+<p>Tomt!</p>
+{% else %}
 <ul>
 {% for page in pages %}
-  <li>[ <a href="{% url admin.views.page_edit page.id %}">Rediger</a> ] {{ page.content }}</li>
+  <li>[ <a href="{% url admin.views.page_delete page.id %}">Slett</a> ]
+      [ <a href="{% url admin.views.page_edit page.id %}">Rediger</a> ]
+      {{ page.content }}</li>
 {% endfor %}
 </ul>
+{% endif %}
 
 <p><a href="{% url admin.views.page_new %}">Ny artikkel</a></p>
 {% endblock %}

@@ -41,3 +41,11 @@ def page_new(request):
         page = Page(content=request.POST['content'], slug=request.POST['slug'])
         page.save()
         return HttpResponseRedirect(reverse('admin.views.page_list'))
+
+def page_delete(request, page):
+    try:
+        page = Page.objects.get(pk=page)
+        page.delete()
+        return HttpResponseRedirect(reverse('admin.views.page_list'))
+    except (KeyError, Page.DoesNotExist):
+        return page_list(request, error="The page you tried to delete does not exist.")
