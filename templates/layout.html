@@ -14,7 +14,7 @@
     <a class="logo" href="{% url home.views.index %}">Den Norske Turistforening</a>
     <nav class="mainMenu">
     <ul>
-    {% for page in menupages %}
+    {% for page in main_menu_pages %}
     <li><a href="/{{ page.slug }}/">{{ page.content }}</a></li>
     {% empty %}
     <li>No menus defined!</li>
