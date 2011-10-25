@@ -1,0 +1,14 @@
+{% extends "admin/layout.html" %}
+{% block title %}Page{% endblock %}
+{% block body %}
+
+{% if error %}<p><em>{{ error }}</em></p>{% endif %}
+
+<h1>Page</h1>
+<form action="{% url admin.views.page_new %}" method="post">
+{% csrf_token %}
+<textarea name="content" rows="6" cols="80"></textarea><br>
+<input type="text" name="slug" value=""><br>
+<input type="submit">
+</form>
+{% endblock %}

@@ -14,10 +14,17 @@
     <a class="logo" href="{% url home.views.index %}">Den Norske Turistforening</a>
     <nav class="mainMenu">
     <ul>
+    {% for page in menupages %}
+    <li><a href="/{{ page.slug }}/">{{ page.content }}</a></li>
+    {% empty %}
+    <li>No menus defined!</li>
+    {% endfor %}
+    <!--
     <li class=""><a href="{% url home.views.index %}" class="">Forsiden</a></li>
     <li class=""><a href="{% url training.views.index %}" class="">Kurs</a></li>
     <li class=""><a href="{% url member.views.index %}" class="">Medlemskap</a></li>
     <li class=""><a href="{% url about.views.index %}" class="">Om turistforeningen</a></li>
+    -->
     </ul>
     </nav>
     <div id="search">

@@ -1,0 +1,25 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Meny{% endblock %}
+{% block body %}
+
+{% if error %}<p><em>{{ error }}</em></p>{% endif %}
+
+<h1>Menyer</h1>
+{% if not menupages and not otherpages %}
+<p>Ingen (menupages &amp; otherpages)!</p>
+{% else %}
+<form action="{% url admin.views.menu_edit %}" method="post">
+{% csrf_token %}
+<ul>
+{% for page in menupages %}
+  <li><input type="checkbox" checked="checked" name="{{ page.id }}">{{ page.content }}</li>
+{% endfor %}
+{% for page in otherpages %}
+  <li><input type="checkbox" name="{{ page.id }}">{{ page.content }}</li>
+{% endfor %}
+</ul>
+<input type="submit">
+</form>
+{% endif %}
+
+{% endblock %}
