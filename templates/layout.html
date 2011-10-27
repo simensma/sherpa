@@ -14,10 +14,12 @@
     <a class="logo" href="{% url home.views.index %}">Den Norske Turistforening</a>
     <nav class="mainMenu">
     <ul>
-    {% for page in main_menu_pages %}
-    <li><a href="/{{ page.slug }}{% if page.slug %}/{% endif %}">{{ page.content }}</a></li>
+    {% for menu in main_menu %}
+      <li><a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">
+        {% firstof menu.name menu.page.content %}
+      </a></li>
     {% empty %}
-    <li>No menus defined!</li>
+      <li>No menus defined!</li>
     {% endfor %}
     <!--
     <li class=""><a href="{% url home.views.index %}" class="">Forsiden</a></li>

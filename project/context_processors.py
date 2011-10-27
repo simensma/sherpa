@@ -1,4 +1,4 @@
-from page.models import Page
+from home.models import Menu
 
 def main_menu(request):
-    return {'main_menu_pages': Page.objects.filter(menu__isnull=False)}
+    return {'main_menu': Menu.objects.all()}

@@ -18,6 +18,6 @@ def menu_edit(request):
             # csrfmiddlewaretoken is the only unrelated post field
             if(id != 'csrfmiddlewaretoken'):
                 page = Page.objects.get(pk=id)
-                m = Menu(name="Uhm, her maa man finne paa noe lurt", page=page, position=1)
+                m = Menu(name=None, page=page, position=1)
                 m.save()
     return HttpResponseRedirect(reverse('admin.views.menu_list'))
