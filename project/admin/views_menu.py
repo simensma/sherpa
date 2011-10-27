@@ -13,8 +13,7 @@ def menu_list(request, error=None):
 
 def menu_edit(request):
     if(request.method == 'POST'):
-        for menu in Menu.objects.all():
-            menu.delete()
+        Menu.objects.all().delete()
         for id in request.POST:
             # csrfmiddlewaretoken is the only unrelated post field
             if(id != 'csrfmiddlewaretoken'):
