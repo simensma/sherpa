@@ -24,3 +24,4 @@ class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
     slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment')
+    priority = models.IntegerField()
