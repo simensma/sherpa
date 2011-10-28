@@ -12,10 +12,10 @@
 {% csrf_token %}
 <ul>
 {% for page in menupages %}
-  <li><input type="checkbox" checked="checked" name="{{ page.id }}">{{ page.content }}</li>
+  <li><input type="checkbox" checked="checked" name="{{ page.id }}">{{ page.active.content }}</li>
 {% endfor %}
 {% for page in otherpages %}
-  <li><input type="checkbox" name="{{ page.id }}">{{ page.content }}</li>
+  <li><input type="checkbox" name="{{ page.id }}">{{ page.active.content }}</li>
 {% endfor %}
 </ul>
 <input type="submit">

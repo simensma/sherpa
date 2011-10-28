@@ -7,7 +7,7 @@
 <h1>Page</h1>
 <form action="{% url admin.views.page_edit page.id %}" method="post">
 {% csrf_token %}
-<textarea name="content" rows="6" cols="80">{{ page.content }}</textarea><br>
+<textarea name="content" rows="6" cols="80">{{ page.active.content }}</textarea><br>
 <input type="text" name="slug" value="{{ page.slug }}"><br>
 <input type="submit">
 </form>

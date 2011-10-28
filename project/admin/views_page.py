@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from page.models import Page
+from page.models import PageContent
 
 def page_list(request, error=None):
     pages = Page.objects.all()
@@ -21,12 +22,14 @@ def page_edit(request, page):
     elif(request.method == 'POST'):
         try:
             page = Page.objects.get(pk=page)
-            page.content = request.POST['content']
+            page.active.content = request.POST['content']
             page.slug = request.POST['slug']
+            page.active.save()
             page.save()
             return HttpResponseRedirect(reverse('admin.views.page_list'))
         except (KeyError, Page.DoesNotExist):
-            page = Page(content=request.POST['content'], slug=request.POST['slug'])
+            content = PageContent(version=1.0, content=request.POST['content'])
+            page = Page(active=content, slug=request.POST['slug'])
             context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
             return render_to_response('admin/page/edit.html', context,
               context_instance=RequestContext(request))
@@ -35,7 +38,9 @@ def page_new(request):
     if(request.method == 'GET'):
         return render_to_response('admin/page/new.html', context_instance=RequestContext(request))
     elif(request.method == 'POST'):
-        page = Page(content=request.POST['content'], slug=request.POST['slug'])
+        content = PageContent(version=1.0, content=request.POST['content'])
+        content.save()
+        page = Page(active=content, slug=request.POST['slug'])
         page.save()
         return HttpResponseRedirect(reverse('admin.views.page_list'))
 

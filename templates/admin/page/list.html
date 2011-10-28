@@ -12,7 +12,7 @@
 {% for page in pages %}
   <li>[ <a href="{% url admin.views.page_delete page.id %}">Slett</a> ]
       [ <a href="{% url admin.views.page_edit page.id %}">Rediger</a> ]
-      {{ page.content }}</li>
+      {{ page.active.content }}</li>
 {% endfor %}
 </ul>
 {% endif %}
