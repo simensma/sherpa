@@ -147,4 +147,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "context_processors.main_menu"
 )
 
-AUTH_PROFILE_MODULE='home.Profile'
+AUTH_PROFILE_MODULE='auth.Profile'
