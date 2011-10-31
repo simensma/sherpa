@@ -145,3 +145,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # custom processors
     "context_processors.main_menu"
 )
+
+AUTH_PROFILE_MODULE='home.Profile'

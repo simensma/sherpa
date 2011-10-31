@@ -6,6 +6,6 @@ class Menu(models.Model):
     page = models.ForeignKey('page.Page')
     position = models.IntegerField()
 
-class Person(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User)
     # Much more person data
