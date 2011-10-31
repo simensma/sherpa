@@ -16,7 +16,7 @@ def page(request, slug):
         pageVariant = PageVariant.objects.get(page=pages[0]) # Randomly selecting first of list, could be optimized
         return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?variant=" + pageVariant.slug)
     except (KeyError, PageVariant.DoesNotExist):
-        context = {'page': page}
+        context = {'page': pages[0]} # Same as above: Randomly selecting first of list, could be optimized
         return render_to_response('page/page.html', context, context_instance=RequestContext(request))
 
 def variant(request, pageslug, variantslug):
