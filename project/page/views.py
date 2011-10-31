@@ -6,15 +6,17 @@ from page.models import Page
 from analytics.models import PageVariant
 
 def page(request, slug):
+    variantParameter = "variant"
+
     # Requested variant?
-    if('variant' in request.GET):
-        return variant(request, slug, request.GET['variant'])
+    if(variantParameter in request.GET):
+        return variant(request, slug, request.GET[variantParameter])
 
     # If not, check if the page has variants (for segmentation)
     pages = Page.objects.filter(slug=slug)
     try:
         pageVariant = PageVariant.objects.get(page=pages[0]) # Randomly selecting first of list, could be optimized
-        return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?variant=" + pageVariant.slug)
+        return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + pageVariant.slug)
     except (KeyError, PageVariant.DoesNotExist):
         context = {'page': pages[0]} # Same as above: Randomly selecting first of list, could be optimized
         return render_to_response('page/page.html', context, context_instance=RequestContext(request))
