@@ -10,6 +10,16 @@ def page_list(request, error=None):
     context = {'pages': pages, 'error': error}
     return render_to_response('admin/page/list.html', context, context_instance=RequestContext(request))
 
+def page_new(request):
+    if(request.method == 'GET'):
+        return render_to_response('admin/page/new.html', context_instance=RequestContext(request))
+    elif(request.method == 'POST'):
+        content = PageContent(version=1.0, content=request.POST['content'])
+        content.save()
+        page = Page(active=content, slug=request.POST['slug'])
+        page.save()
+        return HttpResponseRedirect(reverse('admin.views.page_list'))
+
 def page_edit(request, page):
     if(request.method == 'GET'):
         try:
@@ -33,16 +43,6 @@ def page_edit(request, page):
             context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
             return render_to_response('admin/page/edit.html', context,
               context_instance=RequestContext(request))
-
-def page_new(request):
-    if(request.method == 'GET'):
-        return render_to_response('admin/page/new.html', context_instance=RequestContext(request))
-    elif(request.method == 'POST'):
-        content = PageContent(version=1.0, content=request.POST['content'])
-        content.save()
-        page = Page(active=content, slug=request.POST['slug'])
-        page.save()
-        return HttpResponseRedirect(reverse('admin.views.page_list'))
 
 def page_delete(request, page):
     try:
