@@ -7,5 +7,5 @@ class Menu(models.Model):
     position = models.IntegerField()
 
 class Person(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     # Much more person data
