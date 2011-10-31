@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'page',
     'admin',
     'analytics', # ? tenkte bare ha modeller i denne
+    'auth',
 )
 
 # A sample logging configuration. The only tangible logging

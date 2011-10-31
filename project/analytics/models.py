@@ -1,7 +1,7 @@
 from django.db import models
 
 class Visitor(models.Model):
-    profile = models.ForeignKey('home.Profile', null=True)
+    profile = models.ForeignKey('auth.Profile', null=True)
     pageviews = models.ForeignKey('analytics.Pageview')
 
 class Pageview(models.Model):
