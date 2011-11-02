@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from page.models import Page
 from page.models import PageContent
 from page.models import PageVersion
+from analytics.models import PageVariant
 
 def page_list(request, error=None):
     actives = PageVersion.objects.filter(active=True)
@@ -78,11 +79,20 @@ def page_version(request, page):
 
 def page_delete(request, page):
     try:
-        # Her maa det gjores litt testing. Deep delete!
-        #page = Page.objects.get(pk=page)
-        #versions = PageVersion.objects.filter(page=page)
-        #contents = PageContent.objects.filter()
-        #page.delete()
+        page = Page.objects.get(pk=page)
+        versions = PageVersion.objects.filter(page=page)
+        print("Version len: %d" % len(versions))
+        for version in versions:
+            print("Deleting version content: %s from id %d" % (version.content.content, version.id))
+            variants = PageVariant.objects.filter(pageVersion=version)
+            print("Variant len: %d" % len(variants))
+            for variant in variants:
+                print("Deleting variant content: %s" % variant.pageContent.content)
+                variant.pageContent.delete()
+            version.content.delete()
+            variants.delete()
+        # versions will be deleted by page cascade
+        page.delete()
         return HttpResponseRedirect(reverse('admin.views.page_list'))
     except (KeyError, Page.DoesNotExist):
         return page_list(request, error="The page you tried to delete does not exist.")
