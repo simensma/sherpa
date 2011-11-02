@@ -17,7 +17,7 @@ def page(request, slug):
     page = Page.objects.get(slug=slug)
     version = PageVersion.objects.filter(page=page).get(active=True)
     try:
-        variant = PageVariant.objects.get(pageVersion=version)
+        variant = PageVariant.objects.get(version=version)
         return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
     except (KeyError, PageVariant.DoesNotExist):
         context = {'version': version}

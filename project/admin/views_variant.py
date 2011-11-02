@@ -17,9 +17,9 @@ def variant_new(request):
     if(request.method == 'POST'):
         page = Page.objects.get(id=request.POST['page'])
         segment = Segment.objects.get(id=request.POST['segment'])
-        pageVariant = PageVariant(page=page, slug=request.POST['slug'], segment=segment,
+        variant = PageVariant(page=page, slug=request.POST['slug'], segment=segment,
           priority=request.POST['priority'])
-        pageVariant.save()
+        variant.save()
         #return HttpResponseRedirect(reverse('admin.views.variant_list') + "/" + page.id + "/")
         return HttpResponseRedirect(reverse('admin.views.variant_list', args=[page.id]))
 

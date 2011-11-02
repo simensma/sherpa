@@ -84,11 +84,11 @@ def page_delete(request, page):
         print("Version len: %d" % len(versions))
         for version in versions:
             print("Deleting version content: %s from id %d" % (version.content.content, version.id))
-            variants = PageVariant.objects.filter(pageVersion=version)
+            variants = PageVariant.objects.filter(version=version)
             print("Variant len: %d" % len(variants))
             for variant in variants:
-                print("Deleting variant content: %s" % variant.pageContent.content)
-                variant.pageContent.delete()
+                print("Deleting variant content: %s" % variant.content.content)
+                variant.content.delete()
             version.content.delete()
             variants.delete()
         # versions will be deleted by page cascade
