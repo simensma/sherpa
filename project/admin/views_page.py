@@ -81,6 +81,15 @@ def page_version_new(request, page):
 
     return HttpResponseRedirect(reverse('admin.views.page_version', args=[page.id]))
 
+def page_version_activate(request, page, version):
+    oldActive = PageVersion.objects.filter(page=page).get(active=True)
+    newActive = PageVersion.objects.get(pk=version)
+    oldActive.active = False
+    newActive.active = True
+    oldActive.save()
+    newActive.save()
+    return HttpResponseRedirect(reverse('admin.views.page_version', args=[page]))
+
 def page_version_edit(request, page):
     try:
         page = Page.objects.get(id=page)

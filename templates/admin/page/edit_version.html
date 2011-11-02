@@ -12,7 +12,12 @@
 {% for version in versions %}
 <tr>
   <td>{{ version.version }}</td>
-  <td>{% if version.active %}YES!{% else %}No.{% endif %}</td>
+  <td>
+    {% if version.active %}
+      Ja
+    {% else %}
+      Nei (<a href="{% url admin.views.page_version_activate version.page.id version.id %}">aktiver</a>)
+    {% endif %}</td>
   <td><input type="checkbox"></td>
 </tr>
 {% endfor %}
