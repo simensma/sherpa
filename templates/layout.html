@@ -15,7 +15,7 @@
     <nav class="mainMenu">
     <ul>
     {% for menu in main_menu %}
-      <li><a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">
+      <li><a href="/{{ menu.version.page.slug }}{% if menu.version.page.slug %}/{% endif %}">
         {{ menu.name }}
       </a></li>
     {% empty %}

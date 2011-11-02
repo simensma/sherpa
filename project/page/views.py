@@ -20,7 +20,7 @@ def page(request, slug):
         variant = PageVariant.objects.get(version=version)
         return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
     except (KeyError, PageVariant.DoesNotExist):
-        context = {'version': version}
+        context = {'version': version, 'content': version.content}
         return render_to_response('page/page.html', context, context_instance=RequestContext(request))
 
 def render_variant(request, pageslug, variantslug):
@@ -28,7 +28,7 @@ def render_variant(request, pageslug, variantslug):
     context = {}
     for variant in variants:
         if(True): # If segment matches
-            context = {'version': variant.pageVersion}
+            context = {'version': variant.pageVersion, 'content': variant.content}
             return render_to_response('page/page.html', context, context_instance=RequestContext(request))
         # Logic for when several segments match
     # Error
