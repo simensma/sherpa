@@ -1,14 +1,29 @@
 {% extends "admin/layout.html" %}
-{% block title %}Page{% endblock %}
+{% block title %}Admin: Page{% endblock %}
 {% block body %}
 
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
-<h1>Page</h1>
-<form action="{% url admin.views.page_edit page.id %}" method="post">
-{% csrf_token %}
-<textarea name="content" rows="6" cols="80">{{ page.active.content }}</textarea><br>
-<input type="text" name="slug" value="{{ page.slug }}"><br>
-<input type="submit">
-</form>
+<h1>Redigerer artikkel '{{ active.content.content }}'</h1>
+<table>
+<thead>
+<tr>
+  <th>Versjon:</th>
+  <td>Aktiv versjon: {{ active.version }}</td>
+  {% if version %}
+  <td>Du redigerer nå versjon {{ version.version }} ({% if not version.active %}ikke {% endif %}aktiv) - <a href="{% url admin.views.page_version version.page.id %}">endre versjon</a></td>
+  {% endif %}
+</tr>
+</thead>
+<tbody>
+<tr>
+  <th>Variant:</th>
+  <td><a href="{% url admin.views.variant_list version.page.id %}">Rediger varianter</a></td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+
+{% block edit %}{% endblock %}
 {% endblock %}

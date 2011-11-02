@@ -1,0 +1,37 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Variant{% endblock %}
+{% block body %}
+
+<h1>Varianter for: {{ page.active.content }}</h1>
+{% if not variants %}
+<p>Denne siden har ingen varianter ennå.</p>
+{% else %}
+<ol>
+{% for variant in variants %}
+  <li>Pri {{ variant.priority }}. for: {{ variant.segment.description }} (slug: {{ variant.slug }})</li>
+{% endfor %}
+</ol>
+{% endif %}
+
+<hr>
+
+<h2>Ny variant:</h2>
+
+{% if error %}<p><em>{{ error }}</em></p>{% endif %}
+
+<form action="{% url admin.views.variant_new %}" method="post">
+{% csrf_token %}
+<p>
+Slug: <input type="text" name="slug" value=""><br>
+Prioritet: <input type="text" name="priority" value=""><br>
+Segment: <select name="segment">
+{% for segment in segments %}
+<option value="{{ segment.id }}">{{ segment.description }}</option>
+{% endfor %}
+</select><br>
+<p>Om du ønsker å bruke et segment som ikke er definert her, snakk med Ali eller Hans.</p>
+<input type="hidden" name="page" value="{{ page.id }}">
+<input type="submit">
+</form>
+
+{% endblock %}

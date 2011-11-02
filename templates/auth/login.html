@@ -1,0 +1,16 @@
+{% extends "auth/layout.html" %}
+
+{% block title %}Logg inn{% endblock %}
+
+{% block body %}
+
+{% if error %}<p>{{ error }}</p>{% endif %}
+
+<form action="{% url auth.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
+{% csrf_token %}
+Navn: <input type="text" name="username"><br>
+Passord: <input type="password" name="password"><br>
+<input type="submit">
+</form>
+
+{% endblock %}

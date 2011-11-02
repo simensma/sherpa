@@ -2,8 +2,13 @@ from django.db import models
 
 class Page(models.Model):
     slug = models.CharField(max_length=50)
-    active = models.ForeignKey('page.PageContent')
+    published = models.BooleanField()
+
+class PageVersion(models.Model):
+    page = models.ForeignKey('page.Page')
+    content = models.ForeignKey('page.PageContent')
+    version = models.IntegerField()
+    active = models.BooleanField()
 
 class PageContent(models.Model):
-    version = models.DecimalField(max_digits=4, decimal_places=1)
     content = models.TextField()

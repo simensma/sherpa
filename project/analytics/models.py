@@ -21,7 +21,8 @@ class Segment(models.Model):
     description = models.TextField()
 
 class PageVariant(models.Model):
-    page = models.ForeignKey('page.Page')
+    pageVersion = models.ForeignKey('page.PageVersion')
+    pageContent = models.ForeignKey('page.PageContent')
     slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment')
     priority = models.IntegerField()

@@ -1,0 +1,32 @@
+{% extends "admin/page/edit.html" %}
+{% block edit %}
+<table>
+<thead>
+<tr>
+  <th>Versjon</th>
+  <th>Aktiv</th>
+  <th>Sammenlikn</th>
+</tr>
+</thead>
+<tbody>
+{% for version in versions %}
+<tr>
+  <td>{{ version.version }}</td>
+  <td>{% if version.active %}YES!{% else %}No.{% endif %}</td>
+  <td><input type="checkbox"></td>
+</tr>
+{% endfor %}
+</tbody>
+<tfoot>
+<tr>
+  <td></td>
+  <td></td>
+  <td><input type="button" value="Diff"></td>
+</tr>
+</tfoot>
+</table>
+<form action="{% url admin.views.page_edit version.page.id version.id %}" method="post">
+{% csrf_token %}
+<input type="submit">
+</form>
+{% endblock %}

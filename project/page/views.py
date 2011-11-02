@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from page.models import Page
+from page.models import PageVersion
 from analytics.models import PageVariant
 
 def page(request, slug):
@@ -13,12 +14,13 @@ def page(request, slug):
         return variant(request, slug, request.GET[variantParameter])
 
     # If not, check if the page has variants (for segmentation)
-    pages = Page.objects.filter(slug=slug)
+    page = Page.objects.get(slug=slug)
+    version = PageVersion.objects.filter(page=page).get(active=True)
     try:
-        pageVariant = PageVariant.objects.get(page=pages[0]) # Randomly selecting first of list, could be optimized
-        return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + pageVariant.slug)
+        variant = PageVariant.objects.get(pageVersion=version)
+        return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
     except (KeyError, PageVariant.DoesNotExist):
-        context = {'page': pages[0]} # Same as above: Randomly selecting first of list, could be optimized
+        context = {'version': version}
         return render_to_response('page/page.html', context, context_instance=RequestContext(request))
 
 def variant(request, pageslug, variantslug):
@@ -26,7 +28,7 @@ def variant(request, pageslug, variantslug):
     context = {}
     for variant in variants:
         if(True): # If segment matches
-            context = {'page': variant.page}
+            context = {'version': variant.pageVersion}
             return render_to_response('page/page.html', context, context_instance=RequestContext(request))
         # Logic for when several segments match
     # Error

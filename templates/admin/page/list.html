@@ -5,17 +5,34 @@
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
 <h1>Artikler</h1>
-{% if not pages %}
+{% if not actives %}
 <p>Tomt!</p>
 {% else %}
 <ul>
-{% for page in pages %}
-  <li>[ <a href="{% url admin.views.page_delete page.id %}">Slett</a> ]
-      [ <a href="{% url admin.views.page_edit page.id %}">Rediger</a> ]
-      {{ page.active.content }}</li>
+{% for active in actives %}
+  <li>{{ active.content.content }}
+      [ <a href="{% url admin.views.page_edit active.page.id active.id %}">Rediger</a> ]
+      [ <a href="{% url admin.views.page_delete active.page.id %}">Slett</a> ]</li>
 {% endfor %}
 </ul>
 {% endif %}
 
-<p><a href="{% url admin.views.page_new %}">Ny artikkel</a></p>
+<p><a href="#" id="new_page">Ny artikkel</a></p>
+<form action="{% url admin.views.page_new %}" method="post" id="new_page_form">
+{% csrf_token %}
+<table>
+<tr>
+  <td>Innhold:</td>
+  <td><textarea name="content" rows="6" cols="80"></textarea></td>
+</tr>
+<tr>
+  <td>Slug:</td>
+  <td><input type="text" name="slug" value=""></td>
+</tr>
+<tr>
+  <td></td>
+  <td><input type="submit" value="Opprett"></td>
+</tr>
+</table>
+</form>
 {% endblock %}
