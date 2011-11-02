@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.db.models import Max
 from page.models import Page
 from page.models import PageContent
 from page.models import PageVersion
@@ -50,32 +51,56 @@ def page_edit(request, page, version):
               context_instance=RequestContext(request))
 
 def page_version(request, page):
-    if(request.method == 'GET'):
-        try:
-            versions = PageVersion.objects.filter(page=page)
-            active = versions.get(active=True)
-            context = {'versions': versions, 'active': active}
-            return render_to_response('admin/page/edit_version.html', context,
-              context_instance=RequestContext(request))
-        except (KeyError, Page.DoesNotExist):
-            return page_list(request, error="This page does not exist.")
-    elif(request.method == 'POST'):
-        # Todo!
-        try:
-            page = Page.objects.get(id=page)
-            page.slug = request.POST['slug']
-            page.save()
-            version = PageVersion.objects.filter(page=page).get(version=version)
-            content = PageContent.objects.get(pageversion=version)
-            content.content = request.POST['content']
-            content.save()
-            return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id, version.id]))
-        except (KeyError, Page.DoesNotExist):
-            content = PageContent(version=1.0, content=request.POST['content'])
-            page = Page(active=content, slug=request.POST['slug'])
-            context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
-            return render_to_response('admin/page/edit_page.html', context,
-              context_instance=RequestContext(request))
+    try:
+        versions = PageVersion.objects.filter(page=page).order_by('-version')
+        active = versions.get(active=True)
+        context = {'versions': versions, 'active': active}
+        return render_to_response('admin/page/edit_version.html', context,
+          context_instance=RequestContext(request))
+    except (KeyError, Page.DoesNotExist):
+        return page_list(request, error="This page does not exist.")
+
+def page_version_new(request, page):
+    page = Page.objects.get(pk=page)
+    max_version = PageVersion.objects.aggregate(Max('version'))['version__max']
+    currentVersion = PageVersion.objects.filter(page=page).get(version=max_version)
+    print(currentVersion)
+    # Copy content
+    newContent = PageContent(content=currentVersion.content.content)
+    newContent.save()
+
+    # Create the new version
+    newVersion = PageVersion(page=page, content=newContent, version=(currentVersion.version + 1), active=False)
+    newVersion.save()
+
+    # Copy variants
+    for variant in PageVariant.objects.filter(version=currentVersion):
+        # Copy variant content
+        newVariantContent = PageContent(content=variant.content.content)
+
+        # Create the new variant
+        newVariant = PageVariant(version=newVersion, content=newVariantContent, slug=variant.slug,
+          segment=variant.segment, priority=variant.priority)
+        newVariant.save()
+
+    return HttpResponseRedirect(reverse('admin.views.page_version', args=[page.id]))
+
+def page_version_edit(request, page):
+    try:
+        page = Page.objects.get(id=page)
+        page.slug = request.POST['slug']
+        page.save()
+        version = PageVersion.objects.filter(page=page).get(version=version)
+        content = PageContent.objects.get(pageversion=version)
+        content.content = request.POST['content']
+        content.save()
+        return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id, version.id]))
+    except (KeyError, Page.DoesNotExist):
+        content = PageContent(version=1.0, content=request.POST['content'])
+        page = Page(active=content, slug=request.POST['slug'])
+        context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
+        return render_to_response('admin/page/edit_page.html', context,
+          context_instance=RequestContext(request))
 
 def page_delete(request, page):
     try:

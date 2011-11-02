@@ -25,8 +25,6 @@
 </tr>
 </tfoot>
 </table>
-<form action="{% url admin.views.page_edit version.page.id version.id %}" method="post">
-{% csrf_token %}
-<input type="submit">
-</form>
+<br>
+<p><a href="{% url admin.views.page_version_new active.page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 {% endblock %}
