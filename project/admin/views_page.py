@@ -24,7 +24,7 @@ def page_edit(request, page, version):
     if(request.method == 'GET'):
         try:
             versions = PageVersion.objects.filter(page=page)
-            version = versions.get(version=version)
+            version = versions.get(pk=version)
             active = versions.get(active=True)
             context = {'version': version, 'active': active}
             return render_to_response('admin/page/edit_page.html', context,
@@ -36,7 +36,7 @@ def page_edit(request, page, version):
             page = Page.objects.get(id=page)
             page.slug = request.POST['slug']
             page.save()
-            version = PageVersion.objects.filter(page=page).get(version=version)
+            version = PageVersion.objects.filter(page=page).get(id=version)
             content = PageContent.objects.get(pageversion=version)
             content.content = request.POST['content']
             content.save()
@@ -59,6 +59,7 @@ def page_version(request, page):
         except (KeyError, Page.DoesNotExist):
             return page_list(request, error="This page does not exist.")
     elif(request.method == 'POST'):
+        # Todo!
         try:
             page = Page.objects.get(id=page)
             page.slug = request.POST['slug']
