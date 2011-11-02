@@ -3,11 +3,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from home.models import Menu
-from page.models import Page
+from page.models import PageVersion
 
 def menu_list(request, error=None):
-    menupages = Page.objects.filter(menu__isnull=False)
-    otherpages = Page.objects.filter(menu__isnull=True)
+    menupages = PageVersion.objects.filter(menu__isnull=False).filter(active=True)
+    otherpages = PageVersion.objects.filter(menu__isnull=True).filter(active=True)
     context = {'menupages': menupages, 'otherpages': otherpages, 'error': error}
     return render_to_response('admin/menu/list.html', context, context_instance=RequestContext(request))
 
@@ -17,7 +17,8 @@ def menu_edit(request):
         for id in request.POST:
             # csrfmiddlewaretoken is the only unrelated post field
             if(id != 'csrfmiddlewaretoken'):
-                page = Page.objects.get(pk=id)
-                m = Menu(name=page.active.content, page=page, position=1)
+                version = PageVersion.objects.get(pk=id)
+                # Save with the name of the version content now, but this should be manually entered
+                m = Menu(name=version.content.content, version=version, position=1)
                 m.save()
     return HttpResponseRedirect(reverse('admin.views.menu_list'))

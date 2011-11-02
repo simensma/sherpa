@@ -11,11 +11,11 @@
 <form action="{% url admin.views.menu_edit %}" method="post">
 {% csrf_token %}
 <ul>
-{% for page in menupages %}
-  <li><input type="checkbox" checked="checked" name="{{ page.id }}">{{ page.active.content }}</li>
+{% for version in menupages %}
+  <li><input type="checkbox" checked="checked" name="{{ version.page.id }}">{{ version.content.content }}</li>
 {% endfor %}
-{% for page in otherpages %}
-  <li><input type="checkbox" name="{{ page.id }}">{{ page.active.content }}</li>
+{% for version in otherpages %}
+  <li><input type="checkbox" name="{{ version.id }}">{{ version.content.content }}</li>
 {% endfor %}
 </ul>
 <input type="submit">

@@ -16,7 +16,7 @@
     <ul>
     {% for menu in main_menu %}
       <li><a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">
-        {% firstof menu.name menu.page.content %}
+        {{ menu.name }}
       </a></li>
     {% empty %}
       <li>No menus defined!</li>
