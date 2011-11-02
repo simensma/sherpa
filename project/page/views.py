@@ -11,7 +11,7 @@ def page(request, slug):
 
     # Requested variant?
     if(variantParameter in request.GET):
-        return variant(request, slug, request.GET[variantParameter])
+        return render_variant(request, slug, request.GET[variantParameter])
 
     # If not, check if the page has variants (for segmentation)
     page = Page.objects.get(slug=slug)
@@ -23,7 +23,7 @@ def page(request, slug):
         context = {'version': version}
         return render_to_response('page/page.html', context, context_instance=RequestContext(request))
 
-def variant(request, pageslug, variantslug):
+def render_variant(request, pageslug, variantslug):
     variants = PageVariant.objects.filter(slug=variantslug).order_by('priority')
     context = {}
     for variant in variants:
