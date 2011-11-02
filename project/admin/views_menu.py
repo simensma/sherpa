@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from home.models import Menu
 from page.models import PageVersion
@@ -9,7 +8,7 @@ def menu_list(request, error=None):
     menupages = PageVersion.objects.filter(menu__isnull=False).filter(active=True)
     otherpages = PageVersion.objects.filter(menu__isnull=True).filter(active=True)
     context = {'menupages': menupages, 'otherpages': otherpages, 'error': error}
-    return render_to_response('admin/menu/list.html', context, context_instance=RequestContext(request))
+    return render(request, 'admin/menu/list.html', context)
 
 def menu_edit(request):
     if(request.method == 'POST'):

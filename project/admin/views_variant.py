@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from page.models import Page
 from analytics.models import PageVariant
@@ -11,7 +10,7 @@ def variant_list(request, page):
     variants = PageVariant.objects.filter(page=page).order_by("priority")
     segments = Segment.objects.all()
     context = {'page': page, 'variants': variants, 'segments': segments}
-    return render_to_response('admin/variant/list.html', context, context_instance=RequestContext(request))
+    return render(request, 'admin/variant/list.html', context)
 
 def variant_new(request):
     if(request.method == 'POST'):
@@ -28,8 +27,7 @@ def variant_new(request):
 #        try:
 #            page = Page.objects.get(pk=page)
 #            context = {'page': page}
-#            return render_to_response('admin/page/edit.html', context,
-#              context_instance=RequestContext(request))
+#            return render(request, 'admin/page/edit.html', context)
 #        except (KeyError, Page.DoesNotExist):
 #            return page_list(request, error="This page does not exist.")
 #    elif(request.method == 'POST'):
@@ -44,8 +42,7 @@ def variant_new(request):
 #            content = PageContent(version=1.0, content=request.POST['content'])
 #            page = Page(active=content, slug=request.POST['slug'])
 #            context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
-#            return render_to_response('admin/page/edit.html', context,
-#              context_instance=RequestContext(request))
+#            return render(request, 'admin/page/edit.html', context)
 #
 #def variant_delete(request, page):
 #    try:

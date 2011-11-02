@@ -1,8 +1,7 @@
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 
 def index(request):
-    return render_to_response('member/member.html', context_instance=RequestContext(request))
+    return render(request, 'member/member.html')
 
 def register(request):
-    return render_to_response('member/register.html', context_instance=RequestContext(request))
+    return render(request, 'member/register.html')

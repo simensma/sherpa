@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from page.models import Page
 from page.models import PageVersion
@@ -21,7 +20,7 @@ def page(request, slug):
         return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
     except (KeyError, PageVariant.DoesNotExist):
         context = {'version': version, 'content': version.content}
-        return render_to_response('page/page.html', context, context_instance=RequestContext(request))
+        return render(request, 'page/page.html', context)
 
 def render_variant(request, pageslug, variantslug):
     variants = PageVariant.objects.filter(slug=variantslug).order_by('priority')
@@ -29,6 +28,6 @@ def render_variant(request, pageslug, variantslug):
     for variant in variants:
         if(True): # If segment matches
             context = {'version': variant.pageVersion, 'content': variant.content}
-            return render_to_response('page/page.html', context, context_instance=RequestContext(request))
+            return render(request, 'page/page.html', context)
         # Logic for when several segments match
     # Error
