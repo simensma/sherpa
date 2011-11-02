@@ -110,13 +110,9 @@ def page_delete(request, page):
     try:
         page = Page.objects.get(pk=page)
         versions = PageVersion.objects.filter(page=page)
-        print("Version len: %d" % len(versions))
         for version in versions:
-            print("Deleting version content: %s from id %d" % (version.content.content, version.id))
             variants = PageVariant.objects.filter(version=version)
-            print("Variant len: %d" % len(variants))
             for variant in variants:
-                print("Deleting variant content: %s" % variant.content.content)
                 variant.content.delete()
             version.content.delete()
             variants.delete()
