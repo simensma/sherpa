@@ -90,22 +90,6 @@ def page_version_activate(request, page, version):
     newActive.save()
     return HttpResponseRedirect(reverse('admin.views.page_version', args=[page]))
 
-def page_version_edit(request, page):
-    try:
-        page = Page.objects.get(id=page)
-        page.slug = request.POST['slug']
-        page.save()
-        version = PageVersion.objects.filter(page=page).get(version=version)
-        content = PageContent.objects.get(pageversion=version)
-        content.content = request.POST['content']
-        content.save()
-        return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id, version.id]))
-    except (KeyError, Page.DoesNotExist):
-        content = PageContent(version=1.0, content=request.POST['content'])
-        page = Page(active=content, slug=request.POST['slug'])
-        context = {'page': page, 'error': "Whoops, looks like you tried to edit a non-existing thing."}
-        return render(request, 'admin/page/edit_page.html', context)
-
 def page_delete(request, page):
     try:
         page = Page.objects.get(pk=page)
