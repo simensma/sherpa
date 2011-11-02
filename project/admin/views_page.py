@@ -26,7 +26,7 @@ def page_edit(request, page, version):
             versions = PageVersion.objects.filter(page=page)
             version = versions.get(pk=version)
             active = versions.get(active=True)
-            context = {'version': version, 'active': active}
+            context = {'version': version, 'versioncount': len(versions), 'active': active}
             return render(request, 'admin/page/edit_page.html', context)
         except (KeyError, Page.DoesNotExist):
             return page_list(request, error="This page does not exist.")

@@ -10,7 +10,7 @@ def variant_list(request, page, version):
     variants = PageVariant.objects.filter(version=version).order_by("priority")
     segments = Segment.objects.all()
     context = {'page': page, 'variants': variants, 'segments': segments}
-    return render(request, 'admin/variant/list.html', context)
+    return render(request, 'admin/page/edit_variant.html', context)
 
 def variant_new(request):
     if(request.method == 'POST'):

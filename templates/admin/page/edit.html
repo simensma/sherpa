@@ -5,25 +5,28 @@
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
 <h1>Redigerer artikkel '{{ active.content.content }}'</h1>
+
+{% if version %}
 <table>
 <thead>
-<tr>
-  <th>Versjon:</th>
-  <td>Aktiv versjon: {{ active.version }}</td>
-  {% if version %}
-  <td>Du redigerer nå versjon {{ version.version }} ({% if not version.active %}ikke {% endif %}aktiv) - <a href="{% url admin.views.page_version version.page.id %}">endre versjon</a></td>
-  {% endif %}
-</tr>
+  <tr>
+    <th>Versjon</th>
+    <th>Nyest</th>
+    <th>Aktiv</th>
+    <th>Endre versjon</th>
+  </tr>
 </thead>
 <tbody>
-<tr>
-  <th>Variant:</th>
-  <td><a href="{% url admin.views.variant_list version.page.id version.id %}">Rediger varianter</a></td>
-</tr>
+  <tr>
+    <td>{{ version.version }}</td>
+    <td>{{ versioncount }}</td>
+    <td>{{ active.version }}</td>
+    <td><a href="{% url admin.views.page_version version.page.id %}">Endre versjon</a></td>
+  </tr>
 </tbody>
 </table>
-
-<hr>
+<br>
+{% endif %}
 
 {% block edit %}{% endblock %}
 {% endblock %}
