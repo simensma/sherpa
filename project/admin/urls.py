@@ -15,7 +15,7 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/versjon/aktiver/(?P<page>\d*)/(?P<version>\d*)/$', 'page_version_activate'),
 
     # Varianter
-    url(r'^artikkel/variant/(?P<page>\d*)/$', 'variant_list'),
+    url(r'^artikkel/variant/(?P<page>\d*)/(?P<version>\d*)/$', 'variant_list'),
 #    url(r'^side/variant/ny/$', 'variant_new'),
 #    url(r'^side/variant/rediger/(?P<page>\d*)/$', 'variant_edit'),
 #    url(r'^side/variant/slett/(?P<page>\d*)/$', 'variant_delete'),

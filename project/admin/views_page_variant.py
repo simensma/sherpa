@@ -5,9 +5,9 @@ from page.models import Page
 from analytics.models import PageVariant
 from analytics.models import Segment
 
-def variant_list(request, page):
+def variant_list(request, page, version):
     page = Page.objects.get(id=page)
-    variants = PageVariant.objects.filter(page=page).order_by("priority")
+    variants = PageVariant.objects.filter(version=version).order_by("priority")
     segments = Segment.objects.all()
     context = {'page': page, 'variants': variants, 'segments': segments}
     return render(request, 'admin/variant/list.html', context)
