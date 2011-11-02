@@ -6,6 +6,7 @@
   <th>Versjon</th>
   <th>Aktiv</th>
   <th>Sammenlikn</th>
+  <th>Rediger</th>
 </tr>
 </thead>
 <tbody>
@@ -19,6 +20,7 @@
       Nei (<a href="{% url admin.views.page_version_activate version.page.id version.id %}">aktiver</a>)
     {% endif %}</td>
   <td><input type="checkbox"></td>
+  <td><a href="{% url admin.views.page_edit version.page.id version.id %}">Rediger</a></td>
 </tr>
 {% endfor %}
 </tbody>
