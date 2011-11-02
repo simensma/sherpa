@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from admin.views_page import *
 from admin.views_menu import *
+from admin.views_page_version import *
 from admin.views_variant import *
 
 def index(request):
