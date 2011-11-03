@@ -12,7 +12,7 @@ def page_list(request, error=None):
     return render(request, 'admin/page/list.html', context)
 
 def page_new(request):
-    page = Page(slug=request.POST['slug'])
+    page = Page(slug=request.POST['slug'], published=False)
     page.save()
     content = PageContent(content=request.POST['content'])
     content.save()

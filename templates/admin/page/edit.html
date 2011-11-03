@@ -4,6 +4,12 @@
 
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
+{% if active.page.published %}
+  <p class="published">Publisert</p>
+{% else %}
+  <p class="not-published">Ikke publisert</p>
+{% endif %}
+
 <h1>Redigerer artikkel '{{ active.content.content }}'</h1>
 
 {% if version %}

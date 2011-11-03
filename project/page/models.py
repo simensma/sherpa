@@ -3,6 +3,7 @@ from django.db import models
 class Page(models.Model):
     slug = models.CharField(max_length=50)
     published = models.BooleanField()
+    pub_date = models.DateTimeField(null=True)
     # The active field can be set by the view in order to get a reference to
     # the active page version in the template. Not sure if there exists a better
     # way to do this?
