@@ -1,0 +1,65 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Meny{% endblock %}
+{% block body %}
+
+{% if error %}<p><em>{{ error }}</em></p>{% endif %}
+
+<h1>Menyer</h1>
+
+{% if not menus and not pages %}
+  <p>Ingen artikler er opprettet (og dermed ingen menyer)!</p>
+{% else %}
+
+<h2>Artikler i menyen:</h2>
+{% if not menus %}
+  <p>Ingen menyer er definert.</p>
+{% else %}
+<table>
+<tr>
+  <th>Tittel</th>
+  <th>Menynavn</th>
+  <th>Flytt opp</th>
+  <th>Flytt ned</th>
+  <th>Fjern</th>
+</tr>
+{% for menu in menus %}
+<tr>
+  <td>{{ menu.page.active.content.content }}</td>
+  <td>{{ menu.name }}</td>
+  <td>{% if menu.position != 1 %}
+    <a href="{% url admin.views.menu_swap menu.position menu.position|add:-1 %}">Opp</a>
+  {% endif %}</td>
+  <td>{% if menu.position != menus|length %}
+    <a href="{% url admin.views.menu_swap menu.position menu.position|add:1 %}">Ned</a>
+  {% endif %}</td>
+  <td><a href="{% url admin.views.menu_remove menu.page.id %}">Ta bort fra menyen</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<h2>Artikler ikke i menyen:</h2>
+{% if not pages %}
+  <p>Det finnes ingen artikler som ikke er i menyen.</p>
+{% else %}
+<table>
+<tr>
+  <th>Tittel</th>
+  <th>Menynavn</th>
+  <th>Legg til</th>
+</tr>
+{% for page in pages %}
+<tr>
+  <form action="{% url admin.views.menu_add page.id %}" method="post">
+  {% csrf_token %}
+  <td>{{ page.active.content.content }}</td>
+  <td><input type="text" name="name" value={{ page.active.content.content }}></td>
+  <td><input type="submit" value="Legg til"></td>
+  </form>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% endif %}
+{% endblock %}

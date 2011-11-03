@@ -23,5 +23,7 @@ urlpatterns = patterns('admin.views',
 
     # Menyer
     url(r'^meny/$', 'menu_list'),
-    url(r'^meny/rediger/$', 'menu_edit'),
+    url(r'^meny/ny/(?P<page>\d*)/$', 'menu_add'),
+    url(r'^meny/bytt/(?P<pos1>\d*)/(?P<pos2>\d*)/$', 'menu_swap'),
+    url(r'^meny/slett/(?P<page>\d*)/$', 'menu_remove'),
 )
