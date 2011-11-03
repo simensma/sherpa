@@ -11,3 +11,9 @@ table#version {
   margin-left: 5%;
   margin-right: 5%;
 }
+
+table#variant {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}

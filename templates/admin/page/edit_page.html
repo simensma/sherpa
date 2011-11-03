@@ -1,10 +1,4 @@
-{% extends "admin/page/edit.html" %}
-{% block edit %}
-<p><a href="{% url admin.views.variant_list version.page.id version.id %}">Rediger varianter</a></p>
-
+{% extends "admin/page/edit_content.html" %}
+{% block form %}
 <form action="{% url admin.views.page_version_edit version.id %}" method="post">
-{% csrf_token %}
-<textarea name="content" rows="6" cols="80">{{ version.content.content }}</textarea><br>
-<input type="submit">
-</form>
 {% endblock %}

@@ -48,8 +48,9 @@ def page_version_edit(request, version):
         try:
             version = PageVersion.objects.get(pk=version)
             versions = PageVersion.objects.filter(page=version.page).order_by('-version')
+            variants = PageVariant.objects.filter(version=version).order_by('priority')
             active = versions.get(active=True)
-            context = {'active': active, 'version': version, 'versions': versions}
+            context = {'active': active, 'version': version, 'versions': versions, 'variants': variants}
             return render(request, 'admin/page/edit_page.html', context)
         except (KeyError, Page.DoesNotExist):
             return page_list(request, error="This page does not exist.")
