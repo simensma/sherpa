@@ -18,7 +18,7 @@ def page_new(request):
     content.save()
     version = PageVersion(page=page, content=content, version="1", active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page.id, version.id]))
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
 
 def page_edit(request, page):
     if(request.method == 'GET'):

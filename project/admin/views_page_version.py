@@ -31,22 +31,23 @@ def page_version_new(request, page):
           segment=variant.segment, priority=variant.priority)
         newVariant.save()
 
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page.id, newVersion.id]))
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[newVersion.id]))
 
-def page_version_activate(request, page, version):
-    oldActive = PageVersion.objects.filter(page=page).get(active=True)
+def page_version_activate(request, version):
+    # Todo: Handle errors, + fails if activating the _same version_ 2 times in a row
     newActive = PageVersion.objects.get(pk=version)
-    oldActive.active = False
+    oldActive = PageVersion.objects.filter(page=newActive.page).get(active=True)
     newActive.active = True
-    oldActive.save()
+    oldActive.active = False
     newActive.save()
-    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page]))
+    oldActive.save()
+    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[newActive.page.id]))
 
-def page_version_edit(request, page, version):
+def page_version_edit(request, version):
     if(request.method == 'GET'):
         try:
-            versions = PageVersion.objects.filter(page=page).order_by('-version')
-            version = versions.get(pk=version)
+            version = PageVersion.objects.get(pk=version)
+            versions = PageVersion.objects.filter(page=version.page).order_by('-version')
             active = versions.get(active=True)
             context = {'active': active, 'version': version, 'versions': versions}
             return render(request, 'admin/page/edit_page.html', context)
@@ -54,8 +55,7 @@ def page_version_edit(request, page, version):
             return page_list(request, error="This page does not exist.")
     elif(request.method == 'POST'):
         # todo: handle errors
-        version = PageVersion.objects.filter(page=page).get(id=version)
         content = PageContent.objects.get(pageversion=version)
         content.content = request.POST['content']
         content.save()
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page, version.id]))
+        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))

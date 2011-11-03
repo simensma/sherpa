@@ -12,7 +12,7 @@
 
 <h1>Redigerer artikkel '{% firstof version.content.content active.content.content %}'</h1>
 
-<form action="{% url admin.views.page_edit version.page.id %}" method="post">
+<form action="{% url admin.views.page_edit active.page.id %}" method="post">
 {% csrf_token %}
 <p>Slug: <input type="text" name="slug" value="{{ active.page.slug }}"> <input type="submit"></p>
 </form>
@@ -35,11 +35,11 @@
     {% if version.active %}
       Aktiv!
     {% else %}
-      <a href="{% url admin.views.page_version_activate version.page.id version.id %}">Aktivér</a>
+      <a href="{% url admin.views.page_version_activate version.id %}">Aktivér</a>
     {% endif %}</td>
   <td>todo</td>
   <td>todo</td>
-  <td>Todo: Vis (<a href="{% url admin.views.page_version_edit version.page.id version.id %}">Rediger</a>)</td>
+  <td>Todo: Vis (<a href="{% url admin.views.page_version_edit version.id %}">Rediger</a>)</td>
 </tr>
 {% endfor %}
 </tbody>
