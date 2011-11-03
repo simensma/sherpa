@@ -11,15 +11,3 @@ table#version {
   margin-left: 5%;
   margin-right: 5%;
 }
-
-p.published {
-  float: left;
-  background-color: green;
-  margin-right: 30px;
-}
-
-p.not-published {
-  float: right;
-  background-color: red;
-  margin-right: 30px;
-}

@@ -4,13 +4,8 @@
 
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
-{% if active.page.published %}
-  <p class="published">Publisert</p>
-{% else %}
-  <p class="not-published">Ikke publisert</p>
-{% endif %}
-
-<h1>Redigerer artikkel '{% firstof version.content.content active.content.content %}'</h1>
+<h1>Redigerer artikkel '{% firstof version.content.content active.content.content %}'
+({% if active.page.published %}Publisert{% else %}Ikke publisert{% endif %})</h1>
 
 <form action="{% url admin.views.page_edit active.page.id %}" method="post">
 {% csrf_token %}
