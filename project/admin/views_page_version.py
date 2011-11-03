@@ -21,7 +21,7 @@ def page_version_new(request, page):
     versions = PageVersion.objects.filter(page=page)
     max_version = versions.aggregate(Max('version'))['version__max']
     currentVersion = versions.get(version=max_version)
-    print(currentVersion)
+
     # Copy content
     newContent = PageContent(content=currentVersion.content.content)
     newContent.save()
