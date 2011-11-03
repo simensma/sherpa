@@ -14,6 +14,8 @@ class PageVersion(models.Model):
     content = models.ForeignKey('page.PageContent')
     version = models.IntegerField()
     active = models.BooleanField()
+    #publisher = models.ForeignKey('auth.Profile')
+    #change_comment = models.TextField()
 
 class PageContent(models.Model):
     content = models.TextField()
