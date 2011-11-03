@@ -18,14 +18,21 @@ def page_new(request):
     content.save()
     version = PageVersion(page=page, content=content, version="1", active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id, version.id]))
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page.id, version.id]))
 
-def page_edit(request, page, version):
-    # todo: handle errors
-    page = Page.objects.get(id=page)
-    page.slug = request.POST['slug']
-    page.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page.id, version]))
+def page_edit(request, page):
+    if(request.method == 'GET'):
+        # todo: handle errors
+        versions = PageVersion.objects.filter(page=page).order_by('-version')
+        active = versions.get(active=True)
+        context = {'active': active, 'versions': versions}
+        return render(request, 'admin/page/edit.html', context)
+    elif(request.method == 'POST'):
+        # todo: handle errors
+        page = Page.objects.get(id=page)
+        page.slug = request.POST['slug']
+        page.save()
+        return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id]))
 
 def page_delete(request, page):
     try:

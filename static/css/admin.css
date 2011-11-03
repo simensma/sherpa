@@ -6,6 +6,12 @@ table th, table td {
   border: 1px solid;
 }
 
+table#version {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 p.published {
   float: left;
   background-color: green;

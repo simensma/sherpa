@@ -6,11 +6,10 @@ urlpatterns = patterns('admin.views',
     # Sider
     url(r'^artikkel/$', 'page_list'),
     url(r'^artikkel/ny/$', 'page_new'),
-    url(r'^artikkel/rediger/(?P<page>\d*)/(?P<version>\d*)/$', 'page_edit'),
+    url(r'^artikkel/rediger/(?P<page>\d*)/$', 'page_edit'),
     url(r'^artikkel/slett/(?P<page>\d*)/$', 'page_delete'),
 
     # Versjoner
-    url(r'^artikkel/versjon/(?P<page>\d*)/$', 'page_version'),
     url(r'^artikkel/versjon/ny/(?P<page>\d*)/$', 'page_version_new'),
     url(r'^artikkel/versjon/aktiver/(?P<page>\d*)/(?P<version>\d*)/$', 'page_version_activate'),
     url(r'^artikkel/versjon/rediger/(?P<page>\d*)/(?P<version>\d*)/$', 'page_version_edit'),

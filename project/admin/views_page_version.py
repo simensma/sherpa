@@ -7,15 +7,6 @@ from page.models import PageContent
 from page.models import PageVersion
 from analytics.models import PageVariant
 
-def page_version(request, page):
-    try:
-        versions = PageVersion.objects.filter(page=page).order_by('-version')
-        active = versions.get(active=True)
-        context = {'versions': versions, 'active': active}
-        return render(request, 'admin/page/edit_version.html', context)
-    except (KeyError, Page.DoesNotExist):
-        return page_list(request, error="This page does not exist.")
-
 def page_version_new(request, page):
     page = Page.objects.get(pk=page)
     versions = PageVersion.objects.filter(page=page)
@@ -40,7 +31,7 @@ def page_version_new(request, page):
           segment=variant.segment, priority=variant.priority)
         newVariant.save()
 
-    return HttpResponseRedirect(reverse('admin.views.page_version', args=[page.id]))
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page.id, newVersion.id]))
 
 def page_version_activate(request, page, version):
     oldActive = PageVersion.objects.filter(page=page).get(active=True)
@@ -49,15 +40,15 @@ def page_version_activate(request, page, version):
     newActive.active = True
     oldActive.save()
     newActive.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version', args=[page]))
+    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page]))
 
 def page_version_edit(request, page, version):
     if(request.method == 'GET'):
         try:
-            versions = PageVersion.objects.filter(page=page)
+            versions = PageVersion.objects.filter(page=page).order_by('-version')
             version = versions.get(pk=version)
             active = versions.get(active=True)
-            context = {'version': version, 'versioncount': len(versions), 'active': active}
+            context = {'active': active, 'version': version, 'versions': versions}
             return render(request, 'admin/page/edit_page.html', context)
         except (KeyError, Page.DoesNotExist):
             return page_list(request, error="This page does not exist.")
