@@ -51,3 +51,20 @@ def page_version_activate(request, page, version):
     newActive.save()
     return HttpResponseRedirect(reverse('admin.views.page_version', args=[page]))
 
+def page_version_edit(request, page, version):
+    if(request.method == 'GET'):
+        try:
+            versions = PageVersion.objects.filter(page=page)
+            version = versions.get(pk=version)
+            active = versions.get(active=True)
+            context = {'version': version, 'versioncount': len(versions), 'active': active}
+            return render(request, 'admin/page/edit_page.html', context)
+        except (KeyError, Page.DoesNotExist):
+            return page_list(request, error="This page does not exist.")
+    elif(request.method == 'POST'):
+        # todo: handle errors
+        version = PageVersion.objects.filter(page=page).get(id=version)
+        content = PageContent.objects.get(pageversion=version)
+        content.content = request.POST['content']
+        content.save()
+        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[page, version.id]))

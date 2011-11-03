@@ -12,6 +12,11 @@
 
 <h1>Redigerer artikkel '{{ active.content.content }}'</h1>
 
+<form action="{% url admin.views.page_edit version.page.id version.id %}" method="post">
+{% csrf_token %}
+<p>Slug: <input type="text" name="slug" value="{{ active.page.slug }}"> <input type="submit"></p>
+</form>
+
 {% if version %}
 <table>
 <thead>

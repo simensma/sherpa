@@ -11,7 +11,7 @@
 <ul>
 {% for active in actives %}
   <li>{{ active.content.content }}
-      [ <a href="{% url admin.views.page_edit active.page.id active.id %}">Rediger</a> ]
+      [ <a href="{% url admin.views.page_version_edit active.page.id active.id %}">Rediger</a> ]
       [ <a href="{% url admin.views.page_delete active.page.id %}">Slett</a> ]</li>
 {% endfor %}
 </ul>

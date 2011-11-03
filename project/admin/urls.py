@@ -13,6 +13,7 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/versjon/(?P<page>\d*)/$', 'page_version'),
     url(r'^artikkel/versjon/ny/(?P<page>\d*)/$', 'page_version_new'),
     url(r'^artikkel/versjon/aktiver/(?P<page>\d*)/(?P<version>\d*)/$', 'page_version_activate'),
+    url(r'^artikkel/versjon/rediger/(?P<page>\d*)/(?P<version>\d*)/$', 'page_version_edit'),
 
     # Varianter
     url(r'^artikkel/variant/(?P<page>\d*)/(?P<version>\d*)/$', 'variant_list'),
