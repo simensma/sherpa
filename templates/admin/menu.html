@@ -53,7 +53,7 @@
   <form action="{% url admin.views.menu_add page.id %}" method="post">
   {% csrf_token %}
   <td>{{ page.active.content.content }}</td>
-  <td><input type="text" name="name" value={{ page.active.content.content }}></td>
+  <td><input type="text" name="name" value="{{ page.active.content.content }}"></td>
   <td><input type="submit" value="Legg til"></td>
   </form>
 </tr>
