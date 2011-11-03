@@ -144,7 +144,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
 
     # custom processors
-    "context_processors.main_menu"
+    "context_processors.main_menu",
+    "context_processors.sql_queries"
 )
 
 AUTH_PROFILE_MODULE='auth.Profile'

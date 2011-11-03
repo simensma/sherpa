@@ -120,6 +120,13 @@
         </div>
             <img src="{{ STATIC_URL }}img/dummy/samarbeid.png" />
     </div>
+    <hr>
+    <p>{{ sql_queries|length }} queries</p>
+    <ul>
+    {% for sql in sql_queries %}
+    <li><b>{{ sql.time }}s</b> {{ sql.sql }}</li>
+    {% endfor %}
+    </ul>
     </footer> 
     </body>
 </html>
