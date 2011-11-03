@@ -18,21 +18,12 @@
 {% endif %}
 
 <p><a href="#" id="new_page">Ny artikkel</a></p>
+<p>
 <form action="{% url admin.views.page_new %}" method="post" id="new_page_form">
 {% csrf_token %}
-<table>
-<tr>
-  <td>Innhold:</td>
-  <td><textarea name="content" rows="6" cols="80"></textarea></td>
-</tr>
-<tr>
-  <td>Slug:</td>
-  <td><input type="text" name="slug" value=""></td>
-</tr>
-<tr>
-  <td></td>
-  <td><input type="submit" value="Opprett"></td>
-</tr>
-</table>
+  Vennligst oppgi foreløpig slug (du kan endre denne senere):<br>
+  <input type="text" name="slug" value=""><br>
+  <input type="submit" value="Opprett ny artikkel">
 </form>
+</p>
 {% endblock %}
