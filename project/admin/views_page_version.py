@@ -25,6 +25,7 @@ def page_version_new(request, page):
     for variant in PageVariant.objects.filter(version=currentVersion):
         # Copy variant content
         newVariantContent = PageContent(content=variant.content.content)
+        newVariantContent.save()
 
         # Create the new variant
         newVariant = PageVariant(version=newVersion, content=newVariantContent, slug=variant.slug,
