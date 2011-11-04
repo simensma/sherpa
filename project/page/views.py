@@ -23,11 +23,9 @@ def page(request, slug):
     for variant in variants:
         if(variant.segment.match(request, visitor)):
             # Woop, the visitor matches this segment - show this variant
-            if(slug == ""):
-                # Special case for when the frontpage has variants
-                return HttpResponseRedirect(reverse('page.views.page') + "?" + variantParameter + "=" + variant.slug)
-            else:
-                return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
+            if(slug == ""): args = []
+            else:           args = [slug]
+            return HttpResponseRedirect(reverse('page.views.page', args=args) + "?" + variantParameter + "=" + variant.slug)
 
     # None of the defined segments (if any) matched this visitor, so show the default version
     context = {'version': version, 'content': version.content}
