@@ -25,7 +25,7 @@ def page(request, slug):
             # Woop, the visitor matches this segment - show this variant
             if(slug == ""):
                 # Special case for when the frontpage has variants
-                return HttpResponseRedirect(reverse('home.views.index') + "?" + variantParameter + "=" + variant.slug)
+                return HttpResponseRedirect(reverse('page.views.page') + "?" + variantParameter + "=" + variant.slug)
             else:
                 return HttpResponseRedirect(reverse('page.views.page', args=[slug]) + "?" + variantParameter + "=" + variant.slug)
 

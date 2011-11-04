@@ -11,7 +11,7 @@
 <body>
 <header id="mainHeader">
   <div id="ident">
-    <a class="logo" href="{% url home.views.index %}">Den Norske Turistforening</a>
+    <a class="logo" href="{% url page.views.page %}">Den Norske Turistforening</a>
     <nav class="mainMenu">
     <ul>
     {% for menu in main_menu %}
@@ -22,7 +22,7 @@
       <li>No menus defined!</li>
     {% endfor %}
     <!--
-    <li class=""><a href="{% url home.views.index %}" class="">Forsiden</a></li>
+    <li class=""><a href="{% url page.views.page %}" class="">Forsiden</a></li>
     <li class=""><a href="{% url training.views.index %}" class="">Kurs</a></li>
     <li class=""><a href="{% url member.views.index %}" class="">Medlemskap</a></li>
     <li class=""><a href="{% url about.views.index %}" class="">Om turistforeningen</a></li>

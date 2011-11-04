@@ -30,5 +30,5 @@ def login(request):
 
 def logout(request):
     log_user_out(request)
-    return HttpResponseRedirect(reverse('home.views.index'))
+    return HttpResponseRedirect(reverse('page.views.page'))
     # Redirect

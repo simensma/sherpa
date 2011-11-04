@@ -2,8 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
-from home.models import Menu
-from page.models import Page, PageVersion
+from page.models import Menu, Page, PageVersion
 
 def menu_list(request, error=None):
     menus = Menu.objects.all().order_by('position')

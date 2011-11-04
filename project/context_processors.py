@@ -1,5 +1,5 @@
 from django.db import connection
-from home.models import Menu
+from page.models import Menu
 
 def main_menu(request):
     return {'main_menu': Menu.objects.all().order_by('position')}
