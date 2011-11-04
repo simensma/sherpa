@@ -20,6 +20,17 @@ class Segment(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
 
+    def match(self, request, visitor):
+        if   self.name == 'opera': return self.matchOpera(request, visitor)
+        elif self.name == 'firefox': return self.matchFirefox(request, visitor)
+        else: return False # Log an error here, we're not supposed to receive an undefined segment
+
+    def matchOpera(self, request, visitor):
+        return (request.META['HTTP_USER_AGENT'].find("Opera") != -1)
+
+    def matchFirefox(self, request, visitor):
+        return (request.META['HTTP_USER_AGENT'].find("Firefox") != -1)
+
 class PageVariant(models.Model):
     version = models.ForeignKey('page.PageVersion')
     content = models.ForeignKey('page.PageContent')
