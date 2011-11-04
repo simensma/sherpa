@@ -2,16 +2,16 @@ from django.db import models
 
 class Visitor(models.Model):
     profile = models.ForeignKey('auth.Profile', null=True)
-    pageviews = models.ForeignKey('analytics.Pageview')
 
 class Pageview(models.Model):
+    visitor = models.ForeignKey('analytics.Visitor')
     url = models.CharField(max_length=2048)
     referrer = models.CharField(max_length=2048)
-    events = models.ForeignKey('analytics.Event')
     enter = models.DateField()
     exit = models.DateField(null=True)
 
 class Event(models.Model):
+    pageview = models.ForeignKey('analytics.PageView')
     action = models.CharField(max_length=4096) # ?
     params = models.CharField(max_length=4096) # ?
     time = models.DateField()
