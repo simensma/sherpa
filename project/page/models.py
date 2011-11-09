@@ -14,13 +14,17 @@ class Page(models.Model):
     # way to do this?
     active = None
 
-class PageVersion(models.Model):
+class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
-    content = models.ForeignKey('page.PageContent')
     version = models.IntegerField()
     active = models.BooleanField()
-    #publisher = models.ForeignKey('auth.Profile')
-    #change_comment = models.TextField()
+    slug = models.CharField(max_length=50)
+    segment = models.ForeignKey('analytics.Segment', unique=True)
+    # priority
+    # probability
+    # publisher = models.ForeignKey('auth.Profile')
+    # change_comment = models.TextField()
+    content = models.ForeignKey('page.PageContent', unique=True)
 
 class PageContent(models.Model):
     content = models.TextField()

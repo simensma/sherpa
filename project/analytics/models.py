@@ -30,10 +30,3 @@ class Segment(models.Model):
 
     def matchFirefox(self, request, visitor):
         return (request.META['HTTP_USER_AGENT'].find("Firefox") != -1)
-
-class PageVariant(models.Model):
-    version = models.ForeignKey('page.PageVersion')
-    content = models.ForeignKey('page.PageContent')
-    slug = models.CharField(max_length=50)
-    segment = models.ForeignKey('analytics.Segment')
-    priority = models.IntegerField()
