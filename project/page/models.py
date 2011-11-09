@@ -18,8 +18,8 @@ class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
     version = models.IntegerField()
     active = models.BooleanField()
-    slug = models.CharField(max_length=50)
-    segment = models.ForeignKey('analytics.Segment', unique=True)
+    slug = models.CharField(max_length=50, null=True)
+    segment = models.ForeignKey('analytics.Segment', unique=True, null=True)
     # priority
     # probability
     # publisher = models.ForeignKey('auth.Profile')
