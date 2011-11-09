@@ -101,9 +101,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'training',
-    'member',
-    'about',
     'page',
     'admin',
     'analytics', # ? tenkte bare ha modeller i denne
