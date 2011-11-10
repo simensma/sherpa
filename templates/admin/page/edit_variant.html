@@ -1,20 +1,44 @@
-{% extends "admin/page/edit_content.html" %}
-{% block form %}
+{% extends "admin/page/edit.html" %}
+{% block edit %}
 
-<h2>Ny variant:</h2>
-
-{% if error %}<p><em>{{ error }}</em></p>{% endif %}
-
-<form action="{% url admin.views.page_variant_new version.id %}" method="post">
-{% csrf_token %}
-<p>
-Slug: <input type="text" name="slug" value=""><br>
-Segment: <select name="segment">
-{% for segment in segments %}
-<option value="{{ segment.id }}">{{ segment.description }}</option>
+<table id="version">
+<thead>
+<tr>
+  <th>Versjon</th>
+  <th>Aktiv versjon</th>
+  <th>Endringer</th>
+  <th>Skribent</th>
+  <th>Forhåndsvisning</th>
+  <th>Rediger</th>
+</tr>
+</thead>
+<tbody>
+{% for version in versions %}
+<tr>
+  <td>{{ version.version }}</td>
+  <td>
+    {% if version.active %}
+      Aktiv!
+    {% else %}
+      <a href="{% url admin.views.page_version_activate version.id %}">Aktivér</a>
+    {% endif %}</td>
+  <td>todo</td>
+  <td>todo</td>
+  <td>todo</td>
+  <td><a href="{% url admin.views.page_version_edit version.id %}">Rediger</a></td>
+</tr>
 {% endfor %}
-</select><br>
-<p>Om du ønsker å bruke et segment som ikke er definert her, snakk med Ali eller Hans.</p>
-<input type="hidden" name="page" value="{{ page.id }}">
+</tbody>
+<tfoot>
+</tfoot>
+</table>
+<br>
+<p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
+
+<form action="{% url admin.views.page_version_edit version.id %}" method="post">
+{% csrf_token %}
+<textarea name="content" rows="6" cols="80">{{ version.content.content }}</textarea><br>
+<input type="submit">
+</form>
 
 {% endblock %}

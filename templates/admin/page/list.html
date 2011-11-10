@@ -5,14 +5,14 @@
 {% if error %}<p><em>{{ error }}</em></p>{% endif %}
 
 <h1>Artikler</h1>
-{% if not actives %}
+{% if not versions %}
 <p>Tomt!</p>
 {% else %}
 <ul>
-{% for active in actives %}
-  <li>{{ active.content.content }}
-      [ <a href="{% url admin.views.page_edit active.page.id %}">Rediger</a> ]
-      [ <a href="{% url admin.views.page_delete active.page.id %}">Slett</a> ]</li>
+{% for version in versions %}
+  <li>{{ version.content.content }}
+      [ <a href="{% url admin.views.page_edit version.variant.page.id %}">Rediger</a> ]
+      [ <a href="{% url admin.views.page_delete version.variant.page.id %}">Slett</a> ]</li>
 {% endfor %}
 </ul>
 {% endif %}

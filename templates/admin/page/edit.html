@@ -2,82 +2,32 @@
 {% block title %}Admin: Page{% endblock %}
 {% block body %}
 
-{% if error %}<p><em>{{ error }}</em></p>{% endif %}
-
-<h1>Redigerer artikkel '{% firstof version.content.content active.content.content %}'
-({% if active.page.published %}Publisert{% else %}Ikke publisert{% endif %})</h1>
-
-<form action="{% url admin.views.page_edit active.page.id %}" method="post">
+<form action="{% url admin.views.page_edit page.id %}" method="post">
 {% csrf_token %}
-<p>Slug: <input type="text" name="slug" value="{{ active.page.slug }}"> <input type="submit"></p>
+<p>Slug: <input type="text" name="slug" value="{{ page.slug }}"> <input type="submit"></p>
 </form>
+<h1><a href="{% url admin.views.page_edit page.id %}">Side</a>
+  {% for active in activeVersions %},
+  {% if active.id == version.id %}[ {% endif %}
+  <a href="{% url admin.views.page_version_edit active.id %}">{{ active.content.content }}</a>
+  {% if active.id == version.id %} ]{% endif %}
+  {% endfor %}
+  <a href="#" id="new_variant">+</a>
+</h1>
 
-<table id="version">
-<thead>
-<tr>
-  <th>Versjon</th>
-  <th>Aktiv versjon</th>
-  <th>Endringer</th>
-  <th>Skribent</th>
-  <th>Forhåndsvisning</th>
-</tr>
-</thead>
-<tbody>
-{% for version in versions %}
-<tr>
-  <td>{{ version.version }}</td>
-  <td>
-    {% if version.active %}
-      Aktiv!
-    {% else %}
-      <a href="{% url admin.views.page_version_activate version.id %}">Aktivér</a>
-    {% endif %}</td>
-  <td>todo</td>
-  <td>todo</td>
-  <td>Todo: Vis (<a href="{% url admin.views.page_version_edit version.id %}">Rediger</a>)</td>
-</tr>
+<form id="new_variant_form" action="{% url admin.views.page_variant_new page.id %}" method="post">
+{% csrf_token %}
+<p>
+Slug: <input type="text" name="slug" value=""><br>
+Segment: <select name="segment">
+{% for segment in segments %}
+<option value="{{ segment.id }}">{{ segment.description }}</option>
 {% endfor %}
-</tbody>
-<tfoot>
-</tfoot>
-</table>
-<br>
-<p><a href="{% url admin.views.page_version_new active.page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
-
-{% if version %}
-{% if not variants %}
-<p>Det er ikke laget noen varianter for denne versjonen. <a href="{% url admin.views.page_variant_new version.id %}">Opprett variant</a>. Varianter brukes til segmentering, les mer <a href="">her</a>.</p>
-{% else %}
-<h2>Varianter:</h2>
-<table id="variant">
-<tr>
-  <th>Prioritet</th>
-  <th>Slug</th>
-  <th>Segment</th>
-  <th>Rediger</th>
-  <th>Flytt opp</th>
-  <th>Flytt ned</th>
-  <th>Slett</th>
-</tr>
-{% for variant in variants %}
-<tr>
-  <td>{{ variant.priority }}</td>
-  <td>{{ variant.slug }}</td>
-  <td>{{ variant.segment.description }}</td>
-  <td>todo</td>
-  <td>{% if variant.priority != 1 %}
-    <a href="{% url admin.views.page_variant_swap version.id variant.priority variant.priority|add:-1 %}">Opp</a>
-  {% endif %}</td>
-  <td>{% if variant.priority != variants|length %}
-    <a href="{% url admin.views.page_variant_swap version.id variant.priority variant.priority|add:1 %}">Ned</a>
-  {% endif %}</td>
-  <td><a href="{% url admin.views.page_variant_delete variant.id %}">Slett</a></td>
-</tr>
-{% endfor %}
-</table>
-<p><a href="{% url admin.views.page_variant_new version.id %}">Opprett variant</a>.</p>
-{% endif %}
-{% endif %}
+</select><br>
+<p>Om du ønsker å bruke et segment som ikke er definert her, snakk med Ali eller Hans.</p>
+<input type="hidden" name="page" value="{{ page.id }}">
+<input type="submit">
+</form>
 
 {% block edit %}{% endblock %}
 {% endblock %}

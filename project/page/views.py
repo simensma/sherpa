@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from page.models import Page, PageVersion
-from analytics.models import PageVariant, Visitor
+from page.models import Page, PageVariant
+from analytics.models import Visitor
 
 def page(request, slug):
     variantParameter = "variant"
@@ -15,8 +15,8 @@ def page(request, slug):
 
     # If not, check if the page has variants (for segmentation)
     page = Page.objects.get(slug=slug)
-    version = PageVersion.objects.filter(page=page).get(active=True)
-    variants = PageVariant.objects.filter(version=version).order_by('priority')
+    activeVariants = PageVariant.objects.filter(page=page).filter(active=True)
+    variants = activeVariants.filter(segment__isnull=False)#.order_by('priority')
     visitor = Visitor.objects.get(pk=request.session['visitor'])
 
     # Iterate all variants, ordered by priority, and check if their segment matches this visitor
@@ -28,5 +28,6 @@ def page(request, slug):
             return HttpResponseRedirect(reverse('page.views.page', args=args) + "?" + variantParameter + "=" + variant.slug)
 
     # None of the defined segments (if any) matched this visitor, so show the default version
-    context = {'version': version, 'content': version.content}
+    defaultVariant = activeVariants.get(segmint__isnull=True)
+    context = {'variant': defaultVariant}
     return render(request, 'page/page.html', context)

@@ -2,16 +2,16 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
-from page.models import Menu, Page, PageVersion
+from page.models import Menu, Page, PageVariant
 
-def menu_list(request, error=None):
+def menu_list(request):
     menus = Menu.objects.all().order_by('position')
     for menu in menus:
-        menu.page.active = PageVersion.objects.filter(page=menu.page).get(active=True)
+        menu.page.active = PageVariant.objects.filter(page=menu.page).get(active=True)
     pages = Page.objects.filter(menu__isnull=True)
     for page in pages:
-        page.active = PageVersion.objects.filter(page=page).get(active=True)
-    context = {'menus': menus, 'pages': pages, 'error': error}
+        page.active = PageVariant.objects.filter(page=page).get(active=True)
+    context = {'menus': menus, 'pages': pages}
     return render(request, 'admin/menu.html', context)
 
 def menu_add(request, page):

@@ -34,16 +34,6 @@ def page_version_new(request, page):
 
     return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[newVersion.id]))
 
-def page_version_activate(request, version):
-    # Todo: Handle errors, + fails if activating the _same version_ 2 times in a row
-    newActive = PageVersion.objects.get(pk=version)
-    oldActive = PageVersion.objects.filter(page=newActive.page).get(active=True)
-    newActive.active = True
-    oldActive.active = False
-    newActive.save()
-    oldActive.save()
-    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[newActive.page.id]))
-
 def page_version_edit(request, version):
     if(request.method == 'GET'):
         try:

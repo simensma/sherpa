@@ -9,16 +9,16 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/rediger/(?P<page>\d*)/$', 'page_edit'),
     url(r'^artikkel/slett/(?P<page>\d*)/$', 'page_delete'),
 
-    # Versjoner
-    url(r'^artikkel/versjon/ny/(?P<page>\d*)/$', 'page_version_new'),
-    url(r'^artikkel/versjon/aktiver/(?P<version>\d*)/$', 'page_version_activate'),
-    url(r'^artikkel/versjon/rediger/(?P<version>\d*)/$', 'page_version_edit'),
-
     # Varianter
-    url(r'^artikkel/variant/ny/(?P<version>\d*)/$', 'page_variant_new'),
-    url(r'^side/variant/bytt/(?P<version>\d*)/(?P<pri1>\d*)/(?P<pri2>\d*)/$', 'page_variant_swap'),
-    url(r'^artikkel/variant/slett/(?P<variant>\d*)/$', 'page_variant_delete'),
+    url(r'^artikkel/variant/ny/(?P<page>\d*)/$', 'page_variant_new'),
+    url(r'^artikkel/variant/rediger/(?P<version>\d*)/$', 'page_variant_edit'),
+    #url(r'^side/variant/bytt/(?P<version>\d*)/(?P<pri1>\d*)/(?P<pri2>\d*)/$', 'page_variant_swap'),
+    #url(r'^artikkel/variant/slett/(?P<variant>\d*)/$', 'page_variant_delete'),
 
+    # Versjoner
+    url(r'^artikkel/versjon/ny/(?P<variant>\d*)/$', 'page_version_new'),
+    url(r'^artikkel/versjon/rediger/(?P<version>\d*)/$', 'page_version_edit'),
+    url(r'^artikkel/version/aktiver/(?P<version>\d*)/$', 'page_version_activate'),
 
     # Menyer
     url(r'^meny/$', 'menu_list'),
