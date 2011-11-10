@@ -14,7 +14,7 @@ class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
     slug = models.CharField(max_length=50, unique=True, null=True)
     segment = models.ForeignKey('analytics.Segment', null=True)
-    # priority
+    priority = models.IntegerField()
     # probability
     # publisher = models.ForeignKey('auth.Profile')
     # change_comment = models.TextField()

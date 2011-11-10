@@ -12,7 +12,7 @@ urlpatterns = patterns('admin.views',
     # Varianter
     url(r'^artikkel/variant/ny/(?P<page>\d*)/$', 'page_variant_new'),
     url(r'^artikkel/variant/rediger/(?P<version>\d*)/$', 'page_variant_edit'),
-    #url(r'^side/variant/bytt/(?P<version>\d*)/(?P<pri1>\d*)/(?P<pri2>\d*)/$', 'page_variant_swap'),
+    url(r'^artikkel/variant/bytt/(?P<page>\d*)/(?P<pri1>\d*)/(?P<pri2>\d*)/$', 'page_variant_swap'),
     #url(r'^artikkel/variant/slett/(?P<variant>\d*)/$', 'page_variant_delete'),
 
     # Versjoner

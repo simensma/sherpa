@@ -12,7 +12,7 @@ def page_list(request):
 def page_new(request):
     page = Page(slug=request.POST['slug'], published=False)
     page.save()
-    variant = PageVariant(page=page, slug=None, segment=None)
+    variant = PageVariant(page=page, slug=None, segment=None, priority=1)
     variant.save()
     content = PageContent(content="Ny artikkel")
     content.save()
@@ -23,12 +23,11 @@ def page_new(request):
 def page_edit(request, page):
     if(request.method == 'GET'):
         page = Page.objects.get(pk=page)
-        activeVersions = PageVersion.objects.filter(variant__page=page, active=True)
-        variants = PageVariant.objects.filter(page=page)
+        variants = PageVariant.objects.filter(page=page).order_by('priority')
         for variant in variants:
             variant.active = PageVersion.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')
-        context = {'page': page, 'variants': variants, 'activeVersions': activeVersions, 'segments': segments}
+        context = {'page': page, 'variants': variants, 'segments': segments}
         return render(request, 'admin/page/edit_page.html', context)
     elif(request.method == 'POST'):
         page = Page.objects.get(pk=page)
