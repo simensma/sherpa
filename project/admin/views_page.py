@@ -24,8 +24,11 @@ def page_edit(request, page):
     if(request.method == 'GET'):
         page = Page.objects.get(pk=page)
         activeVersions = PageVersion.objects.filter(variant__page=page, active=True)
+        variants = PageVariant.objects.filter(page=page)
+        for variant in variants:
+            variant.active = PageVersion.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')
-        context = {'page': page, 'activeVersions': activeVersions, 'segments': segments}
+        context = {'page': page, 'variants': variants, 'activeVersions': activeVersions, 'segments': segments}
         return render(request, 'admin/page/edit_page.html', context)
     elif(request.method == 'POST'):
         page = Page.objects.get(pk=page)

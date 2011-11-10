@@ -14,13 +14,11 @@ def page_variant_new(request, page):
     variant.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[variant.id]))
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
 
 def page_variant_edit(request, version):
-    if(request.method == 'GET'):
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
-    elif(request.method == 'POST'):
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
+    # Not used yet, should be called from page_edit
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
 
 def page_version_new(request, variant):
     variant = PageVariant.objects.get(pk=variant)

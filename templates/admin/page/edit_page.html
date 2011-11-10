@@ -1,13 +1,14 @@
 {% extends "admin/page/edit.html" %}
-{% block form %}
+{% block edit %}
 
 {% if not variants %}
-<p>Det er ikke laget noen varianter for denne versjonen. <a href="{% url admin.views.page_variant_new version.id %}">Opprett variant</a>. Varianter brukes til segmentering, les mer <a href="">her</a>.</p>
+<p>Det er ikke laget noen varianter for denne versjonen. Her skulle det vært en form elns for å lage en.</p>
 {% else %}
 <h2>Varianter:</h2>
 <table id="variant">
 <tr>
   <th>Prioritet</th>
+  <th>Aktiv tittel</th>
   <th>Slug</th>
   <th>Segment</th>
   <th>Rediger</th>
@@ -18,20 +19,21 @@
 {% for variant in variants %}
 <tr>
   <td>{{ variant.priority }}</td>
-  <td>{{ variant.slug }}</td>
-  <td>{{ variant.segment.description }}</td>
+  <td>{{ variant.active.content.content }}</td>
+  <td>{{ variant.slug|default:"" }}</td>
+  <td>{{ variant.segment.description|default:"(Default)" }}</td>
   <td>todo</td>
   <td>{% if variant.priority != 1 %}
-    <a href="{% url admin.views.page_variant_swap version.id variant.priority variant.priority|add:-1 %}">Opp</a>
+    <a href="{# url admin.views.page_variant_swap version.id variant.priority variant.priority|add:-1 #}">Opp</a>
   {% endif %}</td>
   <td>{% if variant.priority != variants|length %}
-    <a href="{% url admin.views.page_variant_swap version.id variant.priority variant.priority|add:1 %}">Ned</a>
+    <a href="{# url admin.views.page_variant_swap version.id variant.priority variant.priority|add:1 #}">Ned</a>
   {% endif %}</td>
-  <td><a href="{% url admin.views.page_variant_delete variant.id %}">Slett</a></td>
+  <td><a href="{# url admin.views.page_variant_delete variant.id #}">Slett</a></td>
 </tr>
 {% endfor %}
 </table>
-<p><a href="{% url admin.views.page_variant_new version.id %}">Opprett variant</a>.</p>
+<p><a href="{# url admin.views.page_variant_new version.id #}">Opprett variant</a>.</p>
 {% endif %}
 
 {% endblock %}
