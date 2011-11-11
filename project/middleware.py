@@ -1,4 +1,5 @@
-from analytics.models import Visitor
+from analytics.models import Visitor, Request, Pageview
+from datetime import datetime
 
 class Analytics():
     def process_request(self, request):
@@ -10,9 +11,26 @@ class Analytics():
         # If this is a new user, create a new Visitor
         # Todo: Logic around auth
         if not 'visitor' in request.session:
-            v = Visitor()
-            v.save()
-            request.session['visitor'] = v.id
+            visitor = Visitor()
+            visitor.save()
+            request.session['visitor'] = visitor.id
+        else:
+            visitor = Visitor.objects.get(pk=request.session['visitor'])
 
-        # Save pageview, events etc
+        requestObject = Request(
+          visitor=visitor,
+          url=request.path,
+          server_host=request.get_host(),
+          client_ip=request.META['REMOTE_ADDR'],
+          client_host=request.META['REMOTE_HOST'],
+          referrer=request.META.get('REMOTE_HOST'),
+          enter=datetime.now())
+        requestObject.save()
+
+        request.session['request'] = requestObject
         return None
+
+    def process_response(self, request, response):
+        if 'request' in request.session:
+            del request.session['request']
+        return response

@@ -3,18 +3,22 @@ from django.db import models
 class Visitor(models.Model):
     profile = models.ForeignKey('auth.Profile', unique=True, null=True)
 
-class Pageview(models.Model):
+class Request(models.Model):
     visitor = models.ForeignKey('analytics.Visitor')
     url = models.CharField(max_length=2048)
+    server_host = models.CharField(max_length=2048)
+    client_ip = models.CharField(max_length=39) # Max char-length of ipv6
+    client_host = models.CharField(max_length=2048)
     referrer = models.CharField(max_length=2048)
     enter = models.DateField()
-    exit = models.DateField(null=True)
+    exit = models.DateField(default=None, null=True)
 
-class Event(models.Model):
-    pageview = models.ForeignKey('analytics.PageView')
-    action = models.CharField(max_length=4096) # ?
-    params = models.CharField(max_length=4096) # ?
-    time = models.DateField()
+class Pageview(models.Model):
+    request = models.ForeignKey('analytics.Request')
+    variant = models.ForeignKey('page.PageVariant')
+    activeVersion = models.ForeignKey('page.PageVersion')
+    requestedSegment = models.ForeignKey('analytics.Segment', related_name='requested', null=True)
+    matchedSegment = models.ForeignKey('analytics.Segment', related_name='matched', null=True)
 
 class Segment(models.Model):
     name = models.CharField(max_length=200)
