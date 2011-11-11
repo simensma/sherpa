@@ -1,0 +1,42 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Analytics{% endblock %}
+{% block body %}
+
+<h1>Sidevisninger</h1>
+{% if not requests %}
+<p>Ingen sidevisninger!</p>
+{% else %}
+<table>
+<tr>
+  <th>URL</th>
+  <th>Server host</th>
+  <th>Klient IP</th>
+  <th>Klient Host</th>
+  <th>Referrer</th>
+  <th>Enter</th>
+  <th>Exit</th>
+  <th>Side-slug</th>
+  <th>Variant-slug</th>
+  <th>Aktiv versjon</th>
+  <th>Forespurt segment</th>
+  <th>Faktisk segment</th>
+</tr>
+{% for request in requests %}
+<tr>
+  <td>{{ request.url }}</td>
+  <td>{{ request.server_host }}</td>
+  <td>{{ request.client_ip }}</td>
+  <td>{{ request.client_host }}</td>
+  <td>{{ request.referrer }}</td>
+  <td>{{ request.enter }}</td>
+  <td>{{ request.exit }}</td>
+  <td>{{ request.pageview.variant.page.slug }}</td>
+  <td>{{ request.pageview.variant.slug }}</td>
+  <td>{{ request.pageview.variant.active.version }}</td>
+  <td>{{ request.pageview.requestedSegment.description }}</td>
+  <td>{{ request.pageview.matchedSegment.description }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

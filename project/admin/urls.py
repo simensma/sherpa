@@ -25,4 +25,8 @@ urlpatterns = patterns('admin.views',
     url(r'^meny/ny/(?P<page>\d*)/$', 'menu_add'),
     url(r'^meny/bytt/(?P<pos1>\d*)/(?P<pos2>\d*)/$', 'menu_swap'),
     url(r'^meny/slett/(?P<page>\d*)/$', 'menu_remove'),
+
+    # Analytics
+    url(r'^analyse/$', 'analytics_visitors_list'),
+    url(r'^analyse/sidevisninger/(?P<visitor>\d*)/$', 'analytics_requests_list'),
 )

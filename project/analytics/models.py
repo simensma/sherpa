@@ -12,6 +12,8 @@ class Request(models.Model):
     referrer = models.CharField(max_length=2048)
     enter = models.DateField()
     exit = models.DateField(default=None, null=True)
+    # Hack?
+    pageview = None
 
 class Pageview(models.Model):
     request = models.ForeignKey('analytics.Request')

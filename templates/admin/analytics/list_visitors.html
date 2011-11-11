@@ -1,0 +1,16 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Analytics{% endblock %}
+{% block body %}
+
+<h1>Besøkende</h1>
+{% if not visitors %}
+<p>Ingen besøkende!</p>
+{% else %}
+<ul>
+{% for visitor in visitors %}
+  <li>(Anonym)
+      [ <a href="{% url admin.views.analytics_requests_list visitor.id %}">Se sidevisninger</a> ]</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
