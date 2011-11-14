@@ -25,7 +25,7 @@ def page(request, slug):
         version = PageVersion.objects.get(variant=variant, active=True)
         content = PageContent.objects.get(pk=version.content.id)
         pageview = Pageview(request=request.session['request'],
-          variant=variant, activeVersion=version,
+          variant=variant, active_version=version,
           requestedSegment=variant.segment,
           matchedSegment=matchedVariant.segment)
         pageview.save()
@@ -37,7 +37,7 @@ def page(request, slug):
         version = PageVersion.objects.get(variant=defaultVariant, active=True)
         content = PageContent.objects.get(pk=version.content.id)
         pageview = Pageview(request=request.session['request'],
-          variant=defaultVariant, activeVersion=version,
+          variant=defaultVariant, active_version=version,
           requestedSegment=None, matchedSegment=None)
         pageview.save()
         context = {'content': content}
