@@ -15,6 +15,12 @@ class Request(models.Model):
     exit = models.DateField(default=None, null=True)
     # Hack?
     pageview = None
+    parameter_count = None
+
+class Parameter(models.Model):
+    request = models.ForeignKey('analytics.Request')
+    key = models.TextField()
+    value = models.TextField()
 
 class Pageview(models.Model):
     request = models.ForeignKey('analytics.Request')

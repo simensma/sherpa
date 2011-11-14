@@ -1,4 +1,4 @@
-from analytics.models import Visitor, Request, Pageview
+from analytics.models import Visitor, Request, Parameter, Pageview
 from datetime import datetime
 
 class Analytics():
@@ -27,6 +27,10 @@ class Analytics():
           referrer=request.META.get('HTTP_REFERER'),
           enter=datetime.now())
         requestObject.save()
+
+        for key, value in request.GET.items():
+            p = Parameter(request=requestObject, key=key, value=value)
+            p.save()
 
         request.session['request'] = requestObject
         return None
