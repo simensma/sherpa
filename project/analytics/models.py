@@ -8,8 +8,8 @@ class Request(models.Model):
     url = models.CharField(max_length=2048)
     server_host = models.CharField(max_length=2048)
     client_ip = models.CharField(max_length=39) # Max char-length of ipv6
-    client_host = models.CharField(max_length=2048)
-    referrer = models.CharField(max_length=2048)
+    client_host = models.CharField(max_length=2048, null=True)
+    referrer = models.CharField(max_length=2048, null=True)
     enter = models.DateField()
     exit = models.DateField(default=None, null=True)
     # Hack?
