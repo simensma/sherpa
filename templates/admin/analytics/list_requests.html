@@ -8,6 +8,7 @@
 {% else %}
 <table>
 <tr>
+  <th>Metode</th>
   <th>URL</th>
   <th>Server host</th>
   <th>Klient IP</th>
@@ -23,6 +24,7 @@
 </tr>
 {% for request in requests %}
 <tr>
+  <td>{{ request.http_method }}</td>
   <td>{{ request.url }}</td>
   <td>{{ request.server_host }}</td>
   <td>{{ request.client_ip }}</td>

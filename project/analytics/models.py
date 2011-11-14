@@ -5,6 +5,7 @@ class Visitor(models.Model):
 
 class Request(models.Model):
     visitor = models.ForeignKey('analytics.Visitor')
+    http_method = models.CharField(max_length=10)
     url = models.CharField(max_length=2048)
     server_host = models.CharField(max_length=2048)
     client_ip = models.CharField(max_length=39) # Max char-length of ipv6

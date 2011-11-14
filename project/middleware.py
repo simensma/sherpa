@@ -19,6 +19,7 @@ class Analytics():
 
         requestObject = Request(
           visitor=visitor,
+          http_method=request.method,
           url=request.path,
           server_host=request.get_host(),
           client_ip=request.META['REMOTE_ADDR'],
