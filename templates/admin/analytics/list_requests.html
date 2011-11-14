@@ -9,7 +9,7 @@
 <table>
 <tr>
   <th>Metode</th>
-  <th>URL</th>
+  <th>Path</th>
   <th>Server host</th>
   <th>Klient IP</th>
   <th>Klient Host</th>
@@ -25,7 +25,7 @@
 {% for request in requests %}
 <tr>
   <td>{{ request.http_method }}</td>
-  <td>{{ request.url }}</td>
+  <td>{{ request.path }}</td>
   <td>{{ request.server_host }}</td>
   <td>{{ request.client_ip }}</td>
   <td>{{ request.client_host }}</td>
