@@ -8,6 +8,10 @@ class Analytics():
         if request.path[1:] in statics:
             return None
 
+        # Don't process AJAX requests
+        if request.is_ajax():
+            return None
+
         # If this is a new user, create a new Visitor
         # Todo: Logic around auth
         if not 'visitor' in request.session:
