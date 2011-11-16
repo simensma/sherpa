@@ -13,8 +13,6 @@ class Request(models.Model):
     referrer = models.CharField(max_length=2048, null=True)
     enter = models.DateField()
     exit = models.DateField(default=None, null=True)
-    # Hack?
-    pageview = None
     parameter_count = None
 
 class Parameter(models.Model):
@@ -23,7 +21,7 @@ class Parameter(models.Model):
     value = models.TextField()
 
 class Pageview(models.Model):
-    request = models.ForeignKey('analytics.Request')
+    request = models.OneToOneField('analytics.Request')
     variant = models.ForeignKey('page.PageVariant')
     active_version = models.ForeignKey('page.PageVersion')
     requested_segment = models.ForeignKey('analytics.Segment', related_name='requested', null=True)

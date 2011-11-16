@@ -10,13 +10,6 @@ def analytics_visitors_list(request):
 
 def analytics_requests_list(request, visitor):
     requests = Request.objects.filter(visitor=visitor)
-    for requestObject in requests:
-        requestObject.parameter_count = len(Parameter.objects.filter(request=requestObject))
-        try:
-            pageview = Pageview.objects.get(request=requestObject)
-            requestObject.pageview = pageview
-        except (KeyError, Pageview.DoesNotExist):
-            requestObject.pageview = None
     context = {'requests': requests}
     return render(request, 'admin/analytics/list_requests.html', context)
 
