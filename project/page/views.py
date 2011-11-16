@@ -3,47 +3,57 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from page.models import Page, PageVariant, PageVersion, PageContent
 from analytics.models import Visitor, Pageview
+from string import split
 
-def page(request, slug):
-    variantParameter = "variant"
+def page(request, slugs):
+    for pair in slug_combinations(slugs):
+        page = Page.objects.filter(slug=pair['pageslug'])
+        if len(page) != 0:
+            page = page[0]
+            matched_variant = match_user(request, page)
+            if(pair['variantslug'] == ''):
+                if matched_variant is not None:
+                    # Render the matched variant
+                    if(pair['pageslug'] == ""): args = []
+                    else:               args = [pair['pageslug']]
+                    return HttpResponseRedirect("%s%s/" % (reverse('page.views.page', args=args), matched_variant.slug))
+                else:
+                    default = PageVariant.objects.get(page=page, segment__isnull=True)
+                    version = PageVersion.objects.get(variant=default)
+                    content = PageContent.objects.get(pageversion=version)
+                    pageview = Pageview(request=request.session['request'],
+                      variant=default, active_version=version,
+                      requested_segment=None, matched_segment=matched_variant.segment)
+                    pageview.save()
+            else:
+                variant = PageVariant.objects.get(page=page, slug=pair['variantslug'])
+                version = PageVersion.objects.get(variant=variant)
+                content = PageContent.objects.get(pageversion=version)
+                pageview = Pageview(request=request.session['request'],
+                  variant=variant, active_version=version,
+                  requested_segment=variant.segment, matched_segment=matched_variant.segment)
+                pageview.save()
+            context = {'content': content}
+            return render(request, 'page/page.html', context)
 
-    # Check which segment this visitor matches (if any)
-    page = Page.objects.get(slug=slug)
-    variants = PageVariant.objects.filter(page=page)
-    defaultVariant = variants.get(segment__isnull=True)
-    segmentedVariants = variants.filter(segment__isnull=False).order_by('priority')
+def match_user(request, page):
+    variants = PageVariant.objects.filter(page=page, segment__isnull=False).order_by('priority')
     visitor = Visitor.objects.get(pk=request.session['visitor'])
-    matchedVariant = None
-    for variant in segmentedVariants:
+    for variant in variants:
         if(variant.segment.match(request, visitor)):
-            matchedVariant = variant
-            break
+            return variant
+    return None
 
-    # Requested variant?
-    if(variantParameter in request.GET):
-        variant = PageVariant.objects.filter(version__page__slug=slug).get(slug=request.GET[variantParameter])
-        version = PageVersion.objects.get(variant=variant, active=True)
-        content = PageContent.objects.get(pk=version.content.id)
-        pageview = Pageview(request=request.session['request'],
-          variant=variant, activeVersion=version,
-          requestedSegment=variant.segment,
-          matchedSegment=matchedVariant.segment)
-        pageview.save()
-        context = {'content': variant.content}
-        return render(request, 'page/page.html', context)
-
-    if not matchedVariant:
-        # Render the default variant
-        version = PageVersion.objects.get(variant=defaultVariant, active=True)
-        content = PageContent.objects.get(pk=version.content.id)
-        pageview = Pageview(request=request.session['request'],
-          variant=defaultVariant, activeVersion=version,
-          requestedSegment=None, matchedSegment=None)
-        pageview.save()
-        context = {'content': content}
-        return render(request, 'page/page.html', context)
-    else:
-        # Render the matched variant
-        if(slug == ""): args = []
-        else:           args = [slug]
-        return HttpResponseRedirect("%s?%s=%s" % (reverse('page.views.page', args=args), variantParameter, variant.slug))
+def slug_combinations(slugs):
+    combinations = []
+    slugs = split(slugs, '/')
+    for i in range(len(slugs), -1, -1):
+        pageslug = ""
+        variantslug = ""
+        for j in range(i):
+            pageslug += '/' + slugs[j]
+        for j in range(i, len(slugs)):
+            variantslug += '/' + slugs[j]
+        pair = {'pageslug': pageslug[1:], 'variantslug': variantslug[1:]}
+        combinations.append(pair)
+    return combinations
