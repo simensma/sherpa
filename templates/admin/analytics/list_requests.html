@@ -16,7 +16,6 @@
   <th>Klient Host</th>
   <th>Referrer</th>
   <th>Enter</th>
-  <th>Exit</th>
   <th>Side-slug</th>
   <th>Variant-slug</th>
   <th>Aktiv versjon</th>
@@ -33,7 +32,6 @@
   <td>{{ request.client_host }}</td>
   <td>{{ request.referrer }}</td>
   <td>{{ request.enter }}</td>
-  <td>{{ request.exit }}</td>
   {% with pageview=request.pageview %}
   <td>{{ pageview.variant.page.slug }}</td>
   <td>{{ pageview.variant.slug }}</td>
