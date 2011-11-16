@@ -22,9 +22,9 @@ class Analytics():
           http_method=request.method,
           path=request.path,
           server_host=request.get_host(),
-          client_ip=request.META['REMOTE_ADDR'],
-          client_host=request.META.get('REMOTE_HOST'),
-          referrer=request.META.get('HTTP_REFERER'),
+          client_ip=request.META.get('REMOTE_ADDR', ''),
+          client_host=request.META.get('REMOTE_HOST', ''),
+          referrer=request.META.get('HTTP_REFERER', ''),
           enter=datetime.now())
         requestObject.save()
 

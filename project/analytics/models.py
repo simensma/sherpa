@@ -9,8 +9,8 @@ class Request(models.Model):
     path = models.CharField(max_length=2048)
     server_host = models.CharField(max_length=2048)
     client_ip = models.CharField(max_length=39) # Max char-length of ipv6
-    client_host = models.CharField(max_length=2048, null=True)
-    referrer = models.CharField(max_length=2048, null=True)
+    client_host = models.CharField(max_length=2048)
+    referrer = models.CharField(max_length=2048)
     enter = models.DateField()
     exit = models.DateField(default=None, null=True)
     parameter_count = None

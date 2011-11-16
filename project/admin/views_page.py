@@ -12,7 +12,7 @@ def page_list(request):
 def page_new(request):
     page = Page(slug=request.POST['slug'], published=False)
     page.save()
-    variant = PageVariant(page=page, slug=None, segment=None, priority=1)
+    variant = PageVariant(page=page, slug='', segment=None, priority=1)
     variant.save()
     content = PageContent(content="Ny artikkel")
     content.save()
