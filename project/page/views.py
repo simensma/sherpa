@@ -23,7 +23,7 @@ def page(request, slugs):
                     content = PageContent.objects.get(pageversion=version)
                     pageview = Pageview(request=request.session['request'],
                       variant=default, active_version=version,
-                      requested_segment=None, matched_segment=matched_variant.segment)
+                      requested_segment=None, matched_segment=None)
                     pageview.save()
             else:
                 variant = PageVariant.objects.get(page=page, slug=pair['variantslug'])
