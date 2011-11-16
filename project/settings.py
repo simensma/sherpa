@@ -2,8 +2,6 @@
 
 from local_settings import *
 
-TEMPLATE_DEBUG = DEBUG = True
-
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'aka@turistforeningen.no'),
     ('Hans Skjerpen', 'hsk@turistforeningen.no'),
