@@ -34,11 +34,13 @@
   <td>{{ request.referrer }}</td>
   <td>{{ request.enter }}</td>
   <td>{{ request.exit }}</td>
-  <td>{{ request.pageview.variant.page.slug }}</td>
-  <td>{{ request.pageview.variant.slug }}</td>
-  <td>{{ request.pageview.variant.active.version }}</td>
-  <td>{{ request.pageview.requested_segment.description }}</td>
-  <td>{{ request.pageview.matched_segment.description }}</td>
+  {% with pageview=request.pageview %}
+  <td>{{ pageview.variant.page.slug }}</td>
+  <td>{{ pageview.variant.slug }}</td>
+  <td>{{ pageview.variant.active.version }}</td>
+  <td>{{ pageview.requested_segment.description }}</td>
+  <td>{{ pageview.matched_segment.description }}</td>
+  {% endwith %}
 </tr>
 {% endfor %}
 </table>
