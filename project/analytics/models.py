@@ -11,7 +11,7 @@ class Request(models.Model):
     client_ip = models.CharField(max_length=39) # Max char-length of ipv6
     client_host = models.CharField(max_length=2048)
     referrer = models.CharField(max_length=2048)
-    enter = models.DateField()
+    enter = models.DateTimeField()
     parameter_count = None
 
 class Parameter(models.Model):
