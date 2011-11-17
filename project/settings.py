@@ -37,6 +37,9 @@ MEDIA_URL = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
+# Note: this setting is now used in the Analytics middleware
+# to skip logging of static file requests - if set to '/' (no prefix),
+# that will break request logging.
 STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
