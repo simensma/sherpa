@@ -5,8 +5,8 @@ from datetime import datetime
 class Analytics():
     def process_request(self, request):
         # Don't process requests to static files
-        statics = ['favicon.ico', 'robots.txt']
-        if request.path[1:] in statics or request.path.startswith(settings.STATIC_URL):
+        statics = ['/favicon.ico', '/robots.txt']
+        if request.path in statics or request.path.startswith(settings.STATIC_URL):
             return None
 
         # Don't process AJAX requests
