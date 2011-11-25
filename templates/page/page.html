@@ -7,7 +7,7 @@
     </div>
     <div id="content">
       <div class="top">
-      <h1>{{ content.content }}</h1>
+      <h1>{{ content.title }}</h1>
         Har du gått mye i høyfjellet og har fjellerfaring som du gjerne vil dele med andre?
         Lyst til å jobbe med ulike mennesker og kan ta beslutninger på vegne av andre?
         Har du lyst til å være turleder på DNTs fellesturer? Da er turlederutdanningen noe for deg!
@@ -27,6 +27,12 @@
         </div>
       </div>
       <div class="inner">
+        <hr>
+        {% for widget in widgets %}
+        {% include widget.template %}
+        {% endfor %}
+        <hr>
+
         <h2>Instruktørutdannelsen er på fire nivå</h2>
         <p>Utdanningen er tenkt som en stige, der Ambassadør er laveste nivå, og vinterturleder høyeste nivå. Sentrale temaer er orientering, veivalg, ledelse, og kommunikasjon.</p>
         <p>Hele utdanningen kan du ta over 6 helger og gir en enhetlig basiskompetanse som sikrere trygghet og trivsel for turdeltakerne uansett årstid og alder. Som turleder er man et forbilde for andre, og formålet med utdanningen er å stimulere deltakerne til å drive et enkelt, aktivt, trygt og miljøvennlig friluftsliv i tråd med norske friluftstradisjoner.</p>

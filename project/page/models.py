@@ -30,4 +30,9 @@ class PageVersion(models.Model):
     active = models.BooleanField()
 
 class PageContent(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+
+class NewsSection(models.Model):
+    subtitle = models.CharField(max_length=200)
     content = models.TextField()

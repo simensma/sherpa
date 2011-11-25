@@ -5,6 +5,8 @@ from page.models import Page, PageVariant, PageVersion, PageContent
 from analytics.models import Visitor, Pageview
 from string import split
 
+from page.views_widgets import *
+
 def match_slug(request, slugs):
     for pair in slug_combinations(slugs):
         page = Page.objects.filter(slug=pair['pageslug'])
@@ -24,7 +26,7 @@ def match_slug(request, slugs):
                       variant=default, active_version=version,
                       requested_segment=None, matched_segment=None)
                     pageview.save()
-                    return version
+                    return parse_content(request, version)
             else:
                 variant = PageVariant.objects.get(page=page, slug=pair['variantslug'])
                 version = PageVersion.objects.get(variant=variant)
@@ -32,7 +34,7 @@ def match_slug(request, slugs):
                   variant=variant, active_version=version,
                   requested_segment=variant.segment, matched_segment=matched_variant.segment)
                 pageview.save()
-            return version
+            return parse_content(request, version)
 
 def match_user(request, page):
     variants = PageVariant.objects.filter(page=page, segment__isnull=False).order_by('priority')
