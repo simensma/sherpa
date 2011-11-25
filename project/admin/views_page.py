@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import Page, PageVariant, PageVersion, PageContent
+from page.models import Page, PageVariant, PageVersion
 from analytics.models import Segment
 
 def page_list(request):

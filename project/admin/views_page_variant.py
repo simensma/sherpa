@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
-from page.models import Page, PageVariant, PageVersion, PageContent
+from page.models import Page, PageVariant, PageVersion
 from analytics.models import Segment
 
 def page_variant_new(request, page):

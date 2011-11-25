@@ -7,6 +7,7 @@ class Menu(models.Model):
 
 class Page(models.Model):
     slug = models.CharField(max_length=50, unique=True)
+    layout = models.CharField(max_length=200)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
 
@@ -25,13 +26,15 @@ class PageVariant(models.Model):
 
 class PageVersion(models.Model):
     variant = models.ForeignKey('page.PageVariant')
-    content = models.ForeignKey('page.PageContent', unique=True)
     version = models.IntegerField()
     active = models.BooleanField()
 
-class PageContent(models.Model):
+### Layouts and corresponding widgets
+
+class NewsLayout(models.Model):
+    version = models.ForeignKey('page.PageVersion')
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    tags = models.TextField()
 
 class NewsSection(models.Model):
     subtitle = models.CharField(max_length=200)

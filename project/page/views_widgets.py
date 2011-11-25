@@ -1,18 +1,19 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import PageContent, NewsSection
+from page.models import NewsLayout, NewsSection
 import json
 
 def parse_content(request, version):
-    content = PageContent.objects.get(pageversion=version)
+    if(version.variant.page.layout == "news"):
+        template = 'page/news.html'
+        layout = NewsLayout.objects.get(version=version)
     widgets = []
-    j = json.loads(content.content)
-    for tag in json.loads(content.content):
+    for tag in json.loads(layout.tags):
         if(tag['name'] == "news_section"):
             widgets.append(parse_news_section(tag))
-    context = {'content': content, 'widgets': widgets}
-    return render(request, 'page/page.html', context)
+    context = {'layout': layout, 'widgets': widgets}
+    return render(request, template, context)
 
 def parse_news_section(tag):
     section = NewsSection.objects.get(id=tag['id'])
