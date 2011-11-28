@@ -15,9 +15,9 @@
 </ul>
 {% endif %}
 
-<p><a href="#" id="new_page">Ny artikkel</a></p>
+<p>Ny artikkel</p>
 <p>
-<form action="{% url admin.views.page_new %}" method="post" id="new_page_form">
+<form action="{% url admin.views.page_new %}" method="post">
 {% csrf_token %}
   Vennligst oppgi foreløpig slug (du kan endre denne senere):<br>
   <input type="text" name="slug" value=""><br>
