@@ -32,7 +32,7 @@ class PageVersion(models.Model):
 ### Layouts and corresponding widgets
 
 class NewsLayout(models.Model):
-    version = models.ForeignKey('page.PageVersion')
+    version = models.OneToOneField('page.PageVersion')
     title = models.CharField(max_length=200)
     tags = models.TextField()
 
