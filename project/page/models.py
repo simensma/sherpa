@@ -7,12 +7,12 @@ class Menu(models.Model):
 
 class Page(models.Model):
     slug = models.CharField(max_length=50, unique=True)
-    layout = models.CharField(max_length=200)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
 
 class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
+    layout = models.CharField(max_length=200)
     slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()

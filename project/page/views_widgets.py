@@ -5,7 +5,7 @@ from page.models import NewsLayout, NewsSection
 import json
 
 def parse_content(request, version):
-    if(version.variant.page.layout == "news"):
+    if(version.variant.layout == "news"):
         template = 'page/news.html'
         layout = NewsLayout.objects.get(version=version)
     widgets = []
