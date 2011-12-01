@@ -17,7 +17,7 @@ def match_slug(request, slugs):
                 if matched_variant is not None:
                     # Render the matched variant
                     if(pair['pageslug'] == ""): args = []
-                    else:               args = [pair['pageslug']]
+                    else: args = [pair['pageslug']]
                     return HttpResponseRedirect("%s%s/" % (reverse('page.views.page', args=args), matched_variant.slug))
                 else:
                     default = PageVariant.objects.get(page=page, segment__isnull=True)
