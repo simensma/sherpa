@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id="grid">
+  <div id="body">
+    <div class="path">
+      <a href="{% url page.views.page %}">Forsiden</a> /
+    </div>
+    <div id="content">
+      <div class="top">
+      <h1>{{ layout.title }}</h1>
+        Har du gått mye i høyfjellet og har fjellerfaring som du gjerne vil dele med andre?
+        Lyst til å jobbe med ulike mennesker og kan ta beslutninger på vegne av andre?
+        Har du lyst til å være turleder på DNTs fellesturer? Da er turlederutdanningen noe for deg!
+      </div>
+      <div id="context">
+        <div class="mod ">
+          <blockquote>"En god opplevelse med å være riktig kledd for både store og små ekspedisjoner"</blockquote>
+          <p class="txt_r">- Ole Andreas Devold</p>
+          <a href=""><img src="{{ STATIC_URL }}img/partner/devold-big.png" alt="Devold"  /></a>
+        </div>
+        <div class="mod modBox">
+          <h2>Medlemsservice</h2>
+          <p>Ring: 4000 1970</p>
+          <p>Åpent alle hverdager: kl: 09.00 - 16.00
+          e-post: medlem@turistforeningen.no</p>
+          <p>Har du spørsmål om hytter, stier eller turforslag ta kontakt med din lokale forening</p>
+        </div>
+      </div>
+      <div class="inner">
+        <hr>
+        {% for layout in layouts %}
+        {% include layout.template %}
+        {% endfor %}
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

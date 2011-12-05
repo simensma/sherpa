@@ -12,7 +12,6 @@ class Page(models.Model):
 
 class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
-    layout = models.CharField(max_length=200)
     slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
@@ -29,13 +28,22 @@ class PageVersion(models.Model):
     version = models.IntegerField()
     active = models.BooleanField()
 
-### Layouts and corresponding widgets
+### Layouts
 
-class NewsLayout(models.Model):
-    version = models.OneToOneField('page.PageVersion')
-    title = models.CharField(max_length=200)
-    tags = models.TextField()
+class Layout(models.Model):
+    version = models.ForeignKey('page.PageVersion')
+    template = models.CharField(max_length=50) # Actual template name? Or int? Just a unique ID
+    order = models.IntegerField()
+    columns = []
 
-class NewsSection(models.Model):
-    subtitle = models.CharField(max_length=200)
+class HTMLContent(models.Model):
+    layout = models.ForeignKey('page.Layout')
     content = models.TextField()
+    column = models.IntegerField()
+    order = models.IntegerField()
+
+class Widget(models.Model):
+    layout = models.ForeignKey('page.Layout')
+    widget = models.TextField()
+    column = models.IntegerField()
+    order = models.IntegerField()
