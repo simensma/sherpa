@@ -1,6 +1,13 @@
-<h1>Layout med sidebar</h1>
-
-<h2>Kolonne 1</h2>
+<aside>
+{% for item in layout.columns.1 %}
+  {% if item.type == "html" %}
+    {{ item.content|safe }}
+  {% endif %}
+  {% if item.type == "widget" %}
+    {% include item.content.template with widget=item.content %}
+  {% endif %}
+{% endfor %}
+</aside>
 
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
@@ -9,17 +16,4 @@
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
-  <br>
-{% endfor %}
-
-<h2>Kolonne 2</h2>
-
-{% for item in layout.columns.1 %}
-  {% if item.type == "html" %}
-    {{ item.content|safe }}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-  <br>
 {% endfor %}
