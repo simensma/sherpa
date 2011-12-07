@@ -1,9 +1,0 @@
-{% extends "admin/page/edit.html" %}
-{% block edit %}
-{# Default page vs. variant will want to send their forms to different views, so let the extending template supply the form tag #}
-{% block form %}{% endblock %}
-{% csrf_token %}
-<textarea name="content" rows="6" cols="80">{{ version.content.content }}</textarea><br>
-<input type="submit">
-</form>
-{% endblock %}
