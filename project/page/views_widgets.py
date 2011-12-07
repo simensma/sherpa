@@ -7,7 +7,7 @@ import json
 def parse_content(request, version):
     max_columns = 3 # The highest number of columns we'll have in a layout
     # Potential optimization: Use a manager to perform a single query with joins
-    layouts = Layout.objects.filter(version=version).order_by('order')
+    layouts = Layout.objects.filter(version=version).order_by('-order')
     for layout in layouts:
         del layout.columns[:]
         layout.columns = []
