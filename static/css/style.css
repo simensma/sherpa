@@ -23,3 +23,25 @@ header > nav > ul > li {
     display: inline;
 }
 
+footer > div.social {
+    width: 25%;
+    float: left;
+    margin: 0;
+    padding: 0;
+    /* Common text properties */
+    color: rgb(118, 118, 118);
+}
+
+footer > div.social > img {
+    float: left;
+    margin-right: 10px;
+}
+
+footer > div.social > h3 {
+    margin: 0;
+}
+
+footer > div.bottom-menu {
+    width: 25%;
+    float: left;
+}
