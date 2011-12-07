@@ -9,6 +9,7 @@ def parse_content(request, version):
     # Potential optimization: Use a manager to perform a single query with joins
     layouts = Layout.objects.filter(version=version).order_by('order')
     for layout in layouts:
+        layout.template = "page/layouts/" + layout.template + ".html"
         del layout.columns[:]
         layout.columns = []
         for i in range(max_columns):

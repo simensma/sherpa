@@ -33,7 +33,7 @@ class PageVersion(models.Model):
 
 class Layout(models.Model):
     version = models.ForeignKey('page.PageVersion')
-    template = models.CharField(max_length=50) # Actual template name? Or int? Just a unique ID
+    template = models.CharField(max_length=50)
     order = models.IntegerField()
     columns = []
 
