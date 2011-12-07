@@ -1,0 +1,25 @@
+body {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header > #search {
+    float: right;
+}
+
+header > #search > form > input.button {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(173, 170, 170);
+    font-size: 12px;
+    padding: 3px 5px 2px 5px;
+}
+
+header > nav > ul {
+    list-style: none;
+}
+
+header > nav > ul > li {
+    display: inline;
+}
+
