@@ -33,3 +33,5 @@ def parse_content(request, version):
 def parse_widget(widget):
     if(widget['name'] == "foo"):
         return {'template': 'page/widgets/foo.html', 'bar': 'baz'}
+    elif(widget['name'] == "memberservice"):
+        return {'template': 'page/widgets/memberservice.html'}

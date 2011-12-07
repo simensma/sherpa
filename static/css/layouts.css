@@ -26,6 +26,12 @@ aside > h2 {
     padding: 0;
 }
 
+/* memberservice widget */
+
+div.memberservice {
+    background-color: rgb(238, 239, 239);
+}
+
 /* quote content */
 
 blockquote {
