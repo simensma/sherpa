@@ -1,0 +1,53 @@
+/* css for admin-ui layouts and widgets
+ * Note: A lot of this is probably duplicated from the
+ * main presentation css, could that be avoided?
+ */
+
+/* layouts */
+#editarea {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#editarea h1 {
+    border-bottom: 5px solid rgb(61, 83, 37);
+    font-size: 40px;
+    line-height: 52px;
+    margin-bottom: 29px;
+}
+
+#editarea div.lede {
+    font-family: "Helvetica";
+    font-size: 20px;
+}
+
+/* sidebar */
+
+#editarea aside {
+    float: right;
+    margin-top: 0.83em;
+    width: 35%;
+}
+
+#editarea aside > h2 {
+    margin: 0;
+    padding: 0;
+}
+
+/* memberservice widget */
+
+#editarea div.memberservice {
+    background-color: rgb(238, 239, 239);
+}
+
+/* quote content */
+
+#editarea blockquote {
+    font-size: 24px;
+    font-style: italic;
+}
+
+#editarea p.quote-source {
+    text-align: right;
+}

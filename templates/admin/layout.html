@@ -6,6 +6,7 @@
     <script src="{{ STATIC_URL }}js/jquery-1.6.4.min.js"></script>
     <script src="{{ STATIC_URL }}js/admin.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-layouts.css" media="screen">
 </head>
 <body>
 <header>
@@ -19,6 +20,7 @@
   </nav>
 </header>
 {% block body %}{% endblock %}
+<div style="clear: both;"></div>
 <footer>
 <hr>
 <p>{{ sql_queries|length }} queries</p>
