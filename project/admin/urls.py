@@ -20,6 +20,9 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/versjon/rediger/(?P<version>\d*)/$', 'page_version_edit'),
     url(r'^artikkel/version/aktiver/(?P<version>\d*)/$', 'page_version_activate'),
 
+    # AJAX-updates to content and widgets
+    url(r'^ajax/save/content/(?P<content>\d*)/$', 'page_content_update'),
+
     # Menyer
     url(r'^meny/$', 'menu_list'),
     url(r'^meny/ny/(?P<page>\d*)/$', 'menu_add'),

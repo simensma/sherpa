@@ -1,9 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
 from analytics.models import Segment
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 def page_variant_new(request, page):
@@ -95,6 +96,15 @@ def parse_widget(widget):
         return {'template': 'page/widgets/foo.html', 'bar': 'baz'}
     elif(widget['name'] == "memberservice"):
         return {'template': 'page/widgets/memberservice.html'}
+
+# Ajax for content and widgets
+
+@csrf_exempt
+def page_content_update(request, content):
+    content = HTMLContent.objects.get(id=content)
+    content.content = request.POST['content']
+    content.save()
+    return HttpResponse('')
 
 #def page_variant_delete(request, variant):
 #    variant = PageVariant.objects.get(pk=variant)

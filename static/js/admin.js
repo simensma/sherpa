@@ -30,17 +30,20 @@ $(document).ready(function() {
 
     function saveContent(element) {
         element.addClass('saving');
+        element.children().each(function() {
+            $(this).attr('contentEditable', false);
+        });
+        var content = element.html();
         $.ajax({
             // Maybe this file should be rendered as a template to avoid static URLs?
             url: '/admin/ajax/save/content/' + element.attr('name') + '/',
             type: 'POST',
-            success: function() {
-                element.removeClass('saving');
-            },
-            error: function() {
-                element.removeClass('saving');
-            },
-            data: element.html()
+            data: "content=" + content
+        }).done(function() {
+            element.removeClass('saving');
+            element.children().each(function() {
+                $(this).attr('contentEditable', true);
+            });
         });
     }
 
