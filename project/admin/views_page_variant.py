@@ -2,8 +2,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
-from page.models import Page, PageVariant, PageVersion
+from page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
 from analytics.models import Segment
+import json
 
 def page_variant_new(request, page):
     page = Page.objects.get(pk=page)
@@ -54,19 +55,46 @@ def page_version_activate(request, version):
 def page_version_edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(pk=version)
+        layouts = Layout.objects.filter(version=version).order_by('order')
+        for layout in layouts:
+            layout.template = "admin/page/layouts/" + layout.template + ".html"
+            del layout.columns[:]
+            layout.columns = []
+            for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
+                layout.columns.append([])
+            # Fetch all items and sort them afterwards
+            contents = HTMLContent.objects.filter(layout=layout)
+            widgets = Widget.objects.filter(layout=layout)
+            list = []
+            list.extend(contents)
+            list.extend(widgets)
+            list.sort(key=lambda item: item.order)
+            for item in list:
+                if isinstance(item, HTMLContent):
+                    layout.columns[item.column].append({'type': 'html', 'content': item.content})
+                elif isinstance(item, Widget):
+                    widget = json.loads(item.widget)
+                    layout.columns[item.column].append({'type': 'widget', 'content':
+                      parse_widget(widget)})
         variants = PageVariant.objects.filter(page=version.variant.page).order_by('priority')
         for variant in variants:
             variant.active = PageVersion.objects.get(variant=variant, active=True)
         versions = PageVersion.objects.filter(variant=version.variant).order_by('-version')
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
-          'versions': versions, 'version': version, 'segments': segments}
+          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts}
         return render(request, 'admin/page/edit_variant.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']
         version.content.save()
         return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+
+def parse_widget(widget):
+    if(widget['name'] == "foo"):
+        return {'template': 'page/widgets/foo.html', 'bar': 'baz'}
+    elif(widget['name'] == "memberservice"):
+        return {'template': 'page/widgets/memberservice.html'}
 
 #def page_variant_delete(request, variant):
 #    variant = PageVariant.objects.get(pk=variant)

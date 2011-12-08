@@ -35,10 +35,10 @@
 <br>
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
-<form action="{% url admin.views.page_version_edit version.id %}" method="post">
-{% csrf_token %}
-<textarea name="content" rows="6" cols="80">{{ version.content.content }}</textarea><br>
-<input type="submit">
-</form>
+<div id="editarea">
+{% for layout in layouts %}
+{% include layout.template %}
+{% endfor %}
+</div>
 
 {% endblock %}
