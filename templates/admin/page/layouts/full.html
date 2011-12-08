@@ -1,10 +1,9 @@
-<div id="forediting">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
-    {{ item.content|safe }}
+    <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
-</div>
+{% include 'admin/page/add_dropdown.html' %}

@@ -4,6 +4,27 @@
  */
 
 /* layouts */
+
+/* dropdown for adding new content or widgets */
+
+#editarea .add-dropdown {
+    border: 1px solid;
+}
+
+/* While working */
+#editarea .hover {
+    background-color: #ddd;
+}
+
+#editarea .writing {
+    background-color: #ddd;
+    border: 1px solid #000;
+}
+
+#editarea .saving {
+    background-color: #999;
+}
+
 #editarea {
     width: 80%;
     margin-left: auto;

@@ -71,7 +71,7 @@ def page_version_edit(request, version):
             list.sort(key=lambda item: item.order)
             for item in list:
                 if isinstance(item, HTMLContent):
-                    layout.columns[item.column].append({'type': 'html', 'content': item.content})
+                    layout.columns[item.column].append({'type': 'html', 'id': item.id, 'content': item.content})
                 elif isinstance(item, Widget):
                     widget = json.loads(item.widget)
                     layout.columns[item.column].append({'type': 'widget', 'content':
