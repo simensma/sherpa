@@ -31,7 +31,7 @@ $(document).ready(function() {
     function saveContent(element) {
         element.addClass('saving');
         element.children().each(function() {
-            $(this).attr('contentEditable', false);
+            $(this).removeAttr('contentEditable');
         });
         var content = element.html();
         $.ajax({
@@ -42,7 +42,7 @@ $(document).ready(function() {
         }).done(function() {
             element.removeClass('saving');
             element.children().each(function() {
-                $(this).attr('contentEditable', true);
+                $(this).removeAttr('contentEditable');
             });
         });
     }
