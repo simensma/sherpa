@@ -58,7 +58,11 @@ def page_version_edit(request, version):
         version = PageVersion.objects.get(pk=version)
         layouts = Layout.objects.filter(version=version).order_by('order')
         for layout in layouts:
-            layout.template = "admin/page/layouts/" + layout.template + ".html"
+            mode = request.GET.get('mode')
+            # Default editmode to layout. Should this really be defined here?
+            if(mode != 'layout' and mode != 'content'):
+                mode = 'layout'
+            layout.template = "admin/page/layouts/%s_%s.html" % (layout.template, mode)
             del layout.columns[:]
             layout.columns = []
             for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
