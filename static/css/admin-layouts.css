@@ -45,15 +45,30 @@
 
 /* sidebar */
 
+#editarea .main-column {
+    width: 70%;
+    margin: 0;
+}
+
 #editarea aside {
     float: right;
-    margin-top: 0.83em;
-    width: 35%;
+    margin: 0;
+    width: 30%;
 }
 
 #editarea aside > h2 {
     margin: 0;
     padding: 0;
+}
+
+/* editing layout */
+
+#editarea .moveable-layout {
+    border: 1px solid #000;
+}
+
+#editarea .moveable-layout .hover {
+    background-color: #aa8;
 }
 
 /* memberservice widget */

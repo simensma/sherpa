@@ -47,4 +47,9 @@ $(document).ready(function() {
         });
     }
 
+    // Moveable layouts
+    $(".moveable-layout").draggable({
+        containment: 'document'
+    });
+
 });

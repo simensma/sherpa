@@ -1,21 +1,21 @@
-<aside>
+<aside class="moveable-layout">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
-    <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>
+    <div name="{{ item.id }}">{{ item.content|safe }}</div>
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
-{% include 'admin/page/add_dropdown.html' %}
 </aside>
 
+<div class="moveable-layout main-column">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
-    <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>
+    <div name="{{ item.id }}">{{ item.content|safe }}</div>
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
-{% include 'admin/page/add_dropdown.html' %}
+</div>
