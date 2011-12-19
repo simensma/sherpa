@@ -22,6 +22,7 @@ urlpatterns = patterns('admin.views',
 
     # AJAX-updates to content and widgets
     url(r'^ajax/save/content/(?P<content>\d*)/$', 'page_content_update'),
+    url(r'^ajax/swap/layout/(?P<layout1>\d*)/(?P<layout2>\d*)/$', 'page_layout_swap'),
 
     # Menyer
     url(r'^meny/$', 'menu_list'),

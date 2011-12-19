@@ -63,8 +63,24 @@
 
 /* editing layout */
 
-#editarea .moveable-layout {
-    border: 1px solid #000;
+#editarea .moveable-layout.hover > * {
+    background-color: #bbb;
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* ie <= 8 */
+}
+
+#editarea .moveable-layout aside {
+    width: 28%;
+}
+
+#editarea .moveable-layout .main-column {
+    width: 68%;
+}
+
+#editarea .moveable-layout aside,
+#editarea .moveable-layout .main-column,
+#editarea .moveable-layout.full-column {
+    margin: 1%;
 }
 
 #editarea .moveable-layout .hover {

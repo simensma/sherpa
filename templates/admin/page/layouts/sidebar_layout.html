@@ -1,4 +1,6 @@
-<aside class="moveable-layout">
+<div class="moveable-layout">
+<input type="hidden" name="id" value="{{ layout.id }}">
+<aside>
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     <div name="{{ item.id }}">{{ item.content|safe }}</div>
@@ -9,7 +11,7 @@
 {% endfor %}
 </aside>
 
-<div class="moveable-layout main-column">
+<div class="main-column">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     <div name="{{ item.id }}">{{ item.content|safe }}</div>
@@ -18,4 +20,7 @@
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
+<div style="clear: both;"></div>
+</div>
+<p class="swapper">SWAP</p>
 </div>
