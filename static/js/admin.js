@@ -75,7 +75,7 @@ $(document).ready(function() {
         }).done(function() {
             element.removeClass('saving');
             element.children().each(function() {
-                $(this).removeAttr('contentEditable');
+                $(this).attr('contentEditable', 'true');
             });
         });
     }
