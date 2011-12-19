@@ -5,6 +5,16 @@
 
 /* layouts */
 
+#add-layouts {
+    text-align: center;
+}
+
+#add-layouts table {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
+
 /* dropdown for adding new content or widgets */
 
 #editarea .add-dropdown {

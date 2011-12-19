@@ -19,6 +19,7 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/versjon/ny/(?P<variant>\d*)/$', 'page_version_new'),
     url(r'^artikkel/versjon/rediger/(?P<version>\d*)/$', 'page_version_edit'),
     url(r'^artikkel/version/aktiver/(?P<version>\d*)/$', 'page_version_activate'),
+    url(r'^artikkel/version/layout/ny/(?P<version>\d*)/(?P<template>[a-zA-Z0-9-_]*)/$', 'page_add_layout'),
 
     # AJAX-updates to content and widgets
     url(r'^ajax/save/content/(?P<content>\d*)/$', 'page_content_update'),

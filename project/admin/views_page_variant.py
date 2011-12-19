@@ -87,13 +87,21 @@ def page_version_edit(request, version):
         versions = PageVersion.objects.filter(variant=version.variant).order_by('-version')
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
-          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts}
+          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts,
+          'mode': mode}
         return render(request, 'admin/page/edit_variant.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']
         version.content.save()
         return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+
+def page_add_layout(request, version, template):
+    version = PageVersion.objects.get(id=version)
+    max = Layout.objects.filter(version=version).aggregate(Max('order'))['order__max']
+    layout = Layout(version=version, template=template, order=(max+1))
+    layout.save()
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
 
 def parse_widget(widget):
     if(widget['name'] == "foo"):
