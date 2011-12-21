@@ -1,4 +1,4 @@
-<div class="moveable-layout">
+<div class="layout-sidebar moveable-layout">
 <input type="hidden" name="id" value="{{ layout.id }}">
 <aside>
 {% for item in layout.columns.1 %}
@@ -20,7 +20,7 @@
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
-<div style="clear: both;"></div>
 </div>
 <p class="swapper">SWAP</p>
+<div style="clear: both;"></div>
 </div>

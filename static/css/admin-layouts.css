@@ -53,24 +53,6 @@
     font-size: 20px;
 }
 
-/* sidebar */
-
-#editarea .main-column {
-    width: 70%;
-    margin: 0;
-}
-
-#editarea aside {
-    float: right;
-    margin: 0;
-    width: 30%;
-}
-
-#editarea aside > h2 {
-    margin: 0;
-    padding: 0;
-}
-
 /* editing layout */
 
 #editarea .moveable-layout.hover > * {
@@ -79,37 +61,6 @@
     filter: alpha(opacity=40); /* ie <= 8 */
 }
 
-#editarea .moveable-layout aside {
-    width: 28%;
-}
-
-#editarea .moveable-layout .main-column {
-    width: 68%;
-}
-
-#editarea .moveable-layout aside,
-#editarea .moveable-layout .main-column,
-#editarea .moveable-layout.full-column {
-    margin: 1%;
-}
-
 #editarea .moveable-layout .hover {
     background-color: #aa8;
-}
-
-/* memberservice widget */
-
-#editarea div.memberservice {
-    background-color: rgb(238, 239, 239);
-}
-
-/* quote content */
-
-#editarea blockquote {
-    font-size: 24px;
-    font-style: italic;
-}
-
-#editarea p.quote-source {
-    text-align: right;
 }
