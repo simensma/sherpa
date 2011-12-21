@@ -1,27 +1,38 @@
 /* css for layouts and widgets */
 
-/* layouts */
-h1 {
+/*********
+  Layouts
+**********/
+
+/* "Main column" (common for full- and sidebar-layout) */
+
+.layout-full h1, .layout-sidebar > .main-column h1 {
     border-bottom: 5px solid rgb(61, 83, 37);
     font-size: 40px;
     line-height: 52px;
     margin-bottom: 29px;
 }
 
-div.lede {
+.layout-full div.lede, .layout-sidebar > .main-column div.lede {
     font-family: "Helvetica";
     font-size: 20px;
 }
 
 /* sidebar */
 
-aside {
-    float: right;
-    margin-top: 0.83em;
-    width: 35%;
+.layout-sidebar > .main-column {
+    float: left;
+    width: 66%;
+    margin: 1% 1% 2% 0;
 }
 
-aside > h2 {
+.layout-sidebar > aside {
+    float: right;
+    margin: 1% 0 2% 1%;
+    width: 32%;
+}
+
+.layout-sidebar > aside > h2 {
     margin: 0;
     padding: 0;
 }

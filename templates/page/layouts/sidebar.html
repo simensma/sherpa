@@ -1,3 +1,4 @@
+<div class="layout-sidebar">
 <aside>
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
@@ -9,6 +10,7 @@
 {% endfor %}
 </aside>
 
+<div class="main-column">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
@@ -17,4 +19,6 @@
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
+</div>
 <div style="clear: both;"></div>
+</div>
