@@ -10,6 +10,7 @@
   <script src="{{ STATIC_URL }}js/custom.js"></script>
 </head>
 <body>
+<div id="container">
 <header>
   <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}img/header-logo.png"></a>
   <div id="search">
@@ -102,5 +103,6 @@
     {% endfor %}
     </ul>
     </footer>
+    </div>
     </body>
 </html>
