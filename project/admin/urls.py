@@ -20,6 +20,9 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/versjon/rediger/(?P<version>\d*)/$', 'page_version_edit'),
     url(r'^artikkel/version/aktiver/(?P<version>\d*)/$', 'page_version_activate'),
     url(r'^artikkel/version/layout/ny/(?P<version>\d*)/(?P<template>[a-zA-Z0-9-_]*)/$', 'page_add_layout'),
+    url(r'^artikkel/version/layout/flytt-ned/(?P<layout>\d*)/$', 'page_layout_move_down'),
+    url(r'^artikkel/version/layout/flytt-opp/(?P<layout>\d*)/$', 'page_layout_move_up'),
+    url(r'^artikkel/version/layout/slett/(?P<layout>\d*)/$', 'page_layout_delete'),
 
     # AJAX-updates to content and widgets
     url(r'^ajax/save/content/(?P<content>\d*)/$', 'page_content_update'),

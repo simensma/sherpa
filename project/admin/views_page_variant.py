@@ -104,6 +104,42 @@ def page_add_layout(request, version, template):
     layout.save()
     return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
 
+def page_layout_move_up(request, layout):
+    layout = Layout.objects.get(id=layout)
+    if(layout.order == 1):
+        # error handling
+        raise Exception
+    else:
+        swap_layouts(layout, -1)
+        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+
+def page_layout_move_down(request, layout):
+    layout = Layout.objects.get(id=layout)
+    max = Layout.objects.filter(version=layout.version).aggregate(Max('order'))['order__max']
+    if(layout.order == max):
+        # error handling
+        raise Exception
+    else:
+        swap_layouts(layout, 1)
+        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+
+def page_layout_delete(request, layout):
+    layout = Layout.objects.get(id=layout)
+    widgets = Widget.objects.filter(layout=layout)
+    contents = HTMLContent.objects.filter(layout=layout)
+    layout.delete()
+    widgets.delete()
+    contents.delete()
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+
+
+def swap_layouts(layout, increment):
+    other_layout = Layout.objects.get(version=layout.version, order=(layout.order + increment))
+    other_layout.order = layout.order
+    layout.order = other_layout.order + increment
+    other_layout.save()
+    layout.save()
+
 def parse_widget(widget):
     if(widget['name'] == "foo"):
         return {'template': 'page/widgets/foo.html', 'bar': 'baz'}

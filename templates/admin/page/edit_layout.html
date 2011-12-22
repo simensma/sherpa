@@ -1,7 +1,7 @@
 <div class="edit-layout">
 <p>Rediger layout:
-  [<a href="">Flytt ned</a>] -
-  [<a href="">Flytt opp</a>] -
-  [<a href="">Slett</a>]
+  [<a href="{% url admin.views.page_layout_move_down layout.id %}">Flytt ned</a>] -
+  [<a href="{% url admin.views.page_layout_move_up layout.id %}">Flytt opp</a>] -
+  [<a href="{% url admin.views.page_layout_delete layout.id %}">Slett</a>]
 </p>
 </div>
