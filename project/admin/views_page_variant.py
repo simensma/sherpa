@@ -98,6 +98,7 @@ def page_version_edit(request, version):
 
 def page_add_layout(request, version, template):
     version = PageVersion.objects.get(id=version)
+    # error handling: if there are no layouts (if that's at all possible?), set order to 1
     max = Layout.objects.filter(version=version).aggregate(Max('order'))['order__max']
     layout = Layout(version=version, template=template, order=(max+1))
     layout.save()
