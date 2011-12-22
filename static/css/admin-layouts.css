@@ -41,18 +41,6 @@
     margin-right: auto;
 }
 
-#editarea h1 {
-    border-bottom: 5px solid rgb(61, 83, 37);
-    font-size: 40px;
-    line-height: 52px;
-    margin-bottom: 29px;
-}
-
-#editarea div.lede {
-    font-family: "Helvetica";
-    font-size: 20px;
-}
-
 /* editing layout */
 
 #editarea .moveable-layout.hover > * {
