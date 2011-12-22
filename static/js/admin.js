@@ -1,38 +1,5 @@
 $(document).ready(function() {
 
-    jQuery.fn.swapWith = function(to) {
-        return this.each(function() {
-            var copy_to = $(to).clone();
-            var copy_from = $(this).clone();
-            $(to).replaceWith(copy_from);
-            $(this).replaceWith(copy_to);
-            makeSwappable();
-        });
-    };
-
-    function makeSwappable() {
-    $(".swapper").click(function() {
-        var l1 = $(this).parent();
-        var l2 = l1.siblings($(".moveable-layout"));
-        l1.swapWith(l2);
-        var id1 = l1.children().first().val();
-        var id2 = l2.children().first().val();
-        $.ajax({
-            // Maybe this file should be rendered as a template to avoid static URLs?
-            url: '/admin/ajax/swap/layout/' + id1 + '/' + id2 + '/',
-            type: 'POST'
-        });
-    });
-    }
-
-    makeSwappable();
-
-    /*$(".moveable-layout").hover(function() {
-        $(this).addClass('hover');
-    }, function() {
-        $(this).removeClass('hover');
-    });*/
-
     $(".editable").each(function() {
         var editelement = $(this);
         $(this).children().each(function() {
@@ -79,10 +46,5 @@ $(document).ready(function() {
             });
         });
     }
-
-    // Moveable layouts
-    $(".moveable-layout").draggable({
-        containment: 'document'
-    });
 
 });

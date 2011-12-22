@@ -46,15 +46,3 @@
 #editarea .saving {
     background-color: #999;
 }
-
-/* editing layout */
-
-#editarea .moveable-layout.hover > * {
-    background-color: #bbb;
-    opacity: 0.4;
-    filter: alpha(opacity=40); /* ie <= 8 */
-}
-
-#editarea .moveable-layout .hover {
-    background-color: #aa8;
-}
