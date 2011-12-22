@@ -35,18 +35,10 @@
 <br>
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
-<p>
-  Rediger
-  <a href="{% url admin.views.page_version_edit version.id %}?mode=layout">layout</a>
-  eller
-  <a href="{% url admin.views.page_version_edit version.id %}?mode=content">innhold</a>.
-</p>
-
 <div id="editarea">
 {% for layout in layouts %}
 {% include layout.template %}
 {% endfor %}
-{% if mode == 'layout' %}
 <div id="add-layouts">
 <h2>Legg til flere kolonner:</h2>
 <table>
@@ -62,7 +54,6 @@
 </tr>
 </table>
 </div>
-{% endif %}
 </div>
 
 {% endblock %}

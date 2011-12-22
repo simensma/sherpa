@@ -57,12 +57,8 @@ def page_version_edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(pk=version)
         layouts = Layout.objects.filter(version=version).order_by('order')
-        mode = request.GET.get('mode')
-        # Default editmode to layout. Should this really be defined here?
-        if(mode != 'layout' and mode != 'content'):
-            mode = 'layout'
         for layout in layouts:
-            layout.template = "admin/page/layouts/%s_%s.html" % (layout.template, mode)
+            layout.template = "admin/page/layouts/%s.html" % layout.template
             del layout.columns[:]
             layout.columns = []
             for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
@@ -87,8 +83,7 @@ def page_version_edit(request, version):
         versions = PageVersion.objects.filter(variant=version.variant).order_by('-version')
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
-          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts,
-          'mode': mode}
+          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts}
         return render(request, 'admin/page/edit_variant.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)
