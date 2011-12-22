@@ -6,7 +6,7 @@
 
 /* All layout margins */
 
-.layout-full, .layout-sidebar {
+.layout-full, .layout-sidebar, .layout-3-columns {
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -42,6 +42,21 @@
 .layout-sidebar > aside > h2 {
     margin: 0;
     padding: 0;
+}
+
+/* 3 columns */
+
+.column-of-3 {
+    float: left;
+    width: 32%;
+}
+
+.column-of-3.left {
+    margin-right: 2%;
+}
+
+.column-of-3.right {
+    margin-left: 2%;
 }
 
 /* memberservice widget */
