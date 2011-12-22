@@ -57,11 +57,11 @@ def page_version_edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(pk=version)
         layouts = Layout.objects.filter(version=version).order_by('order')
+        mode = request.GET.get('mode')
+        # Default editmode to layout. Should this really be defined here?
+        if(mode != 'layout' and mode != 'content'):
+            mode = 'layout'
         for layout in layouts:
-            mode = request.GET.get('mode')
-            # Default editmode to layout. Should this really be defined here?
-            if(mode != 'layout' and mode != 'content'):
-                mode = 'layout'
             layout.template = "admin/page/layouts/%s_%s.html" % (layout.template, mode)
             del layout.columns[:]
             layout.columns = []
