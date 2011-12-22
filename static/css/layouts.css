@@ -4,6 +4,13 @@
   Layouts
 **********/
 
+/* All layout margins */
+
+.layout-full, .layout-sidebar {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 /* "Main column" (common for full- and sidebar-layout) */
 
 .layout-full h1, .layout-sidebar > .main-column h1 {
@@ -23,13 +30,13 @@
 .layout-sidebar > .main-column {
     float: left;
     width: 66%;
-    margin: 1% 1% 2% 0;
+    margin-right: 1%;
 }
 
 .layout-sidebar > aside {
     float: right;
-    margin: 1% 0 2% 1%;
     width: 32%;
+    margin-left: 1%;
 }
 
 .layout-sidebar > aside > h2 {
