@@ -1,4 +1,5 @@
 <div class="layout-full">
+{% include 'admin/page/edit_layout.html' %}
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>

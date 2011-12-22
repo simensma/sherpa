@@ -5,6 +5,14 @@
 
 /* layouts */
 
+#editarea {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* snippets, editboxes etc. */
+
 #add-layouts {
     text-align: center;
 }
@@ -15,13 +23,17 @@
     width: auto;
 }
 
-/* dropdown for adding new content or widgets */
-
 #editarea .add-dropdown {
     border: 1px solid;
 }
 
+#editarea .edit-layout {
+    border: 1px solid;
+    text-align: right;
+}
+
 /* While working */
+
 #editarea .hover {
     background-color: #ddd;
 }
@@ -33,12 +45,6 @@
 
 #editarea .saving {
     background-color: #999;
-}
-
-#editarea {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* editing layout */
