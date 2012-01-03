@@ -1,32 +1,22 @@
 $(document).ready(function() {
 
-    $(".editable").each(function() {
-        var editelement = $(this);
-        $(this).children().each(function() {
-            $(this).attr('contenteditable', 'true');
-            $(this).hover(function() {
-                $(this).addClass('hover');
-            }, function() {
-                $(this).removeClass('hover');
-            });
-            // disable enter for headers
-            if(this.nodeName == "H1") {
-                $(this).keypress(function(event) {
-                    // Don't make linebreaks in headers
-                    if(event.which == 13) {
-                        event.preventDefault();
-                    }
-                });
-            };
-            $(this).focus(function() {
-                $(this).addClass('writing');
-            });
-            $(this).focusout(function() {
-                $(this).removeClass('writing');
-                saveContent(editelement);
-            });
-        });
+    $(".add-dropdown .headerAdder").click(function() {
+        addElement("h1", this)
     });
+
+    function addElement(html, adder) {
+        var element = $(document.createElement(html));
+        handleEditable(element);
+        $(adder).parent().parent().before(element);
+        $(element).focus();
+    }
+
+    function handleEditable(element) {
+        element.attr('contenteditable', 'true');
+        element.keydown(function(event) {
+            // Handle some keypresses
+        });
+    }
 
     function saveContent(element) {
         element.addClass('saving');
