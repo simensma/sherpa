@@ -11,6 +11,12 @@
     margin-bottom: 1em;
 }
 
+.layout-full p, .layout-sidebar p, .layout-3-columns p {
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 1em;
+}
+
 /* "Main column" (common for full- and sidebar-layout) */
 
 .layout-full h1, .layout-sidebar > .main-column h1 {
