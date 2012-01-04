@@ -1,3 +1,46 @@
+$.fn.setCursor = function(length) {
+    return this.each(function() {
+        $(this).contents().each(function() {
+            if(this.nodeType == 3) {
+                if(this.length < length) {
+                    return $(this).setTextRange(length, length);
+                } else {
+                    length -= this.length;
+                }
+            }
+        });
+    });
+}
+
+$.fn.setCursorLast = function() {
+    return this.each(function() {
+        if(window.getSelection) {
+            var selection = window.getSelection();
+            var range = document.createRange();
+            range.setStartAfter($(this).last().get(0));
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else if(document.selection) {
+            alert("IE?");
+        }
+    });
+}
+
+$.fn.setTextRange = function(start, end) {
+    return this.each(function() {
+        if(window.getSelection) {
+            var selection = window.getSelection();
+            var range = document.createRange();
+            range.setStart($(this).get(0), start);
+            range.setEnd($(this).get(0), end);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else if(document.selection) {
+            alert("IE?");
+        }
+    });
+};
+
 $(document).ready(function() {
     var lastActiveEditElement;
     var currentActiveEditElement;
