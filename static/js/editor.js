@@ -1,4 +1,13 @@
 $(document).ready(function() {
+    var activeEditElement;
+
+    // Refocus last edited element upon any button click
+    $(".add-dropdown button").click(function() {
+        if(activeEditElement) {
+            activeEditElement.focus();
+        }
+    });
+
     $(".add-dropdown .header").click(function() {
         var element = $(document.createElement("h1"));
         addElement(element, this);
@@ -39,6 +48,13 @@ $(document).ready(function() {
 
     function handleEditable(element) {
         element.attr('contenteditable', 'true');
+
+        // Upon removing focus, remember which element was edited, in case
+        // the focus goes to a button and should be promptly moved back
+        element.focusout(function() {
+            activeEditElement = $(this);
+        });
+
         element.keydown(function(event) {
             if(event.which == 38 && element.prev().get(0).tagName != "DIV") {
                 // arrow up
