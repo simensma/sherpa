@@ -1,10 +1,11 @@
 $(document).ready(function() {
-    var activeEditElement;
+    var lastActiveEditElement;
+    var currentActiveEditElement;
 
     // Refocus last edited element upon any button click
     $(".add-dropdown button").click(function() {
-        if(activeEditElement) {
-            activeEditElement.focus();
+        if(lastActiveEditElement) {
+            lastActiveEditElement.focus();
         }
     });
 
@@ -49,10 +50,12 @@ $(document).ready(function() {
     function handleEditable(element) {
         element.attr('contenteditable', 'true');
 
-        // Upon removing focus, remember which element was edited, in case
-        // the focus goes to a button and should be promptly moved back
+        // Keep track of which items are currently and lastly edited
+        element.focusin(function() {
+            currentActiveEditElement = $(this);
+        })
         element.focusout(function() {
-            activeEditElement = $(this);
+            lastActiveEditElement = $(this);
         });
 
         element.keydown(function(event) {
