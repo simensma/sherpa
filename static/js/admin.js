@@ -41,7 +41,37 @@ $(document).ready(function() {
     function handleEditable(element) {
         element.attr('contenteditable', 'true');
         element.keydown(function(event) {
-            // Handle some keypresses
+            if(event.which == 38 && element.prev().get(0).tagName != "DIV") {
+                // arrow up
+                element.prev().focus();
+            }
+            if(event.which == 40) {
+                // arrow down
+                element.next().focus();
+            }
+            if(event.which == 46 && element.text() == "") {
+                // delete
+                element.remove();
+                event.preventDefault();
+            }
+            if(event.which == 8 && element.text() == "") {
+                // backspace
+                if(element.prev().get(0).tagName != "DIV") {
+                    element.prev().focus();
+                    var len = element.prev().text().length;
+                    element.prev().setCursorLast();
+                }
+                element.remove();
+                event.preventDefault();
+            }
+            if(event.which == 13) {
+                // enter
+                var p = $(document.createElement("p"));
+                element.after(p);
+                handleEditable(p);
+                p.focus();
+                event.preventDefault();
+            }
         });
     }
 
