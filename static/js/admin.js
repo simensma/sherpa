@@ -1,11 +1,11 @@
 $(document).ready(function() {
 
     $(".add-dropdown .headerAdder").click(function() {
-        addElement("h1", this)
+        var element = $(document.createElement("h1"));
+        addElement(element, this);
     });
 
-    function addElement(html, adder) {
-        var element = $(document.createElement(html));
+    function addElement(element, adder) {
         handleEditable(element);
         $(adder).parent().parent().before(element);
         $(element).focus();
