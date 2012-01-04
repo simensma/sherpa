@@ -20,19 +20,47 @@ $(document).ready(function() {
     });
 
     $("#buttons .header").click(function() {
-        var element = $(document.createElement("h1"));
-        addElement(element, this);
+        if(lastActiveEditElement.attr('contenteditable') === "true") {
+            var h1 = $(document.createElement("h1"));
+            h1.html(lastActiveEditElement.html());
+            handleEditable(h1);
+            lastActiveEditElement.before(h1);
+            lastActiveEditElement.remove();
+            h1.focus();
+        } else {
+            alert('fail, du må ha musa på rett plass');
+        }
     });
 
     $("#buttons .lede").click(function() {
-        var element = $(document.createElement("p"));
-        element.addClass('lede');
-        addElement(element, this);
+        if(lastActiveEditElement.attr('contenteditable') === "true") {
+            if(lastActiveEditElement.get(0).tagName !== "P") {
+                var p = $(document.createElement("p"));
+                handleEditable(p);
+                p.html(lastActiveEditElement.html());
+                p.addClass('lede');
+                lastActiveEditElement.before(p);
+                lastActiveEditElement.remove();
+                p.focus();
+            } else {
+                lastActiveEditElement.addClass('lede');
+            }
+        }
     });
 
     $("#buttons .body").click(function() {
-        var element = $(document.createElement("p"));
-        addElement(element, this);
+        if(lastActiveEditElement.attr('contenteditable') === "true") {
+            if(lastActiveEditElement.get(0).tagName !== "P") {
+                var p = $(document.createElement("p"));
+                handleEditable(p);
+                p.html(lastActiveEditElement.html());
+                lastActiveEditElement.before(p);
+                lastActiveEditElement.remove();
+                p.focus();
+            } else {
+                lastActiveEditElement.removeClass('lede');
+            }
+        }
     });
 
     $("#buttons .bold").click(function(event) {
@@ -50,12 +78,6 @@ $(document).ready(function() {
     $("#buttons .anchor").click(function(event) {
         document.execCommand('createLink', false, 'TBD');
     });
-
-    function addElement(element, adder) {
-        handleEditable(element);
-        $(adder).parent().parent().before(element);
-        $(element).focus();
-    }
 
     function handleEditable(element) {
         element.attr('contenteditable', 'true');
