@@ -69,11 +69,11 @@ $(document).ready(function() {
         });
 
         element.keydown(function(event) {
-            if(event.which == 38 && element.prev().get(0).tagName != "DIV") {
+            if(event.which == 38 && element.prev().length == 1) {
                 // arrow up
                 element.prev().focus();
             }
-            if(event.which == 40) {
+            if(event.which == 40 && element.next().length == 1) {
                 // arrow down
                 element.next().focus();
             }
@@ -85,7 +85,7 @@ $(document).ready(function() {
             if(event.which == 8 && element.text() == "") {
                 // backspace
                 event.preventDefault();
-                if(element.prev().get(0).tagName != "DIV") {
+                if(element.prev().length == 1) {
                     element.prev().focus();
                     var len = element.prev().text().length;
                     element.prev().setCursorLast();
