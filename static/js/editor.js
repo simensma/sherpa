@@ -79,26 +79,26 @@ $(document).ready(function() {
             }
             if(event.which == 46 && element.text() == "") {
                 // delete
-                element.remove();
                 event.preventDefault();
+                element.remove();
             }
             if(event.which == 8 && element.text() == "") {
                 // backspace
+                event.preventDefault();
                 if(element.prev().get(0).tagName != "DIV") {
                     element.prev().focus();
                     var len = element.prev().text().length;
                     element.prev().setCursorLast();
                 }
                 element.remove();
-                event.preventDefault();
             }
             if(event.which == 13) {
                 // enter
+                event.preventDefault();
                 var p = $(document.createElement("p"));
                 element.after(p);
                 handleEditable(p);
                 p.focus();
-                event.preventDefault();
             }
         });
     }
