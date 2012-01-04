@@ -5,7 +5,7 @@ $(document).ready(function() {
     // Refocus last edited element upon any button click
     $("#buttons button").click(function() {
         if(lastActiveEditElement) {
-            lastActiveEditElement.focus();
+            setTimeout(function() { lastActiveEditElement.focus() }, 20);
         }
     });
 
