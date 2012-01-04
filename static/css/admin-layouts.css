@@ -23,7 +23,11 @@
     width: auto;
 }
 
-#editarea .add-dropdown {
+#editarea #buttons {
+    border: 1px solid;
+}
+
+#editarea .add-content {
     border: 1px solid;
 }
 

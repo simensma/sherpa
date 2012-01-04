@@ -37,9 +37,23 @@
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
 <div id="editarea">
+  <div id="buttons">
+  <p>Gjør markert linje til:
+    <button class="header" type="button">Overskrift</button>,
+    <button class="lede" type="button">Ingress</button>,
+    <button class="body" type="button">Brødtekst</button>,
+    evt gjør markert tekst
+    <button class="bold" type="button">Bold</button>,
+    <button class="italic" type="button">Italic</button>,
+    <button class="underline" type="button">Understreket</button>,
+    <button class="anchor" type="button">Link</button>,
+  </p>
+  </div>
+
 {% for layout in layouts %}
 {% include layout.template %}
 {% endfor %}
+
 <div id="add-layouts">
 <h2>Legg til flere kolonner:</h2>
 <table>

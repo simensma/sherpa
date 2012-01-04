@@ -3,41 +3,51 @@ $(document).ready(function() {
     var currentActiveEditElement;
 
     // Refocus last edited element upon any button click
-    $(".add-dropdown button").click(function() {
+    $("#buttons button").click(function() {
         if(lastActiveEditElement) {
             lastActiveEditElement.focus();
         }
     });
 
-    $(".add-dropdown .header").click(function() {
+    $(".add-content button.content").click(function() {
+        var element = $(document.createElement("div"));
+        element.addClass('htmlcontent');
+        var p = $(document.createElement("p"));
+        element.append(p);
+        handleEditable(p);
+        $(this).parent().parent().before(element);
+        p.focus();
+    });
+
+    $("#buttons .header").click(function() {
         var element = $(document.createElement("h1"));
         addElement(element, this);
     });
 
-    $(".add-dropdown .lede").click(function() {
+    $("#buttons .lede").click(function() {
         var element = $(document.createElement("p"));
         element.addClass('lede');
         addElement(element, this);
     });
 
-    $(".add-dropdown .body").click(function() {
+    $("#buttons .body").click(function() {
         var element = $(document.createElement("p"));
         addElement(element, this);
     });
 
-    $(".add-dropdown .bold").click(function(event) {
+    $("#buttons .bold").click(function(event) {
         document.execCommand('bold');
     });
 
-    $(".add-dropdown .italic").click(function(event) {
+    $("#buttons .italic").click(function(event) {
         document.execCommand('italic');
     });
 
-    $(".add-dropdown .underline").click(function(event) {
+    $("#buttons .underline").click(function(event) {
         document.execCommand('underline');
     });
 
-    $(".add-dropdown .anchor").click(function(event) {
+    $("#buttons .anchor").click(function(event) {
         document.execCommand('createLink', false, 'TBD');
     });
 
