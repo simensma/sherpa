@@ -145,6 +145,9 @@ $(document).ready(function() {
             if(event.which == 46 && element.text() == "") {
                 // delete
                 event.preventDefault();
+                if(element.siblings().length == 0) {
+                    // Remove the HTMLContent div
+                }
                 element.remove();
             }
             if(event.which == 8 && element.text() == "") {
@@ -154,6 +157,9 @@ $(document).ready(function() {
                     element.prev().focus();
                     var len = element.prev().text().length;
                     element.prev().setCursorLast();
+                }
+                if(element.siblings().length == 0) {
+                    // Remove the HTMLContent div
                 }
                 element.remove();
             }
