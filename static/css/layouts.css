@@ -90,3 +90,10 @@ blockquote {
 p.quote-source {
     text-align: right;
 }
+
+/* common */
+
+p.lede {
+    font-size: 110%;
+    font-variant: small-caps;
+}

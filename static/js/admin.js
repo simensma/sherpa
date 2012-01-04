@@ -1,8 +1,35 @@
 $(document).ready(function() {
 
-    $(".add-dropdown .headerAdder").click(function() {
+    $(".add-dropdown .header").click(function() {
         var element = $(document.createElement("h1"));
         addElement(element, this);
+    });
+
+    $(".add-dropdown .lede").click(function() {
+        var element = $(document.createElement("p"));
+        element.addClass('lede');
+        addElement(element, this);
+    });
+
+    $(".add-dropdown .body").click(function() {
+        var element = $(document.createElement("p"));
+        addElement(element, this);
+    });
+
+    $(".add-dropdown .bold").click(function(event) {
+        document.execCommand('bold');
+    });
+
+    $(".add-dropdown .italic").click(function(event) {
+        document.execCommand('italic');
+    });
+
+    $(".add-dropdown .underline").click(function(event) {
+        document.execCommand('underline');
+    });
+
+    $(".add-dropdown .anchor").click(function(event) {
+        document.execCommand('createLink', false, 'TBD');
     });
 
     function addElement(element, adder) {
