@@ -40,6 +40,11 @@
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
 <div id="editarea">
+  <div id="savearea">
+    <p id="savestatus">Dokumentet er lagret.</p>
+    <button id="savebutton" disabled>Lagre</button>
+  </div>
+
   <div id="buttons">
   <p>Gjør markert linje til:
     <button class="header" type="button">Overskrift</button>,

@@ -42,6 +42,14 @@ div.htmlcontent {
     width: auto;
 }
 
+#editarea #savearea {
+    text-align: center;
+    border: 1px solid black;
+    margin-bottom: 1.2em;
+    background-color: #008800;
+    color: white;
+}
+
 #editarea #buttons {
     border: 1px solid;
 }
