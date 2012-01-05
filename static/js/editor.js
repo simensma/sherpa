@@ -260,4 +260,9 @@ $(document).ready(function() {
         $(this).data('id', $(this).attr('name'));
         $(this).removeAttr('name');
     });
+
+    // Handle all newly created content-elements
+    $(".htmlcontent").children().each(function() {
+        handleEditable($(this));
+    });
 });
