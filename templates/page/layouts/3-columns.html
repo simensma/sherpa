@@ -3,7 +3,7 @@
 <div class="column-of-3 left">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
-    <div name="{{ item.id }}">{{ item.content|safe }}</div>
+    {{ item.content|safe }}
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
@@ -14,7 +14,7 @@
 <div class="column-of-3 middle">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
-    <div name="{{ item.id }}">{{ item.content|safe }}</div>
+    {{ item.content|safe }}
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
@@ -25,7 +25,7 @@
 <div class="column-of-3 right">
 {% for item in layout.columns.2 %}
   {% if item.type == "html" %}
-    <div name="{{ item.id }}">{{ item.content|safe }}</div>
+    {{ item.content|safe }}
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
