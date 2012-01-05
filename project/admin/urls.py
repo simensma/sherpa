@@ -25,7 +25,9 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/version/layout/slett/(?P<layout>\d*)/$', 'page_layout_delete'),
 
     # AJAX-updates to content and widgets
-    url(r'^ajax/save/content/(?P<content>\d*)/$', 'page_content_update'),
+    url(r'^ajax/create/content/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'page_content_create'),
+    url(r'^ajax/update/content/(?P<content>\d+)/$', 'page_content_update'),
+    url(r'^ajax/delete/content/(?P<content>\d+)/$', 'page_content_delete'),
     url(r'^ajax/swap/layout/(?P<layout1>\d*)/(?P<layout2>\d*)/$', 'page_layout_swap'),
 
     # Menyer

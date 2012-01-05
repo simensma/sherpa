@@ -147,10 +147,23 @@ def parse_widget(widget):
 # Ajax for content and widgets
 
 @csrf_exempt
+def page_content_create(request, layout, column, order):
+    layout = Layout.objects.get(id=layout)
+    content = HTMLContent(layout=layout, content=request.POST['content'], column=column, order=order)
+    content.save()
+    return HttpResponse('')
+
+@csrf_exempt
 def page_content_update(request, content):
     content = HTMLContent.objects.get(id=content)
     content.content = request.POST['content']
     content.save()
+    return HttpResponse('')
+
+@csrf_exempt
+def page_content_delete(request, content):
+    content = HTMLContent.objects.get(id=content)
+    content.delete()
     return HttpResponse('')
 
 @csrf_exempt

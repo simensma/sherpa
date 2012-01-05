@@ -201,6 +201,7 @@ $(document).ready(function() {
         if(!documentSaving) {
             documentSaving = true;
             setStatus('saving');
+            saveContent();
         } else {
             // This is a bug; the user shouldn't be able to click the button
             // while documentSaving is true. Ignore it and just disable the button.
@@ -208,21 +209,48 @@ $(document).ready(function() {
         }
     });
 
-    function saveContent(element) {
-        element.addClass('saving');
-        element.children().each(function() {
-            $(this).removeAttr('contentEditable');
-        });
-        var content = element.html();
-        $.ajax({
-            // Maybe this file should be rendered as a template to avoid static URLs?
-            url: '/admin/ajax/save/content/' + element.attr('name') + '/',
-            type: 'POST',
-            data: "content=" + content
-        }).done(function() {
-            element.removeClass('saving');
-            element.children().each(function() {
-                $(this).attr('contentEditable', 'true');
+    function saveContent() {
+        $("div.htmlcontent").each(function() {
+            $(this).children().removeAttr('contenteditable');
+            var id = $(this).data('id');
+            var url;
+            var data;
+            if(id) {
+                url = '/admin/ajax/update/content/' + $(this).data('id') + '/';
+                data = "content=" + $(this).html()
+            } else {
+                var layout = $(this).parents(".layout").data('id');
+                var column;
+                if($(this).parents(".full, .left, .main-column").length > 0) {
+                    column = 0;
+                } else if($(this).parents(".middle, .column-of-2.right, aside").length > 0) {
+                    column = 1;
+                } else if($(this).parents(".column-of-3.right").length > 0) {
+                    column = 2;
+                }
+                var pa = $(this).prevAll();
+                var order = $(this).prevAll().length + 1;
+                url = '/admin/ajax/create/content/' + layout + '/' + column + '/' + order + '/';
+                data = "content=" + $(this).html()
+            }
+            $.ajax({
+                // Maybe this file should be rendered as a template to avoid static URLs?
+                url: url,
+                type: 'POST',
+                data: data
+            }).done(function() {
+                documentSaved = true;
+            }).fail(function() {
+                // Todo: Fetch an error code and display corresponding message
+                documentSaved = false;
+            }).always(function() {
+                $(this).children().attr('contenteditable', 'true');
+                documentSaving = false;
+                if(documentSaved) {
+                    setStatus('saved');
+                } else {
+                    setStatus('unsaved');
+                }
             });
         });
     }
