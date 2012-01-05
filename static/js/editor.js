@@ -12,7 +12,7 @@ $.fn.setCursor = function(length) {
     });
 }
 
-$.fn.setCursorLast = function() {
+$.fn.setCursorAtEnd = function() {
     return this.each(function() {
         if(window.getSelection) {
             var selection = window.getSelection();
@@ -161,10 +161,10 @@ $(document).ready(function() {
                     // Remove the HTMLContent div
                 } else if(element.prev().length == 1) {
                     element.prev().focus();
-                    element.prev().setCursorLast();
+                    element.prev().setCursorAtEnd();
                 } else if(element.next().length == 1) {
                     element.next().focus();
-                    element.prev().setCursorLast();
+                    element.prev().setCursorAtEnd();
                 }
                 element.remove();
             }
