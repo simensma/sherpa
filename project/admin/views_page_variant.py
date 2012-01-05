@@ -166,17 +166,6 @@ def page_content_delete(request, content):
     content.delete()
     return HttpResponse('')
 
-@csrf_exempt
-def page_layout_swap(request, layout1, layout2):
-    layout1 = Layout.objects.get(id=layout1)
-    layout2 = Layout.objects.get(id=layout2)
-    tmp = layout1.order
-    layout1.order = layout2.order
-    layout2.order = tmp
-    layout1.save()
-    layout2.save()
-    return HttpResponse('')
-
 #def page_variant_delete(request, variant):
 #    variant = PageVariant.objects.get(pk=variant)
 #    content = PageContent.objects.get(pagevariant=variant)

@@ -28,7 +28,6 @@ urlpatterns = patterns('admin.views',
     url(r'^ajax/create/content/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'page_content_create'),
     url(r'^ajax/update/content/(?P<content>\d+)/$', 'page_content_update'),
     url(r'^ajax/delete/content/(?P<content>\d+)/$', 'page_content_delete'),
-    url(r'^ajax/swap/layout/(?P<layout1>\d+)/(?P<layout2>\d+)/$', 'page_layout_swap'),
 
     # Menyer
     url(r'^meny/$', 'menu_list'),
