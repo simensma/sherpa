@@ -123,27 +123,29 @@ $(document).ready(function() {
                 // delete
                 event.preventDefault();
                 if(element.siblings().length == 0) {
-                    // Remove the HTMLContent div
+                    element.parent().remove();
                 } else if(element.next().length == 1) {
                     element.next().focus();
+                    element.remove();
                 } else if(element.prev().length == 1) {
                     element.prev().focus();
+                    element.remove();
                 }
-                element.remove();
             }
             if(event.which == 8 && element.text() == "") {
                 // backspace
                 event.preventDefault();
                 if(element.siblings().length == 0) {
-                    // Remove the HTMLContent div
+                    element.parent().remove();
                 } else if(element.prev().length == 1) {
                     element.prev().focus();
                     element.prev().setCursorAtEnd();
+                    element.remove();
                 } else if(element.next().length == 1) {
                     element.next().focus();
                     element.prev().setCursorAtEnd();
+                    element.remove();
                 }
-                element.remove();
             }
             if(event.which == 13) {
                 // enter
