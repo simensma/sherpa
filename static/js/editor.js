@@ -42,15 +42,13 @@ $(document).ready(function() {
     });
 
     $("#buttons .header").click(function() {
-        if(lastActiveEditElement.attr('contenteditable') === "true") {
+        if(lastActiveEditElement) {
             var h1 = $(document.createElement("h1"));
             h1.html(lastActiveEditElement.html());
             handleEditable(h1);
             lastActiveEditElement.before(h1);
             lastActiveEditElement.remove();
             h1.focus();
-        } else {
-            alert('fail, du må ha musa på rett plass');
         }
     });
 
