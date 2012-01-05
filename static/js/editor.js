@@ -14,19 +14,12 @@ $.fn.setCursor = function(length) {
 
 $.fn.setCursorAtEnd = function() {
     return this.each(function() {
-        if(window.getSelection) {
-            var selection = window.getSelection();
-            var range = document.createRange();
-            range.setStartAfter($(this).last().get(0));
-            selection.removeAllRanges();
-            selection.addRange(range);
-        } else if(document.selection) {
-            alert("IE?");
-        }
+        var el = $(this).contents().last();
+        el.setRange(el.get(0).length, el.get(0).length);
     });
 }
 
-$.fn.setTextRange = function(start, end) {
+$.fn.setRange = function(start, end) {
     return this.each(function() {
         if(window.getSelection) {
             var selection = window.getSelection();
