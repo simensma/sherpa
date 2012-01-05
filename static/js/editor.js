@@ -1,7 +1,9 @@
 $.fn.setCursorAtEnd = function() {
     return this.each(function() {
         var el = $(this).contents().last();
-        el.setRange(el.get(0).length, el.get(0).length);
+        if(el.length > 0 && el.get(0).length) {
+            el.setRange(el.get(0).length, el.get(0).length);
+        }
     });
 }
 
