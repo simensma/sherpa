@@ -46,7 +46,7 @@ div.htmlcontent {
     text-align: center;
     border: 1px solid black;
     margin-bottom: 1.2em;
-    background-color: #008800;
+    background-color: rgb(0, 128, 0);
     color: white;
 }
 

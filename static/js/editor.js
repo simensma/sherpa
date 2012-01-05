@@ -180,19 +180,19 @@ $(document).ready(function() {
             case 'saving':
                 $("#savearea #savestatus").text("Dokumentet lagres, vennligst vent...");
                 $("#savearea #savebutton").attr('disabled', '');
-                $("#savearea").css('background-color', '#ffa500');
+                $("#savearea").css('background-color', 'rgb(255, 165, 0)');
                 break;
 
             case 'saved':
                 $("#savearea #savestatus").text("Dokumentet er lagret.");
                 $("#savearea #savebutton").attr('disabled', '');
-                $("#savearea").css('background-color', '#00ff00');
+                $("#savearea").css('background-color', 'rgb(0, 128, 0)');
                 break;
 
             case 'unsaved':
                 $("#savearea #savestatus").html("Dokumentet er <strong>ikke</strong> lagret.");
                 $("#savearea #savebutton").removeAttr('disabled');
-                $("#savearea").css('background-color', '#ff0000');
+                $("#savearea").css('background-color', 'rgb(255, 0, 0)');
                 break;
         }
     }
