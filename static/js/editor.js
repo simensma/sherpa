@@ -1,17 +1,3 @@
-$.fn.setCursor = function(length) {
-    return this.each(function() {
-        $(this).contents().each(function() {
-            if(this.nodeType == 3) {
-                if(this.length < length) {
-                    return $(this).setTextRange(length, length);
-                } else {
-                    length -= this.length;
-                }
-            }
-        });
-    });
-}
-
 $.fn.setCursorAtEnd = function() {
     return this.each(function() {
         var el = $(this).contents().last();
