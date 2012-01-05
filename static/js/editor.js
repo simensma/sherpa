@@ -147,6 +147,10 @@ $(document).ready(function() {
                 event.preventDefault();
                 if(element.siblings().length == 0) {
                     // Remove the HTMLContent div
+                } else if(element.next().length == 1) {
+                    element.next().focus();
+                } else if(element.prev().length == 1) {
+                    element.prev().focus();
                 }
                 element.remove();
             }
