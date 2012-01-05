@@ -1,10 +1,10 @@
-<div class="layout 2-columns">
+<div class="layout 2-columns" name="{{ layout.id }}">
 {% include 'admin/page/snippets/edit_layout.html' %}
 
 <div class="column-of-2 left">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
-    <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>
+    <div class="htmlcontent" name="{{ item.id }}">{{ item.content|safe }}</div>
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
@@ -16,7 +16,7 @@
 <div class="column-of-2 right">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
-    <div class="editable" name="{{ item.id }}">{{ item.content|safe }}</div>
+    <div class="htmlcontent" name="{{ item.id }}">{{ item.content|safe }}</div>
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}

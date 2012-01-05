@@ -226,4 +226,10 @@ $(document).ready(function() {
             });
         });
     }
+
+    // Store all the layout- and content-ids
+    $(".layout[name], .htmlcontent[name]").each(function() {
+        $(this).data('id', $(this).attr('name'));
+        $(this).removeAttr('name');
+    });
 });
