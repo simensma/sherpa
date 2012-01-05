@@ -157,13 +157,14 @@ $(document).ready(function() {
             if(event.which == 8 && element.text() == "") {
                 // backspace
                 event.preventDefault();
-                if(element.prev().length == 1) {
-                    element.prev().focus();
-                    var len = element.prev().text().length;
-                    element.prev().setCursorLast();
-                }
                 if(element.siblings().length == 0) {
                     // Remove the HTMLContent div
+                } else if(element.prev().length == 1) {
+                    element.prev().focus();
+                    element.prev().setCursorLast();
+                } else if(element.next().length == 1) {
+                    element.next().focus();
+                    element.prev().setCursorLast();
                 }
                 element.remove();
             }
