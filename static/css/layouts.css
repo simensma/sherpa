@@ -14,7 +14,7 @@
 .layout p {
     margin-top: 0;
     margin-bottom: 0;
-    height: 1em;
+    min-height: 1.2em;
 }
 
 /* "Main column" (common for full- and sidebar-layout) */
