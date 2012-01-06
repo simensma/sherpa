@@ -9,16 +9,11 @@ $.fn.setCursorAtEnd = function() {
 
 $.fn.setRange = function(start, end) {
     return this.each(function() {
-        if(window.getSelection) {
-            var selection = window.getSelection();
-            var range = document.createRange();
-            range.setStart($(this).get(0), start);
-            range.setEnd($(this).get(0), end);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        } else if(document.selection) {
-            alert("IE?");
-        }
+        var selection = rangy.getSelection();
+        var range = rangy.createRange();
+        range.setStart($(this).get(0), start);
+        range.setEnd($(this).get(0), end);
+        selection.setSingleRange(range);
     });
 };
 
