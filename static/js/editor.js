@@ -211,7 +211,8 @@ $(document).ready(function() {
 
     function saveContent() {
         $("div.htmlcontent").each(function() {
-            $(this).children().removeAttr('contenteditable');
+            var children = $(this).children();
+            children.removeAttr('contenteditable');
             var id = $(this).data('id');
             var url;
             var data;
@@ -244,7 +245,7 @@ $(document).ready(function() {
                 // Todo: Fetch an error code and display corresponding message
                 documentSaved = false;
             }).always(function() {
-                $(this).children().attr('contenteditable', 'true');
+                children.attr('contenteditable', 'true');
                 documentSaving = false;
                 if(documentSaved) {
                     setStatus('saved');
