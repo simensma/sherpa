@@ -18,6 +18,18 @@ $.fn.setRange = function(start, end) {
 };
 
 $(document).ready(function() {
+
+    // Write content to iframes
+    $("iframe").each(function() {
+        var doc = this.contentDocument;
+        doc.open();
+        doc.designMode = 'on';
+        doc.write('<!DOCTYPE html><head><title>Editor window</title></head><body>');
+        doc.write($(this).html());
+        doc.write('</body></html>');
+        doc.close();
+    });
+
     var lastActiveEditElement;
     var currentActiveEditElement;
 
