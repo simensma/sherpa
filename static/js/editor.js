@@ -21,24 +21,56 @@ $(document).ready(function() {
 
     // Write content to iframes
     $("iframe").each(function() {
-        var doc = this.contentDocument;
+        // Hide the content element, which later will be appended to the iframe
+        var content = $(this).prev();
+        content.hide();
+
+        // Get the iframe and its document
+        var frame = this;
+        var doc;
+        if(this.contentDocument) {
+            doc = this.contentDocument;
+        } else {
+            doc = this.contentWindow.document;
+        }
+
+        // Append the iframe content when the "loading"-document is loaded
+        var intervalId = setInterval(loadOrWait, 100);
+        function loadOrWait() {
+            // The body tag won't have elements until it's loaded.
+            if($(doc.body).length > 0) {
+                $(doc.body).blur(function() {
+                    // Whenever an iframe loses focus, note which iframe it was
+                    lastIframe = frame;
+                });
+                clearInterval(intervalId);
+                $(doc.body).find("*").remove();
+                $(doc.body).append(content.children());
+                content.remove();
+                $(doc.body).keypress(documentChange);
+                $(doc.body).click(documentChange);
+            }
+        }
+
+        // Create the "loading"-document, and enable designmode
+        var loadingDocument = '<!DOCTYPE html><html><head><title>Editor window</title>';
+        loadingDocument += '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">';
+        loadingDocument += '<link rel="stylesheet" href="/static/css/layouts.css" media="screen"></head><body>';
+        loadingDocument += '<h1>Laster, vennligst vent...</h1>';
+        loadingDocument += '</body></html>';
         doc.open();
-        doc.designMode = 'on';
-        doc.write('<!DOCTYPE html><head><title>Editor window</title></head><body>');
-        doc.write($(this).html());
-        doc.write('</body></html>');
+        doc.write(loadingDocument);
         doc.close();
+        doc.designMode = 'on';
     });
 
+    var lastIframe;
     var lastActiveEditElement;
     var currentActiveEditElement;
 
-    // Refocus last edited element upon any button click
+    // Note document changes upon button click
     $("#buttons button").click(function() {
         documentChange();
-        if(lastActiveEditElement) {
-            setTimeout(function() { lastActiveEditElement.focus() }, 20);
-        }
     });
 
     $(".add-content button.content").click(function() {
@@ -53,14 +85,7 @@ $(document).ready(function() {
     });
 
     $("#buttons .header").click(function() {
-        if(lastActiveEditElement) {
-            var h1 = $(document.createElement("h1"));
-            h1.html(lastActiveEditElement.html());
-            handleEditable(h1);
-            lastActiveEditElement.before(h1);
-            lastActiveEditElement.remove();
-            h1.focus();
-        }
+        $("iframe").get(0).contentDocument.execCommand('formatblock', false, 'h1');
     });
 
     $("#buttons .lede").click(function() {
@@ -80,22 +105,11 @@ $(document).ready(function() {
     });
 
     $("#buttons .body").click(function() {
-        if(lastActiveEditElement.attr('contenteditable') === "true") {
-            if(lastActiveEditElement.get(0).tagName !== "P") {
-                var p = $(document.createElement("p"));
-                handleEditable(p);
-                p.html(lastActiveEditElement.html());
-                lastActiveEditElement.before(p);
-                lastActiveEditElement.remove();
-                p.focus();
-            } else {
-                lastActiveEditElement.removeClass('lede');
-            }
-        }
+        lastIframe.contentDocument.execCommand('formatblock', false, 'p');
     });
 
     $("#buttons .bold").click(function(event) {
-        document.execCommand('bold');
+        lastIframe.contentDocument.execCommand('bold');
     });
 
     $("#buttons .italic").click(function(event) {
