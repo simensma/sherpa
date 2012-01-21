@@ -34,6 +34,16 @@ $(document).ready(function() {
             // The body tag won't have elements until it's loaded.
             if($(doc.body).length > 0) {
                 clearInterval(intervalId);
+
+                // Simulate the layout classes on html/body in the iframe
+                $(doc).children().addClass($(iframe).parent().parent().attr('class'));
+                $(doc.body).addClass($(iframe).parent().attr('class'));
+
+                // Remove all temporary content and add the actual content
+                $(doc.body).find("*").remove();
+                $(doc.body).append(content);
+
+                // Add event handlers for the iframe
                 $(doc.body).blur(function() {
                     // Whenever an iframe loses focus, note which iframe it was
                     lastIframe = iframe;
@@ -44,10 +54,6 @@ $(document).ready(function() {
                         confirm('Todo: Confirm deletion of entire content box.');
                     }
                 });
-                $(doc).children().addClass($(iframe).parent().parent().attr('class'));
-                $(doc.body).addClass($(iframe).parent().attr('class'));
-                $(doc.body).find("*").remove();
-                $(doc.body).append(content);
                 $(doc.body).keypress(documentChange);
                 $(doc.body).click(documentChange);
             }
