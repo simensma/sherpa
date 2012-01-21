@@ -87,7 +87,9 @@ $(document).ready(function() {
         iframe.css('border', '1px solid #000');
         // This traversal is based on the add-content div for any layout column and may change.
         $(this).parent().parent().last().before(iframe.get(0));
-        iframe.iframeDocument().designMode = 'on';
+        var p = document.createElement("p");
+        $(p).text("Legg til innhold her...");
+        createIframe(iframe.get(0), p);
     });
 
     $("#buttons .header").click(function() {
