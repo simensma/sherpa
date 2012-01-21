@@ -231,6 +231,7 @@ $(document).ready(function() {
     });
 
     function saveContent() {
+        // TODO move most of this logic outside the loop!
         $("iframe").each(function() {
             // Figure out the metadata (new/existing, layout, column, order) for this content
             var url;
