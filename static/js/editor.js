@@ -64,6 +64,9 @@ $(document).ready(function() {
         content.hide();
         createIframe(this, content.children());
         content.remove();
+        // id's are consistently stored as "content-<id>", so strip "content-"
+        $(this).data('id', $(this).attr('id').substring(8));
+        $(this).removeAttr('id');
     });
 
     var lastIframe;
@@ -237,8 +240,9 @@ $(document).ready(function() {
         // TODO move most of this logic outside the loop!
         $("iframe").each(function() {
             // Figure out the metadata (new/existing, layout, column, order) for this content
+            var iframe = this;
             var url;
-            if($(this).attr('id') === undefined) {
+            if($(this).data('id') === undefined) {
                 // New content
                 var layout = $(this).parents(".layout").data('id');
                 var column;
@@ -253,8 +257,7 @@ $(document).ready(function() {
                 url = '/admin/ajax/create/content/' + layout + '/' + column + '/' + order + '/';
             } else {
                 // Existing content
-                // id's are consistently stored as "content-<id>", so strip "content-"
-                var id = $(this).attr('id').substring(8);
+                var id = $(this).data('id');
                 url = '/admin/ajax/update/content/' + id + '/';
             }
             var data = "content=" + $($(this).iframeDocument().body).html();
@@ -264,12 +267,14 @@ $(document).ready(function() {
                 url: url,
                 type: 'POST',
                 data: data
-            }).done(function() {
+            }).done(function(string) {
+                var response = JSON.parse(string);
+                $(iframe).data('id', response.id);
                 documentSaved = true;
-            }).fail(function() {
+            }).fail(function(string) {
                 // Todo: Fetch an error code and display corresponding message
                 documentSaved = false;
-            }).always(function() {
+            }).always(function(string) {
                 documentSaving = false;
                 if(documentSaved) {
                     setStatus('saved');
