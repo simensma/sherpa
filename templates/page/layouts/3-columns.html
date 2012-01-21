@@ -1,6 +1,6 @@
-<div class="layout 3-columns">
+<div class="layout columns-3">
 
-<div class="column-of-3 left">
+<div class="column col-one">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
@@ -11,7 +11,7 @@
 {% endfor %}
 </div>
 
-<div class="column-of-3 middle">
+<div class="column col-two">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
@@ -22,7 +22,7 @@
 {% endfor %}
 </div>
 
-<div class="column-of-3 right">
+<div class="column col-three">
 {% for item in layout.columns.2 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}

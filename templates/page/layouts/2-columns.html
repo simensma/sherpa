@@ -1,5 +1,5 @@
-<div class="layout 2-columns">
-<div class="column-of-2 left">
+<div class="layout columns-2">
+<div class="column col-one">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
@@ -10,7 +10,7 @@
 {% endfor %}
 </div>
 
-<div class="column-of-2 right">
+<div class="column col-two">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
