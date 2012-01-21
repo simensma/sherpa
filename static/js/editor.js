@@ -38,6 +38,12 @@ $(document).ready(function() {
                     // Whenever an iframe loses focus, note which iframe it was
                     lastIframe = iframe;
                 });
+                $(doc.body).keypress(function(event) {
+                    if(event.which == 8 && $(doc.body).text().length == 0) {
+                        // Backspace was pressed, and there is no text content in the document
+                        confirm('Todo: Confirm deletion of entire content box.');
+                    }
+                });
                 $(doc).children().addClass($(iframe).parent().parent().attr('class'));
                 $(doc.body).addClass($(iframe).parent().attr('class'));
                 $(doc.body).find("*").remove();
