@@ -1,7 +1,7 @@
-<div class="layout 3-columns" name="{{ layout.id }}">
+<div class="layout columns-3" name="{{ layout.id }}">
 {% include 'admin/page/snippets/edit_layout.html' %}
 
-<div class="column-of-3 left">
+<div class="column col-one">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}
@@ -15,7 +15,7 @@
 {% include 'admin/page/snippets/add_content.html' %}
 </div>
 
-<div class="column-of-3 middle">
+<div class="column col-two">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}
@@ -29,7 +29,7 @@
 {% include 'admin/page/snippets/add_content.html' %}
 </div>
 
-<div class="column-of-3 right">
+<div class="column col-three">
 {% for item in layout.columns.2 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}

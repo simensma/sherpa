@@ -1,6 +1,6 @@
 <div class="layout full" name="{{ layout.id }}">
 {% include 'admin/page/snippets/edit_layout.html' %}
-<div class="full-column">
+<div class="column col-one">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}

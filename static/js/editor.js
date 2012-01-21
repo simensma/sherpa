@@ -238,11 +238,11 @@ $(document).ready(function() {
                 // New content
                 var layout = $(this).parents(".layout").data('id');
                 var column;
-                if($(this).parents(".full-column, .left, .main-column").length > 0) {
+                if($(this).parent(".col-one").length > 0) {
                     column = 0;
-                } else if($(this).parents(".middle, .column-of-2.right, aside").length > 0) {
+                } else if($(this).parent(".col-two").length > 0) {
                     column = 1;
-                } else if($(this).parents(".column-of-3.right").length > 0) {
+                } else if($(this).parent(".col-three").length > 0) {
                     column = 2;
                 }
                 var order = $(this).prevAll().length + 1;

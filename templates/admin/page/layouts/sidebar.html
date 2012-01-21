@@ -1,7 +1,7 @@
 <div class="layout sidebar" name="{{ layout.id }}">
 {% include 'admin/page/snippets/edit_layout.html' %}
-<aside>
-{% for item in layout.columns.1 %}
+<div class="column col-one">
+{% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}
     <div>{{ item.content|safe }}</div>
@@ -12,10 +12,10 @@
   {% endif %}
 {% endfor %}
 {% include 'admin/page/snippets/add_content.html' %}
-</aside>
+</div>
 
-<div class="main-column">
-{% for item in layout.columns.0 %}
+<div class="column col-two">
+{% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     {# The div contents will be moved into the iframe by scripts. #}
     <div>{{ item.content|safe }}</div>
