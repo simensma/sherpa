@@ -231,30 +231,30 @@ $(document).ready(function() {
     });
 
     function saveContent() {
-        $("div.htmlcontent").each(function() {
-            var children = $(this).children();
-            children.removeAttr('contenteditable');
-            var id = $(this).data('id');
+        $("iframe").each(function() {
+            // Figure out the metadata (new/existing, layout, column, order) for this content
             var url;
-            var data;
-            if(id) {
-                url = '/admin/ajax/update/content/' + $(this).data('id') + '/';
-                data = "content=" + $(this).html()
-            } else {
+            if($(this).attr('id') === undefined) {
+                // New content
                 var layout = $(this).parents(".layout").data('id');
                 var column;
-                if($(this).parents(".full, .left, .main-column").length > 0) {
+                if($(this).parents(".full-column, .left, .main-column").length > 0) {
                     column = 0;
                 } else if($(this).parents(".middle, .column-of-2.right, aside").length > 0) {
                     column = 1;
                 } else if($(this).parents(".column-of-3.right").length > 0) {
                     column = 2;
                 }
-                var pa = $(this).prevAll();
                 var order = $(this).prevAll().length + 1;
                 url = '/admin/ajax/create/content/' + layout + '/' + column + '/' + order + '/';
-                data = "content=" + $(this).html()
+            } else {
+                // Existing content
+                // id's are consistently stored as "content-<id>", so strip "content-"
+                var id = $(this).attr('id').substring(8);
+                url = '/admin/ajax/update/content/' + id + '/';
             }
+            var data = "content=" + $($(this).iframeDocument().body).html();
+
             $.ajax({
                 // Maybe this file should be rendered as a template to avoid static URLs?
                 url: url,
@@ -266,7 +266,6 @@ $(document).ready(function() {
                 // Todo: Fetch an error code and display corresponding message
                 documentSaved = false;
             }).always(function() {
-                children.attr('contenteditable', 'true');
                 documentSaving = false;
                 if(documentSaved) {
                     setStatus('saved');
@@ -278,13 +277,8 @@ $(document).ready(function() {
     }
 
     // Store all the layout- and content-ids
-    $(".layout[name], .htmlcontent[name]").each(function() {
+    $(".layout[name]").each(function() {
         $(this).data('id', $(this).attr('name'));
         $(this).removeAttr('name');
-    });
-
-    // Handle all newly created content-elements
-    $(".htmlcontent").children().each(function() {
-        handleEditable($(this));
     });
 });
