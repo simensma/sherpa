@@ -50,7 +50,7 @@ $(document).ready(function() {
          // Create the "loading"-document, and enable designmode
          var loadingDocument = '<!DOCTYPE html><html><head><title>Editor window</title>';
          loadingDocument += '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">';
-         loadingDocument += '<link rel="stylesheet" href="/static/css/layouts.css" media="screen"></head><body>';
+         loadingDocument += '<link rel="stylesheet" href="/static/css/layouts-formatting.css" media="screen"></head><body>';
          loadingDocument += '<h1>Laster, vennligst vent...</h1>';
          loadingDocument += '</body></html>';
          doc.open();
