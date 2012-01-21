@@ -17,6 +17,10 @@ $.fn.setRange = function(start, end) {
     });
 };
 
+$.fn.iframeDocument = function() {
+    return this.get(0).contentDocument ? this.get(0).contentDocument : this.get(0).contentWindow.document;
+};
+
 $(document).ready(function() {
 
     // Write content to iframes
@@ -27,12 +31,7 @@ $(document).ready(function() {
 
         // Get the iframe and its document
         var frame = this;
-        var doc;
-        if(this.contentDocument) {
-            doc = this.contentDocument;
-        } else {
-            doc = this.contentWindow.document;
-        }
+        var doc = $(this).iframeDocument();
 
         // Append the iframe content when the "loading"-document is loaded
         var intervalId = setInterval(loadOrWait, 100);
