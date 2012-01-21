@@ -72,15 +72,16 @@ $(document).ready(function() {
         documentChange();
     });
 
+    // Add new html-content in a specific column
     $(".add-content button.content").click(function() {
         documentChange();
-        var element = $(document.createElement("div"));
-        element.addClass('htmlcontent');
-        var p = $(document.createElement("p"));
-        element.append(p);
-        handleEditable(p);
-        $(this).parent().parent().before(element);
-        p.focus();
+        var iframe = $(document.createElement("iframe"));
+        iframe.width("100%");
+        iframe.height("300px");
+        iframe.css('border', '1px solid #000');
+        // This traversal is based on the add-content div for any layout column and may change.
+        $(this).parent().parent().last().before(iframe.get(0));
+        iframe.iframeDocument().designMode = 'on';
     });
 
     $("#buttons .header").click(function() {
