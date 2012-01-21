@@ -21,17 +21,12 @@ $.fn.iframeDocument = function() {
     return this.get(0).contentDocument ? this.get(0).contentDocument : this.get(0).contentWindow.document;
 };
 
+
 $(document).ready(function() {
 
-    // Write content to iframes
-    $("iframe").each(function() {
-        // Hide the content element, which later will be appended to the iframe
-        var content = $(this).prev();
-        content.hide();
-
-        // Get the iframe and its document
-        var frame = this;
-        var doc = $(this).iframeDocument();
+    // Creates an iframe with the specified content
+    function createIframe(iframe, content) {
+        var doc = $(iframe).iframeDocument();
 
         // Append the iframe content when the "loading"-document is loaded
         var intervalId = setInterval(loadOrWait, 100);
@@ -40,27 +35,35 @@ $(document).ready(function() {
             if($(doc.body).length > 0) {
                 $(doc.body).blur(function() {
                     // Whenever an iframe loses focus, note which iframe it was
-                    lastIframe = frame;
+                    lastIframe = iframe;
                 });
                 clearInterval(intervalId);
                 $(doc.body).find("*").remove();
-                $(doc.body).append(content.children());
-                content.remove();
+                $(doc.body).append(content);
                 $(doc.body).keypress(documentChange);
                 $(doc.body).click(documentChange);
             }
         }
 
-        // Create the "loading"-document, and enable designmode
-        var loadingDocument = '<!DOCTYPE html><html><head><title>Editor window</title>';
-        loadingDocument += '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">';
-        loadingDocument += '<link rel="stylesheet" href="/static/css/layouts.css" media="screen"></head><body>';
-        loadingDocument += '<h1>Laster, vennligst vent...</h1>';
-        loadingDocument += '</body></html>';
-        doc.open();
-        doc.write(loadingDocument);
-        doc.close();
-        doc.designMode = 'on';
+         // Create the "loading"-document, and enable designmode
+         var loadingDocument = '<!DOCTYPE html><html><head><title>Editor window</title>';
+         loadingDocument += '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">';
+         loadingDocument += '<link rel="stylesheet" href="/static/css/layouts.css" media="screen"></head><body>';
+         loadingDocument += '<h1>Laster, vennligst vent...</h1>';
+         loadingDocument += '</body></html>';
+         doc.open();
+         doc.write(loadingDocument);
+         doc.close();
+         doc.designMode = 'on';
+    }
+
+    // Write content to iframes
+    $("iframe").each(function() {
+        // Hide the content element, which later will be appended to the iframe
+        var content = $(this).prev();
+        content.hide();
+        createIframe(this, content.children());
+        content.remove();
     });
 
     var lastIframe;
