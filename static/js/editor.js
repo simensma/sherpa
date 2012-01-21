@@ -91,7 +91,7 @@ $(document).ready(function() {
     });
 
     $("#buttons .header").click(function() {
-        $("iframe").get(0).contentDocument.execCommand('formatblock', false, 'h1');
+        lastIframe.contentDocument.execCommand('formatblock', false, 'h1');
     });
 
     $("#buttons .lede").click(function() {
@@ -119,15 +119,15 @@ $(document).ready(function() {
     });
 
     $("#buttons .italic").click(function(event) {
-        document.execCommand('italic');
+        lastIframe.contentDocument.execCommand('italic');
     });
 
     $("#buttons .underline").click(function(event) {
-        document.execCommand('underline');
+        lastIframe.contentDocument.execCommand('underline');
     });
 
     $("#buttons .anchor").click(function(event) {
-        document.execCommand('createLink', false, 'TBD');
+        lastIframe.contentDocument.execCommand('createLink', false, 'TBD');
     });
 
     function handleEditable(element) {
