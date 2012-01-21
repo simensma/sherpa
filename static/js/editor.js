@@ -33,11 +33,11 @@ $(document).ready(function() {
         function loadOrWait() {
             // The body tag won't have elements until it's loaded.
             if($(doc.body).length > 0) {
+                clearInterval(intervalId);
                 $(doc.body).blur(function() {
                     // Whenever an iframe loses focus, note which iframe it was
                     lastIframe = iframe;
                 });
-                clearInterval(intervalId);
                 $(doc.body).find("*").remove();
                 $(doc.body).append(content);
                 $(doc.body).keypress(documentChange);
