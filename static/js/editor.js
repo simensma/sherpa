@@ -38,6 +38,8 @@ $(document).ready(function() {
                     // Whenever an iframe loses focus, note which iframe it was
                     lastIframe = iframe;
                 });
+                $(doc).children().addClass($(iframe).parent().parent().attr('class'));
+                $(doc.body).addClass($(iframe).parent().attr('class'));
                 $(doc.body).find("*").remove();
                 $(doc.body).append(content);
                 $(doc.body).keypress(documentChange);
