@@ -3,6 +3,11 @@
  * main presentation css, could that be avoided?
  */
 
+ body {
+    /* Account for the top toolbar. */
+    padding-top: 40px;
+ }
+
 /* layouts */
 
 #editarea {
@@ -49,7 +54,17 @@ div.htmlcontent {
 }
 
 #editarea #buttons {
-    border: 1px solid;
+    border: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    position: fixed;
+    width: 99%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0.5%;
+    /* The body will add this amount to padding-top */
+    height: 40px;
+    text-align: center;
 }
 
 #editarea .add-content {

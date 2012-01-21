@@ -46,16 +46,13 @@
   </div>
 
   <div id="buttons">
-  <p>Gjør markert linje til:
-    <button class="header" type="button">Overskrift</button>,
-    <button class="lede" type="button">Ingress</button>,
-    <button class="body" type="button">Brødtekst</button>,
-    evt gjør markert tekst
-    <button class="bold" type="button">Bold</button>,
-    <button class="italic" type="button">Italic</button>,
-    <button class="underline" type="button">Understreket</button>,
-    <button class="anchor" type="button">Link</button>,
-  </p>
+    <button class="header" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/header.png"></button>
+    <button class="lede" type="button">Ingress</button>
+    <button class="body" type="button">Brødtekst</button>
+    <button class="bold" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/bold.png"></button>
+    <button class="italic" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/italic.png"></button>
+    <button class="underline" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/underline.png"></button>
+    <button class="anchor" type="button">Link</button>
   </div>
 
 {% for layout in layouts %}
