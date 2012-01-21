@@ -142,6 +142,14 @@ $(document).ready(function() {
         lastIframe.contentDocument.execCommand('underline');
     });
 
+    $("#buttons .ol").click(function(event) {
+        lastIframe.contentDocument.execCommand('insertorderedlist');
+    });
+
+    $("#buttons .ul").click(function(event) {
+        lastIframe.contentDocument.execCommand('insertunorderedlist');
+    });
+
     $("#buttons .anchor").click(function(event) {
         lastIframe.contentDocument.execCommand('createLink', false, 'TBD');
     });
