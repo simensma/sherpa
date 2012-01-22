@@ -307,6 +307,10 @@ $(document).ready(function() {
 
     function saveContent() {
         // TODO move most of this logic outside the loop!
+        if($("iframe").length == 0) {
+            // nothing to create or update
+            setStatus('saved');
+        }
         $("iframe").each(function() {
             // Figure out the metadata (new/existing, layout, column, order) for this content
             var iframe = this;
