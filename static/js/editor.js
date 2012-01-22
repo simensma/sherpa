@@ -251,6 +251,14 @@ $(document).ready(function() {
     var documentSaved = true;
     var documentSaving = false;
 
+    var count = 1;
+    var counterId;
+
+    function updateCounter() {
+        $("#savebutton").text("Lagre (" + count + "s)");
+        count++;
+    }
+
     function documentChange() {
         documentSaved = false;
         if(!documentSaving) {
@@ -261,26 +269,31 @@ $(document).ready(function() {
     function setStatus(status) {
         switch(status) {
             case 'saving':
-                $("#savearea #savestatus").text("Dokumentet lagres, vennligst vent...");
-                $("#savearea #savebutton").attr('disabled', '');
-                $("#savearea").css('background-color', 'rgb(255, 165, 0)');
+                clearInterval(counterId);
+                counterId = undefined;
+                count = 1;
+                $("#savebutton").attr('disabled', '');
+                $("#savebutton").text("Lagrer...");
+                $("#savebutton").css('background-color', 'rgb(255, 165, 0)');
                 break;
 
             case 'saved':
-                $("#savearea #savestatus").text("Dokumentet er lagret.");
-                $("#savearea #savebutton").attr('disabled', '');
-                $("#savearea").css('background-color', 'rgb(0, 128, 0)');
+                $("#savebutton").removeAttr('disabled');
+                $("#savebutton").text("Lagret");
+                $("#savebutton").css('background-color', 'rgb(0, 128, 0)');
                 break;
 
             case 'unsaved':
-                $("#savearea #savestatus").html("Dokumentet er <strong>ikke</strong> lagret.");
-                $("#savearea #savebutton").removeAttr('disabled');
-                $("#savearea").css('background-color', 'rgb(255, 0, 0)');
+                $("#savebutton").removeAttr('disabled');
+                $("#savebutton").css('background-color', 'rgb(255, 0, 0)');
+                if(counterId === undefined) {
+                    counterId = setInterval(updateCounter, 1000);
+                }
                 break;
         }
     }
 
-    $("#savearea button#savebutton").click(function() {
+    $("#savebutton").click(function() {
         if(!documentSaving) {
             documentSaving = true;
             setStatus('saving');
@@ -288,7 +301,7 @@ $(document).ready(function() {
         } else {
             // This is a bug; the user shouldn't be able to click the button
             // while documentSaving is true. Ignore it and just disable the button.
-            $("#savearea #savebutton").attr('disabled', '');
+            $("#savebutton").attr('disabled', '');
         }
     });
 

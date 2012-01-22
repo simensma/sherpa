@@ -40,11 +40,6 @@
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
 <div id="editarea">
-  <div id="savearea">
-    <p id="savestatus">Dokumentet er lagret.</p>
-    <button id="savebutton" disabled>Lagre</button>
-  </div>
-
   <div id="buttons">
     <button class="header" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/header.png"></button>
     <button class="lede" type="button">Ingress</button>
@@ -60,6 +55,8 @@
     <button class="center" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/center.png"></button>
     <button class="right" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/right.png"></button>
     <button class="full" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/full.png"></button>
+    <br>
+    <button id="savebutton">Lagre</button>
   </div>
 
 {% for layout in layouts %}

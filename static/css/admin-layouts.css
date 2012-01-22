@@ -5,7 +5,7 @@
 
  body {
     /* Account for the top toolbar. */
-    padding-top: 40px;
+    padding-top: 80px;
  }
 
 /* layouts */
@@ -45,12 +45,10 @@ div.htmlcontent {
     width: auto;
 }
 
-#editarea #savearea {
-    text-align: center;
-    border: 1px solid black;
-    margin-bottom: 1.2em;
-    background-color: rgb(0, 128, 0);
-    color: white;
+#editarea #buttons #savebutton {
+    margin: 10px;
+    padding: 4px 15px;
+    font-size: 120%;
 }
 
 #editarea #buttons {
@@ -63,7 +61,7 @@ div.htmlcontent {
     margin: 0;
     padding: 0.5%;
     /* The body will add this amount to padding-top */
-    height: 40px;
+    height: 80px;
     text-align: center;
 }
 
