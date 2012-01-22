@@ -87,8 +87,6 @@ $(document).ready(function() {
     });
 
     var lastIframe;
-    var lastActiveEditElement;
-    var currentActiveEditElement;
 
     // Note document changes upon button click
     $("#buttons button").click(function() {
@@ -114,19 +112,7 @@ $(document).ready(function() {
     });
 
     $("#buttons .lede").click(function() {
-        if(lastActiveEditElement.attr('contenteditable') === "true") {
-            if(lastActiveEditElement.get(0).tagName !== "P") {
-                var p = $(document.createElement("p"));
-                handleEditable(p);
-                p.html(lastActiveEditElement.html());
-                p.addClass('lede');
-                lastActiveEditElement.before(p);
-                lastActiveEditElement.remove();
-                p.focus();
-            } else {
-                lastActiveEditElement.addClass('lede');
-            }
-        }
+        // Todo: Add a 'lede' class to the focused paragraph
     });
 
     $("#buttons .body").click(function() {
@@ -185,66 +171,6 @@ $(document).ready(function() {
     $("#buttons .full").click(function(event) {
         lastIframe.contentDocument.execCommand('justifyfull');
     });
-
-    function handleEditable(element) {
-        element.attr('contenteditable', 'true');
-
-        // Keep track of which items are currently and lastly edited
-        element.focusin(function() {
-            currentActiveEditElement = $(this);
-        })
-        element.focusout(function() {
-            lastActiveEditElement = $(this);
-        });
-
-        element.keydown(function(event) {
-            documentChange();
-            if(event.which == 38 && element.prev().length == 1) {
-                // arrow up
-                element.prev().focus();
-            }
-            if(event.which == 40 && element.next().length == 1) {
-                // arrow down
-                element.next().focus();
-            }
-            if(event.which == 46 && element.text() == "") {
-                // delete
-                event.preventDefault();
-                if(element.siblings().length == 0) {
-                    element.parent().remove();
-                } else if(element.next().length == 1) {
-                    element.next().focus();
-                    element.remove();
-                } else if(element.prev().length == 1) {
-                    element.prev().focus();
-                    element.remove();
-                }
-            }
-            if(event.which == 8 && element.text() == "") {
-                // backspace
-                event.preventDefault();
-                if(element.siblings().length == 0) {
-                    element.parent().remove();
-                } else if(element.prev().length == 1) {
-                    element.prev().focus();
-                    element.prev().setCursorAtEnd();
-                    element.remove();
-                } else if(element.next().length == 1) {
-                    element.next().focus();
-                    element.prev().setCursorAtEnd();
-                    element.remove();
-                }
-            }
-            if(event.which == 13) {
-                // enter
-                event.preventDefault();
-                var p = $(document.createElement("p"));
-                element.after(p);
-                handleEditable(p);
-                p.focus();
-            }
-        });
-    }
 
     /* Saving the document */
 
