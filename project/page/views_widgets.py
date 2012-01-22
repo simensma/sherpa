@@ -32,7 +32,5 @@ def parse_content(request, version):
     return render(request, "page/page.html", context)
 
 def parse_widget(widget):
-    if(widget['name'] == "foo"):
-        return {'template': 'admin/page/widgets/foo.html', 'bar': 'baz'}
-    elif(widget['name'] == "memberservice"):
-        return {'template': 'admin/page/widgets/memberservice.html'}
+    if(widget['name'] == "quote"):
+        return {'template': 'page/widgets/quote.html'}

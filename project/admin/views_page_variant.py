@@ -139,10 +139,8 @@ def swap_layouts(layout, increment):
     layout.save()
 
 def parse_widget(widget):
-    if(widget['name'] == "foo"):
-        return {'template': 'page/widgets/foo.html', 'bar': 'baz'}
-    elif(widget['name'] == "memberservice"):
-        return {'template': 'page/widgets/memberservice.html'}
+    if(widget['name'] == "quote"):
+        return {'template': 'admin/page/widgets/quote.html'}
 
 # Ajax for content and widgets
 

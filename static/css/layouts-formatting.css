@@ -35,6 +35,9 @@ div.memberservice {
 /* quote content */
 
 blockquote {
+    background: url('/static/img/quote-sign.gif') top left no-repeat;
+    padding-left: 50px;
+    padding-top: 10px;
     font-size: 24px;
     font-style: italic;
 }
