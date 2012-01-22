@@ -51,7 +51,10 @@ $(document).ready(function() {
                 $(doc.body).keypress(function(event) {
                     if(event.which == 8 && $(doc.body).text().length == 0) {
                         // Backspace was pressed, and there is no text content in the document
-                        confirm('Todo: Confirm deletion of entire content box.');
+                        if(confirm('Vil du fjerne denne tomme innholdsboksen?')) {
+                            removeIframe($(iframe));
+                            $(iframe).remove();
+                        }
                     }
                 });
                 $(doc.body).keypress(documentChange);
@@ -288,6 +291,19 @@ $(document).ready(function() {
             $("#savearea #savebutton").attr('disabled', '');
         }
     });
+
+    function removeIframe(iframe) {
+        if(iframe.data('id') === undefined) {
+            // The box was never saved, so no need to remove it from the server.
+            return;
+        }
+        $.ajax({
+            url: '/admin/ajax/delete/content/' + iframe.data('id') + '/',
+            type: 'POST'
+        }).always(function(string) {
+            // TODO: Error and success handling
+        });
+    }
 
     function saveContent() {
         // TODO move most of this logic outside the loop!
