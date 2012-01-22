@@ -1,8 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-<p id="path">
-  <a href="{% url page.views.page %}">Forsiden</a> /
-</p>
 
 {% for layout in layouts %}
 {% include layout.template %}
