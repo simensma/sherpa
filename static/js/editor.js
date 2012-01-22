@@ -329,7 +329,7 @@ $(document).ready(function() {
                 var id = $(this).data('id');
                 url = '/admin/ajax/update/content/' + id + '/';
             }
-            var data = "content=" + $($(this).iframeDocument().body).html();
+            var data = "content=" + encodeURIComponent($($(this).iframeDocument().body).html());
 
             $.ajax({
                 // Maybe this file should be rendered as a template to avoid static URLs?
