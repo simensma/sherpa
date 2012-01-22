@@ -154,6 +154,35 @@ $(document).ready(function() {
         lastIframe.contentDocument.execCommand('createLink', false, 'TBD');
     });
 
+    $("#buttons .image").click(function(event) {
+        var imageURL = prompt("Angi bildeURL:", "");
+        lastIframe.contentDocument.execCommand('insertimage', false, imageURL);
+        $(lastIframe.contentDocument.body).find("img").click(function() {
+            if(confirm("Juster mot venstre/høyre?")) {
+                $(this).css('float', 'left');
+            } else {
+                $(this).css('float', 'right');
+            }
+        });
+    });
+
+    $("#buttons .left").click(function(event) {
+        var focuses = $(lastIframe.contentDocument.body).find(":focus");
+        lastIframe.contentDocument.execCommand('justifyleft');
+    });
+
+    $("#buttons .center").click(function(event) {
+        lastIframe.contentDocument.execCommand('justifycenter');
+    });
+
+    $("#buttons .right").click(function(event) {
+        lastIframe.contentDocument.execCommand('justifyright');
+    });
+
+    $("#buttons .full").click(function(event) {
+        lastIframe.contentDocument.execCommand('justifyfull');
+    });
+
     function handleEditable(element) {
         element.attr('contenteditable', 'true');
 
