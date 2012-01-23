@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-structural.css" media="screen">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-formatting.css" media="screen">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
+    {% block editorcss %}{% endblock %}
 </head>
 <body>
 <header>
