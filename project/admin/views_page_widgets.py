@@ -4,9 +4,9 @@ from page.models import Layout, Widget
 import json
 
 # General widget-parser
-def parse_widget(widget):
+def parse_widget(id, widget):
     if(widget['name'] == "quote"):
-        return {'template': 'admin/page/widgets/quote.html'}
+        return {'id': id, 'template': 'admin/page/widgets/quote.html'}
 
 # Add quote widget
 def version_add_widget_quote(request, version):

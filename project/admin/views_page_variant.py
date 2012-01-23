@@ -78,7 +78,7 @@ def version_edit(request, version):
                 elif isinstance(item, Widget):
                     widget = json.loads(item.widget)
                     layout.columns[item.column].append({'type': 'widget', 'content':
-                      parse_widget(widget)})
+                      parse_widget(item.id, widget)})
         variants = PageVariant.objects.filter(page=version.variant.page).order_by('priority')
         for variant in variants:
             variant.active = PageVersion.objects.get(variant=variant, active=True)
