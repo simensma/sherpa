@@ -24,6 +24,8 @@ $.fn.iframeDocument = function() {
 
 $(document).ready(function() {
 
+    var iframesReady = false;
+
     // Creates an iframe with the specified content
     function createIframe(iframe, content) {
         var doc = $(iframe).iframeDocument();
@@ -59,6 +61,7 @@ $(document).ready(function() {
                 });
                 $(doc.body).keypress(documentChange);
                 $(doc.body).click(documentChange);
+                iframesReady = true;
             }
         }
 
