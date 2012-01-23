@@ -3,5 +3,31 @@
 {% block title %}Admin index{% endblock %}
 
 {% block body %}
-Dette er admin index.
+<style type="text/css">
+nav > ul > li {
+    display: block;
+    width: 20%;
+    height: 170px;
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    text-align: center;
+}
+nav img {
+    padding-top: 10px;
+}
+
+</style>
+  <nav>
+    <ul>
+      <li class="dashboard"><a href="{% url admin.views.index %}">
+        <img src="/static/img/random-icons/book.png"><br>Admin-forside</a></li>
+      <li class="menus"><a href="{% url admin.views.menu_list %}">
+        <img src="/static/img/random-icons/check.png"><br>Hovedmeny</a></li>
+      <li class="pages"><a href="{% url admin.views.page_list %}">
+        <img src="/static/img/random-icons/coffee.png"><br>Artikler</a></li>
+      <li class="analysis"><a href="{% url admin.views.analytics_visitors_list %}">
+        <img src="/static/img/random-icons/keys.png"><br>Analyse</a></li>
+    </ul>
+  </nav>
 {% endblock %}
