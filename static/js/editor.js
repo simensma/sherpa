@@ -96,6 +96,7 @@ $(document).ready(function() {
     for(var i=0; i<widgets.length; i++) {
         $("div#widgets-" + widgets[i]).hide();
         $("div#widgets-" + widgets[i]).dialog({
+            title: "Ny widget",
             autoOpen: false,
             modal: true
         });
