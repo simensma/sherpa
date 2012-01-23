@@ -108,7 +108,9 @@ $(document).ready(function() {
             // No widget was selected
             return;
         }
-        save();
+        if(!documentSaved) {
+            attemptSave();
+        }
         // The option value should equal the last part of the div's ID
         $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
     });
