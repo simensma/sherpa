@@ -27,6 +27,9 @@ urlpatterns = patterns('admin.views',
     # Creating widgets
     url(r'^artikkel/widget/opprett/quote/(?P<version>\d+)/$', 'version_add_widget_quote'),
 
+    # Remove widget
+    url(r'^artikkel/widget/slett/(?P<version>\d+)/(?P<widget>\d+)/$', 'widget_delete'),
+
     # AJAX-updates to content and widgets
     url(r'^ajax/opprett/innhold/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
     url(r'^ajax/oppdater/innhold/(?P<content>\d+)/$', 'content_update'),
