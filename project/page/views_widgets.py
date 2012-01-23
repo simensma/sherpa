@@ -33,4 +33,4 @@ def parse_content(request, version):
 
 def parse_widget(widget):
     if(widget['name'] == "quote"):
-        return {'template': 'page/widgets/quote.html'}
+        return {'template': 'page/widgets/quote.html', 'quote': widget['quote'], 'author': widget['author']}

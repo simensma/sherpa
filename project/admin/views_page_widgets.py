@@ -6,13 +6,14 @@ import json
 # General widget-parser
 def parse_widget(id, widget):
     if(widget['name'] == "quote"):
-        return {'id': id, 'template': 'admin/page/widgets/quote.html'}
+        return {'id': id, 'template': 'admin/page/widgets/quote.html',
+        'quote': widget['quote'], 'author': widget['author']}
 
 # Add quote widget
 def version_add_widget_quote(request, version):
     layout = Layout.objects.get(id=request.POST['layout'])
-    widget = Widget(layout=layout, widget=json.dumps({"name": "quote"}),
-      column=request.POST['column'], order=request.POST['order'])
+    widget = Widget(layout=layout, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
+        "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
 

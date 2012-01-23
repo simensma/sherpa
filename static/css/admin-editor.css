@@ -93,3 +93,10 @@ div.htmlcontent {
 #editarea .saving {
     background-color: #999;
 }
+
+/* Widgets and widget editing */
+
+div#widgets-quote table td {
+    border: none;
+    padding: 10px;
+}

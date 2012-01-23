@@ -106,7 +106,8 @@ $(document).ready(function() {
         $("div#widgets-" + widgets[i]).dialog({
             title: "Ny widget",
             autoOpen: false,
-            modal: true
+            modal: true,
+            width: "80%"
         });
     }
 
