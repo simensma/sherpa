@@ -16,14 +16,9 @@
 </head>
 <body>
 <header>
-  <nav>
-    <ul>
-      <li><a href="{% url admin.views.index %}" class="">Admin-forside</a></li>
-      <li><a href="{% url admin.views.menu_list %}" class="">Hovedmeny</a></li>
-      <li><a href="{% url admin.views.page_list %}" class="">Artikler</a></li>
-      <li><a href="{% url admin.views.analytics_visitors_list %}" class="">Analyse</a></li>
-    </ul>
-  </nav>
+    <a href="{% url admin.views.index %}">
+      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening" style="margin-top: 25px; margin-left: 25px">
+    </a>
 </header>
 {% block body %}{% endblock %}
 <div style="clear: both;"></div>
