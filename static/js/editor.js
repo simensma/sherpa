@@ -243,9 +243,9 @@ $(document).ready(function() {
         }
     }
 
-    $("#savebutton").click(save);
+    $("#savebutton").click(attemptSave);
 
-    function save() {
+    function attemptSave() {
         if(!documentSaving) {
             documentSaving = true;
             setStatus('saving');
