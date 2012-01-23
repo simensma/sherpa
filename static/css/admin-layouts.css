@@ -74,6 +74,12 @@ div.htmlcontent {
     text-align: right;
 }
 
+#editarea .edit-widget {
+    width: 100%;
+    border: 1px solid #000;
+    text-align: center;
+}
+
 /* While working */
 
 #editarea .hover {
