@@ -210,6 +210,11 @@ $(document).ready(function() {
     $("#savebutton").click(attemptSave);
     function attemptSave() {
         if(!documentSaving) {
+            if(!iframesReady) {
+                alert('Redigeringsvinduene er ikke klare ennå! Du kan ikke lagre dokumentet før teksten er lastet, ellers kan du miste data.\n\n' +
+                'Vennligst vent noen sekunder og prøv igjen. Hvis denne meldingen vedvarer, vennligst ta kontakt med webmaster.');
+                return;
+            }
             documentSaving = true;
             setStatus('saving');
             saveContent();
