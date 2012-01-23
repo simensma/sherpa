@@ -7,6 +7,8 @@ from analytics.models import Segment
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+from admin.views_page_widgets import *
+
 def variant_new(request, page):
     page = Page.objects.get(pk=page)
     content = PageContent(content="Ny artikkel")
@@ -137,17 +139,6 @@ def swap_layouts(layout, increment):
     layout.order = other_layout.order + increment
     other_layout.save()
     layout.save()
-
-def parse_widget(widget):
-    if(widget['name'] == "quote"):
-        return {'template': 'admin/page/widgets/quote.html'}
-
-def version_add_widget_quote(request, version):
-    layout = Layout.objects.get(id=request.POST['layout'])
-    widget = Widget(layout=layout, widget=json.dumps({"name": "quote"}),
-      column=request.POST['column'], order=request.POST['order'])
-    widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
 
 # Ajax for content and widgets
 
