@@ -1,6 +1,5 @@
-/* css for admin-ui layouts and widgets
- * Note: A lot of this is probably duplicated from the
- * main presentation css, could that be avoided?
+/**
+ * Stylesheet for the editor in the admin ui
  */
 
  body {
