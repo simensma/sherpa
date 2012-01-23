@@ -39,6 +39,8 @@
 <br>
 <p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
+{% include "admin/page/widgets/quote_edit.html" %}
+
 <div id="editarea">
   <div id="buttons">
     <button class="header" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/header.png"></button>

@@ -88,6 +88,27 @@ $(document).ready(function() {
 
     var lastIframe;
 
+    // Hide and create the widget dialogs
+    var widgets = ['quote']
+    for(var i=0; i<widgets.length; i++) {
+        $("div#widgets-" + widgets[i]).hide();
+        $("div#widgets-" + widgets[i]).dialog({
+            autoOpen: false,
+            modal: true
+        });
+    }
+
+
+    $("div.add-content select").change(function() {
+        if($(this).children(":selected").val().length == 0) {
+            // No widget was selected
+            return;
+        }
+        save();
+        // The option value should equal the last part of the div's ID
+        $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
+    });
+
     // Note document changes upon button click
     $("#buttons button").click(function() {
         documentChange();
@@ -219,7 +240,9 @@ $(document).ready(function() {
         }
     }
 
-    $("#savebutton").click(function() {
+    $("#savebutton").click(save);
+
+    function save() {
         if(!documentSaving) {
             documentSaving = true;
             setStatus('saving');
@@ -229,7 +252,7 @@ $(document).ready(function() {
             // while documentSaving is true. Ignore it and just disable the button.
             $("#savebutton").attr('disabled', '');
         }
-    });
+    }
 
     function removeIframe(iframe) {
         if(iframe.data('id') === undefined) {
