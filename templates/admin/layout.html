@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
     <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+    <script src="{{ STATIC_URL }}js/jquery-ui-1.8.17.dialog.min.js"></script>
     <script src="{{ STATIC_URL }}js/admin.js"></script>
     {% block editorscript %}{% endblock %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.8.17.dialog.css" media="screen">
     <!-- Note that the following order is relevant - prioritize admin sheets -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/layouts-structural.css" media="screen">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/layouts-formatting.css" media="screen">
