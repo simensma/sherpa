@@ -147,8 +147,7 @@ def page_version_add_widget_quote(request, version):
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote"}),
       column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    request.method = "GET" # Small hack for the page_version_edit method
-    return page_version_edit(request, version)
+    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
 
 # Ajax for content and widgets
 
