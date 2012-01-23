@@ -88,6 +88,10 @@ $(document).ready(function() {
         $(this).data('id', $(this).attr('id').substring(8));
         $(this).removeAttr('id');
     });
+    if($("iframe").length == 0) {
+        // If there are no iframes, there are none to not be ready.
+        iframesReady = true;
+    }
 
     var lastIframe;
 
