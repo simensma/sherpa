@@ -142,6 +142,14 @@ def parse_widget(widget):
     if(widget['name'] == "quote"):
         return {'template': 'admin/page/widgets/quote.html'}
 
+def page_version_add_widget_quote(request, version):
+    layout = Layout.objects.get(id=request.POST['layout'])
+    widget = Widget(layout=layout, widget=json.dumps({"name": "quote"}),
+      column=request.POST['column'], order=request.POST['order'])
+    widget.save()
+    request.method = "GET" # Small hack for the page_version_edit method
+    return page_version_edit(request, version)
+
 # Ajax for content and widgets
 
 @csrf_exempt

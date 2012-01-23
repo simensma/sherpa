@@ -113,6 +113,18 @@ $(document).ready(function() {
         }
         // The option value should equal the last part of the div's ID
         $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
+
+        // Set the 'layout', 'column' and 'order'-inputfields for this widget
+        var layout = $(this).parents(".layout").data('id');
+        var column;
+        var columnDiv = $(this).parents(".column");
+        if(columnDiv.is($(".col-one"))) column = 0;
+        if(columnDiv.is($(".col-two"))) column = 1;
+        if(columnDiv.is($(".col-three"))) column = 2;
+        var order = $(this).parents(".add-content").prevAll().length + 1;
+        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"layout\"]").val(layout);
+        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"column\"]").val(column);
+        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"order\"]").val(order);
     });
 
     // Note document changes upon button click
