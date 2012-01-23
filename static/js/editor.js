@@ -204,6 +204,19 @@ $(document).ready(function() {
     var count = 1;
     var counterId;
 
+    $("#savebutton").click(attemptSave);
+    function attemptSave() {
+        if(!documentSaving) {
+            documentSaving = true;
+            setStatus('saving');
+            saveContent();
+        } else {
+            // This is a bug; the user shouldn't be able to click the button
+            // while documentSaving is true. Ignore it and just disable the button.
+            $("#savebutton").attr('disabled', '');
+        }
+    }
+
     function updateCounter() {
         $("#savebutton").text("Lagre (" + count + "s)");
         count++;
@@ -240,20 +253,6 @@ $(document).ready(function() {
                     counterId = setInterval(updateCounter, 1000);
                 }
                 break;
-        }
-    }
-
-    $("#savebutton").click(attemptSave);
-
-    function attemptSave() {
-        if(!documentSaving) {
-            documentSaving = true;
-            setStatus('saving');
-            saveContent();
-        } else {
-            // This is a bug; the user shouldn't be able to click the button
-            // while documentSaving is true. Ignore it and just disable the button.
-            $("#savebutton").attr('disabled', '');
         }
     }
 
