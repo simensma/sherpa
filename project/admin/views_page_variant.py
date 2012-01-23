@@ -7,7 +7,7 @@ from analytics.models import Segment
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-def page_variant_new(request, page):
+def variant_new(request, page):
     page = Page.objects.get(pk=page)
     content = PageContent(content="Ny artikkel")
     content.save()
@@ -17,13 +17,13 @@ def page_variant_new(request, page):
     variant.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
 
-def page_variant_edit(request, version):
+def variant_edit(request, version):
     # Not used yet, should be called from page_edit
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
 
-def page_variant_swap(request, page, pri1, pri2):
+def variant_swap(request, page, pri1, pri2):
     variant1 = PageVariant.objects.filter(page=page).get(priority=pri1)
     variant2 = PageVariant.objects.filter(page=page).get(priority=pri2)
     variant1.priority = pri2
@@ -32,7 +32,7 @@ def page_variant_swap(request, page, pri1, pri2):
     variant2.save()
     return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page]))
 
-def page_version_new(request, variant):
+def version_new(request, variant):
     variant = PageVariant.objects.get(pk=variant)
     versions = PageVersion.objects.filter(variant=variant)
     max_version = versions.aggregate(Max('version'))['version__max']
@@ -41,9 +41,9 @@ def page_version_new(request, variant):
     newContent.save()
     version = PageVersion(variant=variant, content=newContent, version=(max_version+1), active=False)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
 
-def page_version_activate(request, version):
+def version_activate(request, version):
     # Note for future error handling: Fails if activating the _same version_ 2 times in a row (F5)
     newActive = PageVersion.objects.get(pk=version)
     oldActive = PageVersion.objects.filter(variant=newActive.variant).get(active=True)
@@ -51,9 +51,9 @@ def page_version_activate(request, version):
     oldActive.active = False
     newActive.save()
     oldActive.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[newActive.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[newActive.id]))
 
-def page_version_edit(request, version):
+def version_edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(pk=version)
         layouts = Layout.objects.filter(version=version).order_by('order')
@@ -89,9 +89,9 @@ def page_version_edit(request, version):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']
         version.content.save()
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
 
-def page_add_layout(request, version, template):
+def layout_add(request, version, template):
     version = PageVersion.objects.get(id=version)
     layouts = Layout.objects.filter(version=version)
     if(len(layouts) == 0):
@@ -100,18 +100,18 @@ def page_add_layout(request, version, template):
         max = layouts.aggregate(Max('order'))['order__max']
     layout = Layout(version=version, template=template, order=(max+1))
     layout.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
 
-def page_layout_move_up(request, layout):
+def layout_move_up(request, layout):
     layout = Layout.objects.get(id=layout)
     if(layout.order == 1):
         # error handling
         raise Exception
     else:
         swap_layouts(layout, -1)
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
-def page_layout_move_down(request, layout):
+def layout_move_down(request, layout):
     layout = Layout.objects.get(id=layout)
     max = Layout.objects.filter(version=layout.version).aggregate(Max('order'))['order__max']
     if(layout.order == max):
@@ -119,16 +119,16 @@ def page_layout_move_down(request, layout):
         raise Exception
     else:
         swap_layouts(layout, 1)
-        return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
-def page_layout_delete(request, layout):
+def layout_delete(request, layout):
     layout = Layout.objects.get(id=layout)
     widgets = Widget.objects.filter(layout=layout)
     contents = HTMLContent.objects.filter(layout=layout)
     layout.delete()
     widgets.delete()
     contents.delete()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
 
 def swap_layouts(layout, increment):
@@ -142,36 +142,36 @@ def parse_widget(widget):
     if(widget['name'] == "quote"):
         return {'template': 'admin/page/widgets/quote.html'}
 
-def page_version_add_widget_quote(request, version):
+def version_add_widget_quote(request, version):
     layout = Layout.objects.get(id=request.POST['layout'])
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote"}),
       column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
 
 # Ajax for content and widgets
 
 @csrf_exempt
-def page_content_create(request, layout, column, order):
+def content_create(request, layout, column, order):
     layout = Layout.objects.get(id=layout)
     content = HTMLContent(layout=layout, content=request.POST['content'], column=column, order=order)
     content.save()
     return HttpResponse(json.dumps({'id': content.id}))
 
 @csrf_exempt
-def page_content_update(request, content):
+def content_update(request, content):
     content = HTMLContent.objects.get(id=content)
     content.content = request.POST['content']
     content.save()
     return HttpResponse(json.dumps({'id': content.id}))
 
 @csrf_exempt
-def page_content_delete(request, content):
+def content_delete(request, content):
     content = HTMLContent.objects.get(id=content)
     content.delete()
     return HttpResponse('')
 
-#def page_variant_delete(request, variant):
+#def variant_delete(request, variant):
 #    variant = PageVariant.objects.get(pk=variant)
 #    content = PageContent.objects.get(pagevariant=variant)
 #    offset = variant.priority
@@ -183,4 +183,4 @@ def page_content_delete(request, content):
 #        variant.priority = offset
 #        variant.save()
 #        offset += 1
-#    return HttpResponseRedirect(reverse('admin.views.page_version_edit', args=[variant.version.id]))
+#    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[variant.version.id]))

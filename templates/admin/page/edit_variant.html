@@ -24,12 +24,12 @@
     {% if version.active %}
       Aktiv!
     {% else %}
-      <a href="{% url admin.views.page_version_activate version.id %}">Aktivér</a>
+      <a href="{% url admin.views.version_activate version.id %}">Aktivér</a>
     {% endif %}</td>
   <td>todo</td>
   <td>todo</td>
   <td>todo</td>
-  <td><a href="{% url admin.views.page_version_edit version.id %}">Rediger</a></td>
+  <td><a href="{% url admin.views.version_edit version.id %}">Rediger</a></td>
 </tr>
 {% endfor %}
 </tbody>
@@ -37,7 +37,7 @@
 </tfoot>
 </table>
 <br>
-<p><a href="{% url admin.views.page_version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
+<p><a href="{% url admin.views.version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 
 {% include "admin/page/widgets/quote_edit.html" %}
 
@@ -75,10 +75,10 @@
   <th>3 kolonner</th>
 </tr>
 <tr>
-  <td><a href="{% url admin.views.page_add_layout version.id 'full' %}"><img src="{{ STATIC_URL }}img/layouts/full.png"></td>
-  <td><a href="{% url admin.views.page_add_layout version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/layouts/sidebar.png"></td>
-  <td><a href="{% url admin.views.page_add_layout version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/layouts/2-columns.png"></td>
-  <td><a href="{% url admin.views.page_add_layout version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/layouts/3-columns.png"></td>
+  <td><a href="{% url admin.views.layout_add version.id 'full' %}"><img src="{{ STATIC_URL }}img/layouts/full.png"></td>
+  <td><a href="{% url admin.views.layout_add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/layouts/sidebar.png"></td>
+  <td><a href="{% url admin.views.layout_add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/layouts/2-columns.png"></td>
+  <td><a href="{% url admin.views.layout_add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/layouts/3-columns.png"></td>
 </tr>
 </table>
 </div>
