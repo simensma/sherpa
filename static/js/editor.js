@@ -23,7 +23,11 @@ $.fn.iframeDocument = function() {
 
 
 $(document).ready(function() {
-
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", $("input[name='csrfmiddlewaretoken']").val());
+        }
+    });
     var iframesReady = false;
 
     // Creates an iframe with the specified content

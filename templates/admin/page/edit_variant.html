@@ -5,6 +5,8 @@
 {% endblock %}
 {% block edit %}
 
+{# This csrf_token will be picked up by javascript and used for ajax requests. There is a fairly large chance that a csrf_token will exist for some other form too, and could have been available instead, but just to be absolutely certain there IS one available, this one is here. #}
+{% csrf_token %}
 <table id="version">
 <thead>
 <tr>

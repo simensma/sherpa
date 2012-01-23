@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
 from analytics.models import Segment
-from django.views.decorators.csrf import csrf_exempt
 import json
 
 from admin.views_page_widgets import *
@@ -142,21 +141,18 @@ def swap_layouts(layout, increment):
 
 # Ajax for content and widgets
 
-@csrf_exempt
 def content_create(request, layout, column, order):
     layout = Layout.objects.get(id=layout)
     content = HTMLContent(layout=layout, content=request.POST['content'], column=column, order=order)
     content.save()
     return HttpResponse(json.dumps({'id': content.id}))
 
-@csrf_exempt
 def content_update(request, content):
     content = HTMLContent.objects.get(id=content)
     content.content = request.POST['content']
     content.save()
     return HttpResponse(json.dumps({'id': content.id}))
 
-@csrf_exempt
 def content_delete(request, content):
     content = HTMLContent.objects.get(id=content)
     content.delete()
