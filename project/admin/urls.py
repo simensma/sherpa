@@ -18,19 +18,19 @@ urlpatterns = patterns('admin.views',
     # Versjoner
     url(r'^artikkel/versjon/ny/(?P<variant>\d+)/$', 'version_new'),
     url(r'^artikkel/versjon/rediger/(?P<version>\d+)/$', 'version_edit'),
-    url(r'^artikkel/version/aktiver/(?P<version>\d+)/$', 'version_activate'),
-    url(r'^artikkel/version/layout/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'layout_add'),
-    url(r'^artikkel/version/layout/flytt-ned/(?P<layout>\d+)/$', 'layout_move_down'),
-    url(r'^artikkel/version/layout/flytt-opp/(?P<layout>\d+)/$', 'layout_move_up'),
-    url(r'^artikkel/version/layout/slett/(?P<layout>\d+)/$', 'layout_delete'),
+    url(r'^artikkel/versjon/aktiver/(?P<version>\d+)/$', 'version_activate'),
+    url(r'^artikkel/versjon/layout/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'layout_add'),
+    url(r'^artikkel/versjon/layout/flytt-ned/(?P<layout>\d+)/$', 'layout_move_down'),
+    url(r'^artikkel/versjon/layout/flytt-opp/(?P<layout>\d+)/$', 'layout_move_up'),
+    url(r'^artikkel/versjon/layout/slett/(?P<layout>\d+)/$', 'layout_delete'),
 
     # Creating widgets
     url(r'^artikkel/widget/opprett/quote/(?P<version>\d+)/$', 'version_add_widget_quote'),
 
     # AJAX-updates to content and widgets
-    url(r'^ajax/create/content/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
-    url(r'^ajax/update/content/(?P<content>\d+)/$', 'content_update'),
-    url(r'^ajax/delete/content/(?P<content>\d+)/$', 'content_delete'),
+    url(r'^ajax/opprett/innhold/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
+    url(r'^ajax/oppdater/innhold/(?P<content>\d+)/$', 'content_update'),
+    url(r'^ajax/slett/innhold/(?P<content>\d+)/$', 'content_delete'),
 
     # Menyer
     url(r'^meny/$', 'menu_list'),
