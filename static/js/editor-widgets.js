@@ -14,8 +14,8 @@ $(document).ready(function() {
     // Hide and create the widget dialogs
     var widgets = ['quote']
     for(var i=0; i<widgets.length; i++) {
-        $("div#widgets-" + widgets[i]).hide();
-        $("div#widgets-" + widgets[i]).dialog({
+        $("div#dialog-" + widgets[i]).hide();
+        $("div#dialog-" + widgets[i]).dialog({
             title: "Ny widget",
             autoOpen: false,
             modal: true,
@@ -58,61 +58,60 @@ $(document).ready(function() {
         var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
         var columnNumber = column.attr('class').replace('column', '').trim().substring(4) - 1;
         var order = column.children().length; // Remember, one of the children is the 'add-content' div
-        $("div#widgets-" + widgetType + " input[name=\"layout\"]").val(layout.data('id'));
-        $("div#widgets-" + widgetType + " input[name=\"column\"]").val(columnNumber);
-        $("div#widgets-" + widgetType + " input[name=\"order\"]").val(order);
+        $("div#" + widgetType + " input[name=\"layout\"]").val(layout.data('id'));
+        $("div#" + widgetType + " input[name=\"column\"]").val(columnNumber);
+        $("div#" + widgetType + " input[name=\"order\"]").val(order);
 
         // Perform specific preparations for this widget
         addSpecificWidget(widgetType)
 
         // And open the dialog
         $("div.add-content-dialog").dialog('close');
-        $("div#widgets-quote").dialog('open');
+        $("div#" + widgetType).dialog('open');
     });
 
     $("div.edit-widget a.edit").click(function() {
         var widget = $(this).parents(".widget").data('widget');
-        var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
+        var widgetType = "dialog-" + $(this).parents(".widget").attr('class').replace('widget', '').trim();
 
-        // Set form destination and input values
-        $("div#widgets-" + widgetType + " form").attr('action',
-          '/sherpa/artikkel/widget/oppdater/sitat/');
-        $("div#widgets-" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
+        // Set input values
+        $("div#" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
 
         // Perform specific preparations for this widget
         editSpecificWidget(widgetType, widget);
 
         // And open the dialog
-        $("div#widgets-" + widgetType).dialog('open');
+        $("div#" + widgetType).dialog('open');
     });
 });
 
 function addSpecificWidget(type) {
     switch(type) {
-        case 'quote':
+        case 'dialog-quote':
             // Set form destination
-            $("div#widgets-quote form").attr('action', '/sherpa/artikkel/widget/opprett/sitat/');
+            $("div#dialog-quote form").attr('action', '/sherpa/artikkel/widget/opprett/sitat/');
+
             // Empty the input fields, in case it was previously edited and pre-filled
-            $("div#widgets-quote textarea").val("");
-            $("div#widgets-quote input[name='author']").val("");
+            $("div#dialog-quote textarea").val("");
+            $("div#dialog-quote input[name='author']").val("");
 
             // Set the text (header and submit button)
-            $("div#widgets-quote h1").text("Legg til sitat-widget");
-            $("div#widgets-quote input[type='submit']").val("Opprett sitat-widget");
+            $("div#dialog-quote h1").text("Legg til sitat-widget");
+            $("div#dialog-quote input[type='submit']").val("Opprett sitat-widget");
           break;
     }
 }
 
 function editSpecificWidget(type, widget) {
     switch(type) {
-        case 'quote':
+        case 'dialog-quote':
             // Set the input fields
-            $("div#widgets-quote textarea").val(widget.quote);
-            $("div#widgets-quote input[name='author']").val(widget.author);
+            $("div#dialog-quote textarea").val(widget.quote);
+            $("div#dialog-quote input[name='author']").val(widget.author);
 
             // Set the text (header and submit button)
-            $("div#widgets-quote h1").text("Endre på sitat-widget");
-            $("div#widgets-quote input[type='submit']").val("Oppdater sitat-widget");
+            $("div#dialog-quote h1").text("Endre på sitat-widget");
+            $("div#dialog-quote input[type='submit']").val("Oppdater sitat-widget");
           break;
     }
 }
