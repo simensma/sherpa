@@ -65,6 +65,8 @@ $(document).ready(function() {
                 });
                 $(doc.body).keypress(documentChange);
                 $(doc.body).click(documentChange);
+                // Todo: This will set true for the *FIRST* ready iframe, but there may be more
+                // of them that are _not_ ready yet.
                 iframesReady = true;
             }
         }
