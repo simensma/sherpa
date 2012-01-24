@@ -18,7 +18,7 @@ def version_add_widget_quote(request, version):
     return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
 
 # Delete a widget
-def widget_delete(request, version, widget):
+def widget_delete(request, widget):
     widgetToRemove = Widget.objects.get(id=widget)
 
     # Collapse orders
@@ -31,4 +31,4 @@ def widget_delete(request, version, widget):
         content.order = (content.order-1)
         content.save();
     widgetToRemove.delete()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[widgetToRemove.layout.version.id]))
