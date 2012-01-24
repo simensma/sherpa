@@ -53,23 +53,17 @@ $(document).ready(function() {
     });
 
     /* Add quote widget */
-    $("div.add-content-dialog .widget-quote a").click(function() {
-        // Set form destination and input values
-        $("div#widgets-quote form").attr('action',
-          '/sherpa/artikkel/widget/opprett/sitat/');
+    $("div.add-content-dialog .widget a").click(function() {
+        // Set input values
+        var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
         var columnNumber = column.attr('class').replace('column', '').trim().substring(4) - 1;
         var order = column.children().length; // Remember, one of the children is the 'add-content' div
-        $("div#widgets-quote input[name=\"layout\"]").val(layout.data('id'));
-        $("div#widgets-quote input[name=\"column\"]").val(columnNumber);
-        $("div#widgets-quote input[name=\"order\"]").val(order);
+        $("div#widgets-" + widgetType + " input[name=\"layout\"]").val(layout.data('id'));
+        $("div#widgets-" + widgetType + " input[name=\"column\"]").val(columnNumber);
+        $("div#widgets-" + widgetType + " input[name=\"order\"]").val(order);
 
-        // Empty the input fields, in case it was previously edited and pre-filled
-        $("div#widgets-quote textarea").val("");
-        $("div#widgets-quote input[name='author']").val("");
-
-        // Set the text (header and submit button)
-        $("div#widgets-quote h1").text("Legg til sitat-widget");
-        $("div#widgets-quote input[type='submit']").val("Opprett sitat-widget");
+        // Perform specific preparations for this widget
+        addSpecificWidget(widgetType)
 
         // And open the dialog
         $("div.add-content-dialog").dialog('close');
@@ -85,17 +79,40 @@ $(document).ready(function() {
           '/sherpa/artikkel/widget/oppdater/sitat/');
         $("div#widgets-" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
 
-        // Set the input fields
-        // Todo: This doesn't make sense, widgetType is dynamic but we're
-        // specifically setting quote widget data.
-        $("div#widgets-" + widgetType + " textarea").val(widget.quote);
-        $("div#widgets-" + widgetType + " input[name='author']").val(widget.author);
-
-        // Set the text (header and submit button)
-        $("div#widgets-" + widgetType + " h1").text("Endre på sitat-widget");
-        $("div#widgets-" + widgetType + " input[type='submit']").val("Oppdater sitat-widget");
+        // Perform specific preparations for this widget
+        editSpecificWidget(widgetType, widget);
 
         // And open the dialog
         $("div#widgets-" + widgetType).dialog('open');
     });
 });
+
+function addSpecificWidget(type) {
+    switch(type) {
+        case 'quote':
+            // Set form destination
+            $("div#widgets-quote form").attr('action', '/sherpa/artikkel/widget/opprett/sitat/');
+            // Empty the input fields, in case it was previously edited and pre-filled
+            $("div#widgets-quote textarea").val("");
+            $("div#widgets-quote input[name='author']").val("");
+
+            // Set the text (header and submit button)
+            $("div#widgets-quote h1").text("Legg til sitat-widget");
+            $("div#widgets-quote input[type='submit']").val("Opprett sitat-widget");
+          break;
+    }
+}
+
+function editSpecificWidget(type, widget) {
+    switch(type) {
+        case 'quote':
+            // Set the input fields
+            $("div#widgets-quote textarea").val(widget.quote);
+            $("div#widgets-quote input[name='author']").val(widget.author);
+
+            // Set the text (header and submit button)
+            $("div#widgets-quote h1").text("Endre på sitat-widget");
+            $("div#widgets-quote input[type='submit']").val("Oppdater sitat-widget");
+          break;
+    }
+}
