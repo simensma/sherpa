@@ -1,5 +1,7 @@
-{% include 'admin/page/snippets/edit_widget.html' %}
-<blockquote>
-{{ widget.quote }}
-<p class="quote-source">- {{ widget.author }}</p>
-</blockquote>
+<div class="widget">
+    {% include 'admin/page/snippets/edit_widget.html' %}
+    <blockquote>
+    {{ widget.quote }}
+    <p class="quote-source">- {{ widget.author }}</p>
+    </blockquote>
+</div>
