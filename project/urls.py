@@ -2,7 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     # Sherpa3 admin interface
-    url(r'^admin/', include('admin.urls')),
+    url(r'^sherpa/', include('admin.urls')),
 
     # User authentication
     url(r'^innlogging/$', 'auth.views.login'),

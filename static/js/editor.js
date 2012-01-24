@@ -291,7 +291,7 @@ $(document).ready(function() {
             return;
         }
         $.ajax({
-            url: '/admin/ajax/slett/innhold/' + iframe.data('id') + '/',
+            url: '/sherpa/ajax/slett/innhold/' + iframe.data('id') + '/',
             type: 'POST'
         }).always(function(string) {
             // TODO: Error and success handling
@@ -320,11 +320,11 @@ $(document).ready(function() {
                     column = 2;
                 }
                 var order = $(this).prevAll().length + 1;
-                url = '/admin/ajax/opprett/innhold/' + layout + '/' + column + '/' + order + '/';
+                url = '/sherpa/ajax/opprett/innhold/' + layout + '/' + column + '/' + order + '/';
             } else {
                 // Existing content
                 var id = $(this).data('id');
-                url = '/admin/ajax/oppdater/innhold/' + id + '/';
+                url = '/sherpa/ajax/oppdater/innhold/' + id + '/';
             }
             var data = "content=" + encodeURIComponent($($(this).iframeDocument().body).html());
 
