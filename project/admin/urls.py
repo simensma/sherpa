@@ -26,6 +26,7 @@ urlpatterns = patterns('admin.views',
 
     # Widgets
     url(r'^artikkel/widget/opprett/quote/$', 'version_add_widget_quote'),
+    url(r'^artikkel/widget/oppdater/quote/$', 'version_edit_widget_quote'),
     url(r'^artikkel/widget/slett/(?P<widget>\d+)/$', 'widget_delete'),
 
     # Content

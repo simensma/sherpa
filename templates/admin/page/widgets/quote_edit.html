@@ -1,10 +1,12 @@
+{# Most of the values here are empty because they'll be filled in by javascript #}
 <div id="widgets-quote">
   <form action="" method="post">
   {% csrf_token %}
+  <input type="hidden" name="id" value="">
   <input type="hidden" name="layout" value="">
   <input type="hidden" name="column" value="">
   <input type="hidden" name="order" value="">
-  <h1>Legg til sitat-widget</h1>
+  <h1></h1>
   <table>
   <tr>
     <td>Sitat:</td>
@@ -15,6 +17,6 @@
     <td><input type="text" name="author"></td>
   </tr>
   </table>
-  <input type="submit" value="Opprett widget">
+  <input type="submit" value="">
   </form>
 </div>
