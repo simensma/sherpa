@@ -73,7 +73,7 @@ div.htmlcontent {
     text-align: right;
 }
 
-#editarea .edit-widget {
+#editarea .edit-widget, #editarea .edit-content {
     width: 100%;
     border: 1px solid #000;
     text-align: center;

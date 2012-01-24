@@ -4,6 +4,7 @@
 <div class="column col-one">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
+    {% include 'admin/page/snippets/edit_content.html' with content=item.content %}
     {# The div contents will be moved into the iframe by scripts. #}
     <div>{{ item.content|safe }}</div>
     <iframe id="content-{{ item.id }}" style="border: 1px solid #000; width: 100%; height: 300px;"></iframe>
@@ -18,6 +19,7 @@
 <div class="column col-two">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
+    {% include 'admin/page/snippets/edit_content.html' with content=item.content %}
     {# The div contents will be moved into the iframe by scripts. #}
     <div>{{ item.content|safe }}</div>
     <iframe id="content-{{ item.id }}" style="border: 1px solid #000; width: 100%; height: 300px;"></iframe>
