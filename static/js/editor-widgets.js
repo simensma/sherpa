@@ -72,7 +72,7 @@ $(document).ready(function() {
 
     $("div.edit-widget a.edit").click(function() {
         var widget = $(this).parents(".widget").data('widget');
-        var widgetType = "dialog-" + $(this).parents(".widget").attr('class').replace('widget', '').trim();
+        var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
 
         // Set input values
         $("div#" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
@@ -114,6 +114,9 @@ function addSpecificWidget(type) {
 function editSpecificWidget(type, widget) {
     switch(type) {
         case 'dialog-quote':
+            // Set form destination
+            $("div#dialog-quote form").attr('action', '/sherpa/artikkel/widget/oppdater/sitat/');
+
             // Set the input fields
             $("div#dialog-quote textarea").val(widget.quote);
             $("div#dialog-quote input[name='author']").val(widget.author);
