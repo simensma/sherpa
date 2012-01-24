@@ -29,5 +29,7 @@ $(document).ready(function() {
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"layout\"]").val(layout);
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"column\"]").val(column);
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"order\"]").val(order);
+        $("div#widgets-" + $(this).children(":selected").val() + " form").attr('action',
+          '/sherpa/artikkel/widget/opprett/quote/');
     });
 });
