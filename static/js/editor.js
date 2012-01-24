@@ -321,8 +321,6 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data
             }).done(function(string) {
-                var response = JSON.parse(string);
-                $(iframe).data('id', response.id);
                 documentSaved = true;
             }).fail(function(string) {
                 // Todo: Fetch an error code and display corresponding message

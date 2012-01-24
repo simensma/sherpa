@@ -152,7 +152,7 @@ def content_update(request, content):
     content = HTMLContent.objects.get(id=content)
     content.content = request.POST['content']
     content.save()
-    return HttpResponse(json.dumps({'id': content.id}))
+    return HttpResponse('')
 
 def content_delete(request, content):
     content = HTMLContent.objects.get(id=content)
