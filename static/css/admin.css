@@ -21,3 +21,17 @@ table#variant {
   margin-left: 5%;
   margin-right: 5%;
 }
+
+nav > ul > li {
+    display: block;
+    width: 20%;
+    height: 170px;
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    text-align: center;
+}
+
+nav img {
+    padding-top: 10px;
+}
