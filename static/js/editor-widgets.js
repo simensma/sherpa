@@ -20,17 +20,19 @@ $(document).ready(function() {
             attemptSave();
         }
 
+        // The option value should equal the last part of the div's ID
+        var widgetType = $(this).children(":selected").val();
+
         // Set the 'layout', 'column' and 'order'-inputfields for this widget
         var layout = $(this).parents(".layout").data('id');
         var column = $(this).parents(".column").attr('class').replace('column', '').trim().substring(4) - 1;
         var order = $(this).parents(".add-content").prevAll().length + 1;
-        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"layout\"]").val(layout);
-        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"column\"]").val(column);
-        $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"order\"]").val(order);
-        $("div#widgets-" + $(this).children(":selected").val() + " form").attr('action',
+        $("div#widgets-" + widgetType + " input[name=\"layout\"]").val(layout);
+        $("div#widgets-" + widgetType + " input[name=\"column\"]").val(column);
+        $("div#widgets-" + widgetType + " input[name=\"order\"]").val(order);
+        $("div#widgets-" + widgetType + " form").attr('action',
           '/sherpa/artikkel/widget/opprett/quote/');
 
-        // The option value should equal the last part of the div's ID
-        $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
+        $("div#widgets-" + widgetType).dialog('open');
     });
 });
