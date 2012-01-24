@@ -156,7 +156,10 @@ def content_update(request, content):
 def content_delete(request, content):
     content = HTMLContent.objects.get(id=content)
     content.delete()
-    return HttpResponse('')
+    if(request.is_ajax()):
+        return HttpResponse('')
+    else:
+        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[content.layout.version.id]))
 
 #def variant_delete(request, variant):
 #    variant = PageVariant.objects.get(pk=variant)
