@@ -19,8 +19,6 @@ $(document).ready(function() {
         if(!documentSaved) {
             attemptSave();
         }
-        // The option value should equal the last part of the div's ID
-        $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
 
         // Set the 'layout', 'column' and 'order'-inputfields for this widget
         var layout = $(this).parents(".layout").data('id');
@@ -31,5 +29,8 @@ $(document).ready(function() {
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"order\"]").val(order);
         $("div#widgets-" + $(this).children(":selected").val() + " form").attr('action',
           '/sherpa/artikkel/widget/opprett/quote/');
+
+        // The option value should equal the last part of the div's ID
+        $("div#widgets-" + $(this).children(":selected").val()).dialog('open');
     });
 });
