@@ -37,6 +37,9 @@ $(document).ready(function() {
         $("div.add-content-dialog").dialog('open');
         layout = $(this).parents(".layout");
         column = $(this).parents(".column");
+        if(!documentSaved) {
+            attemptSave();
+        }
     });
 
     /* Add new content */
@@ -51,10 +54,6 @@ $(document).ready(function() {
 
     /* Add quote widget */
     $("div.add-content-dialog .widget-quote a").click(function() {
-        if(!documentSaved) {
-            attemptSave();
-        }
-
         // Set form destination and input values
         $("div#widgets-quote form").attr('action',
           '/sherpa/artikkel/widget/opprett/sitat/');
