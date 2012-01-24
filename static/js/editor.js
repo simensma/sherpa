@@ -135,16 +135,6 @@ $(document).ready(function() {
         documentChange();
     });
 
-    // Add new html-content in a specific column
-    $(".add-content input[type='submit']").click(function() {
-        var layout = $(this).parents(".layout").data('id');
-        var column = $(this).parents(".column").attr('class').replace('column', '').trim().substring(4) - 1;
-        var order = $(this).parents(".add-content").prevAll().length + 1;
-        $(this).siblings("input[name='layout']").val(layout);
-        $(this).siblings("input[name='column']").val(column);
-        $(this).siblings("input[name='order']").val(order);
-    });
-
     $("#buttons .header").click(function() {
         $(lastIframe).iframeDocument().execCommand('formatblock', false, 'h1');
     });

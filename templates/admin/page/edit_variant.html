@@ -49,6 +49,8 @@
 <p><a href="{% url admin.views.version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 -->
 
+{# Dialogs that will be hidden by javascript #}
+{% include "admin/page/snippets/add_content_dialog.html" %}
 {% include "admin/page/widgets/quote_dialog.html" %}
 
 <div id="editarea">

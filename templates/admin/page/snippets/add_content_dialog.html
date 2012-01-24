@@ -1,0 +1,25 @@
+<div class="add-content-dialog">
+
+  <h1>Legg til innhold</h1>
+
+  <div class="content">
+    <form action="{% url admin.views.content_create %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="layout" value="">
+        <input type="hidden" name="column" value="">
+        <input type="hidden" name="order" value="">
+        <a href="javascript:undefined">
+          <img src="{{ STATIC_URL }}img/icons/world.png" alt="Legg til statisk innhold"><br>
+          Statisk innhold
+        </a>
+    </form>
+  </div>
+
+  <div class="widget-quote">
+    <a href="javascript:undefined">
+      <img src="{{ STATIC_URL }}img/icons/keys.png" alt="Legg til statisk innhold"><br>
+      Sitat
+    </a>
+  </div>
+
+</div>

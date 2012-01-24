@@ -66,6 +66,15 @@ div.htmlcontent {
 
 #editarea .add-content {
     border: 1px solid;
+    text-align: center;
+}
+
+.add-content-dialog > div {
+    float: left;
+    width: 20%;
+    height: 170px;
+    margin: 1%;
+    text-align: center;
 }
 
 #editarea .edit-layout {
