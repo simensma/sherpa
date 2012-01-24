@@ -16,19 +16,19 @@
 
 /* sidebar */
 
-.layout.sidebar > .column.col-one {
+.layout.sidebar > .column.col-1 {
     float: left;
     width: 66%;
     margin-right: 1%;
 }
 
-.layout.sidebar > .column.col-two {
+.layout.sidebar > .column.col-2 {
     float: right;
     width: 32%;
     margin-left: 1%;
 }
 
-.layout.sidebar > .column.col-two > h2 {
+.layout.sidebar > .column.col-2 > h2 {
     margin: 0;
     padding: 0;
 }
@@ -40,11 +40,11 @@
     width: 49%;
 }
 
-.layout.columns-2 > .column.col-one {
+.layout.columns-2 > .column.col-1 {
     margin-right: 1%;
 }
 
-.layout.columns-2 > .column.col-two {
+.layout.columns-2 > .column.col-2 {
     margin-left: 1%;
 }
 
@@ -55,10 +55,10 @@
     width: 32%;
 }
 
-.layout.columns-3 > .column.col-one {
+.layout.columns-3 > .column.col-1 {
     margin-right: 2%;
 }
 
-.layout.columns-3 > .column.col-three {
+.layout.columns-3 > .column.col-3 {
     margin-left: 2%;
 }

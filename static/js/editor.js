@@ -132,11 +132,7 @@ $(document).ready(function() {
 
         // Set the 'layout', 'column' and 'order'-inputfields for this widget
         var layout = $(this).parents(".layout").data('id');
-        var column;
-        var columnDiv = $(this).parents(".column");
-        if(columnDiv.is($(".col-one"))) column = 0;
-        if(columnDiv.is($(".col-two"))) column = 1;
-        if(columnDiv.is($(".col-three"))) column = 2;
+        var column = $(this).parents(".column").attr('class').replace('column', '').trim().substring(4) - 1;
         var order = $(this).parents(".add-content").prevAll().length + 1;
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"layout\"]").val(layout);
         $("div#widgets-" + $(this).children(":selected").val() + " input[name=\"column\"]").val(column);
@@ -151,11 +147,7 @@ $(document).ready(function() {
     // Add new html-content in a specific column
     $(".add-content input[type='submit']").click(function() {
         var layout = $(this).parents(".layout").data('id');
-        var column;
-        var columnDiv = $(this).parents(".column");
-        if(columnDiv.is($(".col-one"))) column = 0;
-        if(columnDiv.is($(".col-two"))) column = 1;
-        if(columnDiv.is($(".col-three"))) column = 2;
+        var column = $(this).parents(".column").attr('class').replace('column', '').trim().substring(4) - 1;
         var order = $(this).parents(".add-content").prevAll().length + 1;
         $(this).siblings("input[name='layout']").val(layout);
         $(this).siblings("input[name='column']").val(column);

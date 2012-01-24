@@ -16,14 +16,14 @@
 
 /* Main column for full- and sidebar-layout */
 
-.layout.full h1, .layout.sidebar > .column.col-one h1 {
+.layout.full h1, .layout.sidebar > .column.col-1 h1 {
     border-bottom: 5px solid rgb(61, 83, 37);
     font-size: 40px;
     line-height: 52px;
     margin-bottom: 29px;
 }
 
-.layout.full div.lede, .layout.sidebar > .column.col-one div.lede {
+.layout.full div.lede, .layout.sidebar > .column.col-1 div.lede {
     font-family: "Helvetica";
     font-size: 20px;
 }

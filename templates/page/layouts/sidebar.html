@@ -1,5 +1,5 @@
 <div class="layout sidebar">
-<div class="column col-one">
+<div class="column col-1">
 {% for item in layout.columns.0 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
@@ -10,7 +10,7 @@
 {% endfor %}
 </div>
 
-<div class="column col-two">
+<div class="column col-2">
 {% for item in layout.columns.1 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
