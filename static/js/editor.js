@@ -23,12 +23,19 @@ $.fn.iframeDocument = function() {
 
 
 $(document).ready(function() {
+
+    // True when iframes have loaded their content and are ready to be manipulated
+    var iframesReady = false;
+
+    // A reference to the last iframe touched. Mostly used by buttons that should execute
+    // comands (e.g. bold) on the document in the last iframe.
+    var lastIframe;
+
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", $("input[name='csrfmiddlewaretoken']").val());
         }
     });
-    var iframesReady = false;
 
     // Creates an iframe with the specified content
     function createIframe(iframe, content) {
@@ -98,8 +105,6 @@ $(document).ready(function() {
         // If there are no iframes, there are none to not be ready.
         iframesReady = true;
     }
-
-    var lastIframe;
 
     // Hide and create the widget dialogs
     var widgets = ['quote']
