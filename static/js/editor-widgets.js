@@ -12,7 +12,7 @@ $(document).ready(function() {
     });
 
     // Hide and create the widget dialogs
-    var widgets = ['quote']
+    var widgets = ['quote', 'promo']
     for(var i=0; i<widgets.length; i++) {
         $("div#dialog-" + widgets[i]).hide();
         $("div#dialog-" + widgets[i]).dialog({
@@ -99,6 +99,15 @@ function addSpecificWidget(type) {
             $("div#dialog-quote h1").text("Legg til sitat-widget");
             $("div#dialog-quote input[type='submit']").val("Opprett sitat-widget");
           break;
+
+        case 'dialog-promo':
+            // Set form destination
+            $("div#dialog-promo form").attr('action', '/sherpa/artikkel/widget/opprett/promo/');
+
+            // Set the text (header and submit button)
+            $("div#dialog-promo h1").text("Legg til promo-widget");
+            $("div#dialog-promo input[type='submit']").val("Opprett promo-widget");
+          break;
     }
 }
 
@@ -112,6 +121,15 @@ function editSpecificWidget(type, widget) {
             // Set the text (header and submit button)
             $("div#dialog-quote h1").text("Endre på sitat-widget");
             $("div#dialog-quote input[type='submit']").val("Oppdater sitat-widget");
+          break;
+
+        case 'dialog-promo':
+            // Set form destination
+            $("div#dialog-promo form").attr('action', '/sherpa/artikkel/widget/oppdater/promo/');
+
+            // Set the text (header and submit button)
+            $("div#dialog-promo h1").text("Endre på promo-widget");
+            $("div#dialog-promo input[type='submit']").val("Oppdater promo-widget");
           break;
     }
 }
