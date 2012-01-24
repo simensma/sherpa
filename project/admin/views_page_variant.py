@@ -141,11 +141,12 @@ def swap_layouts(layout, increment):
 
 # Content
 
-def content_create(request, layout, column, order):
-    layout = Layout.objects.get(id=layout)
-    content = HTMLContent(layout=layout, content=request.POST['content'], column=column, order=order)
+def content_create(request):
+    layout = Layout.objects.get(id=request.POST['layout'])
+    content = HTMLContent(layout=layout, content="<p>Nytt innhold...</p>",
+        column=request.POST['column'], order=request.POST['order'])
     content.save()
-    return HttpResponse(json.dumps({'id': content.id}))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
 def content_update(request, content):
     content = HTMLContent.objects.get(id=content)

@@ -149,17 +149,17 @@ $(document).ready(function() {
     });
 
     // Add new html-content in a specific column
-    $(".add-content button.content").click(function() {
-        documentChange();
-        var iframe = $(document.createElement("iframe"));
-        iframe.width("100%");
-        iframe.height("300px");
-        iframe.css('border', '1px solid #000');
-        // This traversal is based on the add-content div for any layout column and may change.
-        $(this).parent().parent().last().before(iframe.get(0));
-        var p = document.createElement("p");
-        $(p).text("Legg til innhold her...");
-        createIframe(iframe.get(0), p);
+    $(".add-content input[type='submit']").click(function() {
+        var layout = $(this).parents(".layout").data('id');
+        var column;
+        var columnDiv = $(this).parents(".column");
+        if(columnDiv.is($(".col-one"))) column = 0;
+        if(columnDiv.is($(".col-two"))) column = 1;
+        if(columnDiv.is($(".col-three"))) column = 2;
+        var order = $(this).parents(".add-content").prevAll().length + 1;
+        $(this).siblings("input[name='layout']").val(layout);
+        $(this).siblings("input[name='column']").val(column);
+        $(this).siblings("input[name='order']").val(order);
     });
 
     $("#buttons .header").click(function() {
@@ -312,32 +312,12 @@ $(document).ready(function() {
             setStatus('saved');
         }
         $("iframe").each(function() {
-            // Figure out the metadata (new/existing, layout, column, order) for this content
             var iframe = this;
-            var url;
-            if($(this).data('id') === undefined) {
-                // New content
-                var layout = $(this).parents(".layout").data('id');
-                var column;
-                if($(this).parent(".col-one").length > 0) {
-                    column = 0;
-                } else if($(this).parent(".col-two").length > 0) {
-                    column = 1;
-                } else if($(this).parent(".col-three").length > 0) {
-                    column = 2;
-                }
-                var order = $(this).prevAll().length + 1;
-                url = '/sherpa/artikkel/innhold/opprett/' + layout + '/' + column + '/' + order + '/';
-            } else {
-                // Existing content
-                var id = $(this).data('id');
-                url = '/sherpa/artikkel/innhold/oppdater/' + id + '/';
-            }
+            var id = $(this).data('id');
             var data = "content=" + encodeURIComponent($($(this).iframeDocument().body).html());
-
             $.ajax({
                 // Maybe this file should be rendered as a template to avoid static URLs?
-                url: url,
+                url: '/sherpa/artikkel/innhold/oppdater/' + id + '/',
                 type: 'POST',
                 data: data
             }).done(function(string) {

@@ -29,7 +29,7 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/widget/slett/(?P<widget>\d+)/$', 'widget_delete'),
 
     # Content
-    url(r'^artikkel/innhold/opprett/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
+    url(r'^artikkel/innhold/opprett/$', 'content_create'),
     url(r'^artikkel/innhold/oppdater/(?P<content>\d+)/$', 'content_update'),
     url(r'^artikkel/innhold/slett/(?P<content>\d+)/$', 'content_delete'),
 

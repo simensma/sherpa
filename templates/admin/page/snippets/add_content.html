@@ -4,6 +4,12 @@
   <option value="">Widget</option>
   <option value="quote">Sitat</option>
 </select>
-<button class="content">Innhold</button>
+<form action="{% url admin.views.content_create %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="layout" value="">
+<input type="hidden" name="column" value="">
+<input type="hidden" name="order" value="">
+<input type="submit" value="Innhold">
+</form>
 </p>
 </div>
