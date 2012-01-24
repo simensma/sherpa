@@ -131,7 +131,7 @@ $(document).ready(function() {
     });
 
     $("#buttons .header").click(function() {
-        lastIframe.contentDocument.execCommand('formatblock', false, 'h1');
+        $(lastIframe).iframeDocument().execCommand('formatblock', false, 'h1');
     });
 
     $("#buttons .lede").click(function() {
@@ -139,37 +139,37 @@ $(document).ready(function() {
     });
 
     $("#buttons .body").click(function() {
-        lastIframe.contentDocument.execCommand('formatblock', false, 'p');
+        $(lastIframe).iframeDocument().execCommand('formatblock', false, 'p');
     });
 
     $("#buttons .bold").click(function(event) {
-        lastIframe.contentDocument.execCommand('bold');
+        $(lastIframe).iframeDocument().execCommand('bold');
     });
 
     $("#buttons .italic").click(function(event) {
-        lastIframe.contentDocument.execCommand('italic');
+        $(lastIframe).iframeDocument().execCommand('italic');
     });
 
     $("#buttons .underline").click(function(event) {
-        lastIframe.contentDocument.execCommand('underline');
+        $(lastIframe).iframeDocument().execCommand('underline');
     });
 
     $("#buttons .ol").click(function(event) {
-        lastIframe.contentDocument.execCommand('insertorderedlist');
+        $(lastIframe).iframeDocument().execCommand('insertorderedlist');
     });
 
     $("#buttons .ul").click(function(event) {
-        lastIframe.contentDocument.execCommand('insertunorderedlist');
+        $(lastIframe).iframeDocument().execCommand('insertunorderedlist');
     });
 
     $("#buttons .anchor").click(function(event) {
-        lastIframe.contentDocument.execCommand('createLink', false, 'TBD');
+        $(lastIframe).iframeDocument().execCommand('createLink', false, 'TBD');
     });
 
     $("#buttons .image").click(function(event) {
         var imageURL = prompt("Angi bildeURL:", "");
-        lastIframe.contentDocument.execCommand('insertimage', false, imageURL);
-        $(lastIframe.contentDocument.body).find("img").click(function() {
+        $(lastIframe).iframeDocument().execCommand('insertimage', false, imageURL);
+        $($(lastIframe).iframeDocument().body).find("img").click(function() {
             if(confirm("Juster mot venstre/høyre?")) {
                 $(this).css('float', 'left');
             } else {
@@ -179,20 +179,20 @@ $(document).ready(function() {
     });
 
     $("#buttons .left").click(function(event) {
-        var focuses = $(lastIframe.contentDocument.body).find(":focus");
-        lastIframe.contentDocument.execCommand('justifyleft');
+        var focuses = $($(lastIframe).iframeDocument().body).find(":focus");
+        $(lastIframe).iframeDocument().execCommand('justifyleft');
     });
 
     $("#buttons .center").click(function(event) {
-        lastIframe.contentDocument.execCommand('justifycenter');
+        $(lastIframe).iframeDocument().execCommand('justifycenter');
     });
 
     $("#buttons .right").click(function(event) {
-        lastIframe.contentDocument.execCommand('justifyright');
+        $(lastIframe).iframeDocument().execCommand('justifyright');
     });
 
     $("#buttons .full").click(function(event) {
-        lastIframe.contentDocument.execCommand('justifyfull');
+        $(lastIframe).iframeDocument().execCommand('justifyfull');
     });
 
     /* Saving the document */
