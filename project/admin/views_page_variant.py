@@ -139,7 +139,7 @@ def swap_layouts(layout, increment):
     other_layout.save()
     layout.save()
 
-# Ajax for content and widgets
+# Content
 
 def content_create(request, layout, column, order):
     layout = Layout.objects.get(id=layout)
