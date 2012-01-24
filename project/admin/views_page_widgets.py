@@ -10,12 +10,12 @@ def parse_widget(id, widget):
         'quote': widget['quote'], 'author': widget['author']}
 
 # Add quote widget
-def version_add_widget_quote(request, version):
+def version_add_widget_quote(request):
     layout = Layout.objects.get(id=request.POST['layout'])
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
 # Delete a widget
 def widget_delete(request, widget):
