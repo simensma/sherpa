@@ -82,6 +82,11 @@ div.promo div.content {
     color: white;
 }
 
+div.promo div.content h1 {
+    /* Negate the default h1 border */
+    border-bottom: none;
+}
+
 div.promo div.content p.lede {
     font-variant: small-caps;
     font-style: italic;
