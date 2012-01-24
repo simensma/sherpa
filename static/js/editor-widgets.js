@@ -31,7 +31,7 @@ $(document).ready(function() {
 
         // Set form destination and input values
         $("div#widgets-" + widgetType + " form").attr('action',
-          '/sherpa/artikkel/widget/opprett/quote/');
+          '/sherpa/artikkel/widget/opprett/sitat/');
         var layout = $(this).parents(".layout").data('id');
         var column = $(this).parents(".column").attr('class').replace('column', '').trim().substring(4) - 1;
         var order = $(this).parents(".add-content").prevAll().length + 1;
@@ -57,7 +57,7 @@ $(document).ready(function() {
 
         // Set form destination and input values
         $("div#widgets-" + widgetType + " form").attr('action',
-          '/sherpa/artikkel/widget/oppdater/quote/');
+          '/sherpa/artikkel/widget/oppdater/sitat/');
         $("div#widgets-" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
 
         // Set the input fields
