@@ -12,14 +12,14 @@ def parse_widget(id, widget):
 
 # Quote widget
 
-def version_add_widget_quote(request):
+def add_widget_quote(request):
     layout = Layout.objects.get(id=request.POST['layout'])
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
 
-def version_edit_widget_quote(request):
+def edit_widget_quote(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"name": "quote", "quote": request.POST['quote'],
       "author": request.POST['author']})
