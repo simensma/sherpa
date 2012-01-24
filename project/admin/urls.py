@@ -31,9 +31,9 @@ urlpatterns = patterns('admin.views',
     url(r'^artikkel/widget/slett/(?P<version>\d+)/(?P<widget>\d+)/$', 'widget_delete'),
 
     # AJAX-updates to content and widgets
-    url(r'^ajax/opprett/innhold/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
-    url(r'^ajax/oppdater/innhold/(?P<content>\d+)/$', 'content_update'),
-    url(r'^ajax/slett/innhold/(?P<content>\d+)/$', 'content_delete'),
+    url(r'^artikkel/innhold/opprett/(?P<layout>\d+)/(?P<column>\d+)/(?P<order>\d+)/$', 'content_create'),
+    url(r'^artikkel/innhold/oppdater/(?P<content>\d+)/$', 'content_update'),
+    url(r'^artikkel/innhold/slett/(?P<content>\d+)/$', 'content_delete'),
 
     # Menyer
     url(r'^meny/$', 'menu_list'),

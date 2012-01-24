@@ -291,7 +291,7 @@ $(document).ready(function() {
             return;
         }
         $.ajax({
-            url: '/sherpa/ajax/slett/innhold/' + iframe.data('id') + '/',
+            url: '/sherpa/artikkel/innhold/slett/' + iframe.data('id') + '/',
             type: 'POST'
         }).always(function(string) {
             // TODO: Error and success handling
@@ -320,11 +320,11 @@ $(document).ready(function() {
                     column = 2;
                 }
                 var order = $(this).prevAll().length + 1;
-                url = '/sherpa/ajax/opprett/innhold/' + layout + '/' + column + '/' + order + '/';
+                url = '/sherpa/artikkel/innhold/opprett/' + layout + '/' + column + '/' + order + '/';
             } else {
                 // Existing content
                 var id = $(this).data('id');
-                url = '/sherpa/ajax/oppdater/innhold/' + id + '/';
+                url = '/sherpa/artikkel/innhold/oppdater/' + id + '/';
             }
             var data = "content=" + encodeURIComponent($($(this).iframeDocument().body).html());
 
