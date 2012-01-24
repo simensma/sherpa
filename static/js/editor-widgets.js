@@ -61,6 +61,8 @@ $(document).ready(function() {
         $("div#widgets-" + widgetType + " input[name='id']").val($(this).parents(".widget").data('widget').id);
 
         // Set the input fields
+        // Todo: This doesn't make sense, widgetType is dynamic but we're
+        // specifically setting quote widget data.
         $("div#widgets-" + widgetType + " textarea").val(widget.quote);
         $("div#widgets-" + widgetType + " input[name='author']").val(widget.author);
 
