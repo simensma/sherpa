@@ -33,12 +33,12 @@
     {% if version.active %}
       Aktiv!
     {% else %}
-      <a href="{% url admin.cms.views.variant.version_activate version.id %}">Aktivér</a>
+      <a href="{% url admin.cms.views.version.activate version.id %}">Aktivér</a>
     {% endif %}</td>
   <td>todo</td>
   <td>todo</td>
   <td>todo</td>
-  <td><a href="{% url admin.cms.views.variant.version_edit version.id %}">Rediger</a></td>
+  <td><a href="{% url admin.cms.views.version.edit version.id %}">Rediger</a></td>
 </tr>
 {% endfor %}
 </tbody>
@@ -46,7 +46,7 @@
 </tfoot>
 </table>
 <br>
-<p><a href="{% url admin.cms.views.variant.version_new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
+<p><a href="{% url admin.cms.views.version.new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
 -->
 
 {# Dialogs that will be hidden by javascript #}
@@ -88,10 +88,10 @@
   <th>3 kolonner</th>
 </tr>
 <tr>
-  <td><a href="{% url admin.cms.views.variant.layout_add version.id 'full' %}"><img src="{{ STATIC_URL }}img/layouts/full.png"></td>
-  <td><a href="{% url admin.cms.views.variant.layout_add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/layouts/sidebar.png"></td>
-  <td><a href="{% url admin.cms.views.variant.layout_add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/layouts/2-columns.png"></td>
-  <td><a href="{% url admin.cms.views.variant.layout_add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/layouts/3-columns.png"></td>
+  <td><a href="{% url admin.cms.views.layout.add version.id 'full' %}"><img src="{{ STATIC_URL }}img/layouts/full.png"></td>
+  <td><a href="{% url admin.cms.views.layout.add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/layouts/sidebar.png"></td>
+  <td><a href="{% url admin.cms.views.layout.add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/layouts/2-columns.png"></td>
+  <td><a href="{% url admin.cms.views.layout.add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/layouts/3-columns.png"></td>
 </tr>
 </table>
 </div>

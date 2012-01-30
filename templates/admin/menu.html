@@ -27,12 +27,12 @@
   <td>{{ menu.page.active.content.content }}</td>
   <td>{{ menu.name }}</td>
   <td>{% if menu.position != 1 %}
-    <a href="{% url admin.cms.views.menu.menu_swap menu.position menu.position|add:-1 %}">Opp</a>
+    <a href="{% url admin.cms.views.menu.swap menu.position menu.position|add:-1 %}">Opp</a>
   {% endif %}</td>
   <td>{% if menu.position != menus|length %}
-    <a href="{% url admin.cms.views.menu.menu_swap menu.position menu.position|add:1 %}">Ned</a>
+    <a href="{% url admin.cms.views.menu.swap menu.position menu.position|add:1 %}">Ned</a>
   {% endif %}</td>
-  <td><a href="{% url admin.cms.views.menu.menu_remove menu.page.id %}">Ta bort fra menyen</a></td>
+  <td><a href="{% url admin.cms.views.menu.remove menu.page.id %}">Ta bort fra menyen</a></td>
 </tr>
 {% endfor %}
 </table>
@@ -50,7 +50,7 @@
 </tr>
 {% for page in pages %}
 <tr>
-  <form action="{% url admin.cms.views.menu.menu_add page.id %}" method="post">
+  <form action="{% url admin.cms.views.menu.add page.id %}" method="post">
   {% csrf_token %}
   <td>{{ page.active.content.content }}</td>
   <td><input type="text" name="name" value="{{ page.active.content.content }}"></td>

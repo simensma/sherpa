@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Max
 from project.page.models import Menu, Page, PageVariant
 
-def menu_list(request):
+def list(request):
     menus = Menu.objects.all().order_by('position')
     for menu in menus:
         menu.page.active = PageVariant.objects.filter(page=menu.page).get(active=True)
@@ -14,7 +14,7 @@ def menu_list(request):
     context = {'menus': menus, 'pages': pages}
     return render(request, 'admin/menu.html', context)
 
-def menu_add(request, page):
+def add(request, page):
     page = Page.objects.get(pk=page)
     max_position = Menu.objects.aggregate(Max('position'))['position__max']
     if(max_position is None):
@@ -23,7 +23,7 @@ def menu_add(request, page):
     menu.save()
     return HttpResponseRedirect(reverse('admin.views.menu_list'))
 
-def menu_remove(request, page):
+def remove(request, page):
     menu = Menu.objects.get(page=page)
     offset = menu.position
     menu.delete()
@@ -35,7 +35,7 @@ def menu_remove(request, page):
         offset += 1
     return HttpResponseRedirect(reverse('admin.views.menu_list'))
 
-def menu_swap(request, pos1, pos2):
+def swap(request, pos1, pos2):
     menu1 = Menu.objects.get(position=pos1)
     menu2 = Menu.objects.get(position=pos2)
     menu1.position = pos2

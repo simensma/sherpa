@@ -2,21 +2,21 @@
 {% block title %}Admin: Page{% endblock %}
 {% block body %}
 
-<form action="{% url admin.cms.views.page.page_edit page.id %}" method="post">
+<form action="{% url admin.cms.views.page.edit page.id %}" method="post">
 {% csrf_token %}
 <!--<p>Slug: <input type="text" name="slug" value="{{ page.slug }}"> <input type="submit"></p> -->
 </form>
-<h1><a href="{% url admin.cms.views.page.page_edit page.id %}">Side</a>
+<h1><a href="{% url admin.cms.views.page.edit page.id %}">Side</a>
   {% for variant in variants %},
   {% if variant.active.id == version.id %}[ {% endif %}
-  <a href="{% url admin.cms.views.variant.version_edit variant.active.id %}">{{ variant.name }}</a>
+  <a href="{% url admin.cms.views.version.edit variant.active.id %}">{{ variant.name }}</a>
   {% if variant.active.id == version.id %} ]{% endif %}
   {% endfor %}
   <a href="#" id="new_variant">+</a>
 </h1>
 
 <!--
-<form id="new_variant_form" action="{% url admin.cms.views.variant.variant_new page.id %}" method="post">
+<form id="new_variant_form" action="{% url admin.cms.views.variant.new page.id %}" method="post">
 {% csrf_token %}
 <p>
 Slug: <input type="text" name="slug" value=""><br>

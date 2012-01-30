@@ -3,7 +3,7 @@
   <h1>Legg til innhold</h1>
 
   <div class="content">
-    <form action="{% url admin.cms.views.variant.content_create %}" method="post">
+    <form action="{% url admin.cms.views.content.create %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="layout" value="">
         <input type="hidden" name="column" value="">

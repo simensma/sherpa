@@ -15,14 +15,14 @@ def parse_widget(id, widget):
 
 # Quote widget
 
-def add_widget_quote(request):
+def add_quote(request):
     layout = Layout.objects.get(id=request.POST['layout'])
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[layout.version.id]))
 
-def edit_widget_quote(request):
+def edit_quote(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"name": "quote", "quote": request.POST['quote'],
       "author": request.POST['author']})
@@ -31,21 +31,21 @@ def edit_widget_quote(request):
 
 # Promo widget
 
-def add_widget_promo(request):
+def add_promo(request):
     layout = Layout.objects.get(id=request.POST['layout'])
     widget = Widget(layout=layout, widget=json.dumps({"name": "promo"}),
         column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[layout.version.id]))
 
-def edit_widget_promo(request):
+def edit_promo(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"name": "promo"})
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.layout.version.id]))
 
 # Delete a widget
-def widget_delete(request, widget):
+def delete(request, widget):
     widgetToRemove = Widget.objects.get(id=widget)
 
     # Collapse orders
