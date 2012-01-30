@@ -12,7 +12,7 @@ def list(request):
     for page in pages:
         page.active = PageVariant.objects.filter(page=page).get(active=True)
     context = {'menus': menus, 'pages': pages}
-    return render(request, 'admin/menu.html', context)
+    return render(request, 'admin/cms/menu.html', context)
 
 def add(request, page):
     page = Page.objects.get(pk=page)

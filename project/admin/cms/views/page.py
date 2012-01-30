@@ -7,7 +7,7 @@ from project.analytics.models import Segment
 def list(request):
     versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
     context = {'versions': versions}
-    return render(request, 'admin/page/list.html', context)
+    return render(request, 'admin/cms/editor/advanced/list.html', context)
 
 def new(request):
     page = Page(slug=request.POST['slug'], published=False)
@@ -28,7 +28,7 @@ def edit(request, page):
             variant.active = PageVersion.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')
         context = {'page': page, 'variants': variants, 'segments': segments}
-        return render(request, 'admin/page/edit_page.html', context)
+        return render(request, 'admin/cms/editor/advanced/edit_page.html', context)
     elif(request.method == 'POST'):
         page = Page.objects.get(pk=page)
         page.slug = request.POST['slug']

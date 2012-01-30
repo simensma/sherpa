@@ -1,4 +1,4 @@
-{% extends "admin/page/edit.html" %}
+{% extends "admin/cms/editor/advanced/edit.html" %}
 {% block editorscript %}
   <script src="{{ STATIC_URL }}js/editor.js"></script>
   <script src="{{ STATIC_URL }}js/editor-iframe.js"></script>
@@ -50,9 +50,9 @@
 -->
 
 {# Dialogs that will be hidden by javascript #}
-{% include "admin/page/snippets/add_content_dialog.html" %}
-{% include "admin/page/widgets/quote_dialog.html" %}
-{% include "admin/page/widgets/promo_dialog.html" %}
+{% include "admin/cms/editor/advanced/snippets/add_content_dialog.html" %}
+{% include "admin/cms/editor/advanced/widgets/quote_dialog.html" %}
+{% include "admin/cms/editor/advanced/widgets/promo_dialog.html" %}
 
 <div id="editarea">
   <div id="buttons">

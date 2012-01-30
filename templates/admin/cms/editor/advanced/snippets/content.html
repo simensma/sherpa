@@ -1,4 +1,4 @@
-{% include 'admin/page/snippets/edit_content.html' with id=item.id %}
+{% include 'admin/cms/editor/advanced/snippets/edit_content.html' with id=item.id %}
 {# The div contents will be moved into the iframe by scripts. #}
 <div>{{ item.content|safe }}</div>
 <iframe id="content-{{ item.id }}" style="border: 1px solid #000; width: 100%; height: 300px;"></iframe>

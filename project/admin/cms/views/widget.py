@@ -6,11 +6,11 @@ import json
 # General widget-parser
 def parse_widget(id, widget):
     if(widget['name'] == "quote"):
-        return {'id': id, 'template': 'admin/page/widgets/quote.html',
+        return {'id': id, 'template': 'admin/cms/editor/advanced/widgets/quote.html',
         'quote': widget['quote'], 'author': widget['author'],
         'json': json.dumps({'id': id, 'quote': widget['quote'], 'author': widget['author']})}
     elif(widget['name'] == "promo"):
-        return {'id': id, 'template': 'admin/page/widgets/promo.html',
+        return {'id': id, 'template': 'admin/cms/editor/advanced/widgets/promo.html',
         'json': json.dumps({'id': id})}
 
 # Quote widget

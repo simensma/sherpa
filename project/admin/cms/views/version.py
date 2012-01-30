@@ -34,7 +34,7 @@ def edit(request, version):
         version = PageVersion.objects.get(pk=version)
         blocks = Block.objects.filter(version=version).order_by('order')
         for block in blocks:
-            block.template = "admin/page/blocks/%s.html" % block.template
+            block.template = "admin/cms/editor/advanced/blocks/%s.html" % block.template
             del block.columns[:]
             block.columns = []
             for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
@@ -60,7 +60,7 @@ def edit(request, version):
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
           'versions': versions, 'version': version, 'segments': segments, 'blocks': blocks}
-        return render(request, 'admin/page/edit_variant.html', context)
+        return render(request, 'admin/cms/editor/advanced/edit_variant.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']
