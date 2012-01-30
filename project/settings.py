@@ -80,6 +80,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'south', # Database migrations
     'page',
     'admin',
     'analytics', # ? tenkte bare ha modeller i denne
