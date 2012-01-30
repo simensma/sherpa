@@ -19,11 +19,11 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^versjon/rediger/(?P<version>\d+)/$', 'version.edit'),
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
 
-    # Layouts
-    url(r'^versjon/layout/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'layout.add'),
-    url(r'^versjon/layout/flytt-ned/(?P<layout>\d+)/$', 'layout.move_down'),
-    url(r'^versjon/layout/flytt-opp/(?P<layout>\d+)/$', 'layout.move_up'),
-    url(r'^versjon/layout/slett/(?P<layout>\d+)/$', 'layout.delete'),
+    # Blocks
+    url(r'^blokk/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'block.add'),
+    url(r'^blokk/flytt-ned/(?P<block>\d+)/$', 'block.move_down'),
+    url(r'^blokk/flytt-opp/(?P<block>\d+)/$', 'block.move_up'),
+    url(r'^blokk/slett/(?P<block>\d+)/$', 'block.delete'),
 
     # Widgets
     url(r'^widget/opprett/sitat/$', 'widgets.add_quote'),

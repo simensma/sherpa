@@ -119,8 +119,8 @@ function removeIframe(iframe) {
 
 $(document).ready(function() {
 
-    // Store all the layout- and content-ids
-    $(".layout[name]").each(function() {
+    // Store all the block- and content-ids
+    $(".block[name]").each(function() {
         $(this).data('id', $(this).attr('name'));
         $(this).removeAttr('name');
     });

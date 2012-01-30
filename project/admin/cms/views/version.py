@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
-from project.page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
+from project.page.models import Page, PageVariant, PageVersion, Block, HTMLContent, Widget
 from project.analytics.models import Segment
 import json
 
@@ -32,26 +32,26 @@ def activate(request, version):
 def edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(pk=version)
-        layouts = Layout.objects.filter(version=version).order_by('order')
-        for layout in layouts:
-            layout.template = "admin/page/layouts/%s.html" % layout.template
-            del layout.columns[:]
-            layout.columns = []
+        blocks = Block.objects.filter(version=version).order_by('order')
+        for block in blocks:
+            block.template = "admin/page/blocks/%s.html" % block.template
+            del block.columns[:]
+            block.columns = []
             for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
-                layout.columns.append([])
+                block.columns.append([])
             # Fetch all items and sort them afterwards
-            contents = HTMLContent.objects.filter(layout=layout)
-            widgets = Widget.objects.filter(layout=layout)
+            contents = HTMLContent.objects.filter(block=block)
+            widgets = Widget.objects.filter(block=block)
             list = []
             list.extend(contents)
             list.extend(widgets)
             list.sort(key=lambda item: item.order)
             for item in list:
                 if isinstance(item, HTMLContent):
-                    layout.columns[item.column].append({'type': 'html', 'id': item.id, 'content': item.content})
+                    block.columns[item.column].append({'type': 'html', 'id': item.id, 'content': item.content})
                 elif isinstance(item, Widget):
                     widget = json.loads(item.widget)
-                    layout.columns[item.column].append({'type': 'widget', 'content':
+                    block.columns[item.column].append({'type': 'widget', 'content':
                       parse_widget(item.id, widget)})
         variants = PageVariant.objects.filter(page=version.variant.page).order_by('priority')
         for variant in variants:
@@ -59,7 +59,7 @@ def edit(request, version):
         versions = PageVersion.objects.filter(variant=version.variant).order_by('-version')
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
-          'versions': versions, 'version': version, 'segments': segments, 'layouts': layouts}
+          'versions': versions, 'version': version, 'segments': segments, 'blocks': blocks}
         return render(request, 'admin/page/edit_variant.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)

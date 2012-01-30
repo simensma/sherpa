@@ -1,7 +1,6 @@
-<div class="layout columns-3">
-
+<div class="block sidebar">
 <div class="column col-1">
-{% for item in layout.columns.0 %}
+{% for item in block.columns.0 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
   {% endif %}
@@ -12,7 +11,7 @@
 </div>
 
 <div class="column col-2">
-{% for item in layout.columns.1 %}
+{% for item in block.columns.1 %}
   {% if item.type == "html" %}
     {{ item.content|safe }}
   {% endif %}
@@ -21,17 +20,5 @@
   {% endif %}
 {% endfor %}
 </div>
-
-<div class="column col-3">
-{% for item in layout.columns.2 %}
-  {% if item.type == "html" %}
-    {{ item.content|safe }}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-</div>
-
 <div style="clear: both;"></div>
 </div>

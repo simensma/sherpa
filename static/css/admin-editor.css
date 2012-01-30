@@ -7,7 +7,7 @@
     padding-top: 80px;
  }
 
-/* layouts */
+/* blocks */
 
 #editarea {
     width: 80%;
@@ -17,7 +17,7 @@
 
 /* negate paragraph margin specs for non-content paragraphs */
 
-.layout p {
+.block p {
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -34,11 +34,11 @@ div.htmlcontent {
 
 /* snippets, editboxes etc. */
 
-#add-layouts {
+#add-blocks {
     text-align: center;
 }
 
-#add-layouts table {
+#add-blocks table {
     margin-left: auto;
     margin-right: auto;
     width: auto;
@@ -78,7 +78,7 @@ div.htmlcontent {
     text-align: center;
 }
 
-#editarea .edit-layout {
+#editarea .edit-block {
     border: 1px solid;
     text-align: center;
 }

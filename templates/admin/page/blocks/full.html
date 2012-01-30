@@ -1,7 +1,7 @@
-<div class="layout full" name="{{ layout.id }}">
-{% include 'admin/page/snippets/edit_layout.html' %}
+<div class="block full" name="{{ block.id }}">
+{% include 'admin/page/snippets/edit_block.html' %}
 <div class="column col-1">
-{% for item in layout.columns.0 %}
+{% for item in block.columns.0 %}
   {% if item.type == "html" %}
     {% include 'admin/page/snippets/content.html' %}
   {% endif %}

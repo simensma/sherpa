@@ -2,18 +2,18 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
-from project.page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
+from project.page.models import Page, PageVariant, PageVersion, Block, HTMLContent, Widget
 from project.analytics.models import Segment
 import json
 
 from widgets import *
 
 def create(request):
-    layout = Layout.objects.get(id=request.POST['layout'])
-    content = HTMLContent(layout=layout, content="<p>Nytt innhold...</p>",
+    block = Block.objects.get(id=request.POST['block'])
+    content = HTMLContent(block=block, content="<p>Nytt innhold...</p>",
         column=request.POST['column'], order=request.POST['order'])
     content.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[block.version.id]))
 
 def update(request, content):
     content = HTMLContent.objects.get(id=content)
@@ -27,4 +27,4 @@ def delete(request, content):
     if(request.is_ajax()):
         return HttpResponse('')
     else:
-        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[content.layout.version.id]))
+        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[content.block.version.id]))

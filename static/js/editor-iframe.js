@@ -21,7 +21,7 @@ function createIframe(iframe, content) {
         if($(doc.body).length > 0) {
             clearInterval(intervalId);
 
-            // Simulate the layout classes on html/body in the iframe
+            // Simulate the block classes on html/body in the iframe
             $(doc).children().addClass($(iframe).parent().parent().attr('class'));
             $(doc.body).addClass($(iframe).parent().attr('class'));
 

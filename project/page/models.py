@@ -29,22 +29,22 @@ class PageVersion(models.Model):
     version = models.IntegerField()
     active = models.BooleanField()
 
-### Layouts
+### CMS
 
-class Layout(models.Model):
+class Block(models.Model):
     version = models.ForeignKey('page.PageVersion')
     template = models.CharField(max_length=50)
     order = models.IntegerField()
     columns = []
 
 class HTMLContent(models.Model):
-    layout = models.ForeignKey('page.Layout')
+    block = models.ForeignKey('page.Block')
     content = models.TextField()
     column = models.IntegerField()
     order = models.IntegerField()
 
 class Widget(models.Model):
-    layout = models.ForeignKey('page.Layout')
+    block = models.ForeignKey('page.Block')
     widget = models.TextField()
     column = models.IntegerField()
     order = models.IntegerField()

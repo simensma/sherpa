@@ -1,24 +1,28 @@
-<div class="layout columns-2">
+<div class="block columns-2" name="{{ block.id }}">
+{% include 'admin/page/snippets/edit_block.html' %}
+
 <div class="column col-1">
-{% for item in layout.columns.0 %}
+{% for item in block.columns.0 %}
   {% if item.type == "html" %}
-    {{ item.content|safe }}
+    {% include 'admin/page/snippets/content.html' %}
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
+{% include 'admin/page/snippets/add_content.html' %}
 </div>
 
 <div class="column col-2">
-{% for item in layout.columns.1 %}
+{% for item in block.columns.1 %}
   {% if item.type == "html" %}
-    {{ item.content|safe }}
+    {% include 'admin/page/snippets/content.html' %}
   {% endif %}
   {% if item.type == "widget" %}
     {% include item.content.template with widget=item.content %}
   {% endif %}
 {% endfor %}
+{% include 'admin/page/snippets/add_content.html' %}
 </div>
 
 <div style="clear: both;"></div>

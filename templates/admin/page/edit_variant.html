@@ -74,11 +74,11 @@
     <button id="savebutton">Lagre</button>
   </div>
 
-{% for layout in layouts %}
-{% include layout.template %}
+{% for block in blocks %}
+{% include block.template %}
 {% endfor %}
 
-<div id="add-layouts">
+<div id="add-blocks">
 <h2>Legg til flere kolonner:</h2>
 <table>
 <tr>
@@ -88,10 +88,10 @@
   <th>3 kolonner</th>
 </tr>
 <tr>
-  <td><a href="{% url admin.cms.views.layout.add version.id 'full' %}"><img src="{{ STATIC_URL }}img/layouts/full.png"></td>
-  <td><a href="{% url admin.cms.views.layout.add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/layouts/sidebar.png"></td>
-  <td><a href="{% url admin.cms.views.layout.add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/layouts/2-columns.png"></td>
-  <td><a href="{% url admin.cms.views.layout.add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/layouts/3-columns.png"></td>
+  <td><a href="{% url admin.cms.views.block.add version.id 'full' %}"><img src="{{ STATIC_URL }}img/blocks/full.png"></td>
+  <td><a href="{% url admin.cms.views.block.add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/blocks/sidebar.png"></td>
+  <td><a href="{% url admin.cms.views.block.add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/blocks/2-columns.png"></td>
+  <td><a href="{% url admin.cms.views.block.add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/blocks/3-columns.png"></td>
 </tr>
 </table>
 </div>

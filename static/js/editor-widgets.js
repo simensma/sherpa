@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     // These two will be set to their respective divs when adding content
     // based on which 'add content'-button was clicked.
-    var layout;
+    var block;
     var column;
 
     // Store all the widget objects
@@ -35,7 +35,7 @@ $(document).ready(function() {
     /* Adding new content or widgets */
     $("div.add-content a img").click(function() {
         $("div.add-content-dialog").dialog('open');
-        layout = $(this).parents(".layout");
+        block = $(this).parents(".block");
         column = $(this).parents(".column");
         if(!documentSaved) {
             attemptSave();
@@ -46,7 +46,7 @@ $(document).ready(function() {
     $("div.add-content-dialog .content a").click(function() {
         var columnNumber = column.attr('class').replace('column', '').trim().substring(4) - 1;
         var order = column.children().length; // Remember, one of the children is the 'add-content' div
-        $(this).siblings("input[name='layout']").val(layout.data('id'));
+        $(this).siblings("input[name='block']").val(block.data('id'));
         $(this).siblings("input[name='column']").val(columnNumber);
         $(this).siblings("input[name='order']").val(order);
         $(this).parents("form").submit();
@@ -58,7 +58,7 @@ $(document).ready(function() {
         var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
         var columnNumber = column.attr('class').replace('column', '').trim().substring(4) - 1;
         var order = column.children().length; // Remember, one of the children is the 'add-content' div
-        $("div#" + widgetType + " input[name=\"layout\"]").val(layout.data('id'));
+        $("div#" + widgetType + " input[name=\"block\"]").val(block.data('id'));
         $("div#" + widgetType + " input[name=\"column\"]").val(columnNumber);
         $("div#" + widgetType + " input[name=\"order\"]").val(order);
 
