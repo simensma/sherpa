@@ -9,4 +9,7 @@ urlpatterns = patterns('admin',
 
     # Analytics
     url(r'^analyse/', include('project.admin.analytics.urls')),
+
+    # Image archive
+    url(r'^bildearkiv/', include('project.admin.images.urls')),
 )
