@@ -2,11 +2,11 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
-from page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
-from analytics.models import Segment
+from project.page.models import Page, PageVariant, PageVersion, Layout, HTMLContent, Widget
+from project.analytics.models import Segment
 import json
 
-from admin.views_page_widgets import *
+from widgets import *
 
 def variant_new(request, page):
     page = Page.objects.get(pk=page)
@@ -18,11 +18,11 @@ def variant_new(request, page):
     variant.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 def variant_edit(request, version):
     # Not used yet, should be called from page_edit
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version]))
 
 def variant_swap(request, page, pri1, pri2):
     variant1 = PageVariant.objects.filter(page=page).get(priority=pri1)
@@ -31,7 +31,7 @@ def variant_swap(request, page, pri1, pri2):
     variant2.priority = pri1
     variant1.save()
     variant2.save()
-    return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page]))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page]))
 
 def version_new(request, variant):
     variant = PageVariant.objects.get(pk=variant)
@@ -174,4 +174,4 @@ def content_delete(request, content):
 #        variant.priority = offset
 #        variant.save()
 #        offset += 1
-#    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[variant.version.id]))
+#    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[variant.version.id]))

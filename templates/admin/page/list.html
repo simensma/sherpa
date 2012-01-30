@@ -9,15 +9,15 @@
 <ul>
 {% for version in versions %}
   <li>{{ version.content.content }}
-      [ <a href="{% url admin.views.page_edit version.variant.page.id %}">Rediger</a> ]
-      [ <a href="{% url admin.views.page_delete version.variant.page.id %}">Slett</a> ]</li>
+      [ <a href="{% url admin.cms.views.page.page_edit version.variant.page.id %}">Rediger</a> ]
+      [ <a href="{% url admin.cms.views.page.page_delete version.variant.page.id %}">Slett</a> ]</li>
 {% endfor %}
 </ul>
 {% endif %}
 
 <p>Ny artikkel</p>
 <p>
-<form action="{% url admin.views.page_new %}" method="post">
+<form action="{% url admin.cms.views.page.page_new %}" method="post">
 {% csrf_token %}
   Vennligst oppgi foreløpig slug (du kan endre denne senere):<br>
   <input type="text" name="slug" value=""><br>

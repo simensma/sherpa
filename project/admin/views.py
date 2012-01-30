@@ -1,9 +1,10 @@
 from django.shortcuts import render
 
-from admin.views_analytics import *
-from admin.views_menu import *
-from admin.views_page import *
-from admin.views_page_variant import *
+from project.admin.analytics.views import *
+from project.admin.cms.views.menu import *
+from project.admin.cms.views.page import *
+from project.admin.cms.views.variant import *
+from project.admin.cms.views.widgets import *
 
 def index(request):
     return render(request, 'admin/admin.html')

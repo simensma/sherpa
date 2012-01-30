@@ -9,7 +9,7 @@
 <ul>
 {% for visitor in visitors %}
   <li>(Anonym)
-      [ <a href="{% url admin.views.analytics_requests_list visitor.id %}">Se sidevisninger</a> ]</li>
+      [ <a href="{% url admin.analytics.views.analytics_requests_list visitor.id %}">Se sidevisninger</a> ]</li>
 {% endfor %}
 </ul>
 {% endif %}

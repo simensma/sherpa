@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import Page, PageVariant, PageVersion
-from analytics.models import Segment
+from project.page.models import Page, PageVariant, PageVersion
+from project.analytics.models import Segment
 
 def page_list(request):
     versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
@@ -18,7 +18,7 @@ def page_new(request):
     content.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.variant_edit', args=[variant.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.variant.edit', args=[variant.id]))
 
 def page_edit(request, page):
     if(request.method == 'GET'):
@@ -33,10 +33,10 @@ def page_edit(request, page):
         page = Page.objects.get(pk=page)
         page.slug = request.POST['slug']
         page.save()
-        return HttpResponseRedirect(reverse('admin.views.page_edit', args=[page.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page.id]))
 
 def page_delete(request, page):
-    return HttpResponseRedirect(reverse('admin.views.page_list'))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 #    try:
 #        page = Page.objects.get(pk=page)
 #        versions = PageVersion.objects.filter(page=page)
@@ -48,6 +48,6 @@ def page_delete(request, page):
 #            variants.delete()
 #        # versions will be deleted by page cascade
 #        page.delete()
-#        return HttpResponseRedirect(reverse('admin.views.page_list'))
+#        return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 #    except (KeyError, Page.DoesNotExist):
 #        return page_list(request, error="The page you tried to delete does not exist.")

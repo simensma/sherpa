@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from page.models import HTMLContent, Layout, Widget
+from project.page.models import HTMLContent, Layout, Widget
 import json
 
 # General widget-parser
@@ -20,14 +20,14 @@ def add_widget_quote(request):
     widget = Widget(layout=layout, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[layout.version.id]))
 
 def edit_widget_quote(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"name": "quote", "quote": request.POST['quote'],
       "author": request.POST['author']})
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[widget.layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.layout.version.id]))
 
 # Promo widget
 
@@ -36,13 +36,13 @@ def add_widget_promo(request):
     widget = Widget(layout=layout, widget=json.dumps({"name": "promo"}),
         column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[layout.version.id]))
 
 def edit_widget_promo(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"name": "promo"})
     widget.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[widget.layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.layout.version.id]))
 
 # Delete a widget
 def widget_delete(request, widget):
@@ -58,4 +58,4 @@ def widget_delete(request, widget):
         content.order = (content.order-1)
         content.save();
     widgetToRemove.delete()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[widgetToRemove.layout.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widgetToRemove.layout.version.id]))

@@ -24,12 +24,12 @@
   <td>{{ variant.segment.description|default:"(Default)" }}</td>
   <td>todo</td>
   <td>{% if variant.priority != 1 %}
-    <a href="{% url admin.views.variant_swap page.id variant.priority variant.priority|add:-1 %}">Opp</a>
+    <a href="{% url admin.cms.views.variant.variant_swap page.id variant.priority variant.priority|add:-1 %}">Opp</a>
   {% endif %}</td>
   <td>{% if variant.priority != variants|length %}
-    <a href="{% url admin.views.variant_swap page.id variant.priority variant.priority|add:1 %}">Ned</a>
+    <a href="{% url admin.cms.views.variant.variant_swap page.id variant.priority variant.priority|add:1 %}">Ned</a>
   {% endif %}</td>
-  <td><a href="{# url admin.views.variant_delete variant.id #}">Slett</a></td>
+  <td><a href="{# url admin.cms.views.variant.variant_delete variant.id #}">Slett</a></td>
 </tr>
 {% endfor %}
 </table>
