@@ -17,7 +17,7 @@ def new(request, variant):
     newContent.save()
     version = PageVersion(variant=variant, content=newContent, version=(max_version+1), active=False)
     version.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 def activate(request, version):
     # Note for future error handling: Fails if activating the _same version_ 2 times in a row (F5)
@@ -27,7 +27,7 @@ def activate(request, version):
     oldActive.active = False
     newActive.save()
     oldActive.save()
-    return HttpResponseRedirect(reverse('admin.views.version_edit', args=[newActive.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[newActive.id]))
 
 def edit(request, version):
     if(request.method == 'GET'):
@@ -65,5 +65,5 @@ def edit(request, version):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']
         version.content.save()
-        return HttpResponseRedirect(reverse('admin.views.version_edit', args=[version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 

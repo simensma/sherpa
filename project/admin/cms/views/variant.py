@@ -17,7 +17,7 @@ def new(request, page):
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 def edit(request, version):
-    # Not used yet, should be called from page_edit
+    # Not used yet, should be called from page.edit
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version]))
 
 def swap(request, page, pri1, pri2):
