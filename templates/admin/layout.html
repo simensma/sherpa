@@ -17,9 +17,14 @@
 <body>
 <header>
     <a href="{% url admin.views.index %}">
-      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening" style="margin-top: 25px; margin-left: 25px">
+      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening">
     </a>
+    <h1>
+      <a href="{% url admin.views.index%}">Sherpa 3</a> &rarr;
+      {% block header %}<a href="{% url admin.views.index %}">Dashbord</a>{% endblock %}
+    </h1>
 </header>
+<div style="clear: both;"></div>
 {% block body %}{% endblock %}
 <div style="clear: both;"></div>
 <footer>

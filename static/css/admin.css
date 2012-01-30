@@ -2,7 +2,32 @@
  * General stylesheet for the admin ui
  */
 
- table {
+header {
+  height: 119px;
+  margin-left: 6%;
+}
+
+header img {
+  float: left;
+}
+
+header h1 {
+  padding-top: 30px;
+  padding-left: 150px;
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 250%;
+}
+
+header h1 > a {
+  color: black;
+}
+
+header h1 > a:hover {
+  color: rgb(200, 0, 0);
+}
+
+table {
   border-collapse: collapse;
 }
 
