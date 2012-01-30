@@ -5,9 +5,9 @@ urlpatterns = patterns('',
     url(r'^sherpa/', include('admin.urls')),
 
     # User authentication
-    url(r'^innlogging/$', 'auth.views.login'),
-    url(r'^utlogging/$', 'auth.views.logout'),
-    url(r'^minside/$', 'auth.views.home'),
+    url(r'^innlogging/$', 'users.views.login'),
+    url(r'^utlogging/$', 'users.views.logout'),
+    url(r'^minside/$', 'users.views.home'),
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slugs': ""}),

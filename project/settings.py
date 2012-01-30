@@ -83,7 +83,7 @@ INSTALLED_APPS = (
     'page',
     'admin',
     'analytics', # ? tenkte bare ha modeller i denne
-    'auth',
+    'users',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -123,4 +123,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "context_processors.sql_queries"
 )
 
-AUTH_PROFILE_MODULE='auth.Profile'
+AUTH_PROFILE_MODULE='users.Profile'
