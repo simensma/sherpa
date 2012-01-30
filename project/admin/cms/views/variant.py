@@ -1,12 +1,8 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.db.models import Max
-from project.page.models import Page, PageVariant, PageVersion, Block, HTMLContent, Widget
+from project.page.models import Page, PageVariant, PageVersion
 from project.analytics.models import Segment
-import json
-
-from widget import *
 
 def new(request, page):
     page = Page.objects.get(pk=page)

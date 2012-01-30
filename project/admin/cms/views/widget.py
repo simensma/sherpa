@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from project.page.models import HTMLContent, Block, Widget
+from project.page.models import Block, HTMLContent, Widget
 import json
 
 # General widget-parser
