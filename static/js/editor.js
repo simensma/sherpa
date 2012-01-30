@@ -84,7 +84,7 @@ function saveContent() {
         var data = "content=" + encodeURIComponent($($(this).iframeDocument().body).html());
         $.ajax({
             // Maybe this file should be rendered as a template to avoid static URLs?
-            url: '/sherpa/artikkel/innhold/oppdater/' + id + '/',
+            url: '/sherpa/cms/innhold/oppdater/' + id + '/',
             type: 'POST',
             data: data
         }).done(function(string) {
@@ -110,7 +110,7 @@ function removeIframe(iframe) {
         return;
     }
     $.ajax({
-        url: '/sherpa/artikkel/innhold/slett/' + iframe.data('id') + '/',
+        url: '/sherpa/cms/innhold/slett/' + iframe.data('id') + '/',
         type: 'POST'
     }).always(function(string) {
         // TODO: Error and success handling

@@ -5,7 +5,7 @@ urlpatterns = patterns('admin',
     url(r'^$', 'views.index'),
 
     # CMS
-    url(r'^artikkel/', include('project.admin.cms.urls')),
+    url(r'^cms/', include('project.admin.cms.urls')),
 
     # Analytics
     url(r'^analyse/', include('project.admin.analytics.urls')),

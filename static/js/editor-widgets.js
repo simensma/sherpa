@@ -89,7 +89,7 @@ function addSpecificWidget(type) {
     switch(type) {
         case 'dialog-quote':
             // Set form destination
-            $("div#dialog-quote form").attr('action', '/sherpa/artikkel/widget/opprett/sitat/');
+            $("div#dialog-quote form").attr('action', '/sherpa/cms/widget/opprett/sitat/');
 
             // Empty the input fields, in case it was previously edited and pre-filled
             $("div#dialog-quote textarea").val("");
@@ -102,7 +102,7 @@ function addSpecificWidget(type) {
 
         case 'dialog-promo':
             // Set form destination
-            $("div#dialog-promo form").attr('action', '/sherpa/artikkel/widget/opprett/promo/');
+            $("div#dialog-promo form").attr('action', '/sherpa/cms/widget/opprett/promo/');
 
             // Set the text (header and submit button)
             $("div#dialog-promo h1").text("Legg til promo-widget");
@@ -115,7 +115,7 @@ function editSpecificWidget(type, widget) {
     switch(type) {
         case 'dialog-quote':
             // Set form destination
-            $("div#dialog-quote form").attr('action', '/sherpa/artikkel/widget/oppdater/sitat/');
+            $("div#dialog-quote form").attr('action', '/sherpa/cms/widget/oppdater/sitat/');
 
             // Set the input fields
             $("div#dialog-quote textarea").val(widget.quote);
@@ -128,7 +128,7 @@ function editSpecificWidget(type, widget) {
 
         case 'dialog-promo':
             // Set form destination
-            $("div#dialog-promo form").attr('action', '/sherpa/artikkel/widget/oppdater/promo/');
+            $("div#dialog-promo form").attr('action', '/sherpa/cms/widget/oppdater/promo/');
 
             // Set the text (header and submit button)
             $("div#dialog-promo h1").text("Endre på promo-widget");
