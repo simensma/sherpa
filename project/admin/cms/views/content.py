@@ -6,7 +6,7 @@ from project.page.models import Page, PageVariant, PageVersion, Block, HTMLConte
 from project.analytics.models import Segment
 import json
 
-from widgets import *
+from widget import *
 
 def create(request):
     block = Block.objects.get(id=request.POST['block'])

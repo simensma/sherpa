@@ -26,11 +26,11 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^blokk/slett/(?P<block>\d+)/$', 'block.delete'),
 
     # Widgets
-    url(r'^widget/opprett/sitat/$', 'widgets.add_quote'),
-    url(r'^widget/oppdater/sitat/$', 'widgets.edit_quote'),
-    url(r'^widget/opprett/promo/$', 'widgets.add_promo'),
-    url(r'^widget/oppdater/promo/$', 'widgets.edit_promo'),
-    url(r'^widget/slett/(?P<widget>\d+)/$', 'widgets.delete'),
+    url(r'^widget/opprett/sitat/$', 'widget.add_quote'),
+    url(r'^widget/oppdater/sitat/$', 'widget.edit_quote'),
+    url(r'^widget/opprett/promo/$', 'widget.add_promo'),
+    url(r'^widget/oppdater/promo/$', 'widget.edit_promo'),
+    url(r'^widget/slett/(?P<widget>\d+)/$', 'widget.delete'),
 
     # Content
     url(r'^innhold/opprett/$', 'content.create'),

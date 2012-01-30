@@ -6,7 +6,7 @@ from project.page.models import Page, PageVariant, PageVersion, Block, HTMLConte
 from project.analytics.models import Segment
 import json
 
-from widgets import *
+from widget import *
 
 def add(request, version, template):
     version = PageVersion.objects.get(id=version)

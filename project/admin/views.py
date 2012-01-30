@@ -7,7 +7,7 @@ from project.admin.cms.views.menu import *
 from project.admin.cms.views.page import *
 from project.admin.cms.views.variant import *
 from project.admin.cms.views.version import *
-from project.admin.cms.views.widgets import *
+from project.admin.cms.views.widget import *
 
 def index(request):
     return render(request, 'admin/admin.html')
