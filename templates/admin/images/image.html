@@ -1,21 +1,6 @@
-{% extends "admin/layout.html" %}
-{% block title %}Bildearkiv{% endblock %}
-{% block header %} → <a href="{% url admin.images.views.albums %}">Bildearkiv</a>{% endblock %}
+{% extends "admin/images/layout.html" %}
 
-{% block body %}
-<div id="image-toolbar">
-  <form action="" method="post">
-  <input type="text" size="40" id="search"> <input type="submit" value="Søk"> <a href="">Avansert søk</a>
-  </form>
-</div>
-
-<div id="album-path">
-  <a href="{% url admin.images.views.albums %}">Bildearkiv</a>
-{% for album in albumpath %}
-  → <a href="{% url admin.images.views.albums album.id %}">{{ album.name }}</a>
-{% endfor %}
-</div>
-
+{% block imagebody %}
 <div id="image-display">
   <div class="metadata">
     <h1><em>{{ image.description }}</em></h1>
@@ -51,6 +36,4 @@
     <img src="http://www.turistforeningen.no/images/uq/Ek/qD.sized.jpg" alt="{{ image.description }}" title="{{ image.description }}">
   </div>
 </div>
-
-
 {% endblock %}
