@@ -10,4 +10,4 @@ from project.admin.cms.views.version import *
 from project.admin.cms.views.widget import *
 
 def index(request):
-    return render(request, 'admin/admin.html')
+    return render(request, 'admin/dashboard.html')
