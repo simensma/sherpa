@@ -9,10 +9,14 @@
   </form>
 </div>
 
+{% for parent in parents %}
+{{ parent }}<br>
+{% endfor %}
+
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
-    <li><a href="">{{ album.name }}</a></li>
+    <li><a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a></li>
   {% endfor %}
   </ul>
 </div>
