@@ -4,6 +4,14 @@
 {% if not albums and not images %}
 <div class="archive-gallery-notice"><p>Dette albumet er tomt.</p></div>
 {% endif %}
+
+<div id="add-album">
+  <form action="" method="post">
+    <p>Navn på nytt album: <input type="text"></p>
+    <p><input type="submit" value="Legg til album"></p>
+  </form>
+</div>
+
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
