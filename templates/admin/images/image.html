@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Bildearkiv{% endblock %}
-{% block header %} → <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>{% endblock %}
+{% block header %} → <a href="{% url admin.images.views.albums %}">Bildearkiv</a>{% endblock %}
 
 {% block body %}
 <div id="image-toolbar">
@@ -10,9 +10,9 @@
 </div>
 
 <div id="album-path">
-  <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>
+  <a href="{% url admin.images.views.albums %}">Bildearkiv</a>
 {% for album in albumpath %}
-  → <a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a>
+  → <a href="{% url admin.images.views.albums album.id %}">{{ album.name }}</a>
 {% endfor %}
 </div>
 

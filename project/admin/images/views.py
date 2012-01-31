@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from admin.models import Image, Album
 
-def dashboard(request, album):
+def albums(request, album):
     albums = Album.objects.filter(parent=album)
     parents = []
     images = None
@@ -16,7 +16,7 @@ def dashboard(request, album):
             parents.insert(0, album)
 
     context = {'albums': albums, 'albumpath': parents, 'images': images}
-    return render(request, 'admin/images/dashboard.html', context)
+    return render(request, 'admin/images/albums.html', context)
 
 def image(request, image):
     image = Image.objects.get(id=image)
