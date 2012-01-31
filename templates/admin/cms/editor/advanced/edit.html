@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Admin: Page{% endblock %}
-{% block header %} &rarr; <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
+{% block header %} → <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
 {% block body %}
 
 <form action="{% url admin.cms.views.page.edit page.id %}" method="post">
