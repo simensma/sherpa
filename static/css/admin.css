@@ -118,6 +118,10 @@ div#archive-gallery ul li a.image {
   clear: both;
 }
 
+div#archive-gallery ul li.add a.image {
+  margin-top: 20px;
+}
+
 div#image-display .metadata {
   float: left;
   width: 50%;
