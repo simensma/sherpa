@@ -2,6 +2,7 @@ from django.db import models
 
 class Image(models.Model):
     hash = models.CharField(max_length=40)
+    description = models.CharField(max_length=200)
     album = models.ForeignKey('admin.Album')
     photographer = models.CharField(max_length=200)
     credits = models.CharField(max_length=20)
