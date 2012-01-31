@@ -7,4 +7,7 @@ urlpatterns = patterns('admin.images.views',
 
     url(r'^album/slett/(?P<album>\d+)/$', 'delete_album'),
     url(r'^bilde/slett/(?P<image>\d+)/$', 'delete_image'),
+
+    url(r'^album/nytt/$', 'add_album', {'parent': None}),
+    url(r'^album/nytt/(?P<parent>\d+)/$', 'add_album'),
 )

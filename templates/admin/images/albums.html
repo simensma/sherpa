@@ -6,12 +6,12 @@
 {% endif %}
 
 <div id="add-album">
-  <form action="" method="post">
-    <p>Navn på nytt album: <input type="text"></p>
+  <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
+    {% csrf_token %}
+    <p>Navn på nytt album: <input type="text" name="name"></p>
     <p><input type="submit" value="Legg til album"></p>
   </form>
 </div>
-
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
