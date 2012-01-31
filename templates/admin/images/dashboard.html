@@ -3,5 +3,17 @@
 {% block header %} → <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>{% endblock %}
 
 {% block body %}
-<p>Bildearkiv</p>
+<div id="image-toolbar">
+  <form action="" method="post">
+  <input type="text" size="40" id="search"> <input type="submit" value="Søk"> <a href="">Avansert søk</a>
+  </form>
+</div>
+
+<div id="archive-gallery">
+  <ul>
+  {% for album in albums %}
+    <li><a href="">{{ album.name }}</a></li>
+  {% endfor %}
+  </ul>
+</div>
 {% endblock %}
