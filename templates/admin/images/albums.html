@@ -7,10 +7,22 @@
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
-    <li class="album"><a href="{% url admin.images.views.albums album.id %}">{{ album.name }}</a></li>
+    <li class="album">
+      <span class="buttons"><a class="delete" href="{% url admin.images.views.albums album.id %}"><img src="{{ STATIC_URL }}img/small_x.png" alt="Slett album"></a></span>
+      <a class="image" href="{% url admin.images.views.albums album.id %}">
+        <img src="{{ STATIC_URL }}img/icons/folder.png" alt="Album: {{ album.name }}">
+      </a>
+      <a class="text" href="{% url admin.images.views.albums album.id %}">{{ album.name }}</a>
+    </li>
   {% endfor %}
   {% for image in images %}
-    <li class="image"><a href="{% url admin.images.views.image image.id %}">{{ image.description }}</a></li>
+    <li class="image">
+      <span class="buttons"><a class="delete" href="{% url admin.images.views.image image.id %}"><img src="{{ STATIC_URL }}img/small_x.png" alt="Slett album"></a></span>
+      <a class="image" href="{% url admin.images.views.image image.id %}">
+        <img src="" alt="{{ image.description }}">
+      </a>
+      <a class="text" href="{% url admin.images.views.image image.id %}">{{ image.description }}</a>
+    </li>
   {% endfor %}
   </ul>
 </div>

@@ -108,16 +108,14 @@ div#archive-gallery ul li {
   text-align: center;
 }
 
-div#archive-gallery ul li.album {
-  background: url('/static/img/icons/folder.png') 40% 20% no-repeat;
+div#archive-gallery ul li span.buttons {
+  float: right;
+  margin-right: 5px;
 }
 
-div#archive-gallery ul li a {
+div#archive-gallery ul li a.image {
   display: block;
-  color: blue;
-  padding-top: 110px;
-  width: 100%;
-  height: 40px;
+  clear: both;
 }
 
 div#image-display .metadata {
