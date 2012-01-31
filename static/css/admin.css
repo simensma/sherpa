@@ -99,6 +99,9 @@ div#archive-gallery ul li {
   margin: 1%;
   float: left;
   text-align: center;
+}
+
+div#archive-gallery ul li.album {
   background: url('/static/img/icons/folder.png') 40% 20% no-repeat;
 }
 

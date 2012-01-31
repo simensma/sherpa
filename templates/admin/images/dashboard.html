@@ -19,7 +19,10 @@
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
-    <li><a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a></li>
+    <li class="album"><a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a></li>
+  {% endfor %}
+  {% for image in images %}
+    <li class="image"><a href="{% url admin.images.views.image image.id %}">{{ image.description }}</a></li>
   {% endfor %}
   </ul>
 </div>
