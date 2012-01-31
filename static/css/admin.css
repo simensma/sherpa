@@ -36,7 +36,7 @@ header h1 > a {
 }
 
 header h1 > a:hover {
-  color: rgb(200, 0, 0);
+  color: red;
 }
 
 table {
