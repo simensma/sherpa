@@ -83,6 +83,10 @@ div#image-toolbar input#search {
   font-size: 120%;
 }
 
+div#album-path {
+  margin-left: 5%;
+}
+
 div#archive-gallery ul li {
   display: block;
   width: 200px;

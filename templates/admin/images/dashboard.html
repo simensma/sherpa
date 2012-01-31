@@ -9,9 +9,12 @@
   </form>
 </div>
 
-{% for parent in parents %}
-{{ parent }}<br>
+<div id="album-path">
+  <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>
+{% for album in albumpath %}
+  → <a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a>
 {% endfor %}
+</div>
 
 <div id="archive-gallery">
   <ul>
