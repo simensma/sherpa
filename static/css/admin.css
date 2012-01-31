@@ -150,6 +150,7 @@ div#image-display .metadata table td {
 
 div#image-display .metadata h1 {
   font-size: 180%;
+  font-style: italic;
 }
 
 div#image-display .metadata h1, div#image-display .metadata p {
