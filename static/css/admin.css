@@ -91,6 +91,12 @@ div#album-path {
   margin-left: 5%;
 }
 
+div.archive-gallery-notice {
+  margin-left: 5%;
+  font-size: 120%;
+  font-weight: bold;
+}
+
 div#archive-gallery ul li {
   display: block;
   width: 200px;
