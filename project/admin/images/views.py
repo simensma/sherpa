@@ -19,4 +19,6 @@ def dashboard(request, album):
     return render(request, 'admin/images/dashboard.html', context)
 
 def image(request, image):
-    return None
+    image = Image.objects.get(id=image)
+    context = {'image': image}
+    return render(request, 'admin/images/image.html', context)

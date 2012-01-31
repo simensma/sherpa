@@ -118,3 +118,42 @@ div#archive-gallery ul li a {
   width: 100%;
   height: 40px;
 }
+
+div#image-display .metadata {
+  float: left;
+  width: 50%;
+  text-align: right;
+}
+
+div#image-display .metadata table {
+  float: right;
+  margin-right: 10%;
+}
+
+div#image-display .metadata table th, div#image-display .metadata table td {
+  border: none;
+  padding: 5px;
+}
+
+div#image-display .metadata table th {
+  text-align: right;
+  font-weight: normal;
+}
+
+div#image-display .metadata table td {
+  font-weight: bold;
+  text-align: left;
+}
+
+div#image-display .metadata h1 {
+  font-size: 180%;
+}
+
+div#image-display .metadata h1, div#image-display .metadata p {
+  padding-right: 10%;
+}
+
+div#image-display .image {
+  float: right;
+  width: 50%;
+}

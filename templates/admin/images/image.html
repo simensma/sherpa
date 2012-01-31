@@ -1,0 +1,56 @@
+{% extends "admin/layout.html" %}
+{% block title %}Bildearkiv{% endblock %}
+{% block header %} → <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>{% endblock %}
+
+{% block body %}
+<div id="image-toolbar">
+  <form action="" method="post">
+  <input type="text" size="40" id="search"> <input type="submit" value="Søk"> <a href="">Avansert søk</a>
+  </form>
+</div>
+
+<div id="album-path">
+  <a href="{% url admin.images.views.dashboard %}">Bildearkiv</a>
+{% for album in albumpath %}
+  → <a href="{% url admin.images.views.dashboard album.id %}">{{ album.name }}</a>
+{% endfor %}
+</div>
+
+<div id="image-display">
+  <div class="metadata">
+    <h1><em>{{ image.description }}</em></h1>
+    <table>
+    <tr>
+      <th>Kreditering:</th>
+      <td>{{ image.credits }}</td>
+    </tr>
+    <tr>
+      <th>Fotograf:</th>
+      <td>{{ image.photographer }} ({{ image.photographer_contact }})</td>
+    </tr>
+    <tr>
+      <th>Lastet opp:</th>
+      <td>{{ image.uploaded }} av {{ image.uploader.user }}</td>
+    </tr>
+    <tr>
+      <th>Original:</th>
+      <td><a href="">Åpne ({{ image.height }} x {{ image.width }})</a></td>
+    </tr>
+    <tr>
+      <th>Mellomstor:</th>
+      <td><a href="">Åpne (500 x 375)</a></td>
+    </tr>
+    <tr>
+      <th>Liten:</th>
+      <td><a href="">Åpne (150 x 113)</a></td>
+    </tr>
+    </table>
+  </div>
+
+  <div class="image">
+    <img src="http://www.turistforeningen.no/images/uq/Ek/qD.sized.jpg" alt="{{ image.description }}" title="{{ image.description }}">
+  </div>
+</div>
+
+
+{% endblock %}
