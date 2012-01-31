@@ -2,6 +2,10 @@
  * General stylesheet for the admin ui
  */
 
+body {
+  font-family: sans-serif;
+}
+
 header {
   height: 119px;
   margin-left: 6%;
