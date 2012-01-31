@@ -24,19 +24,19 @@
       <a class="text" href="{% url admin.images.views.image_details image.id %}">{{ image.description }}</a>
     </li>
   {% endfor %}
-  <li class="add">
-    <a class="image" href="">
+  <li class="add album">
+    <a class="image" href="javascript:undefined">
       <img src="{{ STATIC_URL }}img/icons/folder-plus.png" alt="Legg til underalbum">
     </a>
-    <a class="text" href="">
+    <a class="text" href="javascript:undefined">
       Legg til underalbum
     </a>
   </li>
-  <li class="add">
-    <a class="image" href="">
+  <li class="add image">
+    <a class="image" href="javascript:undefined">
       <img src="{{ STATIC_URL }}img/icons/upload-image.png" alt="Last opp bilde(r)">
     </a>
-    <a class="text" href="">
+    <a class="text" href="javascript:undefined">
       Last opp bilde
     </a>
   </li>
