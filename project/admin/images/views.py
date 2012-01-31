@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from admin.models import Image, Album
 
-def albums(request, album):
+def list_albums(request, album):
     albums = Album.objects.filter(parent=album)
     parents = []
     images = None

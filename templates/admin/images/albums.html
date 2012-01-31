@@ -8,11 +8,11 @@
   <ul>
   {% for album in albums %}
     <li class="album">
-      <span class="buttons"><a class="delete" href="{% url admin.images.views.albums album.id %}"><img src="{{ STATIC_URL }}img/small_x.png" alt="Slett album"></a></span>
-      <a class="image" href="{% url admin.images.views.albums album.id %}">
+      <span class="buttons"><a class="delete" href="{% url admin.images.views.list_albums album.id %}"><img src="{{ STATIC_URL }}img/small_x.png" alt="Slett album"></a></span>
+      <a class="image" href="{% url admin.images.views.list_albums album.id %}">
         <img src="{{ STATIC_URL }}img/icons/folder.png" alt="Album: {{ album.name }}">
       </a>
-      <a class="text" href="{% url admin.images.views.albums album.id %}">{{ album.name }}</a>
+      <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
     </li>
   {% endfor %}
   {% for image in images %}
