@@ -13,7 +13,7 @@ def albums(request, album):
     context = {'albums': albums, 'albumpath': parents, 'images': images}
     return render(request, 'admin/images/albums.html', context)
 
-def image(request, image):
+def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
     context = {'image': image, 'albumpath': parents}
