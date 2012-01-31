@@ -1,5 +1,5 @@
-#from django.core.urlresolvers import reverse
-#from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from admin.models import Image, Album
 
@@ -18,6 +18,19 @@ def image_details(request, image):
     parents = list_parents(image.album)
     context = {'image': image, 'albumpath': parents}
     return render(request, 'admin/images/image.html', context)
+
+def delete_album(request, album):
+    album = Album.objects.get(id=album)
+    parents = list_parents(album)
+    for album in parents:
+        Image.objects.filter(album=album).delete()
+        album.delete()
+    return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+
+def delete_image(request, image):
+    image = Image.objects.get(id=image)
+    image.delete()
+    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[image.album.id]))
 
 def list_parents(album):
     parents = []
