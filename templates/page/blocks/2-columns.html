@@ -1,25 +1,23 @@
-<div class="block columns-2">
-<div class="column col-1">
-{% for item in block.columns.0 %}
-  {% if item.type == "html" %}
-    {{ item.content|safe }}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-</div>
+<div class="block columns-2 row">
+  <div class="column col-1 span6">
+  {% for item in block.columns.0 %}
+    {% if item.type == "html" %}
+      {{ item.content|safe }}
+    {% endif %}
+    {% if item.type == "widget" %}
+      {% include item.content.template with widget=item.content %}
+    {% endif %}
+  {% endfor %}
+  </div>
 
-<div class="column col-2">
-{% for item in block.columns.1 %}
-  {% if item.type == "html" %}
-    {{ item.content|safe }}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-</div>
-
-<div style="clear: both;"></div>
+  <div class="column col-2 span6">
+  {% for item in block.columns.1 %}
+    {% if item.type == "html" %}
+      {{ item.content|safe }}
+    {% endif %}
+    {% if item.type == "widget" %}
+      {% include item.content.template with widget=item.content %}
+    {% endif %}
+  {% endfor %}
+  </div>
 </div>
