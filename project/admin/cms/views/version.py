@@ -37,7 +37,7 @@ def edit(request, version):
             block.template = "admin/cms/editor/advanced/blocks/%s.html" % block.template
             del block.columns[:]
             block.columns = []
-            for i in range(3): # DUPLIKAT AV page/views_widgets.py, fiks
+            for i in range(3):
                 block.columns.append([])
             # Fetch all items and sort them afterwards
             contents = HTMLContent.objects.filter(block=block)
