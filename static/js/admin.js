@@ -3,7 +3,7 @@ $(document).ready(function() {
     /* Dialogs */
 
     $("div#add-menu-dialog").dialog({
-        title: 'Opprett ny meny',
+        title: 'Opprett ny menylink',
         modal: true,
         autoOpen: false,
         width: "80%"
