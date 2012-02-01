@@ -12,7 +12,8 @@
 <tr>
   <th>Navn</th>
   <th>Linker til</th>
-  <th>Rediger</th>
+  <th>Flytt opp</th>
+  <th>Flytt ned</th>
   <th>Slett</th>
 </tr>
 </thead>
@@ -21,8 +22,13 @@
 <tr>
   <td>{{ menu.name }}</td>
   <td>http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
-  <td>[ <a href="">Rediger</a> ]</td>
-  <td>[ <a href="">Slett</a> ]</td>
+  <td>{% if menu.order != 1 %}
+    <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:-1 %}">Opp</a>
+  {% endif %}</td>
+  <td>{% if menu.order != menus|length %}
+    <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:1 %}">Ned</a>
+  {% endif %}</td>
+  <td>[ <a href="{% url admin.cms.views.menu.delete menu.id %}">Slett</a> ]</td>
 </tr>
 {% endfor %}
 </tbody>

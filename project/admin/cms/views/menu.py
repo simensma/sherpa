@@ -23,23 +23,23 @@ def new(request):
     menu.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
-def remove(request, page):
-    menu = Menu.objects.get(page=page)
-    offset = menu.position
+def delete(request, menu):
+    menu = Menu.objects.get(id=menu)
+    offset = menu.order
     menu.delete()
-    # Cascade positions
-    menus = Menu.objects.all().filter(position__gt=offset).order_by('position')
+    # Cascade orders
+    menus = Menu.objects.all().filter(order__gt=offset).order_by('order')
     for menu in menus:
-        menu.position = offset
+        menu.order = offset
         menu.save()
         offset += 1
-    return HttpResponseRedirect(reverse('admin.views.menu_list'))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
-def swap(request, pos1, pos2):
-    menu1 = Menu.objects.get(position=pos1)
-    menu2 = Menu.objects.get(position=pos2)
-    menu1.position = pos2
-    menu2.position = pos1
+def swap(request, order1, order2):
+    menu1 = Menu.objects.get(order=order1)
+    menu2 = Menu.objects.get(order=order2)
+    menu1.order = order2
+    menu2.order = order1
     menu1.save()
     menu2.save()
-    return HttpResponseRedirect(reverse('admin.views.menu_list'))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))

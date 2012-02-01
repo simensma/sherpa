@@ -40,6 +40,6 @@ urlpatterns = patterns('admin.cms.views',
     # Menus
     url(r'^meny/$', 'menu.list'),
     url(r'^meny/ny/$', 'menu.new'),
-    url(r'^meny/bytt/(?P<pos1>\d+)/(?P<pos2>\d+)/$', 'menu.swap'),
-    url(r'^meny/slett/(?P<page>\d+)/$', 'menu.remove'),
+    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
+    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 )
