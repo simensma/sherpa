@@ -10,6 +10,7 @@
 <table class="table table-striped">
 <thead>
 <tr>
+  <th>Rekkefølge</th>
   <th>Navn</th>
   <th>Linker til</th>
   <th>Flytt opp</th>
@@ -20,6 +21,7 @@
 <tbody>
 {% for menu in menus %}
 <tr>
+  <td>{{ forloop.counter }}.</td>
   <td>{{ menu.name }}</td>
   <td>http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
   <td>{% if menu.order != 1 %}
