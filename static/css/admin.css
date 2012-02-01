@@ -38,6 +38,14 @@ nav img {
   padding-top: 10px;
 }
 
+/* CMS - Large add item-button */
+
+a#add-page {
+  width: 20%;
+  margin-left: 40%;
+  margin-right: 40%;
+}
+
 /* Image gallery */
 
 div#image-toolbar {
