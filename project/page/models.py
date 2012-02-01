@@ -65,8 +65,8 @@ class Block(models.Model):
 class HTMLContent(models.Model):
     block = models.ForeignKey('page.Block')
     content = models.TextField()
-    column = models.IntegerField()
-    order = models.IntegerField()
+    column = models.IntegerField() # 0-indexed (max 2)
+    order = models.IntegerField() # 0-indexed
 
     def deep_delete(self):
         collapse_block_order(self.block, self.column, self.order)
@@ -75,8 +75,8 @@ class HTMLContent(models.Model):
 class Widget(models.Model):
     block = models.ForeignKey('page.Block')
     widget = models.TextField()
-    column = models.IntegerField()
-    order = models.IntegerField()
+    column = models.IntegerField() # 0-indexed (max 2)
+    order = models.IntegerField() # 0-indexed
 
     def deep_delete(self):
         collapse_block_order(self.block, self.column, self.order)
