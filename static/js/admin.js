@@ -1,4 +1,14 @@
 $(document).ready(function() {
+    $("div#add-page-dialog").dialog({
+        title: 'Opprett ny side',
+        modal: true,
+        autoOpen: false,
+        width: "80%"
+    }).hide();
+    $("a#add-page").click(function(event) {
+        $("div#add-page-dialog").dialog('open');
+    });
+
     $("div#add-album").dialog({
         title: 'Legg til album',
         modal: true,

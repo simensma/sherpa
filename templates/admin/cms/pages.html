@@ -3,26 +3,41 @@
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
 {% block body %}
 
-<h1>Artikler</h1>
+<h1>Websider</h1>
 {% if not versions %}
-<p>Tomt!</p>
+<div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
 {% else %}
-<ul>
+<table class="table table-striped">
+<thead>
+<tr>
+  <th>URL til siden</th>
+  <th>Rediger</th>
+  <th>Slett</th>
+</tr>
+</thead>
+<tbody>
 {% for version in versions %}
-  <li>{{ version.content.content }}
-      [ <a href="{% url admin.cms.views.page.edit version.variant.page.id %}">Rediger</a> ]
-      [ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</li>
+<tr>
+  <td>/{{ version.variant.page.slug }}</td>
+  <td>[ <a href="{% url admin.cms.views.page.edit version.variant.page.id %}">Rediger</a> ]</td>
+  <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
+</tr>
 {% endfor %}
-</ul>
+</tbody>
+</table>
 {% endif %}
 
-<p>Ny artikkel</p>
-<p>
-<form action="{% url admin.cms.views.page.new %}" method="post">
-{% csrf_token %}
-  Vennligst oppgi foreløpig slug (du kan endre denne senere):<br>
-  <input type="text" name="slug" value=""><br>
-  <input type="submit" value="Opprett ny artikkel">
-</form>
-</p>
+<p><a id="add-page" class="btn btn-primary" href="javascript:undefined" style="width: 20%; margin-left: 40%; margin-right: 40%">Opprett ny webside</a></p>
+
+
+<div id="add-page-dialog">
+  <form action="{% url admin.cms.views.page.new %}" method="post">
+  {% csrf_token %}
+    <p>Vennligst oppgi URL til denne siden (du kan endre denne senere):</p>
+    <p>(Todo: Dynamisk pre-URL basert på site)<br>
+    http://www.turistforeningen.no/ <input type="text" name="slug" value=""><br>
+    <input type="submit" value="Opprett ny webside">
+    </p>
+  </form>
+</div>
 {% endblock %}
