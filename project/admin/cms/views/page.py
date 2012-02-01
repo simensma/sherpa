@@ -7,7 +7,7 @@ from project.analytics.models import Segment
 def list(request):
     versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
     context = {'versions': versions}
-    return render(request, 'admin/cms/editor/advanced/list.html', context)
+    return render(request, 'admin/cms/pages.html', context)
 
 def new(request):
     page = Page(slug=request.POST['slug'], published=False)
