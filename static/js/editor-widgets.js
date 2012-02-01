@@ -45,8 +45,7 @@ $(document).ready(function() {
     /* Add new content */
     $("div.add-content-dialog .content a").click(function() {
         var columnNumber = /col-(\d+)/.exec(column.attr('class'))[1] - 1;
-        // Remember, 0-indexed, and two of the children are the 'edit-content' and 'add-content' divs
-        var order = column.children().length - 1;
+        var order = column.children("iframe").length + column.children(".widget").length; // 0-indexed
         $(this).siblings("input[name='block']").val(block.data('id'));
         $(this).siblings("input[name='column']").val(columnNumber);
         $(this).siblings("input[name='order']").val(order);
@@ -58,8 +57,7 @@ $(document).ready(function() {
         // Set input values
         var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
         var columnNumber = /col-(\d+)/.exec(column.attr('class'))[1] - 1;
-        // Remember, 0-indexed, and two of the children are the 'edit-content' and 'add-content' divs
-        var order = column.children().length - 1;
+        var order = column.children("iframe").length + column.children(".widget").length; // 0-indexed
         $("div#" + widgetType + " input[name=\"block\"]").val(block.data('id'));
         $("div#" + widgetType + " input[name=\"column\"]").val(columnNumber);
         $("div#" + widgetType + " input[name=\"order\"]").val(order);
