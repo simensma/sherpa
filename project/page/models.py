@@ -3,7 +3,9 @@ from django.db import models
 class Menu(models.Model):
     name = models.CharField(max_length=50)
     page = models.ForeignKey('page.Page', unique=True)
-    order = models.IntegerField(unique=True)
+    # Even though this should be unique, it's not enforced because
+    # when swapping, two orders will temporarily clash.
+    order = models.IntegerField()
 
 class Page(models.Model):
     title = models.CharField(max_length=200)
