@@ -2,58 +2,7 @@
  * The main stylesheet for turistforeningen.no
  */
 
-body {
-    font-family: sans-serif;
-}
-
-div#container {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-header {
-    border-bottom: 1px solid rgb(229, 229, 229);
-}
-
-header > #search {
-    float: right;
-}
-
-header > #search > form > input.button {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(173, 170, 170);
-    font-size: 12px;
-    padding: 3px 5px 2px 5px;
-}
-
-header > nav > ul {
-    list-style: none;
-}
-
-header > nav > ul > li {
-    display: inline;
-}
-
-footer > div.social {
-    width: 25%;
-    float: left;
-    margin: 0;
-    padding: 0;
-    /* Common text properties */
-    color: rgb(118, 118, 118);
-}
-
-footer > div.social > img {
+footer img.social {
     float: left;
     margin-right: 10px;
-}
-
-footer > div.social > h3 {
-    margin: 0;
-}
-
-footer > div.bottom-menu {
-    width: 25%;
-    float: left;
 }
