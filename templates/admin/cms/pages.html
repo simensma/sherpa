@@ -10,6 +10,7 @@
 <table class="table table-striped">
 <thead>
 <tr>
+  <th>Tittel</th>
   <th>URL til siden</th>
   <th>Rediger</th>
   <th>Slett</th>
@@ -18,7 +19,8 @@
 <tbody>
 {% for version in versions %}
 <tr>
-  <td>/{{ version.variant.page.slug }}</td>
+  <td>{{ version.variant.page.title }}</td>
+  <td><a href="http://www.turistforeningen.no/{{ version.variant.page.slug }}">http://todo.turistforeningen.no/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
   <td>[ <a href="{% url admin.cms.views.page.edit version.variant.page.id %}">Rediger</a> ]</td>
   <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
 </tr>
@@ -33,11 +35,19 @@
 <div id="add-page-dialog">
   <form action="{% url admin.cms.views.page.new %}" method="post">
   {% csrf_token %}
-    <p>Vennligst oppgi URL til denne siden (du kan endre denne senere):</p>
-    <p>(Todo: Dynamisk pre-URL basert på site)<br>
-    http://www.turistforeningen.no/ <input type="text" name="slug" value=""><br>
-    <input type="submit" value="Opprett ny webside">
-    </p>
+    <table class="table">
+    <tr>
+      <td>Tittel:</td>
+      <td><input type="text" name="title"></td>
+    </tr>
+    <tr>
+      <td>URL:</td>
+      <td>http://todo.turistforeningen.no/ <input type="text" name="slug" value=""> /</td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Opprett ny webside"></td>
+    </tr>
+    </table>
   </form>
 </div>
 {% endblock %}
