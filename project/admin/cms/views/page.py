@@ -10,15 +10,13 @@ def list(request):
     return render(request, 'admin/cms/pages.html', context)
 
 def new(request):
-    page = Page(slug=request.POST['slug'], published=False)
+    page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False)
     page.save()
-    variant = PageVariant(page=page, slug='', segment=None, priority=1)
+    variant = PageVariant(page=page, name='Standard', slug='', segment=None, priority=1)
     variant.save()
-    content = PageContent(content="Ny artikkel")
-    content.save()
-    version = PageVersion(variant=variant, content=content, version=1, active=True)
+    version = PageVersion(variant=variant, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.variant.edit', args=[variant.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
 def edit(request, page):
     if(request.method == 'GET'):
