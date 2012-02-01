@@ -53,7 +53,7 @@ $(document).ready(function() {
         $(this).parents("form").submit();
     });
 
-    /* Add quote widget */
+    /* Add new widget */
     $("div.add-content-dialog .widget a").click(function() {
         // Set input values
         var widgetType = $(this).parents(".widget").attr('class').replace('widget', '').trim();
