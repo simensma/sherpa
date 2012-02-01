@@ -77,7 +77,7 @@
 <tr>
   <td>{{ forloop.counter }}.</td>
   <td>{{ menu.name }}</td>
-  <td>http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
+  <td><a href="http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
   <td>{% if menu.order != 1 %}
     <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:-1 %}">Opp</a>
   {% endif %}</td>
