@@ -7,14 +7,12 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-structural.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-formatting.css" media="screen">
-  <script src="{{ STATIC_URL }}js/modernizr-1.7.min.js"></script>
   <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-  <script src="{{ STATIC_URL }}js/netlife/custom.js"></script>
 </head>
 <body>
 <div id="container">
 <header>
-  <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}netlife/img/header-logo.png"></a>
+  <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}img/header-logo.png"></a>
   <div id="search">
   <form action="#" method="post">
     <input type="text" value="">
@@ -31,22 +29,22 @@
 {% block body %}{% endblock %}
 <footer>
     <div class="social">
-      <img class="img" src="{{ STATIC_URL }}netlife/img/icon/social/turistforeningen.png">
+      <img class="img" src="{{ STATIC_URL }}img/icons/social/turistforeningen.png">
       <h3>Kontakt oss</h3>
       E-post eller telefon
     </div>
     <div class="social">
-      <img class="img" src="{{ STATIC_URL }}netlife/img/icon/social/facebook.png">
+      <img class="img" src="{{ STATIC_URL }}img/icons/social/facebook.png">
       <h3>Facebook</h3>
       Følg oss
     </div>
     <div class="social">
-      <img class="img" src="{{ STATIC_URL }}netlife/img/icon/social/twitter.png">
+      <img class="img" src="{{ STATIC_URL }}img/icons/social/twitter.png">
       <h3>Twitter</h3>
       Snakk med oss
     </div>
     <div class="social">
-      <img class="img" src="{{ STATIC_URL }}netlife/img/icon/social/youtube.png">
+      <img class="img" src="{{ STATIC_URL }}img/icons/social/youtube.png">
       <h3>You tube</h3>
       Se våre filmer
     </div>
@@ -95,7 +93,7 @@
         <li><a href="#">Organisasjonen</a></li>
       </ul>
     </div>
-    <img src="{{ STATIC_URL }}netlife/img/dummy/samarbeid.png">
+    <img src="{{ STATIC_URL }}img/samarbeid.png">
 
     <hr>
     <p>{{ sql_queries|length }} queries</p>
