@@ -29,16 +29,7 @@ def swap(request, page, pri1, pri2):
     variant2.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page]))
 
-#def delete(request, variant):
-#    variant = PageVariant.objects.get(pk=variant)
-#    content = PageContent.objects.get(pagevariant=variant)
-#    offset = variant.priority
-#    content.delete()
-#    variant.delete()
-#    # Cascade positions
-#    variants = PageVariant.objects.filter(version=variant.version).filter(priority__gt=offset).order_by('priority')
-#    for variant in variants:
-#        variant.priority = offset
-#        variant.save()
-#        offset += 1
-#    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[variant.version.id]))
+def delete(request, variant):
+    variant = PageVariant.objects.get(pk=variant)
+    variant.deep_delete()
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[variant.version.id]))

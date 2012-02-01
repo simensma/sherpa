@@ -35,11 +35,7 @@ def move_down(request, block):
 
 def delete(request, block):
     block = Block.objects.get(id=block)
-    widgets = Widget.objects.filter(block=block)
-    contents = HTMLContent.objects.filter(block=block)
-    block.delete()
-    widgets.delete()
-    contents.delete()
+    block.deep_delete()
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
 
 

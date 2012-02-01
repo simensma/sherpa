@@ -34,18 +34,6 @@ def edit(request, page):
         return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page.id]))
 
 def delete(request, page):
+    page = Page.objects.get(id=page)
+    page.deep_delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
-#    try:
-#        page = Page.objects.get(pk=page)
-#        versions = PageVersion.objects.filter(page=page)
-#        for version in versions:
-#            variants = PageVariant.objects.filter(version=version)
-#            for variant in variants:
-#                variant.content.delete()
-#            version.content.delete()
-#            variants.delete()
-#        # versions will be deleted by page cascade
-#        page.delete()
-#        return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
-#    except (KeyError, Page.DoesNotExist):
-#        return page_list(request, error="The page you tried to delete does not exist.")

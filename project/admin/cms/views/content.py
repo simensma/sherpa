@@ -17,7 +17,7 @@ def update(request, content):
 
 def delete(request, content):
     content = HTMLContent.objects.get(id=content)
-    content.delete()
+    content.deep_delete()
     if(request.is_ajax()):
         return HttpResponse('')
     else:

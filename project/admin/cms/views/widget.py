@@ -46,16 +46,6 @@ def edit_promo(request):
 
 # Delete a widget
 def delete(request, widget):
-    widgetToRemove = Widget.objects.get(id=widget)
-
-    # Collapse orders
-    for widget in Widget.objects.filter(block=widgetToRemove.block, column=widgetToRemove.column,
-        order__gt=widgetToRemove.order):
-        widget.order = (widget.order-1)
-        widget.save();
-    for content in HTMLContent.objects.filter(block=widgetToRemove.block, column=widgetToRemove.column,
-        order__gt=widgetToRemove.order):
-        content.order = (content.order-1)
-        content.save();
-    widgetToRemove.delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widgetToRemove.block.version.id]))
+    widget = Widget.objects.get(id=widget)
+    widget.deep_delete()
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))
