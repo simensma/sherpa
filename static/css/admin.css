@@ -2,79 +2,40 @@
  * General stylesheet for the admin ui
  */
 
-body {
-  font-family: sans-serif;
-}
-
-a {
-  color: blue;
-}
-
-a:hover {
-  color: red;
-}
-
-a img {
-  border: none;
-}
-
 header {
-  height: 119px;
-  margin-left: 6%;
+  margin-top: 25px;
 }
 
-header img {
-  float: left;
+header .logo {
+  text-align: center;
+}
+
+header .line {
+  /* Based on the logo image height */
+  height: 115px;
 }
 
 header h1 {
-  padding-top: 30px;
-  padding-left: 150px;
-  font-family: sans-serif;
-  font-weight: normal;
-  font-size: 250%;
+  /* Based on the logo image height */
+  margin-top: 25px;
+  font-size: 280%;
 }
-
-header h1 > a {
-  color: black;
-}
-
-header h1 > a:hover {
-  color: red;
-}
-
-table {
-  border-collapse: collapse;
-}
-
-table th, table td {
-  border: 1px solid;
-}
-
-table#version {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
-table#variant {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
+nav > ul {
+  list-style-type: none;
 }
 
 nav > ul > li {
-    display: block;
-    width: 250px;
-    height: 170px;
-    border: 1px solid #000;
-    margin: 1%;
-    float: left;
-    text-align: center;
+  display: block;
+  float: left;
+  width: 250px;
+  height: 170px;
+  border: 1px solid rgb(170, 170, 170);
+  margin: 1%;
+  text-align: center;
 }
 
 nav img {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 /* Image gallery */
@@ -85,17 +46,6 @@ div#image-toolbar {
 
 div#image-toolbar input#search {
   font-size: 120%;
-}
-
-div#album-path {
-  margin-top: 15px;
-  margin-left: 5%;
-}
-
-div.archive-gallery-notice {
-  margin-left: 5%;
-  font-size: 120%;
-  font-weight: bold;
 }
 
 div#archive-gallery ul li {
@@ -122,42 +72,20 @@ div#archive-gallery ul li.add a.image {
   margin-top: 20px;
 }
 
-div#image-display .metadata {
-  float: left;
-  width: 50%;
+div#image-display div.metadata {
   text-align: right;
 }
 
-div#image-display .metadata table {
+div#image-display table.metadata {
   float: right;
-  margin-right: 10%;
+  width: auto;
+  margin-top: 20px;
 }
 
-div#image-display .metadata table th, div#image-display .metadata table td {
-  border: none;
-  padding: 5px;
-}
-
-div#image-display .metadata table th {
+div#image-display table.metadata th {
   text-align: right;
-  font-weight: normal;
 }
 
-div#image-display .metadata table td {
-  font-weight: bold;
+div#image-display table.metadata td {
   text-align: left;
-}
-
-div#image-display .metadata h1 {
-  font-size: 180%;
-  font-style: italic;
-}
-
-div#image-display .metadata h1, div#image-display .metadata p {
-  padding-right: 10%;
-}
-
-div#image-display .image {
-  float: right;
-  width: 50%;
 }

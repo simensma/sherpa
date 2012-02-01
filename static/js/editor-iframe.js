@@ -21,10 +21,6 @@ function createIframe(iframe, content) {
         if($(doc.body).length > 0) {
             clearInterval(intervalId);
 
-            // Simulate the block classes on html/body in the iframe
-            $(doc).children().addClass($(iframe).parent().parent().attr('class'));
-            $(doc.body).addClass($(iframe).parent().attr('class'));
-
             // Remove all temporary content and add the actual content
             $(doc.body).find("*").remove();
             $(doc.body).append(content);
@@ -54,7 +50,7 @@ function createIframe(iframe, content) {
     // Create the "loading"-document, and enable designmode
     var loadingDocument = '<!DOCTYPE html><html><head><title>Editor window</title>';
     loadingDocument += '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">';
-    loadingDocument += '<link rel="stylesheet" href="/static/css/editor-formatting.css" media="screen"></head><body>';
+    loadingDocument += '<link rel="stylesheet" href="/static/css/bootstrap.min.css" media="screen"></head><body>';
     loadingDocument += '<h1>Laster, vennligst vent...</h1>';
     loadingDocument += '</body></html>';
     doc.open();

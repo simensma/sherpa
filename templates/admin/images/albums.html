@@ -2,7 +2,7 @@
 
 {% block imagebody %}
 {% if not albums and not images %}
-<div class="archive-gallery-notice"><p>Dette albumet er tomt.</p></div>
+<div class="alert alert-info">Dette albumet er tomt.</div>
 {% endif %}
 
 <div id="add-album">
@@ -50,4 +50,5 @@
   </li>
   </ul>
 </div>
+<div style="clear: both;"></div>
 {% endblock %}

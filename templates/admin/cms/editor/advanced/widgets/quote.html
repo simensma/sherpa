@@ -1,7 +1,7 @@
 <div class="widget dialog-quote" name="{{ widget.json }}">
-    {% include 'admin/cms/editor/advanced/snippets/edit_widget.html' %}
-    <blockquote>
-    {{ widget.quote }}
-    <p class="quote-source">- {{ widget.author }}</p>
-    </blockquote>
+  {% include 'admin/cms/editor/advanced/snippets/edit_widget.html' %}
+  <blockquote>
+  {{ widget.quote }}
+  <small>{{ widget.author }}</small>
+  </blockquote>
 </div>

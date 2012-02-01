@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
-    <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery-ui-1.8.17.dialog.min.js"></script>
-    <script src="{{ STATIC_URL }}js/admin.js"></script>
-    {% block editorscript %}{% endblock %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.8.17.dialog.css" media="screen">
-    {# Note that the following order is relevant - prioritize admin sheets #}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-structural.css" media="screen">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/editor-formatting.css" media="screen">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
-    {% block editorcss %}{% endblock %}
-    <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <meta charset="UTF-8">
+  <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
+  <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+  <script src="{{ STATIC_URL }}js/jquery-ui-1.8.17.dialog.min.js"></script>
+  <script src="{{ STATIC_URL }}js/admin.js"></script>
+  {% block editorscript %}{% endblock %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.8.17.dialog.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/widgets.css" media="screen">
+  {% block editorcss %}{% endblock %}
+  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-<body>
-<header>
-    <a href="{% url admin.views.index %}">
-      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening">
-    </a>
-    <h1>
-      <a href="{% url admin.views.index%}">Sherpa 3</a>{% block header %}{% endblock %}
-    </h1>
+<body class="container">
+
+<header class="row">
+  <div class="span2 logo">
+  <a href="{% url admin.views.index %}">
+    <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening">
+  </a>
+  </div>
+  <div class="span10 line">
+  <h1>
+    <a href="{% url admin.views.index%}">Sherpa 3</a>{% block header %}{% endblock %}
+  </h1>
+  </div>
 </header>
-<div style="clear: both;"></div>
 {% block body %}{% endblock %}
-<div style="clear: both;"></div>
 <footer>
+</footer>
+
 <hr>
 <p>{{ sql_queries|length }} queries</p>
 <ul>
@@ -35,7 +40,6 @@
 <li><b>{{ sql.time }}s</b> {{ sql.sql }}</li>
 {% endfor %}
 </ul>
-</footer>
 
 </body>
 </html>

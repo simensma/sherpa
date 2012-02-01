@@ -9,14 +9,14 @@
 
 /* All block margins */
 
-.block p {
+/*.block p {
     margin-top: 0;
     margin-bottom: 0;
 }
 
 /* Main column for full- and sidebar-block */
 
-.block.full h1, .block.sidebar > .column.col-1 h1 {
+/*.block.full h1, .block.sidebar > .column.col-1 h1 {
     border-bottom: 5px solid rgb(61, 83, 37);
     font-size: 40px;
     line-height: 52px;
@@ -30,7 +30,8 @@
 
 /* common */
 
-p.lede {
+/*p.lede {
     font-size: 110%;
     font-variant: small-caps;
 }
+*/

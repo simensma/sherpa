@@ -1,62 +1,52 @@
-/* quote widget */
-
-blockquote {
-    background: url('/static/img/quote-sign.gif') top left no-repeat;
-    padding-left: 50px;
-    padding-top: 10px;
-    font-size: 24px;
-    font-style: italic;
-}
-
-p.quote-source {
-    text-align: right;
-}
+/**
+ * Styles for all widgets
+ */
 
 /* promo widget */
 
 div.promo {
-    width: 100%;
-    background-color: rgb(216, 42, 32);
-    height: 511px; /* The height of the background-image */
+  width: 100%;
+  background-color: rgb(216, 42, 32);
+  height: 511px; /* The height of the background-image */
 }
 
 div.promo div.left {
-    float: left;
-    background: url('/static/img/widgets/promo/komdegut.jpg') no-repeat 100% 100%;
-    width: 50%;
-    height: 100%;
+  float: left;
+  background: url('/static/img/widgets/promo/komdegut.jpg') no-repeat 100% 100%;
+  width: 50%;
+  height: 100%;
 }
 
 div.promo div.left div.menu {
-    position: relative;
-    float: left;
+  position: relative;
+  float: left;
 }
 
 div.promo div.left div.menu ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 div.promo div.left div.menu li {
-    padding: 5px;
-    background-color: white;
-    border: 1px solid #777;
-    width: 120%;
-    color: #777;
+  padding: 5px;
+  background-color: white;
+  border: 1px solid #777;
+  width: 120%;
+  color: #777;
 }
 
 div.promo div.right {
-    width: 46%;
-    padding: 2% 2% 2% 52%;
-    color: white;
+  width: 46%;
+  padding: 2% 2% 2% 52%;
+  color: white;
 }
 
 div.promo div.right p.lede {
-    font-variant: small-caps;
-    font-style: italic;
+  font-variant: small-caps;
+  font-style: italic;
 }
 
 div.promo div.right img {
-    padding-left: 10%;
+  padding-left: 10%;
 }

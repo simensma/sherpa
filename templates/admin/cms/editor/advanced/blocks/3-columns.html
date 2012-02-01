@@ -1,41 +1,38 @@
-<div class="block columns-3" name="{{ block.id }}">
 {% include 'admin/cms/editor/advanced/snippets/edit_block.html' %}
+<div class="block columns-3 row" name="{{ block.id }}">
+  <div class="column col-1 span4">
+  {% for item in block.columns.0 %}
+    {% if item.type == "html" %}
+      {% include 'admin/cms/editor/advanced/snippets/content.html' %}
+    {% endif %}
+    {% if item.type == "widget" %}
+      {% include item.content.template with widget=item.content %}
+    {% endif %}
+  {% endfor %}
+  {% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
+  </div>
 
-<div class="column col-1">
-{% for item in block.columns.0 %}
-  {% if item.type == "html" %}
-    {% include 'admin/cms/editor/advanced/snippets/content.html' %}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-{% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
-</div>
+  <div class="column col-2 span4">
+  {% for item in block.columns.1 %}
+    {% if item.type == "html" %}
+      {% include 'admin/cms/editor/advanced/snippets/content.html' %}
+    {% endif %}
+    {% if item.type == "widget" %}
+      {% include item.content.template with widget=item.content %}
+    {% endif %}
+  {% endfor %}
+  {% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
+  </div>
 
-<div class="column col-2">
-{% for item in block.columns.1 %}
-  {% if item.type == "html" %}
-    {% include 'admin/cms/editor/advanced/snippets/content.html' %}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-{% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
-</div>
-
-<div class="column col-3">
-{% for item in block.columns.2 %}
-  {% if item.type == "html" %}
-    {% include 'admin/cms/editor/advanced/snippets/content.html' %}
-  {% endif %}
-  {% if item.type == "widget" %}
-    {% include item.content.template with widget=item.content %}
-  {% endif %}
-{% endfor %}
-{% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
-</div>
-
-<div style="clear: both;"></div>
+  <div class="column col-3 span4">
+  {% for item in block.columns.2 %}
+    {% if item.type == "html" %}
+      {% include 'admin/cms/editor/advanced/snippets/content.html' %}
+    {% endif %}
+    {% if item.type == "widget" %}
+      {% include item.content.template with widget=item.content %}
+    {% endif %}
+  {% endfor %}
+  {% include 'admin/cms/editor/advanced/snippets/add_content.html' %}
+  </div>
 </div>

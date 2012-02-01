@@ -1,10 +1,10 @@
 {% extends "admin/images/layout.html" %}
 
 {% block imagebody %}
-<div id="image-display">
-  <div class="metadata">
+<div id="image-display" class="row">
+  <div class="span6 metadata">
     <h1>{{ image.description }}</h1>
-    <table>
+    <table class="table metadata">
     <tr>
       <th>Kreditering:</th>
       <td>{{ image.credits }}</td>
@@ -32,8 +32,9 @@
     </table>
   </div>
 
-  <div class="image">
+  <div class="span6">
     <img src="http://www.turistforeningen.no/images/uq/Ek/qD.sized.jpg" alt="{{ image.description }}" title="{{ image.description }}">
   </div>
 </div>
+<div style="clear: both;"></div>
 {% endblock %}

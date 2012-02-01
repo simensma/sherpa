@@ -3,18 +3,21 @@
 {% block header %} → <a href="{% url admin.images.views.list_albums %}">Bildearkiv</a>{% endblock %}
 
 {% block body %}
-<div id="image-toolbar">
-  <form action="" method="post">
-  <input type="text" size="40" id="search"> <input type="submit" value="Søk"> <a href="">Avansert søk</a>
-  </form>
+<div id="image-toolbar" class="row">
+  <div class="span12">
+    <form action="" method="post">
+    <input type="text" size="40" id="search"> <input type="submit" value="Søk"> <a href="">Avansert søk</a>
+    </form>
+  </div>
 </div>
 
-<div id="album-path">
-  <a href="{% url admin.images.views.list_albums %}">Bildearkiv</a>
-{% for album in albumpath %}
-  → <a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
-{% endfor %}
-</div>
+<ul class="breadcrumb">
+  <li><a href="{% url admin.images.views.list_albums %}">Bildearkiv</a></li>
+  {% for album in albumpath %}
+    <span class="divider">→</span>
+    <li><a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a></li>
+  {% endfor %}
+</ul>
 
 {% block imagebody %}{% endblock %}
 {% endblock %}
