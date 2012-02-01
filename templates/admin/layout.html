@@ -6,13 +6,13 @@
   <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
   <script src="{{ STATIC_URL }}js/jquery-ui-1.8.17.dialog.min.js"></script>
   <script src="{{ STATIC_URL }}js/admin.js"></script>
-  {% block editorscript %}{% endblock %}
+  {% block extra_scripts %}{% endblock %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.8.17.dialog.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/widgets.css" media="screen">
-  {% block editorcss %}{% endblock %}
+  {% block extra_css %}{% endblock %}
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body class="container">
