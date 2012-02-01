@@ -30,7 +30,7 @@
     <ul class="nav nav-tabs">
       {% for menu in menus %}
       <li{% if menu.page == page %} class="active"{% endif %}>
-        <a href="/{{ menu.page.slug }}">{{ menu.name }}</a>
+        <a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">{{ menu.name }}</a>
       </li>
       {% endfor %}
     </ul>
