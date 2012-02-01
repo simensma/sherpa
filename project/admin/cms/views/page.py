@@ -1,12 +1,13 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from project.page.models import Page, PageVariant, PageVersion
+from project.page.models import Menu, Page, PageVariant, PageVersion
 from project.analytics.models import Segment
 
 def list(request):
     versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
-    context = {'versions': versions}
+    menus = Menu.objects.all().order_by('order')
+    context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/cms/pages.html', context)
 
 def new(request):

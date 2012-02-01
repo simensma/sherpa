@@ -5,8 +5,6 @@
 {% block body %}
   <nav>
     <ul>
-      <li><a href="{% url admin.cms.views.menu.list %}">
-        <img src="{{ STATIC_URL }}img/icons/check.png"><br>Hovedmeny</a></li>
       <li><a href="{% url admin.cms.views.page.list %}">
         <img src="{{ STATIC_URL }}img/icons/coffee.png"><br>CMS</a></li>
       <li><a href="{% url admin.analytics.views.visitors_list %}">

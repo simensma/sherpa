@@ -14,14 +14,14 @@ def list(request):
     context = {'menus': menus, 'pages': pages}
     return render(request, 'admin/cms/menu.html', context)
 
-def add(request, page):
-    page = Page.objects.get(pk=page)
-    max_position = Menu.objects.aggregate(Max('position'))['position__max']
-    if(max_position is None):
-        max_position = 0
-    menu = Menu(name=request.POST['name'], page=page, position=(max_position + 1))
+def new(request):
+    page = Page.objects.get(id=request.POST['page'])
+    max_order = Menu.objects.aggregate(Max('order'))['order__max']
+    if(max_order is None):
+        max_order = 0
+    menu = Menu(name=request.POST['name'], page=page, order=(max_order + 1))
     menu.save()
-    return HttpResponseRedirect(reverse('admin.views.menu_list'))
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
 def remove(request, page):
     menu = Menu.objects.get(page=page)

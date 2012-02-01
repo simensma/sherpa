@@ -40,7 +40,7 @@ nav img {
 
 /* CMS - Large add item-button */
 
-a#add-page {
+a#add-menu, a#add-page {
   width: 20%;
   margin-left: 40%;
   margin-right: 40%;

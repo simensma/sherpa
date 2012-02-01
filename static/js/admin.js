@@ -2,6 +2,16 @@ $(document).ready(function() {
 
     /* Dialogs */
 
+    $("div#add-menu-dialog").dialog({
+        title: 'Opprett ny meny',
+        modal: true,
+        autoOpen: false,
+        width: "80%"
+    }).hide();
+    $("a#add-menu").click(function(event) {
+        $("div#add-menu-dialog").dialog('open');
+    });
+
     $("div#add-page-dialog").dialog({
         title: 'Opprett ny side',
         modal: true,
