@@ -3,6 +3,60 @@
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
 {% block body %}
 
+<h1>Websider</h1>
+{% if not versions %}
+<div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
+{% else %}
+<table class="table table-striped">
+<thead>
+<tr>
+  <th>Tittel</th>
+  <th>URL til siden</th>
+  <th>Rediger</th>
+  <th>Slett</th>
+</tr>
+</thead>
+<tbody>
+{% for version in versions %}
+<tr>
+  <td>{{ version.variant.page.title }}</td>
+  <td><a href="http://www.turistforeningen.no/{{ version.variant.page.slug }}">http://todo.turistforeningen.no/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
+  <td>[ <a href="{% url admin.cms.views.page.edit version.variant.page.id %}">Rediger</a> ]</td>
+  <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+<p><a id="add-page" class="btn btn-primary" href="javascript:undefined">Opprett ny webside</a></p>
+
+<div id="add-page-dialog">
+  <form action="{% url admin.cms.views.page.new %}" method="post">
+  {% csrf_token %}
+    <table class="table">
+    <tr>
+      <td>Tittel:</td>
+      <td><input type="text" name="title"></td>
+    </tr>
+    <tr>
+      <td>URL:</td>
+      <td>http://todo.turistforeningen.no/ <input type="text" name="slug" value=""> /</td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Opprett ny webside"></td>
+    </tr>
+    </table>
+    <p><em>Tips til en fornuftig URL:</em></p>
+    <ul>
+      <li>La navnet på URLen reflektere innholdet</li>
+      <li>Ikke bruk en URL som er sannsynlig at du vil bruke på en annen side</li>
+      <li>Bruk mappe-nøsting (f.eks. "/valdres/snøskredfare/" i stedet for "/snøskredfare-i-valdres/"</li>
+    </ul>
+  </form>
+</div>
+
+
 <h1>Hovedmeny</h1>
 {% if not menus %}
 <div class="alert alert-info">Det er ikke definert noen menylinker for dette nettstedet.</div>
@@ -85,56 +139,4 @@
   </form>
 </div>
 
-<h1>Websider</h1>
-{% if not versions %}
-<div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
-{% else %}
-<table class="table table-striped">
-<thead>
-<tr>
-  <th>Tittel</th>
-  <th>URL til siden</th>
-  <th>Rediger</th>
-  <th>Slett</th>
-</tr>
-</thead>
-<tbody>
-{% for version in versions %}
-<tr>
-  <td>{{ version.variant.page.title }}</td>
-  <td><a href="http://www.turistforeningen.no/{{ version.variant.page.slug }}">http://todo.turistforeningen.no/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
-  <td>[ <a href="{% url admin.cms.views.page.edit version.variant.page.id %}">Rediger</a> ]</td>
-  <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-{% endif %}
-
-<p><a id="add-page" class="btn btn-primary" href="javascript:undefined">Opprett ny webside</a></p>
-
-<div id="add-page-dialog">
-  <form action="{% url admin.cms.views.page.new %}" method="post">
-  {% csrf_token %}
-    <table class="table">
-    <tr>
-      <td>Tittel:</td>
-      <td><input type="text" name="title"></td>
-    </tr>
-    <tr>
-      <td>URL:</td>
-      <td>http://todo.turistforeningen.no/ <input type="text" name="slug" value=""> /</td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="Opprett ny webside"></td>
-    </tr>
-    </table>
-    <p><em>Tips til en fornuftig URL:</em></p>
-    <ul>
-      <li>La navnet på URLen reflektere innholdet</li>
-      <li>Ikke bruk en URL som er sannsynlig at du vil bruke på en annen side</li>
-      <li>Bruk mappe-nøsting (f.eks. "/valdres/snøskredfare/" i stedet for "/snøskredfare-i-valdres/"</li>
-    </ul>
-  </form>
-</div>
 {% endblock %}
