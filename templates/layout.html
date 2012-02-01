@@ -25,13 +25,17 @@
     </div>
   </div>
 
+  {% if menus %}
   <nav>
     <ul class="nav nav-tabs">
-      <li class="active"><a href="">Menyer todo</a></li>
-      <li><a href="">Menyer todo</a></li>
-      <li><a href="">Menyer todo</a></li>
+      {% for menu in menus %}
+      <li{% if menu.page == page %} class="active"{% endif %}>
+        <a href="/{{ menu.page.slug }}">{{ menu.name }}</a>
+      </li>
+      {% endfor %}
     </ul>
   </nav>
+  {% endif %}
 </header>
 {% block body %}{% endblock %}
 <footer>

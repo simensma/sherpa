@@ -1,10 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import Block, HTMLContent, Widget
+from page.models import Menu, Block, HTMLContent, Widget
 import json
 
 def parse_content(request, version):
+    menus = Menu.objects.order_by('order')
     max_columns = 3 # The highest number of columns we'll have in a block
     # Potential optimization: Use a manager to perform a single query with joins
     blocks = Block.objects.filter(version=version).order_by('order')
@@ -28,7 +29,7 @@ def parse_content(request, version):
                 widget = json.loads(item.widget)
                 block.columns[item.column].append({'type': 'widget', 'content':
                   parse_widget(widget)})
-    context = {'blocks': blocks}
+    context = {'blocks': blocks, 'menus': menus, 'page': version.variant.page}
     return render(request, "page/page.html", context)
 
 def parse_widget(widget):
