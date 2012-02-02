@@ -2,35 +2,9 @@ $(document).ready(function() {
 
     /* Dialogs */
 
-    $("div#add-menu-dialog").dialog({
-        title: 'Opprett ny menylink',
-        modal: true,
-        autoOpen: false,
-        width: "80%"
-    }).hide();
-    $("a#add-menu").click(function(event) {
-        $("div#add-menu-dialog").dialog('open');
-    });
-
-    $("div#add-page-dialog").dialog({
-        title: 'Opprett ny side',
-        modal: true,
-        autoOpen: false,
-        width: "80%"
-    }).hide();
-    $("a#add-page").click(function(event) {
-        $("div#add-page-dialog").dialog('open');
-    });
-
-    $("div#add-album").dialog({
-        title: 'Legg til album',
-        modal: true,
-        autoOpen: false,
-        width: "80%"
-    }).hide();
-    $("div#archive-gallery li.add.album a").click(function(event) {
-        $("div#add-album").dialog('open');
-    });
+    enableDialog($("div#add-menu-dialog"), $("a#add-menu"), 'Opprett ny menylink');
+    enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side');
+    enableDialog($("div#add-album"), $("div#archive-gallery li.add.album a"), 'Legg til album');
 
     $("div#archive-gallery li.add.image a").click(function(event) {
         // add image
@@ -41,6 +15,18 @@ $(document).ready(function() {
         $("#add-page-dialog input[name='slug']").val(slugify($(this).val()));
     })
 });
+
+function enableDialog(dialog, button, title) {
+    dialog.dialog({
+        title: title,
+        modal: true,
+        autoOpen: false,
+        width: "80%"
+    }).hide();
+    button.click(function(event) {
+        dialog.dialog('open');
+    });
+}
 
 function slugify(string) {
     string = string.toLowerCase().trim();
