@@ -4,6 +4,9 @@ urlpatterns = patterns('',
     # Sherpa3 admin interface
     url(r'^sherpa/', include('admin.urls')),
 
+    # Articles
+    url(r'^artikler/$', include('articles.urls')),
+
     # User authentication
     url(r'^innlogging/$', 'users.views.login'),
     url(r'^utlogging/$', 'users.views.logout'),

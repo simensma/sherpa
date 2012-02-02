@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'page',
     'admin',
     'analytics', # ? tenkte bare ha modeller i denne
+    'articles',
     'users',
 )
 
