@@ -1,102 +1,10 @@
 {% extends "admin/layout.html" %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
-{% block extra_scripts %}
-  <script src="{{ STATIC_URL }}js/editor.js"></script>
-  <script src="{{ STATIC_URL }}js/editor-iframe.js"></script>
-  <script src="{{ STATIC_URL }}js/editor-widgets.js"></script>
-  <script src="{{ STATIC_URL }}js/editor-jquery-fn.js"></script>
-  <script src="{{ STATIC_URL }}js/rangy-1.2.2.min.js"></script>
-{% endblock %}
-{% block extra_css %}
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
-{% endblock %}
 {% block body %}
-
-{# This csrf_token will be picked up by javascript and used for ajax requests. There is a fairly large chance that a csrf_token will exist for some other form too, and could have been available instead, but just to be absolutely certain there IS one available, this one is here. #}
-{% csrf_token %}
-<!--
-<table class="table table-striped">
-<thead>
-<tr>
-  <th>Versjon</th>
-  <th>Aktiv versjon</th>
-  <th>Endringer</th>
-  <th>Skribent</th>
-  <th>Forhåndsvisning</th>
-  <th>Rediger</th>
-</tr>
-</thead>
-<tbody>
-{% for version in versions %}
-<tr>
-  <td>{{ version.version }}</td>
-  <td>
-    {% if version.active %}
-      Aktiv!
-    {% else %}
-      <a href="{% url admin.cms.views.version.activate version.id %}">Aktivér</a>
-    {% endif %}</td>
-  <td>todo</td>
-  <td>todo</td>
-  <td>todo</td>
-  <td><a href="{% url admin.cms.views.editor_advanced.edit version.id %}">Rediger</a></td>
-</tr>
-{% endfor %}
-</tbody>
-<tfoot>
-</tfoot>
-</table>
-<br>
-<p><a href="{% url admin.cms.views.version.new page.id %}">Ny versjon</a> (lager en kopi av den nyeste versjonen)</p>
--->
-
-{# Dialogs that will be hidden by javascript #}
-{% include "admin/cms/editor/advanced/snippets/add_content_dialog.html" %}
-{% include "admin/cms/editor/advanced/widgets/quote_dialog.html" %}
-{% include "admin/cms/editor/advanced/widgets/promo_dialog.html" %}
-
-<div id="editarea">
-  <div id="buttons">
-    <button class="header" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/header.png"></button>
-    <button class="lede" type="button">Ingress</button>
-    <button class="body" type="button">Brødtekst</button>
-    <button class="bold" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/bold.png"></button>
-    <button class="italic" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/italic.png"></button>
-    <button class="underline" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/underline.png"></button>
-    <button class="ol" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/ol.png"></button>
-    <button class="ul" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/ul.png"></button>
-    <button class="anchor" type="button">Link</button>
-    <button class="image" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/image.png"></button>
-    <button class="left" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/left.png"></button>
-    <button class="center" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/center.png"></button>
-    <button class="right" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/right.png"></button>
-    <button class="full" type="button"><img src="{{ STATIC_URL }}img/editorbuttons/full.png"></button>
-    <br>
-    <button id="savebutton">Lagre</button>
-  </div>
 
 {% for block in blocks %}
 {% include block.template %}
 {% endfor %}
-
-<div id="add-blocks">
-<h2>Legg til flere kolonner:</h2>
-<table>
-<tr>
-  <th>Én kolonne</th>
-  <th>Hovedkolonne + sidebar</th>
-  <th>2 kolonner</th>
-  <th>3 kolonner</th>
-</tr>
-<tr>
-  <td><a href="{% url admin.cms.views.block.add version.id 'full' %}"><img src="{{ STATIC_URL }}img/blocks/full.png"></td>
-  <td><a href="{% url admin.cms.views.block.add version.id 'sidebar' %}"><img src="{{ STATIC_URL }}img/blocks/sidebar.png"></td>
-  <td><a href="{% url admin.cms.views.block.add version.id '2-columns' %}"><img src="{{ STATIC_URL }}img/blocks/2-columns.png"></td>
-  <td><a href="{% url admin.cms.views.block.add version.id '3-columns' %}"><img src="{{ STATIC_URL }}img/blocks/3-columns.png"></td>
-</tr>
-</table>
-</div>
-</div>
 
 {% endblock %}
