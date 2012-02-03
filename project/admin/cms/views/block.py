@@ -12,7 +12,7 @@ def add(request, version, template):
         max = blocks.aggregate(Max('order'))['order__max']
     block = Block(version=version, template=template, order=(max+1))
     block.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 
 def move_up(request, block):
     block = Block.objects.get(id=block)
@@ -21,7 +21,7 @@ def move_up(request, block):
         raise Exception
     else:
         swap_blocks(block, -1)
-        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 def move_down(request, block):
     block = Block.objects.get(id=block)
@@ -31,12 +31,12 @@ def move_down(request, block):
         raise Exception
     else:
         swap_blocks(block, 1)
-        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 def delete(request, block):
     block = Block.objects.get(id=block)
     block.deep_delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 
 def swap_blocks(block, increment):

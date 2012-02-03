@@ -8,15 +8,22 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^rediger/(?P<page>\d+)/$', 'page.edit'),
     url(r'^slett/(?P<page>\d+)/$', 'page.delete'),
 
+    # Menus
+    url(r'^meny/$', 'menu.list'),
+    url(r'^meny/ny/$', 'menu.new'),
+    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
+    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
+
+    # Advanced editor
+    url(r'^editor/avansert/(?P<version>\d+)/$', 'editor_advanced.edit'),
+
     # Variants
     url(r'^variant/ny/(?P<page>\d+)/$', 'variant.new'),
-    url(r'^variant/rediger/(?P<version>\d+)/$', 'variant.edit'),
     url(r'^variant/bytt/(?P<page>\d+)/(?P<pri1>\d+)/(?P<pri2>\d+)/$', 'variant.swap'),
-    #url(r'^variant/slett/(?P<variant>\d*)/$', 'delete'),
+    url(r'^variant/slett/(?P<variant>\d*)/$', 'variant.delete'),
 
     # Versions
     url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
-    url(r'^versjon/rediger/(?P<version>\d+)/$', 'version.edit'),
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
 
     # Blocks
@@ -36,10 +43,4 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^innhold/opprett/$', 'content.create'),
     url(r'^innhold/oppdater/(?P<content>\d+)/$', 'content.update'),
     url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
-
-    # Menus
-    url(r'^meny/$', 'menu.list'),
-    url(r'^meny/ny/$', 'menu.new'),
-    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
-    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 )

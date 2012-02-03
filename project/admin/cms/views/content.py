@@ -7,7 +7,7 @@ def create(request):
     content = HTMLContent(block=block, content="<p>Nytt innhold...</p>",
         column=request.POST['column'], order=request.POST['order'])
     content.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 def update(request, content):
     content = HTMLContent.objects.get(id=content)
@@ -21,4 +21,4 @@ def delete(request, content):
     if(request.is_ajax()):
         return HttpResponse('')
     else:
-        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[content.block.version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[content.block.version.id]))

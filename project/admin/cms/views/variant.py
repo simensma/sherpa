@@ -14,11 +14,7 @@ def new(request, page):
     variant.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
-
-def edit(request, version):
-    # Not used yet, should be called from page.edit
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version]))
+    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 
 def swap(request, page, pri1, pri2):
     variant1 = PageVariant.objects.filter(page=page).get(priority=pri1)
@@ -32,4 +28,4 @@ def swap(request, page, pri1, pri2):
 def delete(request, variant):
     variant = PageVariant.objects.get(pk=variant)
     variant.deep_delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[variant.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[variant.version.id]))

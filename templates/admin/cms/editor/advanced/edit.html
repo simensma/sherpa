@@ -10,7 +10,7 @@
 <h1><a href="{% url admin.cms.views.page.edit page.id %}">Side</a>
   {% for variant in variants %},
   {% if variant.active.id == version.id %}[ {% endif %}
-  <a href="{% url admin.cms.views.version.edit variant.active.id %}">{{ variant.name }}</a>
+  <a href="{% url admin.cms.views.editor_advanced.edit variant.active.id %}">{{ variant.name }}</a>
   {% if variant.active.id == version.id %} ]{% endif %}
   {% endfor %}
   <a href="#" id="new_variant">+</a>
