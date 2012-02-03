@@ -4,9 +4,9 @@ urlpatterns = patterns('admin.cms.views',
 
     # Pages
     url(r'^$', 'page.list'),
-    url(r'^ny/$', 'page.new'),
-    url(r'^rediger/(?P<page>\d+)/$', 'page.edit'),
-    url(r'^slett/(?P<page>\d+)/$', 'page.delete'),
+    url(r'^side/(?P<page>\d+)/$', 'page.edit'),
+    url(r'^side/ny/$', 'page.new'),
+    url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
 
     # Menus
     url(r'^meny/$', 'menu.list'),
