@@ -1,5 +1,5 @@
 {% extends "admin/layout.html" %}
-{% block title %}Admin: Page{% endblock %}
+{% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
 {% block body %}
 
