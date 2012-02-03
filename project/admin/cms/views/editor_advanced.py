@@ -38,7 +38,7 @@ def edit(request, version):
         segments = Segment.objects.exclude(name='default')
         context = {'page': version.variant.page, 'variant': version.variant, 'variants': variants,
           'versions': versions, 'version': version, 'segments': segments, 'blocks': blocks}
-        return render(request, 'admin/cms/editor/advanced/edit_variant.html', context)
+        return render(request, 'admin/cms/editor/advanced/editor.html', context)
     elif(request.method == 'POST'):
         version = PageVersion.objects.get(pk=version)
         version.content.content = request.POST['content']

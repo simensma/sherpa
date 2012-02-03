@@ -1,4 +1,6 @@
-{% extends "admin/cms/editor/advanced/edit.html" %}
+{% extends "admin/layout.html" %}
+{% block title %}Admin: Page{% endblock %}
+{% block header %} → <a href="{% url admin.cms.views.page.list %}">CMS</a>{% endblock %}
 {% block extra_scripts %}
   <script src="{{ STATIC_URL }}js/editor.js"></script>
   <script src="{{ STATIC_URL }}js/editor-iframe.js"></script>
@@ -9,7 +11,7 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
 {% endblock %}
-{% block edit %}
+{% block body %}
 
 {# This csrf_token will be picked up by javascript and used for ajax requests. There is a fairly large chance that a csrf_token will exist for some other form too, and could have been available instead, but just to be absolutely certain there IS one available, this one is here. #}
 {% csrf_token %}

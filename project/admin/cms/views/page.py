@@ -27,7 +27,7 @@ def edit(request, page):
             variant.active = PageVersion.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')
         context = {'page': page, 'variants': variants, 'segments': segments}
-        return render(request, 'admin/cms/editor/advanced/edit_page.html', context)
+        return render(request, 'admin/cms/edit_page.html', context)
     elif(request.method == 'POST'):
         page = Page.objects.get(pk=page)
         page.slug = request.POST['slug']
