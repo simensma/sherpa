@@ -1,35 +1,22 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import Menu, Block, HTMLContent, Widget
+from page.models import Menu, Row, Column, Content
 import json
 
 def parse_content(request, version):
     menus = Menu.objects.order_by('order')
-    max_columns = 3 # The highest number of columns we'll have in a block
-    # Potential optimization: Use a manager to perform a single query with joins
-    blocks = Block.objects.filter(version=version).order_by('order')
-    for block in blocks:
-        block.template = "page/blocks/" + block.template + ".html"
-        del block.columns[:]
-        block.columns = []
-        for i in range(max_columns):
-            block.columns.append([])
-        # Fetch all items and sort them afterwards
-        contents = HTMLContent.objects.filter(block=block)
-        widgets = Widget.objects.filter(block=block)
-        list = []
-        list.extend(contents)
-        list.extend(widgets)
-        list.sort(key=lambda item: item.order)
-        for item in list:
-            if isinstance(item, HTMLContent):
-                block.columns[item.column].append({'type': 'html', 'content': item.content})
-            elif isinstance(item, Widget):
-                widget = json.loads(item.widget)
-                block.columns[item.column].append({'type': 'widget', 'content':
-                  parse_widget(widget)})
-    context = {'blocks': blocks, 'menus': menus, 'page': version.variant.page}
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'w':
+                    content.widget = parse_widget(json.loads(content.content))
+            column.contents = contents
+        row.columns = columns
+    context = {'rows': rows, 'menus': menus, 'page': version.variant.page}
     return render(request, "page/page.html", context)
 
 def parse_widget(widget):

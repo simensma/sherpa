@@ -1,17 +1,15 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from project.page.models import Block, HTMLContent, Widget
+from project.page.models import Row, Column, Content
 import json
 
 # General widget-parser
-def parse_widget(id, widget):
+def parse_widget(widget):
     if(widget['name'] == "quote"):
-        return {'id': id, 'template': 'admin/cms/editor/advanced/widgets/quote.html',
-        'quote': widget['quote'], 'author': widget['author'],
-        'json': json.dumps({'id': id, 'quote': widget['quote'], 'author': widget['author']})}
+        return {'template': 'admin/cms/editor/advanced/widgets/quote.html',
+        'quote': widget['quote'], 'author': widget['author']}
     elif(widget['name'] == "promo"):
-        return {'id': id, 'template': 'admin/cms/editor/advanced/widgets/promo.html',
-        'json': json.dumps({'id': id})}
+        return {'template': 'admin/cms/editor/advanced/widgets/promo.html'}
 
 # Quote widget
 

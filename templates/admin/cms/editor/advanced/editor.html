@@ -3,8 +3,20 @@
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
 {% block body %}
 
-{% for block in blocks %}
-{% include block.template %}
+{% for row in rows %}
+<div class="row">
+  {% for column in row.columns %}
+    <div class="span{{ column.span }}">
+      {% for content in column.contents %}
+        {% if content.type == 'h' %}
+          {{ content.content|safe }}
+        {% else %}
+          {% include content.widget.template with widget=content.widget %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
 {% endfor %}
 
 {% endblock %}

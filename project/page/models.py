@@ -45,49 +45,42 @@ class PageVersion(models.Model):
     active = models.BooleanField()
 
     def deep_delete(self):
-        for block in Block.objects.filter(version=self):
-            block.deep_delete()
+        for row in Row.objects.filter(version=self):
+            row.deep_delete()
         self.delete()
 
 ### CMS
 
-class Block(models.Model):
+class Row(models.Model):
     version = models.ForeignKey('page.PageVersion')
-    template = models.CharField(max_length=50)
     order = models.IntegerField()
-    columns = []
+    columns = None
 
     def deep_delete(self):
-        for content in HTMLContent.objects.filter(block=self):
+        for column in Column.objects.filter(version=self):
+            column.deep_delete()
+        self.delete()
+
+class Column(models.Model):
+    row = models.ForeignKey('page.Row')
+    span = models.IntegerField()
+    order = models.IntegerField()
+    contents = None
+
+    def deep_delete(self):
+        for content in Content.objects.filter(version=self):
             content.deep_delete()
-        for widget in Widget.objects.filter(block=self):
-            widget.deep_delete()
         self.delete()
 
-class HTMLContent(models.Model):
-    block = models.ForeignKey('page.Block')
+class Content(models.Model):
+    column = models.ForeignKey('page.Column')
     content = models.TextField()
-    column = models.IntegerField() # 0-indexed (max 2)
-    order = models.IntegerField() # 0-indexed
+    type = models.CharField(max_length=1, choices=(('w', 'Widget'), ('h', 'HTML')))
+    order = models.IntegerField()
+    widget = None
 
     def deep_delete(self):
-        collapse_block_order(self.block, self.column, self.order)
+        for content in Content.objects.filter(column=self.column, order__get=order):
+            content.order = (content.order-1)
+            content.save();
         self.delete()
-
-class Widget(models.Model):
-    block = models.ForeignKey('page.Block')
-    widget = models.TextField()
-    column = models.IntegerField() # 0-indexed (max 2)
-    order = models.IntegerField() # 0-indexed
-
-    def deep_delete(self):
-        collapse_block_order(self.block, self.column, self.order)
-        self.delete()
-
-def collapse_block_order(block, column, order):
-    for widget in Widget.objects.filter(block=block, column=column, order__gt=order):
-        widget.order = (widget.order-1)
-        widget.save();
-    for content in HTMLContent.objects.filter(block=block, column=column, order__gt=order):
-        content.order = (content.order-1)
-        content.save();
