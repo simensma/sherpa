@@ -20,7 +20,7 @@ def parse_content(request, version):
     return render(request, "page/page.html", context)
 
 def parse_widget(widget):
-    if(widget['name'] == "quote"):
+    if(widget['widget'] == "quote"):
         return {'template': 'page/widgets/quote.html', 'quote': widget['quote'], 'author': widget['author']}
-    elif(widget['name'] == "promo"):
+    elif(widget['widget'] == "promo"):
         return {'template': 'page/widgets/promo.html'}

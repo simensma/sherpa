@@ -5,24 +5,24 @@ import json
 
 # General widget-parser
 def parse_widget(widget):
-    if(widget['name'] == "quote"):
+    if(widget['widget'] == "quote"):
         return {'template': 'admin/cms/editor/advanced/widgets/quote.html',
         'quote': widget['quote'], 'author': widget['author']}
-    elif(widget['name'] == "promo"):
+    elif(widget['widget'] == "promo"):
         return {'template': 'admin/cms/editor/advanced/widgets/promo.html'}
 
 # Quote widget
 
 def add_quote(request):
     block = Block.objects.get(id=request.POST['block'])
-    widget = Widget(block=block, widget=json.dumps({"name": "quote", "quote": request.POST['quote'],
+    widget = Widget(block=block, widget=json.dumps({"widget": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 def edit_quote(request):
     widget = Widget.objects.get(id=request.POST['id'])
-    widget.widget = json.dumps({"name": "quote", "quote": request.POST['quote'],
+    widget.widget = json.dumps({"widget": "quote", "quote": request.POST['quote'],
       "author": request.POST['author']})
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))
@@ -31,14 +31,14 @@ def edit_quote(request):
 
 def add_promo(request):
     block = Block.objects.get(id=request.POST['block'])
-    widget = Widget(block=block, widget=json.dumps({"name": "promo"}),
+    widget = Widget(block=block, widget=json.dumps({"widget": "promo"}),
         column=request.POST['column'], order=request.POST['order'])
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
 
 def edit_promo(request):
     widget = Widget.objects.get(id=request.POST['id'])
-    widget.widget = json.dumps({"name": "promo"})
+    widget.widget = json.dumps({"widget": "promo"})
     widget.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))
 
