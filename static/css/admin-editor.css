@@ -2,6 +2,18 @@
  * Stylesheet for the editor in the admin ui
  */
 
+.moveable {
+  cursor: move;
+}
+
+.moveable.horizontal {
+  background: url("/static/img/arrow-left.png") left center no-repeat, url("/static/img/arrow-right.png") right center no-repeat rgb(238, 238, 238);
+}
+
+.moveable.vertical {
+  background: url("/static/img/arrow-up.png") center top no-repeat, url("/static/img/arrow-down.png") center bottom no-repeat rgb(238, 238, 238);
+}
+
 #toolbar {
   position: fixed;
   top: 50px;
@@ -13,6 +25,7 @@
 }
 
 #toolbar #tabs {
+  padding-left: 25px;
 }
 
 #toolbar ul {
