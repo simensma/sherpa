@@ -1,15 +1,22 @@
 {% extends "admin/layout.html" %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block extra_scripts %}
+  <script src="/static/js/admin-editor.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
+{% endblock %}
 {% block body %}
 
+<div id="cms-container">
 {% for row in rows %}
 <div class="row">
   {% for column in row.columns %}
     <div class="span{{ column.span }}">
       {% for content in column.contents %}
         {% if content.type == 'h' %}
-          {{ content.content|safe }}
+          <div class="cms-content">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
@@ -18,5 +25,17 @@
   {% endfor %}
 </div>
 {% endfor %}
+</div>
+
+<div id="toolbar">
+  <ul>
+    <li><a href="javascript:undefined">Formatering</a></li>
+  </ul>
+  <div id="tabs">
+    <div class="tab">
+      <a href=""><img src="{{ STATIC_URL }}img/editorbuttons/bold-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/italic-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/underline-inactive.png"></a>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

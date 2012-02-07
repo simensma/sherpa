@@ -2,63 +2,26 @@
  * Stylesheet for the editor in the admin ui
  */
 
-
-body {
-  /* Account for the top toolbar */
-  padding-top: 80px;
-}
-
-#editarea #buttons {
-  border: 1px solid #e5e5e5;
-  background-color: #f5f5f5;
+#toolbar {
   position: fixed;
-  width: 99%;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 0.5%;
-  /* The body will add this amount to padding-top */
-  height: 80px;
-  text-align: center;
-  z-index: 1;
-}
-
-#editarea #buttons #savebutton {
-    margin: 10px;
-    padding: 4px 15px;
-    font-size: 120%;
-}
-
-#editarea .edit-block {
-  border: 1px solid;
-  text-align: center;
-}
-
-#editarea .edit-widget, #editarea .edit-content {
+  top: 50px;
+  right: 50px;
+  width: 500px;
+  z-index: 1000;
   border: 1px solid #000;
-  text-align: center;
+  background-color: rgb(245, 245, 245);
 }
 
-#editarea .add-content {
-  border: 1px solid;
-  text-align: center;
+#toolbar #tabs {
 }
 
-.add-content-dialog > div {
-  float: left;
-  width: 20%;
-  height: 170px;
-  margin: 1%;
-  text-align: center;
+#toolbar ul {
+  list-style-type: none;
+  margin-bottom: 10px;
 }
 
-div#add-blocks {
-  margin-top: 20px;
-  text-align: center;
-}
-
-div#add-blocks table {
-  margin-left: auto;
-  margin-right: auto;
-  width: auto;
+#toolbar ul li {
+  display: inline;
+  padding: 3px;
+  border-bottom: 1px solid #000;
 }
