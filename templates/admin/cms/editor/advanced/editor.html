@@ -9,6 +9,9 @@
 {% endblock %}
 {% block body %}
 
+{# This token will be picked up by js for ajax requests. If there exists another token on this page, we could've just used that one and avoid duplicating it, but this will always be here in case there isn't one. #}
+{% csrf_token %}
+
 <div id="cms-container">
 {% for row in rows %}
 <div class="row">
@@ -16,7 +19,7 @@
     <div class="span{{ column.span }}">
       {% for content in column.contents %}
         {% if content.type == 'h' %}
-          <div class="cms-content">{{ content.content|safe }}</div>
+          <div class="cms-content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
@@ -33,7 +36,7 @@
   </ul>
   <div id="tabs">
     <div class="tab">
-      <a href=""><img src="{{ STATIC_URL }}img/editorbuttons/bold-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/italic-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/underline-inactive.png"></a>
+      <a class="save" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/save.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/bold-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/italic-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/underline-inactive.png"></a>
     </div>
   </div>
 </div>
