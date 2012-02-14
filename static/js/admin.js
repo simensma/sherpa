@@ -2,9 +2,9 @@ $(document).ready(function() {
 
     /* Dialogs */
 
-    enableDialog($("div#add-menu-dialog"), $("a#add-menu"), 'Opprett ny menylink');
-    enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side');
-    enableDialog($("div#add-album"), $("div#archive-gallery li.add.album a"), 'Legg til album');
+    enableDialog($("div#add-menu-dialog"), $("a#add-menu"), 'Opprett ny menylink', '80%');
+    enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side', '80%');
+    enableDialog($("div#add-album"), $("div#archive-gallery li.add.album a"), 'Legg til album', 'auto');
 
     $("div#archive-gallery li.add.image a").click(function(event) {
         // add image
@@ -16,12 +16,12 @@ $(document).ready(function() {
     })
 });
 
-function enableDialog(dialog, button, title) {
+function enableDialog(dialog, button, title, width) {
     dialog.dialog({
         title: title,
         modal: true,
         autoOpen: false,
-        width: "80%"
+        width: width
     }).hide();
     button.click(function(event) {
         dialog.dialog('open');
