@@ -1,15 +1,25 @@
 {% extends "admin/layout.html" %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block extra_scripts %}
+  <script src="/static/js/admin-editor.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
+{% endblock %}
 {% block body %}
 
+{# This token will be picked up by js for ajax requests. If there exists another token on this page, we could've just used that one and avoid duplicating it, but this will always be here in case there isn't one. #}
+{% csrf_token %}
+
+<div id="cms-container">
 {% for row in rows %}
-<div class="row">
+<div class="row cms-row">
   {% for column in row.columns %}
     <div class="span{{ column.span }}">
       {% for content in column.contents %}
         {% if content.type == 'h' %}
-          {{ content.content|safe }}
+          <div class="cms-content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
@@ -18,5 +28,25 @@
   {% endfor %}
 </div>
 {% endfor %}
+</div>
+
+<div id="toolbar">
+  <ul>
+    <li><a href="javascript:undefined">Formatering</a></li>
+    <li><a href="javascript:undefined">Struktur</a></li>
+  </ul>
+  <div id="tabs">
+    <div class="tab">
+      <a class="save" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/save.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/bold-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/italic-inactive.png"></a><a href=""><img src="{{ STATIC_URL }}img/editorbuttons/underline-inactive.png"></a>
+    </div>
+    <div class="tab">
+      <p>
+        <input class="formatting" type="radio" name="editmode" checked> Tekstredigering<br>
+        <input class="vertical" type="radio" name="editmode"> Flytt vertikalt (kolonner)<br>
+        <input class="horizontal" type="radio" name="editmode"> Flytt horisontalt (rader)<br>
+      </p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

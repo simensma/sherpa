@@ -20,6 +20,7 @@ div.promo div.left {
 div.promo div.left div.menu {
   position: relative;
   float: left;
+  z-index: 1;
 }
 
 div.promo div.left div.menu ul {
