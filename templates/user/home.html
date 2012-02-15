@@ -1,9 +1,10 @@
-{% extends "user/layout.html" %}
-
+{% extends "layout.html" %}
 {% block title %}Min side{% endblock %}
 
 {% block body %}
 <h1>Min side</h1>
 
 <p>Velkommen, {{ user.username }}! Du liker: {{ user.get_profile.text }}</p>
+
+<p><a href="{% url user.views.logout %}">Logg ut</a></p>
 {% endblock %}

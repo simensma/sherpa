@@ -1,16 +1,20 @@
-{% extends "user/layout.html" %}
-
+{% extends "layout.html" %}
 {% block title %}Logg inn{% endblock %}
 
 {% block body %}
 
 {% if error %}<p>{{ error }}</p>{% endif %}
 
-<form action="{% url users.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
-{% csrf_token %}
-Navn: <input type="text" name="username"><br>
-Passord: <input type="password" name="password"><br>
-<input type="submit">
-</form>
+<div class="row">
+  <div class="offset4 span4">
+    <h1>Logg inn</h1>
+    <form action="{% url user.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
+    {% csrf_token %}
+    Navn: <input type="text" name="username"><br>
+    Passord: <input type="password" name="password"><br>
+    <input type="submit">
+    </form>
+    </div>
+</div>
 
 {% endblock %}
