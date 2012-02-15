@@ -6,10 +6,6 @@ $(document).ready(function() {
     enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side', '80%');
     enableDialog($("div#add-album"), $("div#archive-gallery li.add.album a"), 'Legg til album', 'auto');
 
-    $("div#archive-gallery li.add.image a").click(function(event) {
-        // add image
-    });
-
     /* When creating a page, slugify the title as URL */
     $("#add-page-dialog input[name='title']").keyup(function() {
         $("#add-page-dialog input[name='slug']").val(slugify($(this).val()));

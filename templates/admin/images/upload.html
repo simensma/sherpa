@@ -1,0 +1,31 @@
+{% extends "admin/images/layout.html" %}
+{% block extra_scripts %}
+  <script src="/static/lib/jquery/plugins/jquery.form.js"></script>
+{% endblock %}
+{% block imagebody %}
+
+<div id="image-uploader">
+<div class="row">
+  <div class="offset3 span6" style="text-align: center">
+
+  <form action="" method="post" enctype="multipart/form-data">
+    <h1>Last opp bilde</h1>
+    <input type="file" name="files" multiple>
+    {% csrf_token %}
+    <input type="submit" value="Last opp valgte bilder">
+  </form>
+
+  <div class="well">
+    <p class="">Bilde(ne) vil havne i følgende arkiv:<br>
+    {% for album in albumpath %}
+      <span class="label label-info">{{ album.name }}</span>
+      {% if not forloop.last %}→{% endif %}
+    {% endfor %}
+    </p>
+  </div>
+
+  </div>
+</div>
+</div>
+
+{% endblock %}

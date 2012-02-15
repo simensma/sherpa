@@ -40,14 +40,16 @@
       Legg til underalbum
     </a>
   </li>
+  {% if albumpath %}
   <li class="add image">
-    <a class="image" href="javascript:undefined">
+    <a class="image" href="{% url admin.images.views.upload_image current_album.id %}">
       <img src="{{ STATIC_URL }}img/icons/upload-image.png" alt="Last opp bilde(r)">
     </a>
-    <a class="text" href="javascript:undefined">
+    <a class="text" href="{% url admin.images.views.upload_image current_album.id %}">
       Last opp bilde
     </a>
   </li>
+  {% endif %}
   </ul>
 </div>
 <div style="clear: both;"></div>

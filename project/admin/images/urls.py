@@ -10,4 +10,5 @@ urlpatterns = patterns('admin.images.views',
 
     url(r'^album/nytt/$', 'add_album', {'parent': None}),
     url(r'^album/nytt/(?P<parent>\d+)/$', 'add_album'),
+    url(r'^bilde/nytt/(?P<album>\d+)/$', 'upload_image'),
 )
