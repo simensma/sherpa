@@ -9,18 +9,18 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding model 'Profile'
-        db.create_table('users_profile', (
+        db.create_table('user_profile', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
             ('text', self.gf('django.db.models.fields.CharField')(max_length=200)),
         ))
-        db.send_create_signal('users', ['Profile'])
+        db.send_create_signal('user', ['Profile'])
 
 
     def backwards(self, orm):
         
         # Deleting model 'Profile'
-        db.delete_table('users_profile')
+        db.delete_table('user_profile')
 
 
     models = {
@@ -60,7 +60,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'users.profile': {
+        'user.profile': {
             'Meta': {'object_name': 'Profile'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
@@ -68,4 +68,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['users']
+    complete_apps = ['user']
