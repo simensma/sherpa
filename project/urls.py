@@ -9,5 +9,5 @@ urlpatterns = patterns('',
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slugs': ""}),
-    url(r'^(?P<slugs>[a-zA-Z0-9\-_/]+)/$', 'page.views.page'),
+    url(r'^(?P<slugs>.+)/$', 'page.views.page'),
 )
