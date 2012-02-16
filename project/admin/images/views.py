@@ -3,10 +3,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from admin.models import Image, Album
-import random
+import random, Image as pil
+from cStringIO import StringIO
+from hashlib import sha1
 
 from lib import S3
 from local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
+# Pixel sizes we'll want to generate thumbnail images for
+thumb_sizes = [500, 150]
 
 @login_required
 def list_albums(request, album):
@@ -58,6 +63,7 @@ def upload_image(request, album):
         context = {'albumpath': parents}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
+        parsed_images = []
         for file in request.FILES.getlist('files'):
             key = generate_random_image_key()
             while Image.objects.filter(key=key).exists():
@@ -67,15 +73,48 @@ def upload_image(request, album):
             # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
             # file into memory instead of streaming it to AWS. This might need to be
             # optimized at some point.
+            data = file.read()
+
+            # First parse and resize the images. This will consume a lot of memory.
+            try:
+                img = pil.open(StringIO(data))
+                thumbs = []
+                for size in thumb_sizes:
+                    fp = StringIO()
+                    img_copy = img.copy()
+                    img_copy.thumbnail([size, size])
+                    img_copy.save(fp, file.name.split(".")[-1])
+                    thumbs.append({'size': size, 'data': fp.getvalue()})
+
+                parsed_images.append({'key': key, 'hash': sha1(data).hexdigest(),
+                  'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
+                  'data': data, 'thumbs': thumbs})
+            except IOError, KeyError:
+                # This is raised by PIL, maybe it was an invalid image file
+                # or it didn't have the right file extension.
+                parents = list_parents(Album.objects.get(id=album))
+                context = {'invalid_image': True, 'albumpath': parents}
+                return render(request, 'admin/images/upload.html', context)
+
+        # Done parsing, now we'll start moving stuff into persistant state
+        # (Local database entry + store image and thumbs on S3)
+        for image in parsed_images:
             conn = S3.AWSAuthConnection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-            result = conn.put('turistforeningen', "images/" + key, S3.S3Object(file.read()),
-                {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
+            conn.put('turistforeningen', "images/" + image['key'],
+                S3.S3Object(image['data']),
+                {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
             )
+            for thumb in image['thumbs']:
+                conn.put('turistforeningen', "images/" + image['key'] + "-" + str(thumb['size']),
+                    S3.S3Object(thumb['data']),
+                    {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
+                )
             album = Album.objects.get(id=album)
-            image = Image(key=key, hash='', description='', album=album, credits='', photographer='',
-              photographer_contact='', uploader='todo', width=0, height=0)
+            image = Image(key=image['key'], hash=image['hash'], description='', album=album, credits='',
+              photographer='', photographer_contact='', uploader=request.user.get_profile(),
+              width=image['width'], height=image['height'])
             image.save()
-        return HttpResponse(status=201)
+        return HttpResponse(status=204)
 
 def list_parents(album):
     parents = []

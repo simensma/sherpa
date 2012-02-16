@@ -15,6 +15,10 @@
     <input type="submit" value="Last opp valgte bilder">
   </form>
 
+  {% if invalid_image %}
+    <div class="alert alert-error">Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a></div>
+  {% endif %}
+
   <div class="well">
     <p class="">Bilde(ne) vil havne i følgende arkiv:<br>
     {% for album in albumpath %}
