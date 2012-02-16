@@ -1,5 +1,5 @@
 from analytics.models import Visitor, Request, Parameter, Pageview
-import settings
+from django.conf import settings
 from datetime import datetime
 
 class Analytics():
