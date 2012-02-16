@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login as log_user_in, logout as log_user_out
 
-from analytics.models import Request
+from analytics.models import Visitor, Request
 
 def home(request):
     if not request.user.is_authenticated():
@@ -37,17 +37,26 @@ def logout(request):
     # Redirect
 
 def merge_visitor(visitor, profile):
+    visitor = Visitor.objects.get(id=visitor)
     if(visitor.profile == profile):
-        # The user already has connected the visitor to the correct profile
+        # The user already has connected this visitor to the correct profile
         # This might happen if the user logs in twice, somehow.
         return
     if(visitor.profile != None):
-        # Whoa! The user has connected the visitor to another profile!
+        # Whoa! The user has connected this visitor to a _different_ profile!
         # Could this ever happen? We should probably log this and analyze
         # what happened, if it occurs.
         return
-    requests = Request.objects.filter(visitor=visitor)
-    for request in requests:
-        request.visitor = profile.visitor
-        request.save()
-    visitor.delete()
+    if(Visitor.objects.filter(profile=profile).exists()):
+        # The user's profile already has a Visitor, so merge all the
+        # requests over and delete the 'extra' visitor
+        requests = Request.objects.filter(visitor=visitor)
+        for request in requests:
+            request.visitor = profile.visitor
+            request.save()
+        visitor.delete()
+    else:
+        # The user's profile didn't have an existing Visitor, so just
+        # apply this one to the profile
+        visitor.profile = profile
+        visitor.save()
