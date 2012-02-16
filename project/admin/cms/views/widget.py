@@ -5,7 +5,6 @@ from project.page.models import Row, Column, Content
 import json
 
 # General widget-parser
-@login_required
 def parse_widget(widget):
     if(widget['widget'] == "quote"):
         return {'template': 'admin/cms/editor/advanced/widgets/quote.html',

@@ -45,7 +45,6 @@ def add_album(request, parent):
     album.save()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
-@login_required
 def list_parents(album):
     parents = []
     parents.append(album)
