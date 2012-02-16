@@ -13,12 +13,18 @@ class Analytics():
         if request.is_ajax():
             return None
 
-        # If this is a new user, create a new Visitor
-        # Todo: Logic around auth
+        # Store new visitor sessions
         if not 'visitor' in request.session:
-            visitor = Visitor()
-            visitor.save()
-            request.session['visitor'] = visitor.id
+            if request.user.is_authenticated():
+                # Logged-in user without a visitor in session.
+                # In theory, this should never happen.
+                visitor = request.user.get_profile().visitor
+                request.session['visitor'] = visitor.id
+            else:
+                # Completely new user
+                visitor = Visitor()
+                visitor.save()
+                request.session['visitor'] = visitor.id
         else:
             visitor = Visitor.objects.get(id=request.session['visitor'])
 
