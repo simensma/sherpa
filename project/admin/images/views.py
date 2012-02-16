@@ -89,7 +89,7 @@ def upload_image(request, album):
                 parsed_images.append({'key': key, 'hash': sha1(data).hexdigest(),
                   'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
                   'data': data, 'thumbs': thumbs})
-            except IOError, KeyError:
+            except(IOError, KeyError):
                 # This is raised by PIL, maybe it was an invalid image file
                 # or it didn't have the right file extension.
                 parents = list_parents(Album.objects.get(id=album))
