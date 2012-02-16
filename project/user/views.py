@@ -34,7 +34,6 @@ def login(request):
 def logout(request):
     log_user_out(request)
     return HttpResponseRedirect(reverse('page.views.page'))
-    # Redirect
 
 def merge_visitor(visitor, profile):
     visitor = Visitor.objects.get(id=visitor)
