@@ -1,7 +1,7 @@
 from django.db import models
 
 class Visitor(models.Model):
-    profile = models.ForeignKey('user.Profile', unique=True, null=True)
+    profile = models.OneToOneField('user.Profile', null=True)
 
 class Request(models.Model):
     visitor = models.ForeignKey('analytics.Visitor')
