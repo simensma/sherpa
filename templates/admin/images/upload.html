@@ -9,7 +9,7 @@
   <div class="offset3 span6" style="text-align: center">
 
   <form action="" method="post" enctype="multipart/form-data">
-    <h1>Last opp bilde</h1>
+    <h1>Last opp nye bilder</h1>
     <input type="file" name="files" multiple>
     {% csrf_token %}
     <input type="submit" value="Last opp valgte bilder">
@@ -20,7 +20,7 @@
   {% endif %}
 
   <div class="well">
-    <p class="">Bilde(ne) vil havne i følgende arkiv:<br>
+    <p class="">Bildene vil havne i følgende arkiv:<br>
     {% for album in albumpath %}
       <span class="label label-info">{{ album.name }}</span>
       {% if not forloop.last %}→{% endif %}
