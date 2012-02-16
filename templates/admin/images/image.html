@@ -19,21 +19,23 @@
     </tr>
     <tr>
       <th>Original:</th>
-      <td><a href="">Åpne ({{ image.height }} x {{ image.width }})</a></td>
+      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}">Åpne ({{ image.height }} x {{ image.width }})</a></td>
     </tr>
     <tr>
       <th>Mellomstor:</th>
-      <td><a href="">Åpne (500 x 375)</a></td>
+      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-500">Åpne (500px)</a></td>
     </tr>
     <tr>
       <th>Liten:</th>
-      <td><a href="">Åpne (150 x 113)</a></td>
+      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-150">Åpne (150px)</a></td>
     </tr>
     </table>
   </div>
 
   <div class="span6">
-    <img src="http://www.turistforeningen.no/images/uq/Ek/qD.sized.jpg" alt="{{ image.description }}" title="{{ image.description }}">
+    <a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}">
+      <img src="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-500" alt="{{ image.description }}" title="{{ image.description }}">
+    </a>
   </div>
 </div>
 <div style="clear: both;"></div>

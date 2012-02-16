@@ -27,7 +27,7 @@
     <li class="image">
       <span class="buttons"><a class="delete" href="{% url admin.images.views.delete_image image.id %}"><img src="{{ STATIC_URL }}img/small_x.png" alt="Slett album"></a></span>
       <a class="image" href="{% url admin.images.views.image_details image.id %}">
-        <img src="" alt="{{ image.description }}">
+        <img src="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-150" alt="{{ image.description }}">
       </a>
       <a class="text" href="{% url admin.images.views.image_details image.id %}">{{ image.description }}</a>
     </li>
