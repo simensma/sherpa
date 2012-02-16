@@ -3,8 +3,8 @@
 from local_settings import *
 
 MANAGERS = ADMINS = (
-    ('Ali Kaafarani', 'aka@turistforeningen.no'),
-    ('Hans Skjerpen', 'hsk@turistforeningen.no'),
+    ('Ali Kaafarani', 'ali.kaafarani@turistforeningen.no'),
+    ('Hans Skjerpen', 'hans.skjerpen@turistforeningen.no'),
 )
 
 # Local time zone for this installation. Choices can be found here:
