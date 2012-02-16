@@ -1,8 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from admin.models import Image, Album
 
+@login_required
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album)
     parents = []
@@ -13,12 +15,14 @@ def list_albums(request, album):
     context = {'album': album, 'albums': albums, 'albumpath': parents, 'images': images}
     return render(request, 'admin/images/albums.html', context)
 
+@login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
     context = {'image': image, 'albumpath': parents}
     return render(request, 'admin/images/image.html', context)
 
+@login_required
 def delete_album(request, album):
     album = Album.objects.get(id=album)
     parents = list_parents(album)
@@ -27,11 +31,13 @@ def delete_album(request, album):
         album.delete()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
+@login_required
 def delete_image(request, image):
     image = Image.objects.get(id=image)
     image.delete()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[image.album.id]))
 
+@login_required
 def add_album(request, parent):
     if parent is not None:
         parent = Album.objects.get(id=parent)
@@ -39,6 +45,7 @@ def add_album(request, parent):
     album.save()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
+@login_required
 def list_parents(album):
     parents = []
     parents.append(album)

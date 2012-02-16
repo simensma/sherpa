@@ -2,8 +2,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
+from django.contrib.auth.decorators import login_required
 from project.page.models import PageVariant, PageVersion
 
+@login_required
 def new(request, variant):
     variant = PageVariant.objects.get(id=variant)
     versions = PageVersion.objects.filter(variant=variant)
@@ -15,6 +17,7 @@ def new(request, variant):
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 
+@login_required
 def activate(request, version):
     # Note for future error handling: Fails if activating the _same version_ 2 times in a row (F5)
     newActive = PageVersion.objects.get(id=version)

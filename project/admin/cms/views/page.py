@@ -1,15 +1,18 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from project.page.models import Menu, Page, PageVariant, PageVersion
 from project.analytics.models import Segment
 
+@login_required
 def list(request):
     versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/cms/pages.html', context)
 
+@login_required
 def new(request):
     page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False)
     page.save()
@@ -19,6 +22,7 @@ def new(request):
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
+@login_required
 def edit(request, page):
     if(request.method == 'GET'):
         page = Page.objects.get(id=page)
@@ -34,6 +38,7 @@ def edit(request, page):
         page.save()
         return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page.id]))
 
+@login_required
 def delete(request, page):
     page = Page.objects.get(id=page)
     page.deep_delete()

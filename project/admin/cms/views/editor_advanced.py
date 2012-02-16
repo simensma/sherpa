@@ -1,12 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from project.page.models import PageVariant, PageVersion, Row, Column, Content
 from project.analytics.models import Segment
 import json
 
 from widget import *
 
+@login_required
 def edit(request, version):
     if(request.method == 'GET'):
         version = PageVersion.objects.get(id=version)

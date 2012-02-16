@@ -2,12 +2,12 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login as log_user_in, logout as log_user_out
+from django.contrib.auth.decorators import login_required
 
 from analytics.models import Visitor, Request
 
+@login_required
 def home(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('user.views.login') + '?next=%s' % request.path)
     return render(request, 'user/home.html')
 
 def login(request):
