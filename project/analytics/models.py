@@ -12,6 +12,7 @@ class Request(models.Model):
     client_host = models.CharField(max_length=2048)
     referrer = models.CharField(max_length=2048)
     enter = models.DateTimeField()
+    ajax = models.BooleanField()
     parameter_count = None
 
 class Parameter(models.Model):

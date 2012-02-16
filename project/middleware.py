@@ -26,7 +26,8 @@ class Analytics():
           client_ip=request.META.get('REMOTE_ADDR', ''),
           client_host=request.META.get('REMOTE_HOST', ''),
           referrer=request.META.get('HTTP_REFERER', ''),
-          enter=datetime.now())
+          enter=datetime.now(),
+          ajax=request.is_ajax())
         requestObject.save()
 
         for key, value in request.GET.items():
