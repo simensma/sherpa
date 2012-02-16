@@ -21,7 +21,7 @@ def login(request):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             if user.is_active:
-                merge_visitor(request.session['visitor'], user.get_profile())
+                merge_visitor(request.session, user.get_profile())
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
             else:
@@ -35,8 +35,8 @@ def logout(request):
     log_user_out(request)
     return HttpResponseRedirect(reverse('page.views.page'))
 
-def merge_visitor(visitor, profile):
-    visitor = Visitor.objects.get(id=visitor)
+def merge_visitor(session, profile):
+    visitor = Visitor.objects.get(id=session['visitor'])
     if(visitor.profile == profile):
         # The user already has connected this visitor to the correct profile
         # This might happen if the user logs in twice, somehow.
@@ -54,6 +54,7 @@ def merge_visitor(visitor, profile):
             request.visitor = profile.visitor
             request.save()
         visitor.delete()
+        session['visitor'] = profile.visitor.id
     else:
         # The user's profile didn't have an existing Visitor, so just
         # apply this one to the profile
