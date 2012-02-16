@@ -21,7 +21,7 @@ def new(request):
 
 def edit(request, page):
     if(request.method == 'GET'):
-        page = Page.objects.get(pk=page)
+        page = Page.objects.get(id=page)
         variants = PageVariant.objects.filter(page=page).order_by('priority')
         for variant in variants:
             variant.active = PageVersion.objects.get(variant=variant, active=True)
@@ -29,7 +29,7 @@ def edit(request, page):
         context = {'page': page, 'variants': variants, 'segments': segments}
         return render(request, 'admin/cms/edit_page.html', context)
     elif(request.method == 'POST'):
-        page = Page.objects.get(pk=page)
+        page = Page.objects.get(id=page)
         page.slug = request.POST['slug']
         page.save()
         return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page.id]))

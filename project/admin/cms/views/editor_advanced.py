@@ -23,7 +23,7 @@ def edit(request, version):
         context = {'rows': rows}
         return render(request, 'admin/cms/editor/advanced/editor.html', context)
     elif(request.method == 'POST'):
-        version = PageVersion.objects.get(pk=version)
+        version = PageVersion.objects.get(id=version)
         version.content.content = request.POST['content']
         version.content.save()
         return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))

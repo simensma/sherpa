@@ -5,7 +5,7 @@ from django.db.models import Max
 from project.page.models import PageVariant, PageVersion
 
 def new(request, variant):
-    variant = PageVariant.objects.get(pk=variant)
+    variant = PageVariant.objects.get(id=variant)
     versions = PageVersion.objects.filter(variant=variant)
     max_version = versions.aggregate(Max('version'))['version__max']
     currentVersion = versions.get(version=max_version)
@@ -17,7 +17,7 @@ def new(request, variant):
 
 def activate(request, version):
     # Note for future error handling: Fails if activating the _same version_ 2 times in a row (F5)
-    newActive = PageVersion.objects.get(pk=version)
+    newActive = PageVersion.objects.get(id=version)
     oldActive = PageVersion.objects.filter(variant=newActive.variant).get(active=True)
     newActive.active = True
     oldActive.active = False

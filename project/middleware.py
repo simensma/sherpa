@@ -20,7 +20,7 @@ class Analytics():
             visitor.save()
             request.session['visitor'] = visitor.id
         else:
-            visitor = Visitor.objects.get(pk=request.session['visitor'])
+            visitor = Visitor.objects.get(id=request.session['visitor'])
 
         requestObject = Request(
           visitor=visitor,
