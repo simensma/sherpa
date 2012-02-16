@@ -9,10 +9,6 @@ class Analytics():
         if request.path in statics or request.path.startswith(settings.STATIC_URL):
             return None
 
-        # Don't process AJAX requests
-        if request.is_ajax():
-            return None
-
         # If this is a new user, create a new Visitor
         # Todo: Logic around auth
         if not 'visitor' in request.session:
