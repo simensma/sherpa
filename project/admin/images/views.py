@@ -1,12 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from admin.models import Image, Album
 import random
 
 from lib import S3
 from local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
+@login_required
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album)
     parents = []
@@ -20,12 +22,14 @@ def list_albums(request, album):
                'current_album': current_album, 'images': images}
     return render(request, 'admin/images/albums.html', context)
 
+@login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
     context = {'image': image, 'albumpath': parents}
     return render(request, 'admin/images/image.html', context)
 
+@login_required
 def delete_album(request, album):
     album = Album.objects.get(id=album)
     parents = list_parents(album)
@@ -34,11 +38,13 @@ def delete_album(request, album):
         album.delete()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
+@login_required
 def delete_image(request, image):
     image = Image.objects.get(id=image)
     image.delete()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[image.album.id]))
 
+@login_required
 def add_album(request, parent):
     if parent is not None:
         parent = Album.objects.get(id=parent)

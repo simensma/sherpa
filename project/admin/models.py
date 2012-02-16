@@ -9,7 +9,7 @@ class Image(models.Model):
     photographer = models.CharField(max_length=200)
     photographer_contact = models.CharField(max_length=200)
     uploaded = models.DateTimeField(auto_now_add=True)
-    uploader = models.ForeignKey('users.Profile')
+    uploader = models.ForeignKey('user.Profile')
     width = models.IntegerField()
     height = models.IntegerField()
 

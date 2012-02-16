@@ -26,7 +26,7 @@ class PageVariant(models.Model):
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
-    # publisher = models.ForeignKey('users.Profile')
+    # publisher = models.ForeignKey('user.Profile')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better

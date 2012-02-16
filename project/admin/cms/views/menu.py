@@ -2,8 +2,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
+from django.contrib.auth.decorators import login_required
 from project.page.models import Menu, Page, PageVariant
 
+@login_required
 def list(request):
     menus = Menu.objects.all().order_by('position')
     for menu in menus:
@@ -14,6 +16,7 @@ def list(request):
     context = {'menus': menus, 'pages': pages}
     return render(request, 'admin/cms/menu.html', context)
 
+@login_required
 def new(request):
     page = Page.objects.get(id=request.POST['page'])
     max_order = Menu.objects.aggregate(Max('order'))['order__max']
@@ -23,6 +26,7 @@ def new(request):
     menu.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
+@login_required
 def delete(request, menu):
     menu = Menu.objects.get(id=menu)
     offset = menu.order
@@ -35,6 +39,7 @@ def delete(request, menu):
         offset += 1
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
+@login_required
 def swap(request, order1, order2):
     menu1 = Menu.objects.get(order=order1)
     menu2 = Menu.objects.get(order=order2)

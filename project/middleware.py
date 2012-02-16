@@ -1,5 +1,5 @@
 from analytics.models import Visitor, Request, Parameter, Pageview
-import settings
+from django.conf import settings
 from datetime import datetime
 
 class Analytics():
@@ -9,18 +9,20 @@ class Analytics():
         if request.path in statics or request.path.startswith(settings.STATIC_URL):
             return None
 
-        # Don't process AJAX requests
-        if request.is_ajax():
-            return None
-
-        # If this is a new user, create a new Visitor
-        # Todo: Logic around auth
+        # Store new visitor sessions
         if not 'visitor' in request.session:
-            visitor = Visitor()
-            visitor.save()
-            request.session['visitor'] = visitor.id
+            if request.user.is_authenticated():
+                # Logged-in user without a visitor in session.
+                # In theory, this should never happen.
+                visitor = request.user.get_profile().visitor
+                request.session['visitor'] = visitor.id
+            else:
+                # Completely new user
+                visitor = Visitor()
+                visitor.save()
+                request.session['visitor'] = visitor.id
         else:
-            visitor = Visitor.objects.get(pk=request.session['visitor'])
+            visitor = Visitor.objects.get(id=request.session['visitor'])
 
         requestObject = Request(
           visitor=visitor,
@@ -30,7 +32,8 @@ class Analytics():
           client_ip=request.META.get('REMOTE_ADDR', ''),
           client_host=request.META.get('REMOTE_HOST', ''),
           referrer=request.META.get('HTTP_REFERER', ''),
-          enter=datetime.now())
+          enter=datetime.now(),
+          ajax=request.is_ajax())
         requestObject.save()
 
         for key, value in request.GET.items():

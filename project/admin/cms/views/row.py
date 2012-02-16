@@ -1,8 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Max
+from django.contrib.auth.decorators import login_required
 from project.page.models import PageVersion, Row, Column, Content
 
+@login_required
 def add(request, version, template):
     version = PageVersion.objects.get(id=version)
     rows = Row.objects.filter(version=version)
@@ -34,6 +36,7 @@ def add(request, version, template):
         col.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 
+@login_required
 def move_up(request, row):
     row = Block.objects.get(id=row)
     if(row.order == 1):
@@ -43,6 +46,7 @@ def move_up(request, row):
         swap_rows(row, -1)
         return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
 
+@login_required
 def move_down(request, row):
     row = Row.objects.get(id=row)
     max = Row.objects.filter(version=row.version).aggregate(Max('order'))['order__max']
@@ -53,6 +57,7 @@ def move_down(request, row):
         swap_rows(block, 1)
         return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
 
+@login_required
 def delete(request, row):
     row = Row.objects.get(id=row)
     row.deep_delete()

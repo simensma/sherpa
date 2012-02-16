@@ -38,7 +38,7 @@ def match_slug(request, slugs):
 
 def match_user(request, page):
     variants = PageVariant.objects.filter(page=page, segment__isnull=False).order_by('priority')
-    visitor = Visitor.objects.get(pk=request.session['visitor'])
+    visitor = Visitor.objects.get(id=request.session['visitor'])
     for variant in variants:
         if(variant.segment.match(request, visitor)):
             return variant
