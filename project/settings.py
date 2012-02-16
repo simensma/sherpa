@@ -5,7 +5,8 @@ from local_settings import *
 
 SITE_ID = 1
 ROOT_URLCONF = 'urls'
-AUTH_PROFILE_MODULE='users.Profile'
+AUTH_PROFILE_MODULE='user.Profile'
+LOGIN_URL = '/bruker/logg-inn/'
 
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali.kaafarani@turistforeningen.no'),
@@ -28,7 +29,7 @@ INSTALLED_APPS = (
     'page',
     'admin',
     'analytics',
-    'users',
+    'user',
 )
 
 LOGGING = {

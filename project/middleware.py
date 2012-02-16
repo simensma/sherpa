@@ -9,14 +9,20 @@ class Analytics():
         if request.path in statics or request.path.startswith(settings.STATIC_URL):
             return None
 
-        # If this is a new user, create a new Visitor
-        # Todo: Logic around auth
+        # Store new visitor sessions
         if not 'visitor' in request.session:
-            visitor = Visitor()
-            visitor.save()
-            request.session['visitor'] = visitor.id
+            if request.user.is_authenticated():
+                # Logged-in user without a visitor in session.
+                # In theory, this should never happen.
+                visitor = request.user.get_profile().visitor
+                request.session['visitor'] = visitor.id
+            else:
+                # Completely new user
+                visitor = Visitor()
+                visitor.save()
+                request.session['visitor'] = visitor.id
         else:
-            visitor = Visitor.objects.get(pk=request.session['visitor'])
+            visitor = Visitor.objects.get(id=request.session['visitor'])
 
         requestObject = Request(
           visitor=visitor,
