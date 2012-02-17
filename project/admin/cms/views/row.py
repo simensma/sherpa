@@ -60,7 +60,7 @@ def move_down(request, row):
 @login_required
 def delete(request, row):
     row = Row.objects.get(id=row)
-    row.deep_delete()
+    row.delete()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
 
 def swap_rows(row, increment):

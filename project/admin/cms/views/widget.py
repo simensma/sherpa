@@ -51,5 +51,5 @@ def edit_promo(request):
 @login_required
 def delete(request, widget):
     widget = Widget.objects.get(id=widget)
-    widget.deep_delete()
+    widget.delete()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))

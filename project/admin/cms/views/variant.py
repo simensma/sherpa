@@ -31,5 +31,5 @@ def swap(request, page, pri1, pri2):
 @login_required
 def delete(request, variant):
     variant = PageVariant.objects.get(id=variant)
-    variant.deep_delete()
+    variant.delete()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[variant.version.id]))

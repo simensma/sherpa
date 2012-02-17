@@ -1,3 +1,5 @@
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.db import models
 
 class Menu(models.Model):
@@ -13,11 +15,10 @@ class Page(models.Model):
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
 
-    def deep_delete(self):
-        Menu.objects.filter(page=self).delete()
-        for variant in PageVariant.objects.filter(page=self):
-            variant.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=Page)
+def delete_page(sender, **kwargs):
+    Menu.objects.filter(page=kwargs['instance']).delete()
+    PageVariant.objects.filter(page=kwargs['instance']).delete()
 
 class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
@@ -33,21 +34,19 @@ class PageVariant(models.Model):
     # way to do this?
     active = None
 
-    def deep_delete(self):
-        # Note: We don't really need to cascade priorities
-        for version in PageVersion.objects.filter(variant=self):
-            version.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=PageVariant)
+def delete_page_variant(sender, **kwargs):
+    # Note: We don't really need to cascade priorities
+    PageVersion.objects.filter(variant=kwargs['instance']).delete()
 
 class PageVersion(models.Model):
     variant = models.ForeignKey('page.PageVariant')
     version = models.IntegerField()
     active = models.BooleanField()
 
-    def deep_delete(self):
-        for row in Row.objects.filter(version=self):
-            row.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=PageVersion)
+def delete_page_version(sender, **kwargs):
+    Row.objects.filter(version=kwargs['instance']).delete()
 
 ### CMS
 
@@ -56,10 +55,9 @@ class Row(models.Model):
     order = models.IntegerField()
     columns = None
 
-    def deep_delete(self):
-        for column in Column.objects.filter(version=self):
-            column.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=Row)
+def delete_row(sender, **kwargs):
+    Column.objects.filter(row=kwargs['instance']).delete()
 
 class Column(models.Model):
     row = models.ForeignKey('page.Row')
@@ -67,10 +65,9 @@ class Column(models.Model):
     order = models.IntegerField()
     contents = None
 
-    def deep_delete(self):
-        for content in Content.objects.filter(version=self):
-            content.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=Column)
+def delete_column(sender, **kwargs):
+    Content.objects.filter(column=kwargs['instance']).delete()
 
 class Content(models.Model):
     column = models.ForeignKey('page.Column')
@@ -79,8 +76,8 @@ class Content(models.Model):
     order = models.IntegerField()
     widget = None
 
-    def deep_delete(self):
-        for content in Content.objects.filter(column=self.column, order__get=order):
-            content.order = (content.order-1)
-            content.save();
-        self.delete()
+@receiver(post_delete, sender=Content)
+def delete_content(sender, **kwargs):
+    for content in Content.objects.filter(column=self.column, order__get=order):
+        content.order = (content.order-1)
+        content.save();

@@ -40,6 +40,5 @@ def edit(request, page):
 
 @login_required
 def delete(request, page):
-    page = Page.objects.get(id=page)
-    page.deep_delete()
+    Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))

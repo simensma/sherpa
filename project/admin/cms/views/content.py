@@ -20,7 +20,7 @@ def update(request, content):
 @login_required
 def delete(request, content):
     content = Content.objects.get(id=content)
-    content.deep_delete()
+    content.delete()
     if(request.is_ajax()):
         return HttpResponse('')
     else:
