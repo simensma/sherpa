@@ -5,6 +5,21 @@
 <div class="alert alert-info">Dette albumet er tomt.</div>
 {% endif %}
 
+<div class="row">
+  {% if current_album %}
+  <div class="offset4 span2">
+    <p><a class="btn btn-primary add-album large-button" href="javascript:undefined">Opprett nytt album her</a></p>
+  </div>
+  <div class="span2">
+    <p><a class="btn btn-primary" href="{% url admin.images.views.upload_image current_album.id %}">Last opp nytt bilde her</a></p>
+  </div>
+  {% else %}
+  <div class="offset5 span2">
+    <p><a class="btn btn-primary add-album large-button" href="javascript:undefined">Opprett nytt album her</a></p>
+  </div>
+  {% endif %}
+</div>
+
 <div id="add-album">
   <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
     {% csrf_token %}
@@ -32,24 +47,6 @@
       <a class="text" href="{% url admin.images.views.image_details image.id %}">{{ image.description }}</a>
     </li>
   {% endfor %}
-  <li class="add album">
-    <a class="image" href="javascript:undefined">
-      <img src="{{ STATIC_URL }}img/icons/folder-plus.png" alt="Legg til underalbum">
-    </a>
-    <a class="text" href="javascript:undefined">
-      Legg til underalbum
-    </a>
-  </li>
-  {% if albumpath %}
-  <li class="add image">
-    <a class="image" href="{% url admin.images.views.upload_image current_album.id %}">
-      <img src="{{ STATIC_URL }}img/icons/upload-image.png" alt="Last opp bilde(r)">
-    </a>
-    <a class="text" href="{% url admin.images.views.upload_image current_album.id %}">
-      Last opp bilde
-    </a>
-  </li>
-  {% endif %}
   </ul>
 </div>
 <div style="clear: both;"></div>

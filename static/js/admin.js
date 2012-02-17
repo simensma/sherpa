@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     enableDialog($("div#add-menu-dialog"), $("a#add-menu"), 'Opprett ny menylink', '80%');
     enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side', '80%');
-    enableDialog($("div#add-album"), $("div#archive-gallery li.add.album a"), 'Legg til album', 'auto');
+    enableDialog($("div#add-album"), $("a.add-album"), 'Legg til album', 'auto');
 
     /* When creating a page, slugify the title as URL */
     $("#add-page-dialog input[name='title']").keyup(function() {
