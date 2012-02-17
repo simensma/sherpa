@@ -8,7 +8,7 @@ from cStringIO import StringIO
 from hashlib import sha1
 
 from lib import S3
-from local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from django.conf import settings
 
 # Pixel sizes we'll want to generate thumbnail images for
 thumb_sizes = [500, 150]
@@ -103,7 +103,7 @@ def upload_image(request, album):
         # Done parsing, now we'll start moving stuff into persistant state
         # (Local database entry + store image and thumbs on S3)
         for image in parsed_images:
-            conn = S3.AWSAuthConnection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+            conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             conn.put('turistforeningen', "images/" + image['key'],
                 S3.S3Object(image['data']),
                 {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
