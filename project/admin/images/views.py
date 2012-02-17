@@ -38,11 +38,7 @@ def image_details(request, image):
 
 @login_required
 def delete_album(request, album):
-    album = Album.objects.get(id=album)
-    parents = list_parents(album)
-    for album in parents:
-        Image.objects.filter(album=album).delete()
-        album.delete()
+    Album.objects.get(id=album).delete()
     return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
