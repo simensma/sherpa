@@ -104,6 +104,7 @@ def upload_image(request, album):
 
         # Done parsing, now we'll start moving stuff into persistant state
         # (Local database entry + store image and thumbs on S3)
+        album = Album.objects.get(id=album)
         for image in parsed_images:
             conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'],
@@ -115,7 +116,6 @@ def upload_image(request, album):
                     S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
-            album = Album.objects.get(id=album)
             image = Image(key=image['key'], hash=image['hash'], description='', album=album, credits='',
               photographer='', photographer_contact='', uploader=request.user.get_profile(),
               width=image['width'], height=image['height'])
