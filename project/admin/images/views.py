@@ -104,12 +104,12 @@ def upload_image(request, album):
         # (Local database entry + store image and thumbs on S3)
         for image in parsed_images:
             conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.put('turistforeningen', "images/" + image['key'],
+            conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'],
                 S3.S3Object(image['data']),
                 {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
             )
             for thumb in image['thumbs']:
-                conn.put('turistforeningen', "images/" + image['key'] + "-" + str(thumb['size']),
+                conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] + "-" + str(thumb['size']),
                     S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
