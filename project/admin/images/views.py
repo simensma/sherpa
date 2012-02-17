@@ -58,7 +58,10 @@ def add_album(request, parent):
         parent = Album.objects.get(id=parent)
     album = Album(name=request.POST['name'], parent=parent)
     album.save()
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
+    if parent is None:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
 def upload_image(request, album):
     if(request.method == 'GET'):
