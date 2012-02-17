@@ -11,6 +11,8 @@ from lib import S3
 from django.conf import settings
 
 # Pixel sizes we'll want to generate thumbnail images for
+# Note: A couple of places (the template, Image model etc.) has hardcoded
+# these thumb sizes.
 thumb_sizes = [500, 150]
 
 @login_required
