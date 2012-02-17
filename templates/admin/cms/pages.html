@@ -29,7 +29,11 @@
 </table>
 {% endif %}
 
-<p><a id="add-page" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny webside</a></p>
+<div class="row">
+  <div class="offset5 span2">
+    <p><a id="add-page" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny webside</a></p>
+  </div>
+</div>
 
 <div id="add-page-dialog">
   <form action="{% url admin.cms.views.page.new %}" method="post">
@@ -91,7 +95,11 @@
 </table>
 {% endif %}
 
-<p><a id="add-menu" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny meny-link</a></p>
+<div class="row">
+  <div class="offset5 span2">
+    <p><a id="add-menu" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny meny-link</a></p>
+  </div>
+</div>
 
 <div id="add-menu-dialog">
   <form action="{% url admin.cms.views.menu.new %}" method="post">
