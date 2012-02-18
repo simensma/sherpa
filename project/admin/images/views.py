@@ -63,6 +63,7 @@ def add_album(request, parent):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
+@login_required
 def upload_image(request, album):
     if(request.method == 'GET'):
         parents = list_parents(Album.objects.get(id=album))
