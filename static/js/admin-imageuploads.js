@@ -22,6 +22,18 @@ $(document).ready(function() {
         $("div.image-details").show();
     });
 
+    // Parse tags on focus out, and when user presses space and the last character is a space
+    $("input[name='tags']").keyup(function(e) {
+        var val = $(this).val();
+        if(val.length > 1 && val[val.length-1] == ' ') {
+            var tags = val.substring(0, val.lastIndexOf(' ')).trim().split(' ');
+            addTags(tags);
+            $(this).val("");
+        }
+    }).focusout(function() {
+        addTags($(this).val().split(' '));
+        $(this).val("");
+    });
 });
 
 var userReady = false;
@@ -44,5 +56,42 @@ function uploadComplete(result, ids) {
         $("div.upload-no-files").show()
         $("div.image-details").hide();
         $("form.image-uploader").show();
+    }
+}
+
+/* Attaches the given tag names to the DOM */
+function addTags(tags) {
+    for(var i=0; i<tags.length; i++) {
+        if(tags[i] != "") {
+            var cont = true;
+            $("div#keywords div.tag").each(function() {
+                // Check if the tag already exists
+                if($(this).text() == tags[i]) {
+                    var item = $(this);
+                    var c = item.css('color');
+                    var bg = item.css('background-color');
+                    item.css('color', 'white');
+                    item.css('background-color', 'red');
+                    setTimeout(function() {
+                        item.css('color', c);
+                        item.css('background-color', bg);
+                    }, 1000);
+                    cont = false;
+                }
+            });
+            if(!cont) { return; }
+            var el = $(document.createElement("div"));
+            var a = $(document.createElement("a"));
+            var img = $(document.createElement("img"));
+            img.attr('src', '/static/img/so/close-default.png');
+            a.hover(function() { a.children("img").attr('src', '/static/img/so/close-hover.png'); },
+                    function() { a.children("img").attr('src', '/static/img/so/close-default.png'); });
+            a.click(function() {
+                el.remove();
+            });
+            a.append(img);
+            el.addClass('tag').text(tags[i]).append(a);
+            $("div#image-uploader div#keywords").append(el);
+        }
     }
 }
