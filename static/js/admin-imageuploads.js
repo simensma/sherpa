@@ -80,36 +80,39 @@ function uploadComplete(result, ids) {
 function addTags(tags) {
     tags = tags.split(' ');
     for(var i=0; i<tags.length; i++) {
-        if(tags[i] != "") {
-            var cont = true;
-            $("div#tags div.tag").each(function() {
-                // Check if the tag already exists
-                if($(this).text() == tags[i]) {
-                    var item = $(this);
-                    var c = item.css('color');
-                    var bg = item.css('background-color');
-                    item.css('color', 'white');
-                    item.css('background-color', 'red');
-                    setTimeout(function() {
-                        item.css('color', c);
-                        item.css('background-color', bg);
-                    }, 1000);
-                    cont = false;
-                }
-            });
-            if(!cont) { continue; }
-            var el = $(document.createElement("div"));
-            var a = $(document.createElement("a"));
-            var img = $(document.createElement("img"));
-            img.attr('src', '/static/img/so/close-default.png');
-            a.hover(function() { a.children("img").attr('src', '/static/img/so/close-hover.png'); },
-                    function() { a.children("img").attr('src', '/static/img/so/close-default.png'); });
-            a.click(function() {
-                el.remove();
-            });
-            a.append(img);
-            el.addClass('tag').text(tags[i]).append(a);
-            $("div#image-uploader div#tags").append(el);
-        }
+        // Drop empty tags
+        if(tags[i] == "") { continue; }
+
+        // Don't add already added tags
+        var cont = true;
+        $("div#tags div.tag").each(function() {
+            if($(this).text() == tags[i]) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+                cont = false;
+            }
+        });
+        if(!cont) { continue; }
+
+        // Now create the tag
+        var el = $(document.createElement("div"));
+        var a = $(document.createElement("a"));
+        var img = $(document.createElement("img"));
+        img.attr('src', '/static/img/so/close-default.png');
+        a.hover(function() { a.children("img").attr('src', '/static/img/so/close-hover.png'); },
+                function() { a.children("img").attr('src', '/static/img/so/close-default.png'); });
+        a.click(function() {
+            el.remove();
+        });
+        a.append(img);
+        el.addClass('tag').text(tags[i]).append(a);
+        $("div#image-uploader div#tags").append(el);
     }
 }
