@@ -38,19 +38,18 @@ $(document).ready(function() {
         if(e.which == 13) {
             // Add the tag if user presses enter.
             e.preventDefault();
-            addTags($(this).val().split(' '));
+            addTags($(this).val());
             $(this).val("");
         }
     }).keyup(function(e) {
         var val = $(this).val();
         if(val.length > 1 && val[val.length-1] == ' ') {
-            var tags = val.substring(0, val.lastIndexOf(' ')).trim().split(' ');
-            addTags(tags);
+            addTags(val);
             $(this).val("");
         }
     }).focusout(function() {
         if(!autocomplete) {
-            addTags($(this).val().split(' '));
+            addTags($(this).val());
             $(this).val("");
         }
     });
@@ -79,6 +78,7 @@ function uploadComplete(result, ids) {
 
 /* Attaches the given tag names to the DOM */
 function addTags(tags) {
+    tags = tags.split(' ');
     for(var i=0; i<tags.length; i++) {
         if(tags[i] != "") {
             var cont = true;
