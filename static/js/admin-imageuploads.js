@@ -106,11 +106,9 @@ function addTags(tags) {
         var a = $(document.createElement("a"));
         var img = $(document.createElement("img"));
         img.attr('src', '/static/img/so/close-default.png');
-        a.hover(function() { a.children("img").attr('src', '/static/img/so/close-hover.png'); },
-                function() { a.children("img").attr('src', '/static/img/so/close-default.png'); });
-        a.click(function() {
-            el.remove();
-        });
+        a.hover(function() { $(this).children("img").attr('src', '/static/img/so/close-hover.png'); },
+                function() { $(this).children("img").attr('src', '/static/img/so/close-default.png'); });
+        a.click(function() { $(this).parent().remove(); });
         a.append(img);
         el.addClass('tag').text(tags[i]).append(a);
         $("div#image-uploader div#tags").append(el);
