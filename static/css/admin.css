@@ -108,7 +108,7 @@ div#image-uploader label {
   font-weight: bold;
 }
 
-div#image-uploader div#keywords div.tag {
+div#image-uploader div#tags div.tag {
   float: left;
   color: #3e6d8e;
   background: #e0eaf1;
@@ -118,7 +118,7 @@ div#image-uploader div#keywords div.tag {
   padding: 3px 4px;
 }
 
-div#image-uploader div#keywords div.tag a {
+div#image-uploader div#tags div.tag a {
   cursor: pointer;
   width: 12px;
   height: 12px;

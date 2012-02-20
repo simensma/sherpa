@@ -86,7 +86,7 @@ function addTags(tags) {
     for(var i=0; i<tags.length; i++) {
         if(tags[i] != "") {
             var cont = true;
-            $("div#keywords div.tag").each(function() {
+            $("div#tags div.tag").each(function() {
                 // Check if the tag already exists
                 if($(this).text() == tags[i]) {
                     var item = $(this);
@@ -113,7 +113,7 @@ function addTags(tags) {
             });
             a.append(img);
             el.addClass('tag').text(tags[i]).append(a);
-            $("div#image-uploader div#keywords").append(el);
+            $("div#image-uploader div#tags").append(el);
         }
     }
 }
