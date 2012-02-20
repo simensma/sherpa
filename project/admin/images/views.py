@@ -75,7 +75,11 @@ def update_images(request):
         image.photographer_contact = request.POST['photographer_contact']
         image.save()
         for tagName in json.loads(request.POST['tags-serialized']):
-            tag = Tag(name=tagName)
+            tag = None
+            try:
+                tag = Tag.objects.get(name__iexact=tagName)
+            except(Tag.DoesNotExist):
+                tag = Tag(name=tagName)
             tag.save()
             tag.images.add(image)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
