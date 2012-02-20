@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from admin.models import Image, Album
+from admin.models import Image, Tag, Album
 from lib import S3
 
 import random, Image as pil
@@ -74,6 +74,10 @@ def update_images(request):
         image.photographer = request.POST['photographer']
         image.photographer_contact = request.POST['photographer_contact']
         image.save()
+        for tagName in json.loads(request.POST['tags-serialized']):
+            tag = Tag(name=tagName)
+            tag.save()
+            tag.images.add(image)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
 @login_required

@@ -126,3 +126,15 @@ function addTags(tags) {
         $("div#image-uploader div#tags").append(el);
     }
 }
+
+function serializeTags() {
+    var list = "["
+    $("div#tags").children().each(function() {
+        if(list.length > 1) {
+            list += ", "
+        }
+        list += "\"" + $(this).text().replace(/"/g, "\\\"").replace(/\\/g, "\\\\") + "\"";
+    });
+    list += "]"
+    $("div.image-details input[name='tags-serialized']").val(list);
+}
