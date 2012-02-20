@@ -12,7 +12,6 @@ $(document).ready(function() {
     $("div.image-details form").submit(function(e) {
         if(!uploadReady) {
             e.preventDefault();
-            userReady = true;
             $("div.image-details input[type='submit']").attr('disabled', true);
             $("div.image-details p.waiting").show();
         }
@@ -58,7 +57,6 @@ $(document).ready(function() {
 });
 
 var autocomplete = false;
-var userReady = false;
 var uploadReady = false;
 
 function uploadComplete(result, ids) {
@@ -67,9 +65,7 @@ function uploadComplete(result, ids) {
         $("div.upload-complete").show();
         $("div.image-details input[name='ids']").val(ids);
         uploadReady = true;
-        if(userReady) {
-            $("div.image-details form").trigger('submit');
-        }
+        $("div.image-details form").trigger('submit');
     } else if(result == 'parse_error') {
         $("div.upload-failed").show();
         $("div.image-details").hide();
