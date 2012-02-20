@@ -26,7 +26,7 @@ $(document).ready(function() {
 
     // Enable autocomplete, parse tags on focus out, and when user presses space
     // and the last character is a space
-    $("input[name='tags']").autocomplete({
+    $("div.image-details input[name='tags']").autocomplete({
         source: tags,
         open: function() { autocomplete = true; },
         close: function() { autocomplete = false; },
