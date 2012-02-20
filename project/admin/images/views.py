@@ -71,7 +71,7 @@ def upload_image(request, album):
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):
-            return render(request, 'admin/images/iframe.html', {'success': '-1'})
+            return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
         parsed_images = []
         for file in request.FILES.getlist('files'):
             key = generate_random_image_key()
@@ -105,7 +105,7 @@ def upload_image(request, album):
             except(IOError, KeyError):
                 # This is raised by PIL, maybe it was an invalid image file
                 # or it didn't have the right file extension.
-                return render(request, 'admin/images/iframe.html', {'success': '0'})
+                return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
 
         # Done parsing, now we'll start moving stuff into persistant state
         # (Local database entry + store image and thumbs on S3)
@@ -125,7 +125,7 @@ def upload_image(request, album):
               photographer='', photographer_contact='', uploader=request.user.get_profile(),
               width=image['width'], height=image['height'])
             image.save()
-        return render(request, 'admin/images/iframe.html', {'success': '1'})
+        return render(request, 'admin/images/iframe.html', {'result': 'success'})
 
 def list_parents(album):
     parents = []
