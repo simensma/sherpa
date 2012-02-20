@@ -1,3 +1,5 @@
+var tags; // will be overridden by template
+
 $(document).ready(function() {
 
     $("div.uploading").hide();
@@ -22,8 +24,25 @@ $(document).ready(function() {
         $("div.image-details").show();
     });
 
-    // Parse tags on focus out, and when user presses space and the last character is a space
-    $("input[name='tags']").keyup(function(e) {
+    // Enable autocomplete, parse tags on focus out, and when user presses space
+    // and the last character is a space
+    $("input[name='tags']").autocomplete({
+        source: tags,
+        open: function() { autocomplete = true; },
+        close: function() { autocomplete = false; },
+        select: function(event, ui) {
+            addTags([ui.item.value]);
+            $(this).val("");
+            event.preventDefault();
+        }
+    }).keydown(function(e) {
+        if(e.which == 13) {
+            // The user might try to press enter to trigger the autocomplete.
+            // Since JQueryUI doesn't support that, at least cancel the submit
+            // event that would occur instead.
+            e.preventDefault();
+        }
+    }).keyup(function(e) {
         var val = $(this).val();
         if(val.length > 1 && val[val.length-1] == ' ') {
             var tags = val.substring(0, val.lastIndexOf(' ')).trim().split(' ');
@@ -31,11 +50,14 @@ $(document).ready(function() {
             $(this).val("");
         }
     }).focusout(function() {
-        addTags($(this).val().split(' '));
-        $(this).val("");
+        if(!autocomplete) {
+            addTags($(this).val().split(' '));
+            $(this).val("");
+        }
     });
 });
 
+var autocomplete = false;
 var userReady = false;
 var uploadReady = false;
 

@@ -80,7 +80,8 @@ def update_images(request):
 def upload_image(request, album):
     if(request.method == 'GET'):
         current_album = Album.objects.get(id=album)
-        context = {'current_album': current_album}
+        tags = [] # Todo
+        context = {'current_album': current_album, 'tags': json.dumps(tags)}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):
