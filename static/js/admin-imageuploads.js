@@ -37,11 +37,9 @@ $(document).ready(function() {
     $("div.image-details input[name='tags']").autocomplete({
         source: tags,
         open: function() { autocomplete = true; },
-        close: function() { autocomplete = false; },
+        close: function() { $(this).val(""); autocomplete = false; },
         select: function(event, ui) {
-            addTags([ui.item.value]);
-            $(this).val("");
-            event.preventDefault();
+            addTags(ui.item.value);
         }
     }).keydown(function(e) {
         if(e.which == 13) {
