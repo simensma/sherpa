@@ -9,6 +9,12 @@ $(document).ready(function() {
         $(this).hide();
     });
 
+    $("form.image-uploader input[type='submit']").click(function() {
+        $("form.image-uploader").hide();
+        $("div.uploading").show();
+        $("div.image-details").show();
+    });
+
     $("div.image-details form").submit(function(e) {
         if(uploadReady && userReady) {
             serializeTags();
@@ -24,12 +30,6 @@ $(document).ready(function() {
             $("div.image-details input[type='submit']").attr('disabled', true);
             $("div.image-details p.waiting").show();
         }
-    });
-
-    $("input[type='submit']").click(function() {
-        $("form.image-uploader").hide();
-        $("div.uploading").show();
-        $("div.image-details").show();
     });
 
     // Enable autocomplete, parse tags on focus out, and when user presses space
