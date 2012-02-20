@@ -10,6 +10,15 @@ $(document).ready(function() {
     });
 
     $("div.image-details form").submit(function(e) {
+        if(uploadReady && userReady) {
+            serializeTags();
+        } else {
+            e.preventDefault();
+        }
+    });
+
+    $("div.image-details input[type='submit']").click(function(e) {
+        userReady = true;
         if(!uploadReady) {
             e.preventDefault();
             $("div.image-details input[type='submit']").attr('disabled', true);
@@ -56,6 +65,7 @@ $(document).ready(function() {
 });
 
 var autocomplete = false;
+var userReady = false;
 var uploadReady = false;
 
 function uploadComplete(result, ids) {
@@ -64,7 +74,9 @@ function uploadComplete(result, ids) {
         $("div.upload-complete").show();
         $("div.image-details input[name='ids']").val(ids);
         uploadReady = true;
-        $("div.image-details form").trigger('submit');
+        if(userReady) {
+            $("div.image-details form").trigger('submit');
+        }
     } else if(result == 'parse_error') {
         $("div.upload-failed").show();
         $("div.image-details").hide();
