@@ -79,7 +79,7 @@ function addTags(tags) {
                     cont = false;
                 }
             });
-            if(!cont) { return; }
+            if(!cont) { continue; }
             var el = $(document.createElement("div"));
             var a = $(document.createElement("a"));
             var img = $(document.createElement("img"));
