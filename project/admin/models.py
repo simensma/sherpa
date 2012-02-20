@@ -16,6 +16,7 @@ class Image(models.Model):
     uploader = models.ForeignKey('user.Profile')
     width = models.IntegerField()
     height = models.IntegerField()
+    tags = models.ManyToManyField('admin.Tag', related_name='images')
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image)
@@ -24,6 +25,9 @@ def delete_image(sender, **kwargs):
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key)
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key + "-500")
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key + "-150")
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200)
 
 class Album(models.Model):
     name = models.CharField(max_length=200)
