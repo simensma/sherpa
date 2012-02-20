@@ -1,0 +1,12 @@
+{# This iframe will be rendered when an image upload process is complete. It will not be displayed, but it calls the 'uploadComplete' function with the appropriate HTTP response code. #}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+      window.top.window.uploadComplete({{ success }});
+    </script>
+  </head>
+  <body></body>
+</html>
