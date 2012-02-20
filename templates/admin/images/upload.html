@@ -8,7 +8,24 @@
 <div class="row">
   <div class="offset3 span6" style="text-align: center">
 
-  <form action="{% url admin.images.views.upload_image current_album %}" method="post" enctype="multipart/form-data" target="iframe">
+  <div class="messages">
+    <div class="uploading">
+      <p>Laster opp...<br>
+        <img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Laster opp, vennligst vent...">
+      </p>
+    </div>
+    <div class="alert alert-success upload-complete">
+      Bildene har blitt lastet opp!<a class="close">x</a>
+    </div>
+    <div class="alert alert-error upload-failed">
+      Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
+    </div>
+    <div class="alert alert-error upload-no-files">
+      Du må jo velge noen bilder å laste opp!<a class="close">x</a>
+    </div>
+  </div>
+
+  <form class="image-uploader" action="{% url admin.images.views.upload_image current_album %}" method="post" enctype="multipart/form-data" target="iframe">
     <h1>Last opp nye bilder</h1>
     <input type="file" name="files" multiple><br>
     {% csrf_token %}
@@ -16,11 +33,7 @@
     <iframe name="iframe" style="display: none;"></iframe>
   </form>
 
-  {% if invalid_image %}
-    <div class="alert alert-error">Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a></div>
-  {% endif %}
-
-  <div class="well">
+  <div class="well album-path">
     <p class="">Bildene vil havne i følgende arkiv:<br>
     {% for album in albumpath %}
       <span class="label label-info">{{ album.name }}</span>
@@ -31,6 +44,28 @@
 
   </div>
 </div>
+
+<div class="row image-details">
+  <div class="offset3 span6">
+    <h2>Bildeinformasjon</h2>
+    <form action="{% url admin.images.views.update_images %}" method="post" class="well">
+      {% csrf_token %}
+      <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem:</em></p>
+      <label>Kort beskrivelse av bildene:</label>
+      <input type="text" class="span4" name="description" placeholder="F.eks. 'Kom deg ut-dagen 2012'..."><br>
+      <label>Kreditering:</label>
+      <input type="text" class="span4" name="credits" placeholder="Navn på person, forening e.l..."><br>
+      <label>Fotograf:</label>
+      <input type="text" class="span4" name="photographer" placeholder="Fullt navn..."><br>
+      <label>Kontaktinformasjon for fotografen:</label>
+      <input type="text" class="span4" name="photographer_contact" placeholder="Epost, telefon eller liknende..."><br>
+      <input type="submit" class="btn" value="Lagre bildedata">
+      <p class="waiting">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
+      <input type="hidden" name="ids">
+    </form>
+  </div>
+</div>
+
 </div>
 
 {% endblock %}

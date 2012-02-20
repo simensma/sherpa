@@ -95,3 +95,7 @@ div#image-display table.metadata th {
 div#image-display table.metadata td {
   text-align: left;
 }
+
+div#image-uploader label {
+  font-weight: bold;
+}

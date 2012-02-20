@@ -2,13 +2,15 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+
 from admin.models import Image, Album
+from lib import S3
+
 import random, Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
-
-from lib import S3
-from django.conf import settings
+import json
 
 # Pixel sizes we'll want to generate thumbnail images for
 # Note: A couple of places (the template, Image model etc.) has hardcoded
@@ -64,6 +66,17 @@ def add_album(request, parent):
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
 @login_required
+def update_images(request):
+    images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
+    for image in images:
+        image.description = request.POST['description']
+        image.credits = request.POST['credits']
+        image.photographer = request.POST['photographer']
+        image.photographer_contact = request.POST['photographer_contact']
+        image.save()
+    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
+
+@login_required
 def upload_image(request, album):
     if(request.method == 'GET'):
         parents = list_parents(Album.objects.get(id=album))
@@ -73,6 +86,7 @@ def upload_image(request, album):
         if(len(request.FILES.getlist('files')) == 0):
             return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
         parsed_images = []
+        ids = []
         for file in request.FILES.getlist('files'):
             key = generate_random_image_key()
             while Image.objects.filter(key=key).exists():
@@ -125,7 +139,8 @@ def upload_image(request, album):
               photographer='', photographer_contact='', uploader=request.user.get_profile(),
               width=image['width'], height=image['height'])
             image.save()
-        return render(request, 'admin/images/iframe.html', {'result': 'success'})
+            ids.append(image.id)
+        return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
 
 def list_parents(album):
     parents = []
