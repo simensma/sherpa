@@ -70,6 +70,8 @@ def upload_image(request, album):
         context = {'albumpath': parents, 'current_album': album}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
+        if(len(request.FILES.getlist('files')) == 0):
+            return render(request, 'admin/images/iframe.html', {'success': '-1'})
         parsed_images = []
         for file in request.FILES.getlist('files'):
             key = generate_random_image_key()
