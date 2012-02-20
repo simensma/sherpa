@@ -1,4 +1,4 @@
-from django.db.models.signals import post_delete
+from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
@@ -18,9 +18,16 @@ class Image(models.Model):
     height = models.IntegerField()
     tags = models.ManyToManyField('admin.Tag', related_name='images')
 
+# Upon image delete, remove tags that only this image has
+@receiver(pre_delete, sender=Image)
+def delete_image_pre(sender, **kwargs):
+    for tag in kwargs['instance'].tags.all():
+        if(len(tag.images.all()) == 1):
+            tag.delete()
+
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image)
-def delete_image(sender, **kwargs):
+def delete_image_post(sender, **kwargs):
     conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key)
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key + "-500")
