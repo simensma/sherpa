@@ -84,7 +84,10 @@ def update_images(request):
 def upload_image(request, album):
     if(request.method == 'GET'):
         current_album = Album.objects.get(id=album)
-        tags = [] # Todo
+        # Note: This could get expensive if a LOT of tags are created
+        tags = []
+        for tag in Tag.objects.all():
+            tags.append(tag.name)
         context = {'current_album': current_album, 'tags': json.dumps(tags)}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
