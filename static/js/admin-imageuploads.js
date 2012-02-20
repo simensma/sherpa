@@ -36,10 +36,10 @@ $(document).ready(function() {
         }
     }).keydown(function(e) {
         if(e.which == 13) {
-            // The user might try to press enter to trigger the autocomplete.
-            // Since JQueryUI doesn't support that, at least cancel the submit
-            // event that would occur instead.
+            // Add the tag if user presses enter.
             e.preventDefault();
+            addTags($(this).val().split(' '));
+            $(this).val("");
         }
     }).keyup(function(e) {
         var val = $(this).val();
