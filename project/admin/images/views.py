@@ -79,8 +79,8 @@ def update_images(request):
 @login_required
 def upload_image(request, album):
     if(request.method == 'GET'):
-        parents = list_parents(Album.objects.get(id=album))
-        context = {'albumpath': parents, 'current_album': album}
+        current_album = Album.objects.get(id=album)
+        context = {'current_album': current_album}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):

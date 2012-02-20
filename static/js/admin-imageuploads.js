@@ -18,7 +18,6 @@ $(document).ready(function() {
 
     $("input[type='submit']").click(function() {
         $("form.image-uploader").hide();
-        $("div.album-path").hide();
         $("div.uploading").show();
         $("div.image-details").show();
     });
@@ -41,11 +40,9 @@ function uploadComplete(result, ids) {
         $("div.upload-failed").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
-        $("div.album-path").show();
     } else if(result == 'no_files') {
         $("div.upload-no-files").show()
         $("div.image-details").hide();
         $("form.image-uploader").show();
-        $("div.album-path").show();
     }
 }

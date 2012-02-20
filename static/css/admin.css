@@ -96,6 +96,14 @@ div#image-display table.metadata td {
   text-align: left;
 }
 
+div#image-uploader form.image-uploader {
+  text-align: center;
+}
+
+form.image-uploader input[type='file'] {
+  width: 100%;
+}
+
 div#image-uploader label {
   font-weight: bold;
 }

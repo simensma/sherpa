@@ -25,22 +25,14 @@
     </div>
   </div>
 
-  <form class="image-uploader" action="{% url admin.images.views.upload_image current_album %}" method="post" enctype="multipart/form-data" target="iframe">
+  <form class="image-uploader" action="{% url admin.images.views.upload_image current_album.id %}" method="post" enctype="multipart/form-data" target="iframe">
     <h1>Last opp nye bilder</h1>
     <input type="file" name="files" multiple><br>
     {% csrf_token %}
-    <input type="submit" value="Last opp valgte bilder">
+    <input class="btn" type="submit" value="Last opp valgte bilder til albumet '{{ current_album.name }}'">
     <iframe name="iframe" style="display: none;"></iframe>
+    <p><a href="{% url admin.images.views.list_albums current_album.id %}">Avbryt opplasting</a></p>
   </form>
-
-  <div class="well album-path">
-    <p class="">Bildene vil havne i følgende arkiv:<br>
-    {% for album in albumpath %}
-      <span class="label label-info">{{ album.name }}</span>
-      {% if not forloop.last %}→{% endif %}
-    {% endfor %}
-    </p>
-  </div>
 
   </div>
 </div>
