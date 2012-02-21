@@ -7,6 +7,10 @@ article h1 {
   margin-bottom: 6px;
 }
 
+article h2 {
+  font-weight: normal;
+}
+
 article .lede {
   font-weight: bold;
 }
@@ -25,4 +29,18 @@ article .meta p em {
   font-weight: bold;
   color: rgb(119, 119, 119);
   text-transform: uppercase;
+}
+
+
+article .image-right {
+  float: right;
+  width: auto;
+  margin: 0 0 20px 20px;
+}
+
+@media (max-width: 480px) {
+  article .image-right {
+    float: none;
+    margin: auto;
+  }
 }
