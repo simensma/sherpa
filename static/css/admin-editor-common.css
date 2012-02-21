@@ -1,0 +1,28 @@
+/**
+ * Common stylesheet for advanced- and article-editor in the admin ui
+ */
+
+#toolbar {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  width: 500px;
+  z-index: 1000;
+  border: 1px solid #000;
+  background-color: rgb(245, 245, 245);
+}
+
+#toolbar #tabs {
+  padding-left: 25px;
+}
+
+#toolbar ul {
+  list-style-type: none;
+  margin-bottom: 10px;
+}
+
+#toolbar ul li {
+  display: inline;
+  padding: 3px;
+  border-bottom: 1px solid #000;
+}
