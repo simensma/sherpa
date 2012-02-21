@@ -7,8 +7,17 @@
 
 <div id="row">
   <div class="offset5 span2">
-  <p><a id="add-article" class="btn btn-primary large-button" href="{% url admin.articles.views.new %}">Opprett ny artikkel</a></p>
+  <p><a id="add-article" class="btn btn-primary large-button dialog-button" data-dialog=".article-dialog" href="javascript:undefined">Opprett ny artikkel</a></p>
   </div>
+</div>
+
+<div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="auto">
+  <form action="{% url admin.articles.views.new %}" method="post">
+    {% csrf_token %}
+    <label>Navn på artikkelen (kun synlig i Sherpa):</label>
+    <input type="text" name="title"><br>
+    <input type="submit" value="Opprett artikkel">
+  </form>
 </div>
 
 {% endblock %}
