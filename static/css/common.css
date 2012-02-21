@@ -1,0 +1,26 @@
+/**
+ * Common stylesheet for the main site and cms
+ */
+
+article h1 {
+  font-weight: normal;
+  margin-bottom: 6px;
+}
+
+article .lede {
+  font-weight: bold;
+}
+
+article .row {
+  margin-top: 1em;
+}
+
+article .meta p {
+  font-size: 0.9em;
+}
+
+article .meta p em {
+  font-weight: bold;
+  color: rgb(119, 119, 119);
+  text-transform: uppercase;
+}
