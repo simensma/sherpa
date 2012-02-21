@@ -1,6 +1,9 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; Sherpa 3{% endblock %}
 {% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin-editor-common.js"></script>
+{% endblock %}
 {% block body %}
 
 <hr>
