@@ -1,10 +1,3 @@
-/* Always include CSRF-token in AJAX requests */
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        xhr.setRequestHeader("X-CSRFToken", $("input[name='csrfmiddlewaretoken']").val());
-    }
-});
-
 $(document).ready(function() {
     // Hide/show chosen toolbar tab
     $("#toolbar div.tab").hide().first().show();
