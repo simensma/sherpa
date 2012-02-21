@@ -1,10 +1,8 @@
 $(document).ready(function() {
 
-    /* Dialogs */
-
-    enableDialog($("div#add-menu-dialog"), $("a#add-menu"), 'Opprett ny menylink', '80%');
-    enableDialog($("div#add-page-dialog"), $("a#add-page"), 'Opprett ny side', '80%');
-    enableDialog($("div#add-album"), $("a.add-album"), 'Legg til album', 'auto');
+    /* Enable all dialogs */
+    $(".dialog").enableDialog();
+    $(".dialog-button").enableDialogButton();
 
     /* When creating a page, slugify the title as URL */
     $("#add-page-dialog input[name='title']").keyup(function() {
@@ -12,15 +10,22 @@ $(document).ready(function() {
     })
 });
 
-function enableDialog(dialog, button, title, width) {
-    dialog.dialog({
-        title: title,
-        modal: true,
-        autoOpen: false,
-        width: width
-    }).hide();
-    button.click(function(event) {
-        dialog.dialog('open');
+$.fn.enableDialog = function() {
+    return this.each(function() {
+        $(this).dialog({
+            title: $(this).attr('data-title'),
+            modal: true,
+            autoOpen: false,
+            width: $(this).attr('data-width')
+        }).hide();
+    });
+}
+
+$.fn.enableDialogButton = function() {
+    return this.each(function() {
+        $(this).click(function(event) {
+            $($(this).attr('data-dialog')).dialog('open');
+        });
     });
 }
 

@@ -31,11 +31,11 @@
 
 <div class="row">
   <div class="offset5 span2">
-    <p><a id="add-page" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny webside</a></p>
+    <p><a id="add-page" class="btn btn-primary large-button dialog-button" data-dialog=".page-dialog" href="javascript:undefined">Opprett ny webside</a></p>
   </div>
 </div>
 
-<div id="add-page-dialog">
+<div class="dialog page-dialog" data-title="Opprett ny side" data-width="80%">
   <form action="{% url admin.cms.views.page.new %}" method="post">
   {% csrf_token %}
     <table class="table">
@@ -97,11 +97,11 @@
 
 <div class="row">
   <div class="offset5 span2">
-    <p><a id="add-menu" class="btn btn-primary large-button" href="javascript:undefined">Opprett ny meny-link</a></p>
+    <p><a id="add-menu" class="btn btn-primary large-button dialog-button" data-dialog=".menu-dialog" href="javascript:undefined">Opprett ny meny-link</a></p>
   </div>
 </div>
 
-<div id="add-menu-dialog">
+<div class="dialog menu-dialog" data-title="Opprett ny menylink" data-width="80%">
   <form action="{% url admin.cms.views.menu.new %}" method="post">
   {% csrf_token %}
 
