@@ -4,26 +4,33 @@ urlpatterns = patterns('admin.cms.views',
 
     # Pages
     url(r'^$', 'page.list'),
-    url(r'^ny/$', 'page.new'),
-    url(r'^rediger/(?P<page>\d+)/$', 'page.edit'),
-    url(r'^slett/(?P<page>\d+)/$', 'page.delete'),
+    url(r'^side/(?P<page>\d+)/$', 'page.edit'),
+    url(r'^side/ny/$', 'page.new'),
+    url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
+
+    # Menus
+    url(r'^meny/$', 'menu.list'),
+    url(r'^meny/ny/$', 'menu.new'),
+    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
+    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
+
+    # Advanced editor
+    url(r'^editor/avansert/(?P<version>\d+)/$', 'editor_advanced.edit'),
 
     # Variants
     url(r'^variant/ny/(?P<page>\d+)/$', 'variant.new'),
-    url(r'^variant/rediger/(?P<version>\d+)/$', 'variant.edit'),
     url(r'^variant/bytt/(?P<page>\d+)/(?P<pri1>\d+)/(?P<pri2>\d+)/$', 'variant.swap'),
-    #url(r'^variant/slett/(?P<variant>\d*)/$', 'delete'),
+    url(r'^variant/slett/(?P<variant>\d*)/$', 'variant.delete'),
 
     # Versions
     url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
-    url(r'^versjon/rediger/(?P<version>\d+)/$', 'version.edit'),
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
 
-    # Blocks
-    url(r'^blokk/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'block.add'),
-    url(r'^blokk/flytt-ned/(?P<block>\d+)/$', 'block.move_down'),
-    url(r'^blokk/flytt-opp/(?P<block>\d+)/$', 'block.move_up'),
-    url(r'^blokk/slett/(?P<block>\d+)/$', 'block.delete'),
+    # Rows
+    url(r'^rad/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'row.add'),
+    url(r'^rad/flytt-ned/(?P<block>\d+)/$', 'row.move_down'),
+    url(r'^rad/flytt-opp/(?P<block>\d+)/$', 'row.move_up'),
+    url(r'^rad/slett/(?P<block>\d+)/$', 'row.delete'),
 
     # Widgets
     url(r'^widget/opprett/sitat/$', 'widget.add_quote'),
@@ -36,10 +43,4 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^innhold/opprett/$', 'content.create'),
     url(r'^innhold/oppdater/(?P<content>\d+)/$', 'content.update'),
     url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
-
-    # Menus
-    url(r'^meny/$', 'menu.list'),
-    url(r'^meny/ny/$', 'menu.new'),
-    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
-    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 )

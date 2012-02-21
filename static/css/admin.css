@@ -41,9 +41,7 @@ nav img {
 /* CMS - Large add item-button */
 
 .large-button {
-  width: 20%;
-  margin-left: 40%;
-  margin-right: 40%;
+  width: 100%;
 }
 
 /* Image gallery */
@@ -96,4 +94,34 @@ div#image-display table.metadata th {
 
 div#image-display table.metadata td {
   text-align: left;
+}
+
+div#image-uploader form.image-uploader {
+  text-align: center;
+}
+
+form.image-uploader input[type='file'] {
+  width: 100%;
+}
+
+div#image-uploader label {
+  font-weight: bold;
+}
+
+div#image-uploader div#tags div.tag {
+  float: left;
+  color: #3e6d8e;
+  background: #e0eaf1;
+  border-bottom: 1px solid #3e6d8e;
+  border-right: 1px solid #7f9fb6;
+  margin: 2px 3px 10px 3px;
+  padding: 3px 4px;
+}
+
+div#image-uploader div#tags div.tag a {
+  cursor: pointer;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
 }

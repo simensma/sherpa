@@ -1,9 +1,0 @@
-{% extends "users/layout.html" %}
-
-{% block title %}Min side{% endblock %}
-
-{% block body %}
-<h1>Min side</h1>
-
-<p>Velkommen, {{ user.username }}! Du liker: {{ user.get_profile.text }}</p>
-{% endblock %}

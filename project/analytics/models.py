@@ -1,7 +1,7 @@
 from django.db import models
 
 class Visitor(models.Model):
-    profile = models.ForeignKey('users.Profile', unique=True, null=True)
+    profile = models.OneToOneField('user.Profile', null=True)
 
 class Request(models.Model):
     visitor = models.ForeignKey('analytics.Visitor')
@@ -12,6 +12,7 @@ class Request(models.Model):
     client_host = models.CharField(max_length=2048)
     referrer = models.CharField(max_length=2048)
     enter = models.DateTimeField()
+    ajax = models.BooleanField()
     parameter_count = None
 
 class Parameter(models.Model):

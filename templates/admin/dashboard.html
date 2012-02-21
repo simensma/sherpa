@@ -1,12 +1,10 @@
 {% extends "admin/layout.html" %}
 
-{% block title %}Admin index{% endblock %}
-
 {% block body %}
   <nav>
     <ul>
       <li><a href="{% url admin.cms.views.page.list %}">
-        <img src="{{ STATIC_URL }}img/icons/coffee.png"><br>CMS</a></li>
+        <img src="{{ STATIC_URL }}img/icons/coffee.png"><br>Websider</a></li>
       <li><a href="{% url admin.articles.views.list %}">
         <img src="{{ STATIC_URL }}img/icons/book.png"><br>Artikler</a></li>
       <li><a href="{% url admin.analytics.views.visitors_list %}">

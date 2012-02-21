@@ -1,3 +1,5 @@
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.db import models
 
 class Menu(models.Model):
@@ -13,11 +15,10 @@ class Page(models.Model):
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
 
-    def deep_delete(self):
-        Menu.objects.filter(page=self).delete()
-        for variant in PageVariant.objects.filter(page=self):
-            variant.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=Page)
+def delete_page(sender, **kwargs):
+    Menu.objects.filter(page=kwargs['instance']).delete()
+    PageVariant.objects.filter(page=kwargs['instance']).delete()
 
 class PageVariant(models.Model):
     page = models.ForeignKey('page.Page')
@@ -26,68 +27,57 @@ class PageVariant(models.Model):
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
-    # publisher = models.ForeignKey('users.Profile')
+    # publisher = models.ForeignKey('user.Profile')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better
     # way to do this?
     active = None
 
-    def deep_delete(self):
-        # Note: We don't really need to cascade priorities
-        for version in PageVersion.objects.filter(variant=self):
-            version.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=PageVariant)
+def delete_page_variant(sender, **kwargs):
+    # Note: We don't really need to cascade priorities
+    PageVersion.objects.filter(variant=kwargs['instance']).delete()
 
 class PageVersion(models.Model):
     variant = models.ForeignKey('page.PageVariant')
     version = models.IntegerField()
     active = models.BooleanField()
 
-    def deep_delete(self):
-        for block in Block.objects.filter(version=self):
-            block.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=PageVersion)
+def delete_page_version(sender, **kwargs):
+    Row.objects.filter(version=kwargs['instance']).delete()
 
 ### CMS
 
-class Block(models.Model):
+class Row(models.Model):
     version = models.ForeignKey('page.PageVersion')
-    template = models.CharField(max_length=50)
     order = models.IntegerField()
-    columns = []
+    columns = None
 
-    def deep_delete(self):
-        for content in HTMLContent.objects.filter(block=self):
-            content.deep_delete()
-        for widget in Widget.objects.filter(block=self):
-            widget.deep_delete()
-        self.delete()
+@receiver(post_delete, sender=Row)
+def delete_row(sender, **kwargs):
+    Column.objects.filter(row=kwargs['instance']).delete()
 
-class HTMLContent(models.Model):
-    block = models.ForeignKey('page.Block')
+class Column(models.Model):
+    row = models.ForeignKey('page.Row')
+    span = models.IntegerField()
+    order = models.IntegerField()
+    contents = None
+
+@receiver(post_delete, sender=Column)
+def delete_column(sender, **kwargs):
+    Content.objects.filter(column=kwargs['instance']).delete()
+
+class Content(models.Model):
+    column = models.ForeignKey('page.Column')
     content = models.TextField()
-    column = models.IntegerField() # 0-indexed (max 2)
-    order = models.IntegerField() # 0-indexed
+    type = models.CharField(max_length=1, choices=(('w', 'Widget'), ('h', 'HTML')))
+    order = models.IntegerField()
+    widget = None
 
-    def deep_delete(self):
-        collapse_block_order(self.block, self.column, self.order)
-        self.delete()
-
-class Widget(models.Model):
-    block = models.ForeignKey('page.Block')
-    widget = models.TextField()
-    column = models.IntegerField() # 0-indexed (max 2)
-    order = models.IntegerField() # 0-indexed
-
-    def deep_delete(self):
-        collapse_block_order(self.block, self.column, self.order)
-        self.delete()
-
-def collapse_block_order(block, column, order):
-    for widget in Widget.objects.filter(block=block, column=column, order__gt=order):
-        widget.order = (widget.order-1)
-        widget.save();
-    for content in HTMLContent.objects.filter(block=block, column=column, order__gt=order):
+@receiver(post_delete, sender=Content)
+def delete_content(sender, **kwargs):
+    for content in Content.objects.filter(column=self.column, order__get=order):
         content.order = (content.order-1)
         content.save();
