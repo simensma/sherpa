@@ -14,11 +14,11 @@ def list(request):
 
 @login_required
 def new(request):
-    page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False)
+    page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False, publisher=request.user.get_profile())
     page.save()
-    variant = PageVariant(page=page, article=None, name='Standard', slug='', segment=None, priority=1)
+    variant = PageVariant(page=page, article=None, name='Standard', slug='', segment=None, priority=1, publisher=request.user.get_profile())
     variant.save()
-    version = PageVersion(variant=variant, version=1, active=True)
+    version = PageVersion(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 

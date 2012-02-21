@@ -14,6 +14,7 @@ class Page(models.Model):
     slug = models.CharField(max_length=50, unique=True)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
+    publisher = models.ForeignKey('user.Profile')
 
 @receiver(post_delete, sender=Page)
 def delete_page(sender, **kwargs):
@@ -30,7 +31,7 @@ class PageVariant(models.Model):
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
-    # publisher = models.ForeignKey('user.Profile')
+    publisher = models.ForeignKey('user.Profile')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better
@@ -45,6 +46,7 @@ def delete_page_variant(sender, **kwargs):
 class PageVersion(models.Model):
     variant = models.ForeignKey('page.PageVariant')
     version = models.IntegerField()
+    publisher = models.ForeignKey('user.Profile')
     active = models.BooleanField()
 
 @receiver(post_delete, sender=PageVersion)

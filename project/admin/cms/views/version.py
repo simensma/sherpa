@@ -13,7 +13,7 @@ def new(request, variant):
     currentVersion = versions.get(version=max_version)
     newContent = PageContent(content=currentVersion.content.content)
     newContent.save()
-    version = PageVersion(variant=variant, content=newContent, version=(max_version+1), active=False)
+    version = PageVersion(variant=variant, content=newContent, version=(max_version+1), publisher=request.user.get_profile(), active=False)
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 
