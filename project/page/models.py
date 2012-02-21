@@ -21,7 +21,10 @@ def delete_page(sender, **kwargs):
     PageVariant.objects.filter(page=kwargs['instance']).delete()
 
 class PageVariant(models.Model):
-    page = models.ForeignKey('page.Page')
+    # Exactly one of these foreign keys should be referenced (not null)
+    page = models.ForeignKey('page.Page', null=True)
+    article = models.ForeignKey('articles.Article', null=True)
+
     name = models.CharField(max_length=200)
     slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment', null=True)

@@ -12,7 +12,7 @@ def new(request, page):
     content.save()
     segment = Segment.objects.get(id=request.POST['segment'])
     max_priority = PageVariant.objects.filter(page=page).aggregate(Max('priority'))['priority__max']
-    variant = PageVariant(page=page, slug=request.POST['slug'], segment=segment, priority=(max_priority+1))
+    variant = PageVariant(page=page, article=None, slug=request.POST['slug'], segment=segment, priority=(max_priority+1))
     variant.save()
     version = PageVersion(variant=variant, content=content, version=1, active=True)
     version.save()
