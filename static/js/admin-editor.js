@@ -59,18 +59,19 @@ $(document).ready(function() {
 
     // Allow content editing of content elements
     $(".cms-content").attr('contenteditable', 'true');
-});
 
-function saveContent() {
-    $(".cms-content").each(function(c) {
-        $.ajax({
-            url: '/sherpa/cms/innhold/oppdater/' + $(this).attr('data-id') + '/',
-            type: 'POST',
-            data: "content=" + encodeURIComponent($(this).html())
-        }).done(function(string) {
-        }).fail(function(string) {
-            // Todo: Error handling
-        }).always(function(string) {
+    function saveContent() {
+        $(".cms-content").each(function(c) {
+            $.ajax({
+                url: '/sherpa/cms/innhold/oppdater/' + $(this).attr('data-id') + '/',
+                type: 'POST',
+                data: "content=" + encodeURIComponent($(this).html())
+            }).done(function(string) {
+            }).fail(function(string) {
+                // Todo: Error handling
+            }).always(function(string) {
+            });
         });
-    });
-}
+    }
+
+});
