@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from project.page.models import Menu, Page, PageVariant, PageVersion
+from project.page.models import Menu, Page, Variant, PageVersion
 from project.analytics.models import Segment
 
 @login_required
@@ -16,7 +16,7 @@ def list(request):
 def new(request):
     page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False)
     page.save()
-    variant = PageVariant(page=page, name='Standard', slug='', segment=None, priority=1)
+    variant = Variant(page=page, name='Standard', slug='', segment=None, priority=1)
     variant.save()
     version = PageVersion(variant=variant, version=1, active=True)
     version.save()
@@ -26,7 +26,7 @@ def new(request):
 def edit(request, page):
     if(request.method == 'GET'):
         page = Page.objects.get(id=page)
-        variants = PageVariant.objects.filter(page=page).order_by('priority')
+        variants = Variant.objects.filter(page=page).order_by('priority')
         for variant in variants:
             variant.active = PageVersion.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')

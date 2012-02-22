@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from page.models import Page, PageVariant, PageVersion
+from page.models import Page, Variant, PageVersion
 from analytics.models import Visitor, Pageview
 from string import split
 
@@ -16,7 +16,7 @@ def page(request, slug):
     if(requested_variant == None):
         if(matched_variant == None):
             # No variant requested, and no variant matched. The default, simple view for a page.
-            default_variant = PageVariant.objects.get(page=page, segment__isnull=True)
+            default_variant = Variant.objects.get(page=page, segment__isnull=True)
             version = PageVersion.objects.get(variant=default_variant, active=True)
             save_pageview(request, default_variant, version, None, None)
             return parse_content(request, version)
@@ -27,7 +27,7 @@ def page(request, slug):
     else:
         # A specific variant was requested. Show it regardless of which variant matches the user,
         # but do log what actually matched.
-        requested_variant = PageVariant.objects.get(id=requested_variant)
+        requested_variant = Variant.objects.get(id=requested_variant)
         version = PageVersion.objects.get(variant=requested_variant, active=True)
         # In case the user happens to requests a variant without actually matching any
         if(matched_variant == None):
@@ -42,7 +42,7 @@ def save_pageview(request, variant, version, requested_segment, matched_segment)
         active_version=version, requested_segment=requested_segment, matched_segment=matched_segment)
 
 def match_user(request, page):
-    variants = PageVariant.objects.filter(page=page, segment__isnull=False).order_by('priority')
+    variants = Variant.objects.filter(page=page, segment__isnull=False).order_by('priority')
     visitor = Visitor.objects.get(id=request.session['visitor'])
     for variant in variants:
         if(variant.segment.match(request, visitor)):

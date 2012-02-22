@@ -18,9 +18,9 @@ class Page(models.Model):
 @receiver(post_delete, sender=Page)
 def delete_page(sender, **kwargs):
     Menu.objects.filter(page=kwargs['instance']).delete()
-    PageVariant.objects.filter(page=kwargs['instance']).delete()
+    Variant.objects.filter(page=kwargs['instance']).delete()
 
-class PageVariant(models.Model):
+class Variant(models.Model):
     page = models.ForeignKey('page.Page')
     name = models.CharField(max_length=200)
     segment = models.ForeignKey('analytics.Segment', null=True)
@@ -33,13 +33,13 @@ class PageVariant(models.Model):
     # way to do this?
     active = None
 
-@receiver(post_delete, sender=PageVariant)
+@receiver(post_delete, sender=Variant)
 def delete_page_variant(sender, **kwargs):
     # Note: We don't really need to cascade priorities
     PageVersion.objects.filter(variant=kwargs['instance']).delete()
 
 class PageVersion(models.Model):
-    variant = models.ForeignKey('page.PageVariant')
+    variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     active = models.BooleanField()
 

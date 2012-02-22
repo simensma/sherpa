@@ -3,11 +3,11 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import PageVariant, PageVersion
+from project.page.models import Variant, PageVersion
 
 @login_required
 def new(request, variant):
-    variant = PageVariant.objects.get(id=variant)
+    variant = Variant.objects.get(id=variant)
     versions = PageVersion.objects.filter(variant=variant)
     max_version = versions.aggregate(Max('version'))['version__max']
     currentVersion = versions.get(version=max_version)

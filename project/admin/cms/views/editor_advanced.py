@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from project.page.models import PageVariant, PageVersion, Row, Column, Content
+from project.page.models import Variant, PageVersion, Row, Column, Content
 from project.analytics.models import Segment
 import json
 
