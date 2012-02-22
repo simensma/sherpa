@@ -67,6 +67,7 @@ def delete_row(sender, **kwargs):
 class Column(models.Model):
     row = models.ForeignKey('page.Row')
     span = models.IntegerField()
+    offset = models.IntegerField()
     order = models.IntegerField()
     contents = None
 

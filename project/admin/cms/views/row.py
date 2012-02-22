@@ -15,24 +15,24 @@ def add(request, version, template):
     row = Row(version=version, order=(max+1))
     row.save()
     if(template == "2-columns"):
-        col = Column(row=row, span=6, order=0)
+        col = Column(row=row, span=6, offset=0, order=0)
         col.save()
-        col = Column(row=row, span=6, order=1)
+        col = Column(row=row, span=6, offset=0, order=1)
         col.save()
     elif(template == "3-columns"):
-        col = Column(row=row, span=4, order=0)
+        col = Column(row=row, span=4, offset=0, order=0)
         col.save()
-        col = Column(row=row, span=4, order=1)
+        col = Column(row=row, span=4, offset=0, order=1)
         col.save()
-        col = Column(row=row, span=4, order=2)
+        col = Column(row=row, span=4, offset=0, order=2)
         col.save()
     elif(template == "full"):
-        col = Column(row=row, span=12, order=0)
+        col = Column(row=row, span=12, offset=0, order=0)
         col.save()
     elif(template == "sidebar"):
-        col = Column(row=row, span=8, order=0)
+        col = Column(row=row, span=8, offset=0, order=0)
         col.save()
-        col = Column(row=row, span=4, order=1)
+        col = Column(row=row, span=4, offset=0, order=1)
         col.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 

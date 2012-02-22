@@ -4,7 +4,7 @@
 {% for row in rows %}
 <div class="row">
   {% for column in row.columns %}
-    <div class="span{{ column.span }}">
+    <div class="offset{{ column.offset }} span{{ column.span }}">
       {% for content in column.contents %}
         {% if content.type == 'h' %}
           {{ content.content|safe }}
