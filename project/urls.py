@@ -11,6 +11,6 @@ urlpatterns = patterns('',
     url(r'^bruker/', include('user.urls')),
 
     # Not a known view, treat it as a page
-    url(r'^$', 'page.views.page', kwargs={'slugs': ""}),
-    url(r'^(?P<slugs>.+)/$', 'page.views.page'),
+    url(r'^$', 'page.views.page', kwargs={'slug': ""}),
+    url(r'^(?P<slug>.+)/$', 'page.views.page'),
 )

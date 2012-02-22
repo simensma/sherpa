@@ -2,11 +2,11 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import PageVersion, Row, Column, Content
+from project.page.models import Version, Row, Column, Content
 
 @login_required
 def add(request, version, template):
-    version = PageVersion.objects.get(id=version)
+    version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version)
     if(len(rows) == 0):
         max = 0

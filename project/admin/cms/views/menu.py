@@ -3,16 +3,16 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import Menu, Page, PageVariant
+from project.page.models import Menu, Page, Variant
 
 @login_required
 def list(request):
     menus = Menu.objects.all().order_by('position')
     for menu in menus:
-        menu.page.active = PageVariant.objects.filter(page=menu.page).get(active=True)
+        menu.page.active = Variant.objects.filter(page=menu.page).get(active=True)
     pages = Page.objects.filter(menu__isnull=True)
     for page in pages:
-        page.active = PageVariant.objects.filter(page=page).get(active=True)
+        page.active = Variant.objects.filter(page=page).get(active=True)
     context = {'menus': menus, 'pages': pages}
     return render(request, 'admin/cms/menu.html', context)
 

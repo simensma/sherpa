@@ -19,15 +19,14 @@ class Page(models.Model):
 @receiver(post_delete, sender=Page)
 def delete_page(sender, **kwargs):
     Menu.objects.filter(page=kwargs['instance']).delete()
-    PageVariant.objects.filter(page=kwargs['instance']).delete()
+    Variant.objects.filter(page=kwargs['instance']).delete()
 
-class PageVariant(models.Model):
+class Variant(models.Model):
     # Exactly one of these foreign keys should be referenced (not null)
     page = models.ForeignKey('page.Page', null=True)
     article = models.ForeignKey('articles.Article', null=True)
 
     name = models.CharField(max_length=200)
-    slug = models.CharField(max_length=50)
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
@@ -38,25 +37,25 @@ class PageVariant(models.Model):
     # way to do this?
     active = None
 
-@receiver(post_delete, sender=PageVariant)
+@receiver(post_delete, sender=Variant)
 def delete_page_variant(sender, **kwargs):
     # Note: We don't really need to cascade priorities
-    PageVersion.objects.filter(variant=kwargs['instance']).delete()
+    Version.objects.filter(variant=kwargs['instance']).delete()
 
-class PageVersion(models.Model):
-    variant = models.ForeignKey('page.PageVariant')
+class Version(models.Model):
+    variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     publisher = models.ForeignKey('user.Profile')
     active = models.BooleanField()
 
-@receiver(post_delete, sender=PageVersion)
+@receiver(post_delete, sender=Version)
 def delete_page_version(sender, **kwargs):
     Row.objects.filter(version=kwargs['instance']).delete()
 
 ### CMS
 
 class Row(models.Model):
-    version = models.ForeignKey('page.PageVersion')
+    version = models.ForeignKey('page.Version')
     order = models.IntegerField()
     columns = None
 

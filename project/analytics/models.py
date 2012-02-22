@@ -22,8 +22,8 @@ class Parameter(models.Model):
 
 class Pageview(models.Model):
     request = models.OneToOneField('analytics.Request')
-    variant = models.ForeignKey('page.PageVariant')
-    active_version = models.ForeignKey('page.PageVersion')
+    variant = models.ForeignKey('page.Variant')
+    active_version = models.ForeignKey('page.Version')
     requested_segment = models.ForeignKey('analytics.Segment', related_name='requested', null=True)
     matched_segment = models.ForeignKey('analytics.Segment', related_name='matched', null=True)
 
