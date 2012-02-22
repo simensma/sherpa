@@ -5,6 +5,33 @@
 
 <h1>Artikler</h1>
 
+{% if not versions %}
+<div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
+{% else %}
+<table class="table table-striped">
+<thead>
+<tr>
+  <th>Tittel</th>
+  <th>Publisert</th>
+  <th>Opprettet av</th>
+  <th>Rediger</th>
+  <th>Slett</th>
+</tr>
+</thead>
+<tbody>
+{% for version in versions %}
+<tr>
+  <td>{{ version.variant.article.title }}</td>
+  <td>{% if version.variant.article.published %}Ja &mdash; {{ version.variant.article.pub_date }}{% else %}Nei{% endif %}</td>
+  <td>{{ version.variant.article.publisher.user.username }}</td>
+  <td>[ <a href="{% url admin.articles.views.edit version.variant.article.id %}">Rediger</a> ]</td>
+  <td>[ <a href="{# url admin.articles.views.delete version.variant.article.id #}">Slett</a> ]</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
 <div id="row">
   <div class="offset5 span2">
   <p><a id="add-article" class="btn btn-primary large-button dialog-button" data-dialog=".article-dialog" href="javascript:undefined">Opprett ny artikkel</a></p>
