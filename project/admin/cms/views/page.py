@@ -7,7 +7,7 @@ from project.analytics.models import Segment
 
 @login_required
 def list(request):
-    versions = Version.objects.filter(variant__segment__isnull=True, active=True)
+    versions = Version.objects.filter(variant__page__isnull=False, variant__segment__isnull=True, active=True)
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/cms/pages.html', context)
