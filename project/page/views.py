@@ -29,7 +29,12 @@ def page(request, slug):
         # but do log what actually matched.
         requested_variant = PageVariant.objects.get(id=requested_variant)
         version = PageVersion.objects.get(variant=requested_variant, active=True)
-        save_pageview(request, requested_variant, version, requested_variant.segment, matched_variant.segment)
+        # In case the user happens to requests a variant without actually matching any
+        if(matched_variant == None):
+            matched_segment = None
+        else:
+            matched_segment = matched_variant.segment
+        save_pageview(request, requested_variant, version, requested_variant.segment, matched_segment)
         return parse_content(request, version)
 
 def save_pageview(request, variant, version, requested_segment, matched_segment):
