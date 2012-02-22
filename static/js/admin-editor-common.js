@@ -8,7 +8,9 @@ $(document).ready(function() {
         $($("#toolbar div.tab")[$(this).index()]).show();
     });
     // Make toolbar draggable
-    $("#toolbar").draggable();
+    $("#toolbar").draggable({
+        containment: 'window'
+    });
     // Draggable will set position relative, so make sure it is fixed before the user drags it
     $("#toolbar").css('position', 'fixed');
 
