@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import Page, Variant, PageVersion
+from project.page.models import Page, Variant, Version
 from project.analytics.models import Segment
 
 @login_required
@@ -14,7 +14,7 @@ def new(request, page):
     max_priority = Variant.objects.filter(page=page).aggregate(Max('priority'))['priority__max']
     variant = Variant(page=page, slug=request.POST['slug'], segment=segment, priority=(max_priority+1))
     variant.save()
-    version = PageVersion(variant=variant, content=content, version=1, active=True)
+    version = Version(variant=variant, content=content, version=1, active=True)
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
 

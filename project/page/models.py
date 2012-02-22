@@ -36,21 +36,21 @@ class Variant(models.Model):
 @receiver(post_delete, sender=Variant)
 def delete_page_variant(sender, **kwargs):
     # Note: We don't really need to cascade priorities
-    PageVersion.objects.filter(variant=kwargs['instance']).delete()
+    Version.objects.filter(variant=kwargs['instance']).delete()
 
-class PageVersion(models.Model):
+class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     active = models.BooleanField()
 
-@receiver(post_delete, sender=PageVersion)
+@receiver(post_delete, sender=Version)
 def delete_page_version(sender, **kwargs):
     Row.objects.filter(version=kwargs['instance']).delete()
 
 ### CMS
 
 class Row(models.Model):
-    version = models.ForeignKey('page.PageVersion')
+    version = models.ForeignKey('page.Version')
     order = models.IntegerField()
     columns = None
 

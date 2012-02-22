@@ -2,12 +2,12 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from project.page.models import Menu, Page, Variant, PageVersion
+from project.page.models import Menu, Page, Variant, Version
 from project.analytics.models import Segment
 
 @login_required
 def list(request):
-    versions = PageVersion.objects.filter(variant__segment__isnull=True, active=True)
+    versions = Version.objects.filter(variant__segment__isnull=True, active=True)
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/cms/pages.html', context)
@@ -18,7 +18,7 @@ def new(request):
     page.save()
     variant = Variant(page=page, name='Standard', slug='', segment=None, priority=1)
     variant.save()
-    version = PageVersion(variant=variant, version=1, active=True)
+    version = Version(variant=variant, version=1, active=True)
     version.save()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
@@ -28,7 +28,7 @@ def edit(request, page):
         page = Page.objects.get(id=page)
         variants = Variant.objects.filter(page=page).order_by('priority')
         for variant in variants:
-            variant.active = PageVersion.objects.get(variant=variant, active=True)
+            variant.active = Version.objects.get(variant=variant, active=True)
         segments = Segment.objects.exclude(name='default')
         context = {'page': page, 'variants': variants, 'segments': segments}
         return render(request, 'admin/cms/edit_page.html', context)

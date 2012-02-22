@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from page.models import Page, Variant, PageVersion
+from page.models import Page, Variant, Version
 from analytics.models import Visitor, Pageview
 from string import split
 
@@ -17,7 +17,7 @@ def page(request, slug):
         if(matched_variant == None):
             # No variant requested, and no variant matched. The default, simple view for a page.
             default_variant = Variant.objects.get(page=page, segment__isnull=True)
-            version = PageVersion.objects.get(variant=default_variant, active=True)
+            version = Version.objects.get(variant=default_variant, active=True)
             save_pageview(request, default_variant, version, None, None)
             return parse_content(request, version)
         else:
@@ -28,7 +28,7 @@ def page(request, slug):
         # A specific variant was requested. Show it regardless of which variant matches the user,
         # but do log what actually matched.
         requested_variant = Variant.objects.get(id=requested_variant)
-        version = PageVersion.objects.get(variant=requested_variant, active=True)
+        version = Version.objects.get(variant=requested_variant, active=True)
         # In case the user happens to requests a variant without actually matching any
         if(matched_variant == None):
             matched_segment = None
