@@ -1,4 +1,8 @@
 {% extends "admin/articles/edit.html" %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin-editor-article-template.js"></script>
+  {{ block.super }}
+{% endblock %}
 {% block body %}
 {{ block.super }}
 
