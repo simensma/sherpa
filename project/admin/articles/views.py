@@ -29,6 +29,9 @@ def new(request):
 def edit(request, version):
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
+    if(len(rows) == 0):
+        context = {}
+        return render(request, 'admin/articles/edit.template.html', context)
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
