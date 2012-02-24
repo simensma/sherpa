@@ -1,0 +1,17 @@
+/**
+ * Stylesheet for editing articles
+ */
+
+.static-hover, .static-hover * {
+  cursor: not-allowed;
+}
+
+img.changeable {
+  display: block;
+}
+
+img.changeable.hover {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: alias;
+}
