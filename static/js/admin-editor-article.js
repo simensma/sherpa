@@ -12,6 +12,10 @@ $(document).ready(function() {
     $(this).removeClass('hover');
   }).click(function() {
     $(this).removeClass('hover');
+    var src = prompt("URL?");
+    if(src !== null && src !== undefined) {
+      $(this).attr('src', src);
+    }
   });
 
   $(".editable").attr('contenteditable', 'true');
