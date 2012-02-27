@@ -6,7 +6,7 @@ $(document).ready(function() {
     $(this).removeClass('static-hover');
   });
 
-  $(".changeable").hover(function() {
+  $("img.changeable").hover(function() {
     $(this).addClass('hover');
   }, function() {
     $(this).removeClass('hover');
