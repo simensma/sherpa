@@ -32,6 +32,9 @@ article .meta p em {
   text-transform: uppercase;
 }
 
+article .meta hr {
+  margin: 0;
+}
 
 article .image-right {
   float: right;
