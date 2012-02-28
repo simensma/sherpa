@@ -67,21 +67,9 @@ def edit(request, version):
 @login_required
 def save(request, version):
     version = Version.objects.get(id=version)
-    if(request.POST['template'] == "true"):
-        rows = json.loads(request.POST['json'])
-        rowOrder = 0
-        for rowObj in rows['rows']:
-            row = Row(version=version, order=rowOrder)
-            row.save()
-            rowOrder += 1
-            colOrder = 0
-            for colObj in rowObj['columns']:
-                col = Column(row=row, span=colObj['span'], offset=colObj['offset'], order=colOrder)
-                col.save()
-                content = Content(column=col, content=colObj['content'], type='h', order=colOrder)
-                content.save()
-                colOrder += 1
-    else:
-        # Todo: Update instead of save
-        return HttpResponse()
+    contents = json.loads(request.POST['contents'])
+    for newContent in contents:
+        content = Content.objects.get(id=newContent['id'])
+        content.content = newContent['content']
+        content.save()
     return HttpResponse()

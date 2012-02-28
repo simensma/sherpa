@@ -24,35 +24,21 @@ $(document).ready(function() {
 
   $("#toolbar a.save").click(function() {
     $("article .editable").removeAttr('contenteditable');
-    var data = {
-      id: $("article").attr('data-id'),
-      rows: []
-    }
-    $("article div.row").each(function() {
-      var row = {
-        columns: []
+    var contents = [];
+    $("div.content").each(function() {
+      var content = {
+        id: $(this).attr('data-id'),
+        content: $(this).html()
       }
-      $(this).children().each(function() {
-        var column = {
-          id: $(this).attr('data-id'),
-          content: $(this).html(),
-          span: parseColumn($(this).attr('class').split(' '), 'span'),
-          offset: parseColumn($(this).attr('class').split(' '), 'offset')
-        }
-        row.columns = row.columns.concat([column])
-      });
-      data.rows = data.rows.concat([row]);
+      contents = contents.concat([content]);
     });
 
     $.ajax({
-      url: '/sherpa/artikler/oppdater/' + data.id + '/',
+      url: '/sherpa/artikler/oppdater/' + $("article").attr('data-id') + '/',
       type: 'POST',
-      data: "template=" + encodeURIComponent($("article").attr('data-template'))
-        + "&json=" + encodeURIComponent(JSON.stringify(data))
+      data: "contents=" + encodeURIComponent(JSON.stringify(contents))
     }).done(function(result) {
-      // Todo: State change!
-      // Change article 'data-template' attr, add id-attrs to all elements (or just redirect)
-      setSaveStatus('saved');
+      // Todo
     }).fail(function(result) {
       // Todo
     }).always(function(result) {
