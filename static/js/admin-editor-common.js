@@ -26,11 +26,11 @@ $(document).ready(function() {
         $(this).toggleClass('hover');
     });
 
-    $("#toolbar div.button.header").click(function() {
-        document.execCommand('formatblock', false, 'h1');
-    });
-    $("#toolbar div.button.lede").click(function() {
-        $(":focus").toggleClass('lede');
+    $("#toolbar select").change(function() {
+        $("select option:selected").each(function() {
+            document.execCommand('formatblock', false, $(this).val());
+        });
+        $("#toolbar select").val("default");
     });
     $("#toolbar div.button.body").click(function() {
         document.execCommand('formatblock', false, 'p');
