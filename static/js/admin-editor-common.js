@@ -32,6 +32,12 @@ $(document).ready(function() {
         });
         $("#toolbar select").val("default");
     });
+    $("#toolbar button.anchor-add").click(function(event) {
+        document.execCommand('createLink', false, $("input.url").val());
+    });
+    $("#toolbar button.anchor-remove").click(function(event) {
+        document.execCommand('unlink');
+    });
     $("#toolbar div.button.body").click(function() {
         document.execCommand('formatblock', false, 'p');
     });
@@ -49,9 +55,6 @@ $(document).ready(function() {
     });
     $("#toolbar div.button.ul").click(function(event) {
         document.execCommand('insertunorderedlist');
-    });
-    $("#toolbar div.button.anchor").click(function(event) {
-        document.execCommand('createLink', false, 'TODO');
     });
     $("#toolbar div.button.align-left").click(function(event) {
         document.execCommand('justifyleft');

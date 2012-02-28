@@ -20,3 +20,7 @@ img.changeable.hover {
   position: fixed;
   z-index: 900;
 }
+
+input.url {
+  width: 350px;
+}
