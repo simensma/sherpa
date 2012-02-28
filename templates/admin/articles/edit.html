@@ -11,6 +11,9 @@
 {% endblock %}
 {% block body %}
 
+{# Used for AJAX requests. #}
+{% csrf_token %}
+
 <div id="toolbar">
   <ul>
     <li><a href="javascript:undefined">Lagre</a></li>

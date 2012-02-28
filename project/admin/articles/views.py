@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+
+import json
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
@@ -30,7 +32,7 @@ def edit(request, version):
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
     if(len(rows) == 0):
-        context = {}
+        context = {'version': version}
         return render(request, 'admin/articles/edit.template.html', context)
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
@@ -43,3 +45,25 @@ def edit(request, version):
         row.columns = columns
     context = {'rows': rows}
     return render(request, 'admin/articles/edit.html', context)
+
+@login_required
+def save(request, version):
+    version = Version.objects.get(id=version)
+    if(request.POST['template'] == "true"):
+        rows = json.loads(request.POST['json'])
+        rowOrder = 0
+        for rowObj in rows['rows']:
+            row = Row(version=version, order=rowOrder)
+            row.save()
+            rowOrder += 1
+            colOrder = 0
+            for colObj in rowObj['columns']:
+                col = Column(row=row, span=colObj['span'], offset=colObj['offset'], order=colOrder)
+                col.save()
+                content = Content(column=col, content=colObj['content'], type='h', order=colOrder)
+                content.save()
+                colOrder += 1
+    else:
+        # Todo: Update instead of save
+        return HttpResponse()
+    return HttpResponse()
