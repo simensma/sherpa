@@ -78,6 +78,8 @@ class Content(models.Model):
     column = models.ForeignKey('page.Column')
     content = models.TextField()
     type = models.CharField(max_length=1, choices=(('w', 'Widget'), ('h', 'HTML')))
+    # Note: 'order' should be unique, but it's not enforced because
+    # when deleting and cascading orders, two orders will temporarily clash.
     order = models.IntegerField()
     widget = None
 
