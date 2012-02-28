@@ -30,3 +30,22 @@
   border-right: 1px solid rgb(221, 221, 221);
   border-bottom: 1px solid rgb(221, 221, 221);
 }
+
+#toolbar div.button {
+  float: left;
+  cursor: pointer;
+  width: 27px;
+  height: 27px;
+}
+
+#toolbar div.button.bold {
+  background-image: url('/static/img/editorbuttons/bold-inactive.png');
+}
+
+#toolbar div.button.italic {
+  background-image: url('/static/img/editorbuttons/italic-inactive.png');
+}
+
+#toolbar div.button.underline {
+  background-image: url('/static/img/editorbuttons/underline-inactive.png');
+}

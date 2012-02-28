@@ -18,43 +18,43 @@ $(document).ready(function() {
 
     /* Toolbar buttons */
 
-    $("#toolbar a.header").click(function() {
+    $("#toolbar div.button.header").click(function() {
         document.execCommand('formatblock', false, 'h1');
     });
-    $("#toolbar a.lede").click(function() {
+    $("#toolbar div.button.lede").click(function() {
         $(":focus").toggleClass('lede');
     });
-    $("#toolbar a.body").click(function() {
+    $("#toolbar div.button.body").click(function() {
         document.execCommand('formatblock', false, 'p');
     });
-    $("#toolbar a.bold").click(function(event) {
+    $("#toolbar div.button.bold").click(function(event) {
         document.execCommand('bold');
     });
-    $("#toolbar a.italic").click(function(event) {
+    $("#toolbar div.button.italic").click(function(event) {
         document.execCommand('italic');
     });
-    $("#toolbar a.underline").click(function(event) {
+    $("#toolbar div.button.underline").click(function(event) {
         document.execCommand('underline');
     });
-    $("#toolbar a.ol").click(function(event) {
+    $("#toolbar div.button.ol").click(function(event) {
         document.execCommand('insertorderedlist');
     });
-    $("#toolbar a.ul").click(function(event) {
+    $("#toolbar div.button.ul").click(function(event) {
         document.execCommand('insertunorderedlist');
     });
-    $("#toolbar a.anchor").click(function(event) {
+    $("#toolbar div.button.anchor").click(function(event) {
         document.execCommand('createLink', false, 'TODO');
     });
-    $("#toolbar a.left").click(function(event) {
+    $("#toolbar div.button.left").click(function(event) {
         document.execCommand('justifyleft');
     });
-    $("#toolbar a.center").click(function(event) {
+    $("#toolbar div.button.center").click(function(event) {
         document.execCommand('justifycenter');
     });
-    $("#toolbar a.right").click(function(event) {
+    $("#toolbar div.button.right").click(function(event) {
         document.execCommand('justifyright');
     });
-    $("#toolbar a.full").click(function(event) {
+    $("#toolbar div.button.full").click(function(event) {
         document.execCommand('justifyfull');
     });
 
