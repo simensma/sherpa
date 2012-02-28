@@ -1,4 +1,4 @@
-from django.db.models.signals import post_delete
+from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 
@@ -81,7 +81,7 @@ class Content(models.Model):
     order = models.IntegerField()
     widget = None
 
-@receiver(post_delete, sender=Content)
+@receiver(pre_delete, sender=Content)
 def delete_content(sender, **kwargs):
     for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=kwargs['instance'].order):
         content.order = (content.order-1)
