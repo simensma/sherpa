@@ -44,7 +44,7 @@ def edit(request, version):
             column.contents = contents
         row.columns = columns
     context = {'rows': rows}
-    return render(request, 'admin/articles/edit.html', context)
+    return render(request, 'admin/articles/edit.existing.html', context)
 
 @login_required
 def save(request, version):
