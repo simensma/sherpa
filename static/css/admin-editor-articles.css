@@ -15,3 +15,8 @@ img.changeable.hover {
   filter: alpha(opacity=50);
   cursor: alias;
 }
+
+.ui-widget-overlay {
+  position: fixed;
+  z-index: 900;
+}

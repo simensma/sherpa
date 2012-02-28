@@ -21,7 +21,9 @@
   </ul>
   <div id="tabs">
     <div class="tab">
-      <a class="save" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/save.png"></a>
+      <p class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</p>
+      <div class="saving"><img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Lagrer, vennligst vent..."></div>
+      <button class="btn save">Lagre</button>
     </div>
     <div class="tab">
       <div class="button bold"></div>
@@ -34,6 +36,16 @@
       <div class="button align-right"></div>
     </div>
     <div style="clear: both;"></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="offset3 span6">
+    <div class="no-save-warning alert alert-error">
+      <a class="close">x</a>
+      <strong>Advarsel!</strong><br>
+      Du har ikke lagret artikkelen på over 5 minutter! Du bør vurdere å lagre nå, hvis ikke kan du miste endringene du har gjort hvis et uhell oppstår.
+    </div>
   </div>
 </div>
 

@@ -25,7 +25,35 @@ $(document).ready(function() {
 
   /* Saving document */
 
-  $("#toolbar a.save").click(function() {
+  var lastSaveCount = 0;
+  var updateSaveCountID;
+  function updateSaveCount() {
+    lastSaveCount += 1;
+    if(lastSaveCount < 30) {
+      $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
+    } else if(lastSaveCount < 120) {
+      $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+    } else {
+      $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutter siden.");
+    }
+
+    if(lastSaveCount == 60 * 5) {
+      $("div.no-save-warning").show();
+    }
+    updateSaveCountID = setTimeout(updateSaveCount, 1000);
+  }
+  updateSaveCount();
+
+  $("div.no-save-warning").hide();
+  $("#toolbar div.saving").hide();
+
+  $("#toolbar button.save").click(function() {
+    clearInterval(updateSaveCountID);
+    $(this).hide();
+    $("div.no-save-warning").hide();
+    $("#toolbar div.saving").show();
+    $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
+    $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
     $("article .editable").removeAttr('contenteditable');
     var contents = [];
     $("div.content").each(function() {
@@ -41,11 +69,15 @@ $(document).ready(function() {
       type: 'POST',
       data: "contents=" + encodeURIComponent(JSON.stringify(contents))
     }).done(function(result) {
-      // Todo
+      lastSaveCount = 0;
     }).fail(function(result) {
       // Todo
     }).always(function(result) {
-      // Todo
+      updateSaveCount();
+      $(".ui-widget-overlay").remove();
+      $("#toolbar div.saving").hide();
+      $("#toolbar button.save").show();
+      $("article .editable").attr('contenteditable', 'true');
     });
   });
 
