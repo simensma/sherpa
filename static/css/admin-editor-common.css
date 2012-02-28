@@ -42,22 +42,34 @@
   background-image: url('/static/img/editorbuttons/bold-inactive.png');
 }
 
+#toolbar div.button.bold.hover {
+  background-image: url('/static/img/editorbuttons/bold-hover.png');
+}
+
 #toolbar div.button.bold.active {
-  background-image: url('/static/img/editorbuttons/bold-active.png');
+  background-image: url('/static/img/editorbuttons/bold-active.png') !important;
 }
 
 #toolbar div.button.italic {
   background-image: url('/static/img/editorbuttons/italic-inactive.png');
 }
 
+#toolbar div.button.italic.hover {
+  background-image: url('/static/img/editorbuttons/italic-hover.png');
+}
+
 #toolbar div.button.italic.active {
-  background-image: url('/static/img/editorbuttons/italic-active.png');
+  background-image: url('/static/img/editorbuttons/italic-active.png') !important;
 }
 
 #toolbar div.button.underline {
   background-image: url('/static/img/editorbuttons/underline-inactive.png');
 }
 
+#toolbar div.button.underline.hover {
+  background-image: url('/static/img/editorbuttons/underline-hover.png');
+}
+
 #toolbar div.button.underline.active {
-  background-image: url('/static/img/editorbuttons/underline-active.png');
+  background-image: url('/static/img/editorbuttons/underline-active.png') !important;
 }

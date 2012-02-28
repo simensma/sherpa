@@ -22,6 +22,8 @@ $(document).ready(function() {
         $(this).toggleClass('active');
     }).mouseup(function() {
         $(this).toggleClass('active');
+    }).hover(function() {
+        $(this).toggleClass('hover');
     });
 
     $("#toolbar div.button.header").click(function() {
