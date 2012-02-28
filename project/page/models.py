@@ -83,6 +83,6 @@ class Content(models.Model):
 
 @receiver(post_delete, sender=Content)
 def delete_content(sender, **kwargs):
-    for content in Content.objects.filter(column=self.column, order__gt=order):
+    for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=order):
         content.order = (content.order-1)
         content.save();
