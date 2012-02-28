@@ -65,3 +65,48 @@
 #toolbar div.button.underline.active {
   background-image: url('/static/img/editorbuttons/underline-active.png') !important;
 }
+#toolbar div.button.ol {
+  background-image: url('/static/img/editorbuttons/ol-inactive.png');
+}
+#toolbar div.button.ol.hover {
+  background-image: url('/static/img/editorbuttons/ol-hover.png');
+}
+#toolbar div.button.ol.active {
+  background-image: url('/static/img/editorbuttons/ol-active.png') !important;
+}
+#toolbar div.button.ul {
+  background-image: url('/static/img/editorbuttons/ul-inactive.png');
+}
+#toolbar div.button.ul.hover {
+  background-image: url('/static/img/editorbuttons/ul-hover.png');
+}
+#toolbar div.button.ul.active {
+  background-image: url('/static/img/editorbuttons/ul-active.png') !important;
+}
+#toolbar div.button.align-left {
+  background-image: url('/static/img/editorbuttons/align-left-inactive.png');
+}
+#toolbar div.button.align-left.hover {
+  background-image: url('/static/img/editorbuttons/align-left-hover.png');
+}
+#toolbar div.button.align-left.active {
+  background-image: url('/static/img/editorbuttons/align-left-active.png') !important;
+}
+#toolbar div.button.align-center {
+  background-image: url('/static/img/editorbuttons/align-center-inactive.png');
+}
+#toolbar div.button.align-center.hover {
+  background-image: url('/static/img/editorbuttons/align-center-hover.png');
+}
+#toolbar div.button.align-center.active {
+  background-image: url('/static/img/editorbuttons/align-center-active.png') !important;
+}
+#toolbar div.button.align-right {
+  background-image: url('/static/img/editorbuttons/align-right-inactive.png');
+}
+#toolbar div.button.align-right.hover {
+  background-image: url('/static/img/editorbuttons/align-right-hover.png');
+}
+#toolbar div.button.align-right.active {
+  background-image: url('/static/img/editorbuttons/align-right-active.png') !important;
+}

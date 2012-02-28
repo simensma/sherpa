@@ -53,13 +53,13 @@ $(document).ready(function() {
     $("#toolbar div.button.anchor").click(function(event) {
         document.execCommand('createLink', false, 'TODO');
     });
-    $("#toolbar div.button.left").click(function(event) {
+    $("#toolbar div.button.align-left").click(function(event) {
         document.execCommand('justifyleft');
     });
-    $("#toolbar div.button.center").click(function(event) {
+    $("#toolbar div.button.align-center").click(function(event) {
         document.execCommand('justifycenter');
     });
-    $("#toolbar div.button.right").click(function(event) {
+    $("#toolbar div.button.align-right").click(function(event) {
         document.execCommand('justifyright');
     });
     $("#toolbar div.button.full").click(function(event) {
