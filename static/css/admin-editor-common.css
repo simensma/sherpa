@@ -42,10 +42,22 @@
   background-image: url('/static/img/editorbuttons/bold-inactive.png');
 }
 
+#toolbar div.button.bold.active {
+  background-image: url('/static/img/editorbuttons/bold-active.png');
+}
+
 #toolbar div.button.italic {
   background-image: url('/static/img/editorbuttons/italic-inactive.png');
 }
 
+#toolbar div.button.italic.active {
+  background-image: url('/static/img/editorbuttons/italic-active.png');
+}
+
 #toolbar div.button.underline {
   background-image: url('/static/img/editorbuttons/underline-inactive.png');
+}
+
+#toolbar div.button.underline.active {
+  background-image: url('/static/img/editorbuttons/underline-active.png');
 }

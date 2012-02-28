@@ -18,6 +18,12 @@ $(document).ready(function() {
 
     /* Toolbar buttons */
 
+    $("#toolbar div.button").mousedown(function() {
+        $(this).toggleClass('active');
+    }).mouseup(function() {
+        $(this).toggleClass('active');
+    });
+
     $("#toolbar div.button.header").click(function() {
         document.execCommand('formatblock', false, 'h1');
     });
