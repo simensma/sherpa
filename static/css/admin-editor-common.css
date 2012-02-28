@@ -8,21 +8,25 @@
   right: 50px;
   width: 500px;
   z-index: 1000;
-  border: 1px solid #000;
+}
+
+#toolbar #tabs, #toolbar li.active a {
   background-color: rgb(245, 245, 245);
 }
 
+#toolbar ul.nav li a:hover {
+  background-color: rgb(200, 200, 200);
+}
+
+#toolbar ul.nav {
+  /* Negate the default bootstrap margin */
+  margin-bottom: 0 !important;
+  background-color: white;
+}
+
 #toolbar #tabs {
-  padding-left: 25px;
-}
-
-#toolbar ul {
-  list-style-type: none;
-  margin-bottom: 10px;
-}
-
-#toolbar ul li {
-  display: inline;
-  padding: 3px;
-  border-bottom: 1px solid #000;
+  padding: 9px;
+  border-left: 1px solid rgb(221, 221, 221);
+  border-right: 1px solid rgb(221, 221, 221);
+  border-bottom: 1px solid rgb(221, 221, 221);
 }

@@ -4,6 +4,8 @@ $(document).ready(function() {
     // Hide/show chosen toolbar tab
     $("#toolbar div.tab").hide().first().show();
     $("#toolbar li").click(function() {
+        $("#toolbar li").removeClass('active');
+        $(this).addClass('active');
         $("#toolbar div.tab").hide();
         $($("#toolbar div.tab")[$(this).index()]).show();
     });
