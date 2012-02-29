@@ -105,7 +105,9 @@ $(document).ready(function() {
             }).done(function(result) {
                 editable = $(editable);
                 var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(editable);
-                var well = $('<div class="insertable well"></div>');
+                var well = $('<div class="insertable well" data-column="' +
+                    insertable.attr("data-column") + '" data-order="' +
+                    (Number(insertable.attr("data-order")) + 1) + '"></div>');
                 insertable.after(wrapper, well);
 
                 // Redo stuff that would happen on page load
