@@ -23,6 +23,60 @@ $(document).ready(function() {
         }
     });
 
+    /* Add widget/text/image */
+
+    function enableInsertables() {
+        $("#toolbar .adders button").attr('disabled', true);
+        $("#toolbar button.cancel").show();
+        $(".insertable").show();
+    }
+
+    function disableInsertables() {
+        $("#toolbar .adders button").removeAttr('disabled');
+        $(".insertable").hide();
+        $(".insertable").off('click.add');
+        $("#toolbar button.cancel").hide();
+    }
+    $(".insertable").hide().click(disableInsertables);
+    $("#toolbar button.cancel").hide().click(disableInsertables);
+    $("#toolbar .adders button").click(enableInsertables);
+    $("#toolbar button.add-widget").click(function() {
+        $(".insertable").text("Klikk for å legge til widget her").on('click.add', function() {
+            // Todo: insert widget
+        });
+    });
+    $("#toolbar button.add-image").click(function() {
+        $(".insertable").text("Klikk for å legge til bilde her").on('click.add', function() {
+            // Todo: insert image
+        });
+    });
+    $("#toolbar button.add-text").click(function() {
+        $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
+            var insertable = $(this);
+            $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
+            $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
+              .appendTo('body');
+            $.ajax({
+                url: '/sherpa/artikler/innhold/',
+                type: 'POST',
+                data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
+                      "&order=" + encodeURIComponent(insertable.attr("data-order"))
+            }).done(function(result) {
+                var editable = $('<div class="editable"><p></p></div>');
+                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(editable);
+                var well = $('<div class="insertable well"></div>');
+                insertable.after(wrapper, well);
+                editable.attr('contenteditable', 'true').focus();
+                well.hide();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                $(".ui-widget-overlay,.overlay-loader").remove();
+            });
+
+        });
+    });
+
     /* Saving document */
 
     var lastSaveCount = 0;

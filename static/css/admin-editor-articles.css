@@ -2,6 +2,14 @@
  * Stylesheet for editing articles
  */
 
+article .insertable {
+  cursor: pointer;
+  text-align: center;
+  color: rgb(125, 125, 125);
+  font-size: 180%;
+  font-style: italic;
+}
+
 .static-hover, .static-hover * {
   cursor: not-allowed;
 }
