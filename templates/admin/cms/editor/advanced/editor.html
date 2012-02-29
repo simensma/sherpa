@@ -33,17 +33,17 @@
 </div>
 
 <div id="toolbar">
-  <ul>
-    <li><a href="javascript:undefined">Lagre</a></li>
-    <li><a href="javascript:undefined">Formatering</a></li>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="javascript:undefined">Lagre</a></li>
     <li><a href="javascript:undefined">Struktur</a></li>
+    <li><a href="javascript:undefined">Formatering</a></li>
+    <li><a href="javascript:undefined">Lenker</a></li>
   </ul>
   <div id="tabs">
     <div class="tab">
-      <a class="save" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/save.png"></a>
-    </div>
-    <div class="tab">
-      <a class="bold" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/bold-inactive.png"></a><a class="italic" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/italic-inactive.png"></a><a class="underline" href="javascript:undefined"><img src="{{ STATIC_URL }}img/editorbuttons/underline-inactive.png"></a>
+      <p class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</p>
+      <div class="saving"><img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Lagrer, vennligst vent..."></div>
+      <button class="btn save">Lagre</button>
     </div>
     <div class="tab">
       <p>
@@ -52,6 +52,32 @@
         <input class="horizontal" type="radio" name="editmode"> Flytt horisontalt (rader)<br>
       </p>
     </div>
+    <div class="tab">
+      <div class="button bold"></div>
+      <div class="button italic"></div>
+      <div class="button underline"></div>
+      <div class="button ol"></div>
+      <div class="button ul"></div>
+      <div class="button align-left"></div>
+      <div class="button align-center"></div>
+      <div class="button align-right"></div>
+      <div style="clear: both;"></div>
+      <select>
+        <option value="default">Velg skrifttype...</option>
+        <optgroup label="--------------------">
+          <option value="h1">Overskrift (stor)</option>
+          <option value="h2">Overskrift (liten)</option>
+          <option value="p">Brødtekst</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="tab">
+      <p>URL-adresse: <input type="text" class="url"></p>
+      <button class="btn anchor-add">Sett inn link</button>
+      <button class="btn anchor-remove">Ta bort link</button>
+      <p style="margin-top: 10px;">Tips: For at knappene skal funke må du markere teksten i artikkelen som du vil gjøre til en link.</p>
+    </div>
+    <div style="clear: both;"></div>
   </div>
 </div>
 

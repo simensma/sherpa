@@ -35,26 +35,56 @@ $(document).ready(function() {
         });
     }
 
-    // Save all content
-    $("#toolbar #tabs a.save").click(function() {
-        saveContent();
-    });
-
     // Allow content editing of content elements
     $(".cms-content").attr('contenteditable', 'true');
 
-    function saveContent() {
+    /* Saving document */
+
+    var lastSaveCount = 0;
+    var updateSaveCountID;
+    function updateSaveCount() {
+        lastSaveCount += 1;
+        if(lastSaveCount < 30) {
+            $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
+        } else if(lastSaveCount < 120) {
+            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+        } else {
+            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutter siden.");
+        }
+
+        if(lastSaveCount == 60 * 5) {
+            $("div.no-save-warning").show();
+        }
+        updateSaveCountID = setTimeout(updateSaveCount, 1000);
+    }
+    updateSaveCount();
+
+    $("div.no-save-warning").hide();
+    $("#toolbar div.saving").hide();
+
+    $("#toolbar button.save").click(function() {
+        clearInterval(updateSaveCountID);
+        $(this).hide();
+        $("div.no-save-warning").hide();
+        $("#toolbar div.saving").show();
+        $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
+        $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
         $(".cms-content").each(function(c) {
             $.ajax({
                 url: '/sherpa/cms/innhold/oppdater/' + $(this).attr('data-id') + '/',
                 type: 'POST',
                 data: "content=" + encodeURIComponent($(this).html())
-            }).done(function(string) {
-            }).fail(function(string) {
-                // Todo: Error handling
-            }).always(function(string) {
+            }).done(function(result) {
+                lastSaveCount = 0;
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                updateSaveCount();
+                $(".ui-widget-overlay").remove();
+                $("#toolbar div.saving").hide();
+                $("#toolbar button.save").show();
             });
         });
-    }
+    });
 
 });
