@@ -66,9 +66,7 @@ $(document).ready(function() {
         $(this).hide();
         $("div.no-save-warning").hide();
         $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
-        $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
-        $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
-          .appendTo('body');
+        enableOverlay();
         $(".cms-content").each(function(c) {
             $.ajax({
                 url: '/sherpa/cms/innhold/oppdater/' + $(this).attr('data-id') + '/',
@@ -80,7 +78,7 @@ $(document).ready(function() {
                 // Todo
             }).always(function(result) {
                 updateSaveCount();
-                $(".ui-widget-overlay,.overlay-loader").remove();
+                disableOverlay();
                 $("#toolbar button.save").show();
             });
         });

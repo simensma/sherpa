@@ -70,3 +70,13 @@ def save(request, version):
         content.content = newContent['content']
         content.save()
     return HttpResponse()
+
+@login_required
+def create_content(request):
+    column = Column.objects.get(id=request.POST['column'])
+    for content in Content.objects.filter(column=column, order__gte=request.POST['order']):
+        content.order = content.order + 1
+        content.save()
+    content = Content(column=column, content="<div class=\"editable\"><p></p></div>", type='h', order=request.POST['order'])
+    content.save()
+    return HttpResponse(content.id)

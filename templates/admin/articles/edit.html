@@ -19,6 +19,7 @@
     <li class="active"><a href="javascript:undefined">Lagre</a></li>
     <li><a href="javascript:undefined">Formatering</a></li>
     <li><a href="javascript:undefined">Lenker</a></li>
+    <li><a href="javascript:undefined">Widgets</a></li>
   </ul>
   <div id="tabs">
     <div class="tab">
@@ -50,6 +51,14 @@
       <button class="btn anchor-remove">Ta bort link</button>
       <p style="margin-top: 10px;">Tips: For at knappene skal funke må du markere teksten i artikkelen som du vil gjøre til en link.</p>
     </div>
+    <div class="tab">
+      <div class="adders">
+        <button class="btn add-widget">Sett inn widget...</button>
+        <button class="btn add-image">Sett inn bilde...</button>
+        <button class="btn add-text">Sett inn tekst...</button>
+      </div>
+      <button class="btn cancel">Avbryt</button>
+    </div>
     <div style="clear: both;"></div>
   </div>
 </div>
@@ -70,12 +79,14 @@
 <div class="row">
   {% for column in row.columns %}
     <div class="offset{{ column.offset }} span{{ column.span }}">
+      <div class="insertable well" data-column="{{ column.id }}" data-order="0"></div>
       {% for content in column.contents %}
         {% if content.type == 'h' %}
           <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
+        <div class="insertable well" data-column="{{ column.id }}" data-order="{{ content.order|add:1 }}"></div>
       {% endfor %}
     </div>
   {% endfor %}
