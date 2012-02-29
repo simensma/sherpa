@@ -7,6 +7,25 @@
   z-index: 900;
 }
 
+div.overlay-loader {
+  position: fixed;
+  top: 200px;
+  left: 200px;
+  right: 200px;
+  min-width: 250px;
+  text-align: center;
+  background-color: white;
+  border: 1px solid rgb(200, 200, 200);
+  padding: 40px;
+  z-index: 1000;
+}
+@media (max-width: 650px) {
+  div.overlay-loader {
+    left: 10px;
+    width: 200px;
+  }
+}
+
 #toolbar {
   position: fixed;
   top: 50px;
