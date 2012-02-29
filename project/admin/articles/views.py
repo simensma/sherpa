@@ -77,6 +77,6 @@ def create_content(request):
     for content in Content.objects.filter(column=column, order__gte=request.POST['order']):
         content.order = content.order + 1
         content.save()
-    content = Content(column=column, content="<div class=\"editable\"><p></p></div>", type='h', order=request.POST['order'])
+    content = Content(column=column, content=request.POST['content'], type='h', order=request.POST['order'])
     content.save()
     return HttpResponse(content.id)

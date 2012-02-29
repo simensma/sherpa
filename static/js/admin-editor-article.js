@@ -54,16 +54,20 @@ $(document).ready(function() {
         $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
             var insertable = $(this);
             enableOverlay();
+            var editable = '<div class="editable"><p></p></div>';
             $.ajax({
                 url: '/sherpa/artikler/nytt-innhold/',
                 type: 'POST',
                 data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
-                      "&order=" + encodeURIComponent(insertable.attr("data-order"))
+                      "&order=" + encodeURIComponent(insertable.attr("data-order")) +
+                      "&content=" + encodeURIComponent(editable)
             }).done(function(result) {
-                var editable = $('<div class="editable"><p></p></div>');
+                editable = $(editable);
                 var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(editable);
                 var well = $('<div class="insertable well"></div>');
                 insertable.after(wrapper, well);
+
+                // Redo stuff that would happen on page load
                 editable.attr('contenteditable', 'true').focus();
                 well.hide();
             }).fail(function(result) {
