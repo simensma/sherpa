@@ -2,6 +2,11 @@
  * Common stylesheet for advanced- and article-editor in the admin ui
  */
 
+.ui-widget-overlay {
+  position: fixed;
+  z-index: 900;
+}
+
 #toolbar {
   position: fixed;
   top: 50px;

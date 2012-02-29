@@ -16,11 +16,6 @@ img.changeable.hover {
   cursor: alias;
 }
 
-.ui-widget-overlay {
-  position: fixed;
-  z-index: 900;
-}
-
 input.url {
   width: 350px;
 }
