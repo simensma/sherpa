@@ -47,7 +47,48 @@ $(document).ready(function() {
     });
     $("#toolbar button.add-image").click(function() {
         $(".insertable").text("Klikk for å legge til bilde her").on('click.add', function() {
-            // Todo: insert image
+            // Show the insertable to get its width (it'll get hidden by disableInsertables() first)
+            var insertable = $(this);
+            var width = insertable.show().width();
+            insertable.hide();
+            enableOverlay();
+            var image = '<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">';
+            var br = '<br>';
+            var editable = '<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>';
+            $.ajax({
+                url: '/sherpa/artikler/nytt-innhold/',
+                type: 'POST',
+                data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
+                      "&order=" + encodeURIComponent(insertable.attr("data-order")) +
+                      "&content=" + encodeURIComponent(image + br + editable)
+            }).done(function(result) {
+                image = $(image);
+                br = $(br);
+                editable = $(editable);
+                var well = $('<div class="insertable well"></div>');
+                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(image, br, editable);
+                insertable.after(wrapper, well);
+
+                // Redo stuff that would happen on page load
+                image.hover(function() {
+                    $(this).addClass('hover');
+                }, function() {
+                    $(this).removeClass('hover');
+                }).click(function() {
+                    $(this).removeClass('hover');
+                    var src = prompt("URL?");
+                    if(src !== null && src !== undefined) {
+                        $(this).attr('src', src);
+                    }
+                });
+                editable.attr('contenteditable', 'true');
+                well.hide();
+                image.click();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                disableOverlay();
+            });
         });
     });
     $("#toolbar button.add-text").click(function() {
