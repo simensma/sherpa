@@ -55,7 +55,7 @@ $(document).ready(function() {
             var insertable = $(this);
             enableOverlay();
             $.ajax({
-                url: '/sherpa/artikler/innhold/',
+                url: '/sherpa/artikler/nytt-innhold/',
                 type: 'POST',
                 data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
                       "&order=" + encodeURIComponent(insertable.attr("data-order"))
