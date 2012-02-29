@@ -40,7 +40,7 @@ def new(request):
     column = Column(row=row, span=8, offset=2, order=0)
     column.save()
     for i in range(5):
-        content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=0)
+        content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
         content.save()
 
     return HttpResponseRedirect(reverse('admin.articles.views.edit', args=[version.id]))
