@@ -53,9 +53,7 @@ $(document).ready(function() {
     $("#toolbar button.add-text").click(function() {
         $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
             var insertable = $(this);
-            $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
-            $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
-              .appendTo('body');
+            enableOverlay();
             $.ajax({
                 url: '/sherpa/artikler/innhold/',
                 type: 'POST',
@@ -71,7 +69,7 @@ $(document).ready(function() {
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
-                $(".ui-widget-overlay,.overlay-loader").remove();
+                disableOverlay();
             });
 
         });
@@ -105,9 +103,7 @@ $(document).ready(function() {
         $(this).hide();
         $("div.no-save-warning").hide();
         $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
-        $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
-        $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
-          .appendTo('body');
+        enableOverlay();
         $("article .editable").removeAttr('contenteditable');
         var contents = [];
         $("div.content").each(function() {
@@ -128,7 +124,7 @@ $(document).ready(function() {
             // Todo
         }).always(function(result) {
             updateSaveCount();
-            $(".ui-widget-overlay,.overlay-loader").remove();
+            disableOverlay();
             $("#toolbar button.save").show();
             $("article .editable").attr('contenteditable', 'true');
         });

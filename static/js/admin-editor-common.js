@@ -71,3 +71,13 @@ $(document).ready(function() {
 
 
 });
+
+function enableOverlay() {
+    $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
+    $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
+      .appendTo('body');
+}
+
+function disableOverlay() {
+    $(".ui-widget-overlay,.overlay-loader").remove();
+}
