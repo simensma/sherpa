@@ -11,7 +11,7 @@
 }
 
 #toolbar #tabs, #toolbar li.active a {
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(245, 245, 245) !important;
 }
 
 #toolbar ul.nav li a:hover {
@@ -21,7 +21,10 @@
 #toolbar ul.nav {
   /* Negate the default bootstrap margin */
   margin-bottom: 0 !important;
-  background-color: white;
+}
+
+#toolbar ul.nav li a {
+  background-color: rgb(225, 225, 225);
 }
 
 #toolbar #tabs {
