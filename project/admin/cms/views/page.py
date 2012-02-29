@@ -16,7 +16,7 @@ def list(request):
 def new(request):
     page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False, publisher=request.user.get_profile())
     page.save()
-    variant = Variant(page=page, article=None, name='Standard', slug='', segment=None, priority=1, publisher=request.user.get_profile())
+    variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, publisher=request.user.get_profile())
     variant.save()
     version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
     version.save()
