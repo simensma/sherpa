@@ -54,7 +54,7 @@ $(document).ready(function() {
         $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
             var insertable = $(this);
             enableOverlay();
-            var editable = '<div class="editable"><p></p></div>';
+            var editable = '<div class="editable"><p><br></p></div>';
             $.ajax({
                 url: '/sherpa/artikler/nytt-innhold/',
                 type: 'POST',
