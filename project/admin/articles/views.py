@@ -35,11 +35,11 @@ def new(request):
         {'content': """<img class="changeable" src=\"""" + settings.STATIC_URL + """img/article/placeholder-bottom.png" alt="placeholder"><br><div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>""", 'type': 'h'},
     ]
 
+    row = Row(version=version, order=0)
+    row.save()
+    column = Column(row=row, span=8, offset=2, order=0)
+    column.save()
     for i in range(5):
-        row = Row(version=version, order=i)
-        row.save()
-        column = Column(row=row, span=8, offset=2, order=0)
-        column.save()
         content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=0)
         content.save()
 
