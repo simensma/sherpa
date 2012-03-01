@@ -54,29 +54,13 @@ $(document).ready(function() {
     $("#toolbar button.add-image").click(function() {
         $(".insertable").text("Klikk for å legge til bilde her").on('click.add', function() {
             // Show the insertable to get its width (it'll get hidden by disableInsertables() first)
-            var insertable = $(this);
-            var width = insertable.show().width();
-            insertable.hide();
-            enableOverlay();
-            var image = '<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">';
-            var br = '<br>';
-            var editable = '<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>';
-            $.ajax({
-                url: '/sherpa/artikler/nytt-innhold/',
-                type: 'POST',
-                data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
-                      "&order=" + encodeURIComponent(insertable.attr("data-order")) +
-                      "&content=" + encodeURIComponent(image + br + editable) +
-                      "&type=" + encodeURIComponent('h')
-            }).done(function(result) {
-                image = $(image);
-                br = $(br);
-                editable = $(editable);
-                var well = $('<div class="insertable well"></div>');
-                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(image, br, editable);
-                insertable.after(wrapper, well);
-
-                // Redo stuff that would happen on page load
+            var width = $(this).show().width();
+            $(this).hide();
+            var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
+            var br = $('<br>');
+            var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
+            var content = $("<div/>").append(image, br, editable);
+            function done() {
                 image.hover(function() {
                     $(this).addClass('hover');
                 }, function() {
@@ -89,44 +73,18 @@ $(document).ready(function() {
                     }
                 });
                 editable.attr('contenteditable', 'true');
-                well.hide();
                 image.click();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                disableOverlay();
-            });
+            }
+            addContent($(this), content, 'h', done);
         });
     });
     $("#toolbar button.add-text").click(function() {
         $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
-            var insertable = $(this);
-            enableOverlay();
-            var editable = '<div class="editable"><p><br></p></div>';
-            $.ajax({
-                url: '/sherpa/artikler/nytt-innhold/',
-                type: 'POST',
-                data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
-                      "&order=" + encodeURIComponent(insertable.attr("data-order")) +
-                      "&content=" + encodeURIComponent(editable) +
-                      "&type=" + encodeURIComponent('h')
-            }).done(function(result) {
-                editable = $(editable);
-                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(editable);
-                var well = $('<div class="insertable well" data-column="' +
-                    insertable.attr("data-column") + '" data-order="' +
-                    (Number(insertable.attr("data-order")) + 1) + '"></div>');
-                insertable.after(wrapper, well);
-
-                // Redo stuff that would happen on page load
-                editable.attr('contenteditable', 'true').focus();
-                well.hide();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                disableOverlay();
-            });
-
+            var content = $('<div class="editable"><p><br></p></div>');
+            function done() {
+                content.attr('contenteditable', 'true').focus();
+            }
+            addContent($(this), content, 'h', done);
         });
     });
 
@@ -193,4 +151,27 @@ function parseColumn(classList, name) {
       return classList[i].substring(classList[i].length-1)
     }
   }
+}
+
+function addContent(insertable, content, type, done) {
+    enableOverlay();
+    $.ajax({
+        url: '/sherpa/artikler/nytt-innhold/',
+        type: 'POST',
+        data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
+              "&order=" + encodeURIComponent(insertable.attr("data-order")) +
+              "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
+              "&type=" + encodeURIComponent(type)
+    }).done([function(result) {
+        var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
+        var well = $('<div class="insertable well" data-column="' +
+            insertable.attr("data-column") + '" data-order="' +
+            (Number(insertable.attr("data-order")) + 1) + '"></div>');
+        insertable.after(wrapper, well);
+        well.hide();
+    }, done]).fail(function(result) {
+        // Todo
+    }).always(function(result) {
+        disableOverlay();
+    });
 }
