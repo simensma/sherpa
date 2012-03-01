@@ -17,17 +17,7 @@ $(document).ready(function() {
         $(this).removeClass('static-hover');
     });
 
-    $("img.changeable").hover(function() {
-        $(this).addClass('hover');
-    }, function() {
-        $(this).removeClass('hover');
-    }).click(function() {
-        $(this).removeClass('hover');
-        var src = prompt("URL?");
-        if(src !== null && src !== undefined) {
-            $(this).attr('src', src);
-        }
-    });
+    changeableImages($("img.changeable"));
 
     /* Add widget/text/image */
 
@@ -61,17 +51,7 @@ $(document).ready(function() {
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
             var content = $("<div/>").append(image, br, editable);
             function done() {
-                image.hover(function() {
-                    $(this).addClass('hover');
-                }, function() {
-                    $(this).removeClass('hover');
-                }).click(function() {
-                    $(this).removeClass('hover');
-                    var src = prompt("URL?");
-                    if(src !== null && src !== undefined) {
-                        $(this).attr('src', src);
-                    }
-                });
+                changeableImages(image);
                 editable.attr('contenteditable', 'true');
                 image.click();
             }
@@ -151,6 +131,21 @@ function parseColumn(classList, name) {
       return classList[i].substring(classList[i].length-1)
     }
   }
+}
+
+/* Adds event listeners to images for changing the image */
+function changeableImages(images) {
+    images.hover(function() {
+        $(this).addClass('hover');
+    }, function() {
+        $(this).removeClass('hover');
+    }).click(function() {
+        $(this).removeClass('hover');
+        var src = prompt("URL?");
+        if(src !== null && src !== undefined) {
+            $(this).attr('src', src);
+        }
+    });
 }
 
 function addContent(insertable, content, type, done) {
