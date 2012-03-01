@@ -49,6 +49,10 @@ $(document).ready(function() {
                 selectableContent(editable);
                 changeableImages(image);
                 editable.attr('contenteditable', 'true');
+                // We don't want the default overlay to be there when we pick a new picture.
+                // It will be disabled when the ajax 'always' callback is called, but that's
+                // after this callback is done, so we'll just disable it twice.
+                disableOverlay();
                 image.click();
             }
             addContent($(this), content, 'h', done);
