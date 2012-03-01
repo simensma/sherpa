@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from project.page.models import Row, Column, Content
 
 @login_required
-def create(request):
+def add(request):
     column = Column.objects.get(id=request.POST['column'])
     for content in Content.objects.filter(column=column, order__gte=request.POST['order']):
         content.order = content.order + 1
