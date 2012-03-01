@@ -11,7 +11,7 @@
 {% endblock %}
 {% block body %}
 
-{# This token will be picked up by js for ajax requests. If there exists another token on this page, we could've just used that one and avoid duplicating it, but this will always be here in case there isn't one. #}
+{# Used for AJAX requests. #}
 {% csrf_token %}
 
 <div id="cms-container">
