@@ -15,14 +15,14 @@ def update(request, content):
     content = Content.objects.get(id=content)
     content.content = request.POST['content']
     content.save()
-    return HttpResponse('')
+    return HttpResponse()
 
 @login_required
 def delete(request, content):
     content = Content.objects.get(id=content)
     content.delete()
     if(request.is_ajax()):
-        return HttpResponse('')
+        return HttpResponse()
     else:
         return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit',
           args=[content.column.row.version.id]))
