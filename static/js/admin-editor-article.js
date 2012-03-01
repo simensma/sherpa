@@ -11,7 +11,7 @@ $(document).ready(function() {
         $(this).removeClass('static-hover');
     });
 
-    selectableContent($(".content").has(".editable"));
+    selectableContent($(".editable"));
     changeableImages($("img.changeable"));
 
     /* Add widget/text/image */
@@ -46,6 +46,7 @@ $(document).ready(function() {
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
             var content = $("<div/>").append(image, br, editable);
             function done() {
+                selectableContent(editable);
                 changeableImages(image);
                 editable.attr('contenteditable', 'true');
                 image.click();
@@ -57,6 +58,7 @@ $(document).ready(function() {
         $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
+                selectableContent(content);
                 content.attr('contenteditable', 'true').focus();
             }
             addContent($(this), content, 'h', done);
@@ -167,7 +169,6 @@ function addContent(insertable, content, type, done) {
             insertable.attr("data-column") + '" data-order="' +
             (Number(insertable.attr("data-order")) + 1) + '"></div>');
         insertable.after(wrapper, well);
-        selectableContent(wrapper.has(".editable"));
         well.hide();
     }, done]).fail(function(result) {
         // Todo

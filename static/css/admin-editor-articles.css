@@ -33,6 +33,6 @@ input.url {
   width: 350px;
 }
 
-.content.selected {
+.editable.selected {
   background-color: rgb(235, 235, 235);
 }
