@@ -77,10 +77,10 @@ $(document).ready(function() {
         lastSaveCount += 1;
         if(lastSaveCount < 30) {
             $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
-        } else if(lastSaveCount < 120) {
+        } else if(lastSaveCount < 60) {
             $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
         } else {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutter siden.");
+            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
         }
 
         if(lastSaveCount == 60 * 5) {
