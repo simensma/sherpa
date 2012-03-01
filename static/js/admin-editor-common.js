@@ -6,31 +6,14 @@ $(document).ready(function() {
 
     /* Add widget/text/image */
 
-    function enableInsertables() {
-        $("#toolbar .adders button").attr('disabled', true);
-        $("#toolbar button.cancel").show();
-        $(".insertable").show();
-    }
-
-    function disableInsertables() {
-        $("#toolbar .adders button").removeAttr('disabled');
-        $(".insertable").hide();
-        $(".insertable").off('click.add');
-        $("#toolbar button.cancel").hide();
-    }
-    $(".insertable").hide().click(disableInsertables);
-    $("#toolbar button.cancel").hide().click(disableInsertables);
-    $("#toolbar .adders button").click(enableInsertables);
+    $("#toolbar button.cancel").hide().click(removeInsertables);
     $("#toolbar button.add-widget").click(function() {
-        $(".insertable").text("Klikk for å legge til widget her").on('click.add', function() {
+        insertables("Klikk for å legge til widget her", $("article .content"), function() {
             // Todo: insert widget
         });
     });
     $("#toolbar button.add-image").click(function() {
-        $(".insertable").text("Klikk for å legge til bilde her").on('click.add', function() {
-            // Show the insertable to get its width (it'll get hidden by disableInsertables() first)
-            var width = $(this).show().width();
-            $(this).hide();
+        insertables("Klikk for å legge til bilde her", $("article .content"), function(event) {
             var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
             var br = $('<br>');
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
@@ -45,17 +28,17 @@ $(document).ready(function() {
                 disableOverlay();
                 image.click();
             }
-            addContent($(this), content, 'h', done);
+            addContent($(event.target), content, 'h', done);
         });
     });
     $("#toolbar button.add-text").click(function() {
-        $(".insertable").text("Klikk for å legge til tekst her").on('click.add', function() {
+        insertables("Klikk for å legge til tekst her", $("article .content"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
                 content.attr('contenteditable', 'true').focus();
             }
-            addContent($(this), content, 'h', done);
+            addContent($(event.target), content, 'h', done);
         });
     });
 
@@ -164,25 +147,48 @@ function selectableContent(content) {
     });
 }
 
+/* Divs for inserting widgets/images/text */
+function insertables(text, selector, click) {
+    var well = $('<div class="insertable well">' + text + '</div>');
+    selector.first().before(well);
+    well.click(click);
+    selector.each(function() {
+        well = well.clone(true);
+        $(this).after(well);
+    });
+    $("#toolbar .adders button").attr('disabled', true);
+    $("#toolbar button.cancel").show();
+}
+function removeInsertables() {
+    $("#toolbar .adders button").removeAttr('disabled');
+    $("#toolbar button.cancel").hide();
+    $("article .insertable").remove();
+}
+
+
 function addContent(insertable, content, type, done) {
     enableOverlay();
+    var order;
+    if(insertable.prev().length > 0) {
+        order = Number(insertable.prev().attr("data-order")) + 1;
+    } else {
+        order = 0;
+    }
     $.ajax({
         url: '/sherpa/cms/innhold/opprett/',
         type: 'POST',
-        data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
-              "&order=" + encodeURIComponent(insertable.attr("data-order")) +
+        data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
+              "&order=" + encodeURIComponent(order) +
               "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
               "&type=" + encodeURIComponent(type)
     }).done([function(result) {
-        var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
-        var well = $('<div class="insertable well" data-column="' +
-            insertable.attr("data-column") + '" data-order="' +
-            (Number(insertable.attr("data-order")) + 1) + '"></div>');
-        insertable.after(wrapper, well);
-        well.hide();
+        var wrapper = $('<div class="content" data-id="' + result + '" data-order="' + order +
+            '"></div>').append(content);
+        insertable.prev().after(wrapper);
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
+        removeInsertables();
         disableOverlay();
     });
 }
