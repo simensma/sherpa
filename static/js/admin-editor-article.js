@@ -5,18 +5,13 @@ $(window).load(function() {
 
 $(document).ready(function() {
 
-    $(".content").has(".editable").click(function() {
-        $(this).addClass('selected');
-    }).focusout(function() {
-        $(this).removeClass('selected');
-    });
-
     $(".static").hover(function() {
         $(this).addClass('static-hover');
     }, function() {
         $(this).removeClass('static-hover');
     });
 
+    selectableContent($(".content").has(".editable"));
     changeableImages($("img.changeable"));
 
     /* Add widget/text/image */
@@ -148,6 +143,15 @@ function changeableImages(images) {
     });
 }
 
+/* Adds event listeners to selected content for highlighting it */
+function selectableContent(content) {
+    content.click(function() {
+        $(this).addClass('selected');
+    }).focusout(function() {
+        $(this).removeClass('selected');
+    });
+}
+
 function addContent(insertable, content, type, done) {
     enableOverlay();
     $.ajax({
@@ -163,6 +167,7 @@ function addContent(insertable, content, type, done) {
             insertable.attr("data-column") + '" data-order="' +
             (Number(insertable.attr("data-order")) + 1) + '"></div>');
         insertable.after(wrapper, well);
+        selectableContent(wrapper.has(".editable"));
         well.hide();
     }, done]).fail(function(result) {
         // Todo
