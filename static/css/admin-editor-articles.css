@@ -27,3 +27,7 @@ img.changeable.hover {
 input.url {
   width: 350px;
 }
+
+.editable.selected {
+  background-color: rgb(235, 235, 235);
+}

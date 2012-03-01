@@ -5,5 +5,5 @@ urlpatterns = patterns('admin.articles.views',
     url(r'^ny/$', 'new'),
     url(r'^rediger/(?P<version>\d+)/$', 'edit'),
     url(r'^oppdater/(?P<version>\d+)/$', 'save'),
-    url(r'^innhold/$', 'create_content'),
+    url(r'^nytt-innhold/$', 'create_content'),
 )
