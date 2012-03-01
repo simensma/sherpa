@@ -66,7 +66,8 @@ $(document).ready(function() {
                 type: 'POST',
                 data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
                       "&order=" + encodeURIComponent(insertable.attr("data-order")) +
-                      "&content=" + encodeURIComponent(image + br + editable)
+                      "&content=" + encodeURIComponent(image + br + editable) +
+                      "&type=" + encodeURIComponent('h')
             }).done(function(result) {
                 image = $(image);
                 br = $(br);
@@ -107,7 +108,8 @@ $(document).ready(function() {
                 type: 'POST',
                 data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
                       "&order=" + encodeURIComponent(insertable.attr("data-order")) +
-                      "&content=" + encodeURIComponent(editable)
+                      "&content=" + encodeURIComponent(editable) +
+                      "&type=" + encodeURIComponent('h')
             }).done(function(result) {
                 editable = $(editable);
                 var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(editable);
