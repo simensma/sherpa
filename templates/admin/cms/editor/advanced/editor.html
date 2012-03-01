@@ -17,7 +17,7 @@
 <article data-id="{{ version.id }}">
 
 {% for row in rows %}
-<div class="row cms-row">
+<div class="row">
   {% for column in row.columns %}
     <div class="offset{{ column.offset }} span{{ column.span }}">
       <div class="insertable well" data-column="{{ column.id }}" data-order="0"></div>
