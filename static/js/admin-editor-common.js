@@ -8,12 +8,12 @@ $(document).ready(function() {
 
     $("#toolbar button.cancel").hide().click(removeInsertables);
     $("#toolbar button.add-widget").click(function() {
-        insertables("Klikk for å legge til widget her", $("article .content"), function() {
+        insertables("Klikk for å legge til widget her", $("article .column"), function() {
             // Todo: insert widget
         });
     });
     $("#toolbar button.add-image").click(function() {
-        insertables("Klikk for å legge til bilde her", $("article .content"), function(event) {
+        insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
             var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
             var br = $('<br>');
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
@@ -32,7 +32,7 @@ $(document).ready(function() {
         });
     });
     $("#toolbar button.add-text").click(function() {
-        insertables("Klikk for å legge til tekst her", $("article .content"), function(event) {
+        insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
@@ -148,11 +148,12 @@ function selectableContent(content) {
 }
 
 /* Divs for inserting widgets/images/text */
-function insertables(text, selector, click) {
+function insertables(text, container, click) {
     var well = $('<div class="insertable well">' + text + '</div>');
-    selector.first().before(well);
     well.click(click);
-    selector.each(function() {
+    var children = container.children();
+    container.prepend(well);
+    children.each(function() {
         well = well.clone(true);
         $(this).after(well);
     });
