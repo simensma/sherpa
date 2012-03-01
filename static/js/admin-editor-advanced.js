@@ -1,21 +1,23 @@
 $(document).ready(function() {
 
     // Edit mode - formatting, move vertically/horizontally
-    $("article").sortable({ disabled: true });
-    $("article .row").sortable({ disabled: true });
+    var rows = $("article");
+    var columns = $("article row");
+    rows.sortable({ disabled: true });
+    columns.sortable({ disabled: true });
     $("#toolbar #tabs input.formatting").click(function() {
-        disableSort($("article"));
-        disableSort($("article .row"));
+        disableSort(rows);
+        disableSort(columns);
         $(".cms-content").attr('contenteditable', 'true');
     });
     $("#toolbar #tabs input.vertical").click(function() {
-        enableSort($("article"), 'vertical');
-        disableSort($("article .row"));
+        enableSort(rows, 'vertical');
+        disableSort(columns);
         $(".cms-content").attr('contenteditable', 'false');
     });
     $("#toolbar #tabs input.horizontal").click(function() {
-        disableSort($("article"));
-        enableSort($("article .row"), 'horizontal');
+        disableSort(rows);
+        enableSort(columns, 'horizontal');
         $(".cms-content").attr('contenteditable', 'false');
     });
 
