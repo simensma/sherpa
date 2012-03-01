@@ -19,12 +19,14 @@
 <div class="row cms-row">
   {% for column in row.columns %}
     <div class="offset{{ column.offset }} span{{ column.span }}">
+      <div class="insertable well" data-column="{{ column.id }}" data-order="0"></div>
       {% for content in column.contents %}
         {% if content.type == 'h' %}
           <div class="cms-content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
+        <div class="insertable well" data-column="{{ column.id }}" data-order="{{ content.order|add:1 }}"></div>
       {% endfor %}
     </div>
   {% endfor %}
