@@ -161,7 +161,7 @@ function selectableContent(content) {
 function addContent(insertable, content, type, done) {
     enableOverlay();
     $.ajax({
-        url: '/sherpa/artikler/nytt-innhold/',
+        url: '/sherpa/cms/innhold/opprett/',
         type: 'POST',
         data: "column=" + encodeURIComponent(insertable.attr("data-column")) +
               "&order=" + encodeURIComponent(insertable.attr("data-order")) +

@@ -6,9 +6,13 @@ from project.page.models import Row, Column, Content
 @login_required
 def create(request):
     column = Column.objects.get(id=request.POST['column'])
-    content = Content(column=column, content="<p>Nytt innhold...</p>", type='h', order=request.POST['order'])
+    for content in Content.objects.filter(column=column, order__gte=request.POST['order']):
+        content.order = content.order + 1
+        content.save()
+    content = Content(column=column, content=request.POST['content'], type=request.POST['type'],
+        order=request.POST['order'])
     content.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[column.row.version.id]))
+    return HttpResponse(content.id)
 
 @login_required
 def update(request, content):
