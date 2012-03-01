@@ -5,6 +5,12 @@ $(window).load(function() {
 
 $(document).ready(function() {
 
+    $(".content").has(".editable").click(function() {
+        $(this).addClass('selected');
+    }).focusout(function() {
+        $(this).removeClass('selected');
+    });
+
     $(".static").hover(function() {
         $(this).addClass('static-hover');
     }, function() {
