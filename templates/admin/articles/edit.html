@@ -14,6 +14,38 @@
 {# Used for AJAX requests. #}
 {% csrf_token %}
 
+<div class="row">
+  <div class="offset3 span6">
+    <div class="no-save-warning alert alert-error">
+      <a class="close">x</a>
+      <strong>Advarsel!</strong><br>
+      Du har ikke lagret artikkelen på over 5 minutter! Du bør vurdere å lagre nå, hvis ikke kan du miste endringene du har gjort hvis et uhell oppstår.
+    </div>
+  </div>
+</div>
+
+<article data-id="{{ version.id }}">
+
+{% for row in rows %}
+<div class="row">
+  {% for column in row.columns %}
+    <div class="offset{{ column.offset }} span{{ column.span }}">
+      <div class="insertable well" data-column="{{ column.id }}" data-order="0"></div>
+      {% for content in column.contents %}
+        {% if content.type == 'h' %}
+          <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+        {% else %}
+          {% include content.widget.template with widget=content.widget %}
+        {% endif %}
+        <div class="insertable well" data-column="{{ column.id }}" data-order="{{ content.order|add:1 }}"></div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+</article>
+
 <div id="toolbar">
   <ul class="nav nav-tabs">
     <li class="active"><a href="javascript:undefined">Lagre</a></li>
@@ -62,37 +94,5 @@
     <div style="clear: both;"></div>
   </div>
 </div>
-
-<div class="row">
-  <div class="offset3 span6">
-    <div class="no-save-warning alert alert-error">
-      <a class="close">x</a>
-      <strong>Advarsel!</strong><br>
-      Du har ikke lagret artikkelen på over 5 minutter! Du bør vurdere å lagre nå, hvis ikke kan du miste endringene du har gjort hvis et uhell oppstår.
-    </div>
-  </div>
-</div>
-
-<article data-id="{{ version.id }}">
-
-{% for row in rows %}
-<div class="row">
-  {% for column in row.columns %}
-    <div class="offset{{ column.offset }} span{{ column.span }}">
-      <div class="insertable well" data-column="{{ column.id }}" data-order="0"></div>
-      {% for content in column.contents %}
-        {% if content.type == 'h' %}
-          <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
-        {% else %}
-          {% include content.widget.template with widget=content.widget %}
-        {% endif %}
-        <div class="insertable well" data-column="{{ column.id }}" data-order="{{ content.order|add:1 }}"></div>
-      {% endfor %}
-    </div>
-  {% endfor %}
-</div>
-{% endfor %}
-
-</article>
 
 {% endblock %}
