@@ -1,20 +1,20 @@
 $(document).ready(function() {
 
     // Edit mode - formatting, move vertically/horizontally
-    $("#cms-container").sortable({ disabled: true });
+    $("article").sortable({ disabled: true });
     $(".cms-row").sortable({ disabled: true });
     $("#toolbar #tabs input.formatting").click(function() {
-        disableSort($("#cms-container"));
+        disableSort($("article"));
         disableSort($(".cms-row"));
         $(".cms-content").attr('contenteditable', 'true');
     });
     $("#toolbar #tabs input.vertical").click(function() {
-        enableSort($("#cms-container"), 'vertical');
+        enableSort($("article"), 'vertical');
         disableSort($(".cms-row"));
         $(".cms-content").attr('contenteditable', 'false');
     });
     $("#toolbar #tabs input.horizontal").click(function() {
-        disableSort($("#cms-container"));
+        disableSort($("article"));
         enableSort($(".cms-row"), 'horizontal');
         $(".cms-content").attr('contenteditable', 'false');
     });

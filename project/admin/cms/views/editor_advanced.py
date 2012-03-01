@@ -22,7 +22,7 @@ def edit(request, version):
                         content.widget = parse_widget(json.loads(content.content))
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows}
+        context = {'rows': rows, 'version': version}
         return render(request, 'admin/cms/editor/advanced/editor.html', context)
     elif(request.method == 'POST'):
         version = Version.objects.get(id=version)
