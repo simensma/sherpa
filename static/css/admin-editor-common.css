@@ -2,6 +2,14 @@
  * Common stylesheet for advanced- and article-editor in the admin ui
  */
 
+article .insertable {
+  cursor: pointer;
+  text-align: center;
+  color: rgb(125, 125, 125);
+  font-size: 180%;
+  font-style: italic;
+}
+
 .ui-widget-overlay {
   position: fixed;
   z-index: 900;
