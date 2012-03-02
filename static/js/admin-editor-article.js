@@ -32,8 +32,6 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    $("div.no-save-warning").hide();
-
     $("#toolbar button.save").click(function() {
         clearInterval(updateSaveCountID);
         $(this).hide();

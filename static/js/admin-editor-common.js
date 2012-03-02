@@ -1,6 +1,7 @@
 /* Common for avanced- and article-editor */
 $(document).ready(function() {
 
+    $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     changeableImages($("img.changeable"));
 
