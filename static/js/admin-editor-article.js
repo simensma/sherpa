@@ -59,12 +59,3 @@ $(document).ready(function() {
         });
     });
 });
-
-/* Figures that "span" is 8 for a class list of e.g. "offset4 span8" */
-function parseColumn(classList, name) {
-  for(i=0; i<classList.length; i++) {
-    if(classList[i].substring(0, classList[i].length-1) == name) {
-      return classList[i].substring(classList[i].length-1)
-    }
-  }
-}
