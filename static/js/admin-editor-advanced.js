@@ -104,48 +104,4 @@ $(document).ready(function() {
         });
     }
 
-    /* Saving document */
-
-    var lastSaveCount = 0;
-    var updateSaveCountID;
-    function updateSaveCount() {
-        lastSaveCount += 1;
-        if(lastSaveCount < 30) {
-            $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
-        } else if(lastSaveCount < 120) {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
-        } else {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutter siden.");
-        }
-
-        if(lastSaveCount == 60 * 5) {
-            $("div.no-save-warning").show();
-        }
-        updateSaveCountID = setTimeout(updateSaveCount, 1000);
-    }
-    updateSaveCount();
-
-    $("#toolbar button.save").click(function() {
-        clearInterval(updateSaveCountID);
-        $(this).hide();
-        $("div.no-save-warning").hide();
-        $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
-        enableOverlay();
-        $(".cms-content").each(function(c) {
-            $.ajax({
-                url: '/sherpa/cms/innhold/oppdater/' + $(this).attr('data-id') + '/',
-                type: 'POST',
-                data: "content=" + encodeURIComponent($(this).html())
-            }).done(function(result) {
-                lastSaveCount = 0;
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                updateSaveCount();
-                disableOverlay();
-                $("#toolbar button.save").show();
-            });
-        });
-    });
-
 });

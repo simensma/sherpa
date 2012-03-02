@@ -25,6 +25,7 @@ urlpatterns = patterns('admin.cms.views',
     # Versions
     url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
+    url(r'^versjon/oppdater/(?P<version>\d+)/$', 'version.edit'),
 
     # Rows
     url(r'^kolonner/ny/$', 'row.add_columns'),

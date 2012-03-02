@@ -144,6 +144,79 @@ $(document).ready(function() {
     });
 
 
+    /* Saving document */
+
+    var lastSaveCount = 0;
+    var updateSaveCountID;
+    function updateSaveCount() {
+        lastSaveCount += 1;
+        if(lastSaveCount < 30) {
+            $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
+        } else if(lastSaveCount < 60) {
+            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+        } else {
+            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
+        }
+
+        if(lastSaveCount == 60 * 5) {
+            $("div.no-save-warning").show();
+        }
+        updateSaveCountID = setTimeout(updateSaveCount, 1000);
+    }
+    updateSaveCount();
+
+    $("#toolbar button.save").click(function() {
+        clearInterval(updateSaveCountID);
+        $(this).hide();
+        $("div.no-save-warning").hide();
+        $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
+        enableOverlay();
+        $("article .editable").removeAttr('contenteditable');
+        var rows = [];
+        $("article div.row").each(function() {
+            var row = {
+                id: $(this).attr('data-id'),
+                order: $(this).attr('data-order')
+            }
+            rows = rows.concat([row]);
+        });
+        var columns = [];
+        $("article div.column").each(function() {
+            var column = {
+                id: $(this).attr('data-id'),
+                order: $(this).attr('data-order')
+            }
+            column = columns.concat([column]);
+        });
+        var contents = [];
+        $("article div.content").each(function() {
+            var content = {
+                id: $(this).attr('data-id'),
+                order: $(this).attr('data-order'),
+                content: $(this).html(),
+            }
+            contents = contents.concat([content]);
+        });
+
+        $.ajax({
+            url: '/sherpa/cms/versjon/oppdater/' + $("article").attr('data-id') + '/',
+            type: 'POST',
+            data: "rows=" + encodeURIComponent(JSON.stringify(rows)) +
+                  "&columns=" + encodeURIComponent(JSON.stringify(columns)) +
+                  "&contents=" + encodeURIComponent(JSON.stringify(contents))
+        }).done(function(result) {
+            lastSaveCount = 0;
+        }).fail(function(result) {
+            // Todo
+            $(document.body).html(result.responseText);
+        }).always(function(result) {
+            updateSaveCount();
+            disableOverlay();
+            $("#toolbar button.save").show();
+            $("article .editable").attr('contenteditable', 'true');
+        });
+    });
+
 });
 
 function enableOverlay() {

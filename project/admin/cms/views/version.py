@@ -1,9 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import Variant, Version
+from project.page.models import Variant, Version, Row, Column, Content
+
+import json
 
 @login_required
 def new(request, variant):
@@ -27,3 +29,21 @@ def activate(request, version):
     newActive.save()
     oldActive.save()
     return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[newActive.id]))
+
+@login_required
+def edit(request, version):
+    version = Version.objects.get(id=version)
+    for row in json.loads(request.POST['rows']):
+        obj = Row.objects.get(id=row['id'])
+        obj.order = row['order']
+        obj.save()
+    for column in json.loads(request.POST['columns']):
+        obj = Column.objects.get(id=column['id'])
+        obj.order = column['order']
+        obj.save()
+    for content in json.loads(request.POST['contents']):
+        obj = Content.objects.get(id=content['id'])
+        obj.order = content['order']
+        obj.content = content['content']
+        obj.save()
+    return HttpResponse()
