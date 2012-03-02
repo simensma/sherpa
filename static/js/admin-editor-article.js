@@ -1,8 +1,3 @@
-$(window).load(function() {
-    // Don't set contenteditable until the entire window is loaded
-    $("article .editable").attr('contenteditable', 'true');
-});
-
 $(document).ready(function() {
 
     $(".static").hover(function() {

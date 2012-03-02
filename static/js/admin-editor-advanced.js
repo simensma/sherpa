@@ -104,9 +104,6 @@ $(document).ready(function() {
         });
     }
 
-    // Allow content editing of content elements
-    $(".cms-content").attr('contenteditable', 'true');
-
     /* Saving document */
 
     var lastSaveCount = 0;

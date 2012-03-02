@@ -1,3 +1,8 @@
+$(window).load(function() {
+    // Don't set contenteditable until the entire window is loaded
+    $("article .editable").attr('contenteditable', 'true');
+});
+
 /* Common for avanced- and article-editor */
 $(document).ready(function() {
 
