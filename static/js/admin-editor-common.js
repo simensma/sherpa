@@ -12,12 +12,18 @@ $(document).ready(function() {
 
     /* Add widget/text/image */
 
+    var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
+        "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
     $("#toolbar button.cancel-content").hide().click(function() {
         $("#toolbar .adders button").removeAttr('disabled');
         $(this).hide();
         $("article .insertable").remove();
     });
     $("#toolbar button.add-widget").click(function() {
+        if($("article").children().length == 0) {
+            alert(noStructureForContentWarning);
+            return;
+        }
         $("#toolbar .adders button").attr('disabled', true);
         $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
@@ -28,6 +34,10 @@ $(document).ready(function() {
         });
     });
     $("#toolbar button.add-image").click(function() {
+        if($("article").children().length == 0) {
+            alert(noStructureForContentWarning);
+            return;
+        }
         $("#toolbar .adders button").attr('disabled', true);
         $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
@@ -49,6 +59,10 @@ $(document).ready(function() {
         });
     });
     $("#toolbar button.add-text").click(function() {
+        if($("article").children().length == 0) {
+            alert(noStructureForContentWarning);
+            return;
+        }
         $("#toolbar .adders button").attr('disabled', true);
         $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
