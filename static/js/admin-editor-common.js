@@ -187,7 +187,7 @@ function addContent(insertable, content, type, done) {
         order = 0;
     }
     $.ajax({
-        url: '/sherpa/cms/innhold/opprett/',
+        url: '/sherpa/cms/innhold/ny/',
         type: 'POST',
         data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
               "&order=" + encodeURIComponent(order) +
