@@ -1,40 +1,25 @@
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
 from project.page.models import Version, Row, Column, Content
 
+import json
+
 @login_required
-def add(request, version, template):
-    version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version)
-    if(len(rows) == 0):
-        max = 0
-    else:
-        max = rows.aggregate(Max('order'))['order__max']
-    row = Row(version=version, order=(max+1))
+def add_columns(request):
+    version = Version.objects.get(id=request.POST['version'])
+    for row in Row.objects.filter(version=version, order__gte=request.POST['order']):
+        row.order = row.order + 1
+        row.save()
+    row = Row(version=version, order=request.POST['order'])
     row.save()
-    if(template == "2-columns"):
-        col = Column(row=row, span=6, offset=0, order=0)
-        col.save()
-        col = Column(row=row, span=6, offset=0, order=1)
-        col.save()
-    elif(template == "3-columns"):
-        col = Column(row=row, span=4, offset=0, order=0)
-        col.save()
-        col = Column(row=row, span=4, offset=0, order=1)
-        col.save()
-        col = Column(row=row, span=4, offset=0, order=2)
-        col.save()
-    elif(template == "full"):
-        col = Column(row=row, span=12, offset=0, order=0)
-        col.save()
-    elif(template == "sidebar"):
-        col = Column(row=row, span=8, offset=0, order=0)
-        col.save()
-        col = Column(row=row, span=4, offset=0, order=1)
-        col.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
+    ids = [row.id]
+    for column in json.loads(request.POST['columns']):
+        obj = Column(row=row, span=column['span'], offset=column['offset'], order=column['order'])
+        obj.save()
+        ids.append(obj.id)
+    return HttpResponse(json.dumps(ids))
 
 @login_required
 def move_up(request, row):

@@ -27,7 +27,7 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
 
     # Rows
-    url(r'^rad/ny/(?P<version>\d+)/(?P<template>[a-zA-Z0-9-_]+)/$', 'row.add'),
+    url(r'^kolonner/ny/$', 'row.add_columns'),
     url(r'^rad/flytt-ned/(?P<block>\d+)/$', 'row.move_down'),
     url(r'^rad/flytt-opp/(?P<block>\d+)/$', 'row.move_up'),
     url(r'^rad/slett/(?P<block>\d+)/$', 'row.delete'),
