@@ -7,13 +7,24 @@ $(document).ready(function() {
 
     /* Add widget/text/image */
 
-    $("#toolbar button.cancel").hide().click(removeInsertables);
+    $("#toolbar button.cancel-content").hide().click(function() {
+        $("#toolbar .adders button").removeAttr('disabled');
+        $(this).hide();
+        $("article .insertable").remove();
+    });
     $("#toolbar button.add-widget").click(function() {
+        $("#toolbar .adders button").attr('disabled', true);
+        $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             // Todo: insert widget
+            $("#toolbar .adders button").removeAttr('disabled');
+            $("#toolbar button.cancel-content").hide();
+            $("article .insertable").remove();
         });
     });
     $("#toolbar button.add-image").click(function() {
+        $("#toolbar .adders button").attr('disabled', true);
+        $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
             var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
             var br = $('<br>');
@@ -33,6 +44,8 @@ $(document).ready(function() {
         });
     });
     $("#toolbar button.add-text").click(function() {
+        $("#toolbar .adders button").attr('disabled', true);
+        $("#toolbar button.cancel-content").show();
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
@@ -158,15 +171,7 @@ function insertables(text, container, click) {
         well = well.clone(true);
         $(this).after(well);
     });
-    $("#toolbar .adders button").attr('disabled', true);
-    $("#toolbar button.cancel").show();
 }
-function removeInsertables() {
-    $("#toolbar .adders button").removeAttr('disabled');
-    $("#toolbar button.cancel").hide();
-    $("article .insertable").remove();
-}
-
 
 function addContent(insertable, content, type, done) {
     enableOverlay();
@@ -190,7 +195,9 @@ function addContent(insertable, content, type, done) {
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
-        removeInsertables();
+        $("#toolbar .adders button").removeAttr('disabled');
+        $("#toolbar button.cancel-content").hide();
+        $("article .insertable").remove();
         disableOverlay();
     });
 }
