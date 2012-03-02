@@ -1,11 +1,5 @@
 $(document).ready(function() {
 
-    $(".static").hover(function() {
-        $(this).addClass('static-hover');
-    }, function() {
-        $(this).removeClass('static-hover');
-    });
-
     /* Saving document */
 
     var lastSaveCount = 0;

@@ -2,7 +2,7 @@
  * Stylesheet for editing articles
  */
 
-.static-hover, .static-hover * {
+article .meta.static {
   cursor: not-allowed;
 }
 
