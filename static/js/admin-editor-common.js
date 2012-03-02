@@ -210,7 +210,12 @@ function addContent(insertable, content, type, done) {
     }).done([function(result) {
         var wrapper = $('<div class="content" data-id="' + result + '" data-order="' + order +
             '"></div>').append(content);
-        insertable.prev().after(wrapper);
+        var prev = insertable.prev();
+        if(prev.length == 0) {
+            insertable.parent().prepend(wrapper);
+        } else {
+            prev.after(wrapper);
+        }
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
