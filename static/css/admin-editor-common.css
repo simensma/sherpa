@@ -10,6 +10,11 @@ article .insertable {
   font-style: italic;
 }
 
+article .hover-remove {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
 .ui-widget-overlay {
   position: fixed;
   z-index: 900;

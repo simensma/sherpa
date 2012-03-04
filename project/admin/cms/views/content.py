@@ -25,8 +25,4 @@ def update(request, content):
 def delete(request, content):
     content = Content.objects.get(id=content)
     content.delete()
-    if(request.is_ajax()):
-        return HttpResponse()
-    else:
-        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit',
-          args=[content.column.row.version.id]))
+    return HttpResponse()

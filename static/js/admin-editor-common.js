@@ -72,6 +72,39 @@ $(document).ready(function() {
         });
     });
 
+    /* Remove content */
+    $("#toolbar button.remove-content").click(function() {
+        function doneRemoving() {
+            $("article .editable").attr('contenteditable', 'true');
+            changeableImages($("article img.changeable"));
+            $("article .content").off('hover click');
+            enableToolbar();
+        }
+        disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
+        $("article .editable").removeAttr('contenteditable');
+        $("article img.changeable").off('click');
+        $("article .content").hover(function() {
+            $(this).addClass('hover-remove');
+        }, function() {
+            $(this).removeClass('hover-remove');
+        }).click(function() {
+            var content = $(this);
+            $.ajax({
+                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                type: 'POST'
+            }).done(function(result) {
+                content.nextAll().each(function() {
+                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
+                });
+                content.remove();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                doneRemoving();
+            });
+        });
+    });
+
     // Hide/show chosen toolbar tab
     $("#toolbar div.tab").hide().first().show();
     $("#toolbar li").click(function() {
