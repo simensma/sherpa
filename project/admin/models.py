@@ -19,14 +19,14 @@ class Image(models.Model):
     tags = models.ManyToManyField('admin.Tag', related_name='images')
 
 # Upon image delete, remove tags that only this image has
-@receiver(pre_delete, sender=Image)
+@receiver(pre_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_pre(sender, **kwargs):
     for tag in kwargs['instance'].tags.all():
         if(len(tag.images.all()) == 1):
             tag.delete()
 
 # Upon image delete, delete the corresponding object from S3
-@receiver(post_delete, sender=Image)
+@receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
     conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     conn.delete(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + kwargs['instance'].key)
@@ -42,7 +42,7 @@ class Album(models.Model):
     # Todo: Author, or some other sort of affiliation?
 
 # Upon album delete, delete all child albums and connected images
-@receiver(post_delete, sender=Album)
+@receiver(post_delete, sender=Album, dispatch_uid="admin.models")
 def delete_album(sender, **kwargs):
     Album.objects.filter(parent=kwargs['instance']).delete()
     Image.objects.filter(album=kwargs['instance']).delete()

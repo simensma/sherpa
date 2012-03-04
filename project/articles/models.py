@@ -10,6 +10,6 @@ class Article(models.Model):
     pub_date = models.DateTimeField(null=True)
     publisher = models.ForeignKey('user.Profile')
 
-@receiver(post_delete, sender=Article)
+@receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):
     Variant.objects.filter(article=kwargs['instance']).delete()

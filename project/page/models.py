@@ -16,7 +16,7 @@ class Page(models.Model):
     pub_date = models.DateTimeField(null=True)
     publisher = models.ForeignKey('user.Profile')
 
-@receiver(post_delete, sender=Page)
+@receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):
     Menu.objects.filter(page=kwargs['instance']).delete()
     Variant.objects.filter(page=kwargs['instance']).delete()
@@ -37,7 +37,7 @@ class Variant(models.Model):
     # way to do this?
     active = None
 
-@receiver(post_delete, sender=Variant)
+@receiver(post_delete, sender=Variant, dispatch_uid="page.models")
 def delete_page_variant(sender, **kwargs):
     # Note: We don't really need to cascade priorities
     Version.objects.filter(variant=kwargs['instance']).delete()
@@ -48,7 +48,7 @@ class Version(models.Model):
     publisher = models.ForeignKey('user.Profile')
     active = models.BooleanField()
 
-@receiver(post_delete, sender=Version)
+@receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
     Row.objects.filter(version=kwargs['instance']).delete()
 
@@ -59,7 +59,7 @@ class Row(models.Model):
     order = models.IntegerField()
     columns = None
 
-@receiver(post_delete, sender=Row)
+@receiver(post_delete, sender=Row, dispatch_uid="page.models")
 def delete_row(sender, **kwargs):
     Column.objects.filter(row=kwargs['instance']).delete()
 
@@ -70,7 +70,7 @@ class Column(models.Model):
     order = models.IntegerField()
     contents = None
 
-@receiver(post_delete, sender=Column)
+@receiver(post_delete, sender=Column, dispatch_uid="page.models")
 def delete_column(sender, **kwargs):
     Content.objects.filter(column=kwargs['instance']).delete()
 
@@ -83,7 +83,7 @@ class Content(models.Model):
     order = models.IntegerField()
     widget = None
 
-@receiver(pre_delete, sender=Content)
+@receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
     for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=kwargs['instance'].order):
         content.order = (content.order-1)
