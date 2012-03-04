@@ -1,14 +1,10 @@
 $(document).ready(function() {
 
     // Structure - add row with columns
-    $("#toolbar button.cancel-structure").hide().click(function() {
-        $("#toolbar button.add-columns").removeAttr('disabled');
-        $(this).hide();
-        $(".insertable").remove();
-    });
     $("#toolbar button.add-columns").click(function() {
-        $(this).attr('disabled', true);
-        $("#toolbar button.cancel-structure").show();
+        disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
+            $(".insertable").remove();
+        })
         insertables("Klikk her for å sette inn en rad", $("article"), function(event) {
             var choice = Number(prompt("0, 1, 2, 3?"));
             if(!isNaN(choice)) {
@@ -62,6 +58,7 @@ $(document).ready(function() {
                 }).always(function(result) {
                     $("article .insertable").remove();
                     disableOverlay();
+                    enableToolbar();
                 });
             }
         });

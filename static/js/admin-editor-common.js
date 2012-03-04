@@ -14,22 +14,17 @@ $(document).ready(function() {
 
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
-    $("#toolbar button.cancel-content").hide().click(function() {
-        $("#toolbar .adders button").removeAttr('disabled');
-        $(this).hide();
-        $("article .insertable").remove();
-    });
     $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
         }
-        $("#toolbar .adders button").attr('disabled', true);
-        $("#toolbar button.cancel-content").show();
+        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til widget...", function() {
+            $("article .insertable").remove();
+        });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             // Todo: insert widget
-            $("#toolbar .adders button").removeAttr('disabled');
-            $("#toolbar button.cancel-content").hide();
+            enableToolbar();
             $("article .insertable").remove();
         });
     });
@@ -38,8 +33,9 @@ $(document).ready(function() {
             alert(noStructureForContentWarning);
             return;
         }
-        $("#toolbar .adders button").attr('disabled', true);
-        $("#toolbar button.cancel-content").show();
+        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til bilde...", function() {
+            $("article .insertable").remove();
+        });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
             var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
             var br = $('<br>');
@@ -63,8 +59,9 @@ $(document).ready(function() {
             alert(noStructureForContentWarning);
             return;
         }
-        $("#toolbar .adders button").attr('disabled', true);
-        $("#toolbar button.cancel-content").show();
+        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
+            $("article .insertable").remove();
+        });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
@@ -229,6 +226,19 @@ function disableOverlay() {
     $(".ui-widget-overlay,.overlay-loader").remove();
 }
 
+function disableToolbar(displayText, cancelCallback) {
+    $("#toolbar .tab *").hide();
+    var btn = $('<button class="btn cancel">Avbryt</button>');
+    btn.click(enableToolbar);
+    btn.click(cancelCallback);
+    $("#toolbar .tab").append('<p class="cancel">' + displayText + '</p>', btn);
+}
+
+function enableToolbar() {
+    $("#toolbar .tab .cancel").remove();
+    $("#toolbar .tab *").show();
+}
+
 /* Adds event listeners to images for changing the image */
 function changeableImages(images) {
     images.hover(function() {
@@ -292,8 +302,7 @@ function addContent(insertable, content, type, done) {
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
-        $("#toolbar .adders button").removeAttr('disabled');
-        $("#toolbar button.cancel-content").hide();
+        enableToolbar();
         $("article .insertable").remove();
         disableOverlay();
     });
