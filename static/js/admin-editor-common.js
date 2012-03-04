@@ -299,6 +299,9 @@ function addContent(insertable, content, type, done) {
         } else {
             prev.after(wrapper);
         }
+        wrapper.nextAll(".content").each(function() {
+            $(this).attr('data-order', (Number($(this).attr('data-order')) + 1));
+        });
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
