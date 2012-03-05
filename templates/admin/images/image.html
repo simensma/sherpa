@@ -63,7 +63,11 @@
 <div class="row">
   <div class="offset3 span6">
     <h3>Beskrivelse:</h3>
-    <pre>{{ image.description }}</pre>
+      {% if not image.description %}
+        <p>{{ image.uploader.user.first_name }} la ikke inn noen beskrivelse for bildet.</p>
+      {% else %}
+        <pre>{{ image.description }}</pre>
+      {% endif %}
   </div>
 </div>
 <div style="clear: both;"></div>
