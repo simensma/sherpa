@@ -73,6 +73,7 @@ def update_images(request):
         image.credits = request.POST['credits']
         image.licence = request.POST['licence']
         image.save()
+        # Note: Intentionally not removing old tags upon update.
         for tagName in json.loads(request.POST['tags-serialized']):
             tag = None
             try:
