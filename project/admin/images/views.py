@@ -69,6 +69,18 @@ def add_album(request, parent):
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
 @login_required
+def update_album(request):
+    albums = Album.objects.filter(id__in=json.loads(request.POST['albums']))
+    for album in albums:
+        album.name = request.POST['name']
+        album.save()
+    parent = albums[0].parent
+    if(parent is None):
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
+
+@login_required
 def update_images(request):
     images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
     for image in images:

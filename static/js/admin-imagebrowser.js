@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+    $("button.details-button").click(function() {
+        if(selected == "album") {
+            $(".album-details.dialog").dialog('open');
+        } else if(selected == "image") {
+            $(".image-details.dialog").dialog('open');
+        }
+    });
+
+    $(".album-details form").submit(function() {
+        var albums = [];
+        $("#archive-gallery li.album.selected").each(function() {
+            albums = albums.concat([$(this).attr('data-id')]);
+        });
+        $(this).children("input[name='albums']").val(JSON.stringify(albums));
+    });
+
     $(".image-details form").submit(function() {
         var items = [];
         $("#archive-gallery li." + selected + ".selected").each(function() {

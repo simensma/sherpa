@@ -30,7 +30,7 @@
 <div class="row">
   <div class="offset3 span6 multiedit">
     <button class="btn btn-danger dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett valgte album/bilder</button>
-    <button class="btn btn-warning dialog-button" data-dialog=".details-dialog"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button>
+    <button class="btn btn-warning details-button"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button>
   </div>
 </div>
 
@@ -79,7 +79,7 @@
 </div>
 
 
-<div class="dialog details-dialog image-details" data-title="Oppdater bildeinformasjon" data-width="auto">
+<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="auto">
   <form action="{% url admin.images.views.update_images %}" method="post">
     {% csrf_token %}
     <label>Beskrivelse av bildene:</label>
@@ -98,6 +98,15 @@
     <input type="submit" class="btn" value="Lagre bildedata">
     <p class="waiting">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
     <input type="hidden" name="ids">
+  </form>
+</div>
+
+<div class="dialog album-details" data-title="Oppdater albuminformasjon" data-width="auto">
+  <form action="{% url admin.images.views.update_album %}" method="post">
+    {% csrf_token %}
+    <p>Nytt navn: <input type="text" name="name"></p>
+    <input type="hidden" name="albums">
+    <p><input type="submit" value="Oppdater album"></p>
   </form>
 </div>
 {% endblock %}
