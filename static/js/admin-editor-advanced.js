@@ -4,7 +4,7 @@ $(document).ready(function() {
     $("#toolbar button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
-        })
+        });
         insertables("Klikk her for å sette inn en rad", $("article"), function(event) {
             var choice = Number(prompt("0, 1, 2, 3?"));
             if(!isNaN(choice)) {
