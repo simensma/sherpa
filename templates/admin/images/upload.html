@@ -46,14 +46,14 @@
     <form action="{% url admin.images.views.update_images %}" method="post" class="well">
       {% csrf_token %}
       <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem:</em></p>
-      <label>Kort beskrivelse av bildene:</label>
-      <input type="text" class="span4" name="description" placeholder="F.eks. 'Kom deg ut-dagen 2012'..."><br>
-      <label>Kreditering:</label>
-      <input type="text" class="span4" name="credits" placeholder="Navn på person, forening e.l..."><br>
+      <label>Beskrivelse av bildene:</label>
+      <textarea name="description" class="span4" rows="3"></textarea>
       <label>Fotograf:</label>
       <input type="text" class="span4" name="photographer" placeholder="Fullt navn..."><br>
-      <label>Kontaktinformasjon for fotografen:</label>
-      <input type="text" class="span4" name="photographer_contact" placeholder="Epost, telefon eller liknende..."><br>
+      <label>Kreditering:</label>
+      <input type="text" class="span4" name="credits" placeholder="Navn på person, forening e.l..."><br>
+      <label>Bruksrett:</label>
+      <input type="text" class="span4" name="licence" placeholder="Kun ved behov..."><br>
       <label>Nøkkelord</label>
       <input type="text" class="span4" name="tags">
       <input type="hidden" name="tags-serialized">

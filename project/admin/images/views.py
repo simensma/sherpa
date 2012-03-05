@@ -7,10 +7,12 @@ from django.conf import settings
 from admin.models import Image, Tag, Album
 from lib import S3
 
+from PIL.ExifTags import TAGS
 import random, Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
 import json
+from datetime import datetime
 
 # Pixel sizes we'll want to generate thumbnail images for
 # Note: A couple of places (the template, Image model etc.) has hardcoded
@@ -35,7 +37,9 @@ def list_albums(request, album):
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
-    context = {'image': image, 'albumpath': parents}
+    exif = json.loads(image.exif)
+    taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
+    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
@@ -64,9 +68,9 @@ def update_images(request):
     images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
     for image in images:
         image.description = request.POST['description']
-        image.credits = request.POST['credits']
         image.photographer = request.POST['photographer']
-        image.photographer_contact = request.POST['photographer_contact']
+        image.credits = request.POST['credits']
+        image.licence = request.POST['licence']
         image.save()
         for tagName in json.loads(request.POST['tags-serialized']):
             tag = None
@@ -107,6 +111,9 @@ def upload_image(request, album):
             # First parse and resize the images. This will consume a lot of memory.
             try:
                 img = pil.open(StringIO(data))
+                exif = {}
+                for tag, value in img._getexif().items():
+                    exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 for size in thumb_sizes:
                     fp = StringIO()
@@ -121,7 +128,7 @@ def upload_image(request, album):
 
                 parsed_images.append({'key': key, 'hash': sha1(data).hexdigest(),
                   'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-                  'data': data, 'thumbs': thumbs})
+                  'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)})
             except(IOError, KeyError):
                 # This is raised by PIL, maybe it was an invalid image file
                 # or it didn't have the right file extension.
@@ -141,9 +148,9 @@ def upload_image(request, album):
                     S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
-            image = Image(key=image['key'], hash=image['hash'], description='', album=album, credits='',
-              photographer='', photographer_contact='', uploader=request.user.get_profile(),
-              width=image['width'], height=image['height'])
+            image = Image(key=image['key'], hash=image['hash'], description='', album=album,
+              photographer='', credits='', licence='', exif=image['exif'],
+              uploader=request.user.get_profile(), width=image['width'], height=image['height'])
             image.save()
             ids.append(image.id)
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
