@@ -11,6 +11,7 @@ article .insertable {
 }
 
 article .hover-remove {
+  cursor: pointer;
   opacity: 0.2;
   filter: alpha(opacity=20);
 }
