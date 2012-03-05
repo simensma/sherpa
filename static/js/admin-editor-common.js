@@ -8,6 +8,7 @@ $(document).ready(function() {
 
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
+    setEmpties();
 
     /* Add widget/text/image */
 
@@ -18,13 +19,16 @@ $(document).ready(function() {
             alert(noStructureForContentWarning);
             return;
         }
+        removeEmpties();
         disableToolbar("Klikk på et ledig felt i artikkelen for å legge til widget...", function() {
             $("article .insertable").remove();
+            setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             // Todo: insert widget
             enableToolbar();
             $("article .insertable").remove();
+            setEmpties();
         });
     });
     $("#toolbar button.add-image").click(function() {
@@ -32,8 +36,10 @@ $(document).ready(function() {
             alert(noStructureForContentWarning);
             return;
         }
+        removeEmpties();
         disableToolbar("Klikk på et ledig felt i artikkelen for å legge til bilde...", function() {
             $("article .insertable").remove();
+            setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
             var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
@@ -44,6 +50,7 @@ $(document).ready(function() {
                 selectableContent(editable);
                 changeableImages(image);
                 editable.attr('contenteditable', 'true');
+                setEmpties();
                 // We don't want the default overlay to be there when we pick a new picture.
                 // It will be disabled when the ajax 'always' callback is called, but that's
                 // after this callback is done, so we'll just disable it twice.
@@ -58,14 +65,17 @@ $(document).ready(function() {
             alert(noStructureForContentWarning);
             return;
         }
+        removeEmpties();
         disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
             $("article .insertable").remove();
+            setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
                 content.attr('contenteditable', 'true').focus();
+                setEmpties();
             }
             addContent($(event.target), content, 'h', done);
         });
@@ -93,6 +103,9 @@ $(document).ready(function() {
                 content.nextAll().each(function() {
                     $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
                 });
+                if(content.siblings().length == 0) {
+                    setEmpty(content.parent());
+                }
                 content.remove();
             }).fail(function(result) {
                 // Todo
@@ -350,4 +363,19 @@ function addContent(insertable, content, type, done) {
         $("article .insertable").remove();
         disableOverlay();
     });
+}
+
+/* Show/remove placeholder text for empty columns */
+function setEmpty(column) {
+    column.append('<div class="empty well">Tom kolonne</div>');
+}
+function setEmpties() {
+    $("article .column").each(function() {
+        if($(this).children(":not(.insertable)").length == 0) {
+            setEmpty($(this));
+        }
+    });
+}
+function removeEmpties() {
+    $("article .column").children("div.empty.well").remove();
 }

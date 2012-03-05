@@ -52,6 +52,7 @@ $(document).ready(function() {
                     var i = 1;
                     wrapper.children().each(function() {
                         $(this).attr("data-id", ids[i++]);
+                        setEmpty($(this));
                     });
                 }).fail(function(result) {
                     // Todo
@@ -69,10 +70,6 @@ $(document).ready(function() {
             enableEditing();
             enableToolbar();
             $("article .row").off('hover click');
-            $("article .column.empty").each(function() {
-                $(this).children().remove();
-                $(this).removeClass("empty");
-            });
         }
         disableToolbar("Velg raden du vil fjerne...", doneRemoving);
         disableEditing();
@@ -95,12 +92,6 @@ $(document).ready(function() {
             }).always(function(result) {
                 doneRemoving();
             });
-        });
-        $("article .column").each(function() {
-            if($(this).children().length == 0) {
-                $(this).addClass("empty");
-                $(this).append("<p>(Tom kolonne)</p>");
-            }
         });
     });
 

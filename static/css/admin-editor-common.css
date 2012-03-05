@@ -2,17 +2,11 @@
  * Common stylesheet for advanced- and article-editor in the admin ui
  */
 
-article .column.empty {
-  text-align: center;
-  background-color: rgb(225, 225, 225);
-}
-
-article .column.empty p {
-  font-size: 160% !important;
-}
-
 article .insertable {
   cursor: pointer;
+}
+
+article .insertable, article .empty {
   text-align: center;
   color: rgb(125, 125, 125);
   font-size: 180%;
