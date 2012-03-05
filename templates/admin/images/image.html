@@ -61,13 +61,25 @@
   </div>
 </div>
 <div class="row">
-  <div class="offset3 span6">
+  <div class="offset2 span5">
     <h3>Beskrivelse:</h3>
       {% if not image.description %}
         <p>{{ image.uploader.user.first_name }} la ikke inn noen beskrivelse for bildet.</p>
       {% else %}
         <pre>{{ image.description }}</pre>
       {% endif %}
+  </div>
+  <div class="span3">
+    <h3>Nøkkelord:</h3>
+    <div id="tags">
+      {% if not tags %}
+        <p>{{ image.uploader.user.first_name }} la ikke inn noen nøkkelord for bildet.</p>
+      {% else %}
+        {% for tag in tags %}
+          <div class="tag">{{ tag.name }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
 </div>
 <div style="clear: both;"></div>

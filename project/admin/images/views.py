@@ -39,7 +39,8 @@ def image_details(request, image):
     parents = list_parents(image.album)
     exif = json.loads(image.exif)
     taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
-    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken}
+    tags = image.tags.all()
+    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
