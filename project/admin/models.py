@@ -19,7 +19,11 @@ class Image(models.Model):
     height = models.IntegerField()
     tags = models.ManyToManyField('admin.Tag', related_name='images')
 
-# Upon image delete, remove tags that only this image has
+# Upon image delete, remove tags that only this image has.
+# Important: This won't work as expected if delete is called on a manager
+# with two or more images, because the signals will be called before deleting
+# any image, and then they will be bulk deleted. The current setup will leave
+# ghost rows which may have to be garbage collected.
 @receiver(pre_delete, sender=Image)
 def delete_image_pre(sender, **kwargs):
     for tag in kwargs['instance'].tags.all():
