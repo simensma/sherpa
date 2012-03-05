@@ -53,11 +53,11 @@
     <li><a href="javascript:undefined">Lenker</a></li>
   </ul>
   <div id="tabs">
-    <div class="tab">
+    <div class="tab save">
       <p class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</p>
       <button class="btn save">Lagre</button>
     </div>
-    <div class="tab">
+    <div class="tab structure">
       <p>
         <input class="formatting" type="radio" name="editmode" checked> Tekstredigering<br>
         <input class="vertical" type="radio" name="editmode"> Flytt vertikalt (kolonner)<br>
@@ -65,15 +65,13 @@
         <button class="btn add-columns">Legg til ny rad med kolonner</button><br>
       </p>
     </div>
-    <div class="tab">
-      <div class="adders">
-        <button class="btn add-widget"><i class="icon-star"></i> Ny widget</button>
-        <button class="btn add-image"><i class="icon-picture"></i> Nytt bilde</button>
-        <button class="btn add-text"><i class="icon-align-left"></i> Ny tekst</button><br>
-        <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-      </div>
+    <div class="tab content">
+      <button class="btn add-widget"><i class="icon-star"></i> Ny widget</button>
+      <button class="btn add-image"><i class="icon-picture"></i> Nytt bilde</button>
+      <button class="btn add-text"><i class="icon-align-left"></i> Ny tekst</button><br>
+      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
     </div>
-    <div class="tab">
+    <div class="tab formatting">
       <div class="button bold"></div>
       <div class="button italic"></div>
       <div class="button underline"></div>
@@ -92,7 +90,7 @@
         </optgroup>
       </select>
     </div>
-    <div class="tab">
+    <div class="tab link">
       <p>URL-adresse: <input type="text" class="url"></p>
       <button class="btn anchor-add">Sett inn link</button>
       <button class="btn anchor-remove">Ta bort link</button>
