@@ -29,8 +29,12 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
+    # Note: This could get expensive if a LOT of tags are created
+    tags = []
+    for tag in Tag.objects.all():
+        tags.append(tag.name)
     context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images}
+               'current_album': current_album, 'images': images, 'tags': json.dumps(tags)}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
