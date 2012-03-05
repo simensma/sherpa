@@ -1,4 +1,7 @@
 {% extends "admin/images/layout.html" %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin-imagebrowser.js"></script>
+{% endblock %}
 
 {% block imagebody %}
 {% if not albums and not images %}
@@ -20,6 +23,13 @@
   {% endif %}
 </div>
 
+<div class="row">
+  <div class="offset3 span6 multiedit">
+    <button class="btn btn-danger dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett valgte album/bilder</button>
+    <button class="btn btn-warning dialog-button" data-dialog=".details-dialog"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button>
+  </div>
+</div>
+
 <div class="dialog album-dialog" data-title="Legg til album" data-width="auto">
   <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
     {% csrf_token %}
@@ -30,7 +40,7 @@
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
-    <li class="album">
+    <li class="album" data-id="{{ album.id }}">
       <button class="btn mark">Velg album</button>
       <a class="image" href="{% url admin.images.views.list_albums album.id %}">
         <img src="{{ STATIC_URL }}img/icons/folder.png" alt="Album: {{ album.name }}">
@@ -39,7 +49,7 @@
     </li>
   {% endfor %}
   {% for image in images %}
-    <li class="image">
+    <li class="image" data-id="{{ image.id }}">
       <button class="btn mark">Velg bilde</button>
       <a class="image" href="{% url admin.images.views.image_details image.id %}">
         <img src="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-150" alt="{{ image.description }}">
