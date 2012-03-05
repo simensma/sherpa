@@ -63,6 +63,46 @@ $(document).ready(function() {
             }
         });
     });
+    // Remove row
+    $("#toolbar .tab.structure button.remove-columns").click(function() {
+        function doneRemoving() {
+            enableEditing();
+            enableToolbar();
+            $("article .row").off('hover click');
+            $("article .column.empty").each(function() {
+                $(this).children().remove();
+                $(this).removeClass("empty");
+            });
+        }
+        disableToolbar("Velg raden du vil fjerne...", doneRemoving);
+        disableEditing();
+        $("article .row").hover(function() {
+            $(this).addClass('hover-remove');
+        }, function() {
+            $(this).removeClass('hover-remove');
+        }).click(function() {
+            var row = $(this);
+            $.ajax({
+                url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
+                type: 'POST'
+            }).done(function(result) {
+                row.nextAll().each(function() {
+                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
+                });
+                row.remove();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                doneRemoving();
+            });
+        });
+        $("article .column").each(function() {
+            if($(this).children().length == 0) {
+                $(this).addClass("empty");
+                $(this).append("<p>(Tom kolonne)</p>");
+            }
+        });
+    });
 
     // Edit mode - formatting, move vertically/horizontally
     var rows = $("article");

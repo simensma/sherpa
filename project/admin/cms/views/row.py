@@ -46,7 +46,7 @@ def move_down(request, row):
 def delete(request, row):
     row = Row.objects.get(id=row)
     row.delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
+    return HttpResponse()
 
 def swap_rows(row, increment):
     other_row = Row.objects.get(version=row.version, order=(row.order + increment))
