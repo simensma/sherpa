@@ -30,13 +30,6 @@
   </div>
 </div>
 
-<div class="dialog album-dialog" data-title="Legg til album" data-width="auto">
-  <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
-    {% csrf_token %}
-    <p>Navn på nytt album: <input type="text" name="name"></p>
-    <p><input type="submit" value="Legg til album"></p>
-  </form>
-</div>
 <div id="archive-gallery">
   <ul>
   {% for album in albums %}
@@ -61,4 +54,12 @@
   </ul>
 </div>
 <div style="clear: both;"></div>
+
+<div class="dialog album-dialog" data-title="Legg til album" data-width="auto">
+  <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
+    {% csrf_token %}
+    <p>Navn på nytt album: <input type="text" name="name"></p>
+    <p><input type="submit" value="Legg til album"></p>
+  </form>
+</div>
 {% endblock %}
