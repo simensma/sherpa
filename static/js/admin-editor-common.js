@@ -1,6 +1,6 @@
 $(window).load(function() {
-    // Don't set contenteditable until the entire window is loaded
-    $("article .editable").attr('contenteditable', 'true');
+    // Don't enable editing until the entire window is loaded
+    enableEditing();
 });
 
 /* Common for avanced- and article-editor */
@@ -8,7 +8,6 @@ $(document).ready(function() {
 
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
-    changeableImages($("img.changeable"));
 
     /* Add widget/text/image */
 
@@ -75,14 +74,12 @@ $(document).ready(function() {
     /* Remove content */
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $("article .editable").attr('contenteditable', 'true');
-            changeableImages($("article img.changeable"));
+            enableEditing();
             $("article .content").off('hover click');
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
-        $("article .editable").removeAttr('contenteditable');
-        $("article img.changeable").off('click');
+        disableEditing();
         $("article .content").hover(function() {
             $(this).addClass('hover-remove');
         }, function() {
@@ -201,7 +198,7 @@ $(document).ready(function() {
         $("div.no-save-warning").hide();
         $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
         enableOverlay();
-        $("article .editable").removeAttr('contenteditable');
+        disableEditing();
         var rows = [];
         $("article div.row").each(function() {
             var row = {
@@ -243,7 +240,7 @@ $(document).ready(function() {
             updateSaveCount();
             disableOverlay();
             $("#toolbar button.save").show();
-            $("article .editable").attr('contenteditable', 'true');
+            enableEditing();
         });
     });
 
@@ -270,6 +267,16 @@ function disableToolbar(displayText, cancelCallback) {
 function enableToolbar() {
     $("#toolbar .tab .cancel").remove();
     $("#toolbar .tab *").show();
+}
+
+function disableEditing() {
+    $("article .editable").removeAttr('contenteditable');
+    $("article img.changeable").off('click');
+}
+
+function enableEditing() {
+    $("article .editable").attr('contenteditable', 'true');
+    changeableImages($("article img.changeable"));
 }
 
 /* Adds event listeners to images for changing the image */
