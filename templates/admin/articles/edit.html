@@ -2,12 +2,10 @@
 {% block title %}Artikler &mdash; Sherpa 3{% endblock %}
 {% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
 {% block extra_scripts %}
-  <script src="{{ STATIC_URL }}js/admin-editor-common.js"></script>
-  <script src="{{ STATIC_URL }}js/admin-editor-article.js"></script>
+  <script src="{{ STATIC_URL }}js/admin-editor.js"></script>
 {% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor-common.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor-articles.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin-editor.css" media="screen">
 {% endblock %}
 {% block body %}
 
@@ -44,51 +42,5 @@
 
 </article>
 
-<div id="toolbar">
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="javascript:undefined">Lagre</a></li>
-    <li><a href="javascript:undefined">Innhold</a></li>
-    <li><a href="javascript:undefined">Formatering</a></li>
-    <li><a href="javascript:undefined">Lenker</a></li>
-  </ul>
-  <div id="tabs">
-    <div class="tab save">
-      <p class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</p>
-      <button class="btn save">Lagre</button>
-    </div>
-    <div class="tab content">
-      <button class="btn add-widget"><i class="icon-star"></i> Ny widget</button>
-      <button class="btn add-image"><i class="icon-picture"></i> Nytt bilde</button>
-      <button class="btn add-text"><i class="icon-align-left"></i> Ny tekst</button><br>
-      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-    </div>
-    <div class="tab formatting">
-      <div class="button bold"></div>
-      <div class="button italic"></div>
-      <div class="button underline"></div>
-      <div class="button ol"></div>
-      <div class="button ul"></div>
-      <div class="button align-left"></div>
-      <div class="button align-center"></div>
-      <div class="button align-right"></div>
-      <div style="clear: both;"></div>
-      <select>
-        <option value="default">Velg skrifttype...</option>
-        <optgroup label="--------------------">
-          <option value="h1">Overskrift (stor)</option>
-          <option value="h2">Overskrift (liten)</option>
-          <option value="p">Brødtekst</option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="tab link">
-      <p>URL-adresse: <input type="text" class="url"></p>
-      <button class="btn anchor-add"><i class="icon-share-alt"></i> Sett inn link</button>
-      <button class="btn anchor-remove"><i class="icon-remove"></i> Ta bort link</button>
-      <p style="margin-top: 10px;">Tips: For at knappene skal funke må du markere teksten i artikkelen som du vil gjøre til en link.</p>
-    </div>
-    <div style="clear: both;"></div>
-  </div>
-</div>
-
+{% include 'admin/cms/toolbar.html' %}
 {% endblock %}
