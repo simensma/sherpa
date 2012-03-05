@@ -246,16 +246,17 @@ $(document).ready(function() {
 
 });
 
+/* Toggle overlay for the entire site */
 function enableOverlay() {
     $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
     $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
       .appendTo('body');
 }
-
 function disableOverlay() {
     $(".ui-widget-overlay,.overlay-loader").remove();
 }
 
+/* Toggle toolbar usage */
 function disableToolbar(displayText, cancelCallback) {
     $("#toolbar .tab *").hide();
     var btn = $('<button class="btn cancel">Avbryt</button>');
@@ -263,17 +264,16 @@ function disableToolbar(displayText, cancelCallback) {
     btn.click(cancelCallback);
     $("#toolbar .tab").append('<p class="cancel">' + displayText + '</p>', btn);
 }
-
 function enableToolbar() {
     $("#toolbar .tab .cancel").remove();
     $("#toolbar .tab *").show();
 }
 
+/* Toggle editing of the actual content */
 function disableEditing() {
     $("article .editable").removeAttr('contenteditable');
     $("article img.changeable").off('click');
 }
-
 function enableEditing() {
     $("article .editable").attr('contenteditable', 'true');
     changeableImages($("article img.changeable"));
@@ -315,6 +315,7 @@ function insertables(text, container, click) {
     });
 }
 
+/* Add content-objects to some column */
 function addContent(insertable, content, type, done) {
     enableOverlay();
     var order;
