@@ -57,16 +57,20 @@ div#image-toolbar input#search {
 div#archive-gallery ul li {
   display: block;
   width: 200px;
-  height: 150px;
+  height: 235px;
   border: 1px solid #888;
   margin: 1%;
   float: left;
   text-align: center;
 }
 
-div#archive-gallery ul li span.buttons {
-  float: right;
-  margin-right: 5px;
+div#archive-gallery ul li button.mark {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+div#archive-gallery ul li.selected {
+  background-color: rgb(215, 215, 215);
 }
 
 div#archive-gallery ul li a.image {
