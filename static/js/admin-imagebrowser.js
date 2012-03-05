@@ -26,12 +26,12 @@ $(document).ready(function() {
     });
 
     var selected;
-    $("div.multiedit").hide();
+    $("div.multiedit button").attr('disabled', true);
     function toggleMultiedit() {
         if($("#archive-gallery li.selected").length > 0) {
-            $("div.multiedit").show();
+            $("div.multiedit button").removeAttr('disabled');
         } else {
-            $("div.multiedit").hide();
+            $("div.multiedit button").attr('disabled', true);
         }
     }
 
