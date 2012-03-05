@@ -39,20 +39,14 @@ def image_details(request, image):
     return render(request, 'admin/images/image.html', context)
 
 @login_required
-def delete_album(request, album):
-    album = Album.objects.get(id=album)
-    album.delete()
-    parent = album.parent
-    if(parent is None):
+def delete_items(request, album):
+    Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
+    Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
+    if(album is None):
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
-
-@login_required
-def delete_image(request, image):
-    image = Image.objects.get(id=image)
-    image.delete()
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[image.album.id]))
+        album = Album.objects.get(id=album)
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
 @login_required
 def add_album(request, parent):
