@@ -9,7 +9,13 @@
     <table class="table metadata">
     <tr>
       <th>Fotograf:</th>
-      <td>{{ image.photographer }}</td>
+      <td>
+        {% if image.photographer %}
+          {{ image.photographer }}
+        {% else %}
+          (Ingen fotograf oppgitt)
+        {% endif %}
+      </td>
     </tr>
     <tr>
       <th>Tatt:</th>
