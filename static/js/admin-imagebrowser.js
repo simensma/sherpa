@@ -26,12 +26,12 @@ $(document).ready(function() {
     });
 
     var selected;
-    $("div.multiedit button").attr('disabled', true);
+    $("button.context-button").attr('disabled', true);
     function toggleMultiedit() {
         if($("#archive-gallery li.selected").length > 0) {
-            $("div.multiedit button").removeAttr('disabled');
+            $("button.context-button").removeAttr('disabled');
         } else {
-            $("div.multiedit button").attr('disabled', true);
+            $("button.context-button").attr('disabled', true);
         }
     }
 
@@ -65,7 +65,7 @@ $(document).ready(function() {
         $(this).siblings("input[name='images']").val(JSON.stringify(images));
     });
 
-    $("div.multiedit button").click(function() {
+    $("button.context-button").click(function() {
         if(selected == 'album') {
             $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.');
         } else if(selected == 'image') {

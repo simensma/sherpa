@@ -12,26 +12,23 @@
 <div class="alert alert-info">Dette albumet er tomt.</div>
 {% endif %}
 
-<div class="row">
-  {% if current_album %}
-  <div class="offset4 span2">
-    <p><a class="btn btn-success large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
-  </div>
-  <div class="span2">
-    <p><a class="btn btn-success" href="{% url admin.images.views.upload_image current_album.id %}"><i class="icon-picture"></i> Last opp nytt bilde her</a></p>
-  </div>
-  {% else %}
-  <div class="offset5 span2">
-    <p><a class="btn btn-success large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
-  </div>
-  {% endif %}
-</div>
-
 {# The 8px accounts for opera which seems to add that margin to disabled buttons. Without, there's a bug in the background-display of the album/image boxes. #}
 <div class="row" style="margin-bottom: 8px;">
-  <div class="offset3 span6 multiedit">
-    <button class="btn btn-danger dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett valgte album/bilder</button>
-    <button class="btn btn-warning details-button"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button>
+  <div class="offset3 span6">
+    <table class="action-buttons">
+    <tr>
+      <td><button class="btn btn-success dialog-button" data-dialog=".album-dialog"><i class="icon-folder-open"></i> Opprett nytt album her</button></td>
+      <td>
+        <form style="margin: 0;" action="{% if current_album %}{% url admin.images.views.upload_image current_album.id %}{% endif %}" method="get">
+        <button class="btn btn-success"{% if not current_album %} disabled{% endif %}><i class="icon-picture"></i> Last opp nytt bilde her</button>
+        </form>
+      </td>
+    </tr>
+    <tr>
+      <td><button class="btn btn-danger context-button delete-button dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett valgte album/bilder</button></td>
+      <td><button class="btn btn-warning context-button details-button"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button></td>
+    </tr>
+    </table>
   </div>
 </div>
 

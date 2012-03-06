@@ -54,12 +54,13 @@ div#image-toolbar input#search {
   font-size: 120%;
 }
 
-div.multiedit {
-  text-align: center;
+table.action-buttons {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-div.multiedit button {
-  margin: 4px;
+table.action-buttons button {
+  width: 100%;
 }
 
 div#archive-gallery ul li {
