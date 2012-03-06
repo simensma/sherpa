@@ -38,6 +38,9 @@ $(document).ready(function() {
     $("#archive-gallery li.album button.mark").click(function() {
         $("#archive-gallery li.image.selected").removeClass('selected');
         $(this).parent("li").toggleClass('selected');
+        $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.');
+        $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre albumdetaljer');
+        $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album');
         selected = 'album';
         toggleMultiedit();
     });
@@ -45,6 +48,9 @@ $(document).ready(function() {
     $("#archive-gallery li.image button.mark").click(function() {
         $("#archive-gallery li.album.selected").removeClass('selected');
         $(this).parent("li").toggleClass('selected');
+        $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle bildene du har merket, for godt?');
+        $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre bildedetaljer');
+        $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett bilder');
         selected = 'image';
         toggleMultiedit();
     });
@@ -63,14 +69,6 @@ $(document).ready(function() {
         });
         $(this).siblings("input[name='albums']").val(JSON.stringify(albums));
         $(this).siblings("input[name='images']").val(JSON.stringify(images));
-    });
-
-    $("button.context-button").click(function() {
-        if(selected == 'album') {
-            $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.');
-        } else if(selected == 'image') {
-            $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle bildene du har merket, for godt?');
-        }
     });
 
 });
