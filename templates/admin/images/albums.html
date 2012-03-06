@@ -15,14 +15,14 @@
 <div class="row">
   {% if current_album %}
   <div class="offset4 span2">
-    <p><a class="btn btn-primary large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
+    <p><a class="btn btn-success large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
   </div>
   <div class="span2">
-    <p><a class="btn btn-primary" href="{% url admin.images.views.upload_image current_album.id %}"><i class="icon-picture"></i> Last opp nytt bilde her</a></p>
+    <p><a class="btn btn-success" href="{% url admin.images.views.upload_image current_album.id %}"><i class="icon-picture"></i> Last opp nytt bilde her</a></p>
   </div>
   {% else %}
   <div class="offset5 span2">
-    <p><a class="btn btn-primary large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
+    <p><a class="btn btn-success large-button dialog-button" data-dialog=".album-dialog" href="javascript:undefined"><i class="icon-folder-open"></i> Opprett nytt album her</a></p>
   </div>
   {% endif %}
 </div>
