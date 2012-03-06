@@ -1,6 +1,12 @@
 from analytics.models import Visitor, Request, Parameter, Pageview
+from django.contrib.sites.models import Site
 from django.conf import settings
 from datetime import datetime
+
+class Sites():
+    def process_request(self, request):
+        request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+        return None
 
 class Analytics():
     def process_request(self, request):
