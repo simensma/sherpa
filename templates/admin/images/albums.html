@@ -51,7 +51,11 @@
       <a class="image" href="{% url admin.images.views.image_details image.id %}">
         <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-150" alt="{{ image.description }}">
       </a>
-      {{ image.photographer }}<br>
+      {% if not image.photographer %}
+        Ingen fotograf oppgitt
+      {% else %}
+        {{ image.photographer }}
+      {% endif %}<br>
       {{ image.width }} x {{ image.height }}
     </li>
   {% endfor %}
