@@ -14,11 +14,11 @@ $(document).ready(function() {
     });
 
     $(".image-details form").submit(function() {
-        var items = [];
-        $("#archive-gallery li." + selected + ".selected").each(function() {
-            items = items.concat([$(this).attr('data-id')]);
+        var images = [];
+        $("#archive-gallery li.image.selected").each(function() {
+            images = images.concat([$(this).attr('data-id')]);
         });
-        $(this).children("input[name='ids']").val(JSON.stringify(items));
+        $(this).children("input[name='ids']").val(JSON.stringify(images));
         serializeTags();
     });
 
