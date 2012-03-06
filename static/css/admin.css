@@ -65,9 +65,9 @@ div.multiedit button {
 div#archive-gallery ul li {
   display: block;
   width: 200px;
-  height: 235px;
   border: 1px solid #888;
   margin: 1%;
+  padding-bottom: 15px;
   float: left;
   text-align: center;
 }
