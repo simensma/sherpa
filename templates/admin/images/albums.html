@@ -27,7 +27,8 @@
   {% endif %}
 </div>
 
-<div class="row">
+{# The 8px accounts for opera which seems to add that margin to disabled buttons. Without, there's a bug in the background-display of the album/image boxes. #}
+<div class="row" style="margin-bottom: 8px;">
   <div class="offset3 span6 multiedit">
     <button class="btn btn-danger dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett valgte album/bilder</button>
     <button class="btn btn-warning details-button"><i class="icon-pencil"></i> Endre detaljer for valgte album/bilder</button>
