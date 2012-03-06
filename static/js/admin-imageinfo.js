@@ -1,11 +1,9 @@
-var tags; // will be overridden by template
-
 $(document).ready(function() {
 
     // Enable autocomplete, parse tags on focus out, and when user presses space
     // and the last character is a space
     $("div.image-details input[name='tags']").autocomplete({
-        source: tags,
+        source: "/sherpa/bildearkiv/tag/filter/",
         open: function() { autocomplete = true; },
         close: function() { $(this).val(""); autocomplete = false; },
         select: function(event, ui) {

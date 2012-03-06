@@ -29,12 +29,8 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
-    # Note: This could get expensive if a LOT of tags are created
-    tags = []
-    for tag in Tag.objects.all():
-        tags.append(tag.name)
     context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images, 'tags': json.dumps(tags)}
+               'current_album': current_album, 'images': images}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -104,15 +100,18 @@ def update_images(request):
             tag.images.add(image)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
+def filter_tags(request):
+    tag_objects = Tag.objects.filter(name__startswith=request.GET['term'])
+    tags = []
+    for tag in tag_objects:
+        tags.append(tag.name)
+    return HttpResponse(json.dumps(tags))
+
 @login_required
 def upload_image(request, album):
     if(request.method == 'GET'):
         current_album = Album.objects.get(id=album)
-        # Note: This could get expensive if a LOT of tags are created
-        tags = []
-        for tag in Tag.objects.all():
-            tags.append(tag.name)
-        context = {'current_album': current_album, 'tags': json.dumps(tags)}
+        context = {'current_album': current_album}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):
