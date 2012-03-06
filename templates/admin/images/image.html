@@ -1,41 +1,91 @@
 {% extends "admin/images/layout.html" %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin-image.js"></script>
+{% endblock %}
 
 {% block imagebody %}
 <div id="image-display" class="row">
   <div class="span6 metadata">
-    <h1>{{ image.description }}</h1>
     <table class="table metadata">
     <tr>
-      <th>Kreditering:</th>
-      <td>{{ image.credits }}</td>
+      <th>Fotograf:</th>
+      <td>
+        {% if image.photographer %}
+          {{ image.photographer }}
+        {% else %}
+          (Ingen fotograf oppgitt)
+        {% endif %}
+      </td>
     </tr>
     <tr>
-      <th>Fotograf:</th>
-      <td>{{ image.photographer }} ({{ image.photographer_contact }})</td>
+      <th>Tatt:</th>
+      <td>{{ taken }}</td>
     </tr>
     <tr>
       <th>Lastet opp:</th>
-      <td>{{ image.uploaded }} av {{ image.uploader.user }}</td>
+      <td>{{ image.uploaded }} av {{ image.uploader.user.get_full_name }}</td>
     </tr>
     <tr>
       <th>Original:</th>
-      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}">Åpne ({{ image.height }} x {{ image.width }})</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}">Åpne ({{ image.height }} x {{ image.width }})</a></td>
     </tr>
     <tr>
       <th>Mellomstor:</th>
-      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-500">Åpne (500px)</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-500">Åpne (500px)</a></td>
     </tr>
     <tr>
       <th>Liten:</th>
-      <td><a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-150">Åpne (150px)</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-150">Åpne (150px)</a></td>
+    </tr>
+    <tr>
+      <th>Bruksrett:</th>
+      <td>
+        {% if image.license %}
+          {{ image.licence }}
+        {% else %}
+          Standard DNT bruksrett.
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>EXIF-data:</th>
+      <td>
+        <a href="javascript:undefined" class="toggle-exif">Vis...</a>
+        <div class="exif">
+          <pre>{% for tag, value in exif.items %}{{ tag }}: {{ value }}
+{% endfor %}</pre>
+        </div>
+      </td>
     </tr>
     </table>
   </div>
 
   <div class="span6">
-    <a href="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}">
-      <img src="http://turistforeningen.s3.amazonaws.com/images/{{ image.key }}-500" alt="{{ image.description }}" title="{{ image.description }}">
+    <a href="http://cdn.turistforeningen.no/images/{{ image.key }}">
+      <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-500" alt="{{ image.description }}" title="{{ image.description }}">
     </a>
+  </div>
+</div>
+<div class="row">
+  <div class="offset2 span5">
+    <h3>Beskrivelse:</h3>
+      {% if not image.description %}
+        <p>{{ image.uploader.user.first_name }} la ikke inn noen beskrivelse for bildet.</p>
+      {% else %}
+        <pre>{{ image.description }}</pre>
+      {% endif %}
+  </div>
+  <div class="span3">
+    <h3>Nøkkelord:</h3>
+    <div id="tags">
+      {% if not tags %}
+        <p>{{ image.uploader.user.first_name }} la ikke inn noen nøkkelord for bildet.</p>
+      {% else %}
+        {% for tag in tags %}
+          <div class="tag">{{ tag.name }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
 </div>
 <div style="clear: both;"></div>

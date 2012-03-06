@@ -7,18 +7,23 @@ from lib import S3
 class Image(models.Model):
     key = models.CharField(max_length=8)
     hash = models.CharField(max_length=40)
-    description = models.CharField(max_length=200)
+    description = models.TextField()
     album = models.ForeignKey('admin.Album')
-    credits = models.CharField(max_length=20)
     photographer = models.CharField(max_length=200)
-    photographer_contact = models.CharField(max_length=200)
+    credits = models.CharField(max_length=200)
+    licence = models.CharField(max_length=200)
+    exif = models.TextField()
     uploaded = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey('user.Profile')
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('admin.Tag', related_name='images')
 
-# Upon image delete, remove tags that only this image has
+# Upon image delete, remove tags that only this image has.
+# Important: This won't work as expected if delete is called on a manager
+# with two or more images, because the signals will be called before deleting
+# any image, and then they will be bulk deleted. The current setup will leave
+# ghost rows which may have to be garbage collected.
 @receiver(pre_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_pre(sender, **kwargs):
     for tag in kwargs['instance'].tags.all():

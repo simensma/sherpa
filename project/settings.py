@@ -9,7 +9,7 @@ AUTH_PROFILE_MODULE='user.Profile'
 LOGIN_URL = '/bruker/logg-inn/'
 
 AWS_IMAGEGALLERY_PREFIX = 'images/'
-AWS_BUCKET = 'turistforeningen'
+AWS_BUCKET = 'cdn.turistforeningen.no'
 
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali.kaafarani@turistforeningen.no'),

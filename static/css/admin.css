@@ -54,32 +54,36 @@ div#image-toolbar input#search {
   font-size: 120%;
 }
 
+table.action-buttons {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.action-buttons button {
+  width: 100%;
+}
+
 div#archive-gallery ul li {
   display: block;
   width: 200px;
-  height: 150px;
   border: 1px solid #888;
   margin: 1%;
+  padding-bottom: 15px;
   float: left;
   text-align: center;
 }
 
-div#archive-gallery ul li span.buttons {
-  float: right;
-  margin-right: 5px;
+div#archive-gallery ul li button.mark {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+div#archive-gallery ul li.selected {
+  background-color: rgb(215, 215, 215);
 }
 
 div#archive-gallery ul li a.image {
   display: block;
-  clear: both;
-}
-
-div#archive-gallery ul li.add a.image {
-  margin-top: 20px;
-}
-
-div#image-display div.metadata {
-  text-align: right;
 }
 
 div#image-display table.metadata {
@@ -90,6 +94,7 @@ div#image-display table.metadata {
 
 div#image-display table.metadata th {
   text-align: right;
+  vertical-align: top;
 }
 
 div#image-display table.metadata td {
@@ -104,11 +109,15 @@ form.image-uploader input[type='file'] {
   width: 100%;
 }
 
+div.licencing p {
+  font-size: 130%;
+}
+
 div#image-uploader label {
   font-weight: bold;
 }
 
-div#image-uploader div#tags div.tag {
+div#tags div.tag {
   float: left;
   color: #3e6d8e;
   background: #e0eaf1;
@@ -118,7 +127,7 @@ div#image-uploader div#tags div.tag {
   padding: 3px 4px;
 }
 
-div#image-uploader div#tags div.tag a {
+div#tags div.tag a {
   cursor: pointer;
   width: 12px;
   height: 12px;

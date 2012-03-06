@@ -7,10 +7,12 @@ from django.conf import settings
 from admin.models import Image, Tag, Album
 from lib import S3
 
+from PIL.ExifTags import TAGS
 import random, Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
 import json
+from datetime import datetime
 
 # Pixel sizes we'll want to generate thumbnail images for
 # Note: A couple of places (the template, Image model etc.) has hardcoded
@@ -35,24 +37,21 @@ def list_albums(request, album):
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
-    context = {'image': image, 'albumpath': parents}
+    exif = json.loads(image.exif)
+    taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
+    tags = image.tags.all()
+    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
-def delete_album(request, album):
-    album = Album.objects.get(id=album)
-    album.delete()
-    parent = album.parent
-    if(parent is None):
+def delete_items(request, album):
+    Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
+    Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
+    if(album is None):
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
-
-@login_required
-def delete_image(request, image):
-    image = Image.objects.get(id=image)
-    image.delete()
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[image.album.id]))
+        album = Album.objects.get(id=album)
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
 @login_required
 def add_album(request, parent):
@@ -66,14 +65,31 @@ def add_album(request, parent):
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
 @login_required
+def update_album(request):
+    albums = Album.objects.filter(id__in=json.loads(request.POST['albums']))
+    for album in albums:
+        album.name = request.POST['name']
+        album.save()
+    parent = albums[0].parent
+    if(parent is None):
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
+
+@login_required
 def update_images(request):
     images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
     for image in images:
-        image.description = request.POST['description']
-        image.credits = request.POST['credits']
-        image.photographer = request.POST['photographer']
-        image.photographer_contact = request.POST['photographer_contact']
+        if(request.POST['description'] != ""):
+            image.description = request.POST['description']
+        if(request.POST['photographer'] != ""):
+            image.photographer = request.POST['photographer']
+        if(request.POST['credits'] != ""):
+            image.credits = request.POST['credits']
+        if(request.POST['licence'] != ""):
+            image.licence = request.POST['licence']
         image.save()
+        # Note: Intentionally not removing old tags upon update.
         for tagName in json.loads(request.POST['tags-serialized']):
             tag = None
             try:
@@ -84,15 +100,18 @@ def update_images(request):
             tag.images.add(image)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
+def filter_tags(request):
+    tag_objects = Tag.objects.filter(name__startswith=request.GET['term'])
+    tags = []
+    for tag in tag_objects:
+        tags.append(tag.name)
+    return HttpResponse(json.dumps(tags))
+
 @login_required
 def upload_image(request, album):
     if(request.method == 'GET'):
         current_album = Album.objects.get(id=album)
-        # Note: This could get expensive if a LOT of tags are created
-        tags = []
-        for tag in Tag.objects.all():
-            tags.append(tag.name)
-        context = {'current_album': current_album, 'tags': json.dumps(tags)}
+        context = {'current_album': current_album}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):
@@ -113,6 +132,9 @@ def upload_image(request, album):
             # First parse and resize the images. This will consume a lot of memory.
             try:
                 img = pil.open(StringIO(data))
+                exif = {}
+                for tag, value in img._getexif().items():
+                    exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 for size in thumb_sizes:
                     fp = StringIO()
@@ -127,7 +149,7 @@ def upload_image(request, album):
 
                 parsed_images.append({'key': key, 'hash': sha1(data).hexdigest(),
                   'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-                  'data': data, 'thumbs': thumbs})
+                  'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)})
             except(IOError, KeyError):
                 # This is raised by PIL, maybe it was an invalid image file
                 # or it didn't have the right file extension.
@@ -147,9 +169,9 @@ def upload_image(request, album):
                     S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
-            image = Image(key=image['key'], hash=image['hash'], description='', album=album, credits='',
-              photographer='', photographer_contact='', uploader=request.user.get_profile(),
-              width=image['width'], height=image['height'])
+            image = Image(key=image['key'], hash=image['hash'], description='', album=album,
+              photographer='', credits='', licence='', exif=image['exif'],
+              uploader=request.user.get_profile(), width=image['width'], height=image['height'])
             image.save()
             ids.append(image.id)
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
