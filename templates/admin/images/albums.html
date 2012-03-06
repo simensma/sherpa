@@ -36,7 +36,7 @@
   <ul>
   {% for album in albums %}
     <li class="album" data-id="{{ album.id }}">
-      <button class="btn mark">Merk album</button>
+      <button class="btn mark"><i class="icon-tags"></i> Merk album</button>
       <a class="image" href="{% url admin.images.views.list_albums album.id %}">
         <img src="{{ STATIC_URL }}img/icons/folder.png" alt="Album: {{ album.name }}">
       </a>
@@ -45,7 +45,7 @@
   {% endfor %}
   {% for image in images %}
     <li class="image" data-id="{{ image.id }}">
-      <button class="btn mark">Merk bilde</button>
+      <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>
       <a class="image" href="{% url admin.images.views.image_details image.id %}">
         <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-150" alt="{{ image.description }}">
       </a>
