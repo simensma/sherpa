@@ -20,7 +20,7 @@
 {% for version in versions %}
 <tr>
   <td>{{ version.variant.page.title }}</td>
-  <td><a href="http://www.turistforeningen.no/{{ version.variant.page.slug }}">http://todo.turistforeningen.no/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
+  <td><a href="/{{ version.variant.page.slug }}">http://{{ site.domain }}/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
   <td>[ <a href="{% url admin.cms.views.editor_advanced.edit version.id %}">Rediger</a> ]</td>
   <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
 </tr>
@@ -45,7 +45,7 @@
     </tr>
     <tr>
       <td>URL:</td>
-      <td>http://todo.turistforeningen.no/ <input type="text" name="slug" value=""> /</td>
+      <td>http://{{ site.domain }}/ <input type="text" name="slug" value=""> /</td>
     </tr>
     <tr>
       <td colspan="2"><input type="submit" value="Opprett ny webside"></td>
@@ -81,7 +81,7 @@
 <tr>
   <td>{{ forloop.counter }}.</td>
   <td>{{ menu.name }}</td>
-  <td><a href="http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">http://todo.turistforeningen.no/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
+  <td><a href="http://{{ site.domain }}/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">http://{{ site.domain }}/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
   <td>{% if menu.order != 1 %}
     <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:-1 %}">Opp</a>
   {% endif %}</td>
@@ -126,7 +126,7 @@
     <tr>
       <td><input type="radio" name="page" value="{{ version.variant.page.id }}"></td>
       <td>{{ version.variant.page.title }}</td>
-      <td>http://todo.turistforeningen.no/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</td>
+      <td>http://{{ site.domain }}/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</td>
     </tr>
     {% empty %}
     <tr>

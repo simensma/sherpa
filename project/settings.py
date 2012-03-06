@@ -3,7 +3,6 @@
 
 from local_settings import *
 
-SITE_ID = 1
 ROOT_URLCONF = 'urls'
 AUTH_PROFILE_MODULE='user.Profile'
 LOGIN_URL = '/bruker/logg-inn/'
