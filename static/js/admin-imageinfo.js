@@ -5,8 +5,10 @@ $(document).ready(function() {
     $("div.image-details input[name='tags']").autocomplete({
         source: "/sherpa/bildearkiv/tag/filter/",
         open: function() { autocomplete = true; },
-        close: function() { $(this).val(""); autocomplete = false; },
+        close: function() { autocomplete = false; },
         select: function(event, ui) {
+            event.preventDefault();
+            $(this).val("");
             addTags(ui.item.value);
         }
     }).keydown(function(e) {
