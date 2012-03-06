@@ -84,10 +84,14 @@ def update_album(request):
 def update_images(request):
     images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
     for image in images:
-        image.description = request.POST['description']
-        image.photographer = request.POST['photographer']
-        image.credits = request.POST['credits']
-        image.licence = request.POST['licence']
+        if(request.POST['description'] != ""):
+            image.description = request.POST['description']
+        if(request.POST['photographer'] != ""):
+            image.photographer = request.POST['photographer']
+        if(request.POST['credits'] != ""):
+            image.credits = request.POST['credits']
+        if(request.POST['licence'] != ""):
+            image.licence = request.POST['licence']
         image.save()
         # Note: Intentionally not removing old tags upon update.
         for tagName in json.loads(request.POST['tags-serialized']):

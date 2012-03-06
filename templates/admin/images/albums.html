@@ -81,7 +81,7 @@
 </div>
 
 
-<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="auto">
+<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="400px">
   <form action="{% url admin.images.views.update_images %}" method="post">
     {% csrf_token %}
     <label>Beskrivelse av bildene:</label>
@@ -99,6 +99,7 @@
     <div style="clear: both;"></div>
     <input type="submit" class="btn" value="Lagre bildedata">
     <input type="hidden" name="ids">
+    <p><strong>Merk:</strong> Vi sletter ikke gamle felt. Så hvis du for eksempel kun endrer beskrivelse (og ikke fotograf) for to bilder, så bevarer vi den gamle fotografen som allerede er oppgitt.</p>
   </form>
 </div>
 
