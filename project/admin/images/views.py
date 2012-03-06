@@ -111,7 +111,8 @@ def filter_tags(request):
 def upload_image(request, album):
     if(request.method == 'GET'):
         current_album = Album.objects.get(id=album)
-        context = {'current_album': current_album}
+        parents = list_parents(current_album)
+        context = {'current_album': current_album, 'albumpath': parents}
         return render(request, 'admin/images/upload.html', context)
     elif(request.method == 'POST'):
         if(len(request.FILES.getlist('files')) == 0):
