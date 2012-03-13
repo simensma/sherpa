@@ -341,7 +341,7 @@ $(document).ready(function() {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
             }
-            column = columns.concat([column]);
+            columns = columns.concat([column]);
         });
         var contents = [];
         $("article div.content").each(function() {
