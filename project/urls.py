@@ -10,6 +10,9 @@ urlpatterns = patterns('',
     # User authentication
     url(r'^bruker/', include('user.urls')),
 
+    # Enrollment
+    url(r'^innmelding/', include('enrollment.urls')),
+
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slug': ""}),
     url(r'^(?P<slug>.+)/$', 'page.views.page'),

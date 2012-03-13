@@ -33,6 +33,7 @@ INSTALLED_APPS = (
     'analytics',
     'articles',
     'user',
+    'enrollment',
 )
 
 LOGGING = {

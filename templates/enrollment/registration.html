@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/registration.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<h1>Bli medlem</h1>
+
+<form id="registration" class="well" action="/innmelding/registrering/" method="post">
+  {% csrf_token %}
+  <label>Fornavn</label>
+  <input type="text" class="span3" name="firstname" placeholder="Kari">
+  <label>Etternavn</label>
+  <input type="text" class="span3" name="lastname" placeholder="Nordmann">
+  <label>Fødselsdato</label>
+  <input type="text" class="span1" placeholder="dd">
+  <input type="text" class="span1" placeholder="mm">
+  <input type="text" class="span1" placeholder="åååå">
+  <label>Adresse</label>
+  <input type="text" class="span3" placeholder="Turveien 15">
+  <label>Postnummer / Poststed</label>
+  <input type="text" class="span1" name="zipcode" placeholder="1234">
+  <input type="text" class="span2" name="city" disabled>
+  <label>Mobil</label>
+  <input type="text" class="span2" placeholder="12 34 56 78">
+  <label>Epost</label>
+  <input type="text" class="span3" placeholder="ola@eksempel.no">
+  <label class="checkbox">
+    <input type="checkbox"> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
+  </label>
+  <label class="checkbox">
+    <input type="checkbox"> Jeg har lest og godtar <a>betingelsene</a>
+  </label>
+  <button type="submit" class="btn">Submit</button>
+</form>
+
+{% endblock %}
