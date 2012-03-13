@@ -9,8 +9,14 @@
 
 {% block body %}
 
+<div class="row">
+<div class="offset2 span8">
 <h1>Bli medlem</h1>
+</div>
+</div>
 
+<div class="row">
+<div class="offset2 span5">
 <form id="registration" class="well" action="{% url enrollment.views.registration2 %}" method="post">
   {% csrf_token %}
   <label>Fornavn</label>
@@ -36,5 +42,24 @@
   </label>
   <button type="submit" class="btn">Gå videre</button>
 </form>
+
+</div>
+<div class="span5">
+  <div class="well">
+    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong> Kontakt medlemsservice:</p>
+
+    <p>
+      Telefon: 4000 1970<br>
+      Åpent alle hverdager: kl. 09.00 - 16.00<br>
+      E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+    </p>
+  </div>
+
+  <div class="well">
+    <i class="icon-info-sign"></i> <strong>Vil du melde inn en familie?</strong><br>
+    Meld først inn hovedmedlemmet, så vil du få legge inn familiemedlemmer i neste bilde.
+  </div>
+</div>
+</div>
 
 {% endblock %}
