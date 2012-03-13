@@ -101,9 +101,6 @@ $(document).ready(function() {
                 url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
                 type: 'POST'
             }).done(function(result) {
-                content.nextAll().each(function() {
-                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
-                });
                 if(content.siblings().length == 0) {
                     setEmpty(content.parent());
                 }
@@ -204,12 +201,7 @@ $(document).ready(function() {
                                {span: 4, offset: 0, order: 1},
                                {span: 4, offset: 0, order: 2}]
                 }
-                var order;
-                if(insertable.prev().length > 0) {
-                    order = Number(insertable.prev().attr("data-order")) + 1;
-                } else {
-                    order = 0;
-                }
+                var order = insertable.prevAll(":not(.insertable)").length;
                 $.ajax({
                     url: '/sherpa/cms/kolonner/ny/',
                     type: 'POST',
@@ -217,10 +209,10 @@ $(document).ready(function() {
                           "&order=" + encodeURIComponent(order) +
                           "&columns=" + encodeURIComponent(JSON.stringify(columns))
                 }).done(function(result) {
-                    var wrapper = $('<div class="row" data-order="' + order + '"></div>');
+                    var wrapper = $('<div class="row"></div>');
                     for(var i=0; i<columns.length; i++) {
                         wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
-                            columns[i].offset + '" data-order="' + columns[i].order + '"></div>'));
+                            columns[i].offset + '"></div>'));
                     }
                     var prev = insertable.prev();
                     if(prev.length == 0) {
@@ -264,9 +256,6 @@ $(document).ready(function() {
                 url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
                 type: 'POST'
             }).done(function(result) {
-                row.nextAll().each(function() {
-                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
-                });
                 row.remove();
             }).fail(function(result) {
                 // Todo
@@ -342,7 +331,7 @@ $(document).ready(function() {
         $("article div.row").each(function() {
             var row = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order')
+                order: $(this).prevAll().length
             }
             rows = rows.concat([row]);
         });
@@ -350,7 +339,7 @@ $(document).ready(function() {
         $("article div.column").each(function() {
             var column = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order')
+                order: $(this).prevAll().length
             }
             column = columns.concat([column]);
         });
@@ -358,7 +347,7 @@ $(document).ready(function() {
         $("article div.content").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order'),
+                order: $(this).prevAll().length,
                 content: $(this).html(),
             }
             contents = contents.concat([content]);
@@ -457,12 +446,7 @@ function insertables(text, container, click) {
 /* Add content-objects to some column */
 function addContent(insertable, content, type, done) {
     enableOverlay();
-    var order;
-    if(insertable.prev().length > 0) {
-        order = Number(insertable.prev().attr("data-order")) + 1;
-    } else {
-        order = 0;
-    }
+    var order = insertable.prevAll(":not(.insertable)").length;
     $.ajax({
         url: '/sherpa/cms/innhold/ny/',
         type: 'POST',
@@ -471,17 +455,13 @@ function addContent(insertable, content, type, done) {
               "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
               "&type=" + encodeURIComponent(type)
     }).done([function(result) {
-        var wrapper = $('<div class="content" data-id="' + result + '" data-order="' + order +
-            '"></div>').append(content);
+        var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
         var prev = insertable.prev();
         if(prev.length == 0) {
             insertable.parent().prepend(wrapper);
         } else {
             prev.after(wrapper);
         }
-        wrapper.nextAll(".content").each(function() {
-            $(this).attr('data-order', (Number($(this).attr('data-order')) + 1));
-        });
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {
