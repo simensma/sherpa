@@ -325,6 +325,16 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
+    // Warn when autosave-number is invalid
+    $("#toolbar .save input.autosave-frequency").keyup(function() {
+        if($(this).val().match(/^\d+$/)) {
+            $(this).parents(".control-group").removeClass('error');
+        } else {
+            $(this).siblings("input.autosave").removeAttr('checked');
+            $(this).parents(".control-group").addClass('error');
+        }
+    });
+
     $("#toolbar .save button.save").click(function() {
         clearInterval(updateSaveCountID);
         $(this).hide();
