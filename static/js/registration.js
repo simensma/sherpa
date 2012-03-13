@@ -29,6 +29,19 @@ $(document).ready(function() {
         monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',
           'Nov', 'Des'],
         defaultDate: '-15y'
+    }).change(function() {
+        // We consider year of birth, not date.
+        // So in March 2012, someone born December 2011 would be considered 1 year old.
+        var age = new Date().getFullYear() - $(this).datepicker('getDate').getFullYear();
+        if(age > 26) {
+            $("form#registration span.membershiptype").text("Medlemstype: Hovedmedlem");
+        } else if(age <= 26 && age >= 19) {
+            $("form#registration span.membershiptype").text("Medlemstype: Student/ungdom (19-26 år)");
+        } else if(age <= 18 && age >= 13) {
+            $("form#registration span.membershiptype").text("Medlemstype: Skoleungdom (13-18 år)");
+        } else if(age < 13 ) {
+            $("form#registration span.membershiptype").text("Medlemstype: Barn (under 13 år)");
+        }
     });
 
 });
