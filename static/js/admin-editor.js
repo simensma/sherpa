@@ -9,7 +9,6 @@ $(document).ready(function() {
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     setEmpties();
-    $("#toolbar .structure button.formatting").button('toggle');
 
     /* Add widget/text/image */
 
@@ -265,36 +264,34 @@ $(document).ready(function() {
         });
     });
     // Edit mode - formatting, move vertically/horizontally
-    var rows = $("article");
-    var columns = $("article row");
-    rows.sortable({ disabled: true });
-    columns.sortable({ disabled: true });
-    $("#toolbar #tabs input.formatting").click(function() {
-        disableSort(rows);
-        disableSort(columns);
-        $(".cms-content").attr('contenteditable', 'true');
+    $("#toolbar .structure button.formatting").button('toggle');
+    $("#toolbar .structure button.formatting").click(function() {
+        disableSort($("article"));
+        disableSort($("article .row"));
+        $("article .editable").attr('contenteditable', 'true');
     });
-    $("#toolbar #tabs input.vertical").click(function() {
-        enableSort(rows, 'vertical');
-        disableSort(columns);
-        $(".cms-content").attr('contenteditable', 'false');
+    $("#toolbar .structure button.horizontal").click(function() {
+        disableSort($("article"));
+        enableSort($("article .row"), 'horizontal');
+        $("article .editable").removeAttr('contenteditable');
     });
-    $("#toolbar #tabs input.horizontal").click(function() {
-        disableSort(rows);
-        enableSort(columns, 'horizontal');
-        $(".cms-content").attr('contenteditable', 'false');
+    $("#toolbar .structure button.vertical").click(function() {
+        enableSort($("article"), 'vertical');
+        disableSort($("article .row"));
+        $("article .editable").removeAttr('contenteditable');
     });
-    function disableSort(element) {
-        element.sortable('disable');
-        element.children().off('mouseenter');
-        element.children().off('mouseleave');
+    function disableSort(el) {
+        // completely destroy it, in order to include new elements when created
+        el.sortable('destroy');
+        el.children().off('mouseenter');
+        el.children().off('mouseleave');
     }
-    function enableSort(element, alignment) {
-        element.sortable('enable');
-        element.children().on('mouseenter', function() {
+    function enableSort(el, alignment) {
+        el.sortable();
+        el.children().on('mouseenter', function() {
             $(this).addClass('moveable ' + alignment);
         });
-        element.children().on('mouseleave', function() {
+        el.children().on('mouseleave', function() {
             $(this).removeClass('moveable ' + alignment);
         });
     }
