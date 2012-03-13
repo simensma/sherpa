@@ -11,7 +11,7 @@
 
 <h1>Bli medlem</h1>
 
-<form id="registration" class="well" action="/innmelding/registrering/" method="post">
+<form id="registration" class="well" action="{% url enrollment.views.registration2 %}" method="post">
   {% csrf_token %}
   <label>Fornavn</label>
   <input type="text" class="span3" name="firstname" placeholder="Kari">

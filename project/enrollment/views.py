@@ -7,8 +7,11 @@ from user.models import Zipcode
 def index(request):
     return HttpResponse()
 
-def registration(request):
-    return render(request, 'enrollment/registration.html')
+def registration1(request):
+    return render(request, 'enrollment/registration.1.html')
+
+def registration2(request):
+    return render(request, 'enrollment/registration.2.html')
 
 def zipcode(request, code):
     location = Zipcode.objects.get(code=code).location
