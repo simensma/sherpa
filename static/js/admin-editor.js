@@ -317,7 +317,7 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    $("#toolbar button.save").click(function() {
+    $("#toolbar .save button.save").click(function() {
         clearInterval(updateSaveCountID);
         $(this).hide();
         $("div.no-save-warning").hide();
