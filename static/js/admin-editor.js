@@ -28,6 +28,7 @@ $(document).ready(function() {
             // Todo: insert widget
             enableToolbar();
             $("article .insertable").remove();
+            refreshSort();
             setEmpties();
         });
     });
@@ -49,7 +50,10 @@ $(document).ready(function() {
             function done() {
                 selectableContent(editable);
                 changeableImages(image);
-                editable.attr('contenteditable', 'true');
+                if(sortState == 'formatting') {
+                    editable.attr('contenteditable', 'true');
+                }
+                refreshSort();
                 setEmpties();
                 // We don't want the default overlay to be there when we pick a new picture.
                 // It will be disabled when the ajax 'always' callback is called, but that's
@@ -74,7 +78,10 @@ $(document).ready(function() {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
-                content.attr('contenteditable', 'true').focus();
+                if(sortState == 'formatting') {
+                    content.attr('contenteditable', 'true').focus();
+                }
+                refreshSort();
                 setEmpties();
             }
             addContent($(event.target), content, 'h', done);
@@ -107,6 +114,7 @@ $(document).ready(function() {
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
+                refreshSort();
                 doneRemoving();
             });
         });
@@ -226,6 +234,8 @@ $(document).ready(function() {
                         $(this).attr("data-id", ids[i++]);
                         setEmpty($(this));
                     });
+                    wrapper.sortable({disabled: true});
+                    refreshSort();
                 }).fail(function(result) {
                     // Todo
                 }).always(function(result) {
@@ -259,41 +269,56 @@ $(document).ready(function() {
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
+                refreshSort();
                 doneRemoving();
             });
         });
     });
     // Edit mode - formatting, move vertically/horizontally
+    var sortState = 'formatting';
+    $("article").sortable({ disabled: true });
+    $("article .row").sortable({ disabled: true });
     $("#toolbar .structure button.formatting").button('toggle');
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
         $("article .editable").attr('contenteditable', 'true');
+        sortState = 'formatting';
     });
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
         $("article .editable").removeAttr('contenteditable');
+        sortState = 'horizontal';
     });
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
         $("article .editable").removeAttr('contenteditable');
+        sortState = 'vertical';
     });
     function disableSort(el) {
-        // completely destroy it, in order to include new elements when created
-        el.sortable('destroy');
+        el.sortable('disable');
         el.children().off('mouseenter');
         el.children().off('mouseleave');
     }
     function enableSort(el, alignment) {
-        el.sortable();
+        el.sortable('enable');
         el.children().on('mouseenter', function() {
             $(this).addClass('moveable ' + alignment);
         });
         el.children().on('mouseleave', function() {
             $(this).removeClass('moveable ' + alignment);
         });
+    }
+    function refreshSort() {
+        $("article").sortable('refresh');
+        $("article .row").sortable('refresh');
+        if(sortState == 'vertical') {
+            enableSort($("article"), sortState);
+        } else if(sortState == 'horizontal') {
+            enableSort($("article .row"), sortState);
+        }
     }
 
     /* Saving document */
