@@ -152,9 +152,6 @@ $(document).ready(function() {
     $("#toolbar button.anchor-remove").click(function(event) {
         document.execCommand('unlink');
     });
-    $("#toolbar div.button.body").click(function() {
-        document.execCommand('formatblock', false, 'p');
-    });
     $("#toolbar div.button.bold").click(function(event) {
         document.execCommand('bold');
     });
