@@ -9,6 +9,7 @@ $(document).ready(function() {
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     setEmpties();
+    $("#toolbar .structure button.formatting").button('toggle');
 
     /* Add widget/text/image */
 
