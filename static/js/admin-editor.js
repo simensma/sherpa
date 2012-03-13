@@ -303,15 +303,23 @@ $(document).ready(function() {
     function updateSaveCount() {
         lastSaveCount += 1;
         if(lastSaveCount < 30) {
-            $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
+            $("#toolbar span.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
         } else if(lastSaveCount < 60) {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
         } else {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
+            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
         }
 
         if(lastSaveCount == 60 * 5) {
             $("div.no-save-warning").show();
+        }
+
+        if($("#toolbar .save input.autosave:checked").length == 1) {
+            var len = parseInt($("#toolbar .save input.autosave-frequency").val(), 10);
+            if(!isNaN(len) && lastSaveCount > (len * 60)) {
+                $("#toolbar .save button.save").click();
+                return;
+            }
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }
@@ -321,7 +329,7 @@ $(document).ready(function() {
         clearInterval(updateSaveCountID);
         $(this).hide();
         $("div.no-save-warning").hide();
-        $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
+        $("#toolbar span.save-text").text("Lagrer, vennligst vent...");
         enableOverlay();
         disableEditing();
         var rows = [];
