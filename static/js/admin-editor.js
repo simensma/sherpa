@@ -315,8 +315,8 @@ $(document).ready(function() {
         }
 
         if($("#toolbar .save input.autosave:checked").length == 1) {
-            var len = parseInt($("#toolbar .save input.autosave-frequency").val(), 10);
-            if(!isNaN(len) && lastSaveCount > (len * 60)) {
+            var val = $("#toolbar .save input.autosave-frequency").val();
+            if(val.match(/^\d+$/) && lastSaveCount > (val * 60)) {
                 $("#toolbar .save button.save").click();
                 return;
             }
