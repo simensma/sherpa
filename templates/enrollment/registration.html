@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 {% block extra_scripts %}
   <script src="{{ STATIC_URL }}js/registration.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
 {% endblock %}
 
 {% block body %}
@@ -14,9 +18,7 @@
   <label>Etternavn</label>
   <input type="text" class="span3" name="lastname" placeholder="Nordmann">
   <label>Fødselsdato</label>
-  <input type="text" class="span1" placeholder="dd">
-  <input type="text" class="span1" placeholder="mm">
-  <input type="text" class="span1" placeholder="åååå">
+  <input type="text" class="span3" name="dob">
   <label>Adresse</label>
   <input type="text" class="span3" placeholder="Turveien 15">
   <label>Postnummer / Poststed</label>
