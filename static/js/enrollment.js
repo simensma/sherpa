@@ -48,4 +48,13 @@ $(document).ready(function() {
         }
     });
 
+    $("form#registration div.householdmember").hide();
+    $("form#registration input[name='household']").click(function() {
+        if($(this).prop('checked')) {
+            $("form#registration div.householdmember").show();
+        } else {
+            $("form#registration div.householdmember").hide();
+        }
+    });
+
 });
