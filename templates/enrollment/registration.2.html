@@ -9,14 +9,27 @@
 <div class="offset2 span8">
   <h2>Kan du sjekke om dette stemmer?</h2>
 
-  <table id="registration-check" class="table table-bordered">
-    <thead>
+  <table class="registration-check table table-bordered">
     <tr>
       <th>Medlemskap</th>
-      <td>{{ registration.membership }}</td>
+      <td>
+        {{ registration.membership }}<br>
+        {{ registration.membershipreason }}
+      </td>
     </tr>
-    </thead>
-    <tbody>
+    {% if registration.householdmember %}
+    <tr>
+      <th>Hovedmedlem</th>
+      <td>{{ registration.householdmember }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Din lokalforening</th>
+      <td>
+        {{ registration.association }}<br>
+        (Basert på postnummer)
+      </td>
+    </tr>
     <tr>
       <th>Navn</th>
       <td>{{ registration.name }}</td>
@@ -47,7 +60,6 @@
         {% endif %}
       </td>
     </tr>
-    </tbody>
   </table>
 </div>
 </div>

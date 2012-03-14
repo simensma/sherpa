@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -32,12 +33,16 @@ def registration2(request):
         age = datetime.now().isocalendar()[0] - registration['dob'].isocalendar()[0]
         if(age > 26):
             registration['membership'] = 'Hovedmedlem'
+            registration['membershipreason'] = '(27 - 66 år)'
         elif(age <= 26 and age > 19):
             registration['membership'] = 'Student/ungdom'
+            registration['membershipreason'] = '(20 - 26 år)'
         elif(age <= 18 and age > 13):
             registration['membership'] = 'Skoleungdom'
+            registration['membershipreason'] = '(14 - 19 år)'
         elif(age <= 13):
             registration['membership'] = 'Barnemedlem'
+            registration['membershipreason'] = '(13 år eller yngre)'
 
         if(request.POST.get('household') == 'on'):
             registration['household'] = 'checked'

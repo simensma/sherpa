@@ -15,6 +15,6 @@ form#registration input.dob {
     margin-right: 6px;
 }
 
-table#registration-check th {
+table.registration-check th {
     vertical-align: middle;
 }
