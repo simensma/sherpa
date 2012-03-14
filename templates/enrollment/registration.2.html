@@ -1,7 +1,45 @@
 {% extends 'layout.html' %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
 
 {% block body %}
 
-TBD
+<div class="row">
+<div class="offset2 span8">
+  <h2>Kan du sjekke om dette stemmer?</h2>
+
+  <table id="registration-check" class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Medlemskap</th>
+      <td>{{ registration.membership }}</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th>Navn</th>
+      <td>{{ registration.name }}</td>
+    </tr>
+    <tr>
+      <th>Fødselsdato</th>
+      <td>{{ registration.dob }}</td>
+    </tr>
+    <tr>
+      <th>Adresse</th>
+      <td>{{ registration.address }}<br>{{ registration.zipcode }} {{ registration.location }}</td>
+    </tr>
+    <tr>
+      <th>Telefon / mobil</th>
+      <td>{{ registration.phone }}</td>
+    </tr>
+    <tr>
+      <th>E-post</th>
+      <td>{{ registration.email }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</div>
 
 {% endblock %}
