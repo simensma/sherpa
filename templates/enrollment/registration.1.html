@@ -17,7 +17,7 @@
 
 <div class="row">
 <div class="offset2 span5">
-<form id="registration" class="well" action="{% url enrollment.views.registration2 %}" method="post">
+<form id="registration" action="{% url enrollment.views.registration2 %}" method="post">
   {% csrf_token %}
   <label>Fornavn</label>
   <input type="text" class="span3" name="firstname" placeholder="Kari">
