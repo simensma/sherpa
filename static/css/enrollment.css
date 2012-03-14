@@ -2,10 +2,13 @@
 
 form#registration label {
     color: black;
+    font-size: 110%;
 }
 
 form#registration input[type='text'] {
     color: black;
+    font-size: 120%;
+    padding: 8px;
 }
 
 form#registration input.dob {
