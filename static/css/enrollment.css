@@ -7,3 +7,7 @@ form#registration label {
 form#registration input[type='text'] {
     color: black;
 }
+
+form#registration input.dob {
+    margin-right: 6px;
+}

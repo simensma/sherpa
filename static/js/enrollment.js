@@ -28,7 +28,11 @@ $(document).ready(function() {
           'September', 'Oktober', 'November', 'Desember'],
         monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',
           'Nov', 'Des'],
-        defaultDate: '-15y'
+        defaultDate: '-15y',
+        showOn: 'both',
+        buttonImage: '/static/img/calendar.png',
+        buttonImageOnly: true,
+        buttonText: 'Velg dato...'
     }).change(function() {
         // We consider year of birth, not date.
         // So in March 2012, someone born December 2011 would be considered 1 year old.
