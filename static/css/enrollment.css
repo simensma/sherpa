@@ -1,0 +1,9 @@
+/* Enrollment */
+
+form#registration label {
+    color: black;
+}
+
+form#registration input[type='text'] {
+    color: black;
+}
