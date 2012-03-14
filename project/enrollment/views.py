@@ -7,6 +7,9 @@ from user.models import Zipcode
 def index(request):
     return HttpResponse()
 
+def types(request):
+    return render(request, 'enrollment/types.html')
+
 def registration1(request):
     return render(request, 'enrollment/registration.1.html')
 
