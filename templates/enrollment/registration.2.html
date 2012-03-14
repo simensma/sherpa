@@ -37,6 +37,16 @@
       <th>E-post</th>
       <td>{{ registration.email }}</td>
     </tr>
+    <tr>
+      <th>Ønsker DNT-Nøkkel</th>
+      <td>
+        {% if registration.key %}
+          Ja
+        {% else %}
+          Nei
+        {% endif %}
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
