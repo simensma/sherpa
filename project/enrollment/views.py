@@ -31,7 +31,10 @@ def registration2(request):
         registration['email'] = request.POST['email']
 
         age = datetime.now().isocalendar()[0] - registration['dob'].isocalendar()[0]
-        if(age > 26):
+        if(age > 66):
+            registration['membership'] = 'Honnørmedlem'
+            registration['membershipreason'] = '(67 år eller mer)'
+        elif(age <= 66 and age > 26):
             registration['membership'] = 'Hovedmedlem'
             registration['membershipreason'] = '(27 - 66 år)'
         elif(age <= 26 and age > 19):
