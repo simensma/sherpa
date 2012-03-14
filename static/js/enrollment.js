@@ -6,12 +6,12 @@ $(document).ready(function() {
                 url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
                 type: 'POST'
             }).done(function(result) {
-                $("form#registration input[name='city']").val(result);
+                $("form#registration input[name='location']").val(result);
             }).fail(function(result) {
-                $("form#registration input[name='city']").val("Ukjent postnummer");
+                $("form#registration input[name='location']").val("Ukjent postnummer");
             });
         } else {
-            $("form#registration input[name='city']").val("");
+            $("form#registration input[name='location']").val("");
         }
     });
 
@@ -48,7 +48,7 @@ $(document).ready(function() {
         }
     });
 
-    $("form#registration div.householdmember").hide();
+    $("form#registration div.householdmember.hide").hide();
     $("form#registration input[name='household']").click(function() {
         if($(this).prop('checked')) {
             $("form#registration div.householdmember").show();

@@ -13,10 +13,12 @@ def types(request):
     return render(request, 'enrollment/types.html')
 
 def registration1(request):
-    return render(request, 'enrollment/registration.1.html')
+    context = {'registration': request.session.get('registration')}
+    return render(request, 'enrollment/registration.1.html', context)
 
 def registration2(request):
     # Todo: Verify values from form 1, redirect back if invalid
+    # Also verify that 'registration' is set in session
     if(request.method == 'POST'):
         registration = {}
         registration['name'] = request.POST['name']
@@ -36,6 +38,13 @@ def registration2(request):
             registration['membership'] = 'Skoleungdom'
         elif(age <= 13):
             registration['membership'] = 'Barnemedlem'
+
+        if(request.POST.get('household') == 'on'):
+            registration['household'] = 'checked'
+            registration['householdmember'] = request.POST['householdmember']
+
+        if(request.POST.get('key') == 'on'):
+            registration['key'] = 'checked'
 
         request.session['registration'] = registration
 
