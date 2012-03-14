@@ -20,10 +20,8 @@
 <div class="offset2 span5">
 <form id="registration" action="{% url enrollment.views.registration2 %}" method="post">
   {% csrf_token %}
-  <label>Fornavn</label>
-  <input type="text" class="span3" name="firstname" placeholder="Kari">
-  <label>Etternavn</label>
-  <input type="text" class="span3" name="lastname" placeholder="Nordmann">
+  <label>Fullt navn</label>
+  <input type="text" class="span3" name="name" placeholder="Kari Nordmann">
   <label>Fødselsdato</label>
   <input type="text" class="span2 dob" name="dob"><span class="help-inline membershiptype"></span>
   <label>Adresse</label>
