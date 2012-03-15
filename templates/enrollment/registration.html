@@ -59,8 +59,32 @@
       E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
     </p>
   </div>
-
 </div>
+
+{% if users %}
+<div class="span5">
+  <div class="well">
+    <h2>Medlemmer</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2">Medlem</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td class="edit"><i class="icon-pencil" title="Endre medlem"></i>
+          <i class="icon-remove" title="Fjern medlem"></i></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
 </div>
 
 {% endblock %}
