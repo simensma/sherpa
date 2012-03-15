@@ -34,7 +34,7 @@
   <label>Epost</label>
   <input type="text" class="span3" name="email" value="{{ registration.email }}" placeholder="ola@eksempel.no">
   <label class="checkbox">
-    <input type="checkbox" name="household"{% if registration.household %} {{ registration.household }}{% endif %}> Husstandsmedlem (<a>Mer informasjon</a>)
+    <input type="checkbox" name="household"{% if registration.household %} {{ registration.household }}{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
   </label>
   <div class="householdmember{% if not registration.household %} hide{% endif %}">
     <label>Medlemsnummer til hovedmedlemmet:</label>
