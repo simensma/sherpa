@@ -7,7 +7,7 @@ from user.models import Zipcode
 from datetime import datetime, timedelta
 
 def index(request):
-    return HttpResponse()
+    return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def types(request):
     return render(request, 'enrollment/types.html')
