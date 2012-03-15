@@ -71,7 +71,7 @@
     {% for user in users %}
       <tr>
         <td>
-          {{ user.name }}
+          <a href="{% url enrollment.views.registration user.index %}">{{ user.name }}</a>
           <span class="remove">
             <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
           </span>

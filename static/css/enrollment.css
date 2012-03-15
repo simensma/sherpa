@@ -33,7 +33,6 @@ table.memberlist td {
 table.memberlist td:hover {
     background-color: rgb(215, 215, 215);
     color: rgb(0, 0, 0);
-    cursor: pointer;
 }
 
 table.memberlist span.remove {
