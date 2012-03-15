@@ -31,11 +31,13 @@
   <input type="text" class="span3" name="name" value="{{ registration.name }}" placeholder="Kari Nordmann">
   <label>Fødselsdato</label>
   <input type="text" class="span2 dob" name="dob" value="{{ registration.dob|date:"d.m.Y" }}">
-  <label>Adresse</label>
-  <input type="text" class="span3" name="address" value="{{ registration.address }}" placeholder="Turveien 15">
-  <label>Postnummer / Poststed</label>
-  <input type="text" class="span1" name="zipcode" value="{{ registration.zipcode }}" placeholder="1234">
-  <input type="text" class="span2" name="location" value="{{ registration.location }}" disabled>
+  <div class="address">
+    <label>Adresse</label>
+    <input type="text" class="span3" name="address" value="{{ registration.address }}" placeholder="Turveien 15">
+    <label>Postnummer / Poststed</label>
+    <input type="text" class="span1" name="zipcode" value="{{ registration.zipcode }}" placeholder="1234">
+    <input type="text" class="span2" name="location" value="{{ registration.location }}" disabled>
+  </div>
   <label>Telefon / Mobil</label>
   <input type="text" class="span2" name="phone" value="{{ registration.phone }}" placeholder="12 34 56 78">
   <label>Epost</label>

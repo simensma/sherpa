@@ -39,8 +39,10 @@ $(document).ready(function() {
     $("form#registration input[name='household']").click(function() {
         if($(this).prop('checked')) {
             $("form#registration div.householdmember").show();
+            $("form#registration div.address").hide();
         } else {
             $("form#registration div.householdmember").hide();
+            $("form#registration div.address").show();
         }
     });
 
