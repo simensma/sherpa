@@ -73,7 +73,7 @@
         <td>
           {{ user.name }}
           <span class="remove">
-            <a href=""><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+            <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
           </span>
         </td>
       </tr>

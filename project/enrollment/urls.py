@@ -6,6 +6,7 @@ urlpatterns = patterns('enrollment.views',
     url(r'^betingelser/$', 'conditions'),
     url(r'^registrering/$', 'registration', {'user': None}),
     url(r'^registrering/(?P<user>\d+)/$', 'registration'),
+    url(r'^registrering/fjern/(?P<user>\d+)/$', 'remove'),
     url(r'^verifisering/$', 'verification'),
 
     # Zip codes
