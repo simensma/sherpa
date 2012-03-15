@@ -45,14 +45,6 @@
     <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
   <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer</button>
-  <div class="btn-group">
-  {% if prev %}
-    <button type="submit" class="btn btn-primary" name="next" value="{{ prev.index }}"><i class="icon-arrow-left"></i> Forrige {% if prev.name %}({{ prev.name }}){% else %}medlem{% endif %}</button>
-  {% endif %}
-  {% if next %}
-    <button type="submit" class="btn btn-primary" name="next" value="{{ next.index }}">Neste {% if next.name %}({{ next.name }}){% else %}medlem{% endif %} <i class="icon-arrow-right"></i></button>
-  {% endif %}
-  </div>
   <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
 </form>
 

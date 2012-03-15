@@ -15,40 +15,23 @@ def types(request):
 def conditions(request):
     return render(request, 'enrollment/conditions.html')
 
-def registration(request):
+def registration(request, user):
     if not request.session.has_key('registration'):
         request.session['registration'] = []
 
-    prev = None
-    current = None
-    next = None
+    if user is not None:
+        user = request.session['registration'][user]
 
     if(request.method == 'POST'):
-        # Todo: Verify values, redirect back if invalid
         if request.POST.has_key('user'):
             request.session['registration'][int(request.POST['user'])] = parse_user_data(request)
         else:
             request.session['registration'].append(parse_user_data(request))
 
-        # Logic for traversing registrations
         if(request.POST['next'] == "done"):
             return HttpResponseRedirect(reverse("enrollment.views.verification"))
-        elif(request.POST['next'] == "new"):
-            if(len(request.session['registration']) > 0):
-                prev = {'index': len(request.session['registration']) - 1, 'name': request.session['registration'][len(request.session['registration']) - 1]['name']}
-        else:
-            current = {'index': int(request.POST['next'])}
-            if(current['index'] != 0):
-                prev = {'index': current['index'] - 1, 'name': request.session['registration'][current['index'] - 1]['name']}
-            if(current['index'] < len(request.session['registration']) - 1):
-                next = {'index': current['index'] + 1, 'name': request.session['registration'][current['index'] + 1]['name']}
-            current['user'] = request.session['registration'][current['index']]
-    else:
-        if len(request.session['registration']) > 0:
-            current = {'index': 0, 'user': request.session['registration'][0]}
-            if len(request.session['registration']) > 1:
-                next = {'index': 1, 'name': request.session['registration'][1]['name']}
-    context = {'prev': prev, 'current': current, 'next': next}
+
+    context = {'users': request.session['registration'], 'user': user}
     return render(request, 'enrollment/registration.html', context)
 
 def verification(request):
