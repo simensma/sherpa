@@ -24,6 +24,18 @@ table.registration-check th {
     vertical-align: middle;
 }
 
+table.memberlist td {
+    background-color: white;
+    font-size: 120%;
+    padding: 10px;
+}
+
+table.memberlist td:hover {
+    background-color: rgb(215, 215, 215);
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+}
+
 table.memberlist span.remove {
     float: right;
 }
