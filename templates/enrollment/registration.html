@@ -19,7 +19,7 @@
 <div class="row">
 <div class="offset2 span5">
 {% if saved %}
-  <div class="alert alert-success"><a class="close">x</a>Informasjonen er lagret. Legg til flere medlemmer om du ønsker, eller klikk "Gå videre" under skjemaet.</div>
+  <div class="alert alert-success"><a class="close">x</a>Informasjonen er lagret. Legg til flere medlemmer om du ønsker, eller klikk "Gå videre" i boksen til høyre.</div>
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
@@ -47,8 +47,10 @@
   <label class="checkbox">
     <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Lagre</button><br>
-  <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
+  <button type="submit" class="btn btn-success" name="next" value="new"><i class="icon-user"></i> Lagre</button>
+  {% if user %}
+    <p class="add-member"><a href="{% url enrollment.views.registration %}">Avbryt og legg til nytt medlem</a></p>
+  {% endif %}
 </form>
 
 </div>
@@ -82,6 +84,7 @@
       </tr>
     {% endfor %}
     </table>
+    <a href="{% url enrollment.views.verification %}" class="btn btn-success btn-large" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></a>
   </div>
 </div>
 {% endif %}

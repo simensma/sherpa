@@ -38,3 +38,10 @@ table.memberlist td:hover {
 table.memberlist span.remove {
     float: right;
 }
+
+p.add-member {
+    margin-top: 13px;
+    margin-bottom: 13px;
+    font-size: 120%;
+    font-weight: bold;
+}
