@@ -1,17 +1,17 @@
-<div id="toolbar">
+<div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
-    <li class="active"><a href="javascript:undefined">Lagre</a></li>
-    <li><a href="javascript:undefined">Struktur</a></li>
-    <li><a href="javascript:undefined">Innhold</a></li>
-    <li><a href="javascript:undefined">Formatering</a></li>
-    <li><a href="javascript:undefined">Lenker</a></li>
+    <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
+    <li><a href="#2" data-toggle="tab">Struktur</a></li>
+    <li><a href="#3" data-toggle="tab">Innhold</a></li>
+    <li><a href="#4" data-toggle="tab">Formatering</a></li>
+    <li><a href="#5" data-toggle="tab">Lenker</a></li>
   </ul>
-  <div id="tabs">
-    <div class="tab save">
+  <div class="tab-content">
+    <div class="tab-pane active save" id="1">
       <p class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</p>
       <button class="btn save">Lagre</button>
     </div>
-    <div class="tab structure">
+    <div class="tab-pane structure" id="2">
       <p>
         <input class="formatting" type="radio" name="editmode" checked> Tekstredigering<br>
         <input class="vertical" type="radio" name="editmode"> Flytt vertikalt (kolonner)<br>
@@ -20,13 +20,13 @@
         <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
       </p>
     </div>
-    <div class="tab content">
+    <div class="tab-pane content" id="3">
       <button class="btn add-widget"><i class="icon-star"></i> Ny widget</button>
       <button class="btn add-image"><i class="icon-picture"></i> Nytt bilde</button>
       <button class="btn add-text"><i class="icon-align-left"></i> Ny tekst</button><br>
       <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
     </div>
-    <div class="tab formatting">
+    <div class="tab-pane formatting" id="4">
       <div class="button bold"></div>
       <div class="button italic"></div>
       <div class="button underline"></div>
@@ -45,7 +45,7 @@
         </optgroup>
       </select>
     </div>
-    <div class="tab link">
+    <div class="tab-pane link" id="5">
       <p>URL-adresse: <input type="text" class="url"></p>
       <button class="btn anchor-add"><i class="icon-share-alt"></i> Sett inn link</button>
       <button class="btn anchor-remove"><i class="icon-remove"></i> Ta bort link</button>
