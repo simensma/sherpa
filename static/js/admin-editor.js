@@ -28,6 +28,7 @@ $(document).ready(function() {
             // Todo: insert widget
             enableToolbar();
             $("article .insertable").remove();
+            refreshSort();
             setEmpties();
         });
     });
@@ -49,7 +50,10 @@ $(document).ready(function() {
             function done() {
                 selectableContent(editable);
                 changeableImages(image);
-                editable.attr('contenteditable', 'true');
+                if(sortState == 'formatting') {
+                    editable.attr('contenteditable', 'true');
+                }
+                refreshSort();
                 setEmpties();
                 // We don't want the default overlay to be there when we pick a new picture.
                 // It will be disabled when the ajax 'always' callback is called, but that's
@@ -74,7 +78,10 @@ $(document).ready(function() {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
-                content.attr('contenteditable', 'true').focus();
+                if(sortState == 'formatting') {
+                    content.attr('contenteditable', 'true').focus();
+                }
+                refreshSort();
                 setEmpties();
             }
             addContent($(event.target), content, 'h', done);
@@ -100,9 +107,6 @@ $(document).ready(function() {
                 url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
                 type: 'POST'
             }).done(function(result) {
-                content.nextAll().each(function() {
-                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
-                });
                 if(content.siblings().length == 0) {
                     setEmpty(content.parent());
                 }
@@ -110,6 +114,7 @@ $(document).ready(function() {
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
+                refreshSort();
                 doneRemoving();
             });
         });
@@ -151,9 +156,6 @@ $(document).ready(function() {
     });
     $("#toolbar button.anchor-remove").click(function(event) {
         document.execCommand('unlink');
-    });
-    $("#toolbar div.button.body").click(function() {
-        document.execCommand('formatblock', false, 'p');
     });
     $("#toolbar div.button.bold").click(function(event) {
         document.execCommand('bold');
@@ -206,12 +208,7 @@ $(document).ready(function() {
                                {span: 4, offset: 0, order: 1},
                                {span: 4, offset: 0, order: 2}]
                 }
-                var order;
-                if(insertable.prev().length > 0) {
-                    order = Number(insertable.prev().attr("data-order")) + 1;
-                } else {
-                    order = 0;
-                }
+                var order = insertable.prevAll(":not(.insertable)").length;
                 $.ajax({
                     url: '/sherpa/cms/kolonner/ny/',
                     type: 'POST',
@@ -219,10 +216,10 @@ $(document).ready(function() {
                           "&order=" + encodeURIComponent(order) +
                           "&columns=" + encodeURIComponent(JSON.stringify(columns))
                 }).done(function(result) {
-                    var wrapper = $('<div class="row" data-order="' + order + '"></div>');
+                    var wrapper = $('<div class="row"></div>');
                     for(var i=0; i<columns.length; i++) {
                         wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
-                            columns[i].offset + '" data-order="' + columns[i].order + '"></div>'));
+                            columns[i].offset + '"></div>'));
                     }
                     var prev = insertable.prev();
                     if(prev.length == 0) {
@@ -237,6 +234,8 @@ $(document).ready(function() {
                         $(this).attr("data-id", ids[i++]);
                         setEmpty($(this));
                     });
+                    wrapper.sortable({disabled: true});
+                    refreshSort();
                 }).fail(function(result) {
                     // Todo
                 }).always(function(result) {
@@ -266,50 +265,60 @@ $(document).ready(function() {
                 url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
                 type: 'POST'
             }).done(function(result) {
-                row.nextAll().each(function() {
-                    $(this).attr('data-order', (Number($(this).attr('data-order')) - 1));
-                });
                 row.remove();
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
+                refreshSort();
                 doneRemoving();
             });
         });
     });
     // Edit mode - formatting, move vertically/horizontally
-    var rows = $("article");
-    var columns = $("article row");
-    rows.sortable({ disabled: true });
-    columns.sortable({ disabled: true });
-    $("#toolbar #tabs input.formatting").click(function() {
-        disableSort(rows);
-        disableSort(columns);
-        $(".cms-content").attr('contenteditable', 'true');
+    var sortState = 'formatting';
+    $("article").sortable({ disabled: true });
+    $("article .row").sortable({ disabled: true });
+    $("#toolbar .structure button.formatting").button('toggle');
+    $("#toolbar .structure button.formatting").click(function() {
+        disableSort($("article"));
+        disableSort($("article .row"));
+        $("article .editable").attr('contenteditable', 'true');
+        sortState = 'formatting';
     });
-    $("#toolbar #tabs input.vertical").click(function() {
-        enableSort(rows, 'vertical');
-        disableSort(columns);
-        $(".cms-content").attr('contenteditable', 'false');
+    $("#toolbar .structure button.horizontal").click(function() {
+        disableSort($("article"));
+        enableSort($("article .row"), 'horizontal');
+        $("article .editable").removeAttr('contenteditable');
+        sortState = 'horizontal';
     });
-    $("#toolbar #tabs input.horizontal").click(function() {
-        disableSort(rows);
-        enableSort(columns, 'horizontal');
-        $(".cms-content").attr('contenteditable', 'false');
+    $("#toolbar .structure button.vertical").click(function() {
+        enableSort($("article"), 'vertical');
+        disableSort($("article .row"));
+        $("article .editable").removeAttr('contenteditable');
+        sortState = 'vertical';
     });
-    function disableSort(element) {
-        element.sortable('disable');
-        element.children().off('mouseenter');
-        element.children().off('mouseleave');
+    function disableSort(el) {
+        el.sortable('disable');
+        el.children().off('mouseenter');
+        el.children().off('mouseleave');
     }
-    function enableSort(element, alignment) {
-        element.sortable('enable');
-        element.children().on('mouseenter', function() {
+    function enableSort(el, alignment) {
+        el.sortable('enable');
+        el.children().on('mouseenter', function() {
             $(this).addClass('moveable ' + alignment);
         });
-        element.children().on('mouseleave', function() {
+        el.children().on('mouseleave', function() {
             $(this).removeClass('moveable ' + alignment);
         });
+    }
+    function refreshSort() {
+        $("article").sortable('refresh');
+        $("article .row").sortable('refresh');
+        if(sortState == 'vertical') {
+            enableSort($("article"), sortState);
+        } else if(sortState == 'horizontal') {
+            enableSort($("article .row"), sortState);
+        }
     }
 
     /* Saving document */
@@ -319,32 +328,50 @@ $(document).ready(function() {
     function updateSaveCount() {
         lastSaveCount += 1;
         if(lastSaveCount < 30) {
-            $("#toolbar p.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
+            $("#toolbar span.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
         } else if(lastSaveCount < 60) {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
         } else {
-            $("#toolbar p.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
+            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
         }
 
         if(lastSaveCount == 60 * 5) {
             $("div.no-save-warning").show();
         }
+
+        if($("#toolbar .save input.autosave:checked").length == 1) {
+            var val = $("#toolbar .save input.autosave-frequency").val();
+            if(val.match(/^\d+$/) && lastSaveCount > (val * 60)) {
+                $("#toolbar .save button.save").click();
+                return;
+            }
+        }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }
     updateSaveCount();
 
-    $("#toolbar button.save").click(function() {
+    // Warn when autosave-number is invalid
+    $("#toolbar .save input.autosave-frequency").keyup(function() {
+        if($(this).val().match(/^\d+$/)) {
+            $(this).parents(".control-group").removeClass('error');
+        } else {
+            $(this).siblings("input.autosave").removeAttr('checked');
+            $(this).parents(".control-group").addClass('error');
+        }
+    });
+
+    $("#toolbar .save button.save").click(function() {
         clearInterval(updateSaveCountID);
         $(this).hide();
         $("div.no-save-warning").hide();
-        $("#toolbar p.save-text").text("Lagrer, vennligst vent...");
+        $("#toolbar span.save-text").text("Lagrer, vennligst vent...");
         enableOverlay();
         disableEditing();
         var rows = [];
         $("article div.row").each(function() {
             var row = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order')
+                order: $(this).prevAll().length
             }
             rows = rows.concat([row]);
         });
@@ -352,15 +379,15 @@ $(document).ready(function() {
         $("article div.column").each(function() {
             var column = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order')
+                order: $(this).prevAll().length
             }
-            column = columns.concat([column]);
+            columns = columns.concat([column]);
         });
         var contents = [];
         $("article div.content").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
-                order: $(this).attr('data-order'),
+                order: $(this).prevAll().length,
                 content: $(this).html(),
             }
             contents = contents.concat([content]);
@@ -459,12 +486,7 @@ function insertables(text, container, click) {
 /* Add content-objects to some column */
 function addContent(insertable, content, type, done) {
     enableOverlay();
-    var order;
-    if(insertable.prev().length > 0) {
-        order = Number(insertable.prev().attr("data-order")) + 1;
-    } else {
-        order = 0;
-    }
+    var order = insertable.prevAll(":not(.insertable)").length;
     $.ajax({
         url: '/sherpa/cms/innhold/ny/',
         type: 'POST',
@@ -473,17 +495,13 @@ function addContent(insertable, content, type, done) {
               "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
               "&type=" + encodeURIComponent(type)
     }).done([function(result) {
-        var wrapper = $('<div class="content" data-id="' + result + '" data-order="' + order +
-            '"></div>').append(content);
+        var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
         var prev = insertable.prev();
         if(prev.length == 0) {
             insertable.parent().prepend(wrapper);
         } else {
             prev.after(wrapper);
         }
-        wrapper.nextAll(".content").each(function() {
-            $(this).attr('data-order', (Number($(this).attr('data-order')) + 1));
-        });
     }, done]).fail(function(result) {
         // Todo
     }).always(function(result) {

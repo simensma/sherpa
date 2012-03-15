@@ -111,6 +111,11 @@ article .moveable.vertical {
   border-bottom: 1px solid rgb(221, 221, 221);
 }
 
+#toolbar .save input.autosave-frequency {
+  width: 20px;
+  height: 0.8em;
+}
+
 #toolbar div.button {
   float: left;
   cursor: pointer;

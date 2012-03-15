@@ -25,12 +25,12 @@
 <article data-id="{{ version.id }}">
 
 {% for row in rows %}
-<div class="row" data-id="{{ row.id }}" data-order="{{ row.order }}">
+<div class="row" data-id="{{ row.id }}">
   {% for column in row.columns %}
-    <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}" data-order="{{ column.order }}">
+    <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
       {% for content in column.contents %}
         {% if content.type == 'h' %}
-          <div class="content" data-id="{{ content.id }}" data-order="{{ content.order }}">{{ content.content|safe }}</div>
+          <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           {% include content.widget.template with widget=content.widget %}
         {% endif %}
