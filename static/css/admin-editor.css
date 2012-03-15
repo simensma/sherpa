@@ -87,7 +87,7 @@ article .moveable.vertical {
   z-index: 1000;
 }
 
-#toolbar #tabs, #toolbar li.active a {
+#toolbar .tab-content, #toolbar li.active a {
   background-color: rgb(245, 245, 245) !important;
 }
 
@@ -104,7 +104,7 @@ article .moveable.vertical {
   background-color: rgb(225, 225, 225);
 }
 
-#toolbar #tabs {
+#toolbar .tab-content {
   padding: 9px;
   border-left: 1px solid rgb(221, 221, 221);
   border-right: 1px solid rgb(221, 221, 221);

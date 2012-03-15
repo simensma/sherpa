@@ -1,0 +1,25 @@
+/* Enrollment */
+
+form#registration label {
+    color: black;
+    font-size: 110%;
+}
+
+form#registration input[type='text'] {
+    color: black;
+    font-size: 120%;
+    padding: 8px;
+}
+
+form#registration input.dob {
+    margin-right: 6px;
+}
+
+form#registration button {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+table.registration-check th {
+    vertical-align: middle;
+}

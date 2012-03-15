@@ -120,14 +120,6 @@ $(document).ready(function() {
         });
     });
 
-    // Hide/show chosen toolbar tab
-    $("#toolbar div.tab").hide().first().show();
-    $("#toolbar li").click(function() {
-        $("#toolbar li").removeClass('active');
-        $(this).addClass('active');
-        $("#toolbar div.tab").hide();
-        $($("#toolbar div.tab")[$(this).index()]).show();
-    });
     // Make toolbar draggable
     $("#toolbar").draggable({
         containment: 'window'
@@ -247,7 +239,7 @@ $(document).ready(function() {
         });
     });
     // Remove row
-    $("#toolbar .tab.structure button.remove-columns").click(function() {
+    $("#toolbar .tab-pane.structure button.remove-columns").click(function() {
         function doneRemoving() {
             enableEditing();
             enableToolbar();
@@ -426,15 +418,15 @@ function disableOverlay() {
 
 /* Toggle toolbar usage */
 function disableToolbar(displayText, cancelCallback) {
-    $("#toolbar .tab *").hide();
+    $("#toolbar .tab-pane *").hide();
     var btn = $('<button class="btn cancel">Avbryt</button>');
     btn.click(enableToolbar);
     btn.click(cancelCallback);
-    $("#toolbar .tab").append('<p class="cancel">' + displayText + '</p>', btn);
+    $("#toolbar .tab-pane").append('<p class="cancel">' + displayText + '</p>', btn);
 }
 function enableToolbar() {
-    $("#toolbar .tab .cancel").remove();
-    $("#toolbar .tab *").show();
+    $("#toolbar .tab-pane .cancel").remove();
+    $("#toolbar .tab-pane *").show();
 }
 
 /* Toggle editing of the actual content */

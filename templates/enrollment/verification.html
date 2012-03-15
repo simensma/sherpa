@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+<div class="offset2 span8">
+  <h2>Kan du sjekke om dette stemmer?</h2>
+
+  {% for user in users %}
+  <table class="registration-check table table-bordered">
+    <tr>
+      <th>Medlemskap</th>
+      <td>
+        {{ user.membership }}<br>
+        {{ user.membershipreason }}
+      </td>
+    </tr>
+    {% if user.householdmember %}
+    <tr>
+      <th>Hovedmedlem</th>
+      <td>{{ user.householdmember }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Din lokalforening</th>
+      <td>
+        DNT X og Y{{ user.association }}<br>
+        (Basert på postnummer)
+      </td>
+    </tr>
+    <tr>
+      <th>Navn</th>
+      <td>{{ user.name }}</td>
+    </tr>
+    <tr>
+      <th>Fødselsdato</th>
+      <td>{{ user.dob|date:"d.m.Y" }}</td>
+    </tr>
+    <tr>
+      <th>Adresse</th>
+      <td>{{ user.address }}<br>{{ user.zipcode }} {{ user.location }}</td>
+    </tr>
+    <tr>
+      <th>Telefon / mobil</th>
+      <td>{{ user.phone }}</td>
+    </tr>
+    <tr>
+      <th>E-post</th>
+      <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+      <th>Ønsker DNT-Nøkkel</th>
+      <td>
+        {% if user.key %}
+          Ja
+        {% else %}
+          Nei
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  {% endfor %}
+
+</div>
+</div>
+
+{% endblock %}

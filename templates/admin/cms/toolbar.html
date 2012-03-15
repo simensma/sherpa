@@ -1,20 +1,20 @@
-<div id="toolbar">
+<div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
-    <li class="active"><a href="javascript:undefined">Lagre</a></li>
-    <li><a href="javascript:undefined">Struktur</a></li>
-    <li><a href="javascript:undefined">Innhold</a></li>
-    <li><a href="javascript:undefined">Formatering</a></li>
-    <li><a href="javascript:undefined">Lenker</a></li>
+    <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
+    <li><a href="#2" data-toggle="tab">Struktur</a></li>
+    <li><a href="#3" data-toggle="tab">Innhold</a></li>
+    <li><a href="#4" data-toggle="tab">Formatering</a></li>
+    <li><a href="#5" data-toggle="tab">Lenker</a></li>
   </ul>
-  <div id="tabs">
-    <div class="tab save">
+  <div class="tab-content">
+    <div class="tab-pane active save" id="1">
       <p>
         <span class="save-text"><i class=\"icon-ok\"></i> Artikkelen er nylig lagret.</span><br>
         <span class="control-group"><span class="help-inline"><input type="checkbox" class="autosave"> Lagre automatisk hvert <input type="text" value="1" class="autosave-frequency"><span class="help-inline">. minutt</span>
       </p>
       <button class="btn save">Lagre</button>
     </div>
-    <div class="tab structure">
+    <div class="tab-pane structure" id="2">
       <div class="btn-group" data-toggle="buttons-radio">
         <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
         <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt horisontalt <i class="icon-arrow-right"></i></button>
@@ -25,7 +25,7 @@
         <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
       </div>
     </div>
-    <div class="tab content">
+    <div class="tab-pane content" id="3">
       <div class="btn-group">
         <button class="btn add-widget"><i class="icon-star"></i> Ny widget</button>
         <button class="btn add-image"><i class="icon-picture"></i> Nytt bilde</button>
@@ -33,7 +33,7 @@
       </div>
       <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
     </div>
-    <div class="tab formatting">
+    <div class="tab-pane formatting" id="4">
       <div class="button bold"></div>
       <div class="button italic"></div>
       <div class="button underline"></div>
@@ -52,7 +52,7 @@
         </optgroup>
       </select>
     </div>
-    <div class="tab link">
+    <div class="tab-pane link" id="5">
       <p>URL-adresse: <input type="text" class="url"></p>
       <div class="btn-group">
         <button class="btn anchor-add"><i class="icon-share-alt"></i> Sett inn link</button>
