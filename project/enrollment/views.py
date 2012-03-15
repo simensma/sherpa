@@ -46,6 +46,10 @@ def remove(request, user):
     del request.session['registration'][int(user)]
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
+def household(request):
+    context = {'users': request.session['registration']}
+    return render(request, 'enrollment/household.html', context)
+
 def verification(request):
     # Todo: verify that 'registration' is set in session
     context = {'users': request.session['registration']}
