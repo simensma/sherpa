@@ -24,20 +24,20 @@
     <input type="hidden" name="user" value="{{ current.index }}">
   {% endif %}
   <label>Fullt navn</label>
-  <input type="text" class="span3" name="name" value="{{ current.user.name }}" placeholder="Kari Nordmann">
+  <input type="text" class="span3" name="name" value="{{ current.user.name }}">
   <label>Fødselsdato</label>
   <input type="text" class="span2 dob" name="dob" value="{{ current.user.dob }}">
   <div class="address">
     <label>Adresse</label>
-    <input type="text" class="span3" name="address" value="{{ current.user.address }}" placeholder="Turveien 15">
+    <input type="text" class="span3" name="address" value="{{ current.user.address }}">
     <label>Postnummer / Poststed</label>
-    <input type="text" class="span1" name="zipcode" value="{{ current.user.zipcode }}" placeholder="1234">
+    <input type="text" class="span1" name="zipcode" value="{{ current.user.zipcode }}">
     <input type="text" class="span2" name="location" value="{{ current.user.location }}" disabled>
   </div>
   <label>Telefon / Mobil</label>
-  <input type="text" class="span2" name="phone" value="{{ current.user.phone }}" placeholder="12 34 56 78">
+  <input type="text" class="span2" name="phone" value="{{ current.user.phone }}">
   <label>Epost</label>
-  <input type="text" class="span3" name="email" value="{{ current.user.email }}" placeholder="ola@eksempel.no">
+  <input type="text" class="span3" name="email" value="{{ current.user.email }}">
   <label class="checkbox">
     <input type="checkbox" name="key"{% if current.user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
   </label>
