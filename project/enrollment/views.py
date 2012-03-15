@@ -20,8 +20,9 @@ def registration(request, user):
         request.session['registration'] = []
 
     if user is not None:
-        user = request.session['registration'][user]
+        user = request.session['registration'][int(user)]
 
+    saved = False
     if(request.method == 'POST'):
         if request.POST.has_key('user'):
             request.session['registration'][int(request.POST['user'])] = parse_user_data(request)
@@ -30,14 +31,17 @@ def registration(request, user):
 
         if(request.POST['next'] == "done"):
             return HttpResponseRedirect(reverse("enrollment.views.verification"))
+        elif(request.POST['next'] == "save"):
+            saved = True
+            user = request.session['registration'][int(request.POST['user'])]
 
     # Update indices in case they have changed
     i = 0
-    for user in request.session['registration']:
-        user['index'] = i
+    for reg in request.session['registration']:
+        reg['index'] = i
         i += 1
 
-    context = {'users': request.session['registration'], 'user': user}
+    context = {'users': request.session['registration'], 'user': user, 'saved': saved}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):

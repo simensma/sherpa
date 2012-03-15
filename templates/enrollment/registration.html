@@ -18,33 +18,39 @@
 
 <div class="row">
 <div class="offset2 span5">
+{% if saved %}
+  <div class="alert alert-success"><a class="close">x</a>Endringene er lagret.</div>
+{% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
-  {% if current %}
-    <input type="hidden" name="user" value="{{ current.index }}">
+  {% if user %}
+    <input type="hidden" name="user" value="{{ user.index }}">
   {% endif %}
   <label>Fullt navn</label>
-  <input type="text" class="span3" name="name" value="{{ current.user.name }}">
+  <input type="text" class="span3" name="name" value="{{ user.name }}">
   <label>Fødselsdato</label>
-  <input type="text" class="span2 dob" name="dob" value="{{ current.user.dob }}">
+  <input type="text" class="span2 dob" name="dob" value="{{ user.dob }}">
   <div class="address">
     <label>Adresse</label>
-    <input type="text" class="span3" name="address" value="{{ current.user.address }}">
+    <input type="text" class="span3" name="address" value="{{ user.address }}">
     <label>Postnummer / Poststed</label>
-    <input type="text" class="span1" name="zipcode" value="{{ current.user.zipcode }}">
-    <input type="text" class="span2" name="location" value="{{ current.user.location }}" disabled>
+    <input type="text" class="span1" name="zipcode" value="{{ user.zipcode }}">
+    <input type="text" class="span2" name="location" value="{{ user.location }}" disabled>
   </div>
   <label>Telefon / Mobil</label>
-  <input type="text" class="span2" name="phone" value="{{ current.user.phone }}">
+  <input type="text" class="span2" name="phone" value="{{ user.phone }}">
   <label>Epost</label>
-  <input type="text" class="span3" name="email" value="{{ current.user.email }}">
+  <input type="text" class="span3" name="email" value="{{ user.email }}">
   <label class="checkbox">
-    <input type="checkbox" name="key"{% if current.user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
+    <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
   </label>
   <label class="checkbox">
     <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer</button>
+  {% if user %}
+    <button type="submit" class="btn btn-primary" name="next" value="save"><i class="icon-file"></i> Lagre endringer</button><br>
+  {% endif %}
+  <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer</button><br>
   <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
 </form>
 
