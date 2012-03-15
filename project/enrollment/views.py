@@ -28,12 +28,10 @@ def registration(request, user):
             request.session['registration'][int(request.POST['user'])] = parse_user_data(request)
         else:
             request.session['registration'].append(parse_user_data(request))
+        saved = True
 
         if(request.POST['next'] == "done"):
             return HttpResponseRedirect(reverse("enrollment.views.verification"))
-        elif(request.POST['next'] == "save"):
-            saved = True
-            user = request.session['registration'][int(request.POST['user'])]
 
     # Update indices in case they have changed
     i = 0
