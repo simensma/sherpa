@@ -68,20 +68,16 @@
   <div class="well">
     <h2>Medlemmer</h2>
     <table class="table memberlist">
-      <thead>
-        <tr>
-          <th colspan="2">Medlem</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for user in users %}
-        <tr>
-          <td>{{ user.name }}</td>
-          <td class="edit"><i class="icon-pencil" title="Endre medlem"></i>
-          <i class="icon-remove" title="Fjern medlem"></i></td>
-        </tr>
-      {% endfor %}
-      </tbody>
+    {% for user in users %}
+      <tr>
+        <td>
+          {{ user.name }}
+          <span class="remove">
+            <a href=""><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+          </span>
+        </td>
+      </tr>
+    {% endfor %}
     </table>
   </div>
 </div>

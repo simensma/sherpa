@@ -23,3 +23,7 @@ form#registration button {
 table.registration-check th {
     vertical-align: middle;
 }
+
+table.memberlist span.remove {
+    float: right;
+}
