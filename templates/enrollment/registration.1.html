@@ -20,6 +20,13 @@
 <div class="offset2 span5">
 <form id="registration" action="{% url enrollment.views.registration2 %}" method="post">
   {% csrf_token %}
+  <label class="checkbox">
+    <input type="checkbox" name="household"{% if registration.household %} {{ registration.household }}{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
+  </label>
+  <div class="householdmember{% if not registration.household %} hide{% endif %}">
+    <label>Medlemsnummer til hovedmedlemmet:</label>
+    <input type="text" class="span2" name="householdmember" value="{{ registration.householdmember }}" placeholder="1234567">
+  </div>
   <label>Fullt navn</label>
   <input type="text" class="span3" name="name" value="{{ registration.name }}" placeholder="Kari Nordmann">
   <label>Fødselsdato</label>
@@ -33,13 +40,6 @@
   <input type="text" class="span2" name="phone" value="{{ registration.phone }}" placeholder="12 34 56 78">
   <label>Epost</label>
   <input type="text" class="span3" name="email" value="{{ registration.email }}" placeholder="ola@eksempel.no">
-  <label class="checkbox">
-    <input type="checkbox" name="household"{% if registration.household %} {{ registration.household }}{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
-  </label>
-  <div class="householdmember{% if not registration.household %} hide{% endif %}">
-    <label>Medlemsnummer til hovedmedlemmet:</label>
-    <input type="text" class="span2" name="householdmember" value="{{ registration.householdmember }}" placeholder="1234567">
-  </div>
   <label class="checkbox">
     <input type="checkbox" name="key"{% if registration.key %} {{ registration.key }}{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
   </label>
