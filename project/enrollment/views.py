@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.core.urlresolvers import reverse
 from user.models import Zipcode
 
 from datetime import datetime, timedelta
@@ -32,8 +32,7 @@ def registration(request):
 
         # Logic for traversing registrations
         if(request.POST['next'] == "done"):
-            context = {'registration': request.session['registration']}
-            return HttpResponseRedirect(reverse("enrollment.views.verification"), context)
+            return HttpResponseRedirect(reverse("enrollment.views.verification"))
         elif(request.POST['next'] == "new"):
             if(len(request.session['registration']) > 0):
                 prev = {'index': len(request.session['registration']) - 1, 'name': request.session['registration'][len(request.session['registration']) - 1]['name']}
@@ -54,7 +53,7 @@ def registration(request):
 
 def verification(request):
     # Todo: verify that 'registration' is set in session
-    context = {'registration': request.session['registration']}
+    context = {'users': request.session['registration']}
     return render(request, 'enrollment/verification.html', context)
 
 def zipcode(request, code):

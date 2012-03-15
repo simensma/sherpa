@@ -9,51 +9,52 @@
 <div class="offset2 span8">
   <h2>Kan du sjekke om dette stemmer?</h2>
 
+  {% for user in users %}
   <table class="registration-check table table-bordered">
     <tr>
       <th>Medlemskap</th>
       <td>
-        {{ registration.membership }}<br>
-        {{ registration.membershipreason }}
+        {{ user.membership }}<br>
+        {{ user.membershipreason }}
       </td>
     </tr>
-    {% if registration.householdmember %}
+    {% if user.householdmember %}
     <tr>
       <th>Hovedmedlem</th>
-      <td>{{ registration.householdmember }}</td>
+      <td>{{ user.householdmember }}</td>
     </tr>
     {% endif %}
     <tr>
       <th>Din lokalforening</th>
       <td>
-        DNT X og Y{{ registration.association }}<br>
+        DNT X og Y{{ user.association }}<br>
         (Basert på postnummer)
       </td>
     </tr>
     <tr>
       <th>Navn</th>
-      <td>{{ registration.name }}</td>
+      <td>{{ user.name }}</td>
     </tr>
     <tr>
       <th>Fødselsdato</th>
-      <td>{{ registration.dob|date:"d.m.Y" }}</td>
+      <td>{{ user.dob|date:"d.m.Y" }}</td>
     </tr>
     <tr>
       <th>Adresse</th>
-      <td>{{ registration.address }}<br>{{ registration.zipcode }} {{ registration.location }}</td>
+      <td>{{ user.address }}<br>{{ user.zipcode }} {{ user.location }}</td>
     </tr>
     <tr>
       <th>Telefon / mobil</th>
-      <td>{{ registration.phone }}</td>
+      <td>{{ user.phone }}</td>
     </tr>
     <tr>
       <th>E-post</th>
-      <td>{{ registration.email }}</td>
+      <td>{{ user.email }}</td>
     </tr>
     <tr>
       <th>Ønsker DNT-Nøkkel</th>
       <td>
-        {% if registration.key %}
+        {% if user.key %}
           Ja
         {% else %}
           Nei
@@ -61,6 +62,8 @@
       </td>
     </tr>
   </table>
+  {% endfor %}
+
 </div>
 </div>
 
