@@ -1,6 +1,6 @@
 # encoding: utf-8
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
 from user.models import Zipcode
@@ -16,52 +16,86 @@ def types(request):
 def conditions(request):
     return render(request, 'enrollment/conditions.html')
 
-def registration1(request):
-    context = {'registration': request.session.get('registration')}
-    return render(request, 'enrollment/registration.1.html', context)
+def registration(request):
+    if not request.session.has_key('registration'):
+        request.session['registration'] = []
 
-def registration2(request):
-    # Todo: Verify values from form 1, redirect back if invalid
-    # Also verify that 'registration' is set in session
+    prev = None
+    current = None
+    next = None
+
     if(request.method == 'POST'):
-        registration = {}
-        registration['name'] = request.POST['name']
-        registration['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
-        registration['address'] = request.POST['address']
-        registration['zipcode'] = request.POST['zipcode']
-        registration['location'] = Zipcode.objects.get(code=request.POST['zipcode']).location
-        registration['phone'] = request.POST['phone']
-        registration['email'] = request.POST['email']
+        # Todo: Verify values, redirect back if invalid
+        if request.POST.has_key('user'):
+            request.session['registration'][int(request.POST['user'])] = parse_user_data(request)
+        else:
+            request.session['registration'].append(parse_user_data(request))
 
-        age = datetime.now().isocalendar()[0] - registration['dob'].isocalendar()[0]
-        if(age > 66):
-            registration['membership'] = 'Honnørmedlem'
-            registration['membershipreason'] = '(67 år eller mer)'
-        elif(age <= 66 and age > 26):
-            registration['membership'] = 'Hovedmedlem'
-            registration['membershipreason'] = '(27 - 66 år)'
-        elif(age <= 26 and age > 19):
-            registration['membership'] = 'Student/ungdom'
-            registration['membershipreason'] = '(20 - 26 år)'
-        elif(age <= 18 and age > 13):
-            registration['membership'] = 'Skoleungdom'
-            registration['membershipreason'] = '(14 - 19 år)'
-        elif(age <= 13):
-            registration['membership'] = 'Barnemedlem'
-            registration['membershipreason'] = '(13 år eller yngre)'
+        # Logic for traversing registrations
+        if(request.POST['next'] == "done"):
+            context = {'registration': request.session['registration']}
+            return HttpResponseRedirect(reverse("enrollment.views.verification"), context)
+        elif(request.POST['next'] == "new"):
+            if(len(request.session['registration']) > 0):
+                prev = {'index': len(request.session['registration']) - 1, 'name': request.session['registration'][len(request.session['registration']) - 1]['name']}
+        else:
+            current = {'index': int(request.POST['next'])}
+            if(current['index'] != 0):
+                prev = {'index': current['index'] - 1, 'name': request.session['registration'][current['index'] - 1]['name']}
+            if(current['index'] < len(request.session['registration']) - 1):
+                next = {'index': current['index'] + 1, 'name': request.session['registration'][current['index'] + 1]['name']}
+            current['user'] = request.session['registration'][current['index']]
+    else:
+        if len(request.session['registration']) > 0:
+            current = {'index': 0, 'user': request.session['registration'][0]}
+            if len(request.session['registration']) > 1:
+                next = {'index': 1, 'name': request.session['registration'][1]['name']}
+    context = {'prev': prev, 'current': current, 'next': next}
+    return render(request, 'enrollment/registration.html', context)
 
-        if(request.POST.get('household') == 'on'):
-            registration['household'] = 'checked'
-            registration['householdmember'] = request.POST['householdmember']
-
-        if(request.POST.get('key') == 'on'):
-            registration['key'] = 'checked'
-
-        request.session['registration'] = registration
-
+def verification(request):
+    # Todo: verify that 'registration' is set in session
     context = {'registration': request.session['registration']}
-    return render(request, 'enrollment/registration.2.html', context)
+    return render(request, 'enrollment/verification.html', context)
 
 def zipcode(request, code):
     location = Zipcode.objects.get(code=code).location
     return HttpResponse(str(location))
+
+def parse_user_data(request):
+    user = {}
+    user['name'] = request.POST['name']
+    user['dob'] = request.POST['dob']
+    user['address'] = request.POST['address']
+    user['zipcode'] = request.POST['zipcode']
+    user['phone'] = request.POST['phone']
+    user['email'] = request.POST['email']
+
+    if(request.POST.get('household') == 'on'):
+        user['household'] = True
+        user['householdmember'] = request.POST['householdmember']
+
+    if(request.POST.get('key') == 'on'):
+        user['key'] = True
+    return user
+
+def verify_user_data(user):
+    dob = datetime.strptime(user['dob'], "%d.%m.%Y")
+    location = Zipcode.objects.get(code=user['zipcode']).location
+
+    age = datetime.now().isocalendar()[0] - dob.isocalendar()[0]
+    if(age > 66):
+        user['membership'] = 'Honnørmedlem'
+        user['membershipreason'] = '(67 år eller mer)'
+    elif(age <= 66 and age > 26):
+        user['membership'] = 'Hovedmedlem'
+        user['membershipreason'] = '(27 - 66 år)'
+    elif(age <= 26 and age > 19):
+        user['membership'] = 'Student/ungdom'
+        user['membershipreason'] = '(20 - 26 år)'
+    elif(age <= 18 and age > 13):
+        user['membership'] = 'Skoleungdom'
+        user['membershipreason'] = '(14 - 19 år)'
+    elif(age <= 13):
+        user['membership'] = 'Barnemedlem'
+        user['membershipreason'] = '(13 år eller yngre)'

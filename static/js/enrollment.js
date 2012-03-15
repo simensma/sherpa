@@ -14,6 +14,7 @@ $(document).ready(function() {
             $("form#registration input[name='location']").val("");
         }
     });
+    $("form#registration input[name='zipcode']").keyup();
 
     $("form#registration input[name='dob']").datepicker({
         changeMonth: true,
@@ -35,7 +36,11 @@ $(document).ready(function() {
         buttonText: 'Velg dato...'
     });
 
-    $("form#registration div.householdmember.hide").hide();
+    if($("form#registration input[name='household']").prop('checked')) {
+        $("form#registration div.address").hide();
+    } else {
+        $("form#registration div.householdmember.hide").hide();
+    }
     $("form#registration input[name='household']").click(function() {
         if($(this).prop('checked')) {
             $("form#registration div.householdmember").show();

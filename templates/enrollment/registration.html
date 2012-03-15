@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+<div class="offset2 span8">
+<h1>Bli medlem</h1>
+</div>
+</div>
+
+<div class="row">
+<div class="offset2 span5">
+<form id="registration" action="{% url enrollment.views.registration %}" method="post">
+  {% csrf_token %}
+  {% if current %}
+    <input type="hidden" name="user" value="{{ current.index }}">
+  {% endif %}
+  <label class="checkbox">
+    <input type="checkbox" name="household"{% if current.user.household %} checked{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
+  </label>
+  <div class="householdmember{% if not current.user.household %} hide{% endif %}">
+    <label>Medlemsnummer til hovedmedlemmet i din husstand:</label>
+    <input type="text" class="span2" name="householdmember" value="{{ current.user.householdmember }}" placeholder="1234567">
+  </div>
+  <label>Fullt navn</label>
+  <input type="text" class="span3" name="name" value="{{ current.user.name }}" placeholder="Kari Nordmann">
+  <label>Fødselsdato</label>
+  <input type="text" class="span2 dob" name="dob" value="{{ current.user.dob }}">
+  <div class="address">
+    <label>Adresse</label>
+    <input type="text" class="span3" name="address" value="{{ current.user.address }}" placeholder="Turveien 15">
+    <label>Postnummer / Poststed</label>
+    <input type="text" class="span1" name="zipcode" value="{{ current.user.zipcode }}" placeholder="1234">
+    <input type="text" class="span2" name="location" value="{{ current.user.location }}" disabled>
+  </div>
+  <label>Telefon / Mobil</label>
+  <input type="text" class="span2" name="phone" value="{{ current.user.phone }}" placeholder="12 34 56 78">
+  <label>Epost</label>
+  <input type="text" class="span3" name="email" value="{{ current.user.email }}" placeholder="ola@eksempel.no">
+  <label class="checkbox">
+    <input type="checkbox" name="key"{% if current.user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
+  </label>
+  <label class="checkbox">
+    <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
+  </label>
+  <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer</button>
+  <div class="btn-group">
+  {% if prev %}
+    <button type="submit" class="btn btn-primary" name="next" value="{{ prev.index }}"><i class="icon-arrow-left"></i> Forrige {% if prev.name %}({{ prev.name }}){% else %}medlem{% endif %}</button>
+  {% endif %}
+  {% if next %}
+    <button type="submit" class="btn btn-primary" name="next" value="{{ next.index }}">Neste {% if next.name %}({{ next.name }}){% else %}medlem{% endif %} <i class="icon-arrow-right"></i></button>
+  {% endif %}
+  </div>
+  <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
+</form>
+
+</div>
+<div class="span5">
+  <div class="well">
+    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong> Kontakt medlemsservice:</p>
+
+    <p>
+      Telefon: 4000 1970<br>
+      Åpent alle hverdager: kl. 09.00 - 16.00<br>
+      E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+    </p>
+  </div>
+
+  <div class="well">
+    <i class="icon-info-sign"></i> <strong>Hva er et husstandsmedlem?</strong><br>
+    Hvis en husstand har minst ett <em>hovedmedlem</em>, kan resten av husstanden melde seg inn som <em>husstandsmedlem</em> til rabattert pris. <a href="{% url enrollment.views.types %}">Les mer her</a>.
+  </div>
+</div>
+</div>
+
+{% endblock %}
