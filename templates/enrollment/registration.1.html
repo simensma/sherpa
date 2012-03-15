@@ -24,7 +24,7 @@
     <input type="checkbox" name="household"{% if registration.household %} {{ registration.household }}{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
   </label>
   <div class="householdmember{% if not registration.household %} hide{% endif %}">
-    <label>Medlemsnummer til hovedmedlemmet:</label>
+    <label>Medlemsnummer til hovedmedlemmet i din husstand:</label>
     <input type="text" class="span2" name="householdmember" value="{{ registration.householdmember }}" placeholder="1234567">
   </div>
   <label>Fullt navn</label>
