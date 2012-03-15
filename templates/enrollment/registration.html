@@ -19,7 +19,7 @@
 <div class="row">
 <div class="offset2 span5">
 {% if saved %}
-  <div class="alert alert-success"><a class="close">x</a>Endringene er lagret. Legg til flere medlemmer om du ønsker, eller klikk "Gå videre" under skjemaet.</div>
+  <div class="alert alert-success"><a class="close">x</a>Informasjonen er lagret. Legg til flere medlemmer om du ønsker, eller klikk "Gå videre" under skjemaet.</div>
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
