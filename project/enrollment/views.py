@@ -69,10 +69,6 @@ def parse_user_data(request):
     user['phone'] = request.POST['phone']
     user['email'] = request.POST['email']
 
-    if(request.POST.get('household') == 'on'):
-        user['household'] = True
-        user['householdmember'] = request.POST['householdmember']
-
     if(request.POST.get('key') == 'on'):
         user['key'] = True
     return user

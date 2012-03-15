@@ -23,13 +23,6 @@
   {% if current %}
     <input type="hidden" name="user" value="{{ current.index }}">
   {% endif %}
-  <label class="checkbox">
-    <input type="checkbox" name="household"{% if current.user.household %} checked{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
-  </label>
-  <div class="householdmember{% if not current.user.household %} hide{% endif %}">
-    <label>Medlemsnummer til hovedmedlemmet i din husstand:</label>
-    <input type="text" class="span2" name="householdmember" value="{{ current.user.householdmember }}" placeholder="1234567">
-  </div>
   <label>Fullt navn</label>
   <input type="text" class="span3" name="name" value="{{ current.user.name }}" placeholder="Kari Nordmann">
   <label>Fødselsdato</label>
@@ -75,10 +68,6 @@
     </p>
   </div>
 
-  <div class="well">
-    <i class="icon-info-sign"></i> <strong>Hva er et husstandsmedlem?</strong><br>
-    Hvis en husstand har minst ett <em>hovedmedlem</em>, kan resten av husstanden melde seg inn som <em>husstandsmedlem</em> til rabattert pris. <a href="{% url enrollment.views.types %}">Les mer her</a>.
-  </div>
 </div>
 </div>
 
