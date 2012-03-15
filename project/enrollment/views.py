@@ -31,6 +31,12 @@ def registration(request, user):
         if(request.POST['next'] == "done"):
             return HttpResponseRedirect(reverse("enrollment.views.verification"))
 
+    # Update indices in case they have changed
+    i = 0
+    for user in request.session['registration']:
+        user['index'] = i
+        i += 1
+
     context = {'users': request.session['registration'], 'user': user}
     return render(request, 'enrollment/registration.html', context)
 
