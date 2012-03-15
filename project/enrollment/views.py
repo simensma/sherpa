@@ -13,6 +13,9 @@ def index(request):
 def types(request):
     return render(request, 'enrollment/types.html')
 
+def conditions(request):
+    return render(request, 'enrollment/conditions.html')
+
 def registration1(request):
     context = {'registration': request.session.get('registration')}
     return render(request, 'enrollment/registration.1.html', context)
