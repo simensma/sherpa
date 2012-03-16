@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/household.multiple.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+<div class="offset2 span8">
+  <h1>Oppgi hvem som er hovedmedlem</h1>
+</div>
+</div>
+
+<div class="row">
+  <div class="offset2 span8">
+    <div class="well">
+      <p><i class="icon-info-sign"></i> <strong>Hva er et hovedmedlem?</strong></p>
+      <p>
+        Husstanden må ha et <em>hovedmedlem</em>, vanligvis en av foreldrene. Hvem som helst over 13 år kan være hovedmedlem. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+      </p>
+    </div>
+
+    <label class="checkbox"><input type="checkbox" class="existing"> Hovedmedlemmet er allerede medlem</label>
+    <div class="existing">
+      <label>Hva er medlemsnummeret til hovedmedlemmet?</label>
+      <input type="text" name="existing" placeholder="Oppgi medlemsnummer...">
+    </div>
+
+    <table class="table main-member">
+      <thead>
+      <tr>
+        <th>Navn</th>
+        <th>Medlemstype</th>
+        <th>Velg hovedmedlem</th>
+      </tr>
+      </thead>
+      {% for user in users %}
+      <tr data-age="{{ user.age }}">
+        <td>{{ user.name }} ({{ user.age }} år)</td>
+        <td class="membershipType"></td>
+        <td>
+          <button class="btn choose-member">Velg hovedmedlem</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="offset2 span5">
+    <a class="btn" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
+    <a class="btn btn-success" href="{% url enrollment.views.verification %}">Gå videre <i class="icon-arrow-right"></i></a>
+  </div>
+</div>
+{% endblock %}

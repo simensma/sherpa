@@ -21,7 +21,7 @@
 {% if saved %}
   <div class="alert alert-success">
     <a class="close">x</a><strong>Informasjonen er lagret.</strong><br>
-    Legg til flere medlemmer, eller klikk "Gå videre" i boksen til høyre.
+    Legg til flere medlemmer, eller klikk "Gå videre" under.
   </div>
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
@@ -35,10 +35,10 @@
   <input type="text" class="span2 dob" name="dob" value="{{ user.dob }}">
   <div class="address">
     <label>Adresse</label>
-    <input type="text" class="span3" name="address" value="{{ user.address }}">
+    <input type="text" class="span3" name="address" value="{{ address }}">
     <label>Postnummer / Poststed</label>
-    <input type="text" class="span1" name="zipcode" value="{{ user.zipcode }}" maxlength="4">
-    <input type="text" class="span2" name="location" value="{{ user.location }}" disabled>
+    <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
+    <input type="text" class="span2" name="location" disabled>
   </div>
   <label>Telefon / Mobil</label>
   <input type="text" class="span2" name="phone" value="{{ user.phone }}">
@@ -50,10 +50,9 @@
   <label class="checkbox">
     <input type="checkbox"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn btn-success" name="next" value="new"><i class="icon-user"></i> Lagre</button>
-  {% if user %}
-    <p class="add-member"><a href="{% url enrollment.views.registration %}">Avbryt og legg til nytt medlem</a></p>
-  {% endif %}
+  <button type="submit" class="btn" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer på samme adresse</button><br>
+  <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
+  <!-- TODO: Skip hvis validering failer på siste ny-entry -->
 </form>
 
 </div>
@@ -87,7 +86,6 @@
       </tr>
     {% endfor %}
     </table>
-    <a href="{% url enrollment.views.household %}" class="btn btn-success btn-large" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></a>
   </div>
 </div>
 {% endif %}

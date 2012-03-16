@@ -36,4 +36,12 @@ $(document).ready(function() {
         buttonText: 'Velg dato...'
     });
 
+    $("form#registration button[value='done']").click(function(event) {
+        if($("form#registration input[name='name']").val() == "") {
+            // TODO: Assume the user didn't want to add the current form as a member.
+            // If it's partly filled out, we should ask whether or not to include this member.
+            $("form#registration").append($('<input type="hidden" name="skip" value="true">'));
+        }
+    });
+
 });

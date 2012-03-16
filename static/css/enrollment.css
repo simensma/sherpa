@@ -39,9 +39,7 @@ table.memberlist span.remove {
     float: right;
 }
 
-p.add-member {
-    margin-top: 13px;
-    margin-bottom: 13px;
-    font-size: 120%;
+table.main-member tr.main {
+    background-color: rgb(235, 235, 235);
     font-weight: bold;
 }

@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/household.single.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+<div class="offset2 span8">
+  <h1>Er du medlem av en husstand?</h1>
+</div>
+</div>
+
+<div class="row">
+  <div class="offset2 span8">
+    <div class="well">
+      <i class="icon-info-sign"></i> Du kan få rabattert medlemspris som <em>husstandsmedlem</em> hvis du bor på samme adresse som et annet medlem.<br>
+      <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+    </div>
+    <div style="text-align: center">
+      <p><a class="btn btn-success" href="{% url enrollment.views.verification %}">Jeg er et vanlig medlem <i class="icon-arrow-right"></i></a></p>
+      <p><a class="btn btn-success dialog-button" data-dialog=".dialog" href="javascript:undefined">Jeg er husstandsmedlem <i class="icon-arrow-right"></i></a></p>
+      <p><a class="btn" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a></p>
+    </div>
+  </div>
+</div>
+
+
+<div class="dialog" data-title="Oppgi medlemsnummer" data-width="300">
+  <form action="{% url enrollment.views.verification %}" method="post">
+  <p>Hva er medlemsnummeret til den du deler adresse med?</p>
+  <p><input type="text" placeholder="Oppgi medlemsnummer..."></p>
+  <p>
+    <button class="btn btn-danger close-dialog" type="submit"><i class="icon-remove"></i> Avbryt</button>
+    <button class="btn btn-success" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
+  </p>
+  </form>
+</div>
+
+{% endblock %}
