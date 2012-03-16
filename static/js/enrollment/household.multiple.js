@@ -2,7 +2,8 @@ $(document).ready(function() {
 
     $("div.existing").hide();
     setDefaultMain();
-    $("table.main-member button.choose-member").click(function() {
+    $("table.main-member button.choose-member").click(function(event) {
+        event.preventDefault();
         setMain($(this).parents("tr[data-age]"));
     });
 
@@ -17,6 +18,16 @@ $(document).ready(function() {
             $("div.existing").hide();
             setDefaultMain();
             $("table.main-member tr th").eq(2).show();
+        }
+    });
+
+    $("form#household").submit(function() {
+        if($(this).children("input.existing").prop('checked')) {
+            // Send the main member index
+            $(this).append('<input type="hidden" name="main-index" value="' +
+                $("table.main-member tr.main").attr('data-index') + '">');
+        } else {
+            $(this).children("input[name='existing']").remove();
         }
     });
 

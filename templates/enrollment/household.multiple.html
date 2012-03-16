@@ -24,6 +24,8 @@
       </p>
     </div>
 
+    <form id="household" action="{% url enrollment.views.verification %}" method="post">
+    {% csrf_token %}
     <label class="checkbox"><input type="checkbox" class="existing"> Hovedmedlemmet er allerede medlem</label>
     <div class="existing">
       <label>Hva er medlemsnummeret til hovedmedlemmet?</label>
@@ -39,7 +41,7 @@
       </tr>
       </thead>
       {% for user in users %}
-      <tr data-age="{{ user.age }}">
+      <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
         <td>{{ user.name }} ({{ user.age }} år)</td>
         <td class="membershipType"></td>
         <td>
@@ -48,13 +50,12 @@
       </tr>
       {% endfor %}
     </table>
-  </div>
-</div>
 
-<div class="row">
-  <div class="offset2 span5">
-    <a class="btn" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
-    <a class="btn btn-success" href="{% url enrollment.views.verification %}">Gå videre <i class="icon-arrow-right"></i></a>
+    <p>
+      <a class="btn" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
+      <button class="btn btn-success">Gå videre <i class="icon-arrow-right"></i></button>
+    </p>
+    </form>
   </div>
 </div>
 {% endblock %}
