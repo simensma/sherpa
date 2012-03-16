@@ -20,10 +20,6 @@ form#registration button {
     margin-bottom: 3px;
 }
 
-table.registration-check th {
-    vertical-align: middle;
-}
-
 table.memberlist td {
     background-color: white;
     font-size: 120%;

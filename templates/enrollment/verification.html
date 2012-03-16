@@ -6,63 +6,64 @@
 {% block body %}
 
 <div class="row">
-<div class="offset2 span8">
+<div class="offset1 span10">
   <h2>Kan du sjekke om dette stemmer?</h2>
 
-  {% for user in users %}
-  <table class="registration-check table table-bordered">
-    <tr>
-      <th>Medlemskap</th>
-      <td>
-        {{ user.membership }}<br>
-        {{ user.membershipreason }}
-      </td>
-    </tr>
-    {% if user.householdmember %}
-    <tr>
-      <th>Hovedmedlem</th>
-      <td>{{ user.householdmember }}</td>
-    </tr>
-    {% endif %}
-    <tr>
-      <th>Din lokalforening</th>
-      <td>
-        DNT X og Y{{ user.association }}<br>
-        (Basert på postnummer)
-      </td>
-    </tr>
-    <tr>
-      <th>Navn</th>
-      <td>{{ user.name }}</td>
-    </tr>
-    <tr>
-      <th>Fødselsdato</th>
-      <td>{{ user.dob|date:"d.m.Y" }}</td>
-    </tr>
-    <tr>
-      <th>Adresse</th>
-      <td>{{ user.address }}<br>{{ user.zipcode }} {{ user.location }}</td>
-    </tr>
-    <tr>
-      <th>Telefon / mobil</th>
-      <td>{{ user.phone }}</td>
-    </tr>
-    <tr>
-      <th>E-post</th>
-      <td>{{ user.email }}</td>
-    </tr>
-    <tr>
-      <th>Ønsker DNT-Nøkkel</th>
-      <td>
-        {% if user.key %}
-          Ja
-        {% else %}
-          Nei
-        {% endif %}
-      </td>
-    </tr>
+  <table class="table registration-check">
+    <thead>
+      <tr>
+        <th>Medlemstype</th>
+        <th>Navn</th>
+        <th>Fødselsdato</th>
+        <th>Telefon / mobil</th>
+        <th>E-post</th>
+        <th>Ønsker DNT-nøkkel</th>
+        <th>Årspris</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.membershipType }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.dob }} ({{ user.age }} år)</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          {% if user.key %}
+            Ja
+          {% else %}
+            Nei
+          {% endif %}
+        </td>
+        <td>Todo</td>
+      </tr>
+    {% endfor %}
+    </tbody>
   </table>
-  {% endfor %}
+
+  {% if existing %}
+    <h3>Hovedmedlem</h3>
+    <p>Allerede medlem, medlemsnummer: <strong>{{ existing }}</strong> (her vil navnet stå istedet for medlemsnr.)</h3>
+  {% endif %}
+
+  <h3>Adresse</h3>
+  <p>
+    {{ address }}<br>
+    {{ zipcode }} {{ location }}
+  </p>
+
+  <h3>Lokalforening</h3>
+  <p>(Todo, basert på postnr)</p>
+
+  <h3>Total pris</h3>
+  <p>(Todo)</p>
+
+  <p>
+    <a class="btn" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
+    <button class="btn btn-success" onclick="alert('Du ble nå sendt til betalingssiden :)');">Alt ser bra ut <i class="icon-arrow-right"></i></button>
+  </p>
+
 
 </div>
 </div>

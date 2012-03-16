@@ -22,12 +22,11 @@ $(document).ready(function() {
     });
 
     $("form#household").submit(function() {
-        if($(this).children("input.existing").prop('checked')) {
+        if(!$(this).children("input.existing").prop('checked')) {
             // Send the main member index
+            $(this).children("input[name='existing']").remove();
             $(this).append('<input type="hidden" name="main-index" value="' +
                 $("table.main-member tr.main").attr('data-index') + '">');
-        } else {
-            $(this).children("input[name='existing']").remove();
         }
     });
 

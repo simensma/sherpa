@@ -41,7 +41,7 @@
       </tr>
       </thead>
       {% for user in users %}
-      <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
+      <tr data-index="{% if user.index %}{{ user.index }}{% else %}0{% endif %}" data-age="{{ user.age }}">
         <td>{{ user.name }} ({{ user.age }} år)</td>
         <td class="membershipType"></td>
         <td>
