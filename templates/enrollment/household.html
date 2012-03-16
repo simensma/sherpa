@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/household.js"></script>
+{% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
@@ -8,14 +11,56 @@
 
 <div class="row">
 <div class="offset2 span8">
-  <h1>Bli medlem</h1>
+  <h1>Er du medlem av en husstand?</h1>
 </div>
 </div>
 
 <div class="row">
-  <div class="offset2 span5">
-    <h2>Er du medlem av en husstand?
+  <div class="offset2 span8">
+    <p>Husstander kan få rabattert pris ved å velge ett hovedmedlem, og registrere resten som husstandsmedlemmer. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>, og velg husstandsmedlemmer under hvis dette gjelder {% if users|length > 1 %}dere{% else %}deg{% endif %}.</p>
+
+    <p><strong>Merk at husstandsmedlemmer <em>må</em> ha samme adresse som hovedmedlemmet de skal tilknyttes.</strong></p>
+
+    <form id="household">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Navn</th>
+          <th>Medlemstype</th>
+          <th>Tilknyttet hovedmedlem</th>
+        </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td><input type="checkbox" name="household" data-index="{{ user.index }}"> Husstandsmedlem</td>
+          <td>
+            <div class="household">
+              <select>
+                <option>Velg tilknyttelse...</option>
+                <option value="existing">Eksisterende medlem</option>
+                {% for main in users %}
+                  {% if main.index != user.index %}
+                    <option value="{{ main.index }}">{{ main.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <div class="existing">
+                <input type="text" name="household" placeholder="Angi medlemsnummer...">
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </form>
   </div>
 </div>
 
+<div class="row">
+  <div class="offset2 span5">
+    <a class="btn" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
+    <a class="btn btn-success" href="{% url enrollment.views.verification %}">Gå videre <i class="icon-arrow-right"></i></a>
+  </div>
+</div>
 {% endblock %}
