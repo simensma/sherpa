@@ -48,7 +48,7 @@
     <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
   </label>
   <label class="checkbox">
-    <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
+    <input type="checkbox"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
   <button type="submit" class="btn btn-success" name="next" value="new"><i class="icon-user"></i> Lagre</button>
   {% if user %}
