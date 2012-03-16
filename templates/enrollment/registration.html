@@ -45,7 +45,7 @@
   <label>Epost</label>
   <input type="text" class="span3" name="email" value="{{ user.email }}">
   <label class="checkbox">
-    <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
+    <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>
   <label class="checkbox">
     <input type="checkbox"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
