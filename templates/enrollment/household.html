@@ -17,9 +17,11 @@
 
 <div class="row">
   <div class="offset2 span8">
-    <p>Husstander kan få rabattert pris ved å velge ett hovedmedlem, og registrere resten som husstandsmedlemmer. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>, og velg husstandsmedlemmer under hvis dette gjelder {% if users|length > 1 %}dere{% else %}deg{% endif %}.</p>
+    <div class="well">
+      <p><i class="icon-question-sign"></i> Husstander kan få rabattert pris ved å velge ett hovedmedlem, og registrere resten som husstandsmedlemmer. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>, og velg husstandsmedlemmer under hvis dette gjelder {% if users|length > 1 %}dere{% else %}deg{% endif %}.</p>
+      <p><strong><i class="icon-info-sign"></i> Merk at husstandsmedlemmer <em>må</em> ha samme adresse som hovedmedlemmet de skal tilknyttes.</strong></p>
+    </div>
 
-    <p><strong>Merk at husstandsmedlemmer <em>må</em> ha samme adresse som hovedmedlemmet de skal tilknyttes.</strong></p>
 
     <form id="household">
       <table class="table">
