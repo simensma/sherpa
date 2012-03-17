@@ -81,30 +81,31 @@ def verification(request):
         elif(age <= 13):
             membershipType = 'Barnemedlem';
         request.session['registration']['users'][0]['membershipType'] = membershipType
-    for user in request.session['registration']['users']:
-        age = user['age']
-        if i == int(request.POST.get('main-index', -1)):
-            if(age > 66):
-                membershipType = 'Hovedmedlem (honnør)';
-            elif(age <= 66 and age > 26):
-                membershipType = 'Hovedmedlem';
-            elif(age <= 26 and age > 19):
-                membershipType = 'Hovedmedlem (student/ungdom)';
-            elif(age <= 18 and age > 13):
-                membershipType = 'Hovedmedlem (skole)';
-        else:
-            if(age > 66):
-                membershipType = 'Husstandsmedlem (honnør)';
-            elif(age <= 66 and age > 26):
-                membershipType = 'Husstandsmedlem';
-            elif(age <= 26 and age > 19):
-                membershipType = 'Husstandsmedlem (student/ungdom)';
-            elif(age <= 18 and age > 13):
-                membershipType = 'Husstandsmedlem (skole)';
-            elif(age <= 13):
-                membershipType = 'Husstandsmedlem (barn)';
-        user['membershipType'] = membershipType
-        i += 1
+    else:
+        for user in request.session['registration']['users']:
+            age = user['age']
+            if i == int(request.POST.get('main-index', -1)):
+                if(age > 66):
+                    membershipType = 'Hovedmedlem (honnør)';
+                elif(age <= 66 and age > 26):
+                    membershipType = 'Hovedmedlem';
+                elif(age <= 26 and age > 19):
+                    membershipType = 'Hovedmedlem (student/ungdom)';
+                elif(age <= 18 and age > 13):
+                    membershipType = 'Hovedmedlem (skole)';
+            else:
+                if(age > 66):
+                    membershipType = 'Husstandsmedlem (honnør)';
+                elif(age <= 66 and age > 26):
+                    membershipType = 'Husstandsmedlem';
+                elif(age <= 26 and age > 19):
+                    membershipType = 'Husstandsmedlem (student/ungdom)';
+                elif(age <= 18 and age > 13):
+                    membershipType = 'Husstandsmedlem (skole)';
+                elif(age <= 13):
+                    membershipType = 'Husstandsmedlem (barn)';
+            user['membershipType'] = membershipType
+            i += 1
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
