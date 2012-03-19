@@ -50,8 +50,8 @@
   <label class="checkbox">
     <input type="checkbox"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer på samme adresse</button><br>
-  <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
+  <button type="submit" class="btn btn-large" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer på samme adresse</button><br>
+  <button type="submit" class="btn btn-success btn-large" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
   <!-- TODO: Skip hvis validering failer på siste ny-entry -->
 </form>
 

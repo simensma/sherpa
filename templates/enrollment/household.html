@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/household.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+<div class="offset2 span8">
+  <h1>Husstand</h1>
+</div>
+</div>
+
+<div class="row">
+  <div class="offset2 span8">
+    <form action="{% url enrollment.views.verification %}" method="post">
+      {% csrf_token %}
+      <p>Bor {% if users|length > 1 %}dere{% else %}du{% endif %} på samme adresse som et eksisterende medlem?</p>
+      <div class="well">
+        I så fall, hvem bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med?<br>
+        <input type="text" name="existing" placeholder="Oppgi medlemsnummer..."><br>
+        Hvis ikke, bare klikk på "Gå videre".
+      </div>
+      <p><a href="{% url enrollment.views.types %}" target="_blank">Les mer om medlemstypene her</a>.</p>
+      <p><a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a> <button class="btn btn-success btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button></p>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

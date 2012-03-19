@@ -6,6 +6,8 @@ from user.models import Zipcode
 
 from datetime import datetime, timedelta
 
+KEY_PRICE = 100
+
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
@@ -55,62 +57,33 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
-    context = {'users': request.session['registration']['users'],
-        'address': request.session['registration']['address'],
-        'zipcode': request.session['registration']['zipcode']}
-    if(len(request.session['registration']['users']) > 1):
-        return render(request, 'enrollment/household.multiple.html', context)
-    else:
-        return render(request, 'enrollment/household.single.html', context)
+    context = {'users': request.session['registration']['users']}
+    return render(request, 'enrollment/household.html', context)
 
 def verification(request):
     # Todo: verify that 'registration' is set in session
     request.session['registration']['existing'] = request.POST.get('existing', '')
     request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
-    i = 0
-    if len(request.session['registration']['users']) == 1:
-        age = request.session['registration']['users'][0]['age']
-        if(age > 66):
-            membershipType = 'Honnørmedlem';
-        elif(age <= 66 and age > 26):
-            membershipType = 'Hovedmedlem';
-        elif(age <= 26 and age > 19):
-            membershipType = 'Student/ungdomsmedlem)';
-        elif(age <= 18 and age > 13):
-            membershipType = 'Skoleungdomsmedlem';
-        elif(age <= 13):
-            membershipType = 'Barnemedlem';
-        request.session['registration']['users'][0]['membershipType'] = membershipType
-    else:
-        for user in request.session['registration']['users']:
-            age = user['age']
-            if i == int(request.POST.get('main-index', -1)):
-                if(age > 66):
-                    membershipType = 'Hovedmedlem (honnør)';
-                elif(age <= 66 and age > 26):
-                    membershipType = 'Hovedmedlem';
-                elif(age <= 26 and age > 19):
-                    membershipType = 'Hovedmedlem (student/ungdom)';
-                elif(age <= 18 and age > 13):
-                    membershipType = 'Hovedmedlem (skole)';
-            else:
-                if(age > 66):
-                    membershipType = 'Husstandsmedlem (honnør)';
-                elif(age <= 66 and age > 26):
-                    membershipType = 'Husstandsmedlem';
-                elif(age <= 26 and age > 19):
-                    membershipType = 'Husstandsmedlem (student/ungdom)';
-                elif(age <= 18 and age > 13):
-                    membershipType = 'Husstandsmedlem (skole)';
-                elif(age <= 13):
-                    membershipType = 'Husstandsmedlem (barn)';
-            user['membershipType'] = membershipType
-            i += 1
+    keycount = 0
+    over_13 = 0
+    oldest = {'age': 0}
+    for user in request.session['registration']['users']:
+        if(user['age'] > oldest['age']):
+            oldest = user
+        if(user['age'] > 13):
+            over_13 += 1
+        if user.has_key('key'):
+            keycount += 1
+    keyprice = keycount * KEY_PRICE
+    multiple = over_13 > 1
+
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
         'location': request.session['registration']['location'],
-        'existing': request.session['registration']['existing']}
+        'existing': request.session['registration']['existing'],
+        'keycount': keycount, 'keyprice': keyprice, 'multiple': multiple,
+        'oldest': oldest}
     return render(request, 'enrollment/verification.html', context)
 
 def zipcode(request, code):

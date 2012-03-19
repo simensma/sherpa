@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/verification.js"></script>
+{% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
 {% endblock %}
@@ -6,64 +9,87 @@
 {% block body %}
 
 <div class="row">
-<div class="offset1 span10">
-  <h2>Kan du sjekke om dette stemmer?</h2>
+<div class="offset2 span8">
+  <h1>Stemmer dette?</h1>
 
-  <table class="table registration-check">
+  {% if existing or multiple %}
+  <h2>Hovedmedlem</h2>
+    {% if existing %}
+      <p><strong>{{ existing }}</strong> (her vil navnet stå istedet for medlemsnr.)</h3>
+    {% else %}
+      <select class="main">
+        {% for user in users %}
+          {% if user.age > 13 %}
+            <option value="{{ user.index }}"{% if user.index == oldest.index %} selected{% endif %}>{{ user.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    {% endif %}
+  {% endif %}
+
+  <h2>Medlemsinfo</h2>
+  <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Medlemstype</th>
         <th>Navn</th>
         <th>Fødselsdato</th>
-        <th>Telefon / mobil</th>
+        <th>Telefon</th>
         <th>E-post</th>
-        <th>Ønsker DNT-nøkkel</th>
-        <th>Årspris</th>
       </tr>
     </thead>
     <tbody>
     {% for user in users %}
       <tr>
-        <td>{{ user.membershipType }}</td>
         <td>{{ user.name }}</td>
-        <td>{{ user.dob }} ({{ user.age }} år)</td>
+        <td>{{ user.dob }}</td>
         <td>{{ user.phone }}</td>
         <td>{{ user.email }}</td>
-        <td>
-          {% if user.key %}
-            Ja
-          {% else %}
-            Nei
-          {% endif %}
-        </td>
-        <td>Todo</td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-  {% if existing %}
-    <h3>Hovedmedlem</h3>
-    <p>Allerede medlem, medlemsnummer: <strong>{{ existing }}</strong> (her vil navnet stå istedet for medlemsnr.)</h3>
-  {% endif %}
-
-  <h3>Adresse</h3>
-  <p>
+  <h2>{% if users|length > 1 %}Deres{% else %}Din{% endif %} adresse</h2>
+  <p style="border: 1px solid #dddddd; padding: 12px">
     {{ address }}<br>
     {{ zipcode }} {{ location }}
   </p>
 
-  <h3>Lokalforening</h3>
-  <p>(Todo, basert på postnr)</p>
-
-  <h3>Total pris</h3>
-  <p>(Todo)</p>
+  <h2>Priser</h2>
+  <table class="table prices">
+    <thead>
+      <tr>
+        <th colspan="2"></th>
+        <th>Pris (<a href="{% url enrollment.views.types %}" target="_blank">liste</a>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if keycount > 0 %}
+      <tr>
+        <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
+        <td data-price="{{ keyprice }}">{{ keyprice }},-</td>
+      </tr>
+      {% endif %}
+      {% for user in users %}
+      <tr data-index="{{ user.index }}" data-age="{{ user.age }}"{% if user.index == oldest.index %} class="main"{% endif %}>
+        <td>{{ user.name }}</td>
+        <td class="type"></td>
+        <td><span class="price"></span>,-</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="2">Totalt</th>
+        <th><span class="totalprice"></span>,-</th>
+      </tr>
+    </tfoot>
+  </table>
 
   <p>
-    <a class="btn" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
-    <button class="btn btn-success" onclick="alert('Du ble nå sendt til betalingssiden :)');">Alt ser bra ut <i class="icon-arrow-right"></i></button>
+    <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
+    <button class="btn btn-success btn-large" onclick="alert('Du ble nå sendt til betalingssiden :)');">Til betaling <i class="icon-arrow-right"></i></button>
   </p>
-
 
 </div>
 </div>
