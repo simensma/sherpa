@@ -38,12 +38,7 @@ def registration(request, user):
         if(request.POST['next'] == "done"):
             return HttpResponseRedirect(reverse("enrollment.views.household"))
 
-    # Update indices in case they have changed
-    i = 0
-    for reg in request.session['registration']['users']:
-        reg['index'] = i
-        i += 1
-
+    updateIndices(request)
     context = {'users': request.session['registration']['users'], 'user': user, 'saved': saved,
         'address': request.session['registration'].get('address', ''),
         'zipcode': request.session['registration'].get('zipcode', '')}
@@ -79,7 +74,7 @@ def verification(request):
             keycount += 1
     keyprice = keycount * KEY_PRICE
     multiple_main = over_13 > 1
-
+    updateIndices(request)
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
@@ -104,3 +99,9 @@ def parse_user_data(request):
     if(request.POST.get('key') == 'on'):
         user['key'] = True
     return user
+
+def updateIndices(request):
+    i = 0
+    for reg in request.session['registration']['users']:
+        reg['index'] = i
+        i += 1
