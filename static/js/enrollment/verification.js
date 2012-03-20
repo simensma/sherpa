@@ -46,7 +46,7 @@ function priceOf(age) {
         return price_senior;
     } else if(age <= 66 && age > 26) {
         return price_main;
-    } else if(age <= 26 && age > 19) {
+    } else if(age <= 26 && age > 18) {
         return price_student;
     } else if(age <= 18 && age > 13) {
         return price_school;
@@ -60,7 +60,7 @@ function typeOf(age) {
         return 'Honnørmedlem';
     } else if(age <= 66 && age > 26) {
         return 'Hovedmedlem';
-    } else if(age <= 26 && age > 19) {
+    } else if(age <= 26 && age > 18) {
         return 'Student/ungdomsmedlem';
     } else if(age <= 18 && age > 13) {
         return 'Skoleungdomsmedlem';
