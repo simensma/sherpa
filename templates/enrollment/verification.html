@@ -20,7 +20,7 @@
       <select class="main">
         {% for user in users %}
           {% if user.age > 13 %}
-            <option value="{{ user.index }}"{% if user.index == oldest.index %} selected{% endif %}>{{ user.name }}</option>
+            <option value="{{ user.index }}"{% if user.index == main.index %} selected{% endif %}>{{ user.name }}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -71,7 +71,7 @@
       </tr>
       {% endif %}
       {% for user in users %}
-      <tr data-index="{{ user.index }}" data-age="{{ user.age }}"{% if user.index == oldest.index %} class="main"{% endif %}>
+      <tr data-index="{{ user.index }}" data-age="{{ user.age }}"{% if user.index == main.index %} class="main"{% endif %}>
         <td>{{ user.name }}</td>
         <td class="type"></td>
         <td><span class="price"></span>,-</td>

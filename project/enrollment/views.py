@@ -66,10 +66,11 @@ def verification(request):
     request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
     keycount = 0
     over_13 = 0
-    oldest = {'age': 0}
+    main = None
     for user in request.session['registration']['users']:
-        if(user['age'] > oldest['age']):
-            oldest = user
+        if(main == None or (user['age'] < main['age'] and user['age'] > 18)):
+            # The cheapest option will be to set the youngest member, 19 or older, as main member
+            main = user
         if(user['age'] > 13):
             over_13 += 1
         if user.has_key('key'):
@@ -83,7 +84,7 @@ def verification(request):
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
         'keycount': keycount, 'keyprice': keyprice, 'multiple': multiple,
-        'oldest': oldest}
+        'main': main}
     return render(request, 'enrollment/verification.html', context)
 
 def zipcode(request, code):
