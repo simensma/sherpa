@@ -54,7 +54,7 @@ def remove(request, user):
 def household(request):
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
-        'existing': request.session['registration']['existing']}
+        'existing': request.session['registration'].get('existing', '')}
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
