@@ -1,5 +1,6 @@
 var price_key = 100;
 var price_main = 550;
+var price_household = 250;
 var price_senior = 425;
 var price_student = 295;
 var price_school = 175;
@@ -21,10 +22,11 @@ function calculatePrices() {
         var age = $(this).attr('data-age');
         var price = priceOf(age);
         var type = typeOf(age);
-        if($(this).data('main')) {
-            type += " (hovedmedlem)";
-        } else {
-            type += " (husstandsmedlem)";
+        if(!$(this).hasClass('main')) {
+            if(price > price_household) {
+                price = price_household;
+                type = "Husstandsmedlem";
+            }
         }
         $(this).find("td.type").text(type);
         $(this).find("span.price").text(price);
