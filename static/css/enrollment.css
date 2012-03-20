@@ -47,3 +47,8 @@ table.prices tfoot tr {
 table.prices tfoot tr th {
     font-size: 120%;
 }
+
+p.address {
+    border: 1px solid #dddddd;
+    padding: 12px;
+}
