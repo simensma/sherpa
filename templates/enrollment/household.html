@@ -23,7 +23,7 @@
       <p>Bor {% if users|length > 1 %}dere{% else %}du{% endif %} på samme adresse som et eksisterende medlem?</p>
       <div class="well">
         I så fall, hvem bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med?<br>
-        <input type="text" name="existing" placeholder="Oppgi medlemsnummer..."><br>
+        <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer..."><br>
         Hvis ikke, bare klikk på "Gå videre".
       </div>
       <p><a href="{% url enrollment.views.types %}" target="_blank">Les mer om medlemstypene her</a>.</p>

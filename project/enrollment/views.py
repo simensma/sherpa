@@ -57,7 +57,9 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
-    context = {'users': request.session['registration']['users']}
+    updateIndices(request)
+    context = {'users': request.session['registration']['users'],
+        'existing': request.session['registration']['existing']}
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
