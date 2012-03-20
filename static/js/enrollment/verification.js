@@ -12,7 +12,13 @@ $(document).ready(function() {
     $("select.main").change(function(e) {
         $("table.prices tr").removeClass('main');
         $("table.prices tr[data-index='" + $(this).find("option:selected").val() + "']").addClass('main');
+        $("span.main-name").text($("tr.main").children().first().text());
         calculatePrices();
+    }).hide();
+
+    $("a.change-main").click(function() {
+        $("select.main").show();
+        $(this).parent().text($(this).text() + ":");
     });
 });
 

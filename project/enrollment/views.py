@@ -76,14 +76,14 @@ def verification(request):
         if user.has_key('key'):
             keycount += 1
     keyprice = keycount * KEY_PRICE
-    multiple = over_13 > 1
+    multiple_main = over_13 > 1
 
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
-        'keycount': keycount, 'keyprice': keyprice, 'multiple': multiple,
+        'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main}
     return render(request, 'enrollment/verification.html', context)
 

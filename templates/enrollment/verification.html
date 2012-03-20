@@ -12,21 +12,6 @@
 <div class="offset2 span8">
   <h1>Stemmer dette?</h1>
 
-  {% if existing or multiple %}
-  <h2>Hovedmedlem</h2>
-    {% if existing %}
-      <p><strong>{{ existing }}</strong> (her vil navnet stå istedet for medlemsnr.)</h3>
-    {% else %}
-      <select class="main">
-        {% for user in users %}
-          {% if user.age > 13 %}
-            <option value="{{ user.index }}"{% if user.index == main.index %} selected{% endif %}>{{ user.name }}</option>
-          {% endif %}
-        {% endfor %}
-      </select>
-    {% endif %}
-  {% endif %}
-
   <h2>Medlemsinfo</h2>
   <table class="table table-bordered">
     <thead>
@@ -49,8 +34,27 @@
     </tbody>
   </table>
 
-  <h2>{% if users|length > 1 %}Deres{% else %}Din{% endif %} adresse</h2>
+  {% if multiple_main or existing %}
+    <h2>Hovedmedlem m/adresse</h2>
+    {% if not existing %}
+    <p><a class="change-main" href="javascript:undefined">Endre hovedmedlem</a></p>
+    <select class="main">
+      {% for user in users %}
+        {% if user.age > 13 %}
+          <option value="{{ user.index }}"{% if user.index == main.index %} selected{% endif %}>{{ user.name }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% endif %}
+  {% else %}
+    <h2>Adresse</h2>
+  {% endif %}
   <p style="border: 1px solid #dddddd; padding: 12px">
+    {% if existing %}
+      {{ existing }}<br>
+    {% else %}
+      <span class="main-name">{{ main.name }}</span><br>
+    {% endif %}
     {{ address }}<br>
     {{ zipcode }} {{ location }}
   </p>
