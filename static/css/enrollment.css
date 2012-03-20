@@ -52,3 +52,30 @@ p.address {
     border: 1px solid #dddddd;
     padding: 12px;
 }
+
+ol.registration-progress {
+    margin: 0 0 25px 0;
+}
+
+ol.registration-progress li.step:first-of-type {
+    border-left: 1px solid rgb(135, 135, 135);
+}
+
+ol.registration-progress li.step {
+    list-style-type: decimal;
+    list-style-position: inside;
+    float: left;
+    background-color: #dcddde;
+    padding: 15px 30px 15px 15px;
+    margin: 0;
+    border-top: 1px solid rgb(135, 135, 135);
+    border-right: 1px solid rgb(135, 135, 135);
+    border-bottom: 1px solid rgb(135, 135, 135);
+}
+
+ol.registration-progress li.step.current {
+    color: white;
+    background-color: ;
+    background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
+    border-right: none !important;
+}

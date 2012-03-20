@@ -14,6 +14,8 @@
 </div>
 </div>
 
+{% include 'enrollment/progress.html' with current=2 %}
+
 <div class="row">
   <div class="offset2 span8">
     <form action="{% url enrollment.views.verification %}" method="post">
