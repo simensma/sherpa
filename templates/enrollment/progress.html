@@ -1,20 +1,20 @@
 <div class="row">
 <div class="offset2 span8">
   <ol class="registration-progress">
-    <li class="step{% if current == 1 %} current{% endif %}">
-        {% if current > 1 %}<a href="{% url enrollment.views.registration %}">{% endif %}
+    <li class="step{% if step == 1 %} current{% endif %}">
+        {% if step > 1 %}<a href="{% url enrollment.views.registration %}">{% endif %}
         Personopplysninger
-        {% if current > 1 %}</a>{% endif %}
+        {% if step > 1 %}</a>{% endif %}
     </li>
-    <li class="step{% if current == 2 %} current{% endif %}">
-        {% if current > 2 %}<a href="{% url enrollment.views.household %}">{% endif %}
+    <li class="step{% if step == 2 %} current{% endif %}">
+        {% if step > 2 %}<a href="{% url enrollment.views.household %}">{% endif %}
         Husstandsinformasjon
-        {% if current > 2 %}</a>{% endif %}
+        {% if step > 2 %}</a>{% endif %}
     </li>
-    <li class="step{% if current == 3 %} current{% endif %}">
+    <li class="step{% if step == 3 %} current{% endif %}">
         Bekreftelse
     </li>
-    <li class="step{% if current == 4 %} current{% endif %}">
+    <li class="step{% if step == 4 %} current{% endif %}">
         Betaling
     </li>
     <div style="clear: both;"></div>
