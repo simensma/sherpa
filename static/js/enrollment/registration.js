@@ -1,7 +1,9 @@
 $(document).ready(function() {
 
+    $("form#registration img.ajaxloader").hide();
     $("form#registration input[name='zipcode']").keyup(function() {
         if($(this).val().match(/^\d{4}$/)) {
+            $("form#registration img.ajaxloader").show();
             $.ajax({
                 url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
                 type: 'POST'
@@ -9,6 +11,8 @@ $(document).ready(function() {
                 $("form#registration input[name='location']").val(result);
             }).fail(function(result) {
                 $("form#registration input[name='location']").val("Ukjent postnummer");
+            }).always(function(result) {
+                $("form#registration img.ajaxloader").hide();
             });
         } else {
             $("form#registration input[name='location']").val("");
