@@ -31,22 +31,34 @@
   {% if user %}
     <input type="hidden" name="user" value="{{ user.index }}">
   {% endif %}
-  <label>Fullt navn</label>
-  <input type="text" class="span3" name="name" value="{{ user.name }}">
-  <label>Fødselsdato</label>
-  <input type="text" class="span2 dob" name="dob" value="{{ user.dob }}">
-  <div class="address">
-    <label>Adresse</label>
-    <input type="text" class="span3" name="address" value="{{ address }}">
-    <label>Postnummer / Poststed</label>
-    <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
-    <input type="text" class="span2" name="location" disabled>
-    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+  <div class="control-group name">
+    <label>Fullt navn</label>
+    <input type="text" class="span3" name="name" value="{{ user.name }}">
   </div>
-  <label>Telefon / Mobil</label>
-  <input type="text" class="span2" name="phone" value="{{ user.phone }}">
-  <label>Epost</label>
-  <input type="text" class="span3" name="email" value="{{ user.email }}">
+  <div class="control-group dob">
+    <label>Fødselsdato</label>
+    <input type="text" class="span2 dob" name="dob" value="{{ user.dob }}">
+  </div>
+  <div class="address">
+    <div class="control-group address">
+      <label>Adresse</label>
+      <input type="text" class="span3" name="address" value="{{ address }}">
+    </div>
+    <div class="control-group zipcode">
+      <label>Postnummer / Poststed</label>
+      <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
+      <input type="text" class="span2" name="location" disabled>
+      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+    </div>
+  </div>
+  <div class="control-group phone">
+    <label>Telefon / Mobil</label>
+    <input type="text" class="span2" name="phone" value="{{ user.phone }}">
+  </div>
+  <div class="control-group email">
+    <label>Epost</label>
+    <input type="text" class="span3" name="email" value="{{ user.email }}">
+  </div>
   <label class="checkbox">
     <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>

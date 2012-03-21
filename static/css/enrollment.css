@@ -1,8 +1,11 @@
 /* Enrollment */
 
 form#registration label {
-    color: black;
     font-size: 110%;
+}
+
+form#registration .control-group:not(.error,.warning) label {
+    color: black;
 }
 
 form#registration input[type='text'] {
