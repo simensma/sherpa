@@ -68,18 +68,17 @@ p.address {
     padding: 12px;
 }
 
-ol.registration-progress {
+table.registration-progress {
     margin: 0 0 25px 0;
+    width: 100%;
 }
 
-ol.registration-progress li.step:first-of-type {
+table.registration-progress td.step:first-of-type {
     border-left: 1px solid rgb(135, 135, 135);
 }
 
-ol.registration-progress li.step {
-    list-style-type: decimal;
-    list-style-position: inside;
-    float: left;
+table.registration-progress td.step {
+    height: 48px;
     background-color: #dcddde;
     padding: 15px 30px 15px 15px;
     margin: 0;
@@ -88,9 +87,8 @@ ol.registration-progress li.step {
     border-bottom: 1px solid rgb(135, 135, 135);
 }
 
-ol.registration-progress li.step.current {
+table.registration-progress td.step.current {
     color: white;
-    background-color: ;
     background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
     border-right: none !important;
 }
