@@ -46,7 +46,7 @@
     <p><a class="change-main" href="javascript:undefined">Endre hovedmedlem</a></p>
     <select class="main">
       {% for user in users %}
-        {% if user.age > 13 %}
+        {% if user.age > 18 %}
           <option value="{{ user.index }}"{% if user.index == main.index %} selected{% endif %}>{{ user.name }}</option>
         {% endif %}
       {% endfor %}

@@ -62,18 +62,18 @@ def verification(request):
     request.session['registration']['existing'] = request.POST.get('existing', '')
     request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
     keycount = 0
-    over_13 = 0
+    over_18 = 0
     main = None
     for user in request.session['registration']['users']:
         if(main == None or (user['age'] < main['age'] and user['age'] > 18)):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
-        if(user['age'] > 13):
-            over_13 += 1
+        if(user['age'] > 18):
+            over_18 += 1
         if user.has_key('key'):
             keycount += 1
     keyprice = keycount * KEY_PRICE
-    multiple_main = over_13 > 1
+    multiple_main = over_18 > 1
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
