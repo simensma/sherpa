@@ -36,4 +36,11 @@ $(document).ready(function() {
         buttonText: 'Velg dato...'
     });
 
+    $("form#registration button").click(function(e) {
+        if(!$("form#registration input.conditions").prop('checked')) {
+            e.preventDefault();
+            alert("Du kan ikke melde deg inn med mindre du har lest og godtatt betingelsene.");
+        }
+    });
+
 });
