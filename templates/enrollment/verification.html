@@ -42,9 +42,8 @@
           {% endif %}
           <td>
             {{ user.name }}<br>
-            {{ user.dob }}<br>
-            {# Use if-statement for phone to avoid the extra linebreak in case it is empty #}
-            {% if user.phone %}{{ user.phone }}<br>{% endif %}
+            {{ user.dob|date:"d. N Y" }}<br>
+            {{ user.phone }}<br>
             {{ user.email }}
           </td>
           <td class="type"></td>

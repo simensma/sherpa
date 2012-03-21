@@ -10,6 +10,16 @@
 
 {% block body %}
 
+{% if errors or get_error and user %}
+<script>
+  // Trigger form validations
+  $(document).ready(function() {
+    $("form#registration input").focusout();
+    validateDatepicker();
+  });
+</script>
+{% endif %}
+
 <div class="row">
 <div class="offset2 span8">
   <h1>Bli medlem</h1>
@@ -20,7 +30,23 @@
 
 <div class="row">
 <div class="offset2 span5">
-{% if saved %}
+{% if get_error %}
+  <div class="alert alert-error">
+    <a class="close">x</a><strong>Noen av opplysningene er ugyldige.</strong><br>
+    {% if users|length > 1 %}
+      Vennligst gå gjennom alle registrerte medlemmer, og rett alle felter som er markert røde.
+    {% else %}
+      Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+    {% endif %}
+  </div>
+{% endif %}
+{% if errors %}
+  <div class="alert alert-error">
+    <a class="close">x</a><strong>Det ble oppgitt ugyldige opplysniger.</strong><br>
+    Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+  </div>
+{% endif %}
+{% if saved and not errors %}
   <div class="alert alert-success">
     <a class="close">x</a><strong>Opplysningene er lagret.</strong><br>
     Legg til flere medlemmer, eller klikk "Gå videre" i boksen til høyre.
@@ -37,7 +63,7 @@
   </div>
   <div class="control-group dob">
     <label>Fødselsdato</label>
-    <input type="text" class="span2 dob" name="dob" value="{{ user.dob }}">
+    <input type="text" class="span2 dob" name="dob" value="{{ user.dob|date:"d.m.Y" }}">
   </div>
   <div class="address">
     <div class="control-group address">

@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from user.models import Zipcode
 
 from datetime import datetime, timedelta
+import re
 
 KEY_PRICE = 100
 
@@ -25,17 +26,42 @@ def registration(request, user):
         user = request.session['registration']['users'][int(user)]
 
     saved = False
+    errors = False
+    get_error = False # For GET requests (e.g. when redirected from step >1)
     if(request.method == 'POST'):
-        if request.POST.has_key('user'):
-            request.session['registration']['users'][int(request.POST['user'])] = parse_user_data(request)
-        else:
-            request.session['registration']['users'].append(parse_user_data(request))
+        new_user = {}
+        new_user['name'] = request.POST['name']
+        new_user['phone'] = request.POST['phone']
+        new_user['email'] = request.POST['email']
         request.session['registration']['address'] = request.POST['address']
         request.session['registration']['zipcode'] = request.POST['zipcode']
+        if(request.POST.get('key') == 'on'):
+            new_user['key'] = True
+
+        try:
+            new_user['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
+            new_user['age'] = datetime.now().isocalendar()[0] - new_user['dob'].isocalendar()[0]
+        except ValueError:
+            new_user['dob'] = None
+            new_user['age'] = None
+
+        if not validate_user(request.POST) or not validate_location(request.POST['address'], request.POST['zipcode']):
+                errors = True
+                user = new_user
+
+        if request.POST.has_key('user'):
+            request.session['registration']['users'][int(request.POST['user'])] = new_user
+        else:
+            request.session['registration']['users'].append(new_user)
         saved = True
+    else:
+        if(len(request.session['registration']['users']) > 0):
+            if not validate_all_data(request):
+                get_error = True
 
     updateIndices(request)
-    context = {'users': request.session['registration']['users'], 'user': user, 'saved': saved,
+    context = {'users': request.session['registration']['users'], 'user': user,
+        'saved': saved, 'errors': errors, 'get_error': get_error,
         'address': request.session['registration'].get('address', ''),
         'zipcode': request.session['registration'].get('zipcode', '')}
     return render(request, 'enrollment/registration.html', context)
@@ -48,12 +74,20 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_all_data(request):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
         'existing': request.session['registration'].get('existing', '')}
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_all_data(request):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
     # Todo: verify that 'registration' is set in session
     request.session['registration']['existing'] = request.POST.get('existing', '')
     request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
@@ -80,24 +114,63 @@ def verification(request):
         'main': main}
     return render(request, 'enrollment/verification.html', context)
 
+# TODO: Remember to validate_all_data() when submitting step 3
+
 def zipcode(request, code):
     location = Zipcode.objects.get(code=code).location
     return HttpResponse(str(location))
-
-def parse_user_data(request):
-    user = {}
-    user['name'] = request.POST['name']
-    user['dob'] = request.POST['dob']
-    user['age'] = datetime.now().isocalendar()[0] - datetime.strptime(user['dob'], "%d.%m.%Y").isocalendar()[0]
-    user['phone'] = request.POST['phone']
-    user['email'] = request.POST['email']
-
-    if(request.POST.get('key') == 'on'):
-        user['key'] = True
-    return user
 
 def updateIndices(request):
     i = 0
     for reg in request.session['registration']['users']:
         reg['index'] = i
         i += 1
+
+def validate_all_data(request):
+    if len(request.session['registration']['users']) == 0:
+        return False
+    for user in request.session['registration']['users']:
+        if not validate_user(user):
+            return False
+    return validate_location(request.session['registration']['address'],
+                             request.session['registration']['zipcode'])
+
+def validate_user(user):
+    # Name or address is empty
+    if user['name'] == '':
+        return False
+
+    # Phone no. is less than 8 chars (allow >8, in case it's formatted with whitespace)
+    if len(user['phone']) < 8:
+        return False
+
+    # Email is non-empty (empty is allowed) and doesn't match an email
+    if(user['email'] != '' and len(re.findall('.+@.+\..+', user['email'])) == 0):
+        return False
+
+    # Date of birth is not valid format (%d.%m.%Y)
+    # Will be unicode when posted, but datetime when saved
+    if isinstance(user['dob'], unicode):
+        try:
+            datetime.strptime(user['dob'], "%d.%m.%Y")
+        except ValueError:
+            return False
+    elif not isinstance(user['dob'], datetime):
+        return False
+
+    # All tests passed!
+    return True
+
+def validate_location(address, zipcode):
+    # Address is empty
+    if address == '':
+        return False
+
+    # Zipcode does not exist
+    try:
+        Zipcode.objects.get(code=zipcode)
+    except Zipcode.DoesNotExist:
+        return False
+
+    # All tests passed!
+    return True

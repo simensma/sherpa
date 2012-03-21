@@ -39,11 +39,7 @@ $(document).ready(function() {
         buttonImage: '/static/img/calendar.png',
         buttonImageOnly: true,
         buttonText: 'Velg dato...',
-        onClose: function() {
-            if(!$("form#registration input[name='dob']").val().match(/\d\d\.\d\d\.\d\d\d\d/)) {
-                $(this).parents("div.control-group").addClass('error');
-            }
-        }
+        onClose: validateDatepicker
     });
 
     $("form#registration input").focus(function() {
@@ -102,3 +98,9 @@ $(document).ready(function() {
     });
 
 });
+
+function validateDatepicker() {
+    if(!$("form#registration input[name='dob']").val().match(/\d\d\.\d\d\.\d\d\d\d/)) {
+        $("form#registration div.control-group.dob").addClass('error');
+    }
+}
