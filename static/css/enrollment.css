@@ -44,6 +44,14 @@ table.prices tbody td {
     vertical-align: middle;
 }
 
+table.prices tbody td.choose-main {
+    text-align: center;
+}
+
+table.prices span.main {
+    font-weight: bold;
+}
+
 table.prices tfoot tr {
     border-top: 2px solid rgb(105, 105, 105);
 }

@@ -8,24 +8,56 @@ var price_child = 110;
 
 $(document).ready(function() {
 
-    calculatePrices();
-    $("select.main").change(function(e) {
-        $("table.prices tr").removeClass('main');
-        $("table.prices tr[data-index='" + $(this).find("option:selected").val() + "']").addClass('main');
-        $("span.main-name").text($("tr.main").children().first().text());
-        calculatePrices();
-    }).hide();
+    // Figure out the initial main user - the one with lowest age over 18
+    if($("table.prices tr.main").length == 0) {
+        var current;
+        $("table.prices tr[data-age]").each(function() {
+            var age = $(this).attr('data-age');
+            if(current === undefined || (age < current.attr('data-age') && age > 18)) {
+                current = $(this);
+            }
+        });
+        current.addClass('main');
+    }
 
-    $("a.change-main").click(function() {
-        $("select.main").show();
-        $(this).parent().text($(this).text() + ":");
+    calculatePrices();
+    orderListByAge();
+    $("table.prices tr.main button").hide();
+    $("table.prices tr span.main").hide();
+    $("table.prices tr.main span.main").show();
+    $("table.prices button.main").click(function(e) {
+        $("table.prices tr").removeClass('main');
+        $(this).parents("tr").addClass('main');
+        $("table.prices button").show();
+        $("table.prices tr.main button").hide();
+        $("table.prices tr span.main").hide();
+        $("table.prices tr.main span.main").show();
+        calculatePrices();
     });
+
 });
+
+function orderListByAge() {
+    var rows = [];
+    var main = $("table.prices tr.main");
+    var jrows = $("table.prices tr[data-index]");
+    main.detach();
+    jrows.each(function() {
+        rows = rows.concat([$(this)]);
+    }).detach();
+    rows.sort(function(a, b) {
+        return a.attr('data-age') - b.attr('data-age');
+    });
+    for(var i=0; i<rows.length; i++) {
+        $("table.prices tbody").prepend(rows[i]);
+    }
+    $("table.prices tbody").prepend(main);
+}
 
 function calculatePrices() {
     var totalPrice = 0;
-    $("table.prices tr[data-key] span.keyprice").each(function() {
-        totalPrice += $(this).text();
+    $("table.prices td[data-key] span.keyprice").each(function() {
+        totalPrice += Number($(this).text());
     });
     $("table.prices tr[data-index]").each(function() {
         var age = $(this).attr('data-age');

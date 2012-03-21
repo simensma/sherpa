@@ -12,50 +12,49 @@
 
 <div class="row">
 <div class="offset2 span8">
-  {% if multiple_main or existing %}
-    <h2>Hovedmedlem</h2>
-    {% if not existing %}
-    <p><a class="change-main" href="javascript:undefined">Endre hovedmedlem</a></p>
-    <select class="main">
-      {% for user in users %}
-        {% if user.age > 18 %}
-          <option value="{{ user.index }}"{% if user.index == main.index %} selected{% endif %}>{{ user.name }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    {% endif %}
-  {% endif %}
-
   <h2>Registrerte opplysninger</h2>
   <table class="table prices">
     <thead>
       <tr>
-        <th colspan="2"></th>
+        {% if multiple_main and not existing %}
+          <th></th>
+        {% endif %}
+        <th>Personopplysninger</th>
+        <th>Medlemskategori</th>
         <th>Pris (<a href="{% url enrollment.views.types %}" target="_blank">prisliste</a>)</th>
       </tr>
     </thead>
     <tbody>
       {% if existing %}
-      <tr>
+      <tr class="main">
         <td>{{ existing }}</td>
         <td>Hovedmedlem</td>
         <td>-</td>
       </tr>
       {% endif %}
       {% for user in users %}
-      <tr data-index="{{ user.index }}" data-age="{{ user.age }}"{% if user.index == main.index and not existing %} class="main"{% endif %}>
-        <td>
-          {{ user.name }}<br>
-          {{ user.dob }}<br>
-          {# Use if-statement for phone to avoid the extra linebreak in case it is empty #}
-          {% if user.phone %}{{ user.phone }}<br>{% endif %}
-          {{ user.email }}
-        </td>
-        <td class="type"></td>
-        <td><span class="price"></span>,-</td>
-      </tr>
+        <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
+          {% if multiple_main and not existing and user.age > 18 %}
+            <td class="choose-main">
+              <button class="btn main">Velg</button>
+              <span class="main">Hovedmedlem</span>
+            </td>
+          {% endif %}
+          <td>
+            {{ user.name }}<br>
+            {{ user.dob }}<br>
+            {# Use if-statement for phone to avoid the extra linebreak in case it is empty #}
+            {% if user.phone %}{{ user.phone }}<br>{% endif %}
+            {{ user.email }}
+          </td>
+          <td class="type"></td>
+          <td><span class="price"></span>,-</td>
+        </tr>
       {% endfor %}
       <tr>
+        {% if multiple_main and not existing %}
+          <td></td>
+        {% endif %}
         <td>
           <strong>Adresse:</strong><br>
           {{ address }}<br>
@@ -65,6 +64,9 @@
       </tr>
       {% if keycount > 0 %}
       <tr>
+        {% if multiple_main and not existing %}
+          <td></td>
+        {% endif %}
         <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
         <td data-key><span class="keyprice">{{ keyprice }}</span>,-</td>
       </tr>
@@ -72,7 +74,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="2">Totalt</th>
+        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
         <th><span class="totalprice"></span>,-</th>
       </tr>
     </tfoot>
