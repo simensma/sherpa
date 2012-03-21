@@ -26,14 +26,13 @@ def registration(request, user):
 
     saved = False
     if(request.method == 'POST'):
-        if not request.POST.has_key('skip'):
-            if request.POST.has_key('user'):
-                request.session['registration']['users'][int(request.POST['user'])] = parse_user_data(request)
-            else:
-                request.session['registration']['users'].append(parse_user_data(request))
-            request.session['registration']['address'] = request.POST['address']
-            request.session['registration']['zipcode'] = request.POST['zipcode']
-            saved = True
+        if request.POST.has_key('user'):
+            request.session['registration']['users'][int(request.POST['user'])] = parse_user_data(request)
+        else:
+            request.session['registration']['users'].append(parse_user_data(request))
+        request.session['registration']['address'] = request.POST['address']
+        request.session['registration']['zipcode'] = request.POST['zipcode']
+        saved = True
 
     updateIndices(request)
     context = {'users': request.session['registration']['users'], 'user': user, 'saved': saved,
