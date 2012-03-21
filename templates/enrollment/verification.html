@@ -74,12 +74,6 @@
       </tr>
     </thead>
     <tbody>
-      {% if keycount > 0 %}
-      <tr>
-        <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
-        <td data-key><span class="keyprice">{{ keyprice }}</span>,-</td>
-      </tr>
-      {% endif %}
       {% for user in users %}
       <tr data-index="{{ user.index }}" data-age="{{ user.age }}"{% if user.index == main.index and not existing %} class="main"{% endif %}>
         <td>{{ user.name }}</td>
@@ -87,6 +81,12 @@
         <td><span class="price"></span>,-</td>
       </tr>
       {% endfor %}
+      {% if keycount > 0 %}
+      <tr>
+        <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
+        <td data-key><span class="keyprice">{{ keyprice }}</span>,-</td>
+      </tr>
+      {% endif %}
     </tbody>
     <tfoot>
       <tr>
