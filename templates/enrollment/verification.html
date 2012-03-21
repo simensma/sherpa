@@ -80,6 +80,12 @@
     </tfoot>
   </table>
 
+  {% if multiple_main and not existing %}
+  <p>
+    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være over 18 år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+  </p>
+  {% endif %}
+
   <p>
     <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
     <button class="btn btn-success btn-large" onclick="alert('Du ble nå sendt til betalingssiden :)');">Til betaling <i class="icon-arrow-right"></i></button>
