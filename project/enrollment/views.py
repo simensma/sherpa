@@ -35,9 +35,6 @@ def registration(request, user):
             request.session['registration']['zipcode'] = request.POST['zipcode']
             saved = True
 
-        if(request.POST['next'] == "done"):
-            return HttpResponseRedirect(reverse("enrollment.views.household"))
-
     updateIndices(request)
     context = {'users': request.session['registration']['users'], 'user': user, 'saved': saved,
         'address': request.session['registration'].get('address', ''),

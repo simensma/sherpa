@@ -22,8 +22,8 @@
 <div class="offset2 span5">
 {% if saved %}
   <div class="alert alert-success">
-    <a class="close">x</a><strong>Informasjonen er lagret.</strong><br>
-    Legg til flere medlemmer, eller klikk "Gå videre" under.
+    <a class="close">x</a><strong>Opplysningene er lagret.</strong><br>
+    Legg til flere medlemmer, eller klikk "Gå videre" i boksen til høyre.
   </div>
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
@@ -52,9 +52,7 @@
   <label class="checkbox">
     <input type="checkbox"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn btn-large" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer på samme adresse</button><br>
-  <button type="submit" class="btn btn-success btn-large" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
-  <!-- TODO: Skip hvis validering failer på siste ny-entry -->
+  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
 </form>
 
 </div>
@@ -88,6 +86,7 @@
       </tr>
     {% endfor %}
     </table>
+    <p><a href="{% url enrollment.views.household %}" class="btn btn-success btn-large">Gå videre <i class="icon-arrow-right"></i></a></p>
   </div>
 </div>
 {% endif %}
