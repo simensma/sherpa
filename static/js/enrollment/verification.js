@@ -24,6 +24,9 @@ $(document).ready(function() {
 
 function calculatePrices() {
     var totalPrice = 0;
+    $("table.prices tr[data-key] span.keyprice").each(function() {
+        totalPrice += $(this).text();
+    });
     $("table.prices tr[data-index]").each(function() {
         var age = $(this).attr('data-age');
         var price = priceOf(age);
