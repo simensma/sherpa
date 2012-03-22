@@ -1,68 +1,94 @@
 {% extends 'layout.html' %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/enrollment/verification.js"></script>
+{% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
 {% endblock %}
 
 {% block body %}
 
+{% include 'enrollment/progress.html' with step=3 %}
+
 <div class="row">
 <div class="offset2 span8">
-  <h2>Kan du sjekke om dette stemmer?</h2>
-
-  {% for user in users %}
-  <table class="registration-check table table-bordered">
-    <tr>
-      <th>Medlemskap</th>
-      <td>
-        {{ user.membership }}<br>
-        {{ user.membershipreason }}
-      </td>
-    </tr>
-    {% if user.householdmember %}
-    <tr>
-      <th>Hovedmedlem</th>
-      <td>{{ user.householdmember }}</td>
-    </tr>
-    {% endif %}
-    <tr>
-      <th>Din lokalforening</th>
-      <td>
-        DNT X og Y{{ user.association }}<br>
-        (Basert på postnummer)
-      </td>
-    </tr>
-    <tr>
-      <th>Navn</th>
-      <td>{{ user.name }}</td>
-    </tr>
-    <tr>
-      <th>Fødselsdato</th>
-      <td>{{ user.dob|date:"d.m.Y" }}</td>
-    </tr>
-    <tr>
-      <th>Adresse</th>
-      <td>{{ user.address }}<br>{{ user.zipcode }} {{ user.location }}</td>
-    </tr>
-    <tr>
-      <th>Telefon / mobil</th>
-      <td>{{ user.phone }}</td>
-    </tr>
-    <tr>
-      <th>E-post</th>
-      <td>{{ user.email }}</td>
-    </tr>
-    <tr>
-      <th>Ønsker DNT-Nøkkel</th>
-      <td>
-        {% if user.key %}
-          Ja
-        {% else %}
-          Nei
+  <h2>Registrerte opplysninger</h2>
+  <table class="table prices">
+    <thead>
+      <tr>
+        {% if multiple_main and not existing %}
+          <th></th>
         {% endif %}
-      </td>
-    </tr>
+        <th>Personopplysninger</th>
+        <th>Medlemskategori</th>
+        <th><a href="{% url enrollment.views.types %}" target="_blank">Pris</a></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if existing %}
+      <tr class="main">
+        <td>{{ existing }}</td>
+        <td>Hovedmedlem</td>
+        <td>-</td>
+      </tr>
+      {% endif %}
+      {% for user in users %}
+        <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
+          {% if multiple_main and not existing and user.age > 18 %}
+            <td class="choose-main">
+              <button class="btn main">Velg</button>
+              <span class="main">Hovedmedlem</span>
+            </td>
+          {% endif %}
+          <td>
+            {{ user.name }}<br>
+            {{ user.dob|date:"d. N Y" }}<br>
+            {{ user.phone }}<br>
+            {{ user.email }}
+          </td>
+          <td class="type"></td>
+          <td><span class="price"></span>,-</td>
+        </tr>
+      {% endfor %}
+      <tr>
+        {% if multiple_main and not existing %}
+          <td></td>
+        {% endif %}
+        <td>
+          <strong>Adresse:</strong><br>
+          {{ address }}<br>
+          {{ zipcode }} {{ location }}
+        </td>
+        <td colspan="2"></td>
+      </tr>
+      {% if keycount > 0 %}
+      <tr>
+        {% if multiple_main and not existing %}
+          <td></td>
+        {% endif %}
+        <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
+        <td data-key><span class="keyprice">{{ keyprice }}</span>,-</td>
+      </tr>
+      {% endif %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
+        <th><span class="totalprice"></span>,-</th>
+      </tr>
+    </tfoot>
   </table>
-  {% endfor %}
+
+  {% if multiple_main and not existing %}
+  <p>
+    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være over 18 år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+  </p>
+  {% endif %}
+
+  <p>
+    <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
+    <button class="btn btn-success btn-large" onclick="alert('Du ble nå sendt til betalingssiden :)');">Til betaling <i class="icon-arrow-right"></i></button>
+  </p>
 
 </div>
 </div>

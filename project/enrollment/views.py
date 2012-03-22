@@ -5,9 +5,12 @@ from django.core.urlresolvers import reverse
 from user.models import Zipcode
 
 from datetime import datetime, timedelta
+import re
+
+KEY_PRICE = 100
 
 def index(request):
-    return HttpResponse()
+    return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def types(request):
     return render(request, 'enrollment/types.html')
@@ -15,85 +18,159 @@ def types(request):
 def conditions(request):
     return render(request, 'enrollment/conditions.html')
 
-def registration(request):
+def registration(request, user):
     if not request.session.has_key('registration'):
-        request.session['registration'] = []
+        request.session['registration'] = {'users': []}
 
-    prev = None
-    current = None
-    next = None
+    if user is not None:
+        user = request.session['registration']['users'][int(user)]
 
+    saved = False
+    errors = False
+    get_error = False # For GET requests (e.g. when redirected from step >1)
     if(request.method == 'POST'):
-        # Todo: Verify values, redirect back if invalid
-        if request.POST.has_key('user'):
-            request.session['registration'][int(request.POST['user'])] = parse_user_data(request)
-        else:
-            request.session['registration'].append(parse_user_data(request))
+        new_user = {}
+        new_user['name'] = request.POST['name']
+        new_user['phone'] = request.POST['phone']
+        new_user['email'] = request.POST['email']
+        request.session['registration']['address'] = request.POST['address']
+        request.session['registration']['zipcode'] = request.POST['zipcode']
+        if(request.POST.get('key') == 'on'):
+            new_user['key'] = True
 
-        # Logic for traversing registrations
-        if(request.POST['next'] == "done"):
-            return HttpResponseRedirect(reverse("enrollment.views.verification"))
-        elif(request.POST['next'] == "new"):
-            if(len(request.session['registration']) > 0):
-                prev = {'index': len(request.session['registration']) - 1, 'name': request.session['registration'][len(request.session['registration']) - 1]['name']}
+        try:
+            new_user['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
+            new_user['age'] = datetime.now().isocalendar()[0] - new_user['dob'].isocalendar()[0]
+        except ValueError:
+            new_user['dob'] = None
+            new_user['age'] = None
+
+        if not validate_user(request.POST) or not validate_location(request.POST['address'], request.POST['zipcode']):
+                errors = True
+                user = new_user
+
+        if request.POST.has_key('user'):
+            request.session['registration']['users'][int(request.POST['user'])] = new_user
         else:
-            current = {'index': int(request.POST['next'])}
-            if(current['index'] != 0):
-                prev = {'index': current['index'] - 1, 'name': request.session['registration'][current['index'] - 1]['name']}
-            if(current['index'] < len(request.session['registration']) - 1):
-                next = {'index': current['index'] + 1, 'name': request.session['registration'][current['index'] + 1]['name']}
-            current['user'] = request.session['registration'][current['index']]
+            request.session['registration']['users'].append(new_user)
+        saved = True
     else:
-        if len(request.session['registration']) > 0:
-            current = {'index': 0, 'user': request.session['registration'][0]}
-            if len(request.session['registration']) > 1:
-                next = {'index': 1, 'name': request.session['registration'][1]['name']}
-    context = {'prev': prev, 'current': current, 'next': next}
+        if(len(request.session['registration']['users']) > 0):
+            if not validate_all_data(request):
+                get_error = True
+
+    updateIndices(request)
+    context = {'users': request.session['registration']['users'], 'user': user,
+        'saved': saved, 'errors': errors, 'get_error': get_error,
+        'address': request.session['registration'].get('address', ''),
+        'zipcode': request.session['registration'].get('zipcode', '')}
     return render(request, 'enrollment/registration.html', context)
 
+def remove(request, user):
+    del request.session['registration']['users'][int(user)]
+    if(len(request.session['registration']['users']) == 0):
+        del request.session['registration']['address']
+        del request.session['registration']['zipcode']
+    return HttpResponseRedirect(reverse("enrollment.views.registration"))
+
+def household(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_all_data(request):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    updateIndices(request)
+    context = {'users': request.session['registration']['users'],
+        'existing': request.session['registration'].get('existing', '')}
+    return render(request, 'enrollment/household.html', context)
+
 def verification(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_all_data(request):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
     # Todo: verify that 'registration' is set in session
-    context = {'users': request.session['registration']}
+    request.session['registration']['existing'] = request.POST.get('existing', '')
+    request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
+    keycount = 0
+    over_18 = 0
+    main = None
+    for user in request.session['registration']['users']:
+        if(main == None or (user['age'] < main['age'] and user['age'] > 18)):
+            # The cheapest option will be to set the youngest member, 19 or older, as main member
+            main = user
+        if(user['age'] > 18):
+            over_18 += 1
+        if user.has_key('key'):
+            keycount += 1
+    keyprice = keycount * KEY_PRICE
+    multiple_main = over_18 > 1
+    updateIndices(request)
+    context = {'users': request.session['registration']['users'],
+        'address': request.session['registration']['address'],
+        'zipcode': request.session['registration']['zipcode'],
+        'location': request.session['registration']['location'],
+        'existing': request.session['registration']['existing'],
+        'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
+        'main': main}
     return render(request, 'enrollment/verification.html', context)
+
+# TODO: Remember to validate_all_data() when submitting step 3
 
 def zipcode(request, code):
     location = Zipcode.objects.get(code=code).location
     return HttpResponse(str(location))
 
-def parse_user_data(request):
-    user = {}
-    user['name'] = request.POST['name']
-    user['dob'] = request.POST['dob']
-    user['address'] = request.POST['address']
-    user['zipcode'] = request.POST['zipcode']
-    user['phone'] = request.POST['phone']
-    user['email'] = request.POST['email']
+def updateIndices(request):
+    i = 0
+    for reg in request.session['registration']['users']:
+        reg['index'] = i
+        i += 1
 
-    if(request.POST.get('household') == 'on'):
-        user['household'] = True
-        user['householdmember'] = request.POST['householdmember']
+def validate_all_data(request):
+    if len(request.session['registration']['users']) == 0:
+        return False
+    for user in request.session['registration']['users']:
+        if not validate_user(user):
+            return False
+    return validate_location(request.session['registration']['address'],
+                             request.session['registration']['zipcode'])
 
-    if(request.POST.get('key') == 'on'):
-        user['key'] = True
-    return user
+def validate_user(user):
+    # Name or address is empty
+    if user['name'] == '':
+        return False
 
-def verify_user_data(user):
-    dob = datetime.strptime(user['dob'], "%d.%m.%Y")
-    location = Zipcode.objects.get(code=user['zipcode']).location
+    # Phone no. is less than 8 chars (allow >8, in case it's formatted with whitespace)
+    if len(user['phone']) < 8:
+        return False
 
-    age = datetime.now().isocalendar()[0] - dob.isocalendar()[0]
-    if(age > 66):
-        user['membership'] = 'Honnørmedlem'
-        user['membershipreason'] = '(67 år eller mer)'
-    elif(age <= 66 and age > 26):
-        user['membership'] = 'Hovedmedlem'
-        user['membershipreason'] = '(27 - 66 år)'
-    elif(age <= 26 and age > 19):
-        user['membership'] = 'Student/ungdom'
-        user['membershipreason'] = '(20 - 26 år)'
-    elif(age <= 18 and age > 13):
-        user['membership'] = 'Skoleungdom'
-        user['membershipreason'] = '(14 - 19 år)'
-    elif(age <= 13):
-        user['membership'] = 'Barnemedlem'
-        user['membershipreason'] = '(13 år eller yngre)'
+    # Email is non-empty (empty is allowed) and doesn't match an email
+    if(user['email'] != '' and len(re.findall('.+@.+\..+', user['email'])) == 0):
+        return False
+
+    # Date of birth is not valid format (%d.%m.%Y)
+    # Will be unicode when posted, but datetime when saved
+    if isinstance(user['dob'], unicode):
+        try:
+            datetime.strptime(user['dob'], "%d.%m.%Y")
+        except ValueError:
+            return False
+    elif not isinstance(user['dob'], datetime):
+        return False
+
+    # All tests passed!
+    return True
+
+def validate_location(address, zipcode):
+    # Address is empty
+    if address == '':
+        return False
+
+    # Zipcode does not exist
+    try:
+        Zipcode.objects.get(code=zipcode)
+    except Zipcode.DoesNotExist:
+        return False
+
+    # All tests passed!
+    return True

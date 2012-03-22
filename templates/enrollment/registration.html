@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block extra_scripts %}
-  <script src="{{ STATIC_URL }}js/enrollment.js"></script>
+  <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
 {% endblock %}
 {% block extra_css %}
@@ -10,76 +10,132 @@
 
 {% block body %}
 
+{% if errors or get_error and user %}
+<script>
+  // Trigger form validations
+  $(document).ready(function() {
+    $("form#registration input").focusout();
+    validateDatepicker();
+  });
+</script>
+{% endif %}
+
 <div class="row">
 <div class="offset2 span8">
-<h1>Bli medlem</h1>
+  <h1>Bli medlem</h1>
 </div>
 </div>
+
+{% include 'enrollment/progress.html' with step=1 %}
 
 <div class="row">
 <div class="offset2 span5">
+{% if get_error %}
+  <div class="alert alert-error">
+    <a class="close">x</a><strong>Noen av opplysningene er ugyldige.</strong><br>
+    {% if users|length > 1 %}
+      Vennligst gå gjennom alle registrerte medlemmer, og rett alle felter som er markert røde.
+    {% else %}
+      Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+    {% endif %}
+  </div>
+{% endif %}
+{% if errors %}
+  <div class="alert alert-error">
+    <a class="close">x</a><strong>Det ble oppgitt ugyldige opplysniger.</strong><br>
+    Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+  </div>
+{% endif %}
+{% if saved and not errors %}
+  <div class="alert alert-success">
+    <a class="close">x</a><strong>Opplysningene er lagret.</strong><br>
+    Legg til flere medlemmer, eller klikk "Gå videre" i boksen til høyre.
+  </div>
+{% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
-  {% if current %}
-    <input type="hidden" name="user" value="{{ current.index }}">
+  {% if user %}
+    <input type="hidden" name="user" value="{{ user.index }}">
   {% endif %}
-  <label class="checkbox">
-    <input type="checkbox" name="household"{% if current.user.household %} checked{% endif %}> Husstandsmedlem (<a href="{% url enrollment.views.types %}" target="_blank">Mer informasjon</a>)
-  </label>
-  <div class="householdmember{% if not current.user.household %} hide{% endif %}">
-    <label>Medlemsnummer til hovedmedlemmet i din husstand:</label>
-    <input type="text" class="span2" name="householdmember" value="{{ current.user.householdmember }}" placeholder="1234567">
+  <div class="control-group name">
+    <label>Fullt navn</label>
+    <input type="text" class="span3" name="name" value="{{ user.name }}">
   </div>
-  <label>Fullt navn</label>
-  <input type="text" class="span3" name="name" value="{{ current.user.name }}" placeholder="Kari Nordmann">
-  <label>Fødselsdato</label>
-  <input type="text" class="span2 dob" name="dob" value="{{ current.user.dob }}">
+  <div class="control-group dob">
+    <label>Fødselsdato</label>
+    <input type="text" class="span2 dob" name="dob" value="{{ user.dob|date:"d.m.Y" }}">
+  </div>
   <div class="address">
-    <label>Adresse</label>
-    <input type="text" class="span3" name="address" value="{{ current.user.address }}" placeholder="Turveien 15">
-    <label>Postnummer / Poststed</label>
-    <input type="text" class="span1" name="zipcode" value="{{ current.user.zipcode }}" placeholder="1234">
-    <input type="text" class="span2" name="location" value="{{ current.user.location }}" disabled>
+    <div class="control-group address">
+      <label>Adresse</label>
+      <input type="text" class="span3" name="address" value="{{ address }}">
+    </div>
+    <div class="control-group zipcode">
+      <label>Postnummer / Poststed</label>
+      <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
+      <input type="text" class="span2" name="location" disabled>
+      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+    </div>
   </div>
-  <label>Telefon / Mobil</label>
-  <input type="text" class="span2" name="phone" value="{{ current.user.phone }}" placeholder="12 34 56 78">
-  <label>Epost</label>
-  <input type="text" class="span3" name="email" value="{{ current.user.email }}" placeholder="ola@eksempel.no">
+  <div class="control-group phone">
+    <label>Telefon / Mobil</label>
+    <input type="text" class="span2" name="phone" value="{{ user.phone }}">
+  </div>
+  <div class="control-group email">
+    <label>Epost</label>
+    <input type="text" class="span3" name="email" value="{{ user.email }}">
+  </div>
   <label class="checkbox">
-    <input type="checkbox" name="key"{% if current.user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT hyttene (100,- i depositum)
+    <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>
   <label class="checkbox">
-    <input type="checkbox"> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
+    <input type="checkbox" class="conditions"{% if user %} checked{% endif %}> Jeg har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
   </label>
-  <button type="submit" class="btn btn-primary" name="next" value="new"><i class="icon-user"></i> Legg til flere medlemmer</button>
-  <div class="btn-group">
-  {% if prev %}
-    <button type="submit" class="btn btn-primary" name="next" value="{{ prev.index }}"><i class="icon-arrow-left"></i> Forrige {% if prev.name %}({{ prev.name }}){% else %}medlem{% endif %}</button>
-  {% endif %}
-  {% if next %}
-    <button type="submit" class="btn btn-primary" name="next" value="{{ next.index }}">Neste {% if next.name %}({{ next.name }}){% else %}medlem{% endif %} <i class="icon-arrow-right"></i></button>
-  {% endif %}
-  </div>
-  <button type="submit" class="btn btn-success" name="next" value="done">Gå videre <i class="icon-arrow-right"></i></button>
+  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
 </form>
 
 </div>
-<div class="span5">
-  <div class="well">
-    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong> Kontakt medlemsservice:</p>
 
+{% if users %}
+<div class="span3">
+  <div class="well">
+    <h2>Medlemmer</h2>
+    <table class="table table-bordered memberlist">
+    {% for user in users %}
+      <tr>
+        <td>
+          <a href="{% url enrollment.views.registration user.index %}" title="Rediger {{ user.name }}">
+            {% if user.name %}
+              {{ user.name }}
+            {% else %}
+              (Anonym)
+            {% endif %}
+          </a>
+          <span class="remove">
+            <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+          </span>
+        </td>
+      </tr>
+    {% endfor %}
+    </table>
+    <p><a href="{% url enrollment.views.household %}" class="btn btn-success btn-large">Gå videre <i class="icon-arrow-right"></i></a></p>
+  </div>
+</div>
+{% endif %}
+
+<div class="span3">
+  <div class="well">
+    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
     <p>
+      Kontakt medlemsservice:<br>
       Telefon: 4000 1970<br>
-      Åpent alle hverdager: kl. 09.00 - 16.00<br>
+      Åpent alle hverdager:<br>
+      Kl. 09.00 - 16.00<br>
       E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
     </p>
   </div>
-
-  <div class="well">
-    <i class="icon-info-sign"></i> <strong>Hva er et husstandsmedlem?</strong><br>
-    Hvis en husstand har minst ett <em>hovedmedlem</em>, kan resten av husstanden melde seg inn som <em>husstandsmedlem</em> til rabattert pris. <a href="{% url enrollment.views.types %}">Les mer her</a>.
-  </div>
 </div>
+
 </div>
 
 {% endblock %}

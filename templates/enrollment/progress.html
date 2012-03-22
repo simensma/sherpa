@@ -1,0 +1,27 @@
+<div class="row">
+<div class="offset2 span8">
+  {# Use table because I couldn't achieve 100% width with an ordered list :( #}
+  <table class="registration-progress">
+    <tr>
+    <td class="step{% if step == 1 %} current{% endif %}">
+        1.
+        {% if step > 1 %}<a href="{% url enrollment.views.registration %}">{% endif %}
+        Personopplysninger
+        {% if step > 1 %}</a>{% endif %}
+    </td>
+    <td class="step{% if step == 2 %} current{% endif %}">
+        2.
+        {% if step > 2 %}<a href="{% url enrollment.views.household %}">{% endif %}
+        Husstandsinformasjon
+        {% if step > 2 %}</a>{% endif %}
+    </td>
+    <td class="step{% if step == 3 %} current{% endif %}">
+        3. Bekreftelse
+    </td>
+    <td class="step{% if step == 4 %} current{% endif %}">
+        4. Betaling
+    </td>
+    </tr>
+  </table>
+</div>
+</div>

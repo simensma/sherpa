@@ -1,8 +1,11 @@
 /* Enrollment */
 
 form#registration label {
-    color: black;
     font-size: 110%;
+}
+
+form#registration .control-group:not(.error,.warning) label {
+    color: black;
 }
 
 form#registration input[type='text'] {
@@ -20,6 +23,72 @@ form#registration button {
     margin-bottom: 3px;
 }
 
-table.registration-check th {
+table.memberlist td {
+    background-color: white;
+    font-size: 120%;
+    padding: 10px;
+}
+
+table.memberlist td:hover {
+    background-color: rgb(215, 215, 215);
+    color: rgb(0, 0, 0);
+}
+
+table.memberlist span.remove {
+    float: right;
+}
+
+table.main-member tr.main {
+    background-color: rgb(235, 235, 235);
+    font-weight: bold;
+}
+
+table.prices tbody td {
     vertical-align: middle;
+}
+
+table.prices tbody td.choose-main {
+    text-align: center;
+}
+
+table.prices span.main {
+    font-weight: bold;
+}
+
+table.prices tfoot tr {
+    border-top: 2px solid rgb(105, 105, 105);
+}
+
+table.prices tfoot tr th {
+    font-size: 120%;
+}
+
+p.address {
+    border: 1px solid #dddddd;
+    padding: 12px;
+}
+
+table.registration-progress {
+    margin: 0 0 25px 0;
+    width: 100%;
+    min-width: 650px;
+}
+
+table.registration-progress td.step:first-of-type {
+    border-left: 1px solid rgb(135, 135, 135);
+}
+
+table.registration-progress td.step {
+    height: 18px; /* 48 (height of arrow-image) - padding */
+    background-color: #dcddde;
+    padding: 15px 30px 15px 15px;
+    border-top: 1px solid rgb(135, 135, 135);
+    border-right: 1px solid rgb(135, 135, 135);
+    border-bottom: 1px solid rgb(135, 135, 135);
+}
+
+table.registration-progress td.step.current {
+    color: white;
+    background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
+    border-right: none !important;
 }

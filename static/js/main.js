@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+    /* Enable all dialogs */
+    $(".dialog").enableDialog();
+    $(".dialog-button").enableDialogButton();
+
     /* Include CSRF-token when applicable in AJAX requests */
     if($("input[name='csrfmiddlewaretoken']").length > 0) {
         $.ajaxSetup({
@@ -18,3 +22,22 @@ $(document).ready(function() {
     });
 
 });
+
+$.fn.enableDialog = function() {
+    return this.each(function() {
+        $(this).dialog({
+            title: $(this).attr('data-title'),
+            modal: true,
+            autoOpen: false,
+            width: $(this).attr('data-width')
+        }).hide();
+    });
+}
+
+$.fn.enableDialogButton = function() {
+    return this.each(function() {
+        $(this).click(function(event) {
+            $($(this).attr('data-dialog')).dialog('open');
+        });
+    });
+}
