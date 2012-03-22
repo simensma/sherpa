@@ -71,6 +71,7 @@ p.address {
 table.registration-progress {
     margin: 0 0 25px 0;
     width: 100%;
+    min-width: 650px;
 }
 
 table.registration-progress td.step:first-of-type {
