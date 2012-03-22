@@ -79,7 +79,7 @@ table.registration-progress td.step:first-of-type {
 }
 
 table.registration-progress td.step {
-    height: 48px;
+    height: 18px; /* 48 (height of arrow-image) - padding */
     background-color: #dcddde;
     padding: 15px 30px 15px 15px;
     border-top: 1px solid rgb(135, 135, 135);
