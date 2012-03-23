@@ -10,7 +10,7 @@
 
 {% block body %}
 
-{% if errors or get_error and user %}
+{% if errors %}
 <script>
   // Trigger form validations
   $(document).ready(function() {
@@ -30,19 +30,9 @@
 
 <div class="row">
 <div class="offset2 span5">
-{% if get_error %}
-  <div class="alert alert-error">
-    <a class="close">x</a><strong>Noen av opplysningene er ugyldige.</strong><br>
-    {% if users|length > 1 %}
-      Vennligst gå gjennom alle registrerte medlemmer, og rett alle felter som er markert røde.
-    {% else %}
-      Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
-    {% endif %}
-  </div>
-{% endif %}
 {% if errors %}
   <div class="alert alert-error">
-    <a class="close">x</a><strong>Det ble oppgitt ugyldige opplysniger.</strong><br>
+    <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
     Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
   </div>
 {% endif %}
@@ -54,7 +44,7 @@
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
-  {% if user %}
+  {% if user.index >= 0 %}
     <input type="hidden" name="user" value="{{ user.index }}">
   {% endif %}
   <div class="control-group name">
@@ -88,7 +78,7 @@
   <label class="checkbox">
     <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>
-  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
+  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
 </form>
 
 </div>

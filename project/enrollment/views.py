@@ -27,7 +27,6 @@ def registration(request, user):
 
     saved = False
     errors = False
-    get_error = False # For GET requests (e.g. when redirected from step >1)
     if(request.method == 'POST'):
         new_user = {}
         new_user['name'] = request.POST['name']
@@ -46,22 +45,23 @@ def registration(request, user):
             new_user['age'] = None
 
         if not validate_user(request.POST) or not validate_location(request.POST['address'], request.POST['zipcode']):
-                errors = True
+            errors = True
+            if request.POST.has_key('user'):
+                index = int(request.POST['user'])
                 user = new_user
-
-        if request.POST.has_key('user'):
-            request.session['registration']['users'][int(request.POST['user'])] = new_user
+                user['index'] = index
+            else:
+                user = new_user
         else:
-            request.session['registration']['users'].append(new_user)
-        saved = True
-    else:
-        if(len(request.session['registration']['users']) > 0):
-            if not validate_all_data(request):
-                get_error = True
+            if request.POST.has_key('user'):
+                request.session['registration']['users'][int(request.POST['user'])] = new_user
+            else:
+                request.session['registration']['users'].append(new_user)
+            saved = True
 
     updateIndices(request)
     context = {'users': request.session['registration']['users'], 'user': user,
-        'saved': saved, 'errors': errors, 'get_error': get_error,
+        'saved': saved, 'errors': errors,
         'address': request.session['registration'].get('address', ''),
         'zipcode': request.session['registration'].get('zipcode', ''),
         'conditions': request.session['registration'].get('conditions', '')}
@@ -78,7 +78,7 @@ def household(request):
     if not request.session.has_key('registration'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     request.session['registration']['conditions'] = True
-    if not validate_all_data(request):
+    if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
@@ -88,7 +88,7 @@ def household(request):
 def verification(request):
     if not request.session.has_key('registration'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if not validate_all_data(request):
+    if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     # Todo: verify that 'registration' is set in session
     request.session['registration']['existing'] = request.POST.get('existing', '')
@@ -116,7 +116,7 @@ def verification(request):
         'main': main}
     return render(request, 'enrollment/verification.html', context)
 
-# TODO: Remember to validate_all_data() when submitting step 3
+# TODO: Remember to check that len(request.session['registration']['users']) > 0 when submitting step 3
 
 def zipcode(request, code):
     location = Zipcode.objects.get(code=code).location
@@ -127,15 +127,6 @@ def updateIndices(request):
     for user in request.session['registration']['users']:
         user['index'] = i
         i += 1
-
-def validate_all_data(request):
-    if len(request.session['registration']['users']) == 0:
-        return False
-    for user in request.session['registration']['users']:
-        if not validate_user(user):
-            return False
-    return validate_location(request.session['registration']['address'],
-                             request.session['registration']['zipcode'])
 
 def validate_user(user):
     # Name or address is empty
