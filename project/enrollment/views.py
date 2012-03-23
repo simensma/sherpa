@@ -63,7 +63,8 @@ def registration(request, user):
     context = {'users': request.session['registration']['users'], 'user': user,
         'saved': saved, 'errors': errors, 'get_error': get_error,
         'address': request.session['registration'].get('address', ''),
-        'zipcode': request.session['registration'].get('zipcode', '')}
+        'zipcode': request.session['registration'].get('zipcode', ''),
+        'conditions': request.session['registration'].get('conditions', '')}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
@@ -76,6 +77,7 @@ def remove(request, user):
 def household(request):
     if not request.session.has_key('registration'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    request.session['registration']['conditions'] = True
     if not validate_all_data(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     updateIndices(request)
