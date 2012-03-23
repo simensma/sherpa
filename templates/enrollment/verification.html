@@ -33,7 +33,7 @@
       </tr>
       {% endif %}
       {% for user in users %}
-        <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
+        <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
           {% if multiple_main and not existing and user.age > 18 %}
             <td class="choose-main">
               <button class="btn main">Velg</button>
