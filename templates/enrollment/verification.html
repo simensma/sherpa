@@ -46,6 +46,10 @@
           <td>
             {{ user.name }}<br>
             {{ user.dob|date:"d. N Y" }}<br>
+            {% if users|length == 1 and not existing %}
+              {{ address }}<br>
+              {{ zipcode }} {{ location }}<br>
+            {% endif %}
             {{ user.phone }}<br>
             {{ user.email }}
           </td>
@@ -53,6 +57,7 @@
           <td><span class="price"></span>,-</td>
         </tr>
       {% endfor %}
+      {% if users|length > 1 or existing %}
       <tr>
         {% if multiple_main and not existing %}
           <td></td>
@@ -64,6 +69,7 @@
         </td>
         <td colspan="2"></td>
       </tr>
+      {% endif %}
       {% if keycount > 0 %}
       <tr>
         {% if multiple_main and not existing %}
