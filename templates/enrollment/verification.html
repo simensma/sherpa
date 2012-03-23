@@ -21,7 +21,7 @@
         {% endif %}
         <th>Personopplysninger</th>
         <th>Medlemskategori</th>
-        <th><a href="{% url enrollment.views.types %}" target="_blank">Pris</a></th>
+        <th>Pris</th>
       </tr>
     </thead>
     <tbody>
@@ -82,7 +82,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
+        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt<a href="{% url enrollment.views.types %}" target="_blank" class="pricelist">(Se prisliste)</a></th>
         <th><span class="totalprice"></span>,-</th>
       </tr>
     </tfoot>
