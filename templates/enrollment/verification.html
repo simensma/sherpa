@@ -40,6 +40,9 @@
               <span class="main">Hovedmedlem</span>
             </td>
           {% endif %}
+          {% if multiple_main and not existing and user.age <= 18 %}
+            <td></td>
+          {% endif %}
           <td>
             {{ user.name }}<br>
             {{ user.dob|date:"d. N Y" }}<br>
