@@ -124,8 +124,8 @@ def zipcode(request, code):
 
 def updateIndices(request):
     i = 0
-    for reg in request.session['registration']['users']:
-        reg['index'] = i
+    for user in request.session['registration']['users']:
+        user['index'] = i
         i += 1
 
 def validate_all_data(request):
