@@ -364,7 +364,7 @@ $(document).ready(function() {
             var row = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
-            }
+            };
             rows = rows.concat([row]);
         });
         var columns = [];
@@ -372,7 +372,7 @@ $(document).ready(function() {
             var column = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
-            }
+            };
             columns = columns.concat([column]);
         });
         var contents = [];
@@ -380,8 +380,8 @@ $(document).ready(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
-                content: $(this).html(),
-            }
+                content: $(this).html()
+            };
             contents = contents.concat([content]);
         });
 
