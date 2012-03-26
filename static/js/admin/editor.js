@@ -9,6 +9,7 @@ $(document).ready(function() {
     selectableContent($(".editable"));
     setEmpties();
     enableEditing();
+    autoRemoveEmptyContent($("article .editable"));
 
     // Make toolbar draggable
     $("#toolbar").draggable({
@@ -41,6 +42,7 @@ $(document).ready(function() {
             var content = $('<div class="editable"><p><br></p></div>');
             function done() {
                 selectableContent(content);
+                autoRemoveEmptyContent(content);
                 if(sortState == 'formatting') {
                     content.attr('contenteditable', 'true').focus();
                 }
@@ -69,6 +71,7 @@ $(document).ready(function() {
             var content = $("<div/>").append(image, br, editable);
             function done() {
                 selectableContent(editable);
+                autoRemoveEmptyContent(content);
                 changeableImages(image);
                 if(sortState == 'formatting') {
                     editable.attr('contenteditable', 'true');
@@ -516,6 +519,30 @@ function changeableImages(images) {
         var src = prompt("URL?");
         if(src !== null && src !== undefined) {
             $(this).attr('src', src);
+        }
+    });
+}
+
+/* Automatically remove empty content-elements */
+function autoRemoveEmptyContent(content) {
+    content.focusout(function() {
+        if($(this).text().trim() === "") {
+            disableEditing();
+            var content = $(this).parents(".content");
+            $.ajax({
+                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                type: 'POST'
+            }).done(function(result) {
+                if(content.siblings().length == 0) {
+                    setEmpty(content.parent());
+                }
+                content.remove();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                refreshSort();
+                enableEditing();
+            });
         }
     });
 }
