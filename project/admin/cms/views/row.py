@@ -23,6 +23,7 @@ def add_columns(request):
 
 @login_required
 def delete(request, row):
-    row = Row.objects.get(id=row)
-    row.delete()
-    return HttpResponse()
+    if request.is_ajax():
+        row = Row.objects.get(id=row)
+        row.delete()
+        return HttpResponse()
