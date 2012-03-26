@@ -1,7 +1,6 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from project.page.models import Row, Column, Content
+from project.page.models import Column, Content
 
 @login_required
 def add(request):
@@ -13,13 +12,6 @@ def add(request):
         order=request.POST['order'])
     content.save()
     return HttpResponse(content.id)
-
-@login_required
-def update(request, content):
-    content = Content.objects.get(id=content)
-    content.content = request.POST['content']
-    content.save()
-    return HttpResponse()
 
 @login_required
 def delete(request, content):

@@ -20,17 +20,6 @@ def new(request, variant):
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 @login_required
-def activate(request, version):
-    # Note for future error handling: Fails if activating the _same version_ 2 times in a row (F5)
-    newActive = Version.objects.get(id=version)
-    oldActive = Version.objects.filter(variant=newActive.variant).get(active=True)
-    newActive.active = True
-    oldActive.active = False
-    newActive.save()
-    oldActive.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[newActive.id]))
-
-@login_required
 def edit(request, version):
     if request.method == 'GET':
         version = Version.objects.get(id=version)

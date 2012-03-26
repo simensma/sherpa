@@ -12,6 +12,13 @@ def parse_widget(widget):
     elif(widget['widget'] == "promo"):
         return {'template': 'admin/cms/editor/advanced/widgets/promo.html'}
 
+# Delete a widget
+@login_required
+def delete(request, widget):
+    widget = Widget.objects.get(id=widget)
+    widget.delete()
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))
+
 # Quote widget
 
 @login_required
@@ -45,11 +52,4 @@ def edit_promo(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"widget": "promo"})
     widget.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))
-
-# Delete a widget
-@login_required
-def delete(request, widget):
-    widget = Widget.objects.get(id=widget)
-    widget.delete()
     return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))

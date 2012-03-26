@@ -14,20 +14,12 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 
-    # Variants
-    url(r'^variant/ny/(?P<page>\d+)/$', 'variant.new'),
-    url(r'^variant/bytt/(?P<page>\d+)/(?P<pri1>\d+)/(?P<pri2>\d+)/$', 'variant.swap'),
-    url(r'^variant/slett/(?P<variant>\d*)/$', 'variant.delete'),
-
     # Versions
     url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
-    url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
     url(r'^editor/(?P<version>\d+)/$', 'version.edit'),
 
     # Rows
     url(r'^kolonner/ny/$', 'row.add_columns'),
-    url(r'^rad/flytt-ned/(?P<block>\d+)/$', 'row.move_down'),
-    url(r'^rad/flytt-opp/(?P<block>\d+)/$', 'row.move_up'),
     url(r'^rad/slett/(?P<row>\d+)/$', 'row.delete'),
 
     # Widgets
@@ -39,6 +31,5 @@ urlpatterns = patterns('admin.cms.views',
 
     # Content
     url(r'^innhold/ny/$', 'content.add'),
-    url(r'^innhold/oppdater/(?P<content>\d+)/$', 'content.update'),
     url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
 )
