@@ -1,33 +1,57 @@
 /* Common for avanced- and article-editor */
 $(document).ready(function() {
 
+    /**
+     * Initialization
+     */
+
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     setEmpties();
     enableEditing();
 
-    /* Add widget/text/image */
+    // Make toolbar draggable
+    $("#toolbar").draggable({
+        containment: 'window'
+    });
+
+    // Draggable will set position relative, so make sure it is fixed before the user drags it
+    $("#toolbar").css('position', 'fixed');
+
+
+    /**
+     * Content changes (text, images, widgets)
+     */
 
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
-    $("#toolbar button.add-widget").click(function() {
+
+    // Add text
+    $("#toolbar button.add-text").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
         }
         removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til widget...", function() {
+        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
             $("article .insertable").remove();
             setEmpties();
         });
-        insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            // Todo: insert widget
-            enableToolbar();
-            $("article .insertable").remove();
-            refreshSort();
-            setEmpties();
+        insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
+            var content = $('<div class="editable"><p><br></p></div>');
+            function done() {
+                selectableContent(content);
+                if(sortState == 'formatting') {
+                    content.attr('contenteditable', 'true').focus();
+                }
+                refreshSort();
+                setEmpties();
+            }
+            addContent($(event.target), content, 'h', done);
         });
     });
+
+    // Add image
     $("#toolbar button.add-image").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -60,31 +84,28 @@ $(document).ready(function() {
             addContent($(event.target), content, 'h', done);
         });
     });
-    $("#toolbar button.add-text").click(function() {
+
+    // Add widget
+    $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
         }
         removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
+        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til widget...", function() {
             $("article .insertable").remove();
             setEmpties();
         });
-        insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = $('<div class="editable"><p><br></p></div>');
-            function done() {
-                selectableContent(content);
-                if(sortState == 'formatting') {
-                    content.attr('contenteditable', 'true').focus();
-                }
-                refreshSort();
-                setEmpties();
-            }
-            addContent($(event.target), content, 'h', done);
+        insertables("Klikk for å legge til widget her", $("article .column"), function() {
+            // Todo: insert widget
+            enableToolbar();
+            $("article .insertable").remove();
+            refreshSort();
+            setEmpties();
         });
     });
 
-    /* Remove content */
+    // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
             enableEditing();
@@ -116,62 +137,11 @@ $(document).ready(function() {
         });
     });
 
-    // Make toolbar draggable
-    $("#toolbar").draggable({
-        containment: 'window'
-    });
-    // Draggable will set position relative, so make sure it is fixed before the user drags it
-    $("#toolbar").css('position', 'fixed');
+    /**
+     * Structural changes (rows/columns)
+     */
 
-    /* Toolbar buttons */
-
-    $("#toolbar div.button").mousedown(function() {
-        $(this).toggleClass('active');
-    }).mouseup(function() {
-        $(this).toggleClass('active');
-    });
-
-    $("#toolbar select").change(function() {
-        $("select option:selected").each(function() {
-            document.execCommand('formatblock', false, $(this).val());
-        });
-        $("#toolbar select").val("default");
-    });
-    $("#toolbar button.anchor-add").click(function(event) {
-        document.execCommand('createLink', false, $("input.url").val());
-    });
-    $("#toolbar button.anchor-remove").click(function(event) {
-        document.execCommand('unlink');
-    });
-    $("#toolbar div.button.bold").click(function(event) {
-        document.execCommand('bold');
-    });
-    $("#toolbar div.button.italic").click(function(event) {
-        document.execCommand('italic');
-    });
-    $("#toolbar div.button.underline").click(function(event) {
-        document.execCommand('underline');
-    });
-    $("#toolbar div.button.ol").click(function(event) {
-        document.execCommand('insertorderedlist');
-    });
-    $("#toolbar div.button.ul").click(function(event) {
-        document.execCommand('insertunorderedlist');
-    });
-    $("#toolbar div.button.align-left").click(function(event) {
-        document.execCommand('justifyleft');
-    });
-    $("#toolbar div.button.align-center").click(function(event) {
-        document.execCommand('justifycenter');
-    });
-    $("#toolbar div.button.align-right").click(function(event) {
-        document.execCommand('justifyright');
-    });
-    $("#toolbar div.button.full").click(function(event) {
-        document.execCommand('justifyfull');
-    });
-
-    /* Structure - add row with columns */
+    // Add a new row with columns
     $("#toolbar button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
@@ -232,7 +202,8 @@ $(document).ready(function() {
             }
         });
     });
-    // Remove row
+
+    // Remove a row and all its content
     $("#toolbar .tab-pane.structure button.remove-columns").click(function() {
         function doneRemoving() {
             enableEditing();
@@ -260,34 +231,40 @@ $(document).ready(function() {
             });
         });
     });
-    // Edit mode - formatting, move vertically/horizontally
+
+    // Change edit mode - formatting, swap rows, swap columns
     var sortState = 'formatting';
     $("article").sortable({ disabled: true });
     $("article .row").sortable({ disabled: true });
     $("#toolbar .structure button.formatting").button('toggle');
+
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
         $("article .editable").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
+
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
         $("article .editable").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
+
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
         $("article .editable").removeAttr('contenteditable');
         sortState = 'vertical';
     });
+
     function disableSort(el) {
         el.sortable('disable');
         el.children().off('mouseenter');
         el.children().off('mouseleave');
     }
+
     function enableSort(el, alignment) {
         el.sortable('enable');
         el.children().on('mouseenter', function() {
@@ -297,6 +274,7 @@ $(document).ready(function() {
             $(this).removeClass('moveable ' + alignment);
         });
     }
+
     function refreshSort() {
         $("article").sortable('refresh');
         $("article .row").sortable('refresh');
@@ -307,7 +285,59 @@ $(document).ready(function() {
         }
     }
 
-    /* Saving document */
+    /**
+     * Toolbar buttons
+     */
+
+    $("#toolbar div.button").mousedown(function() {
+        $(this).toggleClass('active');
+    }).mouseup(function() {
+        $(this).toggleClass('active');
+    });
+
+    $("#toolbar select").change(function() {
+        $("select option:selected").each(function() {
+            document.execCommand('formatblock', false, $(this).val());
+        });
+        $("#toolbar select").val("default");
+    });
+    $("#toolbar button.anchor-add").click(function(event) {
+        document.execCommand('createLink', false, $("input.url").val());
+    });
+    $("#toolbar button.anchor-remove").click(function(event) {
+        document.execCommand('unlink');
+    });
+    $("#toolbar div.button.bold").click(function(event) {
+        document.execCommand('bold');
+    });
+    $("#toolbar div.button.italic").click(function(event) {
+        document.execCommand('italic');
+    });
+    $("#toolbar div.button.underline").click(function(event) {
+        document.execCommand('underline');
+    });
+    $("#toolbar div.button.ol").click(function(event) {
+        document.execCommand('insertorderedlist');
+    });
+    $("#toolbar div.button.ul").click(function(event) {
+        document.execCommand('insertunorderedlist');
+    });
+    $("#toolbar div.button.align-left").click(function(event) {
+        document.execCommand('justifyleft');
+    });
+    $("#toolbar div.button.align-center").click(function(event) {
+        document.execCommand('justifycenter');
+    });
+    $("#toolbar div.button.align-right").click(function(event) {
+        document.execCommand('justifyright');
+    });
+    $("#toolbar div.button.full").click(function(event) {
+        document.execCommand('justifyfull');
+    });
+
+    /**
+     * Saving the document
+     */
 
     var lastSaveCount = 0;
     var updateSaveCountID;
@@ -400,6 +430,10 @@ $(document).ready(function() {
 
 });
 
+/**
+ * Small, logical code snippets
+ */
+
 /* Toggle overlay for the entire site */
 function enableOverlay() {
     $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
@@ -433,26 +467,6 @@ function enableEditing() {
     changeableImages($("article img.changeable"));
 }
 
-/* Adds event listeners to images for changing the image */
-function changeableImages(images) {
-    images.click(function() {
-        $(this).removeClass('hover');
-        var src = prompt("URL?");
-        if(src !== null && src !== undefined) {
-            $(this).attr('src', src);
-        }
-    });
-}
-
-/* Adds event listeners to selected content for highlighting it */
-function selectableContent(content) {
-    content.click(function() {
-        $(this).addClass('selected');
-    }).focusout(function() {
-        $(this).removeClass('selected');
-    });
-}
-
 /* Divs for inserting widgets/images/text */
 function insertables(text, container, click) {
     var well = $('<div class="insertable well">' + text + '</div>');
@@ -464,6 +478,53 @@ function insertables(text, container, click) {
         $(this).after(well);
     });
 }
+
+/* Show/remove placeholder text for empty columns */
+function setEmpty(column) {
+    column.append('<div class="empty well">Tom kolonne</div>');
+}
+function setEmpties() {
+    $("article .column").each(function() {
+        if($(this).children(":not(.insertable)").length == 0) {
+            setEmpty($(this));
+        }
+    });
+}
+function removeEmpties() {
+    $("article .column").children("div.empty.well").remove();
+}
+
+/**
+ * Dynamic event handlers
+ * These will need to be reapplied for all newly
+ * created DOM content elements.
+ */
+
+/* Highlight contenteditables that _are being edited_. */
+function selectableContent(content) {
+    content.click(function() {
+        $(this).addClass('selected');
+    }).focusout(function() {
+        $(this).removeClass('selected');
+    });
+}
+
+/* Change image sources upon being clicked. */
+function changeableImages(images) {
+    images.click(function() {
+        $(this).removeClass('hover');
+        var src = prompt("URL?");
+        if(src !== null && src !== undefined) {
+            $(this).attr('src', src);
+        }
+    });
+}
+
+/**
+ * Major DOM changes.
+ * Typically includes an ajax request and,
+ * depending on the result, DOM manipulation.
+ */
 
 /* Add content-objects to some column */
 function addContent(insertable, content, type, done) {
@@ -491,19 +552,4 @@ function addContent(insertable, content, type, done) {
         $("article .insertable").remove();
         disableOverlay();
     });
-}
-
-/* Show/remove placeholder text for empty columns */
-function setEmpty(column) {
-    column.append('<div class="empty well">Tom kolonne</div>');
-}
-function setEmpties() {
-    $("article .column").each(function() {
-        if($(this).children(":not(.insertable)").length == 0) {
-            setEmpty($(this));
-        }
-    });
-}
-function removeEmpties() {
-    $("article .column").children("div.empty.well").remove();
 }
