@@ -133,8 +133,6 @@ $(document).ready(function() {
         $(this).toggleClass('active');
     }).mouseup(function() {
         $(this).toggleClass('active');
-    }).hover(function() {
-        $(this).toggleClass('hover');
     });
 
     $("#toolbar select").change(function() {
@@ -441,11 +439,7 @@ function enableEditing() {
 
 /* Adds event listeners to images for changing the image */
 function changeableImages(images) {
-    images.hover(function() {
-        $(this).addClass('hover');
-    }, function() {
-        $(this).removeClass('hover');
-    }).click(function() {
+    images.click(function() {
         $(this).removeClass('hover');
         var src = prompt("URL?");
         if(src !== null && src !== undefined) {

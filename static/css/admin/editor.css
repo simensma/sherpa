@@ -52,7 +52,7 @@ img.changeable {
   display: block;
 }
 
-img.changeable.hover {
+img.changeable:hover {
   opacity: 0.5;
   filter: alpha(opacity=50);
   cursor: alias;
@@ -130,7 +130,7 @@ article .moveable.vertical {
 #toolbar div.button.bold {
   background-image: url('/static/img/editorbuttons/bold-inactive.png');
 }
-#toolbar div.button.bold.hover {
+#toolbar div.button.bold:hover {
   background-image: url('/static/img/editorbuttons/bold-hover.png');
 }
 #toolbar div.button.bold.active {
@@ -139,7 +139,7 @@ article .moveable.vertical {
 #toolbar div.button.italic {
   background-image: url('/static/img/editorbuttons/italic-inactive.png');
 }
-#toolbar div.button.italic.hover {
+#toolbar div.button.italic:hover {
   background-image: url('/static/img/editorbuttons/italic-hover.png');
 }
 #toolbar div.button.italic.active {
@@ -148,7 +148,7 @@ article .moveable.vertical {
 #toolbar div.button.underline {
   background-image: url('/static/img/editorbuttons/underline-inactive.png');
 }
-#toolbar div.button.underline.hover {
+#toolbar div.button.underline:hover {
   background-image: url('/static/img/editorbuttons/underline-hover.png');
 }
 #toolbar div.button.underline.active {
@@ -157,7 +157,7 @@ article .moveable.vertical {
 #toolbar div.button.ol {
   background-image: url('/static/img/editorbuttons/ol-inactive.png');
 }
-#toolbar div.button.ol.hover {
+#toolbar div.button.ol:hover {
   background-image: url('/static/img/editorbuttons/ol-hover.png');
 }
 #toolbar div.button.ol.active {
@@ -166,7 +166,7 @@ article .moveable.vertical {
 #toolbar div.button.ul {
   background-image: url('/static/img/editorbuttons/ul-inactive.png');
 }
-#toolbar div.button.ul.hover {
+#toolbar div.button.ul:hover {
   background-image: url('/static/img/editorbuttons/ul-hover.png');
 }
 #toolbar div.button.ul.active {
@@ -175,7 +175,7 @@ article .moveable.vertical {
 #toolbar div.button.align-left {
   background-image: url('/static/img/editorbuttons/align-left-inactive.png');
 }
-#toolbar div.button.align-left.hover {
+#toolbar div.button.align-left:hover {
   background-image: url('/static/img/editorbuttons/align-left-hover.png');
 }
 #toolbar div.button.align-left.active {
@@ -184,7 +184,7 @@ article .moveable.vertical {
 #toolbar div.button.align-center {
   background-image: url('/static/img/editorbuttons/align-center-inactive.png');
 }
-#toolbar div.button.align-center.hover {
+#toolbar div.button.align-center:hover {
   background-image: url('/static/img/editorbuttons/align-center-hover.png');
 }
 #toolbar div.button.align-center.active {
@@ -193,7 +193,7 @@ article .moveable.vertical {
 #toolbar div.button.align-right {
   background-image: url('/static/img/editorbuttons/align-right-inactive.png');
 }
-#toolbar div.button.align-right.hover {
+#toolbar div.button.align-right:hover {
   background-image: url('/static/img/editorbuttons/align-right-hover.png');
 }
 #toolbar div.button.align-right.active {
