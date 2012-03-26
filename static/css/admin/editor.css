@@ -63,6 +63,10 @@ input.url {
 }
 
 article div[contenteditable='true'].selected {
+  background-color: rgb(215, 215, 215);
+}
+
+article div[contenteditable='true']:hover:not(.selected) {
   background-color: rgb(235, 235, 235);
 }
 
