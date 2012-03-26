@@ -431,152 +431,153 @@ $(document).ready(function() {
         });
     });
 
+
+    /**
+     * Small, logical code snippets
+     */
+
+    /* Toggle overlay for the entire site */
+    function enableOverlay() {
+        $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
+        $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader-large.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
+          .appendTo('body');
+    }
+    function disableOverlay() {
+        $(".ui-widget-overlay,.overlay-loader").remove();
+    }
+
+    /* Toggle toolbar usage */
+    function disableToolbar(displayText, cancelCallback) {
+        $("#toolbar .tab-pane *").hide();
+        var btn = $('<button class="btn cancel">Avbryt</button>');
+        btn.click(enableToolbar);
+        btn.click(cancelCallback);
+        $("#toolbar .tab-pane").append('<p class="cancel">' + displayText + '</p>', btn);
+    }
+    function enableToolbar() {
+        $("#toolbar .tab-pane .cancel").remove();
+        $("#toolbar .tab-pane *").show();
+    }
+
+    /* Toggle editing of the actual content */
+    function disableEditing() {
+        $("article .editable").removeAttr('contenteditable');
+        $("article img.changeable").off('click');
+    }
+    function enableEditing() {
+        $("article .editable").attr('contenteditable', 'true');
+        changeableImages($("article img.changeable"));
+    }
+
+    /* Divs for inserting widgets/images/text */
+    function insertables(text, container, click) {
+        var well = $('<div class="insertable well">' + text + '</div>');
+        well.click(click);
+        var children = container.children();
+        container.prepend(well);
+        children.each(function() {
+            well = well.clone(true);
+            $(this).after(well);
+        });
+    }
+
+    /* Show/remove placeholder text for empty columns */
+    function setEmpty(column) {
+        column.append('<div class="empty well">Tom kolonne</div>');
+    }
+    function setEmpties() {
+        $("article .column").each(function() {
+            if($(this).children(":not(.insertable)").length == 0) {
+                setEmpty($(this));
+            }
+        });
+    }
+    function removeEmpties() {
+        $("article .column").children("div.empty.well").remove();
+    }
+
+    /**
+     * Dynamic event handlers
+     * These will need to be reapplied for all newly
+     * created DOM content elements.
+     */
+
+    /* Highlight contenteditables that _are being edited_. */
+    function selectableContent(content) {
+        content.click(function() {
+            $(this).addClass('selected');
+        }).focusout(function() {
+            $(this).removeClass('selected');
+        });
+    }
+
+    /* Change image sources upon being clicked. */
+    function changeableImages(images) {
+        images.click(function() {
+            $(this).removeClass('hover');
+            var src = prompt("URL?");
+            if(src !== null && src !== undefined) {
+                $(this).attr('src', src);
+            }
+        });
+    }
+
+    /* Automatically remove empty content-elements */
+    function autoRemoveEmptyContent(content) {
+        content.focusout(function() {
+            if($(this).text().trim() === "") {
+                disableEditing();
+                var content = $(this).parents(".content");
+                $.ajax({
+                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                    type: 'POST'
+                }).done(function(result) {
+                    if(content.siblings().length == 0) {
+                        setEmpty(content.parent());
+                    }
+                    content.remove();
+                }).fail(function(result) {
+                    // Todo
+                }).always(function(result) {
+                    refreshSort();
+                    enableEditing();
+                });
+            }
+        });
+    }
+
+    /**
+     * Major DOM changes.
+     * Typically includes an ajax request and,
+     * depending on the result, DOM manipulation.
+     */
+
+    /* Add content-objects to some column */
+    function addContent(insertable, content, type, done) {
+        enableOverlay();
+        var order = insertable.prevAll(":not(.insertable)").length;
+        $.ajax({
+            url: '/sherpa/cms/innhold/ny/',
+            type: 'POST',
+            data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
+                  "&order=" + encodeURIComponent(order) +
+                  "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
+                  "&type=" + encodeURIComponent(type)
+        }).done([function(result) {
+            var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
+            var prev = insertable.prev();
+            if(prev.length == 0) {
+                insertable.parent().prepend(wrapper);
+            } else {
+                prev.after(wrapper);
+            }
+        }, done]).fail(function(result) {
+            // Todo
+        }).always(function(result) {
+            enableToolbar();
+            $("article .insertable").remove();
+            disableOverlay();
+        });
+    }
+
 });
-
-/**
- * Small, logical code snippets
- */
-
-/* Toggle overlay for the entire site */
-function enableOverlay() {
-    $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
-    $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader-large.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
-      .appendTo('body');
-}
-function disableOverlay() {
-    $(".ui-widget-overlay,.overlay-loader").remove();
-}
-
-/* Toggle toolbar usage */
-function disableToolbar(displayText, cancelCallback) {
-    $("#toolbar .tab-pane *").hide();
-    var btn = $('<button class="btn cancel">Avbryt</button>');
-    btn.click(enableToolbar);
-    btn.click(cancelCallback);
-    $("#toolbar .tab-pane").append('<p class="cancel">' + displayText + '</p>', btn);
-}
-function enableToolbar() {
-    $("#toolbar .tab-pane .cancel").remove();
-    $("#toolbar .tab-pane *").show();
-}
-
-/* Toggle editing of the actual content */
-function disableEditing() {
-    $("article .editable").removeAttr('contenteditable');
-    $("article img.changeable").off('click');
-}
-function enableEditing() {
-    $("article .editable").attr('contenteditable', 'true');
-    changeableImages($("article img.changeable"));
-}
-
-/* Divs for inserting widgets/images/text */
-function insertables(text, container, click) {
-    var well = $('<div class="insertable well">' + text + '</div>');
-    well.click(click);
-    var children = container.children();
-    container.prepend(well);
-    children.each(function() {
-        well = well.clone(true);
-        $(this).after(well);
-    });
-}
-
-/* Show/remove placeholder text for empty columns */
-function setEmpty(column) {
-    column.append('<div class="empty well">Tom kolonne</div>');
-}
-function setEmpties() {
-    $("article .column").each(function() {
-        if($(this).children(":not(.insertable)").length == 0) {
-            setEmpty($(this));
-        }
-    });
-}
-function removeEmpties() {
-    $("article .column").children("div.empty.well").remove();
-}
-
-/**
- * Dynamic event handlers
- * These will need to be reapplied for all newly
- * created DOM content elements.
- */
-
-/* Highlight contenteditables that _are being edited_. */
-function selectableContent(content) {
-    content.click(function() {
-        $(this).addClass('selected');
-    }).focusout(function() {
-        $(this).removeClass('selected');
-    });
-}
-
-/* Change image sources upon being clicked. */
-function changeableImages(images) {
-    images.click(function() {
-        $(this).removeClass('hover');
-        var src = prompt("URL?");
-        if(src !== null && src !== undefined) {
-            $(this).attr('src', src);
-        }
-    });
-}
-
-/* Automatically remove empty content-elements */
-function autoRemoveEmptyContent(content) {
-    content.focusout(function() {
-        if($(this).text().trim() === "") {
-            disableEditing();
-            var content = $(this).parents(".content");
-            $.ajax({
-                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                if(content.siblings().length == 0) {
-                    setEmpty(content.parent());
-                }
-                content.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                enableEditing();
-            });
-        }
-    });
-}
-
-/**
- * Major DOM changes.
- * Typically includes an ajax request and,
- * depending on the result, DOM manipulation.
- */
-
-/* Add content-objects to some column */
-function addContent(insertable, content, type, done) {
-    enableOverlay();
-    var order = insertable.prevAll(":not(.insertable)").length;
-    $.ajax({
-        url: '/sherpa/cms/innhold/ny/',
-        type: 'POST',
-        data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
-              "&order=" + encodeURIComponent(order) +
-              "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
-              "&type=" + encodeURIComponent(type)
-    }).done([function(result) {
-        var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
-        var prev = insertable.prev();
-        if(prev.length == 0) {
-            insertable.parent().prepend(wrapper);
-        } else {
-            prev.after(wrapper);
-        }
-    }, done]).fail(function(result) {
-        // Todo
-    }).always(function(result) {
-        enableToolbar();
-        $("article .insertable").remove();
-        disableOverlay();
-    });
-}
