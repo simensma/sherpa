@@ -1,14 +1,10 @@
-$(window).load(function() {
-    // Don't enable editing until the entire window is loaded
-    enableEditing();
-});
-
 /* Common for avanced- and article-editor */
 $(document).ready(function() {
 
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     setEmpties();
+    enableEditing();
 
     /* Add widget/text/image */
 
