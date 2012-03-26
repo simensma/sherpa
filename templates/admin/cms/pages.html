@@ -21,7 +21,7 @@
 <tr>
   <td>{{ version.variant.page.title }}</td>
   <td><a href="/{{ version.variant.page.slug }}">http://{{ site.domain }}/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
-  <td>[ <a href="{% url admin.cms.views.editor_advanced.edit version.id %}">Rediger</a> ]</td>
+  <td>[ <a href="{% url admin.cms.views.version.edit version.id %}">Rediger</a> ]</td>
   <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
 </tr>
 {% endfor %}

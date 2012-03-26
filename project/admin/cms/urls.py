@@ -14,9 +14,6 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 
-    # Advanced editor
-    url(r'^editor/avansert/(?P<version>\d+)/$', 'editor_advanced.edit'),
-
     # Variants
     url(r'^variant/ny/(?P<page>\d+)/$', 'variant.new'),
     url(r'^variant/bytt/(?P<page>\d+)/(?P<pri1>\d+)/(?P<pri2>\d+)/$', 'variant.swap'),
@@ -25,7 +22,7 @@ urlpatterns = patterns('admin.cms.views',
     # Versions
     url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
     url(r'^versjon/aktiver/(?P<version>\d+)/$', 'version.activate'),
-    url(r'^versjon/oppdater/(?P<version>\d+)/$', 'version.edit'),
+    url(r'^editor/(?P<version>\d+)/$', 'version.edit'),
 
     # Rows
     url(r'^kolonner/ny/$', 'row.add_columns'),

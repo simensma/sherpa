@@ -16,7 +16,7 @@ def new(request, page):
     variant.save()
     version = Version(variant=variant, content=content, version=1, publisher=request.user.get_profile(), active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 @login_required
 def swap(request, page, pri1, pri2):
@@ -32,4 +32,4 @@ def swap(request, page, pri1, pri2):
 def delete(request, variant):
     variant = Variant.objects.get(id=variant)
     variant.delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[variant.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[variant.version.id]))

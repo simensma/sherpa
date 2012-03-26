@@ -29,7 +29,7 @@ def move_up(request, row):
         raise Exception
     else:
         swap_rows(row, -1)
-        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[row.version.id]))
 
 @login_required
 def move_down(request, row):
@@ -40,7 +40,7 @@ def move_down(request, row):
         raise Exception
     else:
         swap_rows(block, 1)
-        return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[row.version.id]))
+        return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[row.version.id]))
 
 @login_required
 def delete(request, row):

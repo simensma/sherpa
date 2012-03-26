@@ -20,7 +20,7 @@ def add_quote(request):
     widget = Widget(block=block, widget=json.dumps({"widget": "quote", "quote": request.POST['quote'],
         "author": request.POST['author']}), column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
 
 @login_required
 def edit_quote(request):
@@ -28,7 +28,7 @@ def edit_quote(request):
     widget.widget = json.dumps({"widget": "quote", "quote": request.POST['quote'],
       "author": request.POST['author']})
     widget.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))
 
 # Promo widget
 
@@ -38,18 +38,18 @@ def add_promo(request):
     widget = Widget(block=block, widget=json.dumps({"widget": "promo"}),
         column=request.POST['column'], order=request.POST['order'])
     widget.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[block.version.id]))
 
 @login_required
 def edit_promo(request):
     widget = Widget.objects.get(id=request.POST['id'])
     widget.widget = json.dumps({"widget": "promo"})
     widget.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))
 
 # Delete a widget
 @login_required
 def delete(request, widget):
     widget = Widget.objects.get(id=widget)
     widget.delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[widget.block.version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[widget.block.version.id]))

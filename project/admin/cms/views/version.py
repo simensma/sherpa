@@ -17,7 +17,7 @@ def new(request, variant):
     newContent.save()
     version = Version(variant=variant, content=newContent, version=(max_version+1), publisher=request.user.get_profile(), active=False)
     version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 @login_required
 def activate(request, version):
@@ -28,22 +28,37 @@ def activate(request, version):
     oldActive.active = False
     newActive.save()
     oldActive.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.editor_advanced.edit', args=[newActive.id]))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[newActive.id]))
 
 @login_required
 def edit(request, version):
-    version = Version.objects.get(id=version)
-    for row in json.loads(request.POST['rows']):
-        obj = Row.objects.get(id=row['id'])
-        obj.order = row['order']
-        obj.save()
-    for column in json.loads(request.POST['columns']):
-        obj = Column.objects.get(id=column['id'])
-        obj.order = column['order']
-        obj.save()
-    for content in json.loads(request.POST['contents']):
-        obj = Content.objects.get(id=content['id'])
-        obj.order = content['order']
-        obj.content = content['content']
-        obj.save()
-    return HttpResponse()
+    if request.method == 'GET':
+        version = Version.objects.get(id=version)
+        rows = Row.objects.filter(version=version).order_by('order')
+        for row in rows:
+            columns = Column.objects.filter(row=row).order_by('order')
+            for column in columns:
+                contents = Content.objects.filter(column=column).order_by('order')
+                for content in contents:
+                    if content.type == 'w':
+                        content.widget = parse_widget(json.loads(content.content))
+                column.contents = contents
+            row.columns = columns
+        context = {'rows': rows, 'version': version}
+        return render(request, 'admin/cms/editor/advanced/editor.html', context)
+    elif request.method == 'POST':
+        version = Version.objects.get(id=version)
+        for row in json.loads(request.POST['rows']):
+            obj = Row.objects.get(id=row['id'])
+            obj.order = row['order']
+            obj.save()
+        for column in json.loads(request.POST['columns']):
+            obj = Column.objects.get(id=column['id'])
+            obj.order = column['order']
+            obj.save()
+        for content in json.loads(request.POST['contents']):
+            obj = Content.objects.get(id=content['id'])
+            obj.order = content['order']
+            obj.content = content['content']
+            obj.save()
+        return HttpResponse()

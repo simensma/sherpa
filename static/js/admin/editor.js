@@ -386,7 +386,7 @@ $(document).ready(function() {
         });
 
         $.ajax({
-            url: '/sherpa/cms/versjon/oppdater/' + $("article").attr('data-id') + '/',
+            url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
             type: 'POST',
             data: "rows=" + encodeURIComponent(JSON.stringify(rows)) +
                   "&columns=" + encodeURIComponent(JSON.stringify(columns)) +
