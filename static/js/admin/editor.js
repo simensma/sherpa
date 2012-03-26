@@ -145,66 +145,84 @@ $(document).ready(function() {
      */
 
     // Add a new row with columns
+    var insertable;
     $("#toolbar button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
         });
         insertables("Klikk her for å sette inn en rad", $("article"), function(event) {
-            var choice = Number(prompt("0, 1, 2, 3?"));
-            if(!isNaN(choice)) {
-                var insertable = $(this);
-                var columns;
-                if(choice == 0) {
-                    columns = [{span: 12, offset: 0, order: 0}]
-                } else if(choice == 1) {
-                    columns = [{span: 6, offset: 0, order: 0},
-                               {span: 6, offset: 0, order: 1}]
-                } else if(choice == 2) {
-                    columns = [{span: 9, offset: 0, order: 0},
-                               {span: 3, offset: 0, order: 1}]
-                } else if(choice == 3) {
-                    columns = [{span: 4, offset: 0, order: 0},
-                               {span: 4, offset: 0, order: 1},
-                               {span: 4, offset: 0, order: 2}]
-                }
-                var order = insertable.prevAll(":not(.insertable)").length;
-                $.ajax({
-                    url: '/sherpa/cms/kolonner/ny/',
-                    type: 'POST',
-                    data: "version=" + encodeURIComponent($("article").attr("data-id")) +
-                          "&order=" + encodeURIComponent(order) +
-                          "&columns=" + encodeURIComponent(JSON.stringify(columns))
-                }).done(function(result) {
-                    var wrapper = $('<div class="row"></div>');
-                    for(var i=0; i<columns.length; i++) {
-                        wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
-                            columns[i].offset + '"></div>'));
-                    }
-                    var prev = insertable.prev();
-                    if(prev.length == 0) {
-                        insertable.parent().prepend(wrapper);
-                    } else {
-                        prev.after(wrapper);
-                    }
-                    var ids = JSON.parse(result);
-                    wrapper.attr("data-id", ids[0]);
-                    var i = 1;
-                    wrapper.children().each(function() {
-                        $(this).attr("data-id", ids[i++]);
-                        setEmpty($(this));
-                    });
-                    wrapper.sortable({disabled: true});
-                    refreshSort();
-                }).fail(function(result) {
-                    // Todo
-                }).always(function(result) {
-                    $("article .insertable").remove();
-                    disableOverlay();
-                    enableToolbar();
-                });
-            }
+            $("#dialog-columns").dialog('open');
+            insertable = $(this);
         });
     });
+
+    $("#dialog-columns img.full").click(function() {
+        $(this).parents("#dialog-columns").dialog('close');
+        addColumns(0);
+    });
+    $("#dialog-columns img.sidebar").click(function() {
+        $(this).parents("#dialog-columns").dialog('close');
+        addColumns(1);
+    });
+    $("#dialog-columns img.two").click(function() {
+        $(this).parents("#dialog-columns").dialog('close');
+        addColumns(2);
+    });
+    $("#dialog-columns img.three").click(function() {
+        $(this).parents("#dialog-columns").dialog('close');
+        addColumns(3);
+    });
+
+    function addColumns(choice) {
+        if(choice == 0) {
+            columns = [{span: 12, offset: 0, order: 0}]
+        } else if(choice == 1) {
+            columns = [{span: 9, offset: 0, order: 0},
+                       {span: 3, offset: 0, order: 1}]
+        } else if(choice == 2) {
+            columns = [{span: 6, offset: 0, order: 0},
+                       {span: 6, offset: 0, order: 1}]
+        } else if(choice == 3) {
+            columns = [{span: 4, offset: 0, order: 0},
+                       {span: 4, offset: 0, order: 1},
+                       {span: 4, offset: 0, order: 2}]
+        }
+        var order = insertable.prevAll(":not(.insertable)").length;
+        $.ajax({
+            url: '/sherpa/cms/kolonner/ny/',
+            type: 'POST',
+            data: "version=" + encodeURIComponent($("article").attr("data-id")) +
+                  "&order=" + encodeURIComponent(order) +
+                  "&columns=" + encodeURIComponent(JSON.stringify(columns))
+        }).done(function(result) {
+            var wrapper = $('<div class="row"></div>');
+            for(var i=0; i<columns.length; i++) {
+                wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
+                    columns[i].offset + '"></div>'));
+            }
+            var prev = insertable.prev();
+            if(prev.length == 0) {
+                insertable.parent().prepend(wrapper);
+            } else {
+                prev.after(wrapper);
+            }
+            var ids = JSON.parse(result);
+            wrapper.attr("data-id", ids[0]);
+            var i = 1;
+            wrapper.children().each(function() {
+                $(this).attr("data-id", ids[i++]);
+                setEmpty($(this));
+            });
+            wrapper.sortable({disabled: true});
+            refreshSort();
+        }).fail(function(result) {
+            // Todo
+        }).always(function(result) {
+            $("article .insertable").remove();
+            disableOverlay();
+            enableToolbar();
+        });
+    }
 
     // Remove a row and all its content
     $("#toolbar .tab-pane.structure button.remove-columns").click(function() {

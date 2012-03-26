@@ -199,3 +199,14 @@ article .moveable.vertical {
 #toolbar div.button.align-right.active {
   background-image: url('/static/img/editorbuttons/align-right-active.png') !important;
 }
+
+#dialog-columns h1 {
+  font-size: 140%;
+  text-align: center;
+}
+
+#dialog-columns img:hover {
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
