@@ -21,7 +21,7 @@
         {% endif %}
         <th>Personopplysninger</th>
         <th>Medlemskategori</th>
-        <th><a href="{% url enrollment.views.types %}" target="_blank">Pris</a></th>
+        <th>Pris</th>
       </tr>
     </thead>
     <tbody>
@@ -33,16 +33,23 @@
       </tr>
       {% endif %}
       {% for user in users %}
-        <tr data-index="{{ user.index }}" data-age="{{ user.age }}">
+        <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
           {% if multiple_main and not existing and user.age > 18 %}
             <td class="choose-main">
               <button class="btn main">Velg</button>
               <span class="main">Hovedmedlem</span>
             </td>
           {% endif %}
+          {% if multiple_main and not existing and user.age <= 18 %}
+            <td></td>
+          {% endif %}
           <td>
             {{ user.name }}<br>
             {{ user.dob|date:"d. N Y" }}<br>
+            {% if users|length == 1 and not existing %}
+              {{ address }}<br>
+              {{ zipcode }} {{ location }}<br>
+            {% endif %}
             {{ user.phone }}<br>
             {{ user.email }}
           </td>
@@ -50,6 +57,7 @@
           <td><span class="price"></span>,-</td>
         </tr>
       {% endfor %}
+      {% if users|length > 1 or existing %}
       <tr>
         {% if multiple_main and not existing %}
           <td></td>
@@ -61,6 +69,7 @@
         </td>
         <td colspan="2"></td>
       </tr>
+      {% endif %}
       {% if keycount > 0 %}
       <tr>
         {% if multiple_main and not existing %}
@@ -73,7 +82,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
+        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt<a href="{% url enrollment.views.types %}" target="_blank" class="pricelist">(Se prisliste)</a></th>
         <th><span class="totalprice"></span>,-</th>
       </tr>
     </tfoot>

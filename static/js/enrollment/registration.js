@@ -82,18 +82,20 @@ $(document).ready(function() {
     });
 
     $("form#registration button").click(function(e) {
-        // Check that conditions checkbox is checked
-        if(!$("form#registration input.conditions").prop('checked') && !e.isDefaultPrevented()) {
-            e.preventDefault();
-            alert("Du kan ikke melde deg inn med mindre du har lest og godtatt betingelsene.");
-            return;
-        }
-
         // Warn if email is not provided
         if($("form#registration input[name='email']").val() == "") {
             if(!confirm("Du har ikke oppgitt epost-adresse. Uten den vil du ikke kunne logge inn på min side, endre dine brukeropplysninger senere, benytte fjelltreffen eller motta viktig informasjon fra oss.\n\nEr du sikker på at du vil fortsette?")) {
                 e.preventDefault();
             }
+        }
+    });
+
+    $("a.step2").click(function(e) {
+        // Check that conditions checkbox is checked
+        if(!$("input.conditions").prop('checked')) {
+            e.preventDefault();
+            alert("Du kan ikke gå videre med mindre du har lest og godtatt betingelsene.");
+            return;
         }
     });
 

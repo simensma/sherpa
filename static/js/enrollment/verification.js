@@ -8,16 +8,57 @@ var price_child = 110;
 
 $(document).ready(function() {
 
-    // Figure out the initial main user - the one with lowest age over 18
+    /**
+     * Calculate who should be the main user.
+     *  - Either the cheapest choice,
+     *  - or if there is no price difference; the first registered user.
+     */
     if($("table.prices tr.main").length == 0) {
-        var current;
-        $("table.prices tr[data-age]").each(function() {
-            var age = $(this).attr('data-age');
-            if(current === undefined || (age < current.attr('data-age') && age > 18)) {
-                current = $(this);
+        var high, low;
+        var users = $("table.prices tr[data-age]");
+        users.each(function() {
+            if($(this).attr('data-age') <= 18) {
+                // 18 and below can't be main members, so ignore this result
+                return;
+            }
+            var main = $(this);
+            var totalPrice = 0;
+            totalPrice += priceOf($(this).attr('data-age'));
+            users.each(function() {
+                if($(this).get(0) == main.get(0)) {
+                    return;
+                }
+                var agePrice = priceOf($(this).attr('data-age'));
+                if(agePrice > price_household) {
+                    totalPrice += price_household;
+                } else {
+                    totalPrice += agePrice;
+                }
+            });
+            var row = {
+                index: $(this).index(),
+                price: totalPrice,
+                name: $(this).attr('data-name'),
+                age: $(this).attr('data-age')
+            };
+            if(high === undefined || row.price > high.price) {
+                high = row;
+            }
+            if(low === undefined || row.price < low.price) {
+                low = row;
             }
         });
-        current.addClass('main');
+
+        if(high != low) {
+            // Recommend the cheapest price
+            $("table.prices tr[data-age]").eq(low.index).addClass('main');
+            var info = $('<div class="offset3 span6"><div class="alert alert-info"><a class="close">x</a><strong>Rabattmulighet</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div></div>');
+            info.find("a.close").click(function() { $(this).parent().remove(); });
+            $("table.prices").parent().before(info);
+        } else {
+            // No price differences, set the first member as main member
+            $("table.prices tr[data-age]").eq(0).addClass('main');
+        }
     }
 
     calculatePrices();

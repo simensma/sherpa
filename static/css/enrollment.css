@@ -63,6 +63,12 @@ table.prices tfoot tr th {
     font-size: 120%;
 }
 
+table.prices tfoot a.pricelist {
+    float: right;
+    font-size: 90%;
+    margin-right: 10px;
+}
+
 p.address {
     border: 1px solid #dddddd;
     padding: 12px;
