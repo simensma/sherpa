@@ -4,32 +4,32 @@
 
 /* promo widget */
 
-div.promo {
+div.widget div.promo {
   width: 100%;
   background-color: rgb(216, 42, 32);
   height: 511px; /* The height of the background-image */
 }
 
-div.promo div.left {
+div.widget div.promo div.left {
   float: left;
   background: url('/static/img/widgets/promo/komdegut.jpg') no-repeat 100% 100%;
   width: 50%;
   height: 100%;
 }
 
-div.promo div.left div.menu {
+div.widget div.promo div.left div.menu {
   position: relative;
   float: left;
   z-index: 1;
 }
 
-div.promo div.left div.menu ul {
+div.widget div.promo div.left div.menu ul {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-div.promo div.left div.menu li {
+div.widget div.promo div.left div.menu li {
   padding: 5px;
   background-color: white;
   border: 1px solid #777;
@@ -37,17 +37,17 @@ div.promo div.left div.menu li {
   color: #777;
 }
 
-div.promo div.right {
+div.widget div.promo div.right {
   width: 46%;
   padding: 2% 2% 2% 52%;
   color: white;
 }
 
-div.promo div.right p.lede {
+div.widget div.promo div.right p.lede {
   font-variant: small-caps;
   font-style: italic;
 }
 
-div.promo div.right img {
+div.widget div.promo div.right img {
   padding-left: 10%;
 }

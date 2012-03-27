@@ -9,7 +9,9 @@
         {% if content.type == 'h' %}
           {{ content.content|safe }}
         {% else %}
-          {% include content.widget.template with widget=content.widget %}
+          <div class="widget">
+            {% include content.widget.template with widget=content.widget %}
+          </div>
         {% endif %}
       {% endfor %}
     </div>
