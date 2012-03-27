@@ -161,22 +161,36 @@ $(document).ready(function() {
         }, function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
-            enableOverlay();
+            doneRemoving();
             var content = $(this);
-            $.ajax({
-                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                if(content.siblings().length == 0) {
-                    setEmpty(content.parent());
-                }
-                content.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                doneRemoving();
-                disableOverlay();
+            content.hide();
+            var confirmation = $('<div class="alert alert-danger"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
+            content.before(confirmation);
+            confirmation.find("button.cancel").click(function() {
+                confirmation.remove();
+                content.show();
+                content.removeClass('hover-remove');
+                content.find(".editable").focusout();
+                $("#toolbar button.cancel").click();
+            });
+            confirmation.find("button.confirm").click(function() {
+                confirmation.remove();
+                enableOverlay();
+                $.ajax({
+                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                    type: 'POST'
+                }).done(function(result) {
+                    if(content.siblings().length == 0) {
+                        setEmpty(content.parent());
+                    }
+                    content.remove();
+                }).fail(function(result) {
+                    // Todo
+                }).always(function(result) {
+                    refreshSort();
+                    doneRemoving();
+                    disableOverlay();
+                });
             });
         });
     });
