@@ -103,6 +103,7 @@ $(document).ready(function() {
     });
 
     // Add widget
+    var prev, parent, column, order;
     $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -115,8 +116,11 @@ $(document).ready(function() {
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             $("#dialog-add-widget").dialog('open');
-            insertable = $(this);
             enableToolbar();
+            prev = $(this).prev();
+            parent = $(this).parent();
+            column = $(this).parent(".column").attr("data-id");
+            order = $(this).prevAll(":not(.insertable)").length;
             $("article .insertable").remove();
         });
     });
@@ -138,8 +142,7 @@ $(document).ready(function() {
             author: $("div.dialog.widget-edit.quote input[name='author']").val()
         });
         $(this).parents(".dialog").dialog('close');
-        addContent(insertable.prev(), insertable.parent(), insertable.parent(".column").attr("data-id"),
-            insertable.prevAll(":not(.insertable)").length, content, 'w', widgetAdded);
+        addContent(prev, parent, column, order, content, 'w', widgetAdded);
     });
 
     // Remove content (text/image/widget)
