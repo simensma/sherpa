@@ -1,7 +1,9 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from page.models import Menu, Row, Column, Content
+
+from page.models import Row, Column, Content
+
 import json
 
 def parse_content(request, version):
