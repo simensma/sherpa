@@ -136,12 +136,12 @@ $(document).ready(function() {
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
             enableEditing();
-            $("article .content").off('hover click');
+            $("article .content, article .widget").off('hover click');
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $("article .content").hover(function() {
+        $("article .content, article .widget").hover(function() {
             $(this).addClass('hover-remove');
         }, function() {
             $(this).removeClass('hover-remove');
