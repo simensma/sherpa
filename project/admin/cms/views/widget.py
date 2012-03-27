@@ -7,10 +7,10 @@ import json
 # General widget-parser
 def parse_widget(widget):
     if(widget['widget'] == "quote"):
-        return {'template': 'admin/cms/editor/advanced/widgets/quote.html',
-        'quote': widget['quote'], 'author': widget['author']}
+        return {'template': 'widgets/quote/display.html',
+            'quote': widget['quote'], 'author': widget['author']}
     elif(widget['widget'] == "promo"):
-        return {'template': 'admin/cms/editor/advanced/widgets/promo.html'}
+        return {'template': 'widgets/promo/display.html'}
 
 # Delete a widget
 @login_required
