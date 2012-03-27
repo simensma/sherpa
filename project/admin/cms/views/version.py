@@ -34,7 +34,7 @@ def edit(request, version):
                 column.contents = contents
             row.columns = columns
         context = {'rows': rows, 'version': version}
-        return render(request, 'admin/cms/editor/advanced/editor.html', context)
+        return render(request, 'admin/cms/edit.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)
         for row in json.loads(request.POST['rows']):
