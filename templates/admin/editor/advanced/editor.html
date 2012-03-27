@@ -31,6 +31,7 @@
 
 </article>
 
+{# Adding columns #}
 <div id="dialog-columns" class="dialog" data-title="Velg kolonnestruktur" data-width="auto">
   <h1>Én kolonne:</h1>
   <p><img src="{{ STATIC_URL }}img/columns/full.png" class="full" alt="Én kolonne"></p>
@@ -45,6 +46,7 @@
   <p><img src="{{ STATIC_URL }}img/columns/three.png" class="three" alt="Tre kolonner"></p>
 </div>
 
+{# Main toolbar #}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
@@ -111,4 +113,23 @@
     </div>
     <div style="clear: both;"></div>
   </div>
+</div>
+
+{# Adding widgets #}
+<div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
+
+  <div class="widget-thumbnail">
+    <p>
+      <img src="{{ STATIC_URL }}img/widgets/promo/thumbnail.png" alt="Promo">
+      Promo
+    </p>
+  </div>
+
+  <div class="widget-thumbnail">
+    <p>
+      <img src="{{ STATIC_URL }}img/widgets/quote/thumbnail.png" alt="Sitat">
+      Sitat
+    </p>
+  </div>
+
 </div>

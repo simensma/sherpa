@@ -210,3 +210,23 @@ article .moveable.vertical {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
+
+#dialog-add-widget div.widget-thumbnail {
+  cursor: pointer;
+  float: left;
+  margin: 12px;
+  padding: 10px;
+  border: 1px solid rgb(0, 0, 0);
+  min-height: 200px;
+  text-align: center;
+}
+
+#dialog-add-widget div.widget-thumbnail img {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#dialog-add-widget div.widget-thumbnail p {
+  font-size: 160%;
+  font-weight: bold;
+}

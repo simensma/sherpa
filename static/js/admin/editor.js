@@ -5,6 +5,7 @@ $(document).ready(function() {
      * Initialization
      */
 
+    var insertable;
     $("div.no-save-warning").hide();
     selectableContent($(".editable"));
     setEmpties();
@@ -100,12 +101,16 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            // Todo: insert widget
+            $("#dialog-add-widget").dialog('open');
+            insertable = $(this);
             enableToolbar();
             $("article .insertable").remove();
             refreshSort();
             setEmpties();
         });
+    });
+    $("#dialog-add-widget div.widget-thumbnail").click(function() {
+        $(this).parents("#dialog-add-widget").dialog('close');
     });
 
     // Remove content (text/image/widget)
@@ -145,7 +150,6 @@ $(document).ready(function() {
      */
 
     // Add a new row with columns
-    var insertable;
     $("#toolbar button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
