@@ -291,19 +291,33 @@ $(document).ready(function() {
         }, function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
-            enableOverlay();
             var row = $(this);
-            $.ajax({
-                url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                row.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                doneRemoving();
-                disableOverlay();
+            row.hide();
+            doneRemoving();
+            var confirmation = $('<div class="alert alert-danger"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
+            row.before(confirmation);
+            confirmation.find("button.cancel").click(function() {
+                confirmation.remove();
+                row.show();
+                row.removeClass('hover-remove');
+                row.find(".editable").focusout();
+                $("#toolbar button.cancel").click();
+            });
+            confirmation.find("button.confirm").click(function() {
+                confirmation.remove();
+                enableOverlay();
+                $.ajax({
+                    url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
+                    type: 'POST'
+                }).done(function(result) {
+                    row.remove();
+                }).fail(function(result) {
+                    // Todo
+                }).always(function(result) {
+                    refreshSort();
+                    doneRemoving();
+                    disableOverlay();
+                });
             });
         });
     });
