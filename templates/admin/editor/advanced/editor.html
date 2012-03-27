@@ -21,7 +21,7 @@
         {% if content.type == 'h' %}
           <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
-          <div class="widget">
+          <div class="widget" data-id="{{ content.id }}">
             {% include content.widget.template with widget=content.widget %}
           </div>
         {% endif %}
