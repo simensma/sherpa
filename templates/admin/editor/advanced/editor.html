@@ -120,18 +120,7 @@
 {# Adding widgets #}
 <div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
 
-  <div class="widget-thumbnail promo">
-    <p>
-      <img src="{{ STATIC_URL }}img/widgets/promo/thumbnail.png" alt="Promo">
-      Promo
-    </p>
-  </div>
-
-  <div class="widget-thumbnail quote">
-    <p>
-      <img src="{{ STATIC_URL }}img/widgets/quote/thumbnail.png" alt="Sitat">
-      Sitat
-    </p>
-  </div>
+  {% include 'widgets/promo/thumbnail.html' %}
+  {% include 'widgets/quote/thumbnail.html' %}
 
 </div>
