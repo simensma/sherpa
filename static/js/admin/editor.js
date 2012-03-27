@@ -156,20 +156,19 @@ $(document).ready(function() {
         });
     });
 
-    $("#dialog-columns img.full").click(function() {
+    $("#dialog-columns img").click(function() {
         $(this).parents("#dialog-columns").dialog('close');
+    })
+    $("#dialog-columns img.full").click(function() {
         addColumns(0);
     });
     $("#dialog-columns img.sidebar").click(function() {
-        $(this).parents("#dialog-columns").dialog('close');
         addColumns(1);
     });
     $("#dialog-columns img.two").click(function() {
-        $(this).parents("#dialog-columns").dialog('close');
         addColumns(2);
     });
     $("#dialog-columns img.three").click(function() {
-        $(this).parents("#dialog-columns").dialog('close');
         addColumns(3);
     });
 
