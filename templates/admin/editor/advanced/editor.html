@@ -48,6 +48,12 @@
   <p><img src="{{ STATIC_URL }}img/columns/three.png" class="three" alt="Tre kolonner"></p>
 </div>
 
+{# Adding widgets #}
+<div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
+  {% include 'widgets/promo/thumbnail.html' %}
+  {% include 'widgets/quote/thumbnail.html' %}
+</div>
+
 {# Main toolbar #}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
@@ -115,12 +121,4 @@
     </div>
     <div style="clear: both;"></div>
   </div>
-</div>
-
-{# Adding widgets #}
-<div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
-
-  {% include 'widgets/promo/thumbnail.html' %}
-  {% include 'widgets/quote/thumbnail.html' %}
-
 </div>
