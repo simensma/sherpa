@@ -5,6 +5,8 @@ from django.db.models import Max
 from django.contrib.auth.decorators import login_required
 from project.page.models import Variant, Version, Row, Column, Content
 
+from widget import parse_widget
+
 import json
 
 @login_required
