@@ -122,6 +122,7 @@ $(document).ready(function() {
             column = $(this).parent(".column").attr("data-id");
             order = $(this).prevAll(":not(.insertable)").length;
             $("article .insertable").remove();
+            setEmpties();
         });
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
@@ -131,6 +132,7 @@ $(document).ready(function() {
 
     function widgetAdded() {
         refreshSort();
+        removeEmpties();
         setEmpties();
     }
 
