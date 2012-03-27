@@ -111,6 +111,7 @@ $(document).ready(function() {
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
         $(this).parents("#dialog-add-widget").dialog('close');
+        $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
     });
 
     // Remove content (text/image/widget)
