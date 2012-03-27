@@ -50,7 +50,7 @@ $(document).ready(function() {
                 refreshSort();
                 setEmpties();
             }
-            addContent($(event.target), content, 'h', done);
+            addContent($(event.target), $("<div/>").append(content).html(), 'h', done);
         });
     });
 
@@ -85,7 +85,7 @@ $(document).ready(function() {
                 disableOverlay();
                 image.click();
             }
-            addContent($(event.target), content, 'h', done);
+            addContent($(event.target), $("<div/>").append(content).html(), 'h', done);
         });
     });
 
@@ -583,7 +583,7 @@ $(document).ready(function() {
             type: 'POST',
             data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
                   "&order=" + encodeURIComponent(order) +
-                  "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
+                  "&content=" + encodeURIComponent(content) +
                   "&type=" + encodeURIComponent(type)
         }).done([function(result) {
             var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
