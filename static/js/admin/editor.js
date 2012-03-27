@@ -146,6 +146,7 @@ $(document).ready(function() {
         }, function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
+            enableOverlay();
             var content = $(this);
             $.ajax({
                 url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
@@ -160,6 +161,7 @@ $(document).ready(function() {
             }).always(function(result) {
                 refreshSort();
                 doneRemoving();
+                disableOverlay();
             });
         });
     });
@@ -260,6 +262,7 @@ $(document).ready(function() {
         }, function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
+            enableOverlay();
             var row = $(this);
             $.ajax({
                 url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
@@ -271,6 +274,7 @@ $(document).ready(function() {
             }).always(function(result) {
                 refreshSort();
                 doneRemoving();
+                disableOverlay();
             });
         });
     });
