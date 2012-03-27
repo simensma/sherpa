@@ -22,13 +22,6 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^kolonner/ny/$', 'row.add_columns'),
     url(r'^rad/slett/(?P<row>\d+)/$', 'row.delete'),
 
-    # Widgets
-    url(r'^widget/opprett/sitat/$', 'widget.add_quote'),
-    url(r'^widget/oppdater/sitat/$', 'widget.edit_quote'),
-    url(r'^widget/opprett/promo/$', 'widget.add_promo'),
-    url(r'^widget/oppdater/promo/$', 'widget.edit_promo'),
-    url(r'^widget/slett/(?P<widget>\d+)/$', 'widget.delete'),
-
     # Content
     url(r'^innhold/ny/$', 'content.add'),
     url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
