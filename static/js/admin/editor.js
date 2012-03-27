@@ -41,14 +41,17 @@ $(document).ready(function() {
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $('<div class="editable"><p><br></p></div>');
-            function done() {
-                selectableContent(content);
-                autoRemoveEmptyContent(content);
+            function done(wrapper) {
+                var editable = wrapper.find(".editable");
+                selectableContent(editable);
+                autoRemoveEmptyContent(editable);
                 if(sortState == 'formatting') {
-                    content.attr('contenteditable', 'true').focus();
+                    editable.attr('contenteditable', 'true').focus();
                 }
                 refreshSort();
                 setEmpties();
+                editable.click();
+                editable.focus();
             }
             addContent($(event.target), $("<div/>").append(content).html(), 'h', done);
         });
@@ -70,9 +73,11 @@ $(document).ready(function() {
             var br = $('<br>');
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
             var content = $("<div/>").append(image, br, editable);
-            function done() {
+            function done(wrapper) {
+                var editable = wrapper.find(".editable");
+                var image = wrapper.find("img.changeable");
                 selectableContent(editable);
-                autoRemoveEmptyContent(content);
+                autoRemoveEmptyContent(wrapper.find(".editable"));
                 changeableImages(image);
                 if(sortState == 'formatting') {
                     editable.attr('contenteditable', 'true');
@@ -598,18 +603,25 @@ $(document).ready(function() {
                   "&order=" + encodeURIComponent(order) +
                   "&content=" + encodeURIComponent(content) +
                   "&type=" + encodeURIComponent(type)
-        }).done([function(result) {
+        }).done(function(result) {
+            result = JSON.parse(result);
+            var contentClass;
             if(type == 'h') {
-                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
-                var prev = insertable.prev();
-                if(prev.length == 0) {
-                    insertable.parent().prepend(wrapper);
-                } else {
-                    prev.after(wrapper);
-                }
+                contentClass = 'content';
+            } else if(type == 'w') {
+                contentClass = 'widget';
             }
-        }, done]).fail(function(result) {
+            var wrapper = $('<div class="' + contentClass + '" data-id="' + result.id + '"></div>').append(result.content);
+            var prev = insertable.prev();
+            if(prev.length == 0) {
+                insertable.parent().prepend(wrapper);
+            } else {
+                prev.after(wrapper);
+            }
+            done(wrapper);
+        }).fail(function(result) {
             // Todo
+            $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
             $("article .insertable").remove();
