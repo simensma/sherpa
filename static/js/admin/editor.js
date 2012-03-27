@@ -53,7 +53,10 @@ $(document).ready(function() {
                 editable.click();
                 editable.focus();
             }
-            addContent($(event.target), $("<div/>").append(content).html(), 'h', done);
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length,
+                $("<div/>").append(content).html(), 'h', done);
         });
     });
 
@@ -90,7 +93,10 @@ $(document).ready(function() {
                 disableOverlay();
                 image.click();
             }
-            addContent($(event.target), $("<div/>").append(content).html(), 'h', done);
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length,
+                $("<div/>").append(content).html(), 'h', done);
         });
     });
 
@@ -129,7 +135,8 @@ $(document).ready(function() {
             author: $("div.dialog.widget-edit.quote input[name='author']").val()
         });
         $(this).parents(".dialog").dialog('close');
-        addContent(insertable, content, 'w', widgetAdded);
+        addContent(insertable.prev(), insertable.parent(), insertable.parent(".column").attr("data-id"),
+            insertable.prevAll(":not(.insertable)").length, content, 'w', widgetAdded);
     });
 
     // Remove content (text/image/widget)
@@ -597,13 +604,12 @@ $(document).ready(function() {
      */
 
     /* Add content-objects to some column */
-    function addContent(insertable, content, type, done) {
+    function addContent(prev, parent, column, order, content, type, done) {
         enableOverlay();
-        var order = insertable.prevAll(":not(.insertable)").length;
         $.ajax({
             url: '/sherpa/cms/innhold/ny/',
             type: 'POST',
-            data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
+            data: "column=" + encodeURIComponent(column) +
                   "&order=" + encodeURIComponent(order) +
                   "&content=" + encodeURIComponent(content) +
                   "&type=" + encodeURIComponent(type)
@@ -616,9 +622,8 @@ $(document).ready(function() {
                 contentClass = 'widget';
             }
             var wrapper = $('<div class="' + contentClass + '" data-id="' + result.id + '"></div>').append(result.content);
-            var prev = insertable.prev();
             if(prev.length == 0) {
-                insertable.parent().prepend(wrapper);
+                parent.prepend(wrapper);
             } else {
                 prev.after(wrapper);
             }
