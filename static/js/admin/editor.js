@@ -104,14 +104,27 @@ $(document).ready(function() {
             $("#dialog-add-widget").dialog('open');
             insertable = $(this);
             enableToolbar();
-            $("article .insertable").remove();
-            refreshSort();
-            setEmpties();
         });
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
         $(this).parents("#dialog-add-widget").dialog('close');
         $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
+    });
+
+    function widgetAdded() {
+        refreshSort();
+        setEmpties();
+    }
+
+    // Quote-widget
+    $("div.dialog.widget-edit.quote button.save").click(function() {
+        var content = JSON.stringify({
+            widget: "quote",
+            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
+            author: $("div.dialog.widget-edit.quote input[name='author']").val()
+        });
+        $(this).parents(".dialog").dialog('close');
+        addContent(insertable, content, 'w', widgetAdded);
     });
 
     // Remove content (text/image/widget)
@@ -586,12 +599,14 @@ $(document).ready(function() {
                   "&content=" + encodeURIComponent(content) +
                   "&type=" + encodeURIComponent(type)
         }).done([function(result) {
-            var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
-            var prev = insertable.prev();
-            if(prev.length == 0) {
-                insertable.parent().prepend(wrapper);
-            } else {
-                prev.after(wrapper);
+            if(type == 'h') {
+                var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
+                var prev = insertable.prev();
+                if(prev.length == 0) {
+                    insertable.parent().prepend(wrapper);
+                } else {
+                    prev.after(wrapper);
+                }
             }
         }, done]).fail(function(result) {
             // Todo
