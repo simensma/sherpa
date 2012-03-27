@@ -52,6 +52,7 @@ $(document).ready(function() {
                 setEmpties();
                 editable.click();
                 editable.focus();
+                $("article .insertable").remove();
             }
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
@@ -92,6 +93,7 @@ $(document).ready(function() {
                 // after this callback is done, so we'll just disable it twice.
                 disableOverlay();
                 image.click();
+                $("article .insertable").remove();
             }
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
@@ -115,6 +117,7 @@ $(document).ready(function() {
             $("#dialog-add-widget").dialog('open');
             insertable = $(this);
             enableToolbar();
+            $("article .insertable").remove();
         });
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
@@ -633,7 +636,6 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
-            $("article .insertable").remove();
             disableOverlay();
         });
     }
