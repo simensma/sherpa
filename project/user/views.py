@@ -28,7 +28,7 @@ def login(request):
                 context = {'error': "Din konto er blitt dekativert."}
                 return render(request, 'user/login.html', context)
         else:
-            context = {'error': "Ugyldig brukernavn og/eller passord."}
+            context = {'error': "Ugyldig brukernavn og/eller passord.", 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)
 
 def logout(request):
