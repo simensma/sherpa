@@ -54,31 +54,31 @@
     <input type="hidden" name="user" value="{{ user.index }}">
   {% endif %}
   <div class="control-group name">
-    <label>Fullt navn <span class="asterisk">*</span></label>
+    <label>Fullt navn <span class="asterisk red">*</span></label>
     <input type="text" class="span3" name="name" value="{{ user.name }}">
   </div>
   <div class="control-group dob">
-    <label>Fødselsdato (dd.mm.åååå) <span class="asterisk">*</span></label>
+    <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
     <input type="text" class="span2 dob" name="dob" value="{{ user.dob|date:"d.m.Y" }}">
   </div>
   <div class="address">
     <div class="control-group address">
-      <label> Adresse <span class="asterisk">*</span></label>
+      <label> Adresse <span class="asterisk red">*</span></label>
       <input type="text" class="span3" name="address" value="{{ address }}">
     </div>
     <div class="control-group zipcode">
-      <label> Postnummer / Poststed <span class="asterisk">*</span></label>
+      <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
       <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
       <input type="text" class="span2" name="location" disabled>
       <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
     </div>
   </div>
   <div class="control-group phone">
-    <label> Telefon / Mobil <span class="asterisk red">*</span></label>
+    <label> Telefon / Mobil <span class="asterisk">*</span></label>
     <input type="text" class="span2" name="phone" value="{{ user.phone }}">
   </div>
   <div class="control-group email">
-    <label> Epost <span class="asterisk red">*</span></label>
+    <label> Epost <span class="asterisk">*</span></label>
     <input type="text" class="span3" name="email" value="{{ user.email }}">
   </div>
   <label class="checkbox">
@@ -135,8 +135,8 @@
 <div class="span3">
   <div class="well">
     <p>
-      <span class="asterisk">*</span> = Obligatorisk felt<br>
-      <span class="asterisk red">*</span> = Obligatorisk for én person (for deg som melder inn flere)
+      <span class="asterisk red">*</span> = Obligatorisk felt<br>
+      <span class="asterisk">*</span> = Obligatorisk for én person (for deg som melder inn flere)
     </p>
   </div>
 </div>
