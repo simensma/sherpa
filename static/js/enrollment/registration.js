@@ -65,28 +65,15 @@ $(document).ready(function() {
     });
 
     $("form#registration input[name='phone']").focusout(function() {
-        if($(this).val().length < 8) {
+        if($(this).val() != "" && $(this).val().length < 8) {
             $(this).parents("div.control-group").addClass('error');
         }
     });
 
     $("form#registration input[name='email']").focusout(function() {
-        if($(this).val() == "") {
-            $(this).parents("div.control-group").addClass('warning');
-        } else {
-            if(!$(this).val().match(/.+@.+\..+/)) {
-                // Email provided, but invalid
-                $(this).parents("div.control-group").addClass('error');
-            }
-        }
-    });
-
-    $("form#registration button").click(function(e) {
-        // Warn if email is not provided
-        if($("form#registration input[name='email']").val() == "") {
-            if(!confirm("Du har ikke oppgitt epost-adresse. Uten den vil du ikke kunne logge inn på min side, endre dine brukeropplysninger senere, benytte fjelltreffen eller motta viktig informasjon fra oss.\n\nEr du sikker på at du vil fortsette?")) {
-                e.preventDefault();
-            }
+        if($(this).val() != "" && !$(this).val().match(/.+@.+\..+/)) {
+            // Email provided, but invalid
+            $(this).parents("div.control-group").addClass('error');
         }
     });
 

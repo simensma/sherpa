@@ -137,8 +137,9 @@ def validate_user(user):
     if user['name'] == '':
         return False
 
-    # Phone no. is less than 8 chars (allow >8, in case it's formatted with whitespace)
-    if len(user['phone']) < 8:
+    # Phone no. is non-empty (empty is allowed) and less than 8 chars
+    # (allow >8, in case it's formatted with whitespace)
+    if len(user['phone']) > 0 and len(user['phone']) < 8:
         return False
 
     # Email is non-empty (empty is allowed) and doesn't match an email
