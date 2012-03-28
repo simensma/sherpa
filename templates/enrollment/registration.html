@@ -39,7 +39,7 @@
 {% if saved and not errors %}
   <div class="alert alert-success">
     <a class="close">x</a><strong>Opplysningene er lagret.</strong><br>
-    Legg til flere medlemmer, eller klikk "Gå videre" i boksen til høyre.
+    Legg til flere medlemmer på samme adresse, eller klikk "Gå videre" i boksen til høyre.
   </div>
 {% endif %}
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
@@ -78,7 +78,7 @@
   <label class="checkbox">
     <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>
-  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
+  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% if users|length > 0 %} på samme adresse{% endif %}{% endif %}</button><br>
 </form>
 
 </div>
