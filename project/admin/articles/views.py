@@ -71,3 +71,8 @@ def save(request, version):
         content.content = newContent['content']
         content.save()
     return HttpResponse()
+
+@login_required
+def delete(request, article):
+    Article.objects.get(id=article).delete()
+    return HttpResponseRedirect(reverse('admin.articles.views.list'))
