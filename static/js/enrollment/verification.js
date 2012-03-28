@@ -57,7 +57,16 @@ $(document).ready(function() {
             $("table.prices").parent().before(info);
         } else {
             // No price differences, set the first member as main member
-            $("table.prices tr[data-age]").eq(0).addClass('main');
+            var done = false;
+            $("table.prices tr[data-age]").each(function() {
+                if(done) {
+                    return;
+                }
+                if($(this).attr('data-age') > 18) {
+                    $(this).addClass('main');
+                    done = true;
+                }
+            });
         }
     }
 
