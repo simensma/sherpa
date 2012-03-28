@@ -113,7 +113,7 @@ function calculatePrices() {
         var age = $(this).attr('data-age');
         var price = priceOf(age);
         var type = typeOf(age);
-        if(!$(this).hasClass('main')) {
+        if(!$(this).hasClass('main') && $(this).siblings(".main").length > 0) {
             if(price > price_household) {
                 price = price_household;
                 type = "Husstandsmedlem";
