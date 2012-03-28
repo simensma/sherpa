@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import re
 
 KEY_PRICE = 100
+contact_missing_key = 'mangler-kontaktinfo'
 
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
@@ -59,13 +60,14 @@ def registration(request, user):
                 request.session['registration']['users'].append(new_user)
             saved = True
 
+    contact_missing = request.GET.has_key(contact_missing_key)
     updateIndices(request)
 
     if not errors and request.POST.has_key('forward'):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
     context = {'users': request.session['registration']['users'], 'user': user,
-        'saved': saved, 'errors': errors,
+        'saved': saved, 'errors': errors, 'contact_missing': contact_missing,
         'address': request.session['registration'].get('address', ''),
         'zipcode': request.session['registration'].get('zipcode', ''),
         'conditions': request.session['registration'].get('conditions', '')}
@@ -84,6 +86,8 @@ def household(request):
     request.session['registration']['conditions'] = True
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_user_contact(request.session['registration']['users']):
+        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
         'existing': request.session['registration'].get('existing', '')}
@@ -94,6 +98,8 @@ def verification(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_user_contact(request.session['registration']['users']):
+        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     # Todo: verify that 'registration' is set in session
     request.session['registration']['existing'] = request.POST.get('existing', '')
     request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
@@ -172,3 +178,17 @@ def validate_location(address, zipcode):
 
     # All tests passed!
     return True
+
+# Check that at least one member has valid phone and email
+def validate_user_contact(users):
+    for user in users:
+        # Phone no. is less than 8 chars (allow >8, in case it's formatted with whitespace)
+        if len(user['phone']) < 8:
+            continue
+
+        # Email is doesn't match an email
+        if(len(re.findall('.+@.+\..+', user['email'])) == 0):
+            continue
+
+        return True
+    return False

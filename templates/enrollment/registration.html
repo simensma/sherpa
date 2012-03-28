@@ -36,6 +36,12 @@
     Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
   </div>
 {% endif %}
+{% if contact_missing %}
+  <div class="alert alert-error">
+    <a class="close">x</a><strong>Ugyldig kontaktinformasjon.</strong><br>
+    Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og epost).
+  </div>
+{% endif %}
 {% if saved and not errors %}
   <div class="alert alert-success">
     <a class="close">x</a><strong>Opplysningene er lagret.</strong><br>
