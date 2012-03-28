@@ -60,6 +60,10 @@ def registration(request, user):
             saved = True
 
     updateIndices(request)
+
+    if not errors and request.POST.has_key('forward'):
+        return HttpResponseRedirect(reverse("enrollment.views.household"))
+
     context = {'users': request.session['registration']['users'], 'user': user,
         'saved': saved, 'errors': errors,
         'address': request.session['registration'].get('address', ''),

@@ -108,7 +108,7 @@
     <label class="checkbox">
       <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
     </label>
-    <p><a href="{% url enrollment.views.household %}" class="btn btn-success btn-large step2">Gå videre <i class="icon-arrow-right"></i></a></p>
+    <p><a href="{% url enrollment.views.household %}" class="btn btn-success btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right"></i></a></p>
   </div>
 </div>
 {% endif %}

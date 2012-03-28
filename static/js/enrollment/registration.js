@@ -97,6 +97,10 @@ $(document).ready(function() {
             alert("Du kan ikke gå videre med mindre du har lest og godtatt betingelsene.");
             return;
         }
+        if($(this).hasClass('post')) {
+            e.preventDefault();
+            $("form#registration").prepend('<input type="hidden" name="forward" value="1">').submit();
+        }
     });
 
 });
