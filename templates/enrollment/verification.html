@@ -50,8 +50,8 @@
               {% if users|length == 1 and not existing %}
                 Adresse:<br><br>
               {% endif %}
-              Telefon:<br>
-              Epost:
+              {% if user.phone %}Telefon:<br>{% endif %}
+              {% if user.email %}Epost:{% endif %}
             </div>
             {{ user.name }}<br>
             {{ user.dob|date:"d. N Y" }}<br>
@@ -59,8 +59,8 @@
               {{ address }}<br>
               {{ zipcode }} {{ location }}<br>
             {% endif %}
-            {{ user.phone }}<br>
-            {{ user.email }}
+            {% if user.phone %}{{ user.phone }}<br>{% endif %}
+            {% if user.email %}{{ user.email }}{% endif %}
           </td>
           <td class="type"></td>
           <td><span class="price"></span>,-</td>
