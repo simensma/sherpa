@@ -54,7 +54,7 @@
               {% if user.email %}Epost:{% endif %}
             </div>
             {{ user.name }}<br>
-            {{ user.dob|date:"d. N Y" }}<br>
+            {{ user.dob|date:"d. F Y" }}<br>
             {% if users|length == 1 and not existing %}
               {{ address }}<br>
               {{ zipcode }} {{ location }}<br>
