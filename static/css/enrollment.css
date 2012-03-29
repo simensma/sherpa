@@ -107,3 +107,9 @@ span.asterisk {
 span.asterisk.red {
     color: red;
 }
+
+table.prices div.desc {
+    float: left;
+    margin-right: 10px;
+    font-style: italic;
+}

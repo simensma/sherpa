@@ -44,6 +44,15 @@
             <td></td>
           {% endif %}
           <td>
+            <div class="desc">
+              Navn:<br>
+              Født:<br>
+              {% if users|length == 1 and not existing %}
+                Adresse:<br><br>
+              {% endif %}
+              Telefon:<br>
+              Epost:
+            </div>
             {{ user.name }}<br>
             {{ user.dob|date:"d. N Y" }}<br>
             {% if users|length == 1 and not existing %}
