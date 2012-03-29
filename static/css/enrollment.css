@@ -110,6 +110,9 @@ span.asterisk.red {
 
 table.prices div.desc {
     float: left;
-    margin-right: 10px;
     font-style: italic;
+}
+
+table.prices div.data {
+    margin-left: 70px; /* estimated width of previous sibling div.desc */
 }

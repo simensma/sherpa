@@ -53,14 +53,16 @@
               {% if user.phone %}Telefon:<br>{% endif %}
               {% if user.email %}Epost:{% endif %}
             </div>
-            {{ user.name }}<br>
-            {{ user.dob|date:"j. F Y" }}<br>
-            {% if users|length == 1 and not existing %}
-              {{ address }}<br>
-              {{ zipcode }} {{ location }}<br>
-            {% endif %}
-            {% if user.phone %}{{ user.phone }}<br>{% endif %}
-            {% if user.email %}{{ user.email }}{% endif %}
+            <div class="data">
+              {{ user.name }}<br>
+              {{ user.dob|date:"j. F Y" }}<br>
+              {% if users|length == 1 and not existing %}
+                {{ address }}<br>
+                {{ zipcode }} {{ location }}<br>
+              {% endif %}
+              {% if user.phone %}{{ user.phone }}<br>{% endif %}
+              {% if user.email %}{{ user.email }}{% endif %}
+            </div>
           </td>
           <td class="type"></td>
           <td><span class="price"></span>,-</td>
