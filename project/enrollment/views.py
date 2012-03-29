@@ -30,10 +30,19 @@ def registration(request, user):
     errors = False
     if(request.method == 'POST'):
         new_user = {}
-        new_user['name'] = request.POST['name']
+        # If the name is all lowercase or uppercase, apply titling for them
+        # Else, assume that the specified case is intentional
+        if request.POST['name'].islower() or request.POST['name'].isupper():
+            new_user['name'] = request.POST['name'].title()
+        else:
+            new_user['name'] = request.POST['name']
         new_user['phone'] = request.POST['phone']
-        new_user['email'] = request.POST['email']
-        request.session['registration']['address'] = request.POST['address']
+        new_user['email'] = request.POST['email'].lower()
+        # Same capitalization on address as for name
+        if request.POST['address'].islower() or request.POST['address'].isupper():
+            request.session['registration']['address'] = request.POST['address'].title()
+        else:
+            request.session['registration']['address'] = request.POST['address']
         request.session['registration']['zipcode'] = request.POST['zipcode']
         if(request.POST.get('key') == 'on'):
             new_user['key'] = True
