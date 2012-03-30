@@ -3,9 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import Variant, Version, Row, Column, Content
 
-from widget import parse_widget
+from project.page.views_widgets import *
+from project.page.models import Variant, Version, Row, Column, Content
 
 import json
 

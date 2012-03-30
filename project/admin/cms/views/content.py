@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template import Context, loader
-from project.page.models import Column, Content
 
-from widget import parse_widget
+from project.page.models import Column, Content
+from project.page.views_widgets import parse_widget
 
 import json
 

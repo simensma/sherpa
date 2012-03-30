@@ -9,7 +9,7 @@ import json
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 
-from admin.cms.views.widget import parse_widget
+from page.views_widgets import parse_widget
 
 @login_required
 def list(request):
