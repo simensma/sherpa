@@ -17,14 +17,16 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}css/widgets.css" media="screen">
   {% block extra_css %}{% endblock %}
 </head>
-<body class="container">
+<body>
+
+<div class="container">
 
 <header>
   <div class="row">
     <div class="span6">
       <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}img/header-logo.png"></a>
     </div>
-    <div class="span6" style="text-align: right;">
+    <div class="span6 search">
       <form action="#" method="post" class="form-search">
         <input type="text" value="" class="input-medium search-query">
         <button type="submit" class="btn">Søk</button>
@@ -33,19 +35,27 @@
   </div>
 
   {% if menus %}
-  <nav>
-    <ul class="nav nav-tabs">
-      {% for menu in menus %}
-      <li{% if menu.page == page %} class="active"{% endif %}>
-        <a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">{{ menu.name }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </nav>
+  <div class="row">
+    <div class="offset1 span10">
+      <nav>
+        <ul class="nav nav-tabs">
+          {% for menu in menus %}
+          <li{% if menu.page == page %} class="active"{% endif %}>
+            <a href="/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">{{ menu.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </div>
   {% endif %}
 </header>
+
 {% block body %}{% endblock %}
-<footer>
+
+</div>
+
+<div class="container social-icons">
   <div class="row">
     <div class="span3">
       <img class="social" src="{{ STATIC_URL }}img/icons/social/turistforeningen.png">
@@ -68,56 +78,64 @@
       Se våre filmer
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="span3">
-      <h2>Tilbudet vårt</h2>
-      <ul>
-        <li><a href="#">Fellesturer</a></li>
-        <li><a href="#">Hytter</a></li>
-        <li><a href="#">Stier</a></li>
-        <li><a href="#">Kurs</a></li>
-        <li><a href="#">Bli turleder</a></li>
-        <li><a href="#">Kartbutikk</a></li>
-      </ul>
+<footer>
+  <div class="container">
+    <div class="row services">
+      <div class="span3">
+        <h2>Tilbudet vårt</h2>
+        <ul>
+          <li><a href="#">Fellesturer</a></li>
+          <li><a href="#">Hytter</a></li>
+          <li><a href="#">Stier</a></li>
+          <li><a href="#">Kurs</a></li>
+          <li><a href="#">Bli turleder</a></li>
+          <li><a href="#">Kartbutikk</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+        <h2>Interessegrupper</h2>
+        <ul>
+          <li><a href="#">Barnas Turlag</a></li>
+          <li><a href="#">Seniorgruppa</a></li>
+          <li><a href="#">Fjellsport</a></li>
+          <li><a href="#">Trilleturer</a></li>
+          <li><a href="#">Bli turleder</a></li>
+          <li><a href="#">DNT Ung</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+        <h2>Medlemsskap</h2>
+        <ul>
+          <li><a href="#">Bli medlem</a></li>
+          <li><a href="#">Bestill nøkkel</a></li>
+          <li><a href="#">Endre adresse</a></li>
+          <li><a href="#">Gavemedlem</a></li>
+          <li><a href="#">Bedriftstilbud</a></li>
+          <li><a href="#">Bidra</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+        <h2>Turistforeningen</h2>
+        <ul>
+          <li><a href="#">Kontakt oss</a></li>
+          <li><a href="#">Hva jobber DNT for?</a></li>
+          <li><a href="#">Magasiner/bøker</a></li>
+          <li><a href="#">Partnere</a></li>
+          <li><a href="#">Ledige stillinger</a></li>
+          <li><a href="#">Organisasjonen</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="span3">
-      <h2>Interessegrupper</h2>
-      <ul>
-        <li><a href="#">Barnas Turlag</a></li>
-        <li><a href="#">Seniorgruppa</a></li>
-        <li><a href="#">Fjellsport</a></li>
-        <li><a href="#">Trilleturer</a></li>
-        <li><a href="#">Bli turleder</a></li>
-        <li><a href="#">DNT Ung</a></li>
-      </ul>
+
+    <div class="row">
+      <div class="span12 sponsors">
+        <img src="{{ STATIC_URL }}img/samarbeid.png">
+      </div>
     </div>
-    <div class="span3">
-      <h2>Medlemsskap</h2>
-      <ul>
-        <li><a href="#">Bli medlem</a></li>
-        <li><a href="#">Bestill nøkkel</a></li>
-        <li><a href="#">Endre adresse</a></li>
-        <li><a href="#">Gavemedlem</a></li>
-        <li><a href="#">Bedriftstilbud</a></li>
-        <li><a href="#">Bidra</a></li>
-      </ul>
-    </div>
-    <div class="span3">
-      <h2>Turistforeningen</h2>
-      <ul>
-        <li><a href="#">Kontakt oss</a></li>
-        <li><a href="#">Hva jobber DNT for?</a></li>
-        <li><a href="#">Magasiner/bøker</a></li>
-        <li><a href="#">Partnere</a></li>
-        <li><a href="#">Ledige stillinger</a></li>
-        <li><a href="#">Organisasjonen</a></li>
-      </ul>
-    </div>
+
   </div>
-
-  <img src="{{ STATIC_URL }}img/samarbeid.png">
-
 </footer>
 
 </body>
