@@ -177,6 +177,17 @@ def upload_image(request, album):
             ids.append(image.id)
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
 
+def content_json(request, album):
+    objects = {'albums': [], 'images': []}
+    if album is not None:
+        images = Image.objects.filter(album=album)
+        for image in images:
+            objects['images'].append({'id': image.id, 'key': image.key})
+    albums = Album.objects.filter(parent=album)
+    for album in albums:
+        objects['albums'].append({'id': album.id, 'name': album.name})
+    return HttpResponse(json.dumps(objects))
+
 def list_parents(album):
     parents = []
     parents.append(album)

@@ -58,6 +58,18 @@
 {% include 'widgets/promo/edit.html' %}
 {% include 'widgets/quote/edit.html' %}
 
+{# Changing image #}
+<div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
+  <button class="btn btn-success">Søk</button>
+  <input type="text" name="search" class="span6" placeholder="Søk i bildearkiv - nøkkelord, fotograf, beskrivelse, etc...">
+  <hr>
+  <div id="imagearchive">
+    <div id="contentlist"></div>
+  </div>
+  <hr>
+  <p>Link til bildet: <input type="text"></p>
+</div>
+
 {# Main toolbar #}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">

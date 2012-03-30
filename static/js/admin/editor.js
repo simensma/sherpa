@@ -602,10 +602,7 @@ $(document).ready(function() {
     function changeableImages(images) {
         images.click(function() {
             $(this).removeClass('hover');
-            var src = prompt("URL?");
-            if(src !== null && src !== undefined) {
-                $(this).attr('src', src);
-            }
+            $("div#dialog-change-image").dialog('open');
         });
     }
 
