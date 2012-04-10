@@ -237,3 +237,12 @@ div.alert p.delete-content-warning {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+div#dialog-change-image div#imagearchive div#contentlist p.album {
+  padding-bottom: 5px;
+}
+
+div#dialog-change-image div#imagearchive div#contentlist img.album {
+  float: left;
+  width: 25px;
+}
