@@ -10,6 +10,13 @@ $(document).ready(function() {
     bcList = $("div#dialog-change-image div#imagearchive ul.breadcrumb");
     showFolder('');
 
+    $("div#dialog-change-image button.insert-image").click(function() {
+        var dialog = $(this).parents("div#dialog-change-image")
+        dialog.dialog('close');
+        currentImage.attr('src', dialog.find("input[name='url']").val());
+        currentImage.attr('alt', dialog.find("input[name='alt']").val());
+    });
+
 });
 
 function showFolder(album) {

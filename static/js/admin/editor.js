@@ -598,7 +598,11 @@ $(document).ready(function() {
     function changeableImages(images) {
         images.click(function() {
             $(this).removeClass('hover');
-            $("div#dialog-change-image").dialog('open');
+            var dialog = $("div#dialog-change-image");
+            dialog.dialog('open');
+            dialog.find("input[name='url']").val($(this).attr('src'));
+            dialog.find("input[name='alt']").val($(this).attr('alt'));
+            currentImage = $(this);
         });
     }
 
@@ -669,3 +673,6 @@ $(document).ready(function() {
     }
 
 });
+
+// An image currently being changed (need to save this state while opening the changer dialog)
+var currentImage;
