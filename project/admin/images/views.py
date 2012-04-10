@@ -100,6 +100,7 @@ def update_images(request):
             tag.images.add(image)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
+@login_required
 def filter_tags(request):
     tag_objects = Tag.objects.filter(name__startswith=request.GET['term'])
     tags = []
