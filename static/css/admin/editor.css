@@ -48,14 +48,14 @@ article .meta.static {
   cursor: not-allowed;
 }
 
-img.changeable {
+article div.image img {
   display: block;
   background-color: rgb(0, 0, 0);
   min-width: 20px;
   min-height: 20px;
 }
 
-img.changeable:hover {
+article div.image img:hover {
   opacity: 0.5;
   filter: alpha(opacity=50);
   cursor: alias;

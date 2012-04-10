@@ -20,6 +20,8 @@
       {% for content in column.contents %}
         {% if content.type == 'html' %}
           <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+        {% elif content.type == 'image' %}
+          <div class="image" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
           <div class="widget" data-id="{{ content.id }}">
             {% include content.widget.template with widget=content.widget %}

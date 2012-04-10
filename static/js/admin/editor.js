@@ -7,10 +7,10 @@ $(document).ready(function() {
 
     var insertable;
     $("div.no-save-warning").hide();
-    selectableContent($(".editable"));
+    selectableContent($(".content"));
     setEmpties();
     enableEditing();
-    autoRemoveEmptyContent($("article .editable"));
+    autoRemoveEmptyContent($("article .content"));
 
     // Make toolbar draggable
     $("#toolbar").draggable({
@@ -40,18 +40,17 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = $('<div class="editable"><p><br></p></div>');
+            var content = $('<p><br></p>');
             function done(wrapper) {
-                var editable = wrapper.find(".editable");
-                selectableContent(editable);
-                autoRemoveEmptyContent(editable);
+                selectableContent(wrapper);
+                autoRemoveEmptyContent(wrapper);
                 if(sortState == 'formatting') {
-                    editable.attr('contenteditable', 'true').focus();
+                    wrapper.attr('contenteditable', 'true').focus();
                 }
                 refreshSort();
                 setEmpties();
-                editable.click();
-                editable.focus();
+                wrapper.click();
+                wrapper.focus();
                 $("article .insertable").remove();
             }
             addContent($(event.target).prev(), $(event.target).parent(),
@@ -73,28 +72,31 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img class="changeable" src="" alt="">');
-            var br = $('<br>');
-            var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
-            var content = $("<div/>").append(image, br, editable);
-            function done(wrapper) {
-                var editable = wrapper.find(".editable");
-                var image = wrapper.find("img.changeable");
-                selectableContent(editable);
-                autoRemoveEmptyContent(wrapper.find(".editable"));
+            var image = $('<img src="" alt="">');
+            var content = $('<p>BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></p>');
+            function imageDone(wrapper) {
+                var image = wrapper.find("img");
                 changeableImages(image);
-                if(sortState == 'formatting') {
-                    editable.attr('contenteditable', 'true');
-                }
-                refreshSort();
-                setEmpties();
                 image.click();
-                $("article .insertable").remove();
             }
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
                 $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(content).html(), 'html', done);
+                $("<div/>").append(image).html(), 'image', imageDone);
+            function contentDone(wrapper) {
+                selectableContent(wrapper);
+                autoRemoveEmptyContent(wrapper);
+                if(sortState == 'formatting') {
+                    wrapper.attr('contenteditable', 'true');
+                }
+                refreshSort();
+                setEmpties();
+                $("article .insertable").remove();
+            }
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length + 1, // + 1, add the new image content
+                $("<div/>").append(content).html(), 'html', contentDone);
         });
     });
 
@@ -147,12 +149,12 @@ $(document).ready(function() {
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
             enableEditing();
-            $("article div.content, article div.widget").off('hover click');
+            $("article div.content, article div.widget, article div.image").off('hover click');
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $("article .content, article .widget").hover(function() {
+        $("article div.content, article div.widget, article div.image").hover(function() {
             $(this).addClass('hover-remove');
         }, function() {
             $(this).removeClass('hover-remove');
@@ -166,7 +168,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 content.show();
                 content.removeClass('hover-remove');
-                content.find(".editable").focusout();
+                content.find(".content").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -296,7 +298,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 row.show();
                 row.removeClass('hover-remove');
-                row.find(".editable").focusout();
+                row.find(".content").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -327,21 +329,21 @@ $(document).ready(function() {
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
-        $("article .editable").attr('contenteditable', 'true');
+        $("article .content").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
-        $("article .editable").removeAttr('contenteditable');
+        $("article .content").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
-        $("article .editable").removeAttr('contenteditable');
+        $("article .content").removeAttr('contenteditable');
         sortState = 'vertical';
     });
 
@@ -486,7 +488,7 @@ $(document).ready(function() {
             columns = columns.concat([column]);
         });
         var contents = [];
-        $("article div.content").each(function() {
+        $("article div.content, article div.image").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
@@ -544,12 +546,12 @@ $(document).ready(function() {
 
     /* Toggle editing of the actual content */
     function disableEditing() {
-        $("article .editable").removeAttr('contenteditable');
-        $("article img.changeable").off('click');
+        $("article div.content").removeAttr('contenteditable');
+        $("article div.image img").off('click');
     }
     function enableEditing() {
-        $("article .editable").attr('contenteditable', 'true');
-        changeableImages($("article img.changeable"));
+        $("article div.content").attr('contenteditable', 'true');
+        changeableImages($("article div.image img"));
     }
 
     /* Divs for inserting widgets/images/text */
@@ -611,7 +613,7 @@ $(document).ready(function() {
         content.focusout(function() {
             if($(this).text().trim() === "") {
                 disableEditing();
-                var content = $(this).parents(".content");
+                var content = $(this);
                 $.ajax({
                     url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
                     type: 'POST'
