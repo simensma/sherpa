@@ -2,8 +2,12 @@
  * Picking a URL for an image
  */
 
+var bcList;
+var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
+
 $(document).ready(function() {
 
+    bcList = $("div#dialog-change-image div#imagearchive ul.breadcrumb");
     showFolder('');
 
 });
@@ -21,6 +25,19 @@ function showFolder(album) {
                 showFolder($(this).attr('data-id'));
             });
             $("div#dialog-change-image div#imagearchive div#contentlist").append(item);
+        }
+
+        bcList.children().remove();
+        bcList.append(bcRoot);
+        bcRoot.find("a").click(function() {
+            showFolder('');
+        });
+        for(var i=0; i<result.parents.length; i++) {
+            var item = $('<li><a href="javascript:undefined" data-id="' + result.parents[i].id + '/">' + result.parents[i].name + '</a></li>');
+            item.find("a").click(function() {
+                showFolder($(this).attr('data-id'));
+            });
+            bcList.append($('<span class="divider">→</span>')).append(item);
         }
     }).fail(function(result) {
         $(document.body).html(result.responseText);
