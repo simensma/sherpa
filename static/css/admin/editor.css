@@ -238,6 +238,14 @@ div.alert p.delete-content-warning {
   padding-bottom: 10px;
 }
 
+div#dialog-change-image h2 {
+  font-size: 120%;
+}
+
+div#dialog-change-image button.button-aligned {
+  margin-bottom: 10px;
+}
+
 div#dialog-change-image div#imagearchive div#contentlist p.album {
   padding-bottom: 5px;
 }

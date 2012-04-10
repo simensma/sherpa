@@ -60,15 +60,26 @@
 
 {# Changing image #}
 <div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
-  <button class="btn btn-success">Søk</button>
-  <input type="text" name="search" class="span6" placeholder="Søk i bildearkiv - nøkkelord, fotograf, beskrivelse, etc...">
+  <table>
+    <tr>
+      <td>Link til bildet:</td><td><input type="text" class="span6"></td>
+    </tr>
+    <tr>
+      <td>Bildetekst:</td><td><input type="text" class="span6"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><button class="btn btn-success btn-large">Sett inn</button></td>
+    </tr>
+  </table>
   <hr>
+  <h2>Finn bilde i arkivet:</h2>
+  <input type="text" name="search" class="span6" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
+  <button class="btn btn-success button-aligned">Søk</button>
   <div id="imagearchive">
     <ul class="breadcrumb"></ul>
     <div id="contentlist"></div>
   </div>
-  <hr>
-  <p>Link til bildet: <input type="text"></p>
 </div>
 
 {# Main toolbar #}
