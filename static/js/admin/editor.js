@@ -73,7 +73,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
+            var image = $('<img class="changeable" src="" alt="">');
             var br = $('<br>');
             var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
             var content = $("<div/>").append(image, br, editable);
