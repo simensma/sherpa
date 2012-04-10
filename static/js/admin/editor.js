@@ -88,10 +88,6 @@ $(document).ready(function() {
                 }
                 refreshSort();
                 setEmpties();
-                // We don't want the default overlay to be there when we pick a new picture.
-                // It will be disabled when the ajax 'always' callback is called, but that's
-                // after this callback is done, so we'll just disable it twice.
-                disableOverlay();
                 image.click();
                 $("article .insertable").remove();
             }
@@ -660,13 +656,15 @@ $(document).ready(function() {
             } else {
                 prev.after(wrapper);
             }
+            // Disable the overlay _before_ calling the provided 'done' function
+            disableOverlay();
             done(wrapper);
         }).fail(function(result) {
             // Todo
+            disableOverlay();
             $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
-            disableOverlay();
         });
     }
 
