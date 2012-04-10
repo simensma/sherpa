@@ -57,7 +57,7 @@ $(document).ready(function() {
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
                 $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(content).html(), 'h', done);
+                $("<div/>").append(content).html(), 'html', done);
         });
     });
 
@@ -98,7 +98,7 @@ $(document).ready(function() {
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
                 $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(content).html(), 'h', done);
+                $("<div/>").append(content).html(), 'html', done);
         });
     });
 
@@ -144,7 +144,7 @@ $(document).ready(function() {
             author: $("div.dialog.widget-edit.quote input[name='author']").val()
         });
         $(this).parents(".dialog").dialog('close');
-        addContent(prev, parent, column, order, content, 'w', widgetAdded);
+        addContent(prev, parent, column, order, content, 'widget', widgetAdded);
     });
 
     // Remove content (text/image/widget)
@@ -652,9 +652,9 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             var contentClass;
-            if(type == 'h') {
+            if(type == 'html') {
                 contentClass = 'content';
-            } else if(type == 'w') {
+            } else if(type == 'widget') {
                 contentClass = 'widget';
             }
             var wrapper = $('<div class="' + contentClass + '" data-id="' + result.id + '"></div>').append(result.content);

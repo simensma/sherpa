@@ -14,7 +14,7 @@ def parse_content(request, version):
         for column in columns:
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
-                if content.type == 'w':
+                if content.type == 'widget':
                     content.widget = parse_widget(json.loads(content.content))
             column.contents = contents
         row.columns = columns

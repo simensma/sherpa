@@ -17,7 +17,7 @@ def add(request):
         content = Content(column=column, content=request.POST['content'], type=request.POST['type'],
             order=request.POST['order'])
         content.save()
-        if content.type == 'h':
+        if content.type == 'html':
             result = content.content
         else:
             widget = parse_widget(json.loads(content.content))
