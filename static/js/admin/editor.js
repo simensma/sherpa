@@ -147,7 +147,7 @@ $(document).ready(function() {
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
             enableEditing();
-            $("article .content, article .widget").off('hover click');
+            $("article div.content, article div.widget").off('hover click');
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
