@@ -13,7 +13,9 @@ $(document).ready(function() {
 });
 
 function showFolder(album) {
-    $("div#dialog-change-image div#imagearchive div#contentlist").contents().remove();
+    var list = $("div#dialog-change-image div#imagearchive div#contentlist");
+    list.contents().remove();
+    list.append('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
     $.ajax({
         url: '/sherpa/bildearkiv/innhold/' + album,
         type: 'POST'
@@ -42,5 +44,6 @@ function showFolder(album) {
     }).fail(function(result) {
         $(document.body).html(result.responseText);
     }).always(function(result) {
+        list.find("img.ajaxloader").remove();
     });
 }
