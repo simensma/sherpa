@@ -653,6 +653,8 @@ $(document).ready(function() {
             var contentClass;
             if(type == 'html') {
                 contentClass = 'content';
+            } else if(type == 'image') {
+                contentClass = 'image';
             } else if(type == 'widget') {
                 contentClass = 'widget';
             }
