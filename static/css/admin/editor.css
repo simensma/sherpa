@@ -249,10 +249,6 @@ div#dialog-change-image button.button-aligned {
   margin-bottom: 10px;
 }
 
-div#dialog-change-image div#imagearchive div#contentlist p.album {
-  padding-bottom: 5px;
-}
-
 div#dialog-change-image div#imagearchive div#contentlist img.album {
   float: left;
   width: 25px;
