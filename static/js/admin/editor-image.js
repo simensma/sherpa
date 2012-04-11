@@ -29,7 +29,7 @@ function showFolder(album) {
     }).done(function(result) {
         result = JSON.parse(result);
         for(var i=0; i<result.albums.length; i++) {
-            var item = $('<div><a href="javascript:undefined" data-id="' + result.albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + result.albums[i].name + '</a></div><div style="clear: both;"></div>');
+            var item = $('<div class="album"><a href="javascript:undefined" data-id="' + result.albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + result.albums[i].name + '</a></div><div style="clear: both;"></div>');
             item.find("a").click(function() {
                 showFolder($(this).attr('data-id'));
             });
