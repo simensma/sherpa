@@ -593,7 +593,7 @@ $(document).ready(function() {
 
     /* Highlight contenteditables that _are being edited_. */
     function selectableContent(html) {
-        html.click(function() {
+        html.focus(function() {
             $(this).addClass('selected');
         }).focusout(function() {
             $(this).removeClass('selected');
