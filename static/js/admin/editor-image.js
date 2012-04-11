@@ -18,6 +18,25 @@ $(document).ready(function() {
         dialog.dialog('close');
         currentImage.attr('src', dialog.find("input[name='url']").val());
         currentImage.attr('alt', dialog.find("input[name='alt']").val());
+        var anchor = dialog.find("input[name='anchor']").val();
+        if(anchor.length == 0) {
+            // No link
+            if(currentImage.parent("a").length > 0) {
+                // *Was* link, but is now removed
+                currentImage.parent().before(currentImage).remove();
+            }
+        } else {
+            // Add link
+            if(currentImage.parent("a").length > 0) {
+                // Link exists, update it
+                currentImage.parent().attr('href', anchor);
+            } else {
+                // No existing link, add it
+                var anchorEl = $('<a href="' + anchor + '"></a>');
+                currentImage.before(anchorEl).detach();
+                anchorEl.prepend(currentImage);
+            }
+        }
         $("#toolbar .save button.save").click();
     });
 

@@ -602,11 +602,16 @@ $(document).ready(function() {
 
     /* Change image sources upon being clicked. */
     function changeableImages(images) {
-        images.click(function() {
+        images.parent("a").click(function(e) {
+            // For images with anchors, prevent the default link action
+            e.preventDefault();
+        });
+        images.click(function(e) {
             $(this).removeClass('hover');
             var dialog = $("div#dialog-change-image");
             dialog.dialog('open');
             dialog.find("input[name='url']").val($(this).attr('src'));
+            dialog.find("input[name='anchor']").val($(this).parent("a").attr('href'));
             dialog.find("input[name='alt']").val($(this).attr('alt'));
             currentImage = $(this);
         });
