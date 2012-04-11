@@ -5,11 +5,12 @@ $(document).ready(function() {
      * Initialization
      */
 
+    var insertable;
     $("div.no-save-warning").hide();
-    selectableContent($(".editable"));
+    selectableContent($(".content"));
     setEmpties();
     enableEditing();
-    autoRemoveEmptyContent($("article .editable"));
+    autoRemoveEmptyContent($("article .content"));
 
     // Make toolbar draggable
     $("#toolbar").draggable({
@@ -39,17 +40,23 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = $('<div class="editable"><p><br></p></div>');
-            function done() {
-                selectableContent(content);
-                autoRemoveEmptyContent(content);
+            var content = $('<p><br></p>');
+            function done(wrapper) {
+                selectableContent(wrapper);
+                autoRemoveEmptyContent(wrapper);
                 if(sortState == 'formatting') {
-                    content.attr('contenteditable', 'true').focus();
+                    wrapper.attr('contenteditable', 'true').focus();
                 }
                 refreshSort();
                 setEmpties();
+                wrapper.click();
+                wrapper.focus();
+                $("article .insertable").remove();
             }
-            addContent($(event.target), content, 'h', done);
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length,
+                $("<div/>").append(content).html(), 'html', done);
         });
     });
 
@@ -65,30 +72,36 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img class="changeable" src="/static/img/article/placeholder-bottom.png" alt="placeholder">');
-            var br = $('<br>');
-            var editable = $('<div class="editable">BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></div>');
-            var content = $("<div/>").append(image, br, editable);
-            function done() {
-                selectableContent(editable);
-                autoRemoveEmptyContent(content);
+            var image = $('<img src="" alt="">');
+            var content = $('<p>BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></p>');
+            function imageDone(wrapper) {
+                var image = wrapper.find("img");
                 changeableImages(image);
+                image.click();
+            }
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length,
+                $("<div/>").append(image).html(), 'image', imageDone);
+            function contentDone(wrapper) {
+                selectableContent(wrapper);
+                autoRemoveEmptyContent(wrapper);
                 if(sortState == 'formatting') {
-                    editable.attr('contenteditable', 'true');
+                    wrapper.attr('contenteditable', 'true');
                 }
                 refreshSort();
                 setEmpties();
-                // We don't want the default overlay to be there when we pick a new picture.
-                // It will be disabled when the ajax 'always' callback is called, but that's
-                // after this callback is done, so we'll just disable it twice.
-                disableOverlay();
-                image.click();
+                $("article .insertable").remove();
             }
-            addContent($(event.target), content, 'h', done);
+            addContent($(event.target).prev(), $(event.target).parent(),
+                $(event.target).parent(".column").attr("data-id"),
+                $(event.target).prevAll(":not(.insertable)").length + 1, // + 1, add the new image content
+                $("<div/>").append(content).html(), 'html', contentDone);
         });
     });
 
     // Add widget
+    var prev, parent, column, order;
     $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -100,42 +113,82 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            // Todo: insert widget
+            $("#dialog-add-widget").dialog('open');
             enableToolbar();
+            prev = $(this).prev();
+            parent = $(this).parent();
+            column = $(this).parent(".column").attr("data-id");
+            order = $(this).prevAll(":not(.insertable)").length;
             $("article .insertable").remove();
-            refreshSort();
             setEmpties();
         });
+    });
+    $("#dialog-add-widget div.widget-thumbnail").click(function() {
+        $(this).parents("#dialog-add-widget").dialog('close');
+        $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
+    });
+
+    function widgetAdded() {
+        refreshSort();
+        removeEmpties();
+        setEmpties();
+    }
+
+    // Quote-widget
+    $("div.dialog.widget-edit.quote button.save").click(function() {
+        var content = JSON.stringify({
+            widget: "quote",
+            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
+            author: $("div.dialog.widget-edit.quote input[name='author']").val()
+        });
+        $(this).parents(".dialog").dialog('close');
+        addContent(prev, parent, column, order, content, 'widget', widgetAdded);
     });
 
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
             enableEditing();
-            $("article .content").off('hover click');
+            $("article div.content, article div.widget, article div.image").off('hover click');
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $("article .content").hover(function() {
+        $("article div.content, article div.widget, article div.image").hover(function() {
             $(this).addClass('hover-remove');
         }, function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
+            doneRemoving();
             var content = $(this);
-            $.ajax({
-                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                if(content.siblings().length == 0) {
-                    setEmpty(content.parent());
-                }
-                content.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                doneRemoving();
+            content.hide();
+            var confirmation = $('<div class="alert alert-danger"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
+            content.before(confirmation);
+            confirmation.find("button.cancel").click(function() {
+                confirmation.remove();
+                content.show();
+                content.removeClass('hover-remove');
+                content.find(".content").focusout();
+                $("#toolbar button.cancel").click();
+            });
+            confirmation.find("button.confirm").click(function() {
+                confirmation.remove();
+                enableOverlay();
+                $.ajax({
+                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                    type: 'POST'
+                }).done(function(result) {
+                    if(content.siblings().length == 0) {
+                        setEmpty(content.parent());
+                    }
+                    content.remove();
+                }).fail(function(result) {
+                    // Todo
+                }).always(function(result) {
+                    refreshSort();
+                    doneRemoving();
+                    disableOverlay();
+                });
             });
         });
     });
@@ -145,7 +198,6 @@ $(document).ready(function() {
      */
 
     // Add a new row with columns
-    var insertable;
     $("#toolbar button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
@@ -238,16 +290,32 @@ $(document).ready(function() {
             $(this).removeClass('hover-remove');
         }).click(function() {
             var row = $(this);
-            $.ajax({
-                url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                row.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                doneRemoving();
+            row.hide();
+            doneRemoving();
+            var confirmation = $('<div class="alert alert-danger"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
+            row.before(confirmation);
+            confirmation.find("button.cancel").click(function() {
+                confirmation.remove();
+                row.show();
+                row.removeClass('hover-remove');
+                row.find(".content").focusout();
+                $("#toolbar button.cancel").click();
+            });
+            confirmation.find("button.confirm").click(function() {
+                confirmation.remove();
+                enableOverlay();
+                $.ajax({
+                    url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
+                    type: 'POST'
+                }).done(function(result) {
+                    row.remove();
+                }).fail(function(result) {
+                    // Todo
+                }).always(function(result) {
+                    refreshSort();
+                    doneRemoving();
+                    disableOverlay();
+                });
             });
         });
     });
@@ -261,21 +329,21 @@ $(document).ready(function() {
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
-        $("article .editable").attr('contenteditable', 'true');
+        $("article .content").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
-        $("article .editable").removeAttr('contenteditable');
+        $("article .content").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
-        $("article .editable").removeAttr('contenteditable');
+        $("article .content").removeAttr('contenteditable');
         sortState = 'vertical';
     });
 
@@ -420,7 +488,7 @@ $(document).ready(function() {
             columns = columns.concat([column]);
         });
         var contents = [];
-        $("article div.content").each(function() {
+        $("article div.content, article div.image").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
@@ -478,12 +546,12 @@ $(document).ready(function() {
 
     /* Toggle editing of the actual content */
     function disableEditing() {
-        $("article .editable").removeAttr('contenteditable');
-        $("article img.changeable").off('click');
+        $("article div.content").removeAttr('contenteditable');
+        $("article div.image img").off('click');
     }
     function enableEditing() {
-        $("article .editable").attr('contenteditable', 'true');
-        changeableImages($("article img.changeable"));
+        $("article div.content").attr('contenteditable', 'true');
+        changeableImages($("article div.image img"));
     }
 
     /* Divs for inserting widgets/images/text */
@@ -532,10 +600,11 @@ $(document).ready(function() {
     function changeableImages(images) {
         images.click(function() {
             $(this).removeClass('hover');
-            var src = prompt("URL?");
-            if(src !== null && src !== undefined) {
-                $(this).attr('src', src);
-            }
+            var dialog = $("div#dialog-change-image");
+            dialog.dialog('open');
+            dialog.find("input[name='url']").val($(this).attr('src'));
+            dialog.find("input[name='alt']").val($(this).attr('alt'));
+            currentImage = $(this);
         });
     }
 
@@ -544,7 +613,7 @@ $(document).ready(function() {
         content.focusout(function() {
             if($(this).text().trim() === "") {
                 disableEditing();
-                var content = $(this).parents(".content");
+                var content = $(this);
                 $.ajax({
                     url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
                     type: 'POST'
@@ -570,31 +639,42 @@ $(document).ready(function() {
      */
 
     /* Add content-objects to some column */
-    function addContent(insertable, content, type, done) {
+    function addContent(prev, parent, column, order, content, type, done) {
         enableOverlay();
-        var order = insertable.prevAll(":not(.insertable)").length;
         $.ajax({
             url: '/sherpa/cms/innhold/ny/',
             type: 'POST',
-            data: "column=" + encodeURIComponent(insertable.parent(".column").attr("data-id")) +
+            data: "column=" + encodeURIComponent(column) +
                   "&order=" + encodeURIComponent(order) +
-                  "&content=" + encodeURIComponent($("<div/>").append(content).html()) +
+                  "&content=" + encodeURIComponent(content) +
                   "&type=" + encodeURIComponent(type)
-        }).done([function(result) {
-            var wrapper = $('<div class="content" data-id="' + result + '"></div>').append(content);
-            var prev = insertable.prev();
+        }).done(function(result) {
+            result = JSON.parse(result);
+            var contentClass;
+            if(type == 'html') {
+                contentClass = 'content';
+            } else if(type == 'widget') {
+                contentClass = 'widget';
+            }
+            var wrapper = $('<div class="' + contentClass + '" data-id="' + result.id + '"></div>').append(result.content);
             if(prev.length == 0) {
-                insertable.parent().prepend(wrapper);
+                parent.prepend(wrapper);
             } else {
                 prev.after(wrapper);
             }
-        }, done]).fail(function(result) {
+            // Disable the overlay _before_ calling the provided 'done' function
+            disableOverlay();
+            done(wrapper);
+        }).fail(function(result) {
             // Todo
+            disableOverlay();
+            $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
-            $("article .insertable").remove();
-            disableOverlay();
         });
     }
 
 });
+
+// An image currently being changed (need to save this state while opening the changer dialog)
+var currentImage;

@@ -18,10 +18,14 @@
   {% for column in row.columns %}
     <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
       {% for content in column.contents %}
-        {% if content.type == 'h' %}
+        {% if content.type == 'html' %}
           <div class="content" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+        {% elif content.type == 'image' %}
+          <div class="image" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% else %}
-          {% include content.widget.template with widget=content.widget %}
+          <div class="widget" data-id="{{ content.id }}">
+            {% include content.widget.template with widget=content.widget %}
+          </div>
         {% endif %}
       {% endfor %}
     </div>
@@ -31,6 +35,7 @@
 
 </article>
 
+{# Adding columns #}
 <div id="dialog-columns" class="dialog" data-title="Velg kolonnestruktur" data-width="auto">
   <h1>Én kolonne:</h1>
   <p><img src="{{ STATIC_URL }}img/columns/full.png" class="full" alt="Én kolonne"></p>
@@ -45,6 +50,42 @@
   <p><img src="{{ STATIC_URL }}img/columns/three.png" class="three" alt="Tre kolonner"></p>
 </div>
 
+{# Adding widgets #}
+<div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
+  {% include 'widgets/promo/thumbnail.html' %}
+  {% include 'widgets/quote/thumbnail.html' %}
+</div>
+
+{# Widget edit-dialogs #}
+{% include 'widgets/promo/edit.html' %}
+{% include 'widgets/quote/edit.html' %}
+
+{# Changing image #}
+<div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
+  <table>
+    <tr>
+      <td>Link til bildet:</td><td><input type="text" class="span6" name="url"></td>
+    </tr>
+    <tr>
+      <td>Bildetekst:</td><td><input type="text" class="span6" name="alt"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><button class="btn btn-success btn-large insert-image">Sett inn</button></td>
+    </tr>
+  </table>
+  <hr>
+  <h2>Finn bilde i arkivet:</h2>
+  <input type="text" name="search" class="span6" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
+  <button class="btn btn-success button-aligned">Søk</button>
+  <div id="imagearchive">
+    <ul class="breadcrumb"></ul>
+    <div id="contentlist"></div>
+    <ul id="images"></ul>
+  </div>
+</div>
+
+{# Main toolbar #}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>

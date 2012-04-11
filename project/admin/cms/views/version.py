@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
+
+from project.page.views_widgets import *
 from project.page.models import Variant, Version, Row, Column, Content
 
 import json
@@ -29,7 +31,7 @@ def edit(request, version):
             for column in columns:
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
-                    if content.type == 'w':
+                    if content.type == 'widget':
                         content.widget = parse_widget(json.loads(content.content))
                 column.contents = contents
             row.columns = columns

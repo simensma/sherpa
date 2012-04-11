@@ -1,6 +1,11 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.template import Context, loader
+
 from project.page.models import Column, Content
+from project.page.views_widgets import parse_widget
+
+import json
 
 @login_required
 def add(request):
@@ -12,7 +17,14 @@ def add(request):
         content = Content(column=column, content=request.POST['content'], type=request.POST['type'],
             order=request.POST['order'])
         content.save()
-        return HttpResponse(content.id)
+        if content.type == 'html' or content.type == 'image':
+            result = content.content
+        else:
+            widget = parse_widget(json.loads(content.content))
+            t = loader.get_template(widget['template'])
+            c = Context({'widget': widget})
+            result = t.render(c)
+        return HttpResponse(json.dumps({'id': content.id, 'content': result}))
 
 @login_required
 def delete(request, content):

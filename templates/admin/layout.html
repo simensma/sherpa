@@ -8,6 +8,8 @@
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap/bootstrap-button.js"></script>
   <!--[if lte IE 9]><script src="{{ STATIC_URL }}js/placeholder-ie.js"></script><![endif]-->
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}js/trim-ie.js"></script><![endif]-->
+  <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}js/admin/main.js"></script>
   <script src="{{ STATIC_URL }}js/common.js"></script>
   {% block extra_scripts %}{% endblock %}
