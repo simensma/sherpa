@@ -27,6 +27,9 @@ $(document).ready(function() {
             }
         } else {
             // Add link
+            if(!anchor.match(/^http:\/\//)) {
+                anchor = "http://" + anchor;
+            }
             if(currentImage.parent("a").length > 0) {
                 // Link exists, update it
                 currentImage.parent().attr('href', anchor);
