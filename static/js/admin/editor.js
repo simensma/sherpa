@@ -551,10 +551,10 @@ $(document).ready(function() {
     /* Toggle editing of the actual content */
     function disableEditing() {
         $("article div.html").removeAttr('contenteditable');
-        $("article div.image img").off('click');
+        $("article div.image img").off('click focus focusout');
     }
     function enableEditing() {
-        $("article div.html").attr('contenteditable', 'true');
+        selectableContent($("article div.html").attr('contenteditable', 'true'));
         changeableImages($("article div.image img"));
     }
 
