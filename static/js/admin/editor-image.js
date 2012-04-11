@@ -46,7 +46,11 @@ function search(phrase) {
         url: '/sherpa/bildearkiv/søk/',
         type: 'POST',
         data: "query=" + encodeURIComponent(phrase)
-    }).done(updateContents).fail(function(result) {
+    }).done(function(result) {
+        result = JSON.parse(result);
+        updateContents(result.parents, result.albums, result.images,
+            '<strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-(');
+    }).fail(function(result) {
         $(document.body).html(result.responseText);
     }).always(function(result) {
         ajaxLoader.remove();
@@ -58,24 +62,26 @@ function showFolder(album) {
     $.ajax({
         url: '/sherpa/bildearkiv/innhold/' + album,
         type: 'POST'
-    }).done(updateContents).fail(function(result) {
+    }).done(function(result) {
+        result = JSON.parse(result);
+        updateContents(result.parents, result.albums, result.images,
+            '<strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.');
+    }).fail(function(result) {
         $(document.body).html(result.responseText);
     }).always(function(result) {
         ajaxLoader.remove();
     });
 }
 
-function updateContents(result) {
-    result = JSON.parse(result);
-
+function updateContents(parents, albums, images, emptyText) {
     // Add breadcrumbs
     bcList.children().remove();
     bcList.append(bcRoot);
     bcRoot.find("a").click(function() {
         showFolder('');
     });
-    for(var i=0; i<result.parents.length; i++) {
-        var item = $('<li><a href="javascript:undefined" data-id="' + result.parents[i].id + '/">' + result.parents[i].name + '</a></li>');
+    for(var i=0; i<parents.length; i++) {
+        var item = $('<li><a href="javascript:undefined" data-id="' + parents[i].id + '/">' + parents[i].name + '</a></li>');
         item.find("a").click(function() {
             showFolder($(this).attr('data-id'));
         });
@@ -83,8 +89,8 @@ function updateContents(result) {
     }
 
     // Add albums
-    for(var i=0; i<result.albums.length; i++) {
-        var item = $('<div class="album"><a href="javascript:undefined" data-id="' + result.albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + result.albums[i].name + '</a></div><div style="clear: both;"></div>');
+    for(var i=0; i<albums.length; i++) {
+        var item = $('<div class="album"><a href="javascript:undefined" data-id="' + albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + albums[i].name + '</a></div><div style="clear: both;"></div>');
         item.find("a").click(function() {
             showFolder($(this).attr('data-id'));
         });
@@ -92,13 +98,20 @@ function updateContents(result) {
     }
 
     // Add images
-    for(var i=0; i<result.images.length; i++) {
-        var item = $('<li data-path="' + result.images[i].key + '.' + result.images[i].extension + '" data-description="' + result.images[i].description + '"><p><img src="http://cdn.turistforeningen.no/images/' + result.images[i].key + '-150.' + result.images[i].extension + '" alt="Thumbnail"></p>' + result.images[i].width + ' x ' + result.images[i].height + '<br>' + result.images[i].photographer + '</li>');
+    for(var i=0; i<images.length; i++) {
+        var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
         item.click(function() {
             $("div#dialog-change-image input[name='url']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
             $("div#dialog-change-image input[name='alt']").val($(this).attr('data-description'));
             $("div#dialog-change-image button.insert-image").click();
         });
         $("div#dialog-change-image div#imagearchive ul#images").append(item);
+    }
+
+    // No albums and no images
+    if(albums.length == 0 && images.length == 0) {
+        var sorry = $('<div class="alert alert-info span4"><a class="close">x</a>' + emptyText + '</div>');
+        sorry.find("a").click(function() { $(this).parent().remove(); });
+        $("div#dialog-change-image div#imagearchive div#contentlist").append(sorry);
     }
 }
