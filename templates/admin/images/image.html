@@ -19,7 +19,7 @@
     </tr>
     <tr>
       <th>Tatt:</th>
-      <td>{{ taken }}</td>
+      <td>{% firstof taken "Ukjent" %}</td>
     </tr>
     <tr>
       <th>Lastet opp:</th>
@@ -50,11 +50,15 @@
     <tr>
       <th>EXIF-data:</th>
       <td>
-        <a href="javascript:undefined" class="toggle-exif">Vis...</a>
-        <div class="exif">
-          <pre>{% for tag, value in exif.items %}{{ tag }}: {{ value }}
-{% endfor %}</pre>
-        </div>
+        {% if exif.items|length > 0 %}
+          <a href="javascript:undefined" class="toggle-exif">Vis...</a>
+          <div class="exif">
+            <pre>{% for tag, value in exif.items %}{{ tag }}: {{ value }}
+  {% endfor %}</pre>
+          </div>
+        {% else %}
+          Ingen.
+        {% endif %}
       </td>
     </tr>
     </table>

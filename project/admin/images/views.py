@@ -38,7 +38,10 @@ def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
     exif = json.loads(image.exif)
-    taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
+    if exif.has_key('DateTime'):
+        taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
+    else:
+        taken = None
     tags = image.tags.all()
     context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags}
     return render(request, 'admin/images/image.html', context)
@@ -135,8 +138,9 @@ def upload_image(request, album):
             try:
                 img = pil.open(StringIO(data))
                 exif = {}
-                for tag, value in img._getexif().items():
-                    exif[TAGS.get(tag, tag)] = value
+                if hasattr(img, '_getexif') and img._getexif() is not None:
+                    for tag, value in img._getexif().items():
+                        exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 ext = file.name.split(".")[-1]
                 # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
