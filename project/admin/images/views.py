@@ -20,6 +20,9 @@ from datetime import datetime
 # these thumb sizes.
 thumb_sizes = [500, 150]
 
+# Require this many characters for an image search (this is duplicated client-side)
+MIN_QUERY_LENGTH = 3
+
 @login_required
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album)
@@ -194,7 +197,7 @@ def content_json(request, album):
 
 def search_json(request):
     images = []
-    if len(request.POST['query']) > 2:
+    if len(request.POST['query']) >= MIN_QUERY_LENGTH:
         for word in request.POST['query'].split(' '):
             images += Image.objects.filter(
                 Q(description__icontains=word) |

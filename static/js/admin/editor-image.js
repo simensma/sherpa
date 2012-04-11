@@ -2,6 +2,9 @@
  * Picking a URL for an image
  */
 
+// Require this many characters for an image search (this is duplicated server-side)
+var MIN_QUERY_LENGTH = 3;
+
 var bcList;
 var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
 
@@ -18,9 +21,6 @@ $(document).ready(function() {
         $("#toolbar .save button.save").click();
     });
 
-    function doSearch() {
-        search($("div#dialog-change-image input[name='search']").val());
-    }
     $("div#dialog-change-image button.image-search").click(doSearch);
     $("div#dialog-change-image input[name='search']").keydown(function(e) {
         if(e.which == 13) {
@@ -28,6 +28,16 @@ $(document).ready(function() {
             doSearch();
         }
     });
+    function doSearch() {
+        var query = $("div#dialog-change-image input[name='search']").val();
+        if(query.length < MIN_QUERY_LENGTH) {
+            var sorry = $('<div class="alert alert-error span4"><a class="close">x</a><strong>For få søketegn!</strong><br>Vennligst bruk minst 3 tegn å når du søker, ellers får du garantert mange flere resultater enn du vil ha.</div><div style="clear: both;"></div>');
+            sorry.find("a").click(function() { $(this).parent().remove(); });
+            $("div#dialog-change-image div#imagearchive div#contentlist").prepend(sorry);
+        } else {
+            search(query);
+        }
+    }
 
 });
 
