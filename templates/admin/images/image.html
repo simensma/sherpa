@@ -27,15 +27,15 @@
     </tr>
     <tr>
       <th>Original:</th>
-      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}">Åpne ({{ image.height }} x {{ image.width }})</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}.{{ image.extension }}">Åpne ({{ image.height }} x {{ image.width }})</a></td>
     </tr>
     <tr>
       <th>Mellomstor:</th>
-      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-500">Åpne (500px)</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-500.{{ image.extension }}">Åpne (500px)</a></td>
     </tr>
     <tr>
       <th>Liten:</th>
-      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-150">Åpne (150px)</a></td>
+      <td><a href="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}">Åpne (150px)</a></td>
     </tr>
     <tr>
       <th>Bruksrett:</th>
@@ -65,8 +65,8 @@
   </div>
 
   <div class="span6">
-    <a href="http://cdn.turistforeningen.no/images/{{ image.key }}">
-      <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-500" alt="{{ image.description }}" title="{{ image.description }}">
+    <a href="http://cdn.turistforeningen.no/images/{{ image.key }}.{{ image.extension }}">
+      <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
     </a>
   </div>
 </div>

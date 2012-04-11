@@ -6,6 +6,7 @@ from lib import S3
 
 class Image(models.Model):
     key = models.CharField(max_length=8)
+    extension = models.CharField(max_length=4)
     hash = models.CharField(max_length=40)
     description = models.TextField()
     album = models.ForeignKey('admin.Album')

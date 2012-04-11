@@ -142,18 +142,16 @@ def upload_image(request, album):
                     for tag, value in img._getexif().items():
                         exif[TAGS.get(tag, tag)] = value
                 thumbs = []
-                ext = file.name.split(".")[-1]
+                ext = file.name.split(".")[-1].lower()
                 # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
-                if(ext.lower() == "jpg"):
-                    ext = "jpeg"
                 for size in thumb_sizes:
                     fp = StringIO()
                     img_copy = img.copy()
                     img_copy.thumbnail([size, size])
-                    img_copy.save(fp, ext)
+                    img_copy.save(fp, "jpeg" if ext == "jpg" else ext)
                     thumbs.append({'size': size, 'data': fp.getvalue()})
 
-                parsed_images.append({'key': key, 'hash': sha1(data).hexdigest(),
+                parsed_images.append({'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
                   'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
                   'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)})
             except(IOError, KeyError):
@@ -166,18 +164,19 @@ def upload_image(request, album):
         album = Album.objects.get(id=album)
         for image in parsed_images:
             conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'],
-                S3.S3Object(image['data']),
+            conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
+                '.' + image['ext'], S3.S3Object(image['data']),
                 {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
             )
             for thumb in image['thumbs']:
-                conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] + "-" + str(thumb['size']),
-                    S3.S3Object(thumb['data']),
+                conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
+                    "-" + str(thumb['size']) + '.' + image['ext'], S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
-            image = Image(key=image['key'], hash=image['hash'], description='', album=album,
-              photographer='', credits='', licence='', exif=image['exif'],
-              uploader=request.user.get_profile(), width=image['width'], height=image['height'])
+            image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
+              description='', album=album, photographer='', credits='', licence='',
+              exif=image['exif'], uploader=request.user.get_profile(), width=image['width'],
+              height=image['height'])
             image.save()
             ids.append(image.id)
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
