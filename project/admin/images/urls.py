@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.images.views',
@@ -18,4 +19,5 @@ urlpatterns = patterns('admin.images.views',
 
     url(r'^innhold/$', 'content_json', {'album': None}),
     url(r'^innhold/(?P<album>\d+)/$', 'content_json'),
+    url(ur'^søk/$', 'search_json'),
 )

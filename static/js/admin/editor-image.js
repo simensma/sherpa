@@ -18,14 +18,43 @@ $(document).ready(function() {
         $("#toolbar .save button.save").click();
     });
 
+    function doSearch() {
+        search($("div#dialog-change-image input[name='search']").val());
+    }
+    $("div#dialog-change-image button.image-search").click(doSearch);
+    $("div#dialog-change-image input[name='search']").keydown(function(e) {
+        if(e.which == 13) {
+            // 13 is the Enter key
+            doSearch();
+        }
+    });
+
 });
 
-function showFolder(album) {
+function hideContent() {
+    $("div#dialog-change-image div#imagearchive ul#images").children().remove();
     var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
     var list = $("div#dialog-change-image div#imagearchive div#contentlist");
     list.contents().remove();
     list.append(ajaxLoader);
-    $("div#dialog-change-image div#imagearchive ul#images").children().remove();
+    return ajaxLoader;
+}
+
+function search(phrase) {
+    var ajaxLoader = hideContent();
+    $.ajax({
+        url: '/sherpa/bildearkiv/søk/',
+        type: 'POST',
+        data: "query=" + encodeURIComponent(phrase)
+    }).done(updateContents).fail(function(result) {
+        $(document.body).html(result.responseText);
+    }).always(function(result) {
+        ajaxLoader.remove();
+    });
+}
+
+function showFolder(album) {
+    var ajaxLoader = hideContent();
     $.ajax({
         url: '/sherpa/bildearkiv/innhold/' + album,
         type: 'POST'

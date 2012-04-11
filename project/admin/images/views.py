@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.db.models import Q
 
 from admin.models import Image, Tag, Album
 from lib import S3
@@ -182,23 +183,48 @@ def upload_image(request, album):
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
 
 def content_json(request, album):
-    objects = {'parents': [], 'albums': [], 'images': []}
     if album is not None:
         current_album = Album.objects.get(id=album)
-        parents = list_parents(current_album)
-        for parent in parents:
-            objects['parents'].append({'id': parent.id, 'name': parent.name})
-        images = Image.objects.filter(album=album)
-        for image in images:
-            if image.photographer == '':
-                image.photographer = 'Ingen fotograf oppgitt'
-            objects['images'].append({'key': image.key, 'extension': image.extension,
-                'width': image.width, 'height': image.height,
-                'photographer': image.photographer, 'description': image.description})
-    albums = Album.objects.filter(parent=album)
+        objects = parse_objects(list_parents(current_album),
+            Album.objects.filter(parent=album),
+            Image.objects.filter(album=album))
+    else:
+        objects = parse_objects([], Album.objects.filter(parent=None), [])
+    return HttpResponse(json.dumps(objects))
+
+def search_json(request):
+    images = []
+    if len(request.POST['query']) > 2:
+        for word in request.POST['query'].split(' '):
+            images += Image.objects.filter(
+                Q(description__icontains=word) |
+                Q(album__name__icontains=word) |
+                Q(photographer__icontains=word) |
+                Q(credits__icontains=word) |
+                Q(licence__icontains=word) |
+                Q(exif__icontains=word) |
+                Q(uploader__user__first_name__icontains=word) |
+                Q(uploader__user__last_name__icontains=word) |
+                Q(uploader__user__username__icontains=word) |
+                Q(tags__name__icontains=word)
+        )
+    objects = parse_objects([], [], images)
+    return HttpResponse(json.dumps(objects))
+
+def parse_objects(parents, albums, images):
+    objects = {'parents': [], 'albums': [], 'images': []}
+    for parent in parents:
+        objects['parents'].append({'id': parent.id, 'name': parent.name})
     for album in albums:
         objects['albums'].append({'id': album.id, 'name': album.name})
-    return HttpResponse(json.dumps(objects))
+    for image in images:
+        if image.photographer == '':
+            image.photographer = 'Ingen fotograf oppgitt'
+        objects['images'].append({'key': image.key, 'extension': image.extension,
+            'width': image.width, 'height': image.height,
+            'photographer': image.photographer, 'description': image.description})
+    return objects
+
 
 def list_parents(album):
     parents = []
