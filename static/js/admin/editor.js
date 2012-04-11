@@ -7,10 +7,10 @@ $(document).ready(function() {
 
     var insertable;
     $("div.no-save-warning").hide();
-    selectableContent($(".content"));
+    selectableContent($(".html"));
     setEmpties();
     enableEditing();
-    autoRemoveEmptyContent($("article .content"));
+    autoRemoveEmptyContent($("article .html"));
 
     // Make toolbar draggable
     $("#toolbar").draggable({
@@ -40,7 +40,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = $('<p><br></p>');
+            var html = $('<p><br></p>');
             function done(wrapper) {
                 selectableContent(wrapper);
                 autoRemoveEmptyContent(wrapper);
@@ -56,7 +56,7 @@ $(document).ready(function() {
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
                 $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(content).html(), 'html', done);
+                $("<div/>").append(html).html(), 'html', done);
         });
     });
 
@@ -77,7 +77,7 @@ $(document).ready(function() {
              * of the image) add the html content (text below image).
              */
             var image = $('<img src="" alt="">');
-            var content = $('<p>BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></p>');
+            var html = $('<p>BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></p>');
             function imageDone(wrapper) {
                 var image = wrapper.find("img");
                 function contentDone(wrapper) {
@@ -95,7 +95,7 @@ $(document).ready(function() {
                 addContent($(event.target).prev(), $(event.target).parent(),
                     $(event.target).parent(".column").attr("data-id"),
                     $(event.target).prevAll(":not(.insertable)").length,
-                    $("<div/>").append(content).html(), 'html', contentDone);
+                    $("<div/>").append(html).html(), 'html', contentDone);
             }
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
@@ -152,13 +152,13 @@ $(document).ready(function() {
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $("article div.content, article div.widget, article div.image").off('hover click');
+            $("article div.html, article div.widget, article div.image").off('hover click');
             enableEditing();
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $("article div.content, article div.widget, article div.image").hover(function() {
+        $("article div.html, article div.widget, article div.image").hover(function() {
             $(this).addClass('hover-remove');
         }, function() {
             $(this).removeClass('hover-remove');
@@ -172,7 +172,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 content.show();
                 content.removeClass('hover-remove');
-                content.find(".content").focusout();
+                content.find(".html").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -302,7 +302,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 row.show();
                 row.removeClass('hover-remove');
-                row.find(".content").focusout();
+                row.find(".html").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -333,21 +333,21 @@ $(document).ready(function() {
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
-        $("article .content").attr('contenteditable', 'true');
+        $("article .html").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
-        $("article .content").removeAttr('contenteditable');
+        $("article .html").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
-        $("article .content").removeAttr('contenteditable');
+        $("article .html").removeAttr('contenteditable');
         sortState = 'vertical';
     });
 
@@ -492,7 +492,7 @@ $(document).ready(function() {
             columns = columns.concat([column]);
         });
         var contents = [];
-        $("article div.content, article div.image").each(function() {
+        $("article div.html, article div.image").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
@@ -550,11 +550,11 @@ $(document).ready(function() {
 
     /* Toggle editing of the actual content */
     function disableEditing() {
-        $("article div.content").removeAttr('contenteditable');
+        $("article div.html").removeAttr('contenteditable');
         $("article div.image img").off('click');
     }
     function enableEditing() {
-        $("article div.content").attr('contenteditable', 'true');
+        $("article div.html").attr('contenteditable', 'true');
         changeableImages($("article div.image img"));
     }
 
@@ -588,12 +588,12 @@ $(document).ready(function() {
     /**
      * Dynamic event handlers
      * These will need to be reapplied for all newly
-     * created DOM content elements.
+     * created DOM html elements.
      */
 
     /* Highlight contenteditables that _are being edited_. */
-    function selectableContent(content) {
-        content.click(function() {
+    function selectableContent(html) {
+        html.click(function() {
             $(this).addClass('selected');
         }).focusout(function() {
             $(this).removeClass('selected');
@@ -613,19 +613,19 @@ $(document).ready(function() {
     }
 
     /* Automatically remove empty content-elements */
-    function autoRemoveEmptyContent(content) {
-        content.focusout(function() {
+    function autoRemoveEmptyContent(html) {
+        html.focusout(function() {
             if($(this).text().trim() === "") {
                 disableEditing();
-                var content = $(this);
+                var html = $(this);
                 $.ajax({
-                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(html.attr('data-id')) + '/',
                     type: 'POST'
                 }).done(function(result) {
-                    if(content.siblings().length == 0) {
-                        setEmpty(content.parent());
+                    if(html.siblings().length == 0) {
+                        setEmpty(html.parent());
                     }
-                    content.remove();
+                    html.remove();
                 }).fail(function(result) {
                     // Todo
                 }).always(function(result) {
@@ -654,15 +654,7 @@ $(document).ready(function() {
                   "&type=" + encodeURIComponent(type)
         }).done(function(result) {
             result = JSON.parse(result);
-            var contentClass;
-            if(type == 'html') {
-                contentClass = 'content';
-            } else if(type == 'image') {
-                contentClass = 'image';
-            } else if(type == 'widget') {
-                contentClass = 'widget';
-            }
-            var wrapper = $('<div class="' + contentClass + '" data-id="' + result.id + '"></div>').append(result.content);
+            var wrapper = $('<div class="' + type + '" data-id="' + result.id + '"></div>').append(result.content);
             if(prev.length == 0) {
                 parent.prepend(wrapper);
             } else {
