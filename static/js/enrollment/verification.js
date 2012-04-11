@@ -52,12 +52,21 @@ $(document).ready(function() {
         if(high != low) {
             // Recommend the cheapest price
             $("table.prices tr[data-age]").eq(low.index).addClass('main');
-            var info = $('<div class="offset3 span6"><div class="alert alert-info"><a class="close">x</a><strong>Rabattmulighet</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div></div>');
+            var info = $('<div class="offset3 span6"><div class="alert alert-info"><a class="close">x</a><strong><i class="icon-exclamation-sign"></i> Rabattmulighet</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div></div>');
             info.find("a.close").click(function() { $(this).parent().remove(); });
             $("table.prices").parent().before(info);
         } else {
             // No price differences, set the first member as main member
-            $("table.prices tr[data-age]").eq(0).addClass('main');
+            var done = false;
+            $("table.prices tr[data-age]").each(function() {
+                if(done) {
+                    return;
+                }
+                if($(this).attr('data-age') > 18) {
+                    $(this).addClass('main');
+                    done = true;
+                }
+            });
         }
     }
 
@@ -104,7 +113,7 @@ function calculatePrices() {
         var age = $(this).attr('data-age');
         var price = priceOf(age);
         var type = typeOf(age);
-        if(!$(this).hasClass('main')) {
+        if(!$(this).hasClass('main') && $(this).siblings(".main").length > 0) {
             if(price > price_household) {
                 price = price_household;
                 type = "Husstandsmedlem";

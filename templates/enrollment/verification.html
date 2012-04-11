@@ -44,14 +44,25 @@
             <td></td>
           {% endif %}
           <td>
-            {{ user.name }}<br>
-            {{ user.dob|date:"d. N Y" }}<br>
-            {% if users|length == 1 and not existing %}
-              {{ address }}<br>
-              {{ zipcode }} {{ location }}<br>
-            {% endif %}
-            {{ user.phone }}<br>
-            {{ user.email }}
+            <div class="desc">
+              Navn:<br>
+              Født:<br>
+              {% if users|length == 1 and not existing %}
+                Adresse:<br><br>
+              {% endif %}
+              {% if user.phone %}Telefon:<br>{% endif %}
+              {% if user.email %}Epost:{% endif %}
+            </div>
+            <div class="data">
+              {{ user.name }}<br>
+              {{ user.dob|date:"j. F Y" }}<br>
+              {% if users|length == 1 and not existing %}
+                {{ address }}<br>
+                {{ zipcode }} {{ location }}<br>
+              {% endif %}
+              {% if user.phone %}{{ user.phone }}<br>{% endif %}
+              {% if user.email %}{{ user.email }}{% endif %}
+            </div>
           </td>
           <td class="type"></td>
           <td><span class="price"></span>,-</td>
@@ -63,7 +74,7 @@
           <td></td>
         {% endif %}
         <td>
-          <strong>Adresse:</strong><br>
+          <strong>Deres adresse:</strong><br>
           {{ address }}<br>
           {{ zipcode }} {{ location }}
         </td>

@@ -98,3 +98,21 @@ table.registration-progress td.step.current {
     background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
     border-right: none !important;
 }
+
+span.asterisk {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+span.asterisk.red {
+    color: red;
+}
+
+table.prices div.desc {
+    float: left;
+    font-style: italic;
+}
+
+table.prices div.data {
+    margin-left: 70px; /* estimated width of previous sibling div.desc */
+}

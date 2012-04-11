@@ -16,7 +16,7 @@ MANAGERS = ADMINS = (
 
 TIME_ZONE = 'Europe/Oslo'
 LANGUAGE_CODE = 'nb' # See http://www.i18nguy.com/unicode/language-identifiers.html
-USE_I18N = False
+USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
