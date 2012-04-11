@@ -15,6 +15,7 @@ $(document).ready(function() {
         dialog.dialog('close');
         currentImage.attr('src', dialog.find("input[name='url']").val());
         currentImage.attr('alt', dialog.find("input[name='alt']").val());
+        $("#toolbar .save button.save").click();
     });
 
 });
