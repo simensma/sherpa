@@ -186,7 +186,10 @@ def content_json(request, album):
             objects['parents'].append({'id': parent.id, 'name': parent.name})
         images = Image.objects.filter(album=album)
         for image in images:
-            objects['images'].append({'id': image.id, 'key': image.key})
+            if image.photographer == '':
+                image.photographer = 'Ingen fotograf oppgitt'
+            objects['images'].append({'key': image.key, 'width': image.width, 'height': image.height,
+                'photographer': image.photographer, 'description': image.description})
     albums = Album.objects.filter(parent=album)
     for album in albums:
         objects['albums'].append({'id': album.id, 'name': album.name})

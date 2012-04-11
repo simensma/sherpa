@@ -21,7 +21,9 @@ $(document).ready(function() {
 
 function showFolder(album) {
     var list = $("div#dialog-change-image div#imagearchive div#contentlist");
+    var images = $("div#dialog-change-image div#imagearchive ul#images");
     list.contents().remove();
+    images.children().remove();
     list.append('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
     $.ajax({
         url: '/sherpa/bildearkiv/innhold/' + album,
@@ -36,6 +38,17 @@ function showFolder(album) {
                 showFolder($(this).attr('data-id'));
             });
             $("div#dialog-change-image div#imagearchive div#contentlist").append(item);
+        }
+
+        // Add images
+        for(var i=0; i<result.images.length; i++) {
+            var item = $('<li data-key="' + result.images[i].key + '" data-description="' + result.images[i].description + '"><p><img src="http://cdn.turistforeningen.no/images/' + result.images[i].key + '-150' + '" alt="Thumbnail"></p>' + result.images[i].width + ' x ' + result.images[i].height + '<br>' + result.images[i].photographer + '</li>');
+            item.click(function() {
+                $("div#dialog-change-image input[name='url']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-key'));
+                $("div#dialog-change-image input[name='alt']").val($(this).attr('data-description'));
+                $("div#dialog-change-image button.insert-image").click();
+            });
+            images.append(item);
         }
 
         // Add breadcrumbs
