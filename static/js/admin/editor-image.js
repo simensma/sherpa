@@ -28,6 +28,8 @@ function showFolder(album) {
         type: 'POST'
     }).done(function(result) {
         result = JSON.parse(result);
+
+        // Add albums
         for(var i=0; i<result.albums.length; i++) {
             var item = $('<div class="album"><a href="javascript:undefined" data-id="' + result.albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + result.albums[i].name + '</a></div><div style="clear: both;"></div>');
             item.find("a").click(function() {
@@ -36,6 +38,7 @@ function showFolder(album) {
             $("div#dialog-change-image div#imagearchive div#contentlist").append(item);
         }
 
+        // Add breadcrumbs
         bcList.children().remove();
         bcList.append(bcRoot);
         bcRoot.find("a").click(function() {
