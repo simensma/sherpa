@@ -6,6 +6,7 @@ $(document).ready(function() {
      */
 
     rangy.init();
+    var selection;
     var insertable;
     $("div.no-save-warning").hide();
     setEmpties();
@@ -389,7 +390,11 @@ $(document).ready(function() {
 
     $("#toolbar select").change(function() {
         $("select option:selected").each(function() {
-            document.execCommand('formatblock', false, $(this).val());
+            // The smart thing to do here would be:
+            // document.execCommand('formatblock', false, $(this).val());
+            // But IE doesn't support that, so. FML.
+            var node = $(selection.anchorNode).parent();
+            node.replaceWith($('<' + $(this).val() + '></' + $(this).val() + '>').prepend(node.contents()));
         });
         $("#toolbar select").val("default");
     });
@@ -597,7 +602,12 @@ $(document).ready(function() {
             $(this).addClass('selected');
         }).focusout(function() {
             $(this).removeClass('selected');
-        });
+        }).click(setSelection).keyup(setSelection);
+    }
+
+    /* Used by selectableContent */
+    function setSelection() {
+        selection = rangy.getSelection();
     }
 
     /* Change image sources upon being clicked. */
