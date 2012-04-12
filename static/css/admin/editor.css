@@ -123,83 +123,88 @@ article .moveable.vertical {
   height: 0.8em;
 }
 
-#toolbar div.button {
+#toolbar a.button {
+  display: block;
   float: left;
   cursor: pointer;
   width: 27px;
   height: 27px;
 }
 
-#toolbar div.button.bold {
+#toolbar a.button:hover {
+  text-decoration: none;
+}
+
+#toolbar a.button.bold {
   background-image: url('/static/img/editorbuttons/bold-inactive.png');
 }
-#toolbar div.button.bold:hover {
+#toolbar a.button.bold:hover {
   background-image: url('/static/img/editorbuttons/bold-hover.png');
 }
-#toolbar div.button.bold.active {
+#toolbar a.button.bold.active {
   background-image: url('/static/img/editorbuttons/bold-active.png') !important;
 }
-#toolbar div.button.italic {
+#toolbar a.button.italic {
   background-image: url('/static/img/editorbuttons/italic-inactive.png');
 }
-#toolbar div.button.italic:hover {
+#toolbar a.button.italic:hover {
   background-image: url('/static/img/editorbuttons/italic-hover.png');
 }
-#toolbar div.button.italic.active {
+#toolbar a.button.italic.active {
   background-image: url('/static/img/editorbuttons/italic-active.png') !important;
 }
-#toolbar div.button.underline {
+#toolbar a.button.underline {
   background-image: url('/static/img/editorbuttons/underline-inactive.png');
 }
-#toolbar div.button.underline:hover {
+#toolbar a.button.underline:hover {
   background-image: url('/static/img/editorbuttons/underline-hover.png');
 }
-#toolbar div.button.underline.active {
+#toolbar a.button.underline.active {
   background-image: url('/static/img/editorbuttons/underline-active.png') !important;
 }
-#toolbar div.button.ol {
+#toolbar a.button.ol {
   background-image: url('/static/img/editorbuttons/ol-inactive.png');
 }
-#toolbar div.button.ol:hover {
+#toolbar a.button.ol:hover {
   background-image: url('/static/img/editorbuttons/ol-hover.png');
 }
-#toolbar div.button.ol.active {
+#toolbar a.button.ol.active {
   background-image: url('/static/img/editorbuttons/ol-active.png') !important;
 }
-#toolbar div.button.ul {
+#toolbar a.button.ul {
   background-image: url('/static/img/editorbuttons/ul-inactive.png');
 }
-#toolbar div.button.ul:hover {
+#toolbar a.button.ul:hover {
   background-image: url('/static/img/editorbuttons/ul-hover.png');
 }
-#toolbar div.button.ul.active {
+#toolbar a.button.ul.active {
   background-image: url('/static/img/editorbuttons/ul-active.png') !important;
 }
-#toolbar div.button.align-left {
+#toolbar a.button.align-left {
   background-image: url('/static/img/editorbuttons/align-left-inactive.png');
 }
-#toolbar div.button.align-left:hover {
+#toolbar a.button.align-left:hover {
   background-image: url('/static/img/editorbuttons/align-left-hover.png');
 }
-#toolbar div.button.align-left.active {
+#toolbar a.button.align-left.active {
   background-image: url('/static/img/editorbuttons/align-left-active.png') !important;
 }
-#toolbar div.button.align-center {
+#toolbar a.button.align-center {
   background-image: url('/static/img/editorbuttons/align-center-inactive.png');
 }
-#toolbar div.button.align-center:hover {
+#toolbar a.button.align-center:hover {
   background-image: url('/static/img/editorbuttons/align-center-hover.png');
 }
-#toolbar div.button.align-center.active {
+#toolbar a.button.align-center.active {
   background-image: url('/static/img/editorbuttons/align-center-active.png') !important;
 }
-#toolbar div.button.align-right {
+#toolbar a.button.align-right {
   background-image: url('/static/img/editorbuttons/align-right-inactive.png');
 }
-#toolbar div.button.align-right:hover {
+#toolbar a.button.align-right:hover {
   background-image: url('/static/img/editorbuttons/align-right-hover.png');
 }
-#toolbar div.button.align-right.active {
+#toolbar a.button.align-right.active {
   background-image: url('/static/img/editorbuttons/align-right-active.png') !important;
 }
 

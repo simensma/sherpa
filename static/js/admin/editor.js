@@ -404,31 +404,31 @@ $(document).ready(function() {
     $("#toolbar button.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
     });
-    $("#toolbar div.button.bold").click(function(event) {
+    $("#toolbar a.button.bold").click(function(event) {
         document.execCommand('bold', false, null);
     });
-    $("#toolbar div.button.italic").click(function(event) {
+    $("#toolbar a.button.italic").click(function(event) {
         document.execCommand('italic', false, null);
     });
-    $("#toolbar div.button.underline").click(function(event) {
+    $("#toolbar a.button.underline").click(function(event) {
         document.execCommand('underline', false, null);
     });
-    $("#toolbar div.button.ol").click(function(event) {
+    $("#toolbar a.button.ol").click(function(event) {
         document.execCommand('insertorderedlist', false, null);
     });
-    $("#toolbar div.button.ul").click(function(event) {
+    $("#toolbar a.button.ul").click(function(event) {
         document.execCommand('insertunorderedlist', false, null);
     });
-    $("#toolbar div.button.align-left").click(function(event) {
+    $("#toolbar a.button.align-left").click(function(event) {
         document.execCommand('justifyleft', false, null);
     });
-    $("#toolbar div.button.align-center").click(function(event) {
+    $("#toolbar a.button.align-center").click(function(event) {
         document.execCommand('justifycenter', false, null);
     });
-    $("#toolbar div.button.align-right").click(function(event) {
+    $("#toolbar a.button.align-right").click(function(event) {
         document.execCommand('justifyright', false, null);
     });
-    $("#toolbar div.button.full").click(function(event) {
+    $("#toolbar a.button.full").click(function(event) {
         document.execCommand('justifyfull', false, null);
     });
 
