@@ -7,7 +7,6 @@ $(document).ready(function() {
 
     var insertable;
     $("div.no-save-warning").hide();
-    selectableContent($(".html"));
     setEmpties();
     enableEditing();
     autoRemoveEmptyContent($("article .html"));
