@@ -5,6 +5,7 @@ $(document).ready(function() {
      * Initialization
      */
 
+    rangy.init();
     var insertable;
     $("div.no-save-warning").hide();
     setEmpties();
