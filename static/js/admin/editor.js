@@ -397,34 +397,34 @@ $(document).ready(function() {
         document.execCommand('createLink', false, $("input.url").val());
     });
     $("#toolbar button.anchor-remove").click(function(event) {
-        document.execCommand('unlink');
+        document.execCommand('unlink', false, null);
     });
     $("#toolbar div.button.bold").click(function(event) {
-        document.execCommand('bold');
+        document.execCommand('bold', false, null);
     });
     $("#toolbar div.button.italic").click(function(event) {
-        document.execCommand('italic');
+        document.execCommand('italic', false, null);
     });
     $("#toolbar div.button.underline").click(function(event) {
-        document.execCommand('underline');
+        document.execCommand('underline', false, null);
     });
     $("#toolbar div.button.ol").click(function(event) {
-        document.execCommand('insertorderedlist');
+        document.execCommand('insertorderedlist', false, null);
     });
     $("#toolbar div.button.ul").click(function(event) {
-        document.execCommand('insertunorderedlist');
+        document.execCommand('insertunorderedlist', false, null);
     });
     $("#toolbar div.button.align-left").click(function(event) {
-        document.execCommand('justifyleft');
+        document.execCommand('justifyleft', false, null);
     });
     $("#toolbar div.button.align-center").click(function(event) {
-        document.execCommand('justifycenter');
+        document.execCommand('justifycenter', false, null);
     });
     $("#toolbar div.button.align-right").click(function(event) {
-        document.execCommand('justifyright');
+        document.execCommand('justifyright', false, null);
     });
     $("#toolbar div.button.full").click(function(event) {
-        document.execCommand('justifyfull');
+        document.execCommand('justifyfull', false, null);
     });
 
     /**
