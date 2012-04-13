@@ -433,7 +433,11 @@ $(document).ready(function() {
         $("#toolbar select").val("default");
     });
     $("#toolbar button.anchor-add").click(function(event) {
-        document.execCommand('createLink', false, $("input.url").val());
+        var url = $("input.url").val();
+        if(!url.match(/^http:\/\//)) {
+            url = "http://" + url;
+        }
+        document.execCommand('createLink', false, url);
     });
     $("#toolbar button.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
