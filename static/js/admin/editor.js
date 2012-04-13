@@ -433,6 +433,12 @@ $(document).ready(function() {
         $("#toolbar select").val("default");
     });
     $("#toolbar button.anchor-add").click(function(event) {
+        var range = selection.getRangeAt(0);
+        // Trim the selection for whitespace (actually, just the last char, since that's most common)
+        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+            range.setEnd(range.endContainer, range.endOffset - 1);
+        }
+        selection.setSingleRange(range);
         var url = $("input.url").val();
         if(!url.match(/^http:\/\//)) {
             url = "http://" + url;
@@ -640,7 +646,7 @@ $(document).ready(function() {
             $(this).addClass('selected');
         }).focusout(function() {
             $(this).removeClass('selected');
-        }).click(setSelection).keyup(setSelection);
+        }).mouseup(setSelection).keyup(setSelection);
     }
 
     /* Used by selectableContent */
