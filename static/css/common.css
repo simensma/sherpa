@@ -35,3 +35,7 @@ article .meta p em {
 article .meta hr {
   margin: 0;
 }
+
+img {
+  max-width: 100%;
+}
