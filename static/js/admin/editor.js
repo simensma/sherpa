@@ -198,6 +198,40 @@ $(document).ready(function() {
         });
     });
 
+    // Insert custom button
+    $("div#dialog-add-button div.alert").hide();
+    $("div#dialog-add-button").bind('dialogopen', function(event, ui) {
+        if(selection === undefined) {
+            $(this).dialog('close');
+            alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
+        }
+    });
+    $("div#dialog-add-button button.insert").click(function() {
+        var text = $("div#dialog-add-button input[name='text']").val();
+        var url = $("div#dialog-add-button input[name='url']").val();
+        if(text == "") {
+            $("div#dialog-add-button div.alert").show();
+            return;
+        }
+        var el;
+        if(url != "") {
+            if(!url.match(/^http:\/\//)) {
+                url = "http://" + url;
+            }
+            el = 'a href="' + url + '"';
+        } else {
+            el = 'button';
+        }
+        var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
+        button.addClass($("div#dialog-add-button input[name='color']:checked").val())
+              .addClass($("div#dialog-add-button input[name='size']:checked").val());
+        $(selection.anchorNode).parents(".html").append($('<p></p>').prepend(button), $('<p><br></p>'));
+        $("div#dialog-add-button").dialog('close');
+    });
+    $("div#dialog-add-button table.choices button").click(function() {
+        $(this).parent().prev().children("input[type='radio']").click();
+    });
+
     /**
      * Structural changes (rows/columns)
      */
