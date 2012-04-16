@@ -26,7 +26,6 @@ class Page(models.Model):
 
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):
-    Menu.objects.filter(page=kwargs['instance']).delete()
     Variant.objects.filter(page=kwargs['instance']).delete()
 
 class Variant(models.Model):
