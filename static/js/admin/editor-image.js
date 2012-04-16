@@ -13,11 +13,18 @@ $(document).ready(function() {
     bcList = $("div#dialog-change-image div#imagearchive ul.breadcrumb");
     showFolder('');
     $("div#dialog-change-image div.too-few-chars").hide();
+    $("div#dialog-change-image div.empty-url").hide();
 
     $("div#dialog-change-image button.insert-image").click(function() {
         var dialog = $(this).parents("div#dialog-change-image");
+        var url = dialog.find("input[name='url']").val();
+        if(url == "") {
+            $("div#dialog-change-image div.empty-url").show();
+            return;
+        }
+        $("div#dialog-change-image div.empty-url").hide();
         dialog.dialog('close');
-        currentImage.attr('src', dialog.find("input[name='url']").val());
+        currentImage.attr('src', url);
         currentImage.attr('alt', dialog.find("input[name='alt']").val());
         var anchor = dialog.find("input[name='anchor']").val();
         if(anchor.length == 0) {

@@ -62,6 +62,11 @@
 
 {# Changing image #}
 <div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
+  <div class="alert alert-error empty-url">
+    <a class="close">x</a>
+    <strong>Sett inn hvilket bilde?</strong><br>
+    Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
+  </div>
   <table>
     <tr>
       <td>Bildets adresse:</td><td><input type="text" class="span6" name="url"></td>
