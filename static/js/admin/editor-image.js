@@ -28,7 +28,7 @@ $(document).ready(function() {
             }
         } else {
             // Add link
-            if(!anchor.match(/^http:\/\//)) {
+            if(!anchor.match(/^https?:\/\//)) {
                 anchor = "http://" + anchor;
             }
             if(currentImage.parent("a").length > 0) {

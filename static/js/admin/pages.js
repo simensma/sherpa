@@ -52,7 +52,7 @@ $(document).ready(function() {
     $("div.menu-dialog button.save-menu").click(function() {
         var name = $("div.menu-dialog input[name='name']").val();
         var url = $("div.menu-dialog input[name='url']").val();
-        if(!url.match(/^http:\/\//)) {
+        if(!url.match(/^https?:\/\//)) {
             url = "http://" + url;
         }
         var ajaxUrl;

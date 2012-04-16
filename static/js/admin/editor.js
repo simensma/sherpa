@@ -215,7 +215,7 @@ $(document).ready(function() {
         }
         var el;
         if(url != "") {
-            if(!url.match(/^http:\/\//)) {
+            if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }
             el = 'a href="' + url + '"';
@@ -440,7 +440,7 @@ $(document).ready(function() {
         }
         selection.setSingleRange(range);
         var url = $("input.url").val();
-        if(!url.match(/^http:\/\//)) {
+        if(!url.match(/^https?:\/\//)) {
             url = "http://" + url;
         }
         document.execCommand('createLink', false, url);
