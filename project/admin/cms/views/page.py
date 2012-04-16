@@ -20,7 +20,7 @@ def new(request):
     variant.save()
     version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
     version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 @login_required
 def edit(request, page):
