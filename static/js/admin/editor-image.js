@@ -15,7 +15,7 @@ $(document).ready(function() {
     $("div#dialog-change-image div.too-few-chars").hide();
 
     $("div#dialog-change-image button.insert-image").click(function() {
-        var dialog = $(this).parents("div#dialog-change-image")
+        var dialog = $(this).parents("div#dialog-change-image");
         dialog.dialog('close');
         currentImage.attr('src', dialog.find("input[name='url']").val());
         currentImage.attr('alt', dialog.find("input[name='alt']").val());
