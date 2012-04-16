@@ -6,17 +6,6 @@ from django.contrib.auth.decorators import login_required
 from project.page.models import Menu, Page, Variant
 
 @login_required
-def list(request):
-    menus = Menu.objects.all().order_by('position')
-    for menu in menus:
-        menu.page.active = Variant.objects.filter(page=menu.page).get(active=True)
-    pages = Page.objects.filter(menu__isnull=True)
-    for page in pages:
-        page.active = Variant.objects.filter(page=page).get(active=True)
-    context = {'menus': menus, 'pages': pages}
-    return render(request, 'admin/cms/menu.html', context)
-
-@login_required
 def new(request):
     page = Page.objects.get(id=request.POST['page'])
     max_order = Menu.objects.aggregate(Max('order'))['order__max']

@@ -9,7 +9,6 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
 
     # Menus
-    url(r'^meny/$', 'menu.list'),
     url(r'^meny/ny/$', 'menu.new'),
     url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
