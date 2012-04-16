@@ -6,6 +6,24 @@
 {% endblock %}
 {% block body %}
 
+<h1>Hovedmeny</h1>
+<div class="row">
+  <div class="span12">
+    <nav id="menus">
+      <ul class="nav nav-tabs">
+        {% for menu in menus %}
+        <li>
+          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
+        </li>
+        {% endfor %}
+        <li class="new">
+          <a class="new" href="javascript:undefined">+</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
 <h1>Websider</h1>
 {% if not versions %}
 <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
@@ -63,24 +81,6 @@
   </form>
 </div>
 
-
-<h1>Hovedmeny</h1>
-<div class="row">
-  <div class="span12">
-    <nav id="menus">
-      <ul class="nav nav-tabs">
-        {% for menu in menus %}
-        <li>
-          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
-        </li>
-        {% endfor %}
-        <li class="new">
-          <a class="new" href="javascript:undefined">+</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</div>
 
 <div class="dialog menu-dialog" data-title="Lagre menylink" data-width="auto">
   {% csrf_token %}
