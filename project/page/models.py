@@ -8,6 +8,8 @@ class Menu(models.Model):
     # Even though this should be unique, it's not enforced because
     # when swapping, two orders will temporarily clash.
     order = models.IntegerField()
+    # Used to mark the current active menu page
+    active = None
 
 @receiver(pre_delete, sender=Menu, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
