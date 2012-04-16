@@ -1,6 +1,9 @@
 {% extends "admin/layout.html" %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin/pages.js"></script>
+{% endblock %}
 {% block body %}
 
 <h1>Websider</h1>
@@ -62,83 +65,40 @@
 
 
 <h1>Hovedmeny</h1>
-{% if not menus %}
-<div class="alert alert-info">Det er ikke definert noen menylinker for dette nettstedet.</div>
-{% else %}
-<table class="table table-striped">
-<thead>
-<tr>
-  <th>Rekkefølge</th>
-  <th>Navn</th>
-  <th>Linker til</th>
-  <th>Flytt opp</th>
-  <th>Flytt ned</th>
-  <th>Slett</th>
-</tr>
-</thead>
-<tbody>
-{% for menu in menus %}
-<tr>
-  <td>{{ forloop.counter }}.</td>
-  <td>{{ menu.name }}</td>
-  <td><a href="http://{{ site.domain }}/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}">http://{{ site.domain }}/{{ menu.page.slug }}{% if menu.page.slug %}/{% endif %}</a></td>
-  <td>{% if menu.order != 1 %}
-    <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:-1 %}">Opp</a>
-  {% endif %}</td>
-  <td>{% if menu.order != menus|length %}
-    <a href="{% url admin.cms.views.menu.swap menu.order menu.order|add:1 %}">Ned</a>
-  {% endif %}</td>
-  <td>[ <a href="{% url admin.cms.views.menu.delete menu.id %}">Slett</a> ]</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-{% endif %}
-
 <div class="row">
-  <div class="offset5 span2">
-    <p><a id="add-menu" class="btn btn-primary large-button dialog-button" data-dialog=".menu-dialog" href="javascript:undefined">Opprett ny meny-link</a></p>
+  <div class="span12">
+    <nav id="menus">
+      <ul class="nav nav-tabs">
+        {% for menu in menus %}
+        <li>
+          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
+        </li>
+        {% endfor %}
+        <li class="new">
+          <a class="new" href="javascript:undefined">+</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 
-<div class="dialog menu-dialog" data-title="Opprett ny menylink" data-width="80%">
-  <form action="{% url admin.cms.views.menu.new %}" method="post">
+<div class="dialog menu-dialog" data-title="Lagre menylink" data-width="auto">
   {% csrf_token %}
+  <table class="table">
+  <tr>
+    <td>Navn på linken:</td>
+    <td><input type="text" name="name" class="span2"></td>
+  </tr>
+  <tr>
+    <td>Adresse:</td>
+    <td><input type="text" name="url" class="span5"></td>
+  </tr>
+  </table>
 
-    <table class="table">
-    <tr>
-      <td>Navn på linken:</td>
-      <td><input type="text" name="name"></td>
-    </tr>
-    </table>
-
-    <h2>Velg hvilken side linken skal peke til:</h2>
-    <table class="table">
-    <thead>
-    <tr>
-      <th></th>
-      <th>Tittel</th>
-      <th>URL</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for version in versions %}
-    <tr>
-      <td><input type="radio" name="page" value="{{ version.variant.page.id }}"></td>
-      <td>{{ version.variant.page.title }}</td>
-      <td>http://{{ site.domain }}/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td>Det er ikke opprettet noen sider du kan velge ennå.</td>
-    </tr>
-    {% endfor %}
-    <tr>
-      <td colspan="2"><input type="submit" value="Opprett meny-link"></td>
-    </tr>
-    </tbody>
-    </table>
-  </form>
+  <p>
+    <button class="btn btn-success btn-large save-menu"><i class="icon-ok"></i> Lagre</button>
+    <button class="btn btn-danger btn-large delete-menu"><i class="icon-warning-sign"></i> Slett menyen</button>
+  </p>
 </div>
 
 {% endblock %}

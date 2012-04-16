@@ -10,7 +10,8 @@ urlpatterns = patterns('admin.cms.views',
 
     # Menus
     url(r'^meny/ny/$', 'menu.new'),
-    url(r'^meny/bytt/(?P<order1>\d+)/(?P<order2>\d+)/$', 'menu.swap'),
+    url(r'^meny/rediger/(?P<menu>\d+)/$', 'menu.edit'),
+    url(r'^meny/sorter/$', 'menu.reorder'),
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 
     # Versions
