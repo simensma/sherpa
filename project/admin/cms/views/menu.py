@@ -17,15 +17,7 @@ def new(request):
 
 @login_required
 def delete(request, menu):
-    menu = Menu.objects.get(id=menu)
-    offset = menu.order
-    menu.delete()
-    # Cascade orders
-    menus = Menu.objects.all().filter(order__gt=offset).order_by('order')
-    for menu in menus:
-        menu.order = offset
-        menu.save()
-        offset += 1
+    Menu.objects.get(id=menu).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
 @login_required

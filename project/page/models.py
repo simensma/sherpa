@@ -9,6 +9,12 @@ class Menu(models.Model):
     # when swapping, two orders will temporarily clash.
     order = models.IntegerField()
 
+@receiver(pre_delete, sender=Menu, dispatch_uid="page.models")
+def delete_content(sender, **kwargs):
+    for menu in Menu.objects.filter(order__gt=kwargs['instance'].order):
+        menu.order = (menu.order-1)
+        menu.save();
+
 class Page(models.Model):
     title = models.CharField(max_length=200)
     slug = models.CharField(max_length=50, unique=True)
