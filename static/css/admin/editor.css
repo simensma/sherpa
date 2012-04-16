@@ -4,6 +4,9 @@
 
 article .insertable {
   cursor: pointer;
+  font-weight: bold;
+  background-color: rgb(65, 65, 65) !important;
+  color: rgb(195, 195, 195) !important;
 }
 
 article .insertable, article .empty {
