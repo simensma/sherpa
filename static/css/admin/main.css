@@ -20,11 +20,11 @@ header h1 {
   margin-top: 25px;
   font-size: 280%;
 }
-nav > ul {
+nav#dashboard > ul {
   list-style-type: none;
 }
 
-nav > ul > li {
+nav#dashboard > ul > li {
   display: block;
   float: left;
   width: 250px;
@@ -34,7 +34,7 @@ nav > ul > li {
   text-align: center;
 }
 
-nav img {
+nav#dashboard img {
   padding-top: 10px;
 }
 
