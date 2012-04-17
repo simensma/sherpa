@@ -130,6 +130,7 @@ $(document).ready(function() {
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
         $(this).parents("#dialog-add-widget").dialog('close');
+        $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
         $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
     });
 
