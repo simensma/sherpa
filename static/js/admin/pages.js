@@ -32,7 +32,7 @@ $(document).ready(function() {
     }
 
     $("table#page-details a.delete-page").click(function(e) {
-        if(!confirm("Er du sikker på at du vil slette hele denne siden, alle dens versjoner og varianter, og alt dens innhold FOR GODT? Denne handlingen kan du ikke angre!")) {
+        if(!confirm("Er du HELT sikker på at du vil slette hele denne siden, alle dens versjoner og varianter, og alt dens innhold FOR GODT? Denne handlingen kan du ikke angre!")) {
             e.preventDefault();
         }
     });
