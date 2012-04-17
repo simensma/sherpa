@@ -1,0 +1,32 @@
+{% extends "admin/layout.html" %}
+{% block title %}Websider &mdash; {{ block.super }}{% endblock %}
+{% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="span12">
+
+<h2><span style="font-weight: normal">Rediger side:</span> {{ page.title }}</h2>
+<table id="page-details">
+<tr>
+  <th>URL</th>
+  <td>http://{{ site.domain }}/<input type="text" name="slug">{% if page.slug %}{{ page.slug }}/{% endif %}</input></td>
+</tr>
+<tr>
+  <td colspan="2" class="button">
+    <a class="btn btn-success btn-large"><i class="icon-pencil"></i> Rediger</a>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" class="button">
+    <a class="btn btn-danger btn-large"><i class="icon-warning-sign"></i> Slett</a>
+  </td>
+</tr>
+</table>
+
+  </div>
+</div>
+
+{% endblock %}

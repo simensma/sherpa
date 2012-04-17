@@ -44,6 +44,18 @@ nav#dashboard img {
   width: 100%;
 }
 
+table#page-details th, table#page-details td {
+  padding: 6px;
+}
+
+table#page-details td.button {
+  text-align: center;
+}
+
+table#page-details td.button a {
+  width: 90%;
+}
+
 /* Image gallery */
 
 div#image-toolbar {

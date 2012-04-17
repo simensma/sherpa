@@ -24,19 +24,9 @@ def new(request):
 
 @login_required
 def edit(request, page):
-    if(request.method == 'GET'):
-        page = Page.objects.get(id=page)
-        variants = Variant.objects.filter(page=page).order_by('priority')
-        for variant in variants:
-            variant.active = Version.objects.get(variant=variant, active=True)
-        segments = Segment.objects.exclude(name='default')
-        context = {'page': page, 'variants': variants, 'segments': segments}
-        return render(request, 'admin/cms/edit_page.html', context)
-    elif(request.method == 'POST'):
-        page = Page.objects.get(id=page)
-        page.slug = request.POST['slug']
-        page.save()
-        return HttpResponseRedirect(reverse('admin.cms.views.page.edit', args=[page.id]))
+    page = Page.objects.get(id=page)
+    context = {'page': page, 'site': request.site}
+    return render(request, 'admin/pages/edit.html', context)
 
 @login_required
 def delete(request, page):
