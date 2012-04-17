@@ -25,7 +25,8 @@ def new(request):
 @login_required
 def edit(request, page):
     page = Page.objects.get(id=page)
-    context = {'page': page, 'site': request.site}
+    version = Version.objects.get(variant__page=page, active=True)
+    context = {'page': page, 'version': version, 'site': request.site}
     return render(request, 'admin/pages/edit.html', context)
 
 @login_required
