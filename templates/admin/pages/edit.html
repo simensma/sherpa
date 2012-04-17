@@ -1,6 +1,9 @@
 {% extends "admin/layout.html" %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %} → <a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block extra_scripts %}
+  <script src="{{ STATIC_URL }}js/admin/pages.js"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -21,7 +24,7 @@
 </tr>
 <tr>
   <td colspan="2" class="button">
-    <a class="btn btn-danger btn-large"><i class="icon-warning-sign"></i> Slett</a>
+    <a class="btn btn-danger btn-large delete-page" href="{% url admin.cms.views.page.delete page.id %}"><i class="icon-warning-sign"></i> Slett</a>
   </td>
 </tr>
 </table>

@@ -1,3 +1,17 @@
+/* Editing a page (not its contents) */
+
+$(document).ready(function() {
+
+    $("table#page-details a.delete-page").click(function(e) {
+        if(!confirm("Er du sikker på at du vil slette hele denne siden, alle dens versjoner og varianter, og alt dens innhold FOR GODT? Denne handlingen kan du ikke angre!")) {
+            e.preventDefault();
+        }
+    });
+
+});
+
+/* Menus */
+
 $(document).ready(function() {
 
     // Set when a dialog is opened (undefined for new items, or the anchor element for editing)
