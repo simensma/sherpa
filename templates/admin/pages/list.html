@@ -25,7 +25,7 @@
 </div>
 
 <h1>Websider</h1>
-{% if not versions %}
+{% if not pages %}
 <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
 {% else %}
 <table class="table table-striped">
@@ -33,17 +33,13 @@
 <tr>
   <th>Tittel</th>
   <th>URL til siden</th>
-  <th>Rediger</th>
-  <th>Slett</th>
 </tr>
 </thead>
 <tbody>
-{% for version in versions %}
+{% for page in pages %}
 <tr>
-  <td>{{ version.variant.page.title }}</td>
-  <td><a href="/{{ version.variant.page.slug }}">http://{{ site.domain }}/{{ version.variant.page.slug }}{% if version.variant.page.slug %}/{% endif %}</a></td>
-  <td>[ <a href="{% url admin.cms.views.version.edit version.id %}">Rediger</a> ]</td>
-  <td>[ <a href="{% url admin.cms.views.page.delete version.variant.page.id %}">Slett</a> ]</td>
+  <td><a href="{% url admin.cms.views.page.edit page.id %}">{{ page.title }}</a></td>
+  <td><a href="{% url admin.cms.views.page.edit page.id %}">http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}</a></td>
 </tr>
 {% endfor %}
 </tbody>
