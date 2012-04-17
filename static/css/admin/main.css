@@ -38,6 +38,10 @@ nav#dashboard img {
   padding-top: 10px;
 }
 
+h2.skinny {
+  font-weight: normal;
+}
+
 /* CMS - Large add item-button */
 
 .large-button {
@@ -54,10 +58,6 @@ table#page-details td.button {
 
 table#page-details td.button a {
   width: 90%;
-}
-
-div.edit-page-details h2 {
-  font-weight: normal;
 }
 
 div.edit-page-details h2 span.title {
