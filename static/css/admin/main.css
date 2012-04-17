@@ -56,6 +56,14 @@ table#page-details td.button a {
   width: 90%;
 }
 
+div.edit-page-details h2 {
+  font-weight: normal;
+}
+
+div.edit-page-details h2 span.title {
+  font-weight: bold;
+}
+
 /* Image gallery */
 
 div#image-toolbar {

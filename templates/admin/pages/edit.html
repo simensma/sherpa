@@ -11,10 +11,14 @@
 {% csrf_token %}
 
 <div class="row">
-  <div class="span12">
+  <div class="span12 edit-page-details">
 
-<h2><span style="font-weight: normal">Rediger side:</span> {{ page.title }}</h2>
+<h2>Rediger side: <span class="title">{{ page.title }}</span></h2>
 <table id="page-details" data-id="{{ page.id }}">
+<tr>
+  <th>Tittel</th>
+  <td><input type="text" name="title" value="{{ page.title }}"> <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Loading..."></td>
+</tr>
 <tr>
   <th>URL</th>
   <td>http://{{ site.domain }}/<input type="text" name="slug" value="{{ page.slug }}">/ <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Loading..."></td>
