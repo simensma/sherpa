@@ -12,7 +12,7 @@
 <table id="page-details">
 <tr>
   <th>URL</th>
-  <td>http://{{ site.domain }}/<input type="text" name="slug">{% if page.slug %}{{ page.slug }}/{% endif %}</input></td>
+  <td>http://{{ site.domain }}/<input type="text" name="slug" value="{{ page.slug }}">/</td>
 </tr>
 <tr>
   <td colspan="2" class="button">
