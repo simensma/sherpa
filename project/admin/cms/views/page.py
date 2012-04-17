@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from project.page.models import Menu, Page, Variant, Version
 from project.analytics.models import Segment
@@ -28,6 +28,13 @@ def edit(request, page):
     version = Version.objects.get(variant__page=page, active=True)
     context = {'page': page, 'version': version, 'site': request.site}
     return render(request, 'admin/pages/edit.html', context)
+
+@login_required
+def slug(request, page):
+    page = Page.objects.get(id=page)
+    page.slug = request.POST['slug']
+    page.save()
+    return HttpResponse()
 
 @login_required
 def delete(request, page):

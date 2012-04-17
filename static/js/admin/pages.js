@@ -2,6 +2,26 @@
 
 $(document).ready(function() {
 
+    $("table#page-details img.ajaxloader").hide();
+    $("table#page-details input[name='slug']").change(function() {
+        var id = $(this).parents("table").attr('data-id');
+        var input = $(this);
+        input.attr('disabled', true);
+        $("table#page-details img.ajaxloader").show();
+        $.ajax({
+            url: '/sherpa/cms/side/slug/' + id + '/',
+            type: 'POST',
+            data: 'slug=' + encodeURIComponent(input.val())
+        }).done(function(result) {
+
+        }).fail(function(result) {
+            // Todo
+        }).always(function() {
+            input.attr('disabled', false);
+            $("table#page-details img.ajaxloader").hide();
+        });
+    });
+
     $("table#page-details a.delete-page").click(function(e) {
         if(!confirm("Er du sikker på at du vil slette hele denne siden, alle dens versjoner og varianter, og alt dens innhold FOR GODT? Denne handlingen kan du ikke angre!")) {
             e.preventDefault();

@@ -7,15 +7,17 @@
 
 {% block body %}
 
+{# For AJAX requests #}
+{% csrf_token %}
 
 <div class="row">
   <div class="span12">
 
 <h2><span style="font-weight: normal">Rediger side:</span> {{ page.title }}</h2>
-<table id="page-details">
+<table id="page-details" data-id="{{ page.id }}">
 <tr>
   <th>URL</th>
-  <td>http://{{ site.domain }}/<input type="text" name="slug" value="{{ page.slug }}">/</td>
+  <td>http://{{ site.domain }}/<input type="text" name="slug" value="{{ page.slug }}">/ <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Loading..."></td>
 </tr>
 <tr>
   <td colspan="2" class="button">
