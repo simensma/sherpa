@@ -42,4 +42,4 @@ def update_widget(request, widget):
     t = loader.get_template(widget['template'])
     c = Context({'widget': widget})
     result = t.render(c)
-    return HttpResponse(json.dumps({'content': result}))
+    return HttpResponse(json.dumps({'content': result, 'json': request.POST['content']}))

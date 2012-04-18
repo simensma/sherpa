@@ -753,6 +753,7 @@ $(document).ready(function() {
             result = JSON.parse(result);
             widget.contents().remove();
             widget.append(result.content);
+            widget.attr('data-json', result.json);
         }).always(function() {
             disableOverlay();
         });
