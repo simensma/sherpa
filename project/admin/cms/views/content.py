@@ -24,7 +24,7 @@ def add(request):
             t = loader.get_template(widget['template'])
             c = Context({'widget': widget})
             result = t.render(c)
-        return HttpResponse(json.dumps({'id': content.id, 'content': result}))
+        return HttpResponse(json.dumps({'id': content.id, 'content': result, 'json': content.content}))
 
 @login_required
 def delete(request, content):
@@ -32,3 +32,14 @@ def delete(request, content):
         content = Content.objects.get(id=content)
         content.delete()
         return HttpResponse()
+
+@login_required
+def update_widget(request, widget):
+    widget = Content.objects.get(id=widget)
+    widget.content = request.POST['content']
+    widget.save()
+    widget = parse_widget(json.loads(widget.content))
+    t = loader.get_template(widget['template'])
+    c = Context({'widget': widget})
+    result = t.render(c)
+    return HttpResponse(json.dumps({'content': result}))

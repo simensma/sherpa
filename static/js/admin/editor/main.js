@@ -106,7 +106,9 @@ $(document).ready(function() {
     });
 
     // Add widget
-    var prev, parent, column, order;
+    var widgetPosition; // Set when inserting a new widget
+    var widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
+
     $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -120,35 +122,21 @@ $(document).ready(function() {
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             $("#dialog-add-widget").dialog('open');
             enableToolbar();
-            prev = $(this).prev();
-            parent = $(this).parent();
-            column = $(this).parent(".column").attr("data-id");
-            order = $(this).prevAll(":not(.insertable)").length;
+            widgetPosition = {
+                prev: $(this).prev(),
+                parent: $(this).parent(),
+                column: $(this).parent(".column").attr("data-id"),
+                order: $(this).prevAll(":not(.insertable)").length
+            };
             $("article .insertable").remove();
             setEmpties();
         });
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
+        widgetBeingEdited = undefined; // Defined in widgets.js
         $(this).parents("#dialog-add-widget").dialog('close');
         $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
         $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
-    });
-
-    function widgetAdded() {
-        refreshSort();
-        removeEmpties();
-        setEmpties();
-    }
-
-    // Quote-widget
-    $("div.dialog.widget-edit.quote button.save").click(function() {
-        var content = JSON.stringify({
-            widget: "quote",
-            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
-            author: $("div.dialog.widget-edit.quote input[name='author']").val()
-        });
-        $(this).parents(".dialog").dialog('close');
-        addContent(prev, parent, column, order, content, 'widget', widgetAdded);
     });
 
     // Remove content (text/image/widget)
@@ -602,10 +590,12 @@ $(document).ready(function() {
     function disableEditing() {
         $("article div.html").removeAttr('contenteditable');
         $("article div.image img").off('click focus focusout');
+        $("article div.widget").off('click');
     }
     function enableEditing() {
         selectableContent($("article div.html").attr('contenteditable', 'true'));
         changeableImages($("article div.image img"));
+        clickableWidgets($("div.widget"));
     }
 
     /* Divs for inserting widgets/images/text */
@@ -672,6 +662,14 @@ $(document).ready(function() {
         });
     }
 
+    function clickableWidgets(widgets) {
+        widgets.click(function() {
+            var widget = JSON.parse($(this).attr('data-json'));
+            widgetBeingEdited = $(this);
+            editWidget(widget);
+        });
+    }
+
     /* Automatically remove empty content-elements */
     function autoRemoveEmptyContent(html) {
         html.focusout(function() {
@@ -715,6 +713,9 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             var wrapper = $('<div class="' + type + '" data-id="' + result.id + '"></div>').append(result.content);
+            if(result.json !== undefined) {
+                wrapper.attr('data-json', result.json);
+            }
             if(prev.length == 0) {
                 parent.prepend(wrapper);
             } else {
@@ -730,6 +731,57 @@ $(document).ready(function() {
         }).always(function(result) {
             enableToolbar();
         });
+    }
+
+    /* Editing widgets */
+
+    clickableWidgets($("div.widget"));
+
+    function widgetAdded(wrapper) {
+        refreshSort();
+        removeEmpties();
+        setEmpties();
+        clickableWidgets(wrapper);
+    }
+
+    function saveWidget(widget, content) {
+        $.ajax({
+            url: '/sherpa/cms/widget/oppdater/' + widget.attr('data-id') + '/',
+            type: 'POST',
+            data: 'content=' + encodeURIComponent(content)
+        }).done(function(result) {
+            result = JSON.parse(result);
+            widget.contents().remove();
+            widget.append(result.content);
+        }).always(function() {
+            disableOverlay();
+        });
+    }
+
+    // Save quote-widget
+    $("div.dialog.widget-edit.quote button.save").click(function() {
+        var content = JSON.stringify({
+            widget: "quote",
+            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
+            author: $("div.dialog.widget-edit.quote input[name='author']").val()
+        });
+        if(widgetBeingEdited !== undefined) {
+            $("div.dialog.widget-edit.quote").dialog('close');
+            enableOverlay();
+            saveWidget(widgetBeingEdited, content);
+        } else {
+            $(this).parents(".dialog").dialog('close');
+            addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
+                widgetPosition.order, content, 'widget', widgetAdded);
+        }
+    });
+
+    function editWidget(widget) {
+        if(widget.widget == 'quote') {
+            $("div.dialog.widget-edit.quote textarea[name='quote']").val(widget.quote);
+            $("div.dialog.widget-edit.quote input[name='author']").val(widget.author);
+            $("div.dialog.widget-edit.quote").dialog('open');
+        }
     }
 
 });
