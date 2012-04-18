@@ -43,7 +43,7 @@ def new(request):
     row.save()
     column = Column(row=row, span=8, offset=2, order=0)
     column.save()
-    for i in range(8):
+    for i in range(len(contents)):
         content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
         content.save()
 
