@@ -55,6 +55,7 @@
 <div class="dialog page-dialog" data-title="Opprett ny side" data-width="80%">
   <form action="{% url admin.cms.views.page.new %}" method="post">
   {% csrf_token %}
+    <input type="hidden" name="slug" value="">
     <table class="table">
     <tr>
       <td class="big">Tittel:</td>

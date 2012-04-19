@@ -83,6 +83,10 @@ $(document).ready(function() {
         }
     }
 
+    $("div.page-dialog form").submit(function() {
+        $(this).find("input[name='slug']").val($(this).find("span.slug").text());
+    });
+
 });
 
 /* Menus */
