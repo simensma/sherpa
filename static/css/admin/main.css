@@ -154,3 +154,12 @@ div#tags div.tag a {
   margin-top: 4px;
   margin-left: 4px;
 }
+
+div.page-dialog i.edit-slug, div.page-dialog i.save-slug {
+  cursor: pointer;
+}
+
+div.page-dialog td.big {
+  vertical-align: middle;
+  font-size: 160%;
+}

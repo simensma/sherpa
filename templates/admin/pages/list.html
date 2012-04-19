@@ -57,23 +57,17 @@
   {% csrf_token %}
     <table class="table">
     <tr>
-      <td>Tittel:</td>
-      <td><input type="text" name="title"></td>
+      <td class="big">Tittel:</td>
+      <td><input type="text" name="title" class="span4"></td>
     </tr>
     <tr>
-      <td>URL:</td>
-      <td>http://{{ site.domain }}/ <input type="text" name="slug" value=""> /</td>
+      <td>Permanent URL:</td>
+      <td>http://{{ site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug icon-pencil"></i><i class="save-slug icon-ok"></i></td>
     </tr>
     <tr>
       <td colspan="2"><input type="submit" value="Opprett ny webside"></td>
     </tr>
     </table>
-    <p><em>Tips til en fornuftig URL:</em></p>
-    <ul>
-      <li>La navnet på URLen reflektere innholdet</li>
-      <li>Ikke bruk en URL som er sannsynlig at du vil bruke på en annen side</li>
-      <li>Bruk mappe-nøsting (f.eks. "/valdres/snøskredfare/" i stedet for "/snøskredfare-i-valdres/"</li>
-    </ul>
   </form>
 </div>
 

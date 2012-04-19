@@ -37,6 +37,52 @@ $(document).ready(function() {
         }
     });
 
+    /* New page dialog - define slug based on title */
+
+    $("div.page-dialog input[name='title']").keyup(function() {
+        var val = $(this).val();
+        val = val.replace(/[^-_a-z0-9\s]+/gi, '')
+                 .replace(/\s+/g, "-")
+                 .toLowerCase();
+        updateSlash(val.length == 0);
+        $("div.page-dialog span.slug").text(val);
+    });
+
+    $("div.page-dialog i.save-slug").hide().click(saveSlug);
+    $("div.page-dialog i.edit-slug").click(editSlug);
+    $("div.page-dialog span.slug").click(editSlug);
+
+    function editSlug() {
+        $("div.page-dialog i.edit-slug").hide();
+        $("div.page-dialog i.save-slug").show();
+        var span = $("div.page-dialog span.slug");
+        var input = $('<input type="text" name="slug" value="' + decodeURIComponent(span.text()) + '">');
+        input.focusout(saveSlug);
+        span.before(input);
+        span.remove();
+        input.focus();
+    }
+
+    function saveSlug() {
+        var input = $("div.page-dialog input[name='slug']");
+        var val = input.val();
+        val = val.replace(/\/+$/, '');
+        updateSlash(val.length == 0);
+        var span = $('<span class="slug">' + encodeURIComponent(val) + '</span>');
+        input.before(span);
+        input.remove();
+        $("div.page-dialog i.save-slug").hide();
+        $("div.page-dialog i.edit-slug").show();
+    }
+
+    function updateSlash(hide) {
+        if(hide) {
+            $("div.page-dialog span.slash").text('');
+        } else {
+            $("div.page-dialog span.slash").text('/');
+        }
+    }
+
 });
 
 /* Menus */
