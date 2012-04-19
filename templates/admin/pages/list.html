@@ -55,6 +55,7 @@
 <div class="dialog page-dialog" data-title="Opprett ny side" data-width="80%">
   <form action="{% url admin.cms.views.page.new %}" method="post">
   {% csrf_token %}
+    <input type="hidden" name="template" value="0">
     <input type="hidden" name="slug" value="">
     <table class="table">
     <tr>
@@ -68,19 +69,19 @@
     </table>
     <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
     <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/template1.jpg" alt="Ferdigdefinert mal">
+      <img src="{{ STATIC_URL }}img/templates/template1.jpg" alt="Ferdigdefinert mal" data-template="1">
       <p>Tom</p>
     </div>
     <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/template2.jpg" alt="Ferdigdefinert mal">
+      <img src="{{ STATIC_URL }}img/templates/template2.jpg" alt="Ferdigdefinert mal" data-template="2">
       <p>Én kolonne</p>
     </div>
     <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/template3.png" alt="Ferdigdefinert mal">
+      <img src="{{ STATIC_URL }}img/templates/template3.png" alt="Ferdigdefinert mal" data-template="3">
       <p>Sidebar (hele)</p>
     </div>
     <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/template4.jpg" alt="Ferdigdefinert mal">
+      <img src="{{ STATIC_URL }}img/templates/template4.jpg" alt="Ferdigdefinert mal" data-template="4">
       <p>Sidebar (delvis)</p>
     </div>
   </form>

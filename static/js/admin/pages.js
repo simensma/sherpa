@@ -87,6 +87,11 @@ $(document).ready(function() {
         $(this).find("input[name='slug']").val($(this).find("span.slug").text());
     });
 
+    $("div.page-dialog img[data-template]").click(function() {
+        $("div.page-dialog input[name='template']").val($(this).attr('data-template'));
+        $(this).parents("form").submit();
+    });
+
 });
 
 /* Menus */
