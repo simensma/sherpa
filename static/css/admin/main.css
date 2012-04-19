@@ -163,3 +163,26 @@ div.page-dialog td.big {
   vertical-align: middle;
   font-size: 160%;
 }
+
+div.page-dialog div.template p {
+  font-variant: small-caps;
+}
+
+div.page-dialog div.template img {
+  width: 160px;
+  height: 200px;
+  margin-bottom: 10px;
+}
+
+div.page-dialog div.template {
+  float: left;
+  border: 1px solid rgb(0, 0, 0);
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+div.page-dialog div.template:hover {
+  background-color: rgb(70, 70, 70);
+}
