@@ -21,7 +21,7 @@
 </tr>
 <tr>
   <th>URL</th>
-  <td>http://{{ site.domain }}/<input type="text" name="slug" value="{{ page.slug }}">/ <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Loading..."></td>
+  <td><a href="http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}">http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}</a></td>
 </tr>
 <tr>
   <td colspan="2" class="button">

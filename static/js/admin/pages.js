@@ -4,21 +4,17 @@ $(document).ready(function() {
 
     $("table#page-details img.ajaxloader").hide();
     $("table#page-details input[name='title']").change(updatePage);
-    $("table#page-details input[name='slug']").change(updatePage);
 
     function updatePage() {
         var table = $("table#page-details");
         var id = table.attr('data-id');
         var title = table.find("input[name='title']");
-        var slug = table.find("input[name='slug']");
         title.attr('disabled', true);
-        slug.attr('disabled', true);
         table.find("img.ajaxloader").show();
         $.ajax({
             url: '/sherpa/cms/side/' + id + '/',
             type: 'POST',
-            data: 'title=' + encodeURIComponent(title.val()) +
-                  '&slug=' + encodeURIComponent(slug.val())
+            data: 'title=' + encodeURIComponent(title.val())
         }).done(function(result) {
 
         }).fail(function(result) {
@@ -27,7 +23,6 @@ $(document).ready(function() {
             table.find("img.ajaxloader").hide();
             $("span.title").text(title.val());
             title.attr('disabled', false);
-            slug.attr('disabled', false);
         });
     }
 

@@ -31,7 +31,6 @@ def edit(request, page):
     if request.is_ajax():
         page = Page.objects.get(id=page)
         page.title = request.POST['title']
-        page.slug = request.POST['slug']
         page.save()
         return HttpResponse()
     else:
