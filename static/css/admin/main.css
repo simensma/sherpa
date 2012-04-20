@@ -184,5 +184,6 @@ div.page-dialog div.template {
 }
 
 div.page-dialog div.template:hover {
+  color: rgb(225, 225, 225);
   background-color: rgb(70, 70, 70);
 }
