@@ -23,7 +23,33 @@ def new(request):
     variant.save()
     version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
     version.save()
-    if request.POST['template'] == '2':
+    create_template(request.POST['template'], version)
+    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
+
+@login_required
+def edit(request, page):
+    if request.is_ajax():
+        page = Page.objects.get(id=page)
+        page.title = request.POST['title']
+        page.slug = request.POST['slug']
+        page.save()
+        return HttpResponse()
+    else:
+        page = Page.objects.get(id=page)
+        version = Version.objects.get(variant__page=page, active=True)
+        context = {'page': page, 'version': version, 'site': request.site}
+        return render(request, 'admin/pages/edit.html', context)
+
+@login_required
+def delete(request, page):
+    Page.objects.get(id=page).delete()
+    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
+
+def create_template(template, version):
+    if template == '1':
+        # Empty
+        return
+    elif template == '2':
         contents = [
             {'type': 'html', 'content': """<h1>Fengende overskrift</h1>"""},
             {'type': 'image', 'content': """<img src=\"""" + settings.STATIC_URL + """img/templates/placeholder.jpg" alt="Placeholder">"""},
@@ -40,7 +66,7 @@ def new(request):
         for i in range(len(contents)):
             content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
             content.save()
-    elif request.POST['template'] == '3':
+    elif template == '3':
         contents_upper = [
             {'type': 'html', 'content': """<h1>Fengende overskrift</h1>"""},
             {'type': 'image', 'content': """<img src=\"""" + settings.STATIC_URL + """img/templates/placeholder.jpg" alt="Placeholder">"""},
@@ -74,7 +100,7 @@ def new(request):
         for i in range(len(contents_lower_right)):
             content = Content(column=column, content=contents_lower_right[i]['content'], type=contents_lower_right[i]['type'], order=i)
             content.save()
-    elif request.POST['template'] == '4':
+    elif template == '4':
         contents_upper = [
             {'type': 'html', 'content': """<h1>Fengende overskrift</h1>"""},
             {'type': 'image', 'content': """<img src=\"""" + settings.STATIC_URL + """img/templates/placeholder.jpg" alt="Placeholder">"""},
@@ -124,23 +150,3 @@ def new(request):
         for i in range(len(contents_lower)):
             content = Content(column=column, content=contents_lower[i]['content'], type=contents_lower[i]['type'], order=i)
             content.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
-
-@login_required
-def edit(request, page):
-    if request.is_ajax():
-        page = Page.objects.get(id=page)
-        page.title = request.POST['title']
-        page.slug = request.POST['slug']
-        page.save()
-        return HttpResponse()
-    else:
-        page = Page.objects.get(id=page)
-        version = Version.objects.get(variant__page=page, active=True)
-        context = {'page': page, 'version': version, 'site': request.site}
-        return render(request, 'admin/pages/edit.html', context)
-
-@login_required
-def delete(request, page):
-    Page.objects.get(id=page).delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
