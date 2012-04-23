@@ -129,7 +129,7 @@ function updateContents(parents, albums, images, emptyText) {
 
     // Add albums
     for(var i=0; i<albums.length; i++) {
-        var item = $('<div class="album"><a href="javascript:undefined" data-id="' + albums[i].id + '/"><img src="/static/img/icons/folder.png" alt="Album" class="album"> ' + albums[i].name + '</a></div><div style="clear: both;"></div>');
+        var item = $('<div class="album"><a href="javascript:undefined" data-id="' + albums[i].id + '/"><img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> ' + albums[i].name + '</a></div><div style="clear: both;"></div>');
         item.find("a").click(function() {
             showFolder($(this).attr('data-id'));
         });

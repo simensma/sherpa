@@ -35,7 +35,7 @@
     <li class="album" data-id="{{ album.id }}">
       <button class="btn mark"><i class="icon-tags"></i> Merk album</button>
       <a class="image" href="{% url admin.images.views.list_albums album.id %}">
-        <img src="{{ STATIC_URL }}img/icons/folder.png" alt="Album: {{ album.name }}">
+        <img src="{{ STATIC_URL }}img/icons/imagearchive/folder.png" alt="Album: {{ album.name }}">
       </a>
       <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
     </li>
