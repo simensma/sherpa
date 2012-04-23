@@ -28,14 +28,16 @@ nav#dashboard > ul > li {
   display: block;
   float: left;
   width: 250px;
-  height: 170px;
+  height: 180px;
   border: 1px solid rgb(170, 170, 170);
   margin: 1%;
   text-align: center;
+  font-size: 160%;
 }
 
 nav#dashboard img {
   padding-top: 10px;
+  margin-bottom: 10px;
 }
 
 h2.skinny {
