@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% for row in rows %}
+<div class="row">
+  {% for column in row.columns %}
+    <div class="offset{{ column.offset }} span{{ column.span }}">
+      {% for content in column.contents %}
+        {% if content.type == 'html' or content.type == 'image' %}
+          {{ content.content|safe }}
+        {% else %}
+          <div class="widget">
+            {% include content.widget.template with widget=content.widget %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}

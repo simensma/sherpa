@@ -21,7 +21,7 @@ def parse_content(request, version):
     context = {'rows': rows, 'page': version.variant.page}
     return render(request, "page/page.html", context)
 
-# Note: This is also imported by some views in admin
+# Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(widget):
     if(widget['widget'] == "quote"):
         return {'json': json.dumps(widget), 'template': 'widgets/quote/display.html', 'quote': widget['quote'], 'author': widget['author']}

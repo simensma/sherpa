@@ -5,7 +5,7 @@ urlpatterns = patterns('',
     url(r'^sherpa/', include('admin.urls')),
 
     # Articles
-    url(r'^artikler/$', include('articles.urls')),
+    url(r'^artikler/', include('articles.urls')),
 
     # User authentication
     url(r'^bruker/', include('user.urls')),
