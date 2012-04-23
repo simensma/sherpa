@@ -88,11 +88,18 @@ table.action-buttons button {
 div#archive-gallery ul li {
   display: block;
   width: 200px;
+  height: 224px;
   border: 1px solid #888;
   margin: 1%;
   padding-bottom: 15px;
   float: left;
   text-align: center;
+}
+
+div#archive-gallery ul li img {
+  margin-bottom: 5px;
+  max-width: 160px;
+  height: 120px;
 }
 
 div#archive-gallery ul li button.mark {
