@@ -206,6 +206,14 @@ div.edit-article-header {
   color: rgb(65, 65, 65) !important;
 }
 
+div.edit-article-header h2.title, div.edit-article-header p.description {
+  cursor: pointer;
+}
+
+div.edit-article-header h2.title:hover, div.edit-article-header span.description:hover {
+  text-decoration: underline;
+}
+
 div.edit-article-header img.article-thumbnail {
   float: left;
   margin-right: 20px;

@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
-{% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a> → <a href="{% url admin.articles.views.edit article.id %}">{{ article.title }}</a>{% endblock %}
+{% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a> → <a class="header-title" href="{% url admin.articles.views.edit article.id %}">{{ article.title }}</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
 {% endblock %}
@@ -13,18 +13,18 @@
 <div class="row">
   <div class="span12">
 
-    <div class="well edit-article-header">
+    <div class="well edit-article-header" data-id="{{ article.id }}">
       <div class="published true"{% if article.published %} data-active{% endif %}>
         <p>Publisert</p>
-          <button class="btn btn-danger btn-large publish" data-id="{{ article.id }}"><i class="icon-remove"></i> Avpublisér</button>
+          <button class="btn btn-danger btn-large publish"><i class="icon-remove"></i> Avpublisér</button>
       </div>
       <div class="published false"{% if not article.published %} data-active{% endif %}>
         <p>Ikke publisert</p>
-          <button class="btn btn-success btn-large publish" data-id="{{ article.id }}"><i class="icon-ok"></i> Publisér</button>
+          <button class="btn btn-success btn-large publish"><i class="icon-ok"></i> Publisér</button>
       </div>
       <img class="article-thumbnail" src="{{ article.thumbnail }}" alt="{{ article.title }}">
-      <h2>{{ article.title }}</h2>
-      <p>{{ article.description }}</p>
+      <h2 class="title">{{ article.title }}</h2>
+      <p class="description"><i class="icon-pencil"></i> <span class="description">{{ article.description }}</span></p>
       <div style="clear: both;"></div>
     </div>
 

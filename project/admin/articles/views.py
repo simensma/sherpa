@@ -50,10 +50,17 @@ def new(request):
 
 @login_required
 def edit(request, article):
-    article = Article.objects.get(id=article)
-    versions = Version.objects.filter(variant__article=article)
-    context = {'article': article, 'versions': versions, 'site': request.site}
-    return render(request, 'admin/articles/edit.html', context)
+    if request.is_ajax():
+        article = Article.objects.get(id=article)
+        article.title = request.POST['title']
+        article.description = request.POST['description']
+        article.save()
+        return HttpResponse()
+    else:
+        article = Article.objects.get(id=article)
+        versions = Version.objects.filter(variant__article=article)
+        context = {'article': article, 'versions': versions, 'site': request.site}
+        return render(request, 'admin/articles/edit.html', context)
 
 @login_required
 def publish(request, article):
