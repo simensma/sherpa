@@ -46,7 +46,7 @@ def new(request):
         content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
         content.save()
 
-    return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
+    return HttpResponseRedirect(reverse('admin.articles.views.edit', args=[article.id]))
 
 @login_required
 def edit(request, article):
