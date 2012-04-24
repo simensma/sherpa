@@ -41,7 +41,7 @@
       </tr>
       {% for version in versions %}
       <tr{% if version.active %} class="active"{% endif %}>
-        <td>{{ version.version }}</td>
+        <td>{{ version.version }}.</td>
         <td>{{ version.publisher.user.get_full_name }}</td>
         <td>
           {% if version.active %}
