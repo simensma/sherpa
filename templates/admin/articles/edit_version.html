@@ -1,0 +1,16 @@
+{% extends "admin/layout.html" %}
+{% block title %}Artikler &mdash; Sherpa 3{% endblock %}
+{% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a> → <a href="{% url admin.articles.views.edit version.variant.article.id %}">{{ version.variant.article.title }}</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
+  <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor.css" media="screen">
+{% endblock %}
+
+{% block body %}
+{% include 'admin/editor/advanced.html' %}
+{% endblock %}

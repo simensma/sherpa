@@ -39,3 +39,8 @@ article .meta hr {
 img {
   max-width: 100%;
 }
+
+img.article-thumbnail {
+  max-width: 200px;
+  max-height: 200px;
+}

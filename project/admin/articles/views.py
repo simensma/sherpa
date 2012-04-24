@@ -49,6 +49,13 @@ def new(request):
     return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
 
 @login_required
+def edit(request, article):
+    article = Article.objects.get(id=article)
+    versions = Version.objects.filter(variant__article=article)
+    context = {'article': article, 'versions': versions, 'site': request.site}
+    return render(request, 'admin/articles/edit.html', context)
+
+@login_required
 def save(request, version):
     version = Version.objects.get(id=version)
     contents = json.loads(request.POST['contents'])
@@ -77,4 +84,4 @@ def edit_version(request, version):
             column.contents = contents
         row.columns = columns
     context = {'rows': rows, 'version': version}
-    return render(request, 'admin/articles/edit.html', context)
+    return render(request, 'admin/articles/edit_version.html', context)

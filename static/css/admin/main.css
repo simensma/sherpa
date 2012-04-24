@@ -198,3 +198,36 @@ div.page-dialog div.template:hover {
   color: rgb(225, 225, 225);
   background-color: rgb(70, 70, 70);
 }
+
+/* Article editing */
+
+div.edit-article-header {
+  background-color: rgb(240, 240, 240) !important;
+  color: rgb(65, 65, 65) !important;
+}
+
+div.edit-article-header img.article-thumbnail {
+  float: left;
+  margin-right: 20px;
+}
+
+div.edit-article-header div.published {
+  float: right;
+  border: 1px solid rgb(95, 95, 95);
+  padding: 20px;
+  text-align: center;
+}
+
+div.edit-article-header div.published.true {
+  background-color: rgb(90, 203, 90);
+}
+
+div.edit-article-header div.published.false {
+  color: rgb(255, 255, 255);
+  background-color: rgb(220, 90, 90);
+}
+
+div.edit-article-header div.published p {
+  font-size: 200%;
+  margin-bottom: 20px;
+}
