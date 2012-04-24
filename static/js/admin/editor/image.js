@@ -69,6 +69,14 @@ $(document).ready(function() {
 
 });
 
+function openImageDialog(src, anchor, alt) {
+    var dialog = $("div#dialog-change-image");
+    dialog.dialog('open');
+    dialog.find("input[name='url']").val(src);
+    dialog.find("input[name='anchor']").val(anchor);
+    dialog.find("input[name='alt']").val(alt);
+}
+
 function hideContent() {
     $("div#dialog-change-image div.too-few-chars").hide();
     $("div#dialog-change-image div#imagearchive ul#images").children().remove();

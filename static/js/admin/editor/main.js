@@ -653,11 +653,7 @@ $(document).ready(function() {
         });
         images.click(function(e) {
             $(this).removeClass('hover');
-            var dialog = $("div#dialog-change-image");
-            dialog.dialog('open');
-            dialog.find("input[name='url']").val($(this).attr('src'));
-            dialog.find("input[name='anchor']").val($(this).parent("a").attr('href'));
-            dialog.find("input[name='alt']").val($(this).attr('alt'));
+            openImageDialog($(this).attr('src'), $(this).parent("a").attr('href'), $(this).attr('alt'));
             currentImage = $(this);
         });
     }
