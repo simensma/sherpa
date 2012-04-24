@@ -7,15 +7,13 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^side/(?P<page>\d+)/$', 'page.edit'),
     url(r'^side/ny/$', 'page.new'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
+    url(r'^editor/(?P<version>\d+)/$', 'page.edit_version'),
 
     # Menus
     url(r'^meny/ny/$', 'menu.new'),
     url(r'^meny/rediger/(?P<menu>\d+)/$', 'menu.edit'),
     url(r'^meny/sorter/$', 'menu.reorder'),
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
-
-    # Versions
-    url(r'^editor/(?P<version>\d+)/$', 'version.edit'),
 
     # Rows
     url(r'^kolonner/ny/$', 'row.add_columns'),

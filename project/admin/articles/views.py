@@ -8,7 +8,6 @@ import json
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
-
 from page.views_widgets import parse_widget
 
 @login_required
@@ -47,23 +46,7 @@ def new(request):
         content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
         content.save()
 
-    return HttpResponseRedirect(reverse('admin.articles.views.edit', args=[version.id]))
-
-@login_required
-def edit(request, version):
-    version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.widget = parse_widget(json.loads(content.content))
-            column.contents = contents
-        row.columns = columns
-    context = {'rows': rows, 'version': version}
-    return render(request, 'admin/articles/edit.html', context)
+    return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
 
 @login_required
 def save(request, version):
@@ -79,3 +62,19 @@ def save(request, version):
 def delete(request, article):
     Article.objects.get(id=article).delete()
     return HttpResponseRedirect(reverse('admin.articles.views.list'))
+
+@login_required
+def edit_version(request, version):
+    version = Version.objects.get(id=version)
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'widget':
+                    content.widget = parse_widget(json.loads(content.content))
+            column.contents = contents
+        row.columns = columns
+    context = {'rows': rows, 'version': version}
+    return render(request, 'admin/articles/edit.html', context)
