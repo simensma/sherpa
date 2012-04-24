@@ -41,7 +41,7 @@
 <div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="auto">
   <form action="{% url admin.articles.views.new %}" method="post">
     {% csrf_token %}
-    <label>Navn på artikkelen (kun synlig i Sherpa):</label>
+    <label>Tittel på artikkelen:</label>
     <input type="text" name="title"><br>
     <input type="submit" value="Opprett artikkel">
   </form>
