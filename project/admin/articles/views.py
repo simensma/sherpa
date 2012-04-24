@@ -28,7 +28,7 @@ def new(request):
 
     # Save a new article based on this pre-defined template.
     contents = [
-        {'type': 'html', 'content': """<h1>Fengende overskrift</h1>"""},
+        {'type': 'html', 'content': """<h1>%s</h1>""" % request.POST['title']},
         {'type': 'image', 'content': """<img src=\"""" + settings.STATIC_URL + """img/placeholder.jpg" alt="placeholder">"""},
         {'type': 'html', 'content': """<p>BILDETEKST: Nunc diam velit, adipiscing ut tristique vitae, sagittis vel odio. Maecenas convallis.<br><em>Foto: Ola Nordmann/DNT</em></p>"""},
         {'type': 'html', 'content': """<div class="lede"><p>Suspendisse lectus leo, consectetur in tempor sit amet, placerat quis neque. Etiam luctus porttitor lorem, sed suscipit est rutrum non. Curabitur lobortis nisl a enim congue semper. Aenean commodo ultrices imperdiet.</p></div>"""},
