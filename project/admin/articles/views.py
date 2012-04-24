@@ -19,8 +19,8 @@ def list(request):
 
 @login_required
 def new(request):
-    article = Article(title=request.POST['title'], published=False, pub_date=None,
-      publisher=request.user.get_profile())
+    article = Article(title=request.POST['title'], description='', thumbnail='',
+        published=False, pub_date=None, publisher=request.user.get_profile())
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, publisher=request.user.get_profile())
     variant.save()
