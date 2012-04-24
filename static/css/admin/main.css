@@ -164,6 +164,8 @@ div#tags div.tag a {
   margin-left: 4px;
 }
 
+/* Page editing */
+
 div.page-dialog i.edit-slug, div.page-dialog i.save-slug {
   cursor: pointer;
 }
