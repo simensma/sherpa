@@ -7,6 +7,7 @@ var MIN_QUERY_LENGTH = 3;
 
 var bcList;
 var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
+var imagePickedCallback; // Called when an image is picked in the dialog
 
 $(document).ready(function() {
 
@@ -24,31 +25,13 @@ $(document).ready(function() {
         }
         $("div#dialog-change-image div.empty-url").hide();
         dialog.dialog('close');
-        currentImage.attr('src', url);
-        currentImage.attr('alt', dialog.find("input[name='alt']").val());
+
         var anchor = dialog.find("input[name='anchor']").val();
-        if(anchor.length == 0) {
-            // No link
-            if(currentImage.parent("a").length > 0) {
-                // *Was* link, but is now removed
-                currentImage.parent().before(currentImage).remove();
-            }
-        } else {
-            // Add link
-            if(!anchor.match(/^https?:\/\//)) {
-                anchor = "http://" + anchor;
-            }
-            if(currentImage.parent("a").length > 0) {
-                // Link exists, update it
-                currentImage.parent().attr('href', anchor);
-            } else {
-                // No existing link, add it
-                var anchorEl = $('<a href="' + anchor + '"></a>');
-                currentImage.before(anchorEl).detach();
-                anchorEl.prepend(currentImage);
-            }
+        if(anchor.length != 0 && !anchor.match(/^https?:\/\//)) {
+            anchor = "http://" + anchor;
         }
-        $("#toolbar .save button.save").click();
+        var alt = dialog.find("input[name='alt']").val();
+        imagePickedCallback(url, anchor, alt);
     });
 
     $("div#dialog-change-image button.image-search").click(doSearch);
@@ -69,12 +52,13 @@ $(document).ready(function() {
 
 });
 
-function openImageDialog(src, anchor, alt) {
+function openImageDialog(src, anchor, alt, callback) {
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
     dialog.find("input[name='url']").val(src);
     dialog.find("input[name='anchor']").val(anchor);
     dialog.find("input[name='alt']").val(alt);
+    imagePickedCallback = callback;
 }
 
 function hideContent() {

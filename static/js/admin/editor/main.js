@@ -13,6 +13,9 @@ $(document).ready(function() {
     enableEditing();
     autoRemoveEmptyContent($("article .html"));
 
+    // An image currently being changed (need to save this state while opening the changer dialog)
+    var currentImage;
+
     // Make toolbar draggable
     $("#toolbar").draggable({
         containment: 'window'
@@ -653,8 +656,31 @@ $(document).ready(function() {
         });
         images.click(function(e) {
             $(this).removeClass('hover');
-            openImageDialog($(this).attr('src'), $(this).parent("a").attr('href'), $(this).attr('alt'));
             currentImage = $(this);
+            openImageDialog($(this).attr('src'), $(this).parent("a").attr('href'), $(this).attr('alt'), saveImage);
+            function saveImage(url, anchor, alt) {
+                if(anchor.length == 0) {
+                    // No link
+                    if(currentImage.parent("a").length > 0) {
+                        // *Was* link, but is now removed
+                        currentImage.parent().before(currentImage).remove();
+                    }
+                } else {
+                    // Add link
+                    if(currentImage.parent("a").length > 0) {
+                        // Link exists, update it
+                        currentImage.parent().attr('href', anchor);
+                    } else {
+                        // No existing link, add it
+                        var anchorEl = $('<a href="' + anchor + '"></a>');
+                        currentImage.before(anchorEl).detach();
+                        anchorEl.prepend(currentImage);
+                    }
+                }
+                currentImage.attr('src', url);
+                currentImage.attr('alt', alt);
+                $("#toolbar .save button.save").click();
+            }
         });
     }
 
@@ -782,6 +808,3 @@ $(document).ready(function() {
     }
 
 });
-
-// An image currently being changed (need to save this state while opening the changer dialog)
-var currentImage;
