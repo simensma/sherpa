@@ -63,6 +63,13 @@ def edit(request, article):
         return render(request, 'admin/articles/edit.html', context)
 
 @login_required
+def image(request, article):
+    article = Article.objects.get(id=article)
+    article.thumbnail = request.POST['thumbnail']
+    article.save()
+    return HttpResponse()
+
+@login_required
 def publish(request, article):
     article = Article.objects.get(id=article)
     article.published = not article.published

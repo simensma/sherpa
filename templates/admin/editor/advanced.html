@@ -61,42 +61,7 @@
 {% include 'widgets/quote/edit.html' %}
 
 {# Changing image #}
-<div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
-  <div class="alert alert-error empty-url">
-    <a class="close">x</a>
-    <strong>Sett inn hvilket bilde?</strong><br>
-    Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
-  </div>
-  <table>
-    <tr>
-      <td>Bildets adresse:</td><td><input type="text" class="span6" name="url"></td>
-    </tr>
-    <tr>
-      <td>Bildet lenker til:</td><td><input type="text" class="span6" name="anchor"></td>
-    </tr>
-    <tr>
-      <td>Tekst for blinde:</td><td><input type="text" class="span6" name="alt"></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><button class="btn btn-success btn-large insert-image"><i class="icon-share-alt"></i> Sett inn</button></td>
-    </tr>
-  </table>
-  <hr>
-  <h2>Finn bilde i arkivet:</h2>
-  <input type="text" name="search" class="span6" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
-  <button class="btn btn-success button-aligned image-search"><i class="icon-search"></i> Søk</button>
-  <div id="imagearchive">
-    <ul class="breadcrumb"></ul>
-    <div class="alert alert-error span4 too-few-chars">
-      <a class="close">x</a>
-      <strong>For få søketegn!</strong><br>Vennligst bruk minst 3 tegn å når du søker, ellers får du garantert mange flere resultater enn du vil ha.
-    </div>
-    <div style="clear: both;"></div>
-    <div id="contentlist"></div>
-    <ul id="images"></ul>
-  </div>
-</div>
+{% include 'admin/editor/change-image-dialog.html' with anchor=1 alt=1 %}
 
 {# Insert button #}
 <div id="dialog-add-button" class="dialog" data-title="Legg til ny knapp" data-width="auto">

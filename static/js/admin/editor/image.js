@@ -26,11 +26,22 @@ $(document).ready(function() {
         $("div#dialog-change-image div.empty-url").hide();
         dialog.dialog('close');
 
-        var anchor = dialog.find("input[name='anchor']").val();
-        if(anchor.length != 0 && !anchor.match(/^https?:\/\//)) {
-            anchor = "http://" + anchor;
+        var anchor = dialog.find("input[name='anchor']");
+        if(anchor.length > 0) {
+            anchor = anchor.val();
+            if(anchor.length != 0 && !anchor.match(/^https?:\/\//)) {
+                anchor = "http://" + anchor;
+            }
+        } else {
+            anchor = '';
         }
-        var alt = dialog.find("input[name='alt']").val();
+
+        var alt = dialog.find("input[name='alt']");
+        if(alt.length > 0) {
+            alt = alt.val();
+        } else {
+            alt = '';
+        }
         imagePickedCallback(url, anchor, alt);
     });
 

@@ -62,4 +62,20 @@ $(document).ready(function() {
         });
     }
 
+    /* Change header-image */
+
+    $("div.edit-article-header img.article-thumbnail").click(function() {
+        var image = $(this);
+        openImageDialog($(this).attr('src'), '', '', saveImage);
+        function saveImage(url, anchor, alt) {
+            $.ajax({
+                url: '/sherpa/artikler/bilde/' + image.parents("div.edit-article-header").attr('data-id') + '/',
+                type: 'POST',
+                data: 'thumbnail=' + encodeURIComponent(url)
+            }).done(function() {
+                image.attr('src', url);
+            });
+        }
+    });
+
 });
