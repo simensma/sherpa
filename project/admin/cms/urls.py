@@ -15,7 +15,6 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
 
     # Versions
-    url(r'^versjon/ny/(?P<variant>\d+)/$', 'version.new'),
     url(r'^editor/(?P<version>\d+)/$', 'version.edit'),
 
     # Rows

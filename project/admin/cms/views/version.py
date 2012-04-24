@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
 
@@ -8,18 +8,6 @@ from project.page.views_widgets import *
 from project.page.models import Variant, Version, Row, Column, Content
 
 import json
-
-@login_required
-def new(request, variant):
-    variant = Variant.objects.get(id=variant)
-    versions = Version.objects.filter(variant=variant)
-    max_version = versions.aggregate(Max('version'))['version__max']
-    currentVersion = versions.get(version=max_version)
-    newContent = PageContent(content=currentVersion.content.content)
-    newContent.save()
-    version = Version(variant=variant, content=newContent, version=(max_version+1), publisher=request.user.get_profile(), active=False)
-    version.save()
-    return HttpResponseRedirect(reverse('admin.cms.views.version.edit', args=[version.id]))
 
 @login_required
 def edit(request, version):
