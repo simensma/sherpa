@@ -66,6 +66,14 @@ def save(request, version):
     return HttpResponse()
 
 @login_required
+def publish(request, article):
+    article = Article.objects.get(id=article)
+    article.published = not article.published
+    article.publisher = request.user.get_profile()
+    article.save()
+    return HttpResponse()
+
+@login_required
 def delete(request, article):
     Article.objects.get(id=article).delete()
     return HttpResponseRedirect(reverse('admin.articles.views.list'))
