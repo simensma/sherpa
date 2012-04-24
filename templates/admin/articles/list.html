@@ -3,11 +3,16 @@
 {% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
 {% block body %}
 
-<h2 class="skinny">Artikler</h2>
-
 {% if not versions %}
 <div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
 {% else %}
+
+<div id="row">
+  <div class="offset5 span2">
+  <p><a id="add-article" class="btn btn-success btn-large large-button dialog-button" data-dialog=".article-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny artikkel</a></p>
+  </div>
+</div>
+
 <table class="table table-striped">
 <thead>
 <tr>
@@ -31,12 +36,6 @@
 </tbody>
 </table>
 {% endif %}
-
-<div id="row">
-  <div class="offset5 span2">
-  <p><a id="add-article" class="btn btn-primary large-button dialog-button" data-dialog=".article-dialog" href="javascript:undefined">Opprett ny artikkel</a></p>
-  </div>
-</div>
 
 <div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="auto">
   <form action="{% url admin.articles.views.new %}" method="post">
