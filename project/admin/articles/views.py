@@ -56,16 +56,6 @@ def edit(request, article):
     return render(request, 'admin/articles/edit.html', context)
 
 @login_required
-def save(request, version):
-    version = Version.objects.get(id=version)
-    contents = json.loads(request.POST['contents'])
-    for newContent in contents:
-        content = Content.objects.get(id=newContent['id'])
-        content.content = newContent['content']
-        content.save()
-    return HttpResponse()
-
-@login_required
 def publish(request, article):
     article = Article.objects.get(id=article)
     article.published = not article.published
