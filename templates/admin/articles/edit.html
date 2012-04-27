@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
-{% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a> → <a class="header-title" href="{% url admin.articles.views.edit article.id %}">{{ article.title }}</a>{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → <a class="header-title" href="{% url admin.articles.views.edit article.id %}">{{ article.title }}</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image.js"></script>

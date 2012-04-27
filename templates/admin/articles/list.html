@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; Sherpa 3{% endblock %}
-{% block header %} → <a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
 {% block body %}
 
 {% if not versions %}
