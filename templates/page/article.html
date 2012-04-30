@@ -6,9 +6,9 @@
   {% for column in row.columns %}
     <div class="offset{{ column.offset }} span{{ column.span }}">
       {% for content in column.contents %}
-        {% if content.type == 'html' or content.type == 'image' %}
+        {% if content.type == 'html' or content.type == 'image' or content.type == 'title' or content.type == 'lede' %}
           {{ content.content|safe }}
-        {% else %}
+        {% elif content.type == 'widget' %}
           <div class="widget">
             {% include content.widget.template with widget=content.widget %}
           </div>

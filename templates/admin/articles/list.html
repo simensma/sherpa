@@ -26,10 +26,10 @@
 <tbody>
 {% for version in versions %}
 <tr>
-  <td>{{ version.variant.article.title }}</td>
+  <td>{{ version.title.content|striptags }}</td>
   <td>{% if version.variant.article.published %}Ja &mdash; {{ version.variant.article.pub_date }}{% else %}Nei{% endif %}</td>
   <td>{{ version.variant.article.publisher.user.get_full_name }}</td>
-  <td>[ <a href="{% url admin.articles.views.edit version.variant.article.id %}">Rediger</a> ]</td>
+  <td>[ <a href="{% url admin.articles.views.edit_version version.id %}">Rediger</a> ]</td>
   <td>[ <a href="{% url admin.articles.views.delete version.variant.article.id %}">Slett</a> ]</td>
 </tr>
 {% endfor %}

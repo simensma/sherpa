@@ -5,9 +5,7 @@ from django.db import models
 from page.models import Variant
 
 class Article(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.CharField(max_length=400)
-    thumbnail = models.CharField(max_length=100)
+    thumbnail = models.CharField(max_length=100, null=True)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     publisher = models.ForeignKey('user.Profile')

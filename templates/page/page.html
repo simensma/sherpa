@@ -8,7 +8,7 @@
       {% for content in column.contents %}
         {% if content.type == 'html' or content.type == 'image' %}
           {{ content.content|safe }}
-        {% else %}
+        {% elif content.type == 'widget' %}
           <div class="widget">
             {% include content.widget.template with widget=content.widget %}
           </div>

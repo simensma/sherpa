@@ -1,6 +1,9 @@
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
+from django.db.models import Min
+
+import json
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)
@@ -54,6 +57,19 @@ class Version(models.Model):
     version = models.IntegerField()
     publisher = models.ForeignKey('user.Profile')
     active = models.BooleanField()
+    title = None
+    lede = None
+    thumbnail = None
+
+    def load_preview(self):
+        self.title = Content.objects.get(column__row__version=self, type='title')
+        self.lede = Content.objects.get(column__row__version=self, type='lede')
+        print(str(self.variant.article.thumbnail))
+        if self.variant.article.thumbnail is not None:
+            self.thumbnail = json.loads(self.variant.article.thumbnail)
+        else:
+            order = Content.objects.filter(column__row__version=self, type='image').aggregate(Min('order'))['order__min']
+            self.thumbnail = Content.objects.get(column__row__version=self, type='image', order=order)
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
@@ -84,7 +100,7 @@ def delete_column(sender, **kwargs):
 class Content(models.Model):
     column = models.ForeignKey('page.Column')
     content = models.TextField()
-    type = models.CharField(max_length=1, choices=(('widget', 'Widget'), ('html', 'HTML'), ('image', 'Image')))
+    type = models.CharField(max_length=1, choices=(('widget', 'Widget'), ('html', 'HTML'), ('image', 'Image'), ('title', 'Title')))
     # Note: 'order' should be unique, but it's not enforced because
     # when deleting and cascading orders, two orders will temporarily clash.
     order = models.IntegerField()

@@ -11,7 +11,7 @@ $(document).ready(function() {
     $("div.no-save-warning").hide();
     setEmpties();
     enableEditing();
-    autoRemoveEmptyContent($("article .html"));
+    autoRemoveEmptyContent($("article .html[data-type!='lede']"));
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;

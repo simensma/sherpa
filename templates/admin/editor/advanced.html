@@ -22,7 +22,11 @@
           <div class="html" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
           <div class="image" data-id="{{ content.id }}">{{ content.content|safe }}</div>
-        {% else %}
+        {% elif content.type == 'title' %}
+          <div class="html" data-id="{{ content.id }}" data-type="title">{{ content.content|safe }}</div>
+        {% elif content.type == 'lede' %}
+          <div class="html" data-id="{{ content.id }}" data-type="lede">{{ content.content|safe }}</div>
+        {% elif content.type == 'widget' %}
           <div class="widget" data-id="{{ content.id }}" data-json="{{ content.widget.json }}">
             {% include content.widget.template with widget=content.widget %}
           </div>
