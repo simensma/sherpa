@@ -19,18 +19,18 @@
   <th>Tittel</th>
   <th>Publisert</th>
   <th>Opprettet av</th>
-  <th>Rediger</th>
-  <th>Slett</th>
 </tr>
 </thead>
 <tbody>
 {% for version in versions %}
 <tr>
-  <td>{{ version.title.content|striptags }}</td>
+  <td>
+    <a href="{% url admin.articles.views.edit_version version.id %}">
+      {{ version.title.content|striptags }}
+    </a>
+  </td>
   <td>{% if version.variant.article.published %}Ja &mdash; {{ version.variant.article.pub_date }}{% else %}Nei{% endif %}</td>
   <td>{{ version.variant.article.publisher.user.get_full_name }}</td>
-  <td>[ <a href="{% url admin.articles.views.edit_version version.id %}">Rediger</a> ]</td>
-  <td>[ <a href="{% url admin.articles.views.delete version.variant.article.id %}">Slett</a> ]</td>
 </tr>
 {% endfor %}
 </tbody>

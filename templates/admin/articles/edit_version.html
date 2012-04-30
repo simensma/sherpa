@@ -30,6 +30,9 @@
       <input type="radio" name="thumbnail" value="default"{% if not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
       <input type="radio" name="thumbnail" value="new"{% if version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
       <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ STATIC_URL }}img/placeholder.jpg{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
+      <a class="btn btn-danger delete-article" href="{% url admin.articles.views.delete version.variant.article.id %}">
+        <i class="icon-warning-sign"></i> Slett artikkelen for godt
+      </a>
       <div style="clear: both;"></div>
     </div>
   </div>
