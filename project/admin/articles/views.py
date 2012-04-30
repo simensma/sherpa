@@ -75,7 +75,6 @@ def edit_version(request, version):
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
     title = None
-    lede = None
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
