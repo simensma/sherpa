@@ -21,7 +21,11 @@
         {% if content.type == 'html' %}
           <div class="html" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
-          <div class="image" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+          <div class="image" data-id="{{ content.id }}">
+            {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
+              <img src="{{ content.content.src }}" alt="{{ content.content.alt }}">
+            {% if content.content.anchor %}</a>{% endif %}
+          </div>
         {% elif content.type == 'title' %}
           <div class="html" data-id="{{ content.id }}" data-type="title">{{ content.content|safe }}</div>
         {% elif content.type == 'lede' %}

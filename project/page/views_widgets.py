@@ -16,6 +16,8 @@ def parse_content(request, version):
             for content in contents:
                 if content.type == 'widget':
                     content.widget = parse_widget(json.loads(content.content))
+                elif content.type == 'image':
+                    content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
     context = {'rows': rows, 'page': version.variant.page}

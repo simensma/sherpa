@@ -533,11 +533,30 @@ $(document).ready(function() {
             columns = columns.concat([column]);
         });
         var contents = [];
-        $("article div.html, article div.image").each(function() {
+        $("article div.html").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
                 content: $(this).html()
+            };
+            contents = contents.concat([content]);
+        });
+        $("article div.image").each(function() {
+            var anchor;
+            if($(this).find('a').length == 0) {
+                anchor = null;
+            } else {
+                anchor = $(this).find('a').attr('href');
+            }
+            var image = {
+                src: $(this).find('img').attr('src'),
+                alt: $(this).find('img').attr('alt'),
+                anchor: anchor
+            };
+            var content = {
+                id: $(this).attr('data-id'),
+                order: $(this).prevAll().length,
+                content: JSON.stringify(image)
             };
             contents = contents.concat([content]);
         });
