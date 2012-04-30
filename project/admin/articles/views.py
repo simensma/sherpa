@@ -58,6 +58,13 @@ def image(request, article):
     return HttpResponse()
 
 @login_required
+def image_delete(request, article):
+    article = Article.objects.get(id=article)
+    article.thumbnail = None
+    article.save()
+    return HttpResponse()
+
+@login_required
 def publish(request, article):
     article = Article.objects.get(id=article)
     article.published = not article.published

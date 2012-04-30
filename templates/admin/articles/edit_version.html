@@ -14,5 +14,26 @@
 {% endblock %}
 
 {% block body %}
+
+<div class="row">
+  <div class="span12">
+    <div class="well edit-article-header" data-id="{{ version.variant.article.id }}">
+      <div class="published true"{% if version.variant.article.published %} data-active{% endif %}>
+        <p>Publisert</p>
+          <button class="btn btn-danger btn-large publish"><i class="icon-remove"></i> Avpublisér</button>
+      </div>
+      <div class="published false"{% if not version.variant.article.published %} data-active{% endif %}>
+        <p>Ikke publisert</p>
+          <button class="btn btn-success btn-large publish"><i class="icon-ok"></i> Publisér</button>
+      </div>
+      <h1>Minibilde til forhåndsvisninger:</h1>
+      <input type="radio" name="thumbnail" value="default"{% if not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
+      <input type="radio" name="thumbnail" value="new"{% if version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
+      <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ STATIC_URL }}img/placeholder.jpg{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</div>
+
 {% include 'admin/editor/advanced.html' %}
 {% endblock %}
