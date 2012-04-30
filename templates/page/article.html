@@ -14,7 +14,7 @@
           {% if content.content.anchor %}</a>{% endif %}
         {% elif content.type == 'widget' %}
           <div class="widget">
-            {% include content.widget.template with widget=content.widget %}
+            {% include content.content.template with widget=content.content %}
           </div>
         {% endif %}
       {% endfor %}

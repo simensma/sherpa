@@ -88,7 +88,7 @@ def edit_version(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.widget = parse_widget(json.loads(content.content))
+                    content.content = parse_widget(json.loads(content.content))
                 elif content.type == 'title':
                     title = content.content
                 elif content.type == 'image':

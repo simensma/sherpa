@@ -31,8 +31,8 @@
         {% elif content.type == 'lede' %}
           <div class="html" data-id="{{ content.id }}" data-type="lede">{{ content.content|safe }}</div>
         {% elif content.type == 'widget' %}
-          <div class="widget" data-id="{{ content.id }}" data-json="{{ content.widget.json }}">
-            {% include content.widget.template with widget=content.widget %}
+          <div class="widget" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+            {% include content.content.template with widget=content.content %}
           </div>
         {% endif %}
       {% endfor %}

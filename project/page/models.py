@@ -104,7 +104,6 @@ class Content(models.Model):
     # Note: 'order' should be unique, but it's not enforced because
     # when deleting and cascading orders, two orders will temporarily clash.
     order = models.IntegerField()
-    widget = None
 
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
