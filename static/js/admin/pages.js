@@ -51,7 +51,7 @@ $(document).ready(function() {
         $("div.page-dialog i.edit-slug").hide();
         $("div.page-dialog i.save-slug").show();
         var span = $("div.page-dialog span.slug");
-        var input = $('<input type="text" name="slug" value="' + decodeURIComponent(span.text()) + '">');
+        var input = $('<input type="text" name="slug-input" value="' + decodeURIComponent(span.text()) + '">');
         input.focusout(saveSlug);
         span.before(input);
         span.remove();
@@ -59,7 +59,7 @@ $(document).ready(function() {
     }
 
     function saveSlug() {
-        var input = $("div.page-dialog input[name='slug']");
+        var input = $("div.page-dialog input[name='slug-input']");
         var val = input.val();
         val = val.replace(/\/+$/, '');
         updateSlash(val.length == 0);
