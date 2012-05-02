@@ -66,10 +66,11 @@ class Version(models.Model):
         self.lede = Content.objects.get(column__row__version=self, type='lede')
         print(str(self.variant.article.thumbnail))
         if self.variant.article.thumbnail is not None:
-            self.thumbnail = json.loads(self.variant.article.thumbnail)
+            self.thumbnail = self.variant.article.thumbnail
         else:
             order = Content.objects.filter(column__row__version=self, type='image').aggregate(Min('order'))['order__min']
-            self.thumbnail = Content.objects.get(column__row__version=self, type='image', order=order)
+            content = Content.objects.get(column__row__version=self, type='image', order=order)
+            self.thumbnail = json.loads(content.content)['src']
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
