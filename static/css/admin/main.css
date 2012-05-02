@@ -243,3 +243,9 @@ div.edit-article-header div.published p {
   font-size: 200%;
   margin-bottom: 20px;
 }
+
+/* Article preview in listing */
+
+td.article-preview {
+  width: 60%;
+}

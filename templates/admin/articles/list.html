@@ -16,7 +16,7 @@
 <table class="table table-striped">
 <thead>
 <tr>
-  <th>Tittel</th>
+  <th>Artikkel</th>
   <th>Publisert</th>
   <th>Opprettet av</th>
 </tr>
@@ -24,10 +24,21 @@
 <tbody>
 {% for version in versions %}
 <tr>
-  <td>
-    <a href="{% url admin.articles.views.edit_version version.id %}">
-      {{ version.title.content|striptags }}
-    </a>
+  <td class="article-preview">
+    <div class="article-preview">
+      <a href="{% url admin.articles.views.edit_version version.id %}">
+        <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+      </a>
+        <h2>
+          <a href="{% url admin.articles.views.edit_version version.id %}">
+            {{ version.title.content|striptags }}
+          </a>
+        </h2>
+      <div class="lede">
+        <a href="{% url admin.articles.views.edit_version version.id %}">
+          {{ version.lede.content|removetags:"a"|safe }}
+        </a>
+      </div>
   </td>
   <td>{% if version.variant.article.published %}Ja &mdash; {{ version.variant.article.pub_date }}{% else %}Nei{% endif %}</td>
   <td>{{ version.variant.article.publisher.user.get_full_name }}</td>
