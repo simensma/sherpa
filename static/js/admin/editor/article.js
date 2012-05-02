@@ -41,33 +41,22 @@ $(document).ready(function() {
 
     $("div.edit-article-header input[name='thumbnail'][value='default']").change(function() {
         if($(this).is(':checked')) {
-            chooseImage(true);
-        } else {
-            chooseImage(false);
-        }
-    });
-
-    $("div.edit-article-header input[name='thumbnail'][value='new']").change(function() {
-        if($(this).is(':checked')) {
-            chooseImage(false);
-        } else {
-            chooseImage(true);
-        }
-    });
-
-    function chooseImage(original) {
-        var image = $(this);
-        if(original) {
+            var image = $(this);
             $("div.edit-article-header img.article-thumbnail").hide();
             $.ajax({
                 url: '/sherpa/artikler/bilde/' + $("div.edit-article-header").attr('data-id') + '/slett/',
                 type: 'POST'
             });
-        } else {
+        }
+    });
+
+    $("div.edit-article-header input[name='thumbnail'][value='new']").change(function() {
+        if($(this).is(':checked')) {
+            var image = $(this);
             $("div.edit-article-header img.article-thumbnail").show();
             saveImage();
         }
-    }
+    });
 
     function saveImage() {
         $.ajax({
