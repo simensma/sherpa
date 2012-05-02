@@ -14,16 +14,16 @@ $(document).ready(function() {
     bcList = $("div#dialog-change-image div#imagearchive ul.breadcrumb");
     showFolder('');
     $("div#dialog-change-image div.too-few-chars").hide();
-    $("div#dialog-change-image div.empty-url").hide();
+    $("div#dialog-change-image div.empty-src").hide();
 
     $("div#dialog-change-image button.insert-image").click(function() {
         var dialog = $(this).parents("div#dialog-change-image");
-        var url = dialog.find("input[name='url']").val();
-        if(url == "") {
-            $("div#dialog-change-image div.empty-url").show();
+        var src = dialog.find("input[name='src']").val();
+        if(src == "") {
+            $("div#dialog-change-image div.empty-src").show();
             return;
         }
-        $("div#dialog-change-image div.empty-url").hide();
+        $("div#dialog-change-image div.empty-src").hide();
         dialog.dialog('close');
 
         var anchor = dialog.find("input[name='anchor']");
@@ -42,7 +42,7 @@ $(document).ready(function() {
         } else {
             alt = '';
         }
-        imagePickedCallback(url, anchor, alt);
+        imagePickedCallback(src, anchor, alt);
     });
 
     $("div#dialog-change-image button.image-search").click(doSearch);
@@ -66,7 +66,7 @@ $(document).ready(function() {
 function openImageDialog(src, anchor, alt, callback) {
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
-    dialog.find("input[name='url']").val(src);
+    dialog.find("input[name='src']").val(src);
     dialog.find("input[name='anchor']").val(anchor);
     dialog.find("input[name='alt']").val(alt);
     imagePickedCallback = callback;
@@ -143,7 +143,7 @@ function updateContents(parents, albums, images, emptyText) {
     for(var i=0; i<images.length; i++) {
         var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
         item.click(function() {
-            $("div#dialog-change-image input[name='url']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+            $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
             $("div#dialog-change-image input[name='alt']").val($(this).attr('data-description'));
             $("div#dialog-change-image button.insert-image").click();
         });

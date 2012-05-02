@@ -677,7 +677,7 @@ $(document).ready(function() {
             $(this).removeClass('hover');
             currentImage = $(this);
             openImageDialog($(this).attr('src'), $(this).parent("a").attr('href'), $(this).attr('alt'), saveImage);
-            function saveImage(url, anchor, alt) {
+            function saveImage(src, anchor, alt) {
                 if(anchor.length == 0) {
                     // No link
                     if(currentImage.parent("a").length > 0) {
@@ -696,7 +696,7 @@ $(document).ready(function() {
                         anchorEl.prepend(currentImage);
                     }
                 }
-                currentImage.attr('src', url);
+                currentImage.attr('src', src);
                 currentImage.attr('alt', alt);
                 $("#toolbar .save button.save").click();
             }
