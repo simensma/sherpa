@@ -26,9 +26,11 @@
 <tr>
   <td class="article-preview">
     <div class="article-preview">
-      <a href="{% url admin.articles.views.edit_version version.id %}">
-        <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
-      </a>
+      {% if not version.hide_thumbnail %}
+        <a href="{% url admin.articles.views.edit_version version.id %}">
+          <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+        </a>
+      {% endif %}
       <h2>
         <a href="{% url admin.articles.views.edit_version version.id %}">
           {{ version.title.content|striptags }}

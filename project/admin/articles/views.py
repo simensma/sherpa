@@ -21,7 +21,7 @@ def list(request):
 
 @login_required
 def new(request):
-    article = Article(thumbnail=None, published=False, pub_date=None, publisher=request.user.get_profile())
+    article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None, publisher=request.user.get_profile())
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, publisher=request.user.get_profile())
     variant.save()
@@ -54,6 +54,7 @@ def new(request):
 def image(request, article):
     article = Article.objects.get(id=article)
     article.thumbnail = request.POST['thumbnail']
+    article.hide_thumbnail = False
     article.save()
     return HttpResponse()
 
@@ -61,6 +62,14 @@ def image(request, article):
 def image_delete(request, article):
     article = Article.objects.get(id=article)
     article.thumbnail = None
+    article.hide_thumbnail = False
+    article.save()
+    return HttpResponse()
+
+@login_required
+def image_hide(request, article):
+    article = Article.objects.get(id=article)
+    article.hide_thumbnail = True
     article.save()
     return HttpResponse()
 
@@ -80,6 +89,7 @@ def delete(request, article):
 @login_required
 def edit_version(request, version):
     version = Version.objects.get(id=version)
+    version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
     title = None
     for row in rows:

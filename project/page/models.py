@@ -60,16 +60,24 @@ class Version(models.Model):
     title = None
     lede = None
     thumbnail = None
+    hide_thumbnail = False
 
     def load_preview(self):
         self.title = Content.objects.get(column__row__version=self, type='title')
         self.lede = Content.objects.get(column__row__version=self, type='lede')
+        if self.variant.article.hide_thumbnail:
+            self.hide_thumbnail = True
+            return
         if self.variant.article.thumbnail is not None:
             self.thumbnail = self.variant.article.thumbnail
         else:
-            order = Content.objects.filter(column__row__version=self, type='image').aggregate(Min('order'))['order__min']
-            content = Content.objects.get(column__row__version=self, type='image', order=order)
-            self.thumbnail = json.loads(content.content)['src']
+            try:
+                order = Content.objects.filter(column__row__version=self, type='image').aggregate(Min('order'))['order__min']
+                content = Content.objects.get(column__row__version=self, type='image', order=order)
+                self.thumbnail = json.loads(content.content)['src']
+            except Content.DoesNotExist:
+                # There are no images in this article
+                self.hide_thumbnail = True
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):

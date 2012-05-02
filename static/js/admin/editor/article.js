@@ -35,12 +35,30 @@ $(document).ready(function() {
 
     /* Change thumbnail-image */
 
-    if($("div.edit-article-header input[name='thumbnail'][value='default'][checked]").length > 0) {
+    if($("div.edit-article-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
+       $("div.edit-article-header input[name='thumbnail'][value='none'][checked]").length > 0) {
         $("div.edit-article-header img.article-thumbnail").hide();
     }
 
-    $("div.edit-article-header input[name='thumbnail'][value='default']").change(function() {
+    $("div.edit-article-header input[name='thumbnail'][value='none']").change(function() {
         if($(this).is(':checked')) {
+            var image = $(this);
+            $("div.edit-article-header img.article-thumbnail").hide();
+            $.ajax({
+                url: '/sherpa/artikler/bilde/' + $("div.edit-article-header").attr('data-id') + '/skjul/',
+                type: 'POST'
+            });
+        }
+    });
+
+    $("div.edit-article-header input[name='thumbnail'][value='default']").change(function(e) {
+        if($(this).is(':checked')) {
+            if($("article div.image").length == 0) {
+                debugger;
+                alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
+                $("div.edit-article-header input[name='thumbnail'][value='none']").click();
+                return;
+            }
             var image = $(this);
             $("div.edit-article-header img.article-thumbnail").hide();
             $.ajax({
