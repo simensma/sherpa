@@ -64,7 +64,6 @@ class Version(models.Model):
     def load_preview(self):
         self.title = Content.objects.get(column__row__version=self, type='title')
         self.lede = Content.objects.get(column__row__version=self, type='lede')
-        print(str(self.variant.article.thumbnail))
         if self.variant.article.thumbnail is not None:
             self.thumbnail = self.variant.article.thumbnail
         else:
