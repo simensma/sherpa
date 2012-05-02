@@ -79,7 +79,7 @@ $(document).ready(function() {
 
     $("div.edit-article-header img.article-thumbnail").click(function() {
         var image = $(this);
-        openImageDialog($(this).attr('src'), '', '', function(src, anchor, alt) {
+        openImageDialog($(this).attr('src'), undefined, undefined, function(src, anchor, alt) {
             image.attr('src', src);
             saveImage();
         });

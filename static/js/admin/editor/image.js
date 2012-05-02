@@ -67,8 +67,18 @@ function openImageDialog(src, anchor, alt, callback) {
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
     dialog.find("input[name='src']").val(src);
-    dialog.find("input[name='anchor']").val(anchor);
-    dialog.find("input[name='alt']").val(alt);
+    if(anchor !== undefined) {
+        dialog.find("input[name='anchor']").val(anchor);
+        dialog.find("tr.anchor").show();
+    } else {
+        dialog.find("tr.anchor").hide();
+    }
+    if(alt !== undefined) {
+        dialog.find("input[name='alt']").val(alt);
+        dialog.find("tr.alt").show();
+    } else {
+        dialog.find("tr.alt").hide();
+    }
     imagePickedCallback = callback;
 }
 

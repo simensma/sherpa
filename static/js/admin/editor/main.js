@@ -676,7 +676,11 @@ $(document).ready(function() {
         images.click(function(e) {
             $(this).removeClass('hover');
             currentImage = $(this);
-            openImageDialog($(this).attr('src'), $(this).parent("a").attr('href'), $(this).attr('alt'), saveImage);
+            var anchor = $(this).parent("a").attr('href');
+            if(anchor === undefined) {
+                anchor = '';
+            }
+            openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), saveImage);
             function saveImage(src, anchor, alt) {
                 if(anchor.length == 0) {
                     // No link

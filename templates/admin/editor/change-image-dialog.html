@@ -1,5 +1,5 @@
 <div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
-  <div class="alert alert-error empty-url">
+  <div class="alert alert-error empty-src">
     <a class="close">x</a>
     <strong>Sett inn hvilket bilde?</strong><br>
     Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
@@ -8,16 +8,12 @@
     <tr>
       <td>Bildets adresse:</td><td><input type="text" class="span6" name="src"></td>
     </tr>
-    {% if anchor %}
-      <tr>
-        <td>Bildet lenker til:</td><td><input type="text" class="span6" name="anchor"></td>
-      </tr>
-    {% endif %}
-    {% if alt %}
-      <tr>
-        <td>Tekst for blinde:</td><td><input type="text" class="span6" name="alt"></td>
-      </tr>
-    {% endif %}
+    <tr class="anchor">
+      <td>Bildet lenker til:</td><td><input type="text" class="span6" name="anchor"></td>
+    </tr>
+    <tr class="alt">
+      <td>Tekst for blinde:</td><td><input type="text" class="span6" name="alt"></td>
+    </tr>
     <tr>
       <td></td>
       <td><button class="btn btn-success btn-large insert-image"><i class="icon-share-alt"></i> Sett inn</button></td>
