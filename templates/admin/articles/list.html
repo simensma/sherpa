@@ -29,11 +29,11 @@
       <a href="{% url admin.articles.views.edit_version version.id %}">
         <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
       </a>
-        <h2>
-          <a href="{% url admin.articles.views.edit_version version.id %}">
-            {{ version.title.content|striptags }}
-          </a>
-        </h2>
+      <h2>
+        <a href="{% url admin.articles.views.edit_version version.id %}">
+          {{ version.title.content|striptags }}
+        </a>
+      </h2>
       <div class="lede">
         <a href="{% url admin.articles.views.edit_version version.id %}">
           {{ version.lede.content|removetags:"a"|safe }}
