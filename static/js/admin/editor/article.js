@@ -39,7 +39,7 @@ $(document).ready(function() {
         $("div.edit-article-header img.article-thumbnail").hide();
     }
 
-    $("div.edit-article-header input[name='thumbnail'][value='default']").click(function() {
+    $("div.edit-article-header input[name='thumbnail'][value='default']").change(function() {
         if($(this).is(':checked')) {
             chooseImage(true);
         } else {
@@ -47,7 +47,7 @@ $(document).ready(function() {
         }
     });
 
-    $("div.edit-article-header input[name='thumbnail'][value='new']").click(function() {
+    $("div.edit-article-header input[name='thumbnail'][value='new']").change(function() {
         if($(this).is(':checked')) {
             chooseImage(false);
         } else {
