@@ -407,11 +407,17 @@ $(document).ready(function() {
     /**
      * Toolbar buttons
      */
-
-    $("#toolbar div.button").mousedown(function() {
-        $(this).toggleClass('active');
+    $("#toolbar div.formatting a.button").each(function() {
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png) !important');
+    });
+    $("#toolbar div.formatting a.button").hover(function() {
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png) !important');
+    }, function() {
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png) !important');
+    }).mousedown(function() {
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-active.png) !important');
     }).mouseup(function() {
-        $(this).toggleClass('active');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png) !important');
     });
 
     $("#toolbar select").change(function() {
