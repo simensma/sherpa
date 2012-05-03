@@ -249,3 +249,9 @@ div.edit-article-header div.published p {
 td.article-preview {
   width: 60%;
 }
+
+/* Make jquery-ui autocomplete dropdown a little more clear */
+
+.ui-menu {
+  border: 1px solid rgb(95, 95, 95);
+}
