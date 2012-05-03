@@ -11,6 +11,9 @@
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/statistics.jpg"><br>Analyse</a></li>
       <li><a href="{% url admin.images.views.list_albums %}">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg"><br>Bildearkiv</a></li>
+      {# Don't link directly to the file manager, there's some security stuff in place in case you're not logged in to the old sherpa which will block you from the entire domain for a short period. #}
+      <li><a href="http://www.turistforeningen.no/admin/">
+        <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/folders.jpg"><br>Filer</a></li>
     </ul>
   </nav>
   <div style="clear: both;"></div>
