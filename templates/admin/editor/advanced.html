@@ -14,7 +14,7 @@
 <article data-id="{{ version.id }}">
 
 {% for row in rows %}
-<div class="row" data-id="{{ row.id }}">
+<div class="row-fluid" data-id="{{ row.id }}">
   {% for column in row.columns %}
     <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
       {% for content in column.contents %}

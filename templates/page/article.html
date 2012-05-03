@@ -2,7 +2,7 @@
 {% block body %}
 
 {% for row in rows %}
-<div class="row">
+<div class="row-fluid">
   {% for column in row.columns %}
     <div class="offset{{ column.offset }} span{{ column.span }}">
       {% for content in column.contents %}
