@@ -39,8 +39,8 @@
   {% if menus %}
   <div class="row">
     <div class="span12">
-      <nav>
-        <ul class="nav nav-tabs">
+      <nav id="menus">
+        <ul>
           {% for menu in menus %}
           <li{% if menu.active %} class="active"{% endif %}>
             <a href="{{ menu.url }}">{{ menu.name }}</a>
