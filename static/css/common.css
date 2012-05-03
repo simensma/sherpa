@@ -25,11 +25,18 @@ nav#menus li a {
 
 article h1 {
   font-weight: normal;
-  margin-bottom: 6px;
+  font-size: 280%;
+  line-height: normal !important;
+  border-bottom: 4px solid rgb(35, 35, 35);
+  margin-bottom: 15px;
 }
 
 article h2 {
   font-weight: normal;
+  font-size: 160%;
+  line-height: normal !important;
+  border-bottom: 2px solid rgb(35, 35, 35);
+  margin-bottom: 10px;
 }
 
 article .lede {
