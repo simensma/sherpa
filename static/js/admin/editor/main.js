@@ -11,7 +11,6 @@ $(document).ready(function() {
     $("div.no-save-warning").hide();
     setEmpties();
     enableEditing();
-    autoRemoveEmptyContent($("article .html[data-type!='lede']"));
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
@@ -43,6 +42,28 @@ $(document).ready(function() {
     function setSelection() {
         selection = rangy.getSelection();
     }
+
+    /* Automatically remove empty html contents */
+    $(document).on('focusout', 'div.html', function() {
+        if($(this).text().trim() === "" && $(this).attr('data-type') != "lede") {
+            disableEditing();
+            var html = $(this);
+            $.ajax({
+                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(html.attr('data-id')) + '/',
+                type: 'POST'
+            }).done(function(result) {
+                if(html.siblings().length == 0) {
+                    setEmpty(html.parent());
+                }
+                html.remove();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                refreshSort();
+                enableEditing();
+            });
+        }
+    });
 
     /* Change image sources upon being clicked. */
     $(document).on('click', 'div.image img', function() {
@@ -99,7 +120,6 @@ $(document).ready(function() {
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var html = $('<p><br></p>');
             function done(wrapper) {
-                autoRemoveEmptyContent(wrapper);
                 if(sortState == 'formatting') {
                     wrapper.attr('contenteditable', 'true').focus();
                 }
@@ -138,7 +158,6 @@ $(document).ready(function() {
                 var image = wrapper.find("img");
                 function contentDone(wrapper) {
                     image.click();
-                    autoRemoveEmptyContent(wrapper);
                     if(sortState == 'formatting') {
                         wrapper.attr('contenteditable', 'true');
                     }
@@ -619,30 +638,6 @@ $(document).ready(function() {
             var widget = JSON.parse($(this).attr('data-json'));
             widgetBeingEdited = $(this);
             editWidget(widget);
-        });
-    }
-
-    /* Automatically remove empty content-elements */
-    function autoRemoveEmptyContent(html) {
-        html.focusout(function() {
-            if($(this).text().trim() === "") {
-                disableEditing();
-                var html = $(this);
-                $.ajax({
-                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(html.attr('data-id')) + '/',
-                    type: 'POST'
-                }).done(function(result) {
-                    if(html.siblings().length == 0) {
-                        setEmpty(html.parent());
-                    }
-                    html.remove();
-                }).fail(function(result) {
-                    // Todo
-                }).always(function(result) {
-                    refreshSort();
-                    enableEditing();
-                });
-            }
         });
     }
 
