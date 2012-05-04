@@ -408,16 +408,16 @@ $(document).ready(function() {
      * Toolbar buttons
      */
     $("#toolbar div.formatting a.button").each(function() {
-        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png) !important');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
     });
     $("#toolbar div.formatting a.button").hover(function() {
-        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png) !important');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     }, function() {
-        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png) !important');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
     }).mousedown(function() {
-        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-active.png) !important');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-active.png)');
     }).mouseup(function() {
-        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png) !important');
+        $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
     $("#toolbar select").change(function() {
