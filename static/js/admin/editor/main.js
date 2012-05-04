@@ -24,13 +24,25 @@ $(document).ready(function() {
     // Draggable will set position relative, so make sure it is fixed before the user drags it
     $("#toolbar").css('position', 'fixed');
 
-
     /* Prevent all anchor clicks within the article */
     $(document).on('click', 'a', function(e) {
         if($(this).parents("article").length != 0) {
             e.preventDefault();
         }
     });
+
+    /* Highlight contenteditables that _are being edited_. */
+    $(document).on('focus', 'article div.html', function() {
+        $(this).addClass('selected');
+    });
+    $(document).on('focusout', 'article div.html', function() {
+        $(this).removeClass('selected');
+    });
+    $(document).on('mouseup', 'article div.html', setSelection);
+    $(document).on('keyup', 'article div.html', setSelection);
+    function setSelection() {
+        selection = rangy.getSelection();
+    }
 
     /* Change image sources upon being clicked. */
     $(document).on('click', 'div.image img', function() {
@@ -87,7 +99,6 @@ $(document).ready(function() {
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var html = $('<p><br></p>');
             function done(wrapper) {
-                selectableContent(wrapper);
                 autoRemoveEmptyContent(wrapper);
                 if(sortState == 'formatting') {
                     wrapper.attr('contenteditable', 'true').focus();
@@ -127,7 +138,6 @@ $(document).ready(function() {
                 var image = wrapper.find("img");
                 function contentDone(wrapper) {
                     image.click();
-                    selectableContent(wrapper);
                     autoRemoveEmptyContent(wrapper);
                     if(sortState == 'formatting') {
                         wrapper.attr('contenteditable', 'true');
@@ -567,7 +577,7 @@ $(document).ready(function() {
         $("article div.widget").off('click');
     }
     function enableEditing() {
-        selectableContent($("article div.html").attr('contenteditable', 'true'));
+        $("article div.html").attr('contenteditable', 'true');
         clickableWidgets($("div.widget"));
     }
 
@@ -603,20 +613,6 @@ $(document).ready(function() {
      * These will need to be reapplied for all newly
      * created DOM html elements.
      */
-
-    /* Highlight contenteditables that _are being edited_. */
-    function selectableContent(html) {
-        html.focus(function() {
-            $(this).addClass('selected');
-        }).focusout(function() {
-            $(this).removeClass('selected');
-        }).mouseup(setSelection).keyup(setSelection);
-    }
-
-    /* Used by selectableContent */
-    function setSelection() {
-        selection = rangy.getSelection();
-    }
 
     function clickableWidgets(widgets) {
         widgets.click(function() {
