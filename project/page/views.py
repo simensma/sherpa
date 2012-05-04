@@ -48,3 +48,6 @@ def match_user(request, page):
         if(variant.segment.match(request, visitor)):
             return variant
     return None
+
+def redirect(request, url, prefix):
+    return HttpResponseRedirect("%s%s" % (prefix, url))
