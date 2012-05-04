@@ -136,8 +136,7 @@
   <ul class="nav nav-tabs">
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
     <li><a href="#2" data-toggle="tab">Struktur</a></li>
-    <li><a href="#3" data-toggle="tab">Innhold</a></li>
-    <li><a href="#4" data-toggle="tab">Formatering</a></li>
+    <li><a href="#3" data-toggle="tab">Formatering</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane active save" id="1">
@@ -159,17 +158,7 @@
         <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
       </div>
     </div>
-    <div class="tab-pane content" id="3">
-      <div class="btn-group">
-        <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
-        <button class="btn add-image"><i class="icon-picture"></i> Bilde</button>
-        <button class="btn add-widget"><i class="icon-star"></i> Widget</button>
-        <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
-      </div>
-      <br>
-      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-    </div>
-    <div class="tab-pane formatting" id="4">
+    <div class="tab-pane formatting" id="3">
       <a href="javascript:undefined" title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
       <a href="javascript:undefined" title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
       <a href="javascript:undefined" title="Understreket tekst" class="button underline" data-image="{{ STATIC_URL }}img/editorbuttons/underline">&nbsp;</a>
@@ -190,6 +179,14 @@
           <option value="p">Brødtekst</option>
         </optgroup>
       </select>
+      <div class="btn-group">
+        <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
+        <button class="btn add-image"><i class="icon-picture"></i> Bilde</button>
+        <button class="btn add-widget"><i class="icon-star"></i> Widget</button>
+        <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
+      </div>
+      <br>
+      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
     </div>
   </div>
 </div>
