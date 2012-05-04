@@ -597,7 +597,6 @@ $(document).ready(function() {
     }
     function enableEditing() {
         $("article div.html").attr('contenteditable', 'true');
-        clickableWidgets($("div.widget"));
     }
 
     /* Divs for inserting widgets/images/text */
@@ -625,20 +624,6 @@ $(document).ready(function() {
     }
     function removeEmpties() {
         $("article .column").children("div.empty.well").remove();
-    }
-
-    /**
-     * Dynamic event handlers
-     * These will need to be reapplied for all newly
-     * created DOM html elements.
-     */
-
-    function clickableWidgets(widgets) {
-        widgets.click(function() {
-            var widget = JSON.parse($(this).attr('data-json'));
-            widgetBeingEdited = $(this);
-            editWidget(widget);
-        });
     }
 
     /**
@@ -682,13 +667,16 @@ $(document).ready(function() {
 
     /* Editing widgets */
 
-    clickableWidgets($("div.widget"));
+    $(document).on('click', 'div.widget', function() {
+        var widget = JSON.parse($(this).attr('data-json'));
+        widgetBeingEdited = $(this);
+        editWidget(widget);
+    });
 
     function widgetAdded(wrapper) {
         refreshSort();
         removeEmpties();
         setEmpties();
-        clickableWidgets(wrapper);
     }
 
     function saveWidget(widget, content) {
