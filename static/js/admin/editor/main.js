@@ -25,6 +25,13 @@ $(document).ready(function() {
     $("#toolbar").css('position', 'fixed');
 
 
+    /* Prevent all anchor clicks within the article */
+    $(document).on('click', 'a', function(e) {
+        if($(this).parents("article").length != 0) {
+            e.preventDefault();
+        }
+    });
+
     /**
      * Content changes (text, images, widgets)
      */
@@ -581,10 +588,6 @@ $(document).ready(function() {
 
     /* Change image sources upon being clicked. */
     function changeableImages(images) {
-        images.parent("a").click(function(e) {
-            // For images with anchors, prevent the default link action
-            e.preventDefault();
-        });
         images.click(function(e) {
             $(this).removeClass('hover');
             currentImage = $(this);
