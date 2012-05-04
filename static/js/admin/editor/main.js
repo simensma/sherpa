@@ -32,6 +32,40 @@ $(document).ready(function() {
         }
     });
 
+    /* Change image sources upon being clicked. */
+    $(document).on('click', 'div.image img', function() {
+        $(this).removeClass('hover');
+        currentImage = $(this);
+        var anchor = $(this).parent("a").attr('href');
+        if(anchor === undefined) {
+            anchor = '';
+        }
+        openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), saveImage);
+        function saveImage(src, anchor, alt) {
+            if(anchor.length == 0) {
+                // No link
+                if(currentImage.parent("a").length > 0) {
+                    // *Was* link, but is now removed
+                    currentImage.parent().before(currentImage).remove();
+                }
+            } else {
+                // Add link
+                if(currentImage.parent("a").length > 0) {
+                    // Link exists, update it
+                    currentImage.parent().attr('href', anchor);
+                } else {
+                    // No existing link, add it
+                    var anchorEl = $('<a href="' + anchor + '"></a>');
+                    currentImage.before(anchorEl).detach();
+                    anchorEl.prepend(currentImage);
+                }
+            }
+            currentImage.attr('src', src);
+            currentImage.attr('alt', alt);
+            $("#toolbar .save button.save").click();
+        }
+    });
+
     /**
      * Content changes (text, images, widgets)
      */
@@ -92,7 +126,6 @@ $(document).ready(function() {
             function imageDone(wrapper) {
                 var image = wrapper.find("img");
                 function contentDone(wrapper) {
-                    changeableImages(image);
                     image.click();
                     selectableContent(wrapper);
                     autoRemoveEmptyContent(wrapper);
@@ -535,7 +568,6 @@ $(document).ready(function() {
     }
     function enableEditing() {
         selectableContent($("article div.html").attr('contenteditable', 'true'));
-        changeableImages($("article div.image img"));
         clickableWidgets($("div.widget"));
     }
 
@@ -584,42 +616,6 @@ $(document).ready(function() {
     /* Used by selectableContent */
     function setSelection() {
         selection = rangy.getSelection();
-    }
-
-    /* Change image sources upon being clicked. */
-    function changeableImages(images) {
-        images.click(function(e) {
-            $(this).removeClass('hover');
-            currentImage = $(this);
-            var anchor = $(this).parent("a").attr('href');
-            if(anchor === undefined) {
-                anchor = '';
-            }
-            openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), saveImage);
-            function saveImage(src, anchor, alt) {
-                if(anchor.length == 0) {
-                    // No link
-                    if(currentImage.parent("a").length > 0) {
-                        // *Was* link, but is now removed
-                        currentImage.parent().before(currentImage).remove();
-                    }
-                } else {
-                    // Add link
-                    if(currentImage.parent("a").length > 0) {
-                        // Link exists, update it
-                        currentImage.parent().attr('href', anchor);
-                    } else {
-                        // No existing link, add it
-                        var anchorEl = $('<a href="' + anchor + '"></a>');
-                        currentImage.before(anchorEl).detach();
-                        anchorEl.prepend(currentImage);
-                    }
-                }
-                currentImage.attr('src', src);
-                currentImage.attr('alt', alt);
-                $("#toolbar .save button.save").click();
-            }
-        });
     }
 
     function clickableWidgets(widgets) {
