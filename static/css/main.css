@@ -23,7 +23,7 @@ div.social-icons h3 {
     line-height: 1em;
 }
 
-div.social-icons, div.social-icons h3 {
+div.social-icons a, div.social-icons h3 a {
     color: rgb(118, 118, 118);
 }
 
