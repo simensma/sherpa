@@ -178,8 +178,8 @@ $(document).ready(function() {
     });
 
     // Add widget
-    var widgetPosition; // Set when inserting a new widget
-    var widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
+    window.widgetPosition = undefined; // Set when inserting a new widget
+    window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
 
     $("#toolbar button.add-widget").click(function() {
         if($("article").children().length == 0) {
@@ -463,6 +463,7 @@ $(document).ready(function() {
         });
     }
 
+    window.refreshSort = refreshSort;
     function refreshSort() {
         $("article").sortable('refresh');
         $("article .row").sortable('refresh');
@@ -615,6 +616,7 @@ $(document).ready(function() {
     function setEmpty(column) {
         column.append('<div class="empty well">Tom kolonne</div>');
     }
+    window.setEmpties = setEmpties;
     function setEmpties() {
         $("article .column").each(function() {
             if($(this).children(":not(.insertable)").length == 0) {
@@ -622,6 +624,7 @@ $(document).ready(function() {
             }
         });
     }
+    window.removeEmpties = removeEmpties;
     function removeEmpties() {
         $("article .column").children("div.empty.well").remove();
     }
@@ -633,6 +636,7 @@ $(document).ready(function() {
      */
 
     /* Add content-objects to some column */
+    window.addContent = addContent;
     function addContent(prev, parent, column, order, content, type, done) {
         enableOverlay();
         $.ajax({
@@ -663,61 +667,6 @@ $(document).ready(function() {
         }).always(function(result) {
             enableToolbar();
         });
-    }
-
-    /* Editing widgets */
-
-    $(document).on('click', 'div.widget', function() {
-        var widget = JSON.parse($(this).attr('data-json'));
-        widgetBeingEdited = $(this);
-        editWidget(widget);
-    });
-
-    function widgetAdded(wrapper) {
-        refreshSort();
-        removeEmpties();
-        setEmpties();
-    }
-
-    function saveWidget(widget, content) {
-        $.ajax({
-            url: '/sherpa/cms/widget/oppdater/' + widget.attr('data-id') + '/',
-            type: 'POST',
-            data: 'content=' + encodeURIComponent(content)
-        }).done(function(result) {
-            result = JSON.parse(result);
-            widget.contents().remove();
-            widget.append(result.content);
-            widget.attr('data-json', result.json);
-        }).always(function() {
-            disableOverlay();
-        });
-    }
-
-    // Save quote-widget
-    $("div.dialog.widget-edit.quote button.save").click(function() {
-        var content = JSON.stringify({
-            widget: "quote",
-            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
-            author: $("div.dialog.widget-edit.quote input[name='author']").val()
-        });
-        if(widgetBeingEdited !== undefined) {
-            $("div.dialog.widget-edit.quote").dialog('close');
-            enableOverlay();
-            saveWidget(widgetBeingEdited, content);
-        } else {
-            $(this).parents(".dialog").dialog('close');
-            addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
-                widgetPosition.order, content, 'widget', widgetAdded);
-        }
-    });
-
-    function editWidget(widget) {
-        if(widget.widget == 'quote') {
-            $("div.dialog.widget-edit.quote textarea[name='quote']").val(widget.quote);
-            $("div.dialog.widget-edit.quote input[name='author']").val(widget.author);
-            $("div.dialog.widget-edit.quote").dialog('open');
-        }
     }
 
     window.enableOverlay = enableOverlay;
