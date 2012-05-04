@@ -64,10 +64,6 @@ article div.image img:hover, article div.widget:hover {
   cursor: alias;
 }
 
-input.url {
-  width: 350px;
-}
-
 article div[contenteditable='true'].selected {
   background-color: rgb(215, 215, 215);
 }
@@ -136,6 +132,10 @@ article .moveable.vertical {
 
 #toolbar a.button:hover {
   text-decoration: none;
+}
+
+#toolbar div.formatting input[name='url'] {
+  width: 350px;
 }
 
 #dialog-columns h1 {

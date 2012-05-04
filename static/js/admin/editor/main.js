@@ -430,20 +430,36 @@ $(document).ready(function() {
         });
         $("#toolbar select").val("default");
     });
-    $("#toolbar button.anchor-add").click(function(event) {
-        var range = selection.getRangeAt(0);
-        // Trim the selection for whitespace (actually, just the last char, since that's most common)
-        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-            range.setEnd(range.endContainer, range.endOffset - 1);
+    $("#toolbar a.button.anchor-add").click(function(event) {
+        $("#toolbar .tab-pane *").hide();
+        var p = $('<p class="anchor-insert">URL-adresse: </p>');
+        var input = $('<input type="text" name="url">');
+        p.append(input);
+        var buttons = $('<div class="anchor-buttons btn-group"><button class="btn anchor-add">Sett inn</button><button class="btn anchor-cancel">Avbryt</button></div>');
+        buttons.find("button.anchor-add").click(function() {
+            var range = selection.getRangeAt(0);
+            // Trim the selection for whitespace (actually, just the last char, since that's most common)
+            if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+                range.setEnd(range.endContainer, range.endOffset - 1);
+            }
+            selection.setSingleRange(range);
+            var url = $("#toolbar div.formatting input[name='url']").val();
+            if(!url.match(/^https?:\/\//)) {
+                url = "http://" + url;
+            }
+            document.execCommand('createLink', false, url);
+            reset();
+        });
+        buttons.find("button.anchor-cancel").click(function() {
+            reset();
+        });
+        function reset() {
+            $("#toolbar .formatting p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
+            $("#toolbar .tab-pane *").show();
         }
-        selection.setSingleRange(range);
-        var url = $("input.url").val();
-        if(!url.match(/^https?:\/\//)) {
-            url = "http://" + url;
-        }
-        document.execCommand('createLink', false, url);
+        $("#toolbar .tab-pane").append(p, buttons);
     });
-    $("#toolbar button.anchor-remove").click(function(event) {
+    $("#toolbar a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
     });
     $("#toolbar a.button.bold").click(function(event) {

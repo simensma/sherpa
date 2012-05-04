@@ -138,7 +138,6 @@
     <li><a href="#2" data-toggle="tab">Struktur</a></li>
     <li><a href="#3" data-toggle="tab">Innhold</a></li>
     <li><a href="#4" data-toggle="tab">Formatering</a></li>
-    <li><a href="#5" data-toggle="tab">Lenker</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane active save" id="1">
@@ -174,6 +173,8 @@
       <a href="javascript:undefined" title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
       <a href="javascript:undefined" title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
       <a href="javascript:undefined" title="Understreket tekst" class="button underline" data-image="{{ STATIC_URL }}img/editorbuttons/underline">&nbsp;</a>
+      <a href="javascript:undefined" title="Sett inn lenke" class="button anchor-add" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-add">&nbsp;</a>
+      <a href="javascript:undefined" title="Ta bort lenke" class="button anchor-remove" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-remove">&nbsp;</a>
       <a href="javascript:undefined" title="Nummerert liste" class="button ol" data-image="{{ STATIC_URL }}img/editorbuttons/ol">&nbsp;</a>
       <a href="javascript:undefined" title="Unummerert liste" class="button ul" data-image="{{ STATIC_URL }}img/editorbuttons/ul">&nbsp;</a>
       <a href="javascript:undefined" title="Venstrestill tekst" class="button align-left" data-image="{{ STATIC_URL }}img/editorbuttons/align-left">&nbsp;</a>
@@ -189,14 +190,5 @@
         </optgroup>
       </select>
     </div>
-    <div class="tab-pane link" id="5">
-      <p>URL-adresse: <input type="text" class="url"></p>
-      <div class="btn-group">
-        <button class="btn anchor-add"><i class="icon-share-alt"></i> Sett inn link</button>
-        <button class="btn anchor-remove"><i class="icon-remove"></i> Ta bort link</button>
-      </div>
-      <p>Tips: For at knappene skal funke må du markere teksten i artikkelen som du vil gjøre til en link.</p>
-    </div>
-    <div style="clear: both;"></div>
   </div>
 </div>
