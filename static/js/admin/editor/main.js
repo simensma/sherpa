@@ -489,6 +489,9 @@ $(document).ready(function() {
     $("#toolbar a.button.full").click(function(event) {
         document.execCommand('justifyfull', false, null);
     });
+    $("#toolbar a.button.hr").click(function(event) {
+        document.execCommand('inserthorizontalrule', false, null);
+    });
 
     /**
      * Saving the document
