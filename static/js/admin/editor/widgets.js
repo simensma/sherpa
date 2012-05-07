@@ -2,11 +2,6 @@ $(document).ready(function() {
 
     /* Editing widgets */
 
-    $(document).on('click', 'div.widget', function() {
-        widgetBeingEdited = $(this);
-        editWidget(JSON.parse($(this).attr('data-json')));
-    });
-
     function widgetAdded(wrapper) {
         refreshSort();
         removeEmpties();

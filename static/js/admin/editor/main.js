@@ -205,7 +205,7 @@ $(document).ready(function() {
         });
     });
     $("#dialog-add-widget div.widget-thumbnail").click(function() {
-        widgetBeingEdited = undefined; // Defined in widgets.js
+        widgetBeingEdited = undefined;
         $(this).parents("#dialog-add-widget").dialog('close');
         $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
         $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
@@ -508,11 +508,15 @@ $(document).ready(function() {
     function disableEditing() {
         $("article div.html").removeAttr('contenteditable');
         $("article div.image img").off('click focus focusout');
-        $("article div.widget").off('click');
+        $(document).off('click', 'div.widget');
     }
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.html").attr('contenteditable', 'true');
+        $(document).on('click', 'div.widget', function() {
+            widgetBeingEdited = $(this);
+            editWidget(JSON.parse($(this).attr('data-json')));
+        });
     }
 
     /* Divs for inserting widgets/images/text */
