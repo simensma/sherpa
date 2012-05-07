@@ -45,8 +45,6 @@ $(document).ready(function() {
         $(this).hide();
         $("div.no-save-warning").hide();
         $("#toolbar span.save-text").text("Lagrer, vennligst vent...");
-        enableOverlay();
-        disableEditing();
         var rows = [];
         $("article div.row").each(function() {
             var row = {
@@ -105,9 +103,7 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             updateSaveCount();
-            disableOverlay();
             $("#toolbar button.save").show();
-            enableEditing();
         });
     });
 
