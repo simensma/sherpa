@@ -16,6 +16,16 @@ $(document).ready(function() {
     $("div#dialog-change-image div.too-few-chars").hide();
     $("div#dialog-change-image div.empty-src").hide();
 
+    $("div#dialog-change-image button.choose-image").click(function() {
+        $("div#dialog-change-image div.image-details").hide();
+        $("div#dialog-change-image div.image-archive-chooser").show();
+    });
+
+    $("div#dialog-change-image button.cancel-chooser").click(function() {
+        $("div#dialog-change-image div.image-archive-chooser").hide();
+        $("div#dialog-change-image div.image-details").show();
+    });
+
     $("div#dialog-change-image button.insert-image").click(function() {
         var dialog = $(this).parents("div#dialog-change-image");
         var src = dialog.find("input[name='src']").val();
@@ -64,6 +74,8 @@ $(document).ready(function() {
 });
 
 function openImageDialog(src, anchor, alt, callback) {
+    $("div#dialog-change-image div.image-archive-chooser").hide();
+    $("div#dialog-change-image div.image-details").show();
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
     dialog.find("input[name='src']").val(src);
@@ -155,7 +167,8 @@ function updateContents(parents, albums, images, emptyText) {
         item.click(function() {
             $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
             $("div#dialog-change-image input[name='alt']").val($(this).attr('data-description'));
-            $("div#dialog-change-image button.insert-image").click();
+            $("div#dialog-change-image div.image-archive-chooser").hide();
+            $("div#dialog-change-image div.image-details").show();
         });
         $("div#dialog-change-image div#imagearchive ul#images").append(item);
     }

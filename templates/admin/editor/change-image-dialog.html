@@ -1,36 +1,47 @@
 <div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="90%">
-  <div class="alert alert-error empty-src">
-    <a class="close">x</a>
-    <strong>Sett inn hvilket bilde?</strong><br>
-    Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
-  </div>
-  <table>
-    <tr>
-      <td>Bildets adresse:</td><td><input type="text" class="span6" name="src"></td>
-    </tr>
-    <tr class="anchor">
-      <td>Bildet lenker til:</td><td><input type="text" class="span6" name="anchor"></td>
-    </tr>
-    <tr class="alt">
-      <td>Tekst for blinde:</td><td><input type="text" class="span6" name="alt"></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><button class="btn btn-success btn-large insert-image"><i class="icon-share-alt"></i> Sett inn</button></td>
-    </tr>
-  </table>
-  <hr>
-  <h2>Finn bilde i arkivet:</h2>
-  <input type="text" name="search" class="span6" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
-  <button class="btn btn-success button-aligned image-search"><i class="icon-search"></i> Søk</button>
-  <div id="imagearchive">
-    <ul class="breadcrumb"></ul>
-    <div class="alert alert-error span4 too-few-chars">
+  <div class="image-details">
+    <div class="alert alert-error empty-src">
       <a class="close">x</a>
-      <strong>For få søketegn!</strong><br>Vennligst bruk minst 3 tegn å når du søker, ellers får du garantert mange flere resultater enn du vil ha.
+      <strong>Sett inn hvilket bilde?</strong><br>
+      Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
+    </div>
+    <table>
+      <tr>
+        <td>Bildets adresse:</td>
+        <td><input type="text" class="span6" name="src"></td>
+        <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button>
+      </tr>
+      <tr class="anchor">
+        <td>Bildet lenker til:</td>
+        <td><input type="text" class="span6" name="anchor"></td>
+        <td></td>
+      </tr>
+      <tr class="alt">
+        <td>Tekst for blinde:</td>
+        <td><input type="text" class="span6" name="alt"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button class="btn btn-success btn-large insert-image"><i class="icon-share-alt"></i> Sett inn</button></td>
+      </tr>
+    </table>
+  </div>
+  <div class="image-archive-chooser">
+    <h2>Finn bilde i arkivet:</h2>
+    <input type="text" name="search" class="span6" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
+    <button class="btn btn-success button-aligned image-search"><i class="icon-search"></i> Søk</button>
+    <div id="imagearchive">
+      <ul class="breadcrumb"></ul>
+      <div class="alert alert-error span4 too-few-chars">
+        <a class="close">x</a>
+        <strong>For få søketegn!</strong><br>Vennligst bruk minst 3 tegn å når du søker, ellers får du garantert mange flere resultater enn du vil ha.
+      </div>
+      <div style="clear: both;"></div>
+      <div id="contentlist"></div>
+      <ul id="images"></ul>
     </div>
     <div style="clear: both;"></div>
-    <div id="contentlist"></div>
-    <ul id="images"></ul>
+    <button class="btn cancel-chooser"><i class="icon-remove"></i> Avbryt</button>
   </div>
 </div>
