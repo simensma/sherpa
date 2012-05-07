@@ -214,17 +214,17 @@ $(document).ready(function() {
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $("article div.html, article div.widget, article div.image").off('hover click');
+            $(document).off('mouseenter mouseleave click');
             enableEditing();
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $("article div.html, article div.widget, article div.image").hover(function() {
+        $(document).on('mouseenter', 'div.html, div.widget, div.image', function() {
             $(this).addClass('hover-remove');
-        }, function() {
+        }).on('mouseleave', 'div.html, div.widget, div.image', function() {
             $(this).removeClass('hover-remove');
-        }).click(function() {
+        }).on('click', 'div.html, div.widget, div.image', function() {
             doneRemoving();
             var content = $(this);
             content.hide();
@@ -378,17 +378,17 @@ $(document).ready(function() {
     // Remove a row and all its content
     $("#toolbar .tab-pane.structure button.remove-columns").click(function() {
         function doneRemoving() {
+            $(document).off('mouseenter mouseleave click', 'article .row');
             enableEditing();
             enableToolbar();
-            $("article .row").off('hover click');
         }
         disableToolbar("Velg raden du vil fjerne...", doneRemoving);
         disableEditing();
-        $("article .row").hover(function() {
+        $(document).on('mouseenter', 'article .row', function() {
             $(this).addClass('hover-remove');
-        }, function() {
+        }).on('mouseleave', 'article .row', function() {
             $(this).removeClass('hover-remove');
-        }).click(function() {
+        }).on('click', 'article .row', function() {
             var row = $(this);
             row.hide();
             doneRemoving();
