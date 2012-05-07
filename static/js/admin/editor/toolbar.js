@@ -89,4 +89,16 @@ $(document).ready(function() {
         document.execCommand('inserthorizontalrule', false, null);
     });
 
+    /* Show tooltip for toolbar formatting buttons */
+
+    $("#toolbar .formatting a.button").hover(function() {
+        var tooltip = $('<button class="btn btn-primary title">' + $(this).attr('data-title') + '</button>');
+        tooltip.css('font-weight', 'bold');
+        tooltip.css('position', 'absolute');
+        tooltip.css('top', '72px');
+        $(this).append(tooltip);
+    }, function() {
+        $("button.title").remove();
+    });
+
 });
