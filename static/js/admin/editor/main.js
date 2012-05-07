@@ -175,7 +175,7 @@ $(document).ready(function() {
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
 
-    $("#toolbar button.add-widget").click(function() {
+    $("#toolbar .formatting a.button.widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
