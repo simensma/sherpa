@@ -32,6 +32,7 @@ def parse_widget(widget):
     elif(widget['widget'] == "editor"):
         article = Article.objects.get(id=widget['article'])
         return {'json': json.dumps(widget), 'template': 'widgets/editor/display.html',
+            'static': True,
             'author': article.publisher.user.get_full_name(),
             'email': "TBD",
             'publishdate': article.pub_date}

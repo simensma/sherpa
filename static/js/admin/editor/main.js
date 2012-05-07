@@ -31,21 +31,21 @@ $(document).ready(function() {
     });
 
     /* Highlight contenteditables that _are being edited_. */
-    $(document).on('focus', 'article div.html', function() {
+    $(document).on('focus', 'article div.editable', function() {
         $(this).addClass('selected');
     });
-    $(document).on('focusout', 'article div.html', function() {
+    $(document).on('focusout', 'article div.editable', function() {
         $(this).removeClass('selected');
     });
-    $(document).on('mouseup', 'article div.html', setSelection);
-    $(document).on('keyup', 'article div.html', setSelection);
+    $(document).on('mouseup', 'article div.editable', setSelection);
+    $(document).on('keyup', 'article div.editable', setSelection);
     function setSelection() {
         selection = rangy.getSelection();
     }
 
     /* Automatically remove empty html contents */
     $(document).on('focusout', 'div.html', function() {
-        if($(this).text().trim() === "" && $(this).attr('data-type') != "lede") {
+        if($(this).text().trim() === "") {
             disableEditing();
             var html = $(this);
             $.ajax({
@@ -220,11 +220,11 @@ $(document).ready(function() {
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'div.html, div.widget, div.image', function() {
+        $(document).on('mouseenter', 'div.html, div.widget:not(.static), div.image', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'div.html, div.widget, div.image', function() {
+        }).on('mouseleave', 'div.html, div.widget:not(.static), div.image', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'div.html, div.widget, div.image', function() {
+        }).on('click', 'div.html, div.widget:not(.static), div.image', function() {
             doneRemoving();
             var content = $(this);
             content.hide();
@@ -234,7 +234,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 content.show();
                 content.removeClass('hover-remove');
-                content.find(".html").focusout();
+                content.find(".editable").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -286,7 +286,7 @@ $(document).ready(function() {
         var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
         button.addClass($("div#dialog-add-button input[name='color']:checked").val())
               .addClass($("div#dialog-add-button input[name='size']:checked").val());
-        $(selection.anchorNode).parents(".html").append($('<p></p>').prepend(button), $('<p><br></p>'));
+        $(selection.anchorNode).parents(".editable").append($('<p></p>').prepend(button), $('<p><br></p>'));
         $("div#dialog-add-button").dialog('close');
     });
     $("div#dialog-add-button table.choices button").click(function() {
@@ -398,7 +398,7 @@ $(document).ready(function() {
                 confirmation.remove();
                 row.show();
                 row.removeClass('hover-remove');
-                row.find(".html").focusout();
+                row.find(".editable").focusout();
                 $("#toolbar button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
@@ -429,21 +429,21 @@ $(document).ready(function() {
     $("#toolbar .structure button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
-        $("article .html").attr('contenteditable', 'true');
+        $("article .editable").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
     $("#toolbar .structure button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
-        $("article .html").removeAttr('contenteditable');
+        $("article .editable").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
     $("#toolbar .structure button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
-        $("article .html").removeAttr('contenteditable');
+        $("article .editable").removeAttr('contenteditable');
         sortState = 'vertical';
     });
 
@@ -506,13 +506,13 @@ $(document).ready(function() {
     /* Toggle editing of the actual content */
     window.disableEditing = disableEditing;
     function disableEditing() {
-        $("article div.html").removeAttr('contenteditable');
+        $("article div.editable").removeAttr('contenteditable');
         $("article div.image img").off('click focus focusout');
         $(document).off('click', 'div.widget');
     }
     window.enableEditing = enableEditing;
     function enableEditing() {
-        $("article div.html").attr('contenteditable', 'true');
+        $("article div.editable").attr('contenteditable', 'true');
         $(document).on('click', 'div.widget', editWidget);
         $(document).on('click', 'div.image img', changeImage);
     }
@@ -565,7 +565,11 @@ $(document).ready(function() {
                   "&type=" + encodeURIComponent(type)
         }).done(function(result) {
             result = JSON.parse(result);
-            var wrapper = $('<div class="' + type + '" data-id="' + result.id + '"></div>').append(result.content);
+            var editable = '';
+            if(type == 'html' || type == 'title' || type == 'lede') {
+                editable = ' editable';
+            }
+            var wrapper = $('<div class="' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
             if(result.json !== undefined) {
                 wrapper.attr('data-json', result.json);
             }
