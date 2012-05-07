@@ -310,7 +310,7 @@ $(document).ready(function() {
 
     $("#dialog-columns img").click(function() {
         $(this).parents("#dialog-columns").dialog('close');
-    })
+    });
     $("#dialog-columns img.full").click(function() {
         addColumns(0);
     });
