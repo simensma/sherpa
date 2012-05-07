@@ -54,7 +54,6 @@ $(document).ready(function() {
     $("div.edit-article-header input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
             if($("article div.image").length == 0) {
-                debugger;
                 alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
                 $("div.edit-article-header input[name='thumbnail'][value='none']").click();
                 return;
