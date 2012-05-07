@@ -568,11 +568,13 @@ $(document).ready(function() {
      */
 
     /* Toggle overlay for the entire site */
+    window.enableOverlay = enableOverlay;
     function enableOverlay() {
         $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
         $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader-large.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
           .appendTo('body');
     }
+    window.disableOverlay = disableOverlay;
     function disableOverlay() {
         $(".ui-widget-overlay,.overlay-loader").remove();
     }
@@ -591,11 +593,13 @@ $(document).ready(function() {
     }
 
     /* Toggle editing of the actual content */
+    window.disableEditing = disableEditing;
     function disableEditing() {
         $("article div.html").removeAttr('contenteditable');
         $("article div.image img").off('click focus focusout');
         $("article div.widget").off('click');
     }
+    window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.html").attr('contenteditable', 'true');
     }
@@ -669,8 +673,4 @@ $(document).ready(function() {
         });
     }
 
-    window.enableOverlay = enableOverlay;
-    window.disableOverlay = disableOverlay;
-    window.enableEditing = enableEditing;
-    window.disableEditing = disableEditing;
 });
