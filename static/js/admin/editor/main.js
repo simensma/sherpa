@@ -131,7 +131,7 @@ $(document).ready(function() {
     });
 
     // Add image
-    $("#toolbar button.add-image").click(function() {
+    $("#toolbar .formatting a.button.image").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
