@@ -47,12 +47,12 @@ $(document).ready(function() {
     function changeImage() {
         $(this).removeClass('hover');
         currentImage = $(this);
+        var content = $(this).parents("div.image");
         var anchor = $(this).parent("a").attr('href');
         if(anchor === undefined) {
             anchor = '';
         }
-        openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), saveImage);
-        function saveImage(src, anchor, alt) {
+        openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), function(src, anchor, alt) {
             if(anchor.length == 0) {
                 // No link
                 if(currentImage.parent("a").length > 0) {
@@ -74,7 +74,23 @@ $(document).ready(function() {
             currentImage.attr('src', src);
             currentImage.attr('alt', alt);
             $("#toolbar .save button.save").click();
-        }
+        }, function() {
+            $.ajax({
+                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+                type: 'POST'
+            }).done(function(result) {
+                if(content.siblings().length == 0) {
+                    setEmpty(content.parent());
+                }
+                content.remove();
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                refreshSort();
+                doneRemoving();
+                disableOverlay();
+            });
+        });
     }
 
     /**

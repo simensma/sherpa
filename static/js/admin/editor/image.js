@@ -8,6 +8,7 @@ var MIN_QUERY_LENGTH = 3;
 var bcList;
 var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
 var imagePickedCallback; // Called when an image is picked in the dialog
+var imageRemovedCallback; // Called when an image is removed, from the dialog
 
 $(document).ready(function() {
 
@@ -60,6 +61,11 @@ $(document).ready(function() {
         imagePickedCallback(src, anchor, alt);
     });
 
+    $("div#dialog-change-image button.remove-image").click(function() {
+        $(this).parents("div#dialog-change-image").dialog('close');
+        imageRemovedCallback();
+    });
+
     $("div#dialog-change-image button.image-search").click(doSearch);
     $("div#dialog-change-image input[name='search']").keydown(function(e) {
         if(e.which == 13) {
@@ -78,7 +84,7 @@ $(document).ready(function() {
 
 });
 
-function openImageDialog(src, anchor, alt, callback) {
+function openImageDialog(src, anchor, alt, saveCallback, removeCallback) {
     $("div#dialog-change-image div.image-archive-chooser").hide();
     $("div#dialog-change-image div.image-details").show();
     $("div#dialog-change-image img.preview").attr('src', src);
@@ -97,7 +103,8 @@ function openImageDialog(src, anchor, alt, callback) {
     } else {
         dialog.find("tr.alt").hide();
     }
-    imagePickedCallback = callback;
+    imagePickedCallback = saveCallback;
+    imageRemovedCallback = removeCallback;
 }
 
 function hideContent() {

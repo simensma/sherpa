@@ -89,6 +89,8 @@ $(document).ready(function() {
         openImageDialog($(this).attr('src'), undefined, undefined, function(src, anchor, alt) {
             image.attr('src', src);
             saveImage();
+        }, function() {
+            $("div.edit-article-header input[name='thumbnail'][value='none']").click();
         });
     });
 
