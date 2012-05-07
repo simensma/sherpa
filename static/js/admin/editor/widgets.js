@@ -1,7 +1,7 @@
 /* Editing widgets */
 $(document).ready(function() {
 
-    // Save quote-widget
+    // Save/remove quote-widget
     $("div.dialog.widget-edit.quote button.save").click(function() {
         var content = JSON.stringify({
             widget: "quote",
@@ -17,6 +17,24 @@ $(document).ready(function() {
             addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
                 widgetPosition.order, content, 'widget', widgetAdded);
         }
+    });
+    $("div.dialog.widget-edit.quote button.remove").click(function() {
+        $(this).parents(".dialog").dialog('close');
+        $.ajax({
+            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(widgetBeingEdited.attr('data-id')) + '/',
+            type: 'POST'
+        }).done(function(result) {
+            if(widgetBeingEdited.siblings().length == 0) {
+                setEmpty(widgetBeingEdited.parent());
+            }
+            widgetBeingEdited.remove();
+        }).fail(function(result) {
+            // Todo
+        }).always(function(result) {
+            refreshSort();
+            doneRemoving();
+            disableOverlay();
+        });
     });
 
 });
