@@ -99,4 +99,15 @@ $(document).ready(function() {
         }
     });
 
+    /* Mark empty text elements */
+    $(document).on('focusout', 'div.editable', markEmptyContent);
+    $("div.editable").each(markEmptyContent);
+    function markEmptyContent() {
+        if($(this).text().trim() === "") {
+            $(this).addClass('selected');
+        } else {
+            $(this).removeClass('selected');
+        }
+    }
+
 });
