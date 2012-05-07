@@ -72,13 +72,9 @@ class Version(models.Model):
             self.thumbnail = self.variant.article.thumbnail
         else:
             try:
-                # Define "main image" as the one with the lowest content/column/row order
-                order = Row.objects.filter(version=self).aggregate(Min('order'))['order__min']
-                row = Row.objects.get(version=self, order=order)
-                order = Column.objects.filter(row=row).aggregate(Min('order'))['order__min']
-                column = Column.objects.get(row=row, order=order)
-                order = Content.objects.filter(column=column, type='image').aggregate(Min('order'))['order__min']
-                content = Content.objects.get(column=column, type='image', order=order)
+                # Define "main image" as the one in the first column and row
+                content = Content.objects.get(column__order=0, column__row__order=0,
+                    column__row__version=self, type='image')
                 self.thumbnail = json.loads(content.content)['src']
             except Content.DoesNotExist:
                 # There are no images in this article
