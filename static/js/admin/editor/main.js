@@ -66,7 +66,7 @@ $(document).ready(function() {
     });
 
     /* Change image sources upon being clicked. */
-    $(document).on('click', 'div.image img', function() {
+    function changeImage() {
         $(this).removeClass('hover');
         currentImage = $(this);
         var anchor = $(this).parent("a").attr('href');
@@ -97,7 +97,7 @@ $(document).ready(function() {
             currentImage.attr('alt', alt);
             $("#toolbar .save button.save").click();
         }
-    });
+    }
 
     /**
      * Content changes (text, images, widgets)
@@ -513,10 +513,8 @@ $(document).ready(function() {
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.html").attr('contenteditable', 'true');
-        $(document).on('click', 'div.widget', function() {
-            widgetBeingEdited = $(this);
-            editWidget(JSON.parse($(this).attr('data-json')));
-        });
+        $(document).on('click', 'div.widget', editWidget);
+        $(document).on('click', 'div.image img', changeImage);
     }
 
     /* Divs for inserting widgets/images/text */
