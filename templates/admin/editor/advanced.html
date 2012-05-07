@@ -185,8 +185,10 @@
         <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
         <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
       </div>
-      <br>
-      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
+      {% if toolbar_remove_content %}
+        <br>
+        <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
+      {% endif %}
     </div>
   </div>
 </div>
