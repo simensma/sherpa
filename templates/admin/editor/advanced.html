@@ -135,7 +135,9 @@
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
-    <li><a href="#2" data-toggle="tab">Struktur</a></li>
+    {% if toolbar_structure %}
+      <li><a href="#2" data-toggle="tab">Struktur</a></li>
+    {% endif %}
     <li><a href="#3" data-toggle="tab">Innhold</a></li>
   </ul>
   <div class="tab-content">
@@ -146,18 +148,20 @@
       </p>
       <button class="btn save">Lagre</button>
     </div>
-    <div class="tab-pane structure" id="2">
-      <div class="btn-group" data-toggle="buttons-radio">
-        <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
-        <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt kolonner <i class="icon-arrow-right"></i></button>
-        <button class="btn vertical"><i class="icon-arrow-up"></i> Flytt rader <i class="icon-arrow-down"></i></button>
+    {% if toolbar_structure %}
+      <div class="tab-pane structure" id="2">
+        <div class="btn-group" data-toggle="buttons-radio">
+          <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
+          <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt kolonner <i class="icon-arrow-right"></i></button>
+          <button class="btn vertical"><i class="icon-arrow-up"></i> Flytt rader <i class="icon-arrow-down"></i></button>
+        </div>
+        <br>
+        <div class="btn-group">
+          <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
+          <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
+        </div>
       </div>
-      <br>
-      <div class="btn-group">
-        <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
-        <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
-      </div>
-    </div>
+    {% endif %}
     <div class="tab-pane formatting" id="3">
       <a href="javascript:undefined" data-title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
       <a href="javascript:undefined" data-title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
