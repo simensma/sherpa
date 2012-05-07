@@ -3,9 +3,8 @@ $(document).ready(function() {
     /* Editing widgets */
 
     $(document).on('click', 'div.widget', function() {
-        var widget = JSON.parse($(this).attr('data-json'));
         widgetBeingEdited = $(this);
-        editWidget(widget);
+        editWidget(JSON.parse($(this).attr('data-json')));
     });
 
     function widgetAdded(wrapper) {
