@@ -178,7 +178,7 @@ $(document).ready(function() {
     });
 
     // Add widget
-    window.widgetPosition = undefined; // Set when inserting a new widget
+    window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
 
     $("#toolbar button.add-widget").click(function() {
