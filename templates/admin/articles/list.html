@@ -38,7 +38,7 @@
       </h2>
       <div class="lede">
         <a href="{% url admin.articles.views.edit_version version.id %}">
-          {{ version.lede.content|removetags:"a"|safe }}
+          {{ version.lede.content|removetags:"a"|safe|truncatewords:40 }}
         </a>
       </div>
   </td>
