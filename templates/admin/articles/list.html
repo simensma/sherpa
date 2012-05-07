@@ -1,6 +1,9 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; Sherpa 3{% endblock %}
 {% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
+{% endblock %}
 {% block body %}
 
 <div class="row">
@@ -50,12 +53,34 @@
 </table>
 {% endif %}
 
-<div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="auto">
+<div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="80%">
   <form action="{% url admin.articles.views.new %}" method="post">
     {% csrf_token %}
-    <label>Tittel på artikkelen:</label>
-    <input type="text" name="title"><br>
-    <input type="submit" value="Opprett artikkel">
+    <input type="hidden" name="template" value="0">
+    <input type="hidden" name="slug" value="">
+    <table class="table">
+    <tr>
+      <td class="big">Tittel på artikkelen:</td>
+      <td><input type="text" name="title" class="span4"></td>
+    </tr>
+    </table>
+    <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/template1.jpg" alt="Ferdigdefinert mal" data-template="1">
+      <p>Tom</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/template2.jpg" alt="Ferdigdefinert mal" data-template="2">
+      <p>Én kolonne</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/template3.jpg" alt="Ferdigdefinert mal" data-template="3">
+      <p>Sidebar (hele)</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/template4.jpg" alt="Ferdigdefinert mal" data-template="4">
+      <p>Tre kolonner</p>
+    </div>
   </form>
 </div>
 
