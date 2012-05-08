@@ -73,10 +73,10 @@ class Version(models.Model):
         else:
             try:
                 # Define "main image" as the one in the first column and row
-                content = Content.objects.get(column__order=0, column__row__order=0,
-                    column__row__version=self, type='image')
+                content = Content.objects.filter(column__order=0, column__row__order=0,
+                    column__row__version=self, type='image')[0]
                 self.thumbnail = json.loads(content.content)['src']
-            except Content.DoesNotExist:
+            except IndexError:
                 # There are no images in this article
                 self.hide_thumbnail = True
 
