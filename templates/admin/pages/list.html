@@ -25,6 +25,13 @@
 </div>
 
 <h2 class="skinny">Websider</h2>
+
+<div class="row">
+  <div class="span12">
+    <p style="text-align: center;"><a id="add-page" class="btn btn-success btn-large dialog-button" data-dialog=".page-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny webside</a></p>
+  </div>
+</div>
+
 {% if not pages %}
 <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
 {% else %}
@@ -45,12 +52,6 @@
 </tbody>
 </table>
 {% endif %}
-
-<div class="row">
-  <div class="offset5 span2">
-    <p><a id="add-page" class="btn btn-primary large-button dialog-button" data-dialog=".page-dialog" href="javascript:undefined">Opprett ny webside</a></p>
-  </div>
-</div>
 
 <div class="dialog page-dialog" data-title="Opprett ny side" data-width="80%">
   <form action="{% url admin.cms.views.page.new %}" method="post">
