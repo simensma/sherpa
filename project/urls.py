@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
-    # Sherpa3 admin interface
+    # Sherpa admin interface
     url(r'^sherpa/', include('admin.urls')),
     url(r'^admin/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': '/sherpa/'}),
 

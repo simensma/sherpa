@@ -1,4 +1,4 @@
-# Django settings for Sherpa 3.
+# Django settings for Sherpa.
 # See https://docs.djangoproject.com/en/1.3/ref/settings/
 
 from local_settings import *
