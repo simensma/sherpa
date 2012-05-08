@@ -1,5 +1,5 @@
 {% extends "admin/layout.html" %}
-{% block title %}Artikler &mdash; Sherpa 3{% endblock %}
+{% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → <a class="header-title" href="{% url admin.articles.views.edit_version version.id %}">{{ title|striptags }}</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
