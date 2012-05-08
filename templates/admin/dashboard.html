@@ -16,6 +16,8 @@
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cabin.jpg"><br>Hytter</a></li>
       <li><a href="http://www.turistforeningen.no/admin/trail.php">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/trail.jpg"><br>Ruter</a></li>
+      <li><a href="http://www.turistforeningen.no/admin/conditions.php">
+        <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/weather.jpg"><br>Føremeldinger</a></li>
       <li><a href="{% url admin.images.views.list_albums %}">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg"><br>Bildearkiv</a></li>
       {# Don't link directly to the file manager, there's some security stuff in place in case you're not logged in to the old sherpa which will block you from the entire domain for a short period. #}
