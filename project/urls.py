@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
     # User authentication
     url(r'^bruker/', include('user.urls')),
+    url(r'^foreninger/', include('group.urls')),
 
     # Enrollment
     url(r'^innmelding/', include('enrollment.urls')),
