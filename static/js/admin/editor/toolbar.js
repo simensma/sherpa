@@ -53,7 +53,7 @@ $(document).ready(function() {
             $("#toolbar .formatting p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
             $("#toolbar .formatting *").show();
         }
-        $("#toolbar .tab-pane").append(p, buttons);
+        $("#toolbar .tab-pane.formatting").append(p, buttons);
     });
     $("#toolbar a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
