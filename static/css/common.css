@@ -39,7 +39,7 @@ article h2 {
   margin-bottom: 10px;
 }
 
-article .row {
+article .row, article .row-fluid {
   margin-top: 0.6em;
   margin-bottom: 0.6em;
 }
