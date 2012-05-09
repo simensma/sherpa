@@ -52,12 +52,7 @@ $(document).ready(function() {
             anchor = '';
         }
 
-        var alt = dialog.find("input[name='alt']");
-        if(alt.length > 0) {
-            alt = alt.val();
-        } else {
-            alt = '';
-        }
+        var alt = dialog.find("input[name='alt']").val();
         imagePickedCallback(src, anchor, alt);
     });
 
@@ -97,12 +92,7 @@ function openImageDialog(src, anchor, alt, saveCallback, removeCallback) {
     } else {
         dialog.find("tr.anchor").hide();
     }
-    if(alt !== undefined) {
-        dialog.find("input[name='alt']").val(alt);
-        dialog.find("tr.alt").show();
-    } else {
-        dialog.find("tr.alt").hide();
-    }
+    dialog.find("input[name='alt']").val(alt);
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 }
