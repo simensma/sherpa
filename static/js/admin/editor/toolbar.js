@@ -27,7 +27,7 @@ $(document).ready(function() {
         $("#toolbar select").val("default");
     });
     $("#toolbar a.button.anchor-add").click(function(event) {
-        $("#toolbar .tab-pane *").hide();
+        $("#toolbar .formatting *").hide();
         var p = $('<p class="anchor-insert">URL-adresse: </p>');
         var input = $('<input type="text" name="url">');
         p.append(input);
@@ -51,7 +51,7 @@ $(document).ready(function() {
         });
         function reset() {
             $("#toolbar .formatting p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
-            $("#toolbar .tab-pane *").show();
+            $("#toolbar .formatting *").show();
         }
         $("#toolbar .tab-pane").append(p, buttons);
     });
