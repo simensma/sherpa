@@ -28,7 +28,7 @@
 
 <div class="row">
   <div class="span12">
-    <p style="text-align: center;"><a id="add-page" class="btn btn-success btn-large dialog-button" data-dialog=".page-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny webside</a></p>
+    <p style="text-align: center;"><a id="add-page" class="btn btn-success btn-large dialog-button open-page-dialog" data-dialog=".page-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny webside</a></p>
   </div>
 </div>
 
@@ -65,7 +65,18 @@
     </tr>
     <tr>
       <td>Permanent URL:</td>
-      <td>http://{{ site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug icon-pencil"></i><i class="save-slug icon-ok"></i></td>
+      <td style="min-width: 400px">
+        http://{{ site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug icon-pencil"></i><i class="save-slug icon-ok"></i>
+        <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
+        <span class="valid">
+          <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
+          Ok!
+        </span>
+        <span class="invalid">
+          <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
+          Denne URLen er allerede i bruk!
+        </span>
+      </td>
     </tr>
     </table>
     <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>

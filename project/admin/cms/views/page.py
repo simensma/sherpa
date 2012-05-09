@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.core.urlresolvers import resolve, Resolver404
 
 from project.page.views_widgets import parse_widget
 from project.page.models import Menu, Page, Variant, Version, Row, Column, Content
@@ -18,6 +19,9 @@ def list(request):
 
 @login_required
 def new(request):
+    if not slug_is_unique(request.POST['slug']):
+        # TODO: Error handling
+        raise Exception
     page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False, publisher=request.user.get_profile())
     page.save()
     variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, publisher=request.user.get_profile())
@@ -26,6 +30,13 @@ def new(request):
     version.save()
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
+
+@login_required
+def check_slug(request):
+    urls_valid = slug_is_unique(request.POST['slug'])
+    page_valid = not Page.objects.filter(slug=request.POST['slug']).exists()
+    print("Page valid er %s" % page_valid)
+    return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 @login_required
 def edit(request, page):
@@ -79,6 +90,20 @@ def edit_version(request, version):
             obj.content = content['content']
             obj.save()
         return HttpResponse()
+
+def slug_is_unique(slug):
+    # Verify against the root 'folder' path
+    i = slug.find('/')
+    if i != -1:
+        slug = slug[:i]
+    try:
+        match = resolve('/%s%s' % (slug, '' if len(slug) == 0 else '/'))
+        print("Final string: %s" % '/%s%s' % (slug, '' if len(slug) == 0 else '/'))
+        print("Result: %s" % (match.url_name == 'page.views.page'))
+        return match.url_name == 'page.views.page'
+    except Resolver404:
+        print("%s 404!!" % slug)
+        return True
 
 def create_template(template, version):
     if template == '1':

@@ -34,14 +34,56 @@ $(document).ready(function() {
 
     /* New page dialog - define slug based on title */
 
-    $("div.page-dialog input[name='title']").keyup(function() {
-        var val = $(this).val();
-        val = val.replace(/[^-_a-z0-9\s]+/gi, '')
-                 .replace(/\s+/g, "-")
-                 .toLowerCase();
-        updateSlash(val.length == 0);
-        $("div.page-dialog span.slug").text(val);
+    var validUrl = false;
+
+    $("a.open-page-dialog").click(function() {
+        $("div.page-dialog input[name='title']").keyup()
     });
+    $("div.page-dialog img.loader").hide();
+    $("div.page-dialog span.valid").hide();
+    $("div.page-dialog span.invalid").hide();
+    $("div.page-dialog input[name='title']").keyup(function() {
+        lookupVal = $(this).val().replace(/[^-_a-z0-9\s]+/gi, '')
+                                 .replace(/\s+/g, "-")
+                                 .toLowerCase();
+        updateSlash(lookupVal.length == 0);
+        $("div.page-dialog span.slug").text(lookupVal);
+        initiateLookup();
+        clearTimeout(lookupTimer);
+        lookupTimer = setTimeout(performLookup, KEY_LOOKUP_DELAY);
+    });
+
+    var lookupTimer;
+    var lookupVal;
+    var KEY_LOOKUP_DELAY = 1000;
+
+    function initiateLookup() {
+        $("div.page-dialog span.valid").hide();
+        $("div.page-dialog span.invalid").hide();
+        $("div.page-dialog img.loader").show();
+    }
+
+    function performLookup() {
+        // Check dynamically that the slug is unique
+        $.ajax({
+            url: '/sherpa/cms/side/ny/unik/',
+            type: 'POST',
+            data: 'slug=' + encodeURIComponent(lookupVal)
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.valid) {
+                validUrl = true;
+                $("div.page-dialog span.valid").show();
+            } else {
+                validUrl = false;
+                $("div.page-dialog span.invalid").show();
+            }
+        }).fail(function(result) {
+            $(document.body).html(result.responseText);
+        }).always(function() {
+            $("div.page-dialog img.loader").hide();
+        });
+    }
 
     $("div.page-dialog i.save-slug").hide().click(saveSlug);
     $("div.page-dialog i.edit-slug").click(editSlug);
@@ -53,6 +95,12 @@ $(document).ready(function() {
         var span = $("div.page-dialog span.slug");
         var input = $('<input type="text" name="slug-input" value="' + decodeURIComponent(span.text()) + '">');
         input.focusout(saveSlug);
+        input.keyup(function() {
+            lookupVal = encodeURIComponent($(this).val()).replace('%2F', '/');
+            initiateLookup();
+            clearTimeout(lookupTimer);
+            lookupTimer = setTimeout(performLookup, KEY_LOOKUP_DELAY);
+        });
         span.before(input);
         span.remove();
         input.focus();
@@ -66,6 +114,9 @@ $(document).ready(function() {
         var span = $('<span class="slug">' + encodeURIComponent(val).replace('%2F', '/') + '</span>');
         input.before(span);
         input.remove();
+        lookupVal = val;
+        initiateLookup();
+        performLookup();
         $("div.page-dialog i.save-slug").hide();
         $("div.page-dialog i.edit-slug").show();
     }
@@ -83,6 +134,10 @@ $(document).ready(function() {
     });
 
     $("div.page-dialog img[data-template]").click(function() {
+        if(!validUrl) {
+            alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
+            return;
+        }
         $("div.page-dialog input[name='template']").val($(this).attr('data-template'));
         $(this).parents("form").submit();
     });

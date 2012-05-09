@@ -6,6 +6,7 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^$', 'page.list'),
     url(r'^side/(?P<page>\d+)/$', 'page.edit'),
     url(r'^side/ny/$', 'page.new'),
+    url(r'^side/ny/unik/$', 'page.check_slug'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
     url(r'^editor/(?P<version>\d+)/$', 'page.edit_version'),
 
