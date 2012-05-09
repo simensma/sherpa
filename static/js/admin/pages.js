@@ -138,6 +138,10 @@ $(document).ready(function() {
             alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
             return;
         }
+        if($("div.page-dialog input[name='title']").val().length == 0) {
+            alert("Du må jo skrive inn en tittel på siden før du oppretter den!");
+            return;
+        }
         $("div.page-dialog input[name='template']").val($(this).attr('data-template'));
         $(this).parents("form").submit();
     });
