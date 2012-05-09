@@ -63,7 +63,7 @@ $(document).ready(function() {
         var val = input.val();
         val = val.replace(/\/+$/, '');
         updateSlash(val.length == 0);
-        var span = $('<span class="slug">' + encodeURIComponent(val) + '</span>');
+        var span = $('<span class="slug">' + encodeURIComponent(val).replace('%2F', '/') + '</span>');
         input.before(span);
         input.remove();
         $("div.page-dialog i.save-slug").hide();
