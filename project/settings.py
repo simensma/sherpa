@@ -20,6 +20,8 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
+DATABASE_ROUTERS = ['db_routers.Router']
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
