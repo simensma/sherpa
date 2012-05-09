@@ -1,10 +1,14 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.views_widgets import parse_widget
 
 import json
+
+def index(request):
+    return HttpResponse()
 
 def show(request, article):
     # Assume no segmentation for now
