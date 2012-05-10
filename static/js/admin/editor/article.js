@@ -7,31 +7,45 @@ $(document).ready(function() {
 
     /* Publish/unpublish */
 
-    $("div.published:not([data-active])").hide();
-    $("div.published button.publish").click(function() {
-        if($("div.published.true[data-active]").length == 0) {
-            if(!confirm("Er du sikker på at du vil publisere den aktive versjonen for denne artikkelen?")) {
-                return;
-            }
-        } else {
-            if(!confirm("Er du HELT sikker på at du vil trekke tilbake denne artikkelen? Den vil forsvinne fra nyhetsutlistingen, og ikke dukke opp som søkeresultat når en søker. Du bør ikke avpublisere en publisert artikkel med mindre du er HELT sikker.")) {
-                return;
-            }
+    if($("div.status[data-published]").length == 0) {
+        $("div.status h1.publish button.unpublish").hide();
+    } else {
+        $("div.status h1.publish button.publish").hide();
+    }
+
+    $("div.status button.publish").click(function() {
+        if(!confirm("Er du sikker på at du vil publisere denne artikkelen?")) {
+            return;
         }
-        var button = $(this);
-        button.attr('disabled', true);
-        $.ajax({
-            url: '/sherpa/artikler/publiser/' + $(this).parents("div.edit-article-header").attr('data-id') + '/',
-            type: 'POST'
-        }).done(function() {
-            var active = $("div.published[data-active]");
-            var inactive = $("div.published:not([data-active])");
-            active.removeAttr('data-active').hide();
-            inactive.attr('data-active', true).show();
-        }).always(function() {
-            button.removeAttr('disabled');
+        setPublished(true, function() {
+            $("div.status h1.publish span.false").removeClass('false').addClass('true').text('publisert');
+            $("div.status h1.publish button.publish").hide();
+            $("div.status h1.publish button.unpublish").show();
         });
     });
+
+    $("div.status button.unpublish").click(function() {
+        if(!confirm("Er du HELT sikker på at du vil trekke tilbake denne artikkelen? Den vil forsvinne fra nyhetsutlistingen, og ikke dukke opp som søkeresultat når en søker. Du bør ikke avpublisere en publisert artikkel med mindre du er HELT sikker.")) {
+            return;
+        }
+        setPublished(false, function() {
+            $("div.status h1.publish span.true").removeClass('true').addClass('false').text('ikke publisert');
+            $("div.status h1.publish button.publish").show();
+            $("div.status h1.publish button.unpublish").hide();
+        });
+    });
+
+    function setPublished(status, done) {
+        $("div.status button.publish, div.status button.unpublish").attr('disabled', true);
+        $.ajax({
+            url: '/sherpa/artikler/publiser/' + $("div.edit-article-header").attr('data-id') + '/',
+            type: 'POST',
+            data: 'status=' + encodeURIComponent(JSON.stringify({'status': status}))
+        }).done(done).always(function() {
+            $("div.status button.publish, div.status button.unpublish").removeAttr('disabled');
+        });
+    }
+
 
     /* Change thumbnail-image */
 

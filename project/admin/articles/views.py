@@ -56,7 +56,7 @@ def image_hide(request, article):
 @login_required
 def publish(request, article):
     article = Article.objects.get(id=article)
-    article.published = not article.published
+    article.published = json.loads(request.POST['status'])['status']
     article.publisher = request.user.get_profile()
     article.save()
     return HttpResponse()

@@ -134,13 +134,16 @@
 {# Main toolbar #}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
+    {% if toolbar_save %}
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
+    {% endif %}
     {% if toolbar_structure %}
       <li><a href="#2" data-toggle="tab">Struktur</a></li>
     {% endif %}
     <li><a href="#3" data-toggle="tab">Innhold</a></li>
   </ul>
   <div class="tab-content">
+    {% if toolbar_save %}
     <div class="tab-pane active save" id="1">
       <p>
         <span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span><br>
@@ -148,6 +151,7 @@
       </p>
       <button class="btn save">Lagre</button>
     </div>
+    {% endif %}
     {% if toolbar_structure %}
       <div class="tab-pane structure" id="2">
         <div class="btn-group" data-toggle="buttons-radio">
