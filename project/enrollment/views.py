@@ -111,7 +111,7 @@ def verification(request):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     # Todo: verify that 'registration' is set in session
     request.session['registration']['existing'] = request.POST.get('existing', '')
-    request.session['registration']['location'] = Zipcode.objects.get(code=request.session['registration']['zipcode']).location
+    request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
     keycount = 0
     over_18 = 0
     main = None
@@ -138,7 +138,7 @@ def verification(request):
 # TODO: Remember to check that len(request.session['registration']['users']) > 0 when submitting step 3
 
 def zipcode(request, code):
-    location = Zipcode.objects.get(code=code).location
+    location = Zipcode.objects.get(zip_code=code).location
     return HttpResponse(str(location))
 
 def updateIndices(request):
@@ -181,7 +181,7 @@ def validate_location(address, zipcode):
 
     # Zipcode does not exist
     try:
-        Zipcode.objects.get(code=zipcode)
+        Zipcode.objects.get(zip_code=zipcode)
     except Zipcode.DoesNotExist:
         return False
 
