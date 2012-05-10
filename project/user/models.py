@@ -13,5 +13,5 @@ class Zipcode(models.Model):
     city = models.CharField(max_length=100)
 
 class County(models.Model):
-    code = models.IntegerField()
+    code = models.CharField(max_length=2)
     name = models.CharField(max_length=100)
