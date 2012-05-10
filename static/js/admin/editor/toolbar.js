@@ -21,7 +21,20 @@ $(document).ready(function() {
             // The smart thing to do here would be:
             // document.execCommand('formatblock', false, $(this).val());
             // But IE doesn't support that, so. FML.
-            var node = $(selection.anchorNode).parent();
+            if(typeof selection === "undefined") {
+                alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på linjen du vil gjøre til overskrift, før du velger skrifttypen her.");
+                return $(this);
+            }
+            var node = $(selection.anchorNode);
+            if(node.find(".editable").length != 0) {
+                alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
+                return $(this);
+            }
+            var parent = node.parent();
+            while(!parent.hasClass('editable')) {
+                node = parent;
+                parent = node.parent();
+            }
             node.replaceWith($('<' + $(this).val() + '></' + $(this).val() + '>').prepend(node.contents()));
         });
         $("#toolbar select").val("default");
