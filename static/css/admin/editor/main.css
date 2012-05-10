@@ -93,6 +93,13 @@ article .moveable.vertical {
   z-index: 1000;
 }
 
+/* This one is only for articles */
+#toolbar > div.formatting {
+  padding: 9px;
+  border: 1px solid rgb(221, 221, 221);
+  background-color: rgb(245, 245, 245) !important;
+}
+
 #toolbar .tab-content, #toolbar li.active a {
   background-color: rgb(245, 245, 245) !important;
 }

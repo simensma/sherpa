@@ -132,18 +132,46 @@
 </div>
 
 {# Main toolbar #}
+{# Duplicated for now, rewrite this eventually #}
+{% if toolbar_article %}
+<div id="toolbar">
+  <div class="formatting">
+    <a href="javascript:undefined" data-title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Understreket tekst" class="button underline" data-image="{{ STATIC_URL }}img/editorbuttons/underline">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Sett inn bilde" class="button image" data-image="{{ STATIC_URL }}img/editorbuttons/image">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Sett inn widget" class="button widget" data-image="{{ STATIC_URL }}img/editorbuttons/widget">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Sett inn lenke" class="button anchor-add" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-add">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Ta bort lenke" class="button anchor-remove" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-remove">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Nummerert liste" class="button ol" data-image="{{ STATIC_URL }}img/editorbuttons/ol">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Unummerert liste" class="button ul" data-image="{{ STATIC_URL }}img/editorbuttons/ul">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Venstrestill tekst" class="button align-left" data-image="{{ STATIC_URL }}img/editorbuttons/align-left">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Midtstill tekst" class="button align-center" data-image="{{ STATIC_URL }}img/editorbuttons/align-center">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Høyrestill tekst" class="button align-right" data-image="{{ STATIC_URL }}img/editorbuttons/align-right">&nbsp;</a>
+    <a href="javascript:undefined" data-title="Sett inn strek" class="button hr" data-image="{{ STATIC_URL }}img/editorbuttons/hr">&nbsp;</a>
+    <div style="clear: both;"></div>
+    <select>
+      <option value="default">Velg skrifttype...</option>
+      <optgroup label="--------------------">
+        <option value="h1">Overskrift (stor)</option>
+        <option value="h2">Overskrift (liten)</option>
+        <option value="p">Brødtekst</option>
+      </optgroup>
+    </select>
+    <div class="btn-group">
+      <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
+      <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
+    </div>
+  </div>
+</div>
+{% else %}
 <div id="toolbar" class="tabbable">
   <ul class="nav nav-tabs">
-    {% if toolbar_save %}
     <li class="active"><a href="#1" data-toggle="tab">Lagre</a></li>
-    {% endif %}
-    {% if toolbar_structure %}
-      <li><a href="#2" data-toggle="tab">Struktur</a></li>
-    {% endif %}
+    <li><a href="#2" data-toggle="tab">Struktur</a></li>
     <li><a href="#3" data-toggle="tab">Innhold</a></li>
   </ul>
   <div class="tab-content">
-    {% if toolbar_save %}
     <div class="tab-pane active save" id="1">
       <p>
         <span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span><br>
@@ -151,21 +179,18 @@
       </p>
       <button class="btn save">Lagre</button>
     </div>
-    {% endif %}
-    {% if toolbar_structure %}
-      <div class="tab-pane structure" id="2">
-        <div class="btn-group" data-toggle="buttons-radio">
-          <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
-          <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt kolonner <i class="icon-arrow-right"></i></button>
-          <button class="btn vertical"><i class="icon-arrow-up"></i> Flytt rader <i class="icon-arrow-down"></i></button>
-        </div>
-        <br>
-        <div class="btn-group">
-          <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
-          <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
-        </div>
+    <div class="tab-pane structure" id="2">
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
+        <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt kolonner <i class="icon-arrow-right"></i></button>
+        <button class="btn vertical"><i class="icon-arrow-up"></i> Flytt rader <i class="icon-arrow-down"></i></button>
       </div>
-    {% endif %}
+      <br>
+      <div class="btn-group">
+        <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
+        <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
+      </div>
+    </div>
     <div class="tab-pane formatting" id="3">
       <a href="javascript:undefined" data-title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
       <a href="javascript:undefined" data-title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
@@ -193,10 +218,9 @@
         <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
         <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
       </div>
-      {% if toolbar_remove_content %}
-        <br>
-        <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-      {% endif %}
+      <br>
+      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
     </div>
   </div>
 </div>
+{% endif %}

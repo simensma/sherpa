@@ -6,7 +6,7 @@
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/page.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/save-page.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/widgets.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
@@ -17,5 +17,5 @@
 {% endblock %}
 
 {% block body %}
-{% include 'admin/editor/advanced.html' with toolbar_remove_content=1 toolbar_structure=1 toolbar_save=1 %}
+{% include 'admin/editor/advanced.html' %}
 {% endblock %}
