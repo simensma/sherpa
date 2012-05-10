@@ -231,11 +231,15 @@ div.edit-article-header img.article-thumbnail:hover {
   cursor: alias;
 }
 
-div.edit-article-header div.published {
+div.edit-article-header div.preview-image {
   float: right;
+}
+
+div.edit-article-header div.published {
   border: 1px solid rgb(95, 95, 95);
   padding: 20px;
   text-align: center;
+  width: 200px;
 }
 
 div.edit-article-header div.published.true {
