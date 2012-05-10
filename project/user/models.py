@@ -8,4 +8,5 @@ class Profile(models.Model):
 
 class Zipcode(models.Model):
     code = models.IntegerField()
+    citycode = models.IntegerField()
     location = models.CharField(max_length=100)
