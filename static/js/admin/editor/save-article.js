@@ -11,7 +11,7 @@ $(document).ready(function() {
     var updateSaveCountID;
     function updateSaveCount() {
         lastSaveCount += 1;
-        if(lastSaveCount < 5) {
+        if(lastSaveCount < 15) {
             $("div.edit-article-header div.save span.save-text").html('<i class="icon-ok"></i> Artikkelen er lagret.');
         } else {
             $("div.edit-article-header div.save span.save-text").html('<i class="icon-info-sign"></i> Autolagrer om ' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ' sekunder.');
