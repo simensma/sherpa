@@ -55,3 +55,45 @@ footer div.sponsors {
     text-align: center;
     margin-top: 40px;
 }
+
+/* Search box, preliminary for groups */
+
+div#searchbox {
+    width: 940px;
+    height: 467px;
+    background-image: url('/static/img/promo/sykkel.jpg');
+}
+
+div#searchbox div#content {
+    position: relative;
+    margin-left: 10px;
+    top: 100px;
+    width: 760px;
+    height: 270px;
+}
+
+div#searchbox table {
+    width: 100%;
+}
+
+div#searchbox td.categories {
+    width: 200px;
+}
+
+div#searchbox td.categories p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div#searchbox td.counties {
+    vertical-align: top;
+}
+
+div#searchbox div.county {
+    float: left;
+    width: 33%;
+}
+
+div#results h1 {
+    font-size: 120%;
+}

@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/groups.js"></script>
+{% endblock %}
+{% block body %}
+
+{% csrf_token %}
+
+<h1>DNT der du bor</h1>
+
+<div id="searchbox">
+  <div id="content">
+    <table>
+      <tr>
+        <th>Velg type</th>
+        <th>Fylke</th>
+      </tr>
+      <tr>
+        <td class="categories">
+          <p>
+            <input type="radio" name="category" value="all" checked>
+            Alle (<span class="count"></span>)
+          </p>
+          {% for category in categories %}
+            <p>
+              <input type="radio" name="category" value="{{ category.type }}">
+              {{ category.type|cut:'|' }} (<span class="count"></span>)
+            </p>
+          {% endfor %}
+        </td>
+        <td class="counties">
+          <div class="county"><input type="radio" name="county" value="all" checked> Alle</div>
+          <div class="county"><input type="radio" name="county" value="01"> Østfold</div>
+          <div class="county"><input type="radio" name="county" value="02"> Akershus</div>
+          <div class="county"><input type="radio" name="county" value="03"> Oslo</div>
+          <div class="county"><input type="radio" name="county" value="04"> Hedmark</div>
+          <div class="county"><input type="radio" name="county" value="05"> Oppland</div>
+          <div class="county"><input type="radio" name="county" value="06"> Buskerud</div>
+          <div class="county"><input type="radio" name="county" value="07"> Vestfold</div>
+          <div class="county"><input type="radio" name="county" value="08"> Telemark</div>
+          <div class="county"><input type="radio" name="county" value="09"> Aust-Agder</div>
+          <div class="county"><input type="radio" name="county" value="10"> Vest-Agder</div>
+          <div class="county"><input type="radio" name="county" value="11"> Rogaland</div>
+          <div class="county"><input type="radio" name="county" value="12"> Hordaland</div>
+          <div class="county"><input type="radio" name="county" value="14"> Sogn og Fjordane</div>
+          <div class="county"><input type="radio" name="county" value="15"> Møre og Romsdal</div>
+          <div class="county"><input type="radio" name="county" value="16"> Sør-Trøndelag</div>
+          <div class="county"><input type="radio" name="county" value="17"> Nord-Trøndelag</div>
+          <div class="county"><input type="radio" name="county" value="18"> Nordland</div>
+          <div class="county"><input type="radio" name="county" value="19"> Troms</div>
+          <div class="county"><input type="radio" name="county" value="10"> Finnmark</div>
+          <div class="county"><input type="radio" name="county" value="21"> Svalbard</div>
+          <div class="county"><input type="radio" name="county" value="22"> Jan Mayen</div>
+          <div class="county"><input type="radio" name="county" value="23"> Kontinentalsokkelen</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="loading">
+  <h1>Laster, vennligst vent...</h1>
+  <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+</div>
+
+<div id="results">
+
+</div>
+
+{% endblock %}
