@@ -7,9 +7,9 @@ class Profile(models.Model):
     # Much more person data
 
 class Zipcode(models.Model):
-    zip_code = models.IntegerField()
+    zip_code = models.CharField(max_length=4)
     location = models.CharField(max_length=100)
-    city_code = models.IntegerField()
+    city_code = models.CharField(max_length=4)
     city = models.CharField(max_length=100)
 
 class County(models.Model):
