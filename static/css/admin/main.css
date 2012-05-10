@@ -56,18 +56,6 @@ h2.skinny {
   width: 100%;
 }
 
-table#page-details th, table#page-details td {
-  padding: 6px;
-}
-
-table#page-details td.button {
-  text-align: center;
-}
-
-table#page-details td.button a {
-  width: 90%;
-}
-
 div.edit-page-details h2 span.title {
   font-weight: bold;
 }

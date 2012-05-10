@@ -2,36 +2,6 @@
 
 $(document).ready(function() {
 
-    $("table#page-details img.ajaxloader").hide();
-    $("table#page-details input[name='title']").change(updatePage);
-
-    function updatePage() {
-        var table = $("table#page-details");
-        var id = table.attr('data-id');
-        var title = table.find("input[name='title']");
-        title.attr('disabled', true);
-        table.find("img.ajaxloader").show();
-        $.ajax({
-            url: '/sherpa/cms/side/' + id + '/',
-            type: 'POST',
-            data: 'title=' + encodeURIComponent(title.val())
-        }).done(function(result) {
-
-        }).fail(function(result) {
-            // Todo
-        }).always(function() {
-            table.find("img.ajaxloader").hide();
-            $("span.title").text(title.val());
-            title.attr('disabled', false);
-        });
-    }
-
-    $("table#page-details a.delete-page").click(function(e) {
-        if(!confirm("Er du HELT sikker på at du vil slette hele denne siden, alle dens versjoner og varianter, og alt dens innhold FOR GODT? Denne handlingen kan du ikke angre!")) {
-            e.preventDefault();
-        }
-    });
-
     /* New page dialog - define slug based on title */
 
     var validUrl = false;

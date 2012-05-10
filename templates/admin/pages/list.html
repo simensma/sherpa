@@ -32,7 +32,7 @@
   </div>
 </div>
 
-{% if not pages %}
+{% if not versions %}
 <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
 {% else %}
 <table class="table table-striped">
@@ -43,10 +43,10 @@
 </tr>
 </thead>
 <tbody>
-{% for page in pages %}
+{% for version in versions %}
 <tr>
-  <td><a href="{% url admin.cms.views.page.edit page.id %}">{{ page.title }}</a></td>
-  <td><a href="{% url admin.cms.views.page.edit page.id %}">http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}</a></td>
+  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">{{ version.variant.page.title }}</a></td>
+  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">http://{{ site.domain }}/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a></td>
 </tr>
 {% endfor %}
 </tbody>

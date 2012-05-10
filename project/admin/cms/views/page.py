@@ -12,9 +12,10 @@ import json
 
 @login_required
 def list(request):
+    versions = Version.objects.filter(variant__page__isnull=False, active=True)
     pages = Page.objects.all()
     menus = Menu.objects.all().order_by('order')
-    context = {'pages': pages, 'menus': menus, 'site': request.site}
+    context = {'versions': versions, 'menus': menus, 'site': request.site}
     return render(request, 'admin/pages/list.html', context)
 
 @login_required
@@ -37,19 +38,6 @@ def check_slug(request):
     page_valid = not Page.objects.filter(slug=request.POST['slug']).exists()
     print("Page valid er %s" % page_valid)
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
-
-@login_required
-def edit(request, page):
-    if request.is_ajax():
-        page = Page.objects.get(id=page)
-        page.title = request.POST['title']
-        page.save()
-        return HttpResponse()
-    else:
-        page = Page.objects.get(id=page)
-        version = Version.objects.get(variant__page=page, active=True)
-        context = {'page': page, 'version': version, 'site': request.site}
-        return render(request, 'admin/pages/edit.html', context)
 
 @login_required
 def delete(request, page):
