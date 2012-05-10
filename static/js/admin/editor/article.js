@@ -8,9 +8,9 @@ $(document).ready(function() {
     /* Publish/unpublish */
 
     if($("div.status[data-published]").length == 0) {
-        $("div.status h1.publish button.unpublish").hide();
+        $("div.status button.unpublish").hide();
     } else {
-        $("div.status h1.publish button.publish").hide();
+        $("div.status button.publish").hide();
     }
 
     $("div.status button.publish").click(function() {
@@ -19,8 +19,8 @@ $(document).ready(function() {
         }
         setPublished(true, function() {
             $("div.status h1.publish span.false").removeClass('false').addClass('true').text('publisert');
-            $("div.status h1.publish button.publish").hide();
-            $("div.status h1.publish button.unpublish").show();
+            $("div.status button.publish").hide();
+            $("div.status button.unpublish").show();
         });
     });
 
@@ -30,8 +30,8 @@ $(document).ready(function() {
         }
         setPublished(false, function() {
             $("div.status h1.publish span.true").removeClass('true').addClass('false').text('ikke publisert');
-            $("div.status h1.publish button.publish").show();
-            $("div.status h1.publish button.unpublish").hide();
+            $("div.status button.publish").show();
+            $("div.status button.unpublish").hide();
         });
     });
 

@@ -30,20 +30,28 @@
       </div>
 
       <div class="status"{% if version.variant.article.published %} data-published{% endif %}>
-        <h1 class="publish">Artikkelen er
-          {% if version.variant.article.published %}
-            <span class="true">publisert</span>.
-          {% else %}
-            <span class="false">ikke publisert</span>.
-          {% endif %}
-          <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
-          <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
-        </h1>
         <div class="save">
-          <span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span><br>
-          <span class="control-group"><input type="checkbox" class="autosave" checked> Lagre automatisk hvert <input type="text" value="1" class="autosave-frequency">. minutt</span>
-          <br>
-          <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
+          <table>
+            <tr>
+              <td>
+                <h1 class="publish">Artikkelen er
+                  {% if version.variant.article.published %}
+                    <span class="true">publisert</span>.
+                  {% else %}
+                    <span class="false">ikke publisert</span>.
+                  {% endif %}
+                </h1>
+              </td>
+              <td>
+                <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
+                <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span></td>
+              <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
+            </tr>
+          </table>
         </div>
         <a class="btn btn-danger delete-article" href="{% url admin.articles.views.delete version.variant.article.id %}">
           <i class="icon-warning-sign"></i> Slett artikkelen for godt
