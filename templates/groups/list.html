@@ -31,7 +31,7 @@
         <td class="counties">
           <div class="county"><input type="radio" name="county" value="all" checked> Alle</div>
           {% for county in counties %}
-            <div class="county"><input type="radio" name="county" value="{{ county.code }}"> {{ county.name|title }}</div>
+            <div class="county"><input type="radio" name="county" value="{{ county.code }}"> {{ county.name }}</div>
           {% endfor %}
         </td>
       </tr>
