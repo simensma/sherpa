@@ -91,42 +91,11 @@ article .moveable.vertical {
   right: 50px;
   width: 500px;
   z-index: 1000;
-}
-
-/* This one is only for articles */
-#toolbar > div.formatting {
   padding: 9px;
   border: 1px solid rgb(221, 221, 221);
   background-color: rgb(245, 245, 245) !important;
-}
-
-#toolbar .tab-content, #toolbar li.active a {
-  background-color: rgb(245, 245, 245) !important;
-}
-
-#toolbar ul.nav li a:hover {
-  background-color: rgb(200, 200, 200);
-}
-
-#toolbar ul.nav {
-  /* Negate the default bootstrap margin */
-  margin-bottom: 0 !important;
-}
-
-#toolbar ul.nav li a {
-  background-color: rgb(225, 225, 225);
-}
-
-#toolbar .tab-content {
   padding: 9px;
-  border-left: 1px solid rgb(221, 221, 221);
-  border-right: 1px solid rgb(221, 221, 221);
-  border-bottom: 1px solid rgb(221, 221, 221);
-}
-
-#toolbar .save input.autosave-frequency {
-  width: 20px;
-  height: 0.8em;
+  border: 1px solid rgb(221, 221, 221);
 }
 
 #toolbar a.button {
@@ -141,7 +110,7 @@ article .moveable.vertical {
   text-decoration: none;
 }
 
-#toolbar div.formatting input[name='url'] {
+#toolbar input[name='url'] {
   width: 350px;
 }
 

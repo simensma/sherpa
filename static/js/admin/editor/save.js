@@ -1,50 +1,39 @@
 /**
  * Saving the document
  */
+
+var AUTOSAVE_FREQUENCY = 60; // Autosave every <this> seconds
+var NO_SAVE_WARNING = 60 * 5; // Should never happen when this is larger than autosave frequency
+
 $(document).ready(function() {
 
     var lastSaveCount = 0;
     var updateSaveCountID;
     function updateSaveCount() {
         lastSaveCount += 1;
-        if(lastSaveCount < 30) {
-            $("#toolbar span.save-text").html("<i class=\"icon-ok\"></i> Artikkelen er nylig lagret.");
-        } else if(lastSaveCount < 60) {
-            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + lastSaveCount + " sekunder siden.");
+        if(lastSaveCount < 15) {
+            $("div.editor-header div.save span.save-text").html('<i class="icon-ok"></i> Lagret.');
         } else {
-            $("#toolbar span.save-text").html("<i class=\"icon-warning-sign\"></i> Sist lagret for " + Math.floor(lastSaveCount / 60) + " minutt" + (lastSaveCount >= 120 ? 'er' : '') + " siden.");
+            $("div.editor-header div.save span.save-text").html('<i class="icon-info-sign"></i> Autolagrer om ' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ' sekunder.');
         }
 
-        if(lastSaveCount == 60 * 5) {
+        if(lastSaveCount == NO_SAVE_WARNING) {
             $("div.no-save-warning").show();
         }
 
-        if($("#toolbar .save input.autosave:checked").length == 1) {
-            var val = $("#toolbar .save input.autosave-frequency").val();
-            if(val.match(/^\d+$/) && lastSaveCount > (val * 60)) {
-                $("#toolbar .save button.save").click();
-                return;
-            }
+        if(lastSaveCount >= AUTOSAVE_FREQUENCY) {
+            $("div.editor-header div.save button.save").click();
+            return;
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }
     updateSaveCount();
 
-    // Warn when autosave-number is invalid
-    $("#toolbar .save input.autosave-frequency").keyup(function() {
-        if($(this).val().match(/^\d+$/)) {
-            $(this).parents(".control-group").removeClass('error');
-        } else {
-            $(this).siblings("input.autosave").removeAttr('checked');
-            $(this).parents(".control-group").addClass('error');
-        }
-    });
-
-    $("#toolbar .save button.save").click(function() {
+    $("div.editor-header div.save button.save").click(function() {
         clearInterval(updateSaveCountID);
-        $(this).hide();
+        $(this).attr('disabled', true);
+        $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
         $("div.no-save-warning").hide();
-        $("#toolbar span.save-text").text("Lagrer, vennligst vent...");
         var rows = [];
         $("article div.row").each(function() {
             var row = {
@@ -103,7 +92,7 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             updateSaveCount();
-            $("#toolbar button.save").show();
+            $("div.editor-header div.save button.save").removeAttr('disabled');
         });
     });
 

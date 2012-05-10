@@ -209,57 +209,57 @@ div.page-dialog div.template:hover, div.article-dialog div.template:hover {
 
 /* Article editing */
 
-div.edit-article-header {
+div.editor-header {
   background-color: rgb(240, 240, 240) !important;
   color: rgb(65, 65, 65) !important;
 }
 
-div.edit-article-header h1 {
+div.editor-header h1 {
   font-size: 160%;
   font-weight: normal;
 }
 
-div.edit-article-header div.status h1.publish span.true {
+div.editor-header div.status h1.publish span.true {
   color: green;
 }
 
-div.edit-article-header div.status h1.publish span.false {
+div.editor-header div.status h1.publish span.false {
   color: red;
 }
 
-div.edit-article-header img.article-thumbnail {
+div.editor-header.article img.article-thumbnail {
   background-color: rgb(0, 0, 0);
   min-width: 20px;
   min-height: 20px;
 }
 
-div.edit-article-header img.article-thumbnail:hover {
+div.editor-header.article img.article-thumbnail:hover {
   opacity: 0.5;
   filter: alpha(opacity=50);
   cursor: alias;
 }
 
-div.edit-article-header div.preview-image {
+div.editor-header.article div.preview-image {
   float: right;
 }
 
-div.edit-article-header div.published {
+div.editor-header.article div.published {
   border: 1px solid rgb(95, 95, 95);
   padding: 20px;
   text-align: center;
   width: 200px;
 }
 
-div.edit-article-header div.published.true {
+div.editor-header.article div.published.true {
   background-color: rgb(90, 203, 90);
 }
 
-div.edit-article-header div.published.false {
+div.editor-header.article div.published.false {
   color: rgb(255, 255, 255);
   background-color: rgb(220, 90, 90);
 }
 
-div.edit-article-header div.published p {
+div.editor-header.article div.published p {
   font-size: 200%;
   margin-bottom: 20px;
 }

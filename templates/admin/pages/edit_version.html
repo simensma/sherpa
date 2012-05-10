@@ -6,7 +6,7 @@
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/page.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/save-page.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/widgets.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
@@ -17,5 +17,43 @@
 {% endblock %}
 
 {% block body %}
-{% include 'admin/editor/advanced.html' %}
+
+<div class="row">
+  <div class="span12">
+    <div class="well editor-header page" data-id="{{ version.variant.page.id }}">
+      <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
+        <div class="save">
+          <table>
+            <tr>
+              <td>
+                <h1 class="publish">Siden er
+                  {% if version.variant.page.published %}
+                    <span class="true">publisert</span>.
+                  {% else %}
+                    <span class="false">ikke publisert</span>.
+                  {% endif %}
+                </h1>
+              </td>
+              <td>
+                <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
+                <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="save-text"><i class="icon-ok"></i> Siden er nylig lagret.</span></td>
+              <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
+            </tr>
+          </table>
+        </div>
+        <a class="btn btn-danger delete-page" href="{% url admin.cms.views.page.delete version.variant.page.id %}">
+          <i class="icon-warning-sign"></i> Slett siden for godt
+        </a>
+      </div>
+
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</div>
+
+{% include 'admin/editor/advanced.html' with toolbar_structure=1 %}
 {% endblock %}

@@ -73,7 +73,7 @@ $(document).ready(function() {
             }
             currentImage.attr('src', src);
             currentImage.attr('alt', alt);
-            $("#toolbar .save button.save").click();
+            $("div.editor-header div.save button.save").click();
         }, function() {
             $.ajax({
                 url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
@@ -131,7 +131,7 @@ $(document).ready(function() {
     });
 
     // Add image
-    $("#toolbar .formatting a.button.image").click(function() {
+    $("#toolbar a.button.image").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
@@ -175,7 +175,7 @@ $(document).ready(function() {
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
 
-    $("#toolbar .formatting a.button.widget").click(function() {
+    $("#toolbar a.button.widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
             return;
@@ -370,7 +370,7 @@ $(document).ready(function() {
     }
 
     // Remove a row and all its content
-    $("#toolbar .tab-pane.structure button.remove-columns").click(function() {
+    $("#toolbar button.remove-columns").click(function() {
         function doneRemoving() {
             $(document).off('mouseenter mouseleave click', 'article .row');
             enableEditing();
@@ -418,23 +418,23 @@ $(document).ready(function() {
     var sortState = 'formatting';
     $("article").sortable({ disabled: true });
     $("article .row").sortable({ disabled: true });
-    $("#toolbar .structure button.formatting").button('toggle');
+    $("#toolbar button.formatting").button('toggle');
 
-    $("#toolbar .structure button.formatting").click(function() {
+    $("#toolbar button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article .row"));
         $("article .editable").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
-    $("#toolbar .structure button.horizontal").click(function() {
+    $("#toolbar button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article .row"), 'horizontal');
         $("article .editable").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
-    $("#toolbar .structure button.vertical").click(function() {
+    $("#toolbar button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article .row"));
         $("article .editable").removeAttr('contenteditable');
@@ -486,15 +486,15 @@ $(document).ready(function() {
 
     /* Toggle toolbar usage */
     function disableToolbar(displayText, cancelCallback) {
-        $("#toolbar .tab-pane *").hide();
+        $("#toolbar *").hide();
         var btn = $('<button class="btn cancel">Avbryt</button>');
         btn.click(enableToolbar);
         btn.click(cancelCallback);
-        $("#toolbar .tab-pane").append('<p class="cancel">' + displayText + '</p>', btn);
+        $("#toolbar").append('<p class="cancel">' + displayText + '</p>', btn);
     }
     function enableToolbar() {
-        $("#toolbar .tab-pane .cancel").remove();
-        $("#toolbar .tab-pane *").show();
+        $("#toolbar .cancel").remove();
+        $("#toolbar *").show();
     }
 
     /* Toggle editing of the actual content */

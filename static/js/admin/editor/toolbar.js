@@ -3,10 +3,10 @@ $(document).ready(function() {
     /**
      * Toolbar buttons
      */
-    $("#toolbar div.formatting a.button").each(function() {
+    $("#toolbar a.button").each(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
     });
-    $("#toolbar div.formatting a.button").hover(function() {
+    $("#toolbar a.button").hover(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     }, function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
@@ -40,7 +40,7 @@ $(document).ready(function() {
         $("#toolbar select").val("default");
     });
     $("#toolbar a.button.anchor-add").click(function(event) {
-        $("#toolbar .formatting *").hide();
+        $("#toolbar *").hide();
         var p = $('<p class="anchor-insert">URL-adresse: </p>');
         var input = $('<input type="text" name="url">');
         p.append(input);
@@ -52,7 +52,7 @@ $(document).ready(function() {
                 range.setEnd(range.endContainer, range.endOffset - 1);
             }
             selection.setSingleRange(range);
-            var url = $("#toolbar div.formatting input[name='url']").val();
+            var url = $("#toolbar input[name='url']").val();
             if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }
@@ -63,10 +63,10 @@ $(document).ready(function() {
             reset();
         });
         function reset() {
-            $("#toolbar .formatting p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
-            $("#toolbar .formatting *").show();
+            $("#toolbar p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
+            $("#toolbar *").show();
         }
-        $("#toolbar .tab-pane.formatting").append(p, buttons);
+        $("#toolbar").append(p, buttons);
     });
     $("#toolbar a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
@@ -104,11 +104,11 @@ $(document).ready(function() {
 
     /* Show tooltip for toolbar formatting buttons */
 
-    $("#toolbar .formatting a.button").hover(function() {
+    $("#toolbar a.button").hover(function() {
         var tooltip = $('<button class="btn btn-primary title">' + $(this).attr('data-title') + '</button>');
         tooltip.css('font-weight', 'bold');
         tooltip.css('position', 'absolute');
-        tooltip.css('top', '72px');
+        tooltip.css('top', '36px');
         $(this).append(tooltip);
     }, function() {
         $("button.title").remove();

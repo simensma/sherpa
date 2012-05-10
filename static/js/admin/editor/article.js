@@ -38,7 +38,7 @@ $(document).ready(function() {
     function setPublished(status, done) {
         $("div.status button.publish, div.status button.unpublish").attr('disabled', true);
         $.ajax({
-            url: '/sherpa/artikler/publiser/' + $("div.edit-article-header").attr('data-id') + '/',
+            url: '/sherpa/artikler/publiser/' + $("div.editor-header").attr('data-id') + '/',
             type: 'POST',
             data: 'status=' + encodeURIComponent(JSON.stringify({'status': status}))
         }).done(done).always(function() {
@@ -49,61 +49,61 @@ $(document).ready(function() {
 
     /* Change thumbnail-image */
 
-    if($("div.edit-article-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
-       $("div.edit-article-header input[name='thumbnail'][value='none'][checked]").length > 0) {
-        $("div.edit-article-header img.article-thumbnail").hide();
+    if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
+       $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {
+        $("div.editor-header img.article-thumbnail").hide();
     }
 
-    $("div.edit-article-header input[name='thumbnail'][value='none']").change(function() {
+    $("div.editor-header input[name='thumbnail'][value='none']").change(function() {
         if($(this).is(':checked')) {
             var image = $(this);
-            $("div.edit-article-header img.article-thumbnail").hide();
+            $("div.editor-header img.article-thumbnail").hide();
             $.ajax({
-                url: '/sherpa/artikler/bilde/' + $("div.edit-article-header").attr('data-id') + '/skjul/',
+                url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/skjul/',
                 type: 'POST'
             });
         }
     });
 
-    $("div.edit-article-header input[name='thumbnail'][value='default']").change(function(e) {
+    $("div.editor-header input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
             if($("article div.image").length == 0) {
                 alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
-                $("div.edit-article-header input[name='thumbnail'][value='none']").click();
+                $("div.editor-header input[name='thumbnail'][value='none']").click();
                 return;
             }
             var image = $(this);
-            $("div.edit-article-header img.article-thumbnail").hide();
+            $("div.editor-header img.article-thumbnail").hide();
             $.ajax({
-                url: '/sherpa/artikler/bilde/' + $("div.edit-article-header").attr('data-id') + '/slett/',
+                url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/slett/',
                 type: 'POST'
             });
         }
     });
 
-    $("div.edit-article-header input[name='thumbnail'][value='new']").change(function() {
+    $("div.editor-header input[name='thumbnail'][value='new']").change(function() {
         if($(this).is(':checked')) {
             var image = $(this);
-            $("div.edit-article-header img.article-thumbnail").show();
+            $("div.editor-header img.article-thumbnail").show();
             saveImage();
         }
     });
 
     function saveImage() {
         $.ajax({
-            url: '/sherpa/artikler/bilde/' + $("div.edit-article-header").attr('data-id') + '/',
+            url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/',
             type: 'POST',
-            data: 'thumbnail=' + encodeURIComponent($("div.edit-article-header img.article-thumbnail").attr('src'))
+            data: 'thumbnail=' + encodeURIComponent($("div.editor-header img.article-thumbnail").attr('src'))
         });
     }
 
-    $("div.edit-article-header img.article-thumbnail").click(function() {
+    $("div.editor-header img.article-thumbnail").click(function() {
         var image = $(this);
         openImageDialog($(this).attr('src'), undefined, $(this).attr('alt'), function(src, anchor, alt) {
             image.attr('src', src);
             saveImage();
         }, function() {
-            $("div.edit-article-header input[name='thumbnail'][value='none']").click();
+            $("div.editor-header input[name='thumbnail'][value='none']").click();
         });
     });
 
