@@ -10,7 +10,8 @@ import json
 
 def index(request):
     categories = Group.objects.exclude(type='').order_by('type').distinct('type')
-    context = {'categories': categories}
+    counties = County.objects.all().order_by('code')
+    context = {'categories': categories, 'counties': counties}
     return render(request, 'groups/list.html', context)
 
 def filter(request):
