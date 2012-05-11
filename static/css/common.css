@@ -36,22 +36,6 @@ nav#menus li.active a {
 
 /* Articles */
 
-article h1 {
-  font-weight: normal;
-  font-size: 280%;
-  line-height: normal !important;
-  border-bottom: 4px solid rgb(35, 35, 35);
-  margin-bottom: 15px;
-}
-
-article h2 {
-  font-weight: normal;
-  font-size: 160%;
-  line-height: normal !important;
-  border-bottom: 2px solid rgb(35, 35, 35);
-  margin-bottom: 10px;
-}
-
 article .row, article .row-fluid {
   margin-top: 0.6em;
   margin-bottom: 0.6em;

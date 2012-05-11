@@ -2,6 +2,33 @@
  * The main stylesheet for turistforeningen.no
  */
 
+/**
+ * Fonts and general styles
+ * Changes here need to be copied to cms-specific css
+ */
+
+body, p {
+  font-family: georgia, times, serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, input, button, select, textarea {
+  /* Temporary, until our profile font arrives */
+  font-family: sans-serif;
+}
+
+h1 {
+  text-transform: uppercase;
+  font-size: 280%;
+  border-bottom: 4px solid rgb(35, 35, 35);
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 120%;
+  line-height: 1.2em;
+  margin-top: 20px;
+}
+
 /* Header search */
 
 header div.search {
@@ -19,9 +46,12 @@ div.social-icons {
 }
 
 div.social-icons h1 {
+  text-transform: none;
   font-weight: normal;
   font-size: 140%;
   line-height: 1em;
+  margin-bottom: 0;
+  border-bottom: none;
 }
 
 div.social-icons a, div.social-icons h3 a {
