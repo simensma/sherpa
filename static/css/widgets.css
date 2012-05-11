@@ -51,3 +51,20 @@ div.widget div.promo div.right p.lede {
 div.widget div.promo div.right img {
   padding-left: 10%;
 }
+
+/* Editor (metadata for articles (writer, publication date etc)) */
+
+div.widget div.editor p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+div.widget div.editor p em {
+  font-weight: bold;
+  color: rgb(119, 119, 119);
+  text-transform: uppercase;
+}
+
+div.widget div.editor hr {
+  margin: 0;
+}

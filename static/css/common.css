@@ -57,21 +57,6 @@ article .row, article .row-fluid {
   margin-bottom: 0.6em;
 }
 
-article .meta p {
-  font-size: 0.9em;
-  margin: 0;
-}
-
-article .meta p em {
-  font-weight: bold;
-  color: rgb(119, 119, 119);
-  text-transform: uppercase;
-}
-
-article .meta hr {
-  margin: 0;
-}
-
 /* Article preview */
 
 div.article-preview img, img.article-thumbnail {
