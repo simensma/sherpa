@@ -52,7 +52,6 @@ $(document).ready(function() {
 
     /* Change image sources upon being clicked. */
     function changeImage() {
-        $(this).removeClass('hover');
         currentImage = $(this);
         var content = $(this).parents("div.image");
         var currentDescription = content.find("p.description");
