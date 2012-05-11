@@ -43,16 +43,25 @@ $(document).ready(function() {
         selection = rangy.getSelection();
     }
 
+    /* Hide empty image photographer description */
+    $("article div.image p.photographer").each(function() {
+        if($(this).children("span.content").text() == "") {
+            $(this).hide();
+        }
+    });
+
     /* Change image sources upon being clicked. */
     function changeImage() {
         $(this).removeClass('hover');
         currentImage = $(this);
         var content = $(this).parents("div.image");
+        var currentDescription = content.find("p.description");
+        var currentPhotographer = content.find("p.photographer span.content");
         var anchor = $(this).parent("a").attr('href');
         if(anchor === undefined) {
             anchor = '';
         }
-        openImageDialog($(this).attr('src'), anchor, $(this).attr('alt'), function(src, anchor, alt) {
+        openImageDialog($(this).attr('src'), anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
             if(anchor.length == 0) {
                 // No link
                 if(currentImage.parent("a").length > 0) {
@@ -72,7 +81,14 @@ $(document).ready(function() {
                 }
             }
             currentImage.attr('src', src);
-            currentImage.attr('alt', alt);
+            currentImage.attr('alt', description);
+            currentDescription.text(description);
+            currentPhotographer.text(photographer);
+            if(photographer == '') {
+                currentPhotographer.parent("p.photographer").hide();
+            } else {
+                currentPhotographer.parent("p.photographer").show();
+            }
             $("div.editor-header div.save button.save").click();
         }, function() {
             $.ajax({

@@ -68,7 +68,8 @@ $(document).ready(function() {
             }
             var image = {
                 src: $(this).find('img').attr('src'),
-                alt: $(this).find('img').attr('alt'),
+                description: $(this).find('p.description').text(),
+                photographer: $(this).find('p.photographer span.content').text(),
                 anchor: anchor
             };
             var content = {

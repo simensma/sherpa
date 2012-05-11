@@ -52,8 +52,9 @@ $(document).ready(function() {
             anchor = '';
         }
 
-        var alt = dialog.find("input[name='alt']").val();
-        imagePickedCallback(src, anchor, alt);
+        var description = dialog.find("input[name='description']").val();
+        var photographer = dialog.find("input[name='photographer']").val();
+        imagePickedCallback(src, anchor, description, photographer);
     });
 
     $("div#dialog-change-image button.remove-image").click(function() {
@@ -79,7 +80,7 @@ $(document).ready(function() {
 
 });
 
-function openImageDialog(src, anchor, alt, saveCallback, removeCallback) {
+function openImageDialog(src, anchor, description, photographer, saveCallback, removeCallback) {
     $("div#dialog-change-image div.image-archive-chooser").hide();
     $("div#dialog-change-image div.image-details").show();
     $("div#dialog-change-image img.preview").attr('src', src);
@@ -92,7 +93,20 @@ function openImageDialog(src, anchor, alt, saveCallback, removeCallback) {
     } else {
         dialog.find("tr.anchor").hide();
     }
-    dialog.find("input[name='alt']").val(alt);
+    if(description !== undefined) {
+        dialog.find("input[name='description']").val(description);
+        dialog.find("tr.description").show();
+        dialog.find("tr.description").show();
+    } else {
+        dialog.find("tr.description").hide();
+    }
+    if(photographer !== undefined) {
+        dialog.find("input[name='photographer']").val(photographer);
+        dialog.find("tr.photographer").show();
+        dialog.find("tr.photographer").show();
+    } else {
+        dialog.find("tr.photographer").hide();
+    }
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 }
@@ -166,10 +180,11 @@ function updateContents(parents, albums, images, emptyText) {
 
     // Add images
     for(var i=0; i<images.length; i++) {
-        var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
+        var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '" data-photographer="' + images[i].photographer + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
         item.click(function() {
             $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
-            $("div#dialog-change-image input[name='alt']").val($(this).attr('data-description'));
+            $("div#dialog-change-image input[name='description']").val($(this).attr('data-description'));
+            $("div#dialog-change-image input[name='photographer']").val($(this).attr('data-photographer'));
             $("div#dialog-change-image div.image-archive-chooser").hide();
             $("div#dialog-change-image div.image-details").show();
             $("div#dialog-change-image img.preview").attr('src', "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));

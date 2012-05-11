@@ -23,8 +23,12 @@
         {% elif content.type == 'image' %}
           <div class="image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img src="{{ content.content.src }}" alt="{{ content.content.alt }}">
+              <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
+            <p class="description">{{ content.content.description }}</p>
+            <p class="photographer">Foto:
+              <span class="content">{{ content.content.photographer }}</span>
+            </p>
           </div>
         {% elif content.type == 'title' %}
           <div class="title editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
