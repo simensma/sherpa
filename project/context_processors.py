@@ -1,3 +1,5 @@
+from django.core.urlresolvers import resolve
+
 from page.models import Menu
 
 import re

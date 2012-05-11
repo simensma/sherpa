@@ -5,8 +5,12 @@
 /* Menus */
 
 nav#menus {
-    margin-top: 20px;
     margin-bottom: 60px;
+}
+
+nav#menus ul {
+  /* Override bootstrap */
+  margin-left: 0 !important;
 }
 
 nav#menus li {
@@ -16,9 +20,12 @@ nav#menus li {
 }
 
 nav#menus li a {
-    font-size: 140%;
-    font-weight: bold;
+    font-size: 110%;
     color: rgb(30, 30, 30);
+}
+
+nav#menus li.active a {
+    font-weight: bold;
 }
 
 /* Articles */
