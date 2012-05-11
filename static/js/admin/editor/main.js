@@ -52,15 +52,15 @@ $(document).ready(function() {
 
     /* Change image sources upon being clicked. */
     function changeImage() {
-        currentImage = $(this);
-        var content = $(this).parents("div.image");
+        currentImage = $(this).find("img");
+        var content = $(this);
         var currentDescription = content.find("p.description");
         var currentPhotographer = content.find("p.photographer span.content");
-        var anchor = $(this).parent("a").attr('href');
+        var anchor = $(this).find("a").attr('href');
         if(anchor === undefined) {
             anchor = '';
         }
-        openImageDialog($(this).attr('src'), anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
+        openImageDialog(currentImage.attr('src'), anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
             if(anchor.length == 0) {
                 // No link
                 if(currentImage.parent("a").length > 0) {
@@ -509,7 +509,7 @@ $(document).ready(function() {
     function enableEditing() {
         $("article div.editable").attr('contenteditable', 'true');
         $(document).on('click', 'div.widget', editWidget);
-        $(document).on('click', 'div.image img', changeImage);
+        $(document).on('click', 'div.image', changeImage);
     }
 
     /* Divs for inserting widgets/images/text */

@@ -88,7 +88,7 @@ article div.image img {
   min-height: 20px;
 }
 
-article div.image img:hover, article div.widget:not(.static):hover {
+article div.image:hover, article div.widget:not(.static):hover {
   opacity: 0.5;
   filter: alpha(opacity=50);
   cursor: alias;
