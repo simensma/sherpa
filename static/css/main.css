@@ -5,26 +5,26 @@
 /* Header search */
 
 header div.search {
-    text-align: right;
+  text-align: right;
 }
 
 header div.search form.form-search {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* Social icons above footer */
 
 div.social-icons {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
 div.social-icons h3 {
-    font-weight: normal;
-    line-height: 1em;
+  font-weight: normal;
+  line-height: 1em;
 }
 
 div.social-icons a, div.social-icons h3 a {
-    color: rgb(118, 118, 118);
+  color: rgb(118, 118, 118);
 }
 
 div.social-icons img.social {
@@ -35,65 +35,65 @@ div.social-icons img.social {
 /* Footer */
 
 footer {
-    background-color: #e8e8e9;
-    border-top: 1px solid rgb(195, 195, 195);
-    margin-top: 20px;
-    padding-bottom: 100px;
-    padding-top: 20px;
+  background-color: #e8e8e9;
+  border-top: 1px solid rgb(195, 195, 195);
+  margin-top: 20px;
+  padding-bottom: 100px;
+  padding-top: 20px;
 }
 
 footer div.services h2 {
-    font-size: 150%;
-    font-weight: normal;
+  font-size: 150%;
+  font-weight: normal;
 }
 
 footer div.services a {
-    font-size: 110%;
+  font-size: 110%;
 }
 
 footer div.sponsors {
-    text-align: center;
-    margin-top: 40px;
+  text-align: center;
+  margin-top: 40px;
 }
 
 /* Search box, preliminary for groups */
 
 div#searchbox {
-    width: 940px;
-    height: 467px;
-    background-image: url('/static/img/promo/sykkel.jpg');
+  width: 940px;
+  height: 467px;
+  background-image: url('/static/img/promo/sykkel.jpg');
 }
 
 div#searchbox div#content {
-    position: relative;
-    margin-left: 10px;
-    top: 100px;
-    width: 760px;
-    height: 270px;
+  position: relative;
+  margin-left: 10px;
+  top: 100px;
+  width: 760px;
+  height: 270px;
 }
 
 div#searchbox table {
-    width: 100%;
+  width: 100%;
 }
 
 div#searchbox td.categories {
-    width: 200px;
+  width: 200px;
 }
 
 div#searchbox td.categories p {
-    margin-top: 0;
-    margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 div#searchbox td.counties {
-    vertical-align: top;
+  vertical-align: top;
 }
 
 div#searchbox div.county {
-    float: left;
-    width: 33%;
+  float: left;
+  width: 33%;
 }
 
 div#results h1 {
-    font-size: 120%;
+  font-size: 120%;
 }
