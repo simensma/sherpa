@@ -18,8 +18,9 @@ div.social-icons {
   margin-top: 40px;
 }
 
-div.social-icons h3 {
+div.social-icons h1 {
   font-weight: normal;
+  font-size: 140%;
   line-height: 1em;
 }
 
