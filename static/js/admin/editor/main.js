@@ -158,27 +158,13 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            /* Sorry, this doesn't look very pretty.
-             * First add the image content, then AFTER it's added (in the 'done' function
-             * of the image) add the html content (text below image).
-             */
-            var image = $('<img src="" alt="">');
-            var html = $('<p>BILDETEKST: Donec ut libero sed arcu vehicula.<br><em>Foto: Kari Nordmann/DNT</em></p>');
+            var image = $('<img src="" alt=""><p class="description"></p><p class="photographer">Foto: <span class="content"></span></p>');
             function imageDone(wrapper) {
                 var image = wrapper.find("img");
-                function contentDone(wrapper) {
-                    image.click();
-                    if(sortState == 'formatting') {
-                        wrapper.attr('contenteditable', 'true');
-                    }
-                    refreshSort();
-                    setEmpties();
-                    $("article .insertable").remove();
-                }
-                addContent($(event.target).prev(), $(event.target).parent(),
-                    $(event.target).parent(".column").attr("data-id"),
-                    $(event.target).prevAll(":not(.insertable)").length,
-                    $("<div/>").append(html).html(), 'html', contentDone);
+                image.click();
+                refreshSort();
+                setEmpties();
+                $("article .insertable").remove();
             }
             addContent($(event.target).prev(), $(event.target).parent(),
                 $(event.target).parent(".column").attr("data-id"),
