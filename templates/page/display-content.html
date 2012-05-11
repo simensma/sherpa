@@ -1,0 +1,23 @@
+<article>
+  {% for row in rows %}
+  <div class="row-fluid">
+    {% for column in row.columns %}
+      <div class="offset{{ column.offset }} span{{ column.span }}">
+        {% for content in column.contents %}
+          {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
+            {{ content.content|safe }}
+          {% elif content.type == 'image' %}
+            {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
+              <img src="{{ content.content.src }}" alt="{{ content.content.alt }}">
+            {% if content.content.anchor %}</a>{% endif %}
+          {% elif content.type == 'widget' %}
+            <div class="widget">
+              {% include content.content.template with widget=content.content %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</article>
