@@ -138,6 +138,13 @@ def verification(request):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     request.session['registration']['existing'] = request.POST.get('existing', '')
     request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
+
+    now = datetime.now()
+    if now.month >= MONTH_THRESHOLD:
+        year = "%s, samt ut %s" % (now.year + 1, now.year)
+    else:
+        year = now.year
+
     keycount = 0
     over_18 = 0
     main = None
@@ -158,7 +165,7 @@ def verification(request):
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
+        'main': main, 'year': year, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
         'price_senior': PRICE_SENIOR, 'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL,
         'price_child': PRICE_CHILD, 'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN,
         'age_student': AGE_STUDENT, 'age_school': AGE_SCHOOL}
