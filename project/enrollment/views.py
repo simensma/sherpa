@@ -12,7 +12,7 @@ import re
 from lxml import etree
 
 KEY_PRICE = 100
-contact_missing_key = 'mangler-kontaktinfo'
+contact_missing_key = 'mangler-kontaktinfo' # GET parameter used for error handling
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
