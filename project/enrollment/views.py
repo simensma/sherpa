@@ -71,7 +71,7 @@ def registration(request, user):
 
         try:
             new_user['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
-            new_user['age'] = datetime.now().isocalendar()[0] - new_user['dob'].isocalendar()[0]
+            new_user['age'] = datetime.now().year - new_user['dob'].year
         except ValueError:
             new_user['dob'] = None
             new_user['age'] = None
