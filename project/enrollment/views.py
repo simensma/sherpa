@@ -26,6 +26,12 @@ PRICE_STUDENT = 295
 PRICE_SCHOOL = 175
 PRICE_CHILD = 110
 
+# Hardcoded ages
+AGE_SENIOR = 68
+AGE_MAIN = 27
+AGE_STUDENT = 19
+AGE_SCHOOL = 13
+
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
@@ -150,7 +156,8 @@ def verification(request):
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
         'price_senior': PRICE_SENIOR, 'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL,
-        'price_child': PRICE_CHILD}
+        'price_child': PRICE_CHILD, 'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN,
+        'age_student': AGE_STUDENT, 'age_school': AGE_SCHOOL}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
