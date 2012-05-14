@@ -8,7 +8,7 @@
             {{ content.content|safe }}
           {% elif content.type == 'image' %}
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img src="{{ content.content.src }}" alt="{{ content.content.alt }}">
+              <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
             <p>{{ content.content.description }}</p>
             {% if content.content.photographer %}
