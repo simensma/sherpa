@@ -1,4 +1,4 @@
-/* Common for avanced- and article-editor */
+/* Common for advanced- and article-editor */
 $(document).ready(function() {
 
     /**
