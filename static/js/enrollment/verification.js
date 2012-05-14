@@ -1,3 +1,4 @@
+// These hardcoded prices will need to be moved somewhere at some point
 var price_key = 100;
 var price_main = 550;
 var price_household = 250;
