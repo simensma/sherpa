@@ -8,6 +8,16 @@
 
 {% block body %}
 
+<script>
+  var price_key = {{ keyprice }};
+  var price_main = {{ price_main }};
+  var price_household = {{ price_household }};
+  var price_senior = {{ price_senior }};
+  var price_student = {{ price_student }};
+  var price_school = {{ price_school }};
+  var price_child = {{ price_child }};
+</script>
+
 {% include 'enrollment/progress.html' with step=3 %}
 
 <div class="row">

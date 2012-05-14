@@ -18,6 +18,14 @@ REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 
+# Temporary hardcoded prices
+PRICE_MAIN = 550
+PRICE_HOUSEHOLD = 250
+PRICE_SENIOR = 425
+PRICE_STUDENT = 295
+PRICE_SCHOOL = 175
+PRICE_CHILD = 110
+
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
@@ -140,7 +148,9 @@ def verification(request):
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main}
+        'main': main, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
+        'price_senior': PRICE_SENIOR, 'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL,
+        'price_child': PRICE_CHILD}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):

@@ -1,12 +1,3 @@
-// These hardcoded prices will need to be moved somewhere at some point
-var price_key = 100;
-var price_main = 550;
-var price_household = 250;
-var price_senior = 425;
-var price_student = 295;
-var price_school = 175;
-var price_child = 110;
-
 $(document).ready(function() {
 
     /**
