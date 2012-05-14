@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.template import Context, loader
 
 from user.models import Zipcode
 
@@ -10,6 +11,10 @@ from datetime import datetime
 import requests
 import re
 from lxml import etree
+
+# From the start of this month, memberships are for the remaining year AND next year
+# (1 = January, 12 = December)
+MONTH_THRESHOLD = 10
 
 KEY_PRICE = 100
 contact_missing_key = 'mangler-kontaktinfo' # GET parameter used for error handling
@@ -166,13 +171,27 @@ def payment(request):
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
+    sum = 0
+    for user in request.session['registration']['users']:
+        sum += price_of(user['age'])
+
+    now = datetime.now()
+    if now.month >= MONTH_THRESHOLD:
+        year = "%s, samt ut %s" % (now.year + 1, now.year)
+    else:
+        year = now.year
+
+    t = loader.get_template('enrollment/payment-terminal.html')
+    c = Context({'year': year, 'sum': sum})
+    desc = t.render(c)
+
     r = requests.get(REGISTER_URL, params={
         'merchantId': settings.NETS_MERCHANT_ID,
         'token': settings.NETS_TOKEN,
         'orderNumber': 'TBD',
         'currencyCode': 'NOK',
-        'amount': 1,
-        'orderDescription': 'TBD',
+        'amount': sum * 100,
+        'orderDescription': desc,
         'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result"))
     })
 
@@ -265,3 +284,10 @@ def validate_user_contact(users):
 
         return True
     return False
+
+def price_of(age):
+    if age >= AGE_SENIOR:    return PRICE_SENIOR
+    elif age >= AGE_MAIN:    return PRICE_MAIN
+    elif age >= AGE_STUDENT: return PRICE_STUDENT
+    elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
+    else:                    return PRICE_CHILD
