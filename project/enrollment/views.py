@@ -6,7 +6,7 @@ from django.conf import settings
 
 from user.models import Zipcode
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import requests
 import re
 from lxml import etree
