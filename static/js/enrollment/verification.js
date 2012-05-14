@@ -119,29 +119,17 @@ function calculatePrices() {
 }
 
 function priceOf(age) {
-    if(age >= age_senior) {
-        return price_senior;
-    } else if(age >= age_main) {
-        return price_main;
-    } else if(age >= age_student) {
-        return price_student;
-    } else if(age >= age_school) {
-        return price_school;
-    } else {
-        return price_child;
-    }
+    if(age >= age_senior)       return price_senior;
+    else if(age >= age_main)    return price_main;
+    else if(age >= age_student) return price_student;
+    else if(age >= age_school)  return price_school;
+    else                        return price_child;
 }
 
 function typeOf(age) {
-    if(age >= age_senior) {
-        return 'Honnørmedlem';
-    } else if(age >= age_main) {
-        return 'Hovedmedlem';
-    } else if(age >= age_student) {
-        return 'Student/ungdomsmedlem';
-    } else if(age >= age_school) {
-        return 'Skoleungdomsmedlem';
-    } else {
-        return 'Barnemedlem';
-    }
+    if(age >= age_senior)       return 'Honnørmedlem';
+    else if(age >= age_main)    return 'Hovedmedlem';
+    else if(age >= age_student) return 'Student/ungdomsmedlem';
+    else if(age >= age_school)  return 'Skoleungdomsmedlem';
+    else                        return 'Barnemedlem';
 }
