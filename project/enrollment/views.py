@@ -2,13 +2,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.conf import settings
+
 from user.models import Zipcode
 
 from datetime import datetime, timedelta
+import requests
 import re
+from lxml import etree
 
 KEY_PRICE = 100
 contact_missing_key = 'mangler-kontaktinfo'
+
+REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
+TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
+PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
@@ -135,7 +143,46 @@ def verification(request):
         'main': main}
     return render(request, 'enrollment/verification.html', context)
 
-# TODO: Remember to check that len(request.session['registration']['users']) > 0 when submitting step 3
+def payment(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if len(request.session['registration']['users']) == 0:
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+
+    r = requests.get(REGISTER_URL, params={
+        'merchantId': settings.NETS_MERCHANT_ID,
+        'token': settings.NETS_TOKEN,
+        'orderNumber': 'TBD',
+        'currencyCode': 'NOK',
+        'amount': 1,
+        'orderDescription': 'TBD',
+        'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result"))
+    })
+
+    request.session['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
+
+    return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+        TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
+    ))
+
+def result(request):
+    if request.GET['responseCode'] == 'OK':
+        r = requests.get(PROCESS_URL, params={
+            'merchantId': settings.NETS_MERCHANT_ID,
+            'token': settings.NETS_TOKEN,
+            'operation': 'SALE',
+            'transactionId': request.session['transaction_id']
+        })
+
+        dom = etree.fromstring(r.text)
+        code = dom.find(".//ResponseCode").text
+        if code == 'OK':
+            context = {'status': 'success'}
+        else:
+            context = {'status': 'fail'}
+    else:
+        context = {'status': 'cancel'}
+    return render(request, 'enrollment/result.html', context)
 
 def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location

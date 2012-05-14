@@ -107,7 +107,7 @@
 
   <p>
     <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
-    <button class="btn btn-success btn-large" onclick="alert('Du ble nå sendt til betalingssiden :)');">Til betaling <i class="icon-arrow-right"></i></button>
+    <a href="{% url enrollment.views.payment %}" class="btn btn-success btn-large">Til betaling <i class="icon-arrow-right"></i></a>
   </p>
 
 </div>

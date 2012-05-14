@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Bli medlem</h1>
+  </div>
+</div>
+
+{% if status == 'success' %}
+
+  <h2>Suksess</h2>
+
+{% elif status == 'fail' %}
+
+  <h2>Fail</h2>
+
+{% else %}
+
+  <h2>Cancel</h2>
+
+{% endif %}
+
+{% endblock %}
