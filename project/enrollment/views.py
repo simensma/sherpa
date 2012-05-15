@@ -215,13 +215,12 @@ def result(request):
             'operation': 'SALE',
             'transactionId': request.session['transaction_id']
         })
-
         dom = etree.fromstring(r.text)
         code = dom.find(".//ResponseCode").text
         if code == 'OK':
             context = {'status': 'success'}
         else:
-            context = {'status': 'fail'}
+            context = {'status': 'fail', 'message': dom.find(".//ResponseText").text}
     else:
         context = {'status': 'cancel'}
     return render(request, 'enrollment/result.html', context)
