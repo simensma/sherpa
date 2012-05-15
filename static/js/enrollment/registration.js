@@ -84,7 +84,7 @@ $(document).ready(function() {
             alert("Du kan ikke gå videre med mindre du har lest og godtatt betingelsene.");
             return;
         }
-        if($(this).hasClass('post')) {
+        if($(this).hasClass('post') || $("form#registration input[name='name']").val().length > 0) {
             e.preventDefault();
             $("form#registration").prepend('<input type="hidden" name="forward" value="1">').submit();
         }
