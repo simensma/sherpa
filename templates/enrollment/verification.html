@@ -61,6 +61,7 @@
           <td>
             <div class="desc">
               Navn:<br>
+              Kjønn:<br>
               Født:<br>
               {% if users|length == 1 and not existing %}
                 Adresse:<br><br>
@@ -70,6 +71,11 @@
             </div>
             <div class="data">
               {{ user.name }}<br>
+              {% if user.sex == 'm' %}
+                Mann
+              {% elif user.sex == 'f' %}
+                Kvinne
+              {% endif %}<br>
               {{ user.dob|date:"j. F Y" }}<br>
               {% if users|length == 1 and not existing %}
                 {{ address }}<br>

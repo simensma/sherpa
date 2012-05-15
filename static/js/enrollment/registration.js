@@ -97,3 +97,9 @@ function validateDatepicker() {
         $("form#registration div.control-group.dob").addClass('error');
     }
 }
+
+function validateSex() {
+    if($("from#registration input[name='sex']:checked").length == 0) {
+        $("form#registration div.control-group.sex").addClass('error');
+    }
+}
