@@ -99,6 +99,11 @@ table.registration-progress td.step.current {
     border-right: none !important;
 }
 
+table.registration-progress td.step.final {
+    color: white;
+    background: #d82a20 top right no-repeat;
+}
+
 span.asterisk {
     font-size: 120%;
     font-weight: bold;

@@ -14,9 +14,11 @@
         {% if step > 2 %}</a>{% endif %}
     </td>
     <td class="step{% if step == 3 %} current{% endif %}">
+        {% if step > 3 %}<a href="{% url enrollment.views.verification %}">{% endif %}
         Bekreftelse
+        {% if step > 3 %}</a>{% endif %}
     </td>
-    <td class="step{% if step == 4 %} current{% endif %}">
+    <td class="step{% if step == 4 %} final{% endif %}">
         Betaling
     </td>
     </tr>
