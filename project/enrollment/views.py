@@ -228,7 +228,7 @@ def result(request):
 
 def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location
-    return HttpResponse(str(location))
+    return HttpResponse(location)
 
 def updateIndices(request):
     i = 0
