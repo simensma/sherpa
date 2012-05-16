@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import Context, loader
 
-from user.models import Zipcode
+from user.models import Zipcode, FocusUser, FocusActType
 
 from datetime import datetime
 import requests
@@ -301,3 +301,37 @@ def price_of(age):
     elif age >= AGE_STUDENT: return PRICE_STUDENT
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
+
+def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email):
+    first_name = name.split(' ')[0]
+    last_name = ' '.join(name.split(' ')[1:])
+    gender = 'M' if gender == 'm' else 'K'
+    country = 'NO'
+    language = 'nb_no'
+    receive_yearbook = True # ???
+    yearbook = 152
+    type = focus_type_of(age, False) # Todo: set household True if household-member
+    pay_method = 4 # 4 = Card, 1 = invoice
+    price = price_of(age)
+
+    # Possible race condition here if other apps use these tables
+    # Transactions aren't used because:
+    # 1. Django ORM-level transactions didn't seem to work (rollback had no effect)
+    # 2. Raw execution *could* be used but avoids Djangos SQL-injection
+    seq = FocusActType.objects.get(type='P')
+    seq.next = seq.next + 7
+    seq.save()
+    user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
+        gender=gender, adr1=address, adr2='', adr3='', country=country, phone='', email=email,
+        receive_yearbook=receive_yearbook, type=type, yearbook=yearbook, pay_method=pay_method,
+        mob=phone, postnr=zip_code, poststed=city, language=language, totalprice=price, payed=True,
+        receive_email=True, receive_sms=True)
+    user.save()
+
+def focus_type_of(age, household):
+    if household:            return 107
+    elif age >= AGE_SENIOR:  return 103
+    elif age >= AGE_MAIN:    return 101
+    elif age >= AGE_STUDENT: return 102
+    elif age >= AGE_SCHOOL:  return 106
+    else:                    return 105
