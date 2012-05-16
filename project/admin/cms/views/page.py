@@ -36,7 +36,6 @@ def new(request):
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
     page_valid = not Page.objects.filter(slug=request.POST['slug']).exists()
-    print("Page valid er %s" % page_valid)
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 @login_required
@@ -86,11 +85,8 @@ def slug_is_unique(slug):
         slug = slug[:i]
     try:
         match = resolve('/%s%s' % (slug, '' if len(slug) == 0 else '/'))
-        print("Final string: %s" % '/%s%s' % (slug, '' if len(slug) == 0 else '/'))
-        print("Result: %s" % (match.url_name == 'page.views.page'))
         return match.url_name == 'page.views.page'
     except Resolver404:
-        print("%s 404!!" % slug)
         return True
 
 def create_template(template, version):
