@@ -10,6 +10,6 @@ class Router(object):
         return None
 
     def allow_syncdb(self, db, model):
-        if db == 'sherpa-2' or db == 'sherpa-2.5':
+        if db in ['sherpa-2', 'sherpa-2.5']:
             return False
         return None
