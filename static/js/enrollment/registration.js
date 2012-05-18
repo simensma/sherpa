@@ -47,7 +47,7 @@ $(document).ready(function() {
     });
 
     $("form#registration input[name='name']").focusout(function() {
-        if($(this).val() == "") {
+        if(!$(this).val().match(/.+\s.+/)) {
             $(this).parents("div.control-group").addClass('error');
         }
     });

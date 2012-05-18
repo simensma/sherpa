@@ -293,7 +293,7 @@ def updateIndices(session):
 
 def validate_user(user):
     # Name or address is empty
-    if user['name'] == '':
+    if len(re.findall('.+\s.+', user['name'])) == 0:
         return False
 
     # Gender is not set
