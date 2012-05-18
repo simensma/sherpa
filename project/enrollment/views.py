@@ -207,7 +207,8 @@ def payment(request):
             # The specified main-member index doesn't exist
             return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
     else:
-        # In this case, one or more members below student age are registered.
+        # In this case, one or more members below student age are registered,
+        # so no main/household status applies.
         for user in request.session['registration']['users']:
             user['household'] = False
             # Verify that all members are below student age
