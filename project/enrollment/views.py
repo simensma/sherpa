@@ -325,8 +325,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, adr1=address, adr2='', adr3='', country=country, phone='', email=email,
         receive_yearbook=receive_yearbook, type=type, yearbook=yearbook, pay_method=pay_method,
-        mob=phone, postnr=zip_code, poststed=city, language=language, totalprice=price, payed=True,
-        receive_email=True, receive_sms=True)
+        mob=phone, postnr=zip_code, poststed=city, language=language, totalprice=price, payed=True)
     user.save()
 
 def focus_type_of(age, household):
