@@ -245,13 +245,12 @@ def validate_user(user):
     if user.get('sex', '') != 'm' and user.get('sex', '') != 'f':
         return False
 
-    # Phone no. is non-empty (empty is allowed) and less than 8 chars
-    # (allow >8, in case it's formatted with whitespace)
-    if len(user['phone']) > 0 and len(user['phone']) < 8:
+    # Check phone number only if supplied
+    if len(user['phone']) > 0 and not validate_phone(user['phone']):
         return False
 
     # Email is non-empty (empty is allowed) and doesn't match an email
-    if(user['email'] != '' and len(re.findall('.+@.+\..+', user['email'])) == 0):
+    if user['email'] != '' and not validate_email(user['email']):
         return False
 
     # Date of birth is not valid format (%d.%m.%Y)
@@ -284,16 +283,18 @@ def validate_location(address, zipcode):
 # Check that at least one member has valid phone and email
 def validate_user_contact(users):
     for user in users:
-        # Phone no. is less than 8 chars (allow >8, in case it's formatted with whitespace)
-        if len(user['phone']) < 8:
-            continue
-
-        # Email is doesn't match an email
-        if(len(re.findall('.+@.+\..+', user['email'])) == 0):
-            continue
-
-        return True
+        if validate_phone(user['phone']) and validate_email(user['email']):
+            return True
     return False
+
+def validate_phone(phone):
+    # Phone no. is non-empty (empty is allowed) and less than 8 chars
+    # (allow >8, in case it's formatted with whitespace)
+    return len(phone) >= 8
+
+def validate_email(email):
+    # Email matches anything@anything.anything
+    return len(re.findall('.+@.+\..+', email)) > 0
 
 def price_of(age):
     if age >= AGE_SENIOR:    return PRICE_SENIOR
