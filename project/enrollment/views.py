@@ -138,7 +138,8 @@ def verification(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
-    request.session['registration']['existing'] = request.POST.get('existing', '')
+    if request.POST.has_key('existing'):
+        request.session['registration']['existing'] = request.POST['existing']
     request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
 
     now = datetime.now()
