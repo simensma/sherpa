@@ -197,7 +197,7 @@ def payment(request):
         year = now.year
 
     t = loader.get_template('enrollment/payment-terminal.html')
-    c = Context({'year': year, 'sum': sum})
+    c = Context({'year': year})
     desc = t.render(c)
 
     r = requests.get(REGISTER_URL, params={
