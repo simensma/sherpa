@@ -65,7 +65,7 @@ $(document).ready(function() {
     });
 
     $("form#registration input[name='phone']").focusout(function() {
-        if($(this).val() != "" && $(this).val().length < 8) {
+        if($(this).val() != "" && ($(this).val().length < 8 || $(this).val().match(/[a-z]/i))) {
             $(this).parents("div.control-group").addClass('error');
         }
     });

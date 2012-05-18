@@ -290,7 +290,7 @@ def validate_user_contact(users):
 def validate_phone(phone):
     # Phone no. is non-empty (empty is allowed) and less than 8 chars
     # (allow >8, in case it's formatted with whitespace)
-    return len(phone) >= 8
+    return len(phone) >= 8 and len(re.findall('[a-z]', phone, re.I)) == 0
 
 def validate_email(email):
     # Email matches anything@anything.anything
