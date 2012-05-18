@@ -264,7 +264,7 @@ def payment(request):
         'currencyCode': 'NOK',
         'amount': sum * 100,
         'orderDescription': desc,
-        'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result"))
+        'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result", kwargs={'invoice': False}))
     })
 
     # Sweet, almost done, now just send the user to complete the transaction
