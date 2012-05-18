@@ -143,10 +143,8 @@ def verification(request):
     request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
 
     now = datetime.now()
-    if now.month >= MONTH_THRESHOLD:
-        year = "%s, samt ut %s" % (now.year + 1, now.year)
-    else:
-        year = now.year
+    year = now.year
+    next_year = now.month >= MONTH_THRESHOLD
 
     keycount = 0
     student_or_older_count = 0
@@ -168,11 +166,11 @@ def verification(request):
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main, 'year': year, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
-        'price_senior': PRICE_SENIOR, 'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL,
-        'price_child': PRICE_CHILD, 'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN,
-        'age_student': AGE_STUDENT, 'age_school': AGE_SCHOOL,
-        'invalid_main_member': request.GET.has_key(invalid_main_member_key)}
+        'main': main, 'year': year, 'next_year': next_year, 'price_main': PRICE_MAIN,
+        'price_household': PRICE_HOUSEHOLD, 'price_senior': PRICE_SENIOR,
+        'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL, 'price_child': PRICE_CHILD,
+        'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
+        'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key)}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
@@ -194,13 +192,11 @@ def payment(request):
         sum += price_of(user['age'], household)
 
     now = datetime.now()
-    if now.month >= MONTH_THRESHOLD:
-        year = "%s, samt ut %s" % (now.year + 1, now.year)
-    else:
-        year = now.year
+    year = now.year
+    next_year = now.month >= MONTH_THRESHOLD
 
     t = loader.get_template('enrollment/payment-terminal.html')
-    c = Context({'year': year})
+    c = Context({'year': year, 'next_year': next_year})
     desc = t.render(c)
 
     r = requests.get(REGISTER_URL, params={

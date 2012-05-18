@@ -2,5 +2,5 @@
 
 <p>
   Medlemsskap i Den Norske Turistforening<br>
-  Gjelder for: <span style="font-weight: bold;">{{ year }}</span>
+  Gjelder for: <span style="font-weight: bold;">{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</span>
 </p>

@@ -137,7 +137,7 @@
   </p>
   {% endif %}
 
-  <p>Medlemsskapet vil gjelde for <strong>{{ year }}</strong>.</p>
+  <p>Medlemsskapet vil gjelde for <strong>{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</strong>.</p>
 
   <form id="payment" action="{% url enrollment.views.payment %}" method="post">
     {% csrf_token %}
