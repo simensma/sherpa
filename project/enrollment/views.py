@@ -303,8 +303,8 @@ def price_of(age):
     else:                    return PRICE_CHILD
 
 def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email):
-    first_name = name.split(' ')[0]
-    last_name = ' '.join(name.split(' ')[1:])
+    first_name = ' '.join(name.split(' ')[:-1])
+    last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
     country = 'NO'
     language = 'nb_no'
