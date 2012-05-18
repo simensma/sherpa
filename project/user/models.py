@@ -26,7 +26,7 @@ class FocusUser(models.Model):
     first_name = models.CharField(db_column=u'Firstname', max_length=255)
     dob = models.DateTimeField(db_column=u'Birthdate')
     gender = models.CharField(db_column=u'Gender', max_length=1, choices=(('M', 'Mann'), ('K', 'Kvinne')))
-    linked_to = models.CharField(db_column=u'LinkedTo', max_length=255, default='')
+    linked_to = models.CharField(db_column=u'LinkedTo', max_length=255)
     enlisted_by = models.CharField(db_column=u'EnlistedBy', max_length=255, default=0)
     enlisted_article = models.CharField(db_column=u'EnlistedArticle', max_length=255, default=None)
     adr1 = models.CharField(db_column=u'Adr1', max_length=255)

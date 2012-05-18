@@ -26,6 +26,17 @@
 {% include 'enrollment/progress.html' with step=3 %}
 
 <div class="row">
+
+  {% if invalid_main_member %}
+  <div class="offset3 span6">
+    <div class="alert alert-error">
+      <a class="close">x</a>
+      <strong><i class="icon-warning-sign"></i> Ugyldig hovedmedlem</strong><br>
+      En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+    </div>
+  </div>
+  {% endif %}
+
 <div class="offset2 span8">
   <h2>Registrerte opplysninger</h2>
   <table class="table prices">
@@ -128,9 +139,14 @@
 
   <p>Medlemsskapet vil gjelde for <strong>{{ year }}</strong>.</p>
 
+  <form id="payment" action="{% url enrollment.views.payment %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="main-member" value="">
+  </form>
+
   <p>
     <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
-    <a href="{% url enrollment.views.payment %}" class="btn btn-success btn-large">Til betaling <i class="icon-arrow-right"></i></a>
+    <a href="javascript:undefined" class="btn btn-success btn-large payment">Til betaling <i class="icon-arrow-right"></i></a>
   </p>
 
 </div>

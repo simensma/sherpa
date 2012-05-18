@@ -77,6 +77,15 @@ $(document).ready(function() {
         calculatePrices();
     });
 
+    $("a.payment").click(function() {
+        var form = $("form#payment");
+        var main = $("table.prices tr.main");
+        if(main.attr('data-index') !== undefined) {
+            form.find("input[name='main-member']").val(main.attr('data-index'));
+        }
+        form.submit();
+    });
+
 });
 
 function orderListByAge() {

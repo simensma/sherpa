@@ -18,6 +18,7 @@ MONTH_THRESHOLD = 10
 
 KEY_PRICE = 100
 contact_missing_key = 'mangler-kontaktinfo' # GET parameter used for error handling
+invalid_main_member_key = 'ugyldig-hovedmedlem' # GET parameter used for error handling
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -169,7 +170,8 @@ def verification(request):
         'main': main, 'year': year, 'price_main': PRICE_MAIN, 'price_household': PRICE_HOUSEHOLD,
         'price_senior': PRICE_SENIOR, 'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL,
         'price_child': PRICE_CHILD, 'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN,
-        'age_student': AGE_STUDENT, 'age_school': AGE_SCHOOL}
+        'age_student': AGE_STUDENT, 'age_school': AGE_SCHOOL,
+        'invalid_main_member': request.GET.has_key(invalid_main_member_key)}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
@@ -177,6 +179,12 @@ def payment(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    # Check that the requested main member is student-member or older.
+    # This will (hopefully) only invalidate if someone manually "hacks" the post request.
+    if request.session['registration']['existing'] == '':
+        main = request.session['registration']['users'][int(request.POST['main-member'])]
+        if main['age'] < AGE_STUDENT:
+            return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
 
     sum = 0
     for user in request.session['registration']['users']:
@@ -304,7 +312,7 @@ def price_of(age):
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
 
-def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email):
+def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, main_member):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -315,6 +323,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     type = focus_type_of(age, False) # Todo: set household True if household-member
     pay_method = 4 # 4 = Card, 1 = invoice
     price = price_of(age)
+    main_member = '' if main_member == None else str(main_member)
 
     # Possible race condition here if other apps use these tables
     # Transactions aren't used because:
@@ -324,9 +333,10 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     seq.next = seq.next + 7
     seq.save()
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
-        gender=gender, adr1=address, adr2='', adr3='', country=country, phone='', email=email,
-        receive_yearbook=receive_yearbook, type=type, yearbook=yearbook, pay_method=pay_method,
-        mob=phone, postnr=zip_code, poststed=city, language=language, totalprice=price, payed=True)
+        gender=gender, linked_to=main_member, adr1=address, adr2='', adr3='', country=country,
+        phone='', email=email, receive_yearbook=receive_yearbook, type=type, yearbook=yearbook,
+        pay_method=pay_method, mob=phone, postnr=zip_code, poststed=city, language=language,
+        totalprice=price, payed=True)
     user.save()
 
 def focus_type_of(age, household):
