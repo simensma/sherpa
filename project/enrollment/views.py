@@ -273,6 +273,11 @@ def result(request):
         dom = etree.fromstring(r.text)
         code = dom.find(".//ResponseCode").text
         if code == 'OK':
+            # Register the payment in focus
+            for user in request.session['registration']['users']:
+                focus_user = FocusUser.objects.get(member_id=user['id'])
+                focus_user.payed = True
+                focus_user.save()
             context = {'status': 'success'}
         else:
             context = {'status': 'fail', 'message': dom.find(".//ResponseText").text}
