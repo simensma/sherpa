@@ -45,7 +45,7 @@ class FocusUser(models.Model):
     poststed = models.CharField(db_column=u'Poststed', max_length=255)
     language = models.CharField(max_length=255)
     totalprice = models.FloatField(db_column=u'TotalPrice')
-    payed = models.BooleanField(db_column=u'Payed')
+    payed = models.BooleanField(db_column=u'Payed', default=False)
     reg_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
     receive_email = models.BooleanField(db_column=u'ReceiveEmail', default=True)
     receive_sms = models.BooleanField(db_column=u'ReceiveSms', default=True)

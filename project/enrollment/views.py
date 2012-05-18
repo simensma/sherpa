@@ -388,7 +388,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
         gender=gender, linked_to=linked_to, adr1=address, adr2='', adr3='', country=country,
         phone='', email=email, receive_yearbook=receive_yearbook, type=type, yearbook=yearbook,
         pay_method=pay_method, mob=phone, postnr=zip_code, poststed=city, language=language,
-        totalprice=price, payed=True)
+        totalprice=price)
     user.save()
     return seq.next
 
