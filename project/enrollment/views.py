@@ -17,8 +17,12 @@ from lxml import etree
 MONTH_THRESHOLD = 10
 
 KEY_PRICE = 100
-contact_missing_key = 'mangler-kontaktinfo' # GET parameter used for error handling
-invalid_main_member_key = 'ugyldig-hovedmedlem' # GET parameter used for error handling
+
+# GET parameters used for error handling
+contact_missing_key = 'mangler-kontaktinfo'
+invalid_main_member_key = 'ugyldig-hovedmedlem'
+nonexistent_main_member_key = 'ikke-eksisterende-hovedmedlem'
+no_main_member_key = 'mangler-hovedmedlem'
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -170,7 +174,9 @@ def verification(request):
         'price_household': PRICE_HOUSEHOLD, 'price_senior': PRICE_SENIOR,
         'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL, 'price_child': PRICE_CHILD,
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
-        'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key)}
+        'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
+        'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
+        'no_main_member': request.GET.has_key(no_main_member_key)}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
@@ -178,18 +184,37 @@ def payment(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    # Check that the requested main member is student-member or older.
-    # This will (hopefully) only invalidate if someone manually "hacks" the post request.
-    if request.session['registration']['existing'] == '':
-        main = request.session['registration']['users'][int(request.POST['main-member'])]
-        if main['age'] < AGE_STUDENT:
-            return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
+
+    # Figure out who's a household-member and who's not
+    if request.session['registration']['existing'] != '':
+        # If a pre-existing main member is specified, everyone is household
+        for user in request.session['registration']['users']:
+            user['household'] = True
+    elif request.POST['main-member'] != '':
+        # If the user specified someone, everyone except that member is household
+        for user in request.session['registration']['users']:
+            hit = False
+            if user['index'] == request.POST['main-member']:
+                if user['age'] < AGE_STUDENT:
+                    return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
+                user['household'] = False
+                hit = True
+            else:
+                user['household'] = True
+            if not hit:
+                # The specified main-member index doesn't exist
+                return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
+    else:
+        # In this case, one or more members below student age are registered.
+        for user in request.session['registration']['users']:
+            user['household'] = False
+            # Verify that all members are below student age
+            if user['age'] >= AGE_STUDENT:
+                return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
 
     sum = 0
-    existing = request.session['registration']['existing'] != ''
     for user in request.session['registration']['users']:
-        household = existing or int(request.POST['main-member']) != user['index']
-        sum += price_of(user['age'], household)
+        sum += price_of(user['age'], user['household'])
 
     now = datetime.now()
     year = now.year

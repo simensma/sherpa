@@ -37,6 +37,26 @@
   </div>
   {% endif %}
 
+  {% if no_main_member %}
+  <div class="offset3 span6">
+    <div class="alert alert-error">
+      <a class="close">x</a>
+      <strong><i class="icon-warning-sign"></i> Mangler hovedmedlem</strong><br>
+      En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn studentmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+    </div>
+  </div>
+  {% endif %}
+
+  {% if nonexistent_main_member %}
+  <div class="offset3 span6">
+    <div class="alert alert-error">
+      <a class="close">x</a>
+      <strong><i class="icon-warning-sign"></i> Ikke-eksisterende hovedmedlem</strong><br>
+      En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+    </div>
+  </div>
+  {% endif %}
+
 <div class="offset2 span8">
   <h2>Registrerte opplysninger</h2>
   <table class="table prices">
