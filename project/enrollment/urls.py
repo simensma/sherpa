@@ -2,7 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('enrollment.views',
     url(r'^$', 'index'),
-    url(r'^medlemsskap/$', 'types'),
+    url(r'^medlemskap/$', 'types'),
     url(r'^betingelser/$', 'conditions'),
     url(r'^registrering/$', 'registration', {'user': None}),
     url(r'^registrering/(?P<user>\d+)/$', 'registration'),
