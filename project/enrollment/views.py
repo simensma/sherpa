@@ -235,6 +235,7 @@ def updateIndices(request):
     for user in request.session['registration']['users']:
         user['index'] = i
         i += 1
+    request.session.modified = True
 
 def validate_user(user):
     # Name or address is empty
