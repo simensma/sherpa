@@ -203,9 +203,9 @@ def payment(request):
                 main = user
             else:
                 user['household'] = True
-            if main == None:
-                # The specified main-member index doesn't exist
-                return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
+        if main == None:
+            # The specified main-member index doesn't exist
+            return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
     else:
         # In this case, one or more members below student age are registered.
         for user in request.session['registration']['users']:
