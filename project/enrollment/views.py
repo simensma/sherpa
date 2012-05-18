@@ -245,6 +245,8 @@ def payment(request):
     sum = 0
     for user in request.session['registration']['users']:
         sum += price_of(user['age'], user['household'])
+        if user.has_key('key'):
+            sum += KEY_PRICE
 
     now = datetime.now()
     year = now.year
