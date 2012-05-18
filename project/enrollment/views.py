@@ -196,7 +196,7 @@ def payment(request):
     elif request.POST['main-member'] != '':
         # If the user specified someone, everyone except that member is household
         for user in request.session['registration']['users']:
-            if user['index'] == request.POST['main-member']:
+            if user['index'] == int(request.POST['main-member']):
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
                 user['household'] = False
