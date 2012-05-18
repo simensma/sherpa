@@ -10,7 +10,8 @@ urlpatterns = patterns('enrollment.views',
     url(r'^husstand/$', 'household'),
     url(r'^verifisering/$', 'verification'),
     url(r'^betaling/$', 'payment'),
-    url(r'^resultat/$', 'result'),
+    url(r'^resultat/$', 'result', {'invoice': False}),
+    url(r'^resultat/faktura/$', 'result', {'invoice': True}),
 
     # Zip codes
     url(r'^stedsnavn/(?P<code>\d+)/$', 'zipcode'),

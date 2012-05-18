@@ -23,6 +23,7 @@ contact_missing_key = 'mangler-kontaktinfo'
 invalid_main_member_key = 'ugyldig-hovedmedlem'
 nonexistent_main_member_key = 'ikke-eksisterende-hovedmedlem'
 no_main_member_key = 'mangler-hovedmedlem'
+invalid_payment_method = 'ugyldig-betalingsmetode'
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -176,7 +177,8 @@ def verification(request):
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
-        'no_main_member': request.GET.has_key(no_main_member_key)}
+        'no_main_member': request.GET.has_key(no_main_member_key),
+        'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
@@ -184,6 +186,8 @@ def payment(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if request.POST.get('payment-method', '') != 'card' and request.POST.get('payment-method', '') != 'invoice':
+        return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_payment_method))
 
     # Figure out who's a household-member, who's not, and who's the main member
     main = None
@@ -220,7 +224,8 @@ def payment(request):
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['registration']['address'], request.session['registration']['zipcode'],
-            request.session['registration']['location'], main['phone'], main['email'], None)
+            request.session['registration']['location'], main['phone'], main['email'], None,
+            request.POST['payment-method'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -229,9 +234,14 @@ def payment(request):
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['address'], request.session['registration']['zipcode'],
-            request.session['registration']['location'], user['phone'], user['email'], linked_to)
+            request.session['registration']['location'], user['phone'], user['email'], linked_to,
+            request.POST['payment-method'])
 
-    # Cool. Calculate the order details
+    # Cool. If we're paying by invoice, just forward to result page
+    if request.POST['payment-method'] == 'invoice':
+        return HttpResponseRedirect(reverse('enrollment.views.result', kwargs={'invoice': True}))
+
+    # Paying with card. Calculate the order details
     sum = 0
     for user in request.session['registration']['users']:
         sum += price_of(user['age'], user['household'])
@@ -263,8 +273,10 @@ def payment(request):
         TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
     ))
 
-def result(request):
-    if request.GET['responseCode'] == 'OK':
+def result(request, invoice):
+    if invoice:
+        context = {'status': 'invoice'}
+    elif request.GET['responseCode'] == 'OK':
         r = requests.get(PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
             'token': settings.NETS_TOKEN,
@@ -370,7 +382,7 @@ def price_of_age(age):
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
 
-def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, linked_to):
+def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, linked_to, payment_method):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -379,7 +391,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     receive_yearbook = True # ???
     yearbook = 152
     type = focus_type_of(age, linked_to != None)
-    pay_method = 4 # 4 = Card, 1 = invoice
+    payment_method = focus_payment_method_code(payment_method)
     price = price_of(age, linked_to != None)
     linked_to = '' if linked_to == None else str(linked_to)
 
@@ -393,10 +405,14 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=address, adr2='', adr3='', country=country,
         phone='', email=email, receive_yearbook=receive_yearbook, type=type, yearbook=yearbook,
-        pay_method=pay_method, mob=phone, postnr=zip_code, poststed=city, language=language,
+        payment_method=payment_method, mob=phone, postnr=zip_code, poststed=city, language=language,
         totalprice=price)
     user.save()
     return seq.next
+
+def focus_payment_method_code(method):
+    if method == 'card':      return 4
+    elif method == 'invoice': return 1
 
 def focus_type_of(age, household):
     if household and age >= AGE_MAIN and age < AGE_SENIOR:

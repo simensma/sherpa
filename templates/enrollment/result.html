@@ -14,6 +14,10 @@
 
   <h2>Suksess</h2>
 
+{% elif status == 'invoice' %}
+
+  <h2>Faktura</h2>
+
 {% elif status == 'fail' %}
 
   <h2>Fail</h2>
@@ -22,7 +26,7 @@
     Feilmelding oppgitt av nettbetalingssystemet: <strong>{{ message }}</strong>
   </p>
 
-{% else %}
+{% elif status == 'cancel' %}
 
   <h2>Cancel</h2>
 

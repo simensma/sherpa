@@ -57,6 +57,16 @@
   </div>
   {% endif %}
 
+  {% if invalid_payment_method %}
+  <div class="offset3 span6">
+    <div class="alert alert-error">
+      <a class="close">x</a>
+      <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
+      Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+    </div>
+  </div>
+  {% endif %}
+
 <div class="offset2 span8">
   <h2>Registrerte opplysninger</h2>
   <table class="table prices">
@@ -151,6 +161,22 @@
     </tfoot>
   </table>
 
+  <form id="payment" action="{% url enrollment.views.payment %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="main-member" value="">
+    <div class="control-group payment-method">
+      <label> Velg betalingsmåte:</label>
+      <input type="radio" name="payment-method" value="card" checked> VISA / MASTERCARD<br>
+      <input type="radio" name="payment-method" value="invoice"> Få tilsendt faktura
+    </div>
+  </form>
+
+  <div class="alert alert-warning invoice-info">
+    <a class="close">x</a>
+    <strong><i class="icon-info-sign"></i> Med faktura blir du ikke medlem før du har betalt</strong><br>
+    Om du ønsker å motta medlemsnummer med en gang, må du betale online med bankkort. Hvis ikke blir du ikke registrert medlem før fakturaen blir betalt.
+  </div>
+
   {% if multiple_main and not existing %}
   <p>
     <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være minst {{ age_student }} år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
@@ -158,11 +184,6 @@
   {% endif %}
 
   <p>Medlemsskapet vil gjelde for <strong>{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</strong>.</p>
-
-  <form id="payment" action="{% url enrollment.views.payment %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="main-member" value="">
-  </form>
 
   <p>
     <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>

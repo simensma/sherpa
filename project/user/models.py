@@ -38,7 +38,7 @@ class FocusUser(models.Model):
     receive_yearbook = models.BooleanField(db_column=u'ReceiveYearbook')
     type = models.FloatField(db_column=u'Type')
     yearbook = models.CharField(db_column=u'Yearbook', max_length=255)
-    pay_method = models.FloatField(db_column=u'Paymethod')
+    payment_method = models.FloatField(db_column=u'Paymethod')
     contract_giro = models.BooleanField(db_column=u'ContractGiro', default=False)
     mob = models.CharField(db_column=u'Mob', max_length=255)
     postnr = models.CharField(db_column=u'Postnr', max_length=255)
