@@ -99,7 +99,7 @@ function validateDatepicker() {
 }
 
 function validateSex() {
-    if($("from#registration input[name='sex']:checked").length == 0) {
+    if($("form#registration input[name='sex']:checked").length == 0) {
         $("form#registration div.control-group.sex").addClass('error');
     }
 }
