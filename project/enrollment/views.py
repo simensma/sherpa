@@ -147,18 +147,18 @@ def verification(request):
         year = now.year
 
     keycount = 0
-    over_18 = 0
+    student_or_older_count = 0
     main = None
     for user in request.session['registration']['users']:
-        if(main == None or (user['age'] < main['age'] and user['age'] > 18)):
+        if(main == None or (user['age'] < main['age'] and user['age'] >= AGE_STUDENT)):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
-        if(user['age'] > 18):
-            over_18 += 1
+        if(user['age'] >= AGE_STUDENT):
+            student_or_older_count += 1
         if user.has_key('key'):
             keycount += 1
     keyprice = keycount * KEY_PRICE
-    multiple_main = over_18 > 1
+    multiple_main = student_or_older_count > 1
     updateIndices(request)
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],

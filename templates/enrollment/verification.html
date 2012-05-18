@@ -49,13 +49,13 @@
       {% endif %}
       {% for user in users %}
         <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
-          {% if multiple_main and not existing and user.age > 18 %}
+          {% if multiple_main and not existing and user.age >= age_student %}
             <td class="choose-main">
               <button class="btn main">Velg</button>
               <span class="main">Hovedmedlem</span>
             </td>
           {% endif %}
-          {% if multiple_main and not existing and user.age <= 18 %}
+          {% if multiple_main and not existing and user.age < age_student %}
             <td></td>
           {% endif %}
           <td>
@@ -122,7 +122,7 @@
 
   {% if multiple_main and not existing %}
   <p>
-    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være over 18 år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være minst {{ age_student }} år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
   </p>
   {% endif %}
 
