@@ -185,23 +185,25 @@ def payment(request):
     if len(request.session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
-    # Figure out who's a household-member and who's not
+    # Figure out who's a household-member, who's not, and who's the main member
+    main = None
+    linked_to = None
     if request.session['registration']['existing'] != '':
         # If a pre-existing main member is specified, everyone is household
         for user in request.session['registration']['users']:
             user['household'] = True
+        linked_to = request.session['registration']['existing']
     elif request.POST['main-member'] != '':
         # If the user specified someone, everyone except that member is household
         for user in request.session['registration']['users']:
-            hit = False
             if user['index'] == request.POST['main-member']:
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
                 user['household'] = False
-                hit = True
+                main = user
             else:
                 user['household'] = True
-            if not hit:
+            if main == None:
                 # The specified main-member index doesn't exist
                 return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
     else:
@@ -212,6 +214,23 @@ def payment(request):
             if user['age'] >= AGE_STUDENT:
                 return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
 
+    # Ok. We need the memberID of the main user, so add that user and generate its ID
+    if main != None:
+        # Note, main will always be None when an existing main member is specified
+        main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
+            request.session['registration']['address'], request.session['registration']['zipcode'],
+            request.session['registration']['location'], main['phone'], main['email'], None)
+        linked_to = main['id']
+
+    # Right, let's add the rest of them
+    for user in request.session['registration']['users']:
+        if user == main:
+            continue
+        user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
+            request.session['registration']['address'], request.session['registration']['zipcode'],
+            request.session['registration']['location'], user['phone'], user['email'], linked_to)
+
+    # Cool. Calculate the order details
     sum = 0
     for user in request.session['registration']['users']:
         sum += price_of(user['age'], user['household'])
@@ -224,6 +243,7 @@ def payment(request):
     c = Context({'year': year, 'next_year': next_year})
     desc = t.render(c)
 
+    # Send the transaction registration to Nets
     r = requests.get(REGISTER_URL, params={
         'merchantId': settings.NETS_MERCHANT_ID,
         'token': settings.NETS_TOKEN,
@@ -234,7 +254,9 @@ def payment(request):
         'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result"))
     })
 
+    # Sweet, almost done, now just send the user to complete the transaction
     request.session['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
+    request.session.modified = True
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
         TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
@@ -368,6 +390,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
         pay_method=pay_method, mob=phone, postnr=zip_code, poststed=city, language=language,
         totalprice=price, payed=True)
     user.save()
+    return seq.next
 
 def focus_type_of(age, household):
     if household and age >= AGE_MAIN and age < AGE_SENIOR:
