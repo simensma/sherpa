@@ -66,7 +66,7 @@ def registration(request, user):
             new_user['name'] = request.POST['name']
         new_user['phone'] = request.POST['phone']
         new_user['email'] = request.POST['email'].lower()
-        new_user['sex'] = request.POST.get('sex', '')
+        new_user['gender'] = request.POST.get('gender', '')
         # Same capitalization on address as for name
         if request.POST['address'].islower() or request.POST['address'].isupper():
             request.session['registration']['address'] = request.POST['address'].title()
@@ -252,8 +252,8 @@ def validate_user(user):
     if user['name'] == '':
         return False
 
-    # Sex is not set
-    if user.get('sex', '') != 'm' and user.get('sex', '') != 'f':
+    # Gender is not set
+    if user.get('gender', '') != 'm' and user.get('gender', '') != 'f':
         return False
 
     # Check phone number only if supplied

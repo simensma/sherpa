@@ -16,7 +16,7 @@
   $(document).ready(function() {
     $("form#registration input").focusout();
     validateDatepicker();
-    validateSex();
+    validateGender();
   });
 </script>
 {% endif %}
@@ -56,10 +56,10 @@
     <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
     <input type="text" class="span2 dob" name="dob" value="{{ user.dob|date:"d.m.Y" }}">
   </div>
-  <div class="control-group sex">
+  <div class="control-group gender">
     <label> Kjønn <span class="asterisk red">*</span></label>
-    <input type="radio" name="sex" value="f"{% if user.sex == 'f' %} checked{% endif %}> Kvinne
-    <input type="radio" name="sex" value="m"{% if user.sex == 'm' %} checked{% endif %}> Mann
+    <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
+    <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
   </div>
   <div class="address">
     <div class="control-group address">

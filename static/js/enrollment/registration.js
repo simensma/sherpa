@@ -98,8 +98,8 @@ function validateDatepicker() {
     }
 }
 
-function validateSex() {
-    if($("form#registration input[name='sex']:checked").length == 0) {
-        $("form#registration div.control-group.sex").addClass('error');
+function validateGender() {
+    if($("form#registration input[name='gender']:checked").length == 0) {
+        $("form#registration div.control-group.gender").addClass('error');
     }
 }

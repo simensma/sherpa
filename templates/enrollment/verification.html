@@ -82,9 +82,9 @@
             </div>
             <div class="data">
               {{ user.name }}<br>
-              {% if user.sex == 'm' %}
+              {% if user.gender == 'm' %}
                 Mann
-              {% elif user.sex == 'f' %}
+              {% elif user.gender == 'f' %}
                 Kvinne
               {% endif %}<br>
               {{ user.dob|date:"j. F Y" }}<br>
