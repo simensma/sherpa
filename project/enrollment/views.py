@@ -187,8 +187,10 @@ def payment(request):
             return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
 
     sum = 0
+    existing = request.session['registration']['existing'] != ''
     for user in request.session['registration']['users']:
-        sum += price_of(user['age'])
+        household = existing or int(request.POST['main-member']) != user['index']
+        sum += price_of(user['age'], household)
 
     now = datetime.now()
     if now.month >= MONTH_THRESHOLD:
@@ -305,14 +307,20 @@ def validate_email(email):
     # Email matches anything@anything.anything
     return len(re.findall('.+@.+\..+', email)) > 0
 
-def price_of(age):
+def price_of(age, household):
+    if household:
+        return min(price_of_age(age), PRICE_HOUSEHOLD)
+    else:
+        return price_of_age(age)
+
+def price_of_age(age):
     if age >= AGE_SENIOR:    return PRICE_SENIOR
     elif age >= AGE_MAIN:    return PRICE_MAIN
     elif age >= AGE_STUDENT: return PRICE_STUDENT
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
 
-def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, main_member):
+def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, linked_to):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -320,10 +328,10 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     language = 'nb_no'
     receive_yearbook = True # ???
     yearbook = 152
-    type = focus_type_of(age, False) # Todo: set household True if household-member
+    type = focus_type_of(age, linked_to != None)
     pay_method = 4 # 4 = Card, 1 = invoice
-    price = price_of(age)
-    main_member = '' if main_member == None else str(main_member)
+    price = price_of(age, linked_to != None)
+    linked_to = '' if linked_to == None else str(linked_to)
 
     # Possible race condition here if other apps use these tables
     # Transactions aren't used because:
@@ -333,7 +341,7 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     seq.next = seq.next + 7
     seq.save()
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
-        gender=gender, linked_to=main_member, adr1=address, adr2='', adr3='', country=country,
+        gender=gender, linked_to=linked_to, adr1=address, adr2='', adr3='', country=country,
         phone='', email=email, receive_yearbook=receive_yearbook, type=type, yearbook=yearbook,
         pay_method=pay_method, mob=phone, postnr=zip_code, poststed=city, language=language,
         totalprice=price, payed=True)
