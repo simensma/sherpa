@@ -345,7 +345,8 @@ def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email
     user.save()
 
 def focus_type_of(age, household):
-    if household:            return 107
+    if household and age >= AGE_MAIN and age < AGE_SENIOR:
+                             return 107
     elif age >= AGE_SENIOR:  return 103
     elif age >= AGE_MAIN:    return 101
     elif age >= AGE_STUDENT: return 102
