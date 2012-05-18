@@ -11,7 +11,7 @@
   <div class="offset2 span8">
     <form action="{% url enrollment.views.verification %}" method="post">
       {% csrf_token %}
-      <p>Bor {% if users|length > 1 %}dere{% else %}du{% endif %} på samme adresse som et eksisterende medlem?</p>
+      <p>Bor {% if users|length > 1 %}dere{% else %}du{% endif %} på samme adresse som et <strong>eksisterende</strong> medlem?</p>
       <div class="well">
         I så fall, hvem bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med?<br>
         <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer..."><br>
