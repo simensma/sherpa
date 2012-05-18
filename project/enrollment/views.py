@@ -99,7 +99,7 @@ def registration(request, user):
             saved = True
 
     contact_missing = request.GET.has_key(contact_missing_key)
-    updateIndices(request)
+    updateIndices(request.session)
 
     if not errors and request.POST.has_key('forward'):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
@@ -126,7 +126,7 @@ def household(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
-    updateIndices(request)
+    updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
         'existing': request.session['registration'].get('existing', '')}
     return render(request, 'enrollment/household.html', context)
@@ -160,7 +160,7 @@ def verification(request):
             keycount += 1
     keyprice = keycount * KEY_PRICE
     multiple_main = student_or_older_count > 1
-    updateIndices(request)
+    updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
@@ -240,12 +240,12 @@ def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location
     return HttpResponse(location)
 
-def updateIndices(request):
+def updateIndices(session):
     i = 0
-    for user in request.session['registration']['users']:
+    for user in session['registration']['users']:
         user['index'] = i
         i += 1
-    request.session.modified = True
+    session.modified = True
 
 def validate_user(user):
     # Name or address is empty
