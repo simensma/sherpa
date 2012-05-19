@@ -8,47 +8,6 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'Visitor'
-        db.create_table('analytics_visitor', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['user.Profile'], unique=True, null=True)),
-        ))
-        db.send_create_signal('analytics', ['Visitor'])
-
-        # Adding model 'Request'
-        db.create_table('analytics_request', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('visitor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['analytics.Visitor'])),
-            ('http_method', self.gf('django.db.models.fields.CharField')(max_length=10)),
-            ('path', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-            ('server_host', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-            ('client_ip', self.gf('django.db.models.fields.CharField')(max_length=39)),
-            ('client_host', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-            ('referrer', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-            ('enter', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('analytics', ['Request'])
-
-        # Adding model 'Parameter'
-        db.create_table('analytics_parameter', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('request', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['analytics.Request'])),
-            ('key', self.gf('django.db.models.fields.TextField')()),
-            ('value', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('analytics', ['Parameter'])
-
-        # Adding model 'Pageview'
-        db.create_table('analytics_pageview', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('request', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['analytics.Request'], unique=True)),
-            ('variant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['page.PageVariant'])),
-            ('active_version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['page.PageVersion'])),
-            ('requested_segment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='requested', null=True, to=orm['analytics.Segment'])),
-            ('matched_segment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='matched', null=True, to=orm['analytics.Segment'])),
-        ))
-        db.send_create_signal('analytics', ['Pageview'])
-
         # Adding model 'Segment'
         db.create_table('analytics_segment', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -60,18 +19,6 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         
-        # Deleting model 'Visitor'
-        db.delete_table('analytics_visitor')
-
-        # Deleting model 'Request'
-        db.delete_table('analytics_request')
-
-        # Deleting model 'Parameter'
-        db.delete_table('analytics_parameter')
-
-        # Deleting model 'Pageview'
-        db.delete_table('analytics_pageview')
-
         # Deleting model 'Segment'
         db.delete_table('analytics_segment')
 
