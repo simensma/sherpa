@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("analytics", "0001_initial__segment"),
+    )
+
     def forwards(self, orm):
         
         # Adding model 'Menu'
