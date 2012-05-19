@@ -14,6 +14,10 @@ class Router(object):
         return None
 
     def allow_syncdb(self, db, model):
+        if model._meta.object_name == 'Group':
+            return False
+        if model._meta.object_name == 'FocusUser' or model._meta.object_name == 'FocusActType':
+            return False
         if db in ['sherpa-2', 'sherpa-2.5', 'focus']:
             return False
         return None
