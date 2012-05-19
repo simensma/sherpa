@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'Visitor'
         db.create_table('analytics_visitor', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.Profile'], unique=True, null=True)),
+            ('profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['user.Profile'], unique=True, null=True)),
         ))
         db.send_create_signal('analytics', ['Visitor'])
 
@@ -114,7 +114,7 @@ class Migration(SchemaMigration):
         'analytics.visitor': {
             'Meta': {'object_name': 'Visitor'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'profile': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.Profile']", 'unique': 'True', 'null': 'True'})
+            'profile': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']", 'unique': 'True', 'null': 'True'})
         },
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -175,7 +175,7 @@ class Migration(SchemaMigration):
             'variant': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.PageVariant']"}),
             'version': ('django.db.models.fields.IntegerField', [], {})
         },
-        'users.profile': {
+        'user.profile': {
             'Meta': {'object_name': 'Profile'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),

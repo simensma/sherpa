@@ -36,7 +36,7 @@ class Migration(SchemaMigration):
         db.delete_table('admin_image_tags')
 
         # Changing field 'Image.uploader'
-        db.alter_column('admin_image', 'uploader_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.Profile']))
+        db.alter_column('admin_image', 'uploader_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['user.Profile']))
 
 
     models = {

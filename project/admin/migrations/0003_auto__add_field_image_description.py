@@ -36,7 +36,7 @@ class Migration(SchemaMigration):
             'photographer': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'photographer_contact': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'uploaded': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'uploader': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.Profile']"}),
+            'uploader': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
             'width': ('django.db.models.fields.IntegerField', [], {})
         },
         'admin.keyword': {
@@ -81,7 +81,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'users.profile': {
+        'user.profile': {
             'Meta': {'object_name': 'Profile'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
