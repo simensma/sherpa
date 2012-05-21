@@ -236,9 +236,8 @@ def payment(request):
     if main != None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
-            request.session['registration']['country'], request.session['registration']['address'],
-            request.session['registration']['zipcode'], request.session['registration']['location'],
-            main['phone'], main['email'], None, request.POST['payment-method'])
+            request.session['registration']['location'], main['phone'], main['email'], None,
+            request.POST['payment-method'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -246,9 +245,8 @@ def payment(request):
         if user == main:
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
-            request.session['registration']['country'], request.session['registration']['address'],
-            request.session['registration']['zipcode'], request.session['registration']['location'],
-            user['phone'], user['email'], linked_to, request.POST['payment-method'])
+            request.session['registration']['location'], user['phone'], user['email'],
+            linked_to, request.POST['payment-method'])
 
     # Cool. If we're paying by invoice, just forward to result page
     if request.POST['payment-method'] == 'invoice':
@@ -424,7 +422,7 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, country, address, zip_code, city, phone, email, linked_to, payment_method):
+def add_focus_user(name, dob, age, gender, location, phone, email, linked_to, payment_method):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -436,6 +434,23 @@ def add_focus_user(name, dob, age, gender, country, address, zip_code, city, pho
     price = price_of(age, linked_to != None)
     linked_to = '' if linked_to == None else str(linked_to)
 
+    adr1 = location['address1']
+    if location['country'] == 'NO':
+        adr2 = ''
+        adr3 = ''
+        zip_code = location['zipcode']
+        city = location['city']
+    elif location['country'] == 'DK' or location['country'] == 'SE':
+        adr2 = "%s %s" % (location['zipcode'], location['city'])
+        adr3 = ''
+        zip_code = '0000'
+        city = ''
+    else:
+        adr2 = location['address2']
+        adr3 = location['address3']
+        zip_code = '0000'
+        city = ''
+
     # Possible race condition here if other apps use these tables
     # Transactions aren't used because:
     # 1. Django ORM-level transactions didn't seem to work (rollback had no effect)
@@ -444,10 +459,10 @@ def add_focus_user(name, dob, age, gender, country, address, zip_code, city, pho
     seq.next = seq.next + 7
     seq.save()
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
-        gender=gender, linked_to=linked_to, adr1=address, adr2='', adr3='', country=country,
-        phone='', email=email, receive_yearbook=receive_yearbook, type=type, yearbook=yearbook,
-        payment_method=payment_method, mob=phone, postnr=zip_code, poststed=city, language=language,
-        totalprice=price)
+        gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
+        country=location['country'], phone='', email=email, receive_yearbook=receive_yearbook,
+        type=type, yearbook=yearbook, payment_method=payment_method, mob=phone, postnr=zip_code,
+        poststed=city, language=language, totalprice=price)
     user.save()
     return seq.next
 
