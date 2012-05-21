@@ -64,12 +64,7 @@ def registration(request, user):
     errors = False
     if(request.method == 'POST'):
         new_user = {}
-        # If the name is all lowercase or uppercase, apply titling for them
-        # Else, assume that the specified case is intentional
-        if request.POST['name'].islower() or request.POST['name'].isupper():
-            new_user['name'] = request.POST['name'].title()
-        else:
-            new_user['name'] = request.POST['name']
+        new_user['name'] = polite_title(request.POST['name'])
         new_user['phone'] = request.POST['phone']
         new_user['email'] = request.POST['email'].lower()
         new_user['gender'] = request.POST.get('gender', '')
@@ -128,12 +123,7 @@ def household(request):
     errors = request.GET.has_key(invalid_location)
     if request.method == 'POST':
         request.session['registration']['country'] = request.POST['country']
-        # If the address is all lowercase or uppercase, apply titling for it
-        # Else, assume that the specified case is intentional
-        if request.POST['address'].islower() or request.POST['address'].isupper():
-            request.session['registration']['address'] = request.POST['address'].title()
-        else:
-            request.session['registration']['address'] = request.POST['address']
+        request.session['registration']['address'] = polite_title(request.POST['address'])
         request.session['registration']['zipcode'] = request.POST['zipcode']
         if request.POST.has_key('existing'):
             request.session['registration']['existing'] = request.POST['existing']
@@ -405,6 +395,14 @@ def price_of_age(age):
     elif age >= AGE_STUDENT: return PRICE_STUDENT
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
+
+def polite_title(str):
+    # If the string is all lowercase or uppercase, apply titling for it
+    # Else, assume that the specified case is intentional
+    if str.islower() or str.isupper():
+        return str.title()
+    else:
+        return str
 
 def add_focus_user(name, dob, age, gender, country, address, zip_code, city, phone, email, linked_to, payment_method):
     first_name = ' '.join(name.split(' ')[:-1])
