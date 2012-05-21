@@ -42,27 +42,39 @@
           <label> Land <span class="asterisk red">*</span></label>
           <select name="country">
             <optgroup id="scandinavia" label="Scandinavia">
-              <option value="{{ countries_norway.code }}"{% if country == countries_norway.code or not country %} selected{% endif %}>{{ countries_norway.name }}</option>
+              <option value="{{ countries_norway.code }}"{% if location.country == countries_norway.code or not location %} selected{% endif %}>{{ countries_norway.name }}</option>
               {% for c in countries_other_scandinavian %}
-                <option value="{{ c.code }}"{% if country == c.code %} selected{% endif %}>{{ c.name }}</option>
+                <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
               {% endfor %}
             </optgroup>
             <optgroup id="world" label="Rest of world">
             {% for c in countries_other %}
-              <option value="{{ c.code }}"{% if country == c.code %} selected{% endif %}>{{ c.name }}</option>
+              <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
             {% endfor %}
             </optgroup>
           </select>
         </div>
-        <div class="control-group address">
+        <div class="control-group address1">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="span3" name="address" value="{{ address }}">
+          <input type="text" class="span3" name="address1" value="{{ location.address1 }}">
         </div>
-        <div class="control-group zipcode">
-          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
-          <input type="text" class="span2" name="location" disabled>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+        <div class="scandinavia">
+          <div class="control-group zipcode">
+            <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+            <input type="text" class="span2" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
+            <input type="text" class="span3" name="city" value="{{ location.city }}" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+          </div>
+        </div>
+        <div class="world">
+          <div class="control-group address2">
+            <label> Adresse 2</label>
+            <input type="text" class="span3" name="address2" value="{{ location.address2 }}">
+          </div>
+          <div class="control-group address3">
+            <label> Adresse 3</label>
+            <input type="text" class="span3" name="address3" value="{{ location.address3 }}">
+          </div>
         </div>
       </div>
 

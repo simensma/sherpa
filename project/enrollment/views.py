@@ -118,13 +118,19 @@ def household(request):
     request.session['registration']['conditions'] = True
     errors = request.GET.has_key(invalid_location)
     if request.method == 'POST':
-        request.session['registration']['country'] = request.POST['country']
-        request.session['registration']['address'] = polite_title(request.POST['address'])
-        request.session['registration']['zipcode'] = request.POST['zipcode']
+        location = {}
+        location['country'] = request.POST['country']
+        location['address1'] = polite_title(request.POST['address1'])
+        location['address2'] = polite_title(request.POST['address2'])
+        location['address3'] = polite_title(request.POST['address3'])
+        location['zipcode'] = request.POST['zipcode']
+        location['city'] = request.POST.get('city', '')
+        request.session['registration']['location'] = location
+        request.session.modified = True
         if request.POST.has_key('existing'):
             request.session['registration']['existing'] = request.POST['existing']
 
-        if validate_location(request.session['registration']['country'], request.session['registration']['address'], request.session['registration']['zipcode']):
+        if validate_location(request.session['registration']['location']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
@@ -136,10 +142,8 @@ def household(request):
 
     updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
-        'address': request.session['registration'].get('address', ''),
-        'zipcode': request.session['registration'].get('zipcode', ''),
+        'location': request.session['registration'].get('location', ''),
         'existing': request.session['registration'].get('existing', ''),
-        'country': request.session['registration'].get('country', ''),
         'countries_norway': countries_norway,
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors}
@@ -328,7 +332,7 @@ def validate(session, require_location):
     if not validate_user_contact(session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     if require_location:
-        if not validate_location(session['registration'].get('country', ''), session['registration'].get('address', ''), session['registration'].get('zipcode', '')):
+        if not session['registration'].has_key('location') or not validate_location(session['registration']['location']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
 
 def validate_user(user):
@@ -361,14 +365,24 @@ def validate_user(user):
     # All tests passed!
     return True
 
-def validate_location(country, address, zipcode):
+def validate_location(location):
     # Country does not exist
-    if not FocusCountry.objects.filter(code=country).exists():
+    if not FocusCountry.objects.filter(code=location['country']).exists():
         return False
 
-    # Zipcode does not exist
-    if not Zipcode.objects.filter(zip_code=zipcode).exists():
-        return False
+    if location['country'] != 'NO':
+        # No address provided
+        if location['address1'].strip() == '':
+            return False
+
+        # No zipcode provided
+        if location['zipcode'].strip() == '':
+            return False
+
+    if location['country'] == 'NO':
+        # Zipcode does not exist
+        if not Zipcode.objects.filter(zip_code=location['zipcode']).exists():
+            return False
 
     # All tests passed!
     return True
