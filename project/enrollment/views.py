@@ -137,7 +137,7 @@ def household(request):
         if request.POST.has_key('existing'):
             request.session['registration']['existing'] = request.POST['existing']
 
-        if validate_location(request.POST['address'], request.POST['zipcode']):
+        if validate_location(request.session['registration']['address'], request.session['registration']['zipcode']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
