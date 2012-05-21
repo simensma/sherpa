@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import Context, loader
 
-from user.models import Zipcode, FocusUser, FocusActType
+from user.models import Zipcode, FocusCountry, FocusUser, FocusActType
 
 from datetime import datetime
 import requests
@@ -127,6 +127,7 @@ def household(request):
 
     errors = request.GET.has_key(invalid_location)
     if request.method == 'POST':
+        request.session['registration']['country'] = request.POST['country']
         # If the address is all lowercase or uppercase, apply titling for it
         # Else, assume that the specified case is intentional
         if request.POST['address'].islower() or request.POST['address'].isupper():
@@ -137,17 +138,25 @@ def household(request):
         if request.POST.has_key('existing'):
             request.session['registration']['existing'] = request.POST['existing']
 
-        if validate_location(request.session['registration']['address'], request.session['registration']['zipcode']):
+        if validate_location(request.session['registration']['country'], request.session['registration']['address'], request.session['registration']['zipcode']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
+
+    countries = FocusCountry.objects.all()
+    countries_norway = countries.get(code='NO')
+    countries_other_scandinavian = countries.filter(scandinavian=True).exclude(code='NO')
+    countries_other = countries.filter(scandinavian=False)
 
     updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
         'address': request.session['registration'].get('address', ''),
         'zipcode': request.session['registration'].get('zipcode', ''),
         'existing': request.session['registration'].get('existing', ''),
-        'errors': errors}
+        'country': request.session['registration'].get('country', ''),
+        'countries_norway': countries_norway,
+        'countries_other_scandinavian': countries_other_scandinavian,
+        'countries_other': countries_other, 'errors': errors}
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
@@ -157,7 +166,7 @@ def verification(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
-    if not validate_location(request.session['registration']['address'], request.session['registration']['zipcode']):
+    if not validate_location(request.session['registration']['country'], request.session['registration']['address'], request.session['registration']['zipcode']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
 
@@ -180,6 +189,7 @@ def verification(request):
     multiple_main = student_or_older_count > 1
     updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
+        'country': FocusCountry.objects.get(code=request.session['registration']['country']),
         'address': request.session['registration']['address'],
         'zipcode': request.session['registration']['zipcode'],
         'location': request.session['registration']['location'],
@@ -355,7 +365,11 @@ def validate_user(user):
     # All tests passed!
     return True
 
-def validate_location(address, zipcode):
+def validate_location(country, address, zipcode):
+    # Country does not exist
+    if not FocusCountry.objects.filter(code=country).exists():
+        return False
+
     # Zipcode does not exist
     if not Zipcode.objects.filter(zip_code=zipcode).exists():
         return False

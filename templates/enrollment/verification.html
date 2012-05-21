@@ -105,7 +105,10 @@
               Kjønn:<br>
               Født:<br>
               {% if users|length == 1 and not existing %}
-                Adresse:{% if address %}<br>{% endif %}<br>
+                Adresse:
+                {% if address %}<br>{% endif %}
+                <br>
+                {% if country.code != 'NO' %}<br>{% endif %}
               {% endif %}
               {% if user.phone %}Telefon:<br>{% endif %}
               {% if user.email %}Epost:{% endif %}
@@ -121,6 +124,7 @@
               {% if users|length == 1 and not existing %}
                 {% if address %}{{ address }}<br>{% endif %}
                 {{ zipcode }} {{ location }}<br>
+                {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
               {% endif %}
               {% if user.phone %}{{ user.phone }}<br>{% endif %}
               {% if user.email %}{{ user.email }}{% endif %}
@@ -139,6 +143,7 @@
           <strong>Deres adresse:</strong><br>
           {% if address %}{{ address }}<br>{% endif %}
           {{ zipcode }} {{ location }}
+          {% if country.code != 'NO' %}<br>{{ country.name }}{% endif %}
         </td>
         <td colspan="2"></td>
       </tr>

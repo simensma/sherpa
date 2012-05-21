@@ -38,6 +38,22 @@
 
       <div class="well">
         <h2 style="margin-bottom: 15px;">Hvor bor {% if users|length > 1 %}dere{% else %}du{% endif %}?</h2>
+        <div class="control-group country">
+          <label> Land <span class="asterisk red">*</span></label>
+          <select name="country">
+            <optgroup id="scandinavia" label="Scandinavia">
+              <option value="{{ countries_norway.code }}"{% if country == countries_norway.code or not country %} selected{% endif %}>{{ countries_norway.name }}</option>
+              {% for c in countries_other_scandinavian %}
+                <option value="{{ c.code }}"{% if country == c.code %} selected{% endif %}>{{ c.name }}</option>
+              {% endfor %}
+            </optgroup>
+            <optgroup id="world" label="Rest of world">
+            {% for c in countries_other %}
+              <option value="{{ c.code }}"{% if country == c.code %} selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+            </optgroup>
+          </select>
+        </div>
         <div class="control-group address">
           <label> Adresse <span class="asterisk red">*</span></label>
           <input type="text" class="span3" name="address" value="{{ address }}">
