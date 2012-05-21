@@ -356,10 +356,6 @@ def validate_user(user):
     return True
 
 def validate_location(address, zipcode):
-    # Address is empty
-    if address == '':
-        return False
-
     # Zipcode does not exist
     if not Zipcode.objects.filter(zip_code=zipcode).exists():
         return False

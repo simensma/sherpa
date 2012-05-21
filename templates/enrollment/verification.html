@@ -105,7 +105,7 @@
               Kjønn:<br>
               Født:<br>
               {% if users|length == 1 and not existing %}
-                Adresse:<br><br>
+                Adresse:{% if address %}<br>{% endif %}<br>
               {% endif %}
               {% if user.phone %}Telefon:<br>{% endif %}
               {% if user.email %}Epost:{% endif %}
@@ -119,7 +119,7 @@
               {% endif %}<br>
               {{ user.dob|date:"j. F Y" }}<br>
               {% if users|length == 1 and not existing %}
-                {{ address }}<br>
+                {% if address %}{{ address }}<br>{% endif %}
                 {{ zipcode }} {{ location }}<br>
               {% endif %}
               {% if user.phone %}{{ user.phone }}<br>{% endif %}
@@ -137,7 +137,7 @@
         {% endif %}
         <td>
           <strong>Deres adresse:</strong><br>
-          {{ address }}<br>
+          {% if address %}{{ address }}<br>{% endif %}
           {{ zipcode }} {{ location }}
         </td>
         <td colspan="2"></td>

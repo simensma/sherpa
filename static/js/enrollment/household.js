@@ -46,4 +46,12 @@ $(document).ready(function() {
         }
     });
 
+    $("form#household").submit(function(e) {
+        if($(this).find("input[name='address']").val() == '') {
+            if(!confirm("Har du virkelig ingen adresse?\n\nDet finnes enkelte husstander i Norge som kun har postnummer og -sted, uten gateadresse. Hvis du bor på en av disse kan du gå videre, hvis ikke, trykk avbryt og fyll inn adressen.")) {
+                e.preventDefault();
+            }
+        }
+    });
+
 });
