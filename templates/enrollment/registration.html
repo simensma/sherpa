@@ -61,18 +61,6 @@
     <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
     <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
   </div>
-  <div class="address">
-    <div class="control-group address">
-      <label> Adresse <span class="asterisk red">*</span></label>
-      <input type="text" class="span3" name="address" value="{{ address }}">
-    </div>
-    <div class="control-group zipcode">
-      <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-      <input type="text" class="span1" name="zipcode" value="{{ zipcode }}" maxlength="4">
-      <input type="text" class="span2" name="location" disabled>
-      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
-    </div>
-  </div>
   <div class="control-group phone">
     <label> Mobiltelefon <span class="asterisk">*</span></label>
     <input type="text" class="span2" name="phone" value="{{ user.phone }}">

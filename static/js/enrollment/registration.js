@@ -1,26 +1,5 @@
 $(document).ready(function() {
 
-    $("form#registration img.ajaxloader").hide();
-    $("form#registration input[name='zipcode']").keyup(function() {
-        if($(this).val().match(/^\d{4}$/)) {
-            $("form#registration img.ajaxloader").show();
-            $.ajax({
-                url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                $("form#registration input[name='location']").val(result);
-            }).fail(function(result) {
-                $("form#registration input[name='location']").val("Ukjent postnummer");
-                $("form#registration div.control-group.zipcode").addClass('error');
-            }).always(function(result) {
-                $("form#registration img.ajaxloader").hide();
-            });
-        } else {
-            $("form#registration input[name='location']").val("");
-        }
-    });
-    $("form#registration input[name='zipcode']").keyup();
-
     $("form#registration input[name='dob']").datepicker({
         changeMonth: true,
         changeYear: true,
@@ -48,18 +27,6 @@ $(document).ready(function() {
 
     $("form#registration input[name='name']").focusout(function() {
         if(!$(this).val().match(/.+\s.+/)) {
-            $(this).parents("div.control-group").addClass('error');
-        }
-    });
-
-    $("form#registration input[name='address']").focusout(function() {
-        if($(this).val() == "") {
-            $(this).parents("div.control-group").addClass('error');
-        }
-    });
-
-    $("form#registration input[name='zipcode']").focusout(function() {
-        if(!$(this).val().match(/\d{4}/)) {
             $(this).parents("div.control-group").addClass('error');
         }
     });

@@ -24,6 +24,7 @@ invalid_main_member_key = 'ugyldig-hovedmedlem'
 nonexistent_main_member_key = 'ikke-eksisterende-hovedmedlem'
 no_main_member_key = 'mangler-hovedmedlem'
 invalid_payment_method = 'ugyldig-betalingsmetode'
+invalid_location = 'ugyldig-adresse'
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -72,12 +73,6 @@ def registration(request, user):
         new_user['phone'] = request.POST['phone']
         new_user['email'] = request.POST['email'].lower()
         new_user['gender'] = request.POST.get('gender', '')
-        # Same capitalization on address as for name
-        if request.POST['address'].islower() or request.POST['address'].isupper():
-            request.session['registration']['address'] = request.POST['address'].title()
-        else:
-            request.session['registration']['address'] = request.POST['address']
-        request.session['registration']['zipcode'] = request.POST['zipcode']
         if(request.POST.get('key') == 'on'):
             new_user['key'] = True
 
@@ -88,7 +83,7 @@ def registration(request, user):
             new_user['dob'] = None
             new_user['age'] = None
 
-        if not validate_user(request.POST) or not validate_location(request.POST['address'], request.POST['zipcode']):
+        if not validate_user(request.POST):
             errors = True
             if request.POST.has_key('user'):
                 index = int(request.POST['user'])
@@ -111,8 +106,6 @@ def registration(request, user):
 
     context = {'users': request.session['registration']['users'], 'user': user,
         'saved': saved, 'errors': errors, 'contact_missing': contact_missing,
-        'address': request.session['registration'].get('address', ''),
-        'zipcode': request.session['registration'].get('zipcode', ''),
         'conditions': request.session['registration'].get('conditions', '')}
     return render(request, 'enrollment/registration.html', context)
 
@@ -131,9 +124,30 @@ def household(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
+
+    errors = request.GET.has_key(invalid_location)
+    if request.method == 'POST':
+        # If the address is all lowercase or uppercase, apply titling for it
+        # Else, assume that the specified case is intentional
+        if request.POST['address'].islower() or request.POST['address'].isupper():
+            request.session['registration']['address'] = request.POST['address'].title()
+        else:
+            request.session['registration']['address'] = request.POST['address']
+        request.session['registration']['zipcode'] = request.POST['zipcode']
+        if request.POST.has_key('existing'):
+            request.session['registration']['existing'] = request.POST['existing']
+
+        if validate_location(request.POST['address'], request.POST['zipcode']):
+            return HttpResponseRedirect(reverse('enrollment.views.verification'))
+        else:
+            errors = True
+
     updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
-        'existing': request.session['registration'].get('existing', '')}
+        'address': request.session['registration'].get('address', ''),
+        'zipcode': request.session['registration'].get('zipcode', ''),
+        'existing': request.session['registration'].get('existing', ''),
+        'errors': errors}
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
@@ -143,8 +157,8 @@ def verification(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
-    if request.POST.has_key('existing'):
-        request.session['registration']['existing'] = request.POST['existing']
+    if not validate_location(request.session['registration']['address'], request.session['registration']['zipcode']):
+        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
 
     now = datetime.now()
