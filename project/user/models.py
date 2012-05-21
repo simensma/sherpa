@@ -17,7 +17,13 @@ class County(models.Model):
     name = models.CharField(max_length=100)
 
 
-# Focus
+### Focus ###
+
+# The FocusCountry class is not actually in Focus, but its values
+# (country codes) were extracted from Focus and are stored here.
+class FocusCountry(models.Model):
+    code = models.CharField(max_length=2)
+    name = models.CharField(max_length=255)
 
 class FocusUser(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
