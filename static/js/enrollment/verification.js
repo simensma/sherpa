@@ -121,7 +121,7 @@ function orderListByAge() {
 
 function calculatePrices() {
     var totalPrice = 0;
-    $("table.prices td[data-key] span.keyprice").each(function() {
+    $("table.prices td span.keyprice").each(function() {
         totalPrice += Number($(this).text());
     });
     $("table.prices tr[data-index]").each(function() {
