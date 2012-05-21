@@ -347,9 +347,7 @@ def validate_location(address, zipcode):
         return False
 
     # Zipcode does not exist
-    try:
-        Zipcode.objects.get(zip_code=zipcode)
-    except Zipcode.DoesNotExist:
+    if not Zipcode.objects.filter(zip_code=zipcode).exists():
         return False
 
     # All tests passed!
