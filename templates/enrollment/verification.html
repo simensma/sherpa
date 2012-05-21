@@ -106,8 +106,14 @@
               Født:<br>
               {% if users|length == 1 and not existing %}
                 Adresse:
-                {% if address %}<br>{% endif %}
-                <br>
+                {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
+                  {% if location.address1 %}<br>{% endif %}
+                  <br>
+                {% else %}
+                  {% if location.address1 %}<br>{% endif %}
+                  {% if location.address2 %}<br>{% endif %}
+                  {% if location.address3 %}<br>{% endif %}
+                {% endif %}
                 {% if country.code != 'NO' %}<br>{% endif %}
               {% endif %}
               {% if user.phone %}Telefon:<br>{% endif %}
@@ -122,8 +128,14 @@
               {% endif %}<br>
               {{ user.dob|date:"j. F Y" }}<br>
               {% if users|length == 1 and not existing %}
-                {% if address %}{{ address }}<br>{% endif %}
-                {{ zipcode }} {{ location }}<br>
+                {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
+                  {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                  {{ location.zipcode }} {{ location.city }}<br>
+                {% else %}
+                  {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                  {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
+                  {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
+                {% endif %}
                 {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
               {% endif %}
               {% if user.phone %}{{ user.phone }}<br>{% endif %}
@@ -141,9 +153,15 @@
         {% endif %}
         <td>
           <strong>Deres adresse:</strong><br>
-          {% if address %}{{ address }}<br>{% endif %}
-          {{ zipcode }} {{ location }}
-          {% if country.code != 'NO' %}<br>{{ country.name }}{% endif %}
+            {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
+              {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+              {{ location.zipcode }} {{ location.city }}<br>
+            {% else %}
+              {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+              {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
+              {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
+            {% endif %}
+            {% if country.code != 'NO' %}{{ country.name }}{% endif %}
         </td>
         <td colspan="2"></td>
       </tr>

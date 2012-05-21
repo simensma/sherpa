@@ -154,7 +154,9 @@ def verification(request):
     if val is not None:
         return val
 
-    request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
+    if request.session['registration']['location']['country'] == 'NO':
+        request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
+
     now = datetime.now()
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
@@ -174,9 +176,7 @@ def verification(request):
     multiple_main = student_or_older_count > 1
     updateIndices(request.session)
     context = {'users': request.session['registration']['users'],
-        'country': FocusCountry.objects.get(code=request.session['registration']['country']),
-        'address': request.session['registration']['address'],
-        'zipcode': request.session['registration']['zipcode'],
+        'country': FocusCountry.objects.get(code=request.session['registration']['location']['country']),
         'location': request.session['registration']['location'],
         'existing': request.session['registration']['existing'],
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
