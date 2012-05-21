@@ -1,24 +1,32 @@
 /* Enrollment */
 
-form#registration label {
+form#registration label, form#household label {
     font-size: 110%;
 }
 
-form#registration .control-group:not(.error,.warning) label {
+form#registration .control-group:not(.error,.warning) label, form#household .control-group:not(.error,.warning) label {
     color: black;
 }
 
-form#registration input[type='text'] {
+form#household select {
+    height: 34px;
+}
+
+form#household select option[disabled] {
+    background-color: rgb(215, 215, 215);
+}
+
+form#registration input[type='text'], form#household input[type='text'], form#household select {
     color: black;
     font-size: 120%;
     padding: 8px;
 }
 
-form#registration input.dob {
+form#registration input.dob, form#household input.dob {
     margin-right: 6px;
 }
 
-form#registration button {
+form#registration button, form#household button {
     margin-top: 3px;
     margin-bottom: 3px;
 }
