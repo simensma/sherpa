@@ -24,6 +24,7 @@ class County(models.Model):
 class FocusCountry(models.Model):
     code = models.CharField(max_length=2)
     name = models.CharField(max_length=255)
+    scandinavian = models.BooleanField()
 
 class FocusUser(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
