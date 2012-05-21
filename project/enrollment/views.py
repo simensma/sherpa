@@ -247,9 +247,9 @@ def payment(request):
     if main != None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
-            request.session['registration']['address'], request.session['registration']['zipcode'],
-            request.session['registration']['location'], main['phone'], main['email'], None,
-            request.POST['payment-method'])
+            request.session['registration']['country'], request.session['registration']['address'],
+            request.session['registration']['zipcode'], request.session['registration']['location'],
+            main['phone'], main['email'], None, request.POST['payment-method'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -257,9 +257,9 @@ def payment(request):
         if user == main:
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
-            request.session['registration']['address'], request.session['registration']['zipcode'],
-            request.session['registration']['location'], user['phone'], user['email'], linked_to,
-            request.POST['payment-method'])
+            request.session['registration']['country'], request.session['registration']['address'],
+            request.session['registration']['zipcode'], request.session['registration']['location'],
+            user['phone'], user['email'], linked_to, request.POST['payment-method'])
 
     # Cool. If we're paying by invoice, just forward to result page
     if request.POST['payment-method'] == 'invoice':
@@ -406,11 +406,10 @@ def price_of_age(age):
     elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
     else:                    return PRICE_CHILD
 
-def add_focus_user(name, dob, age, gender, address, zip_code, city, phone, email, linked_to, payment_method):
+def add_focus_user(name, dob, age, gender, country, address, zip_code, city, phone, email, linked_to, payment_method):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
-    country = 'NO'
     language = 'nb_no'
     receive_yearbook = True # ???
     yearbook = 152
