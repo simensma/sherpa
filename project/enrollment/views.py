@@ -112,14 +112,11 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
-    if not request.session.has_key('registration'):
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    request.session['registration']['conditions'] = True
-    if len(request.session['registration']['users']) == 0:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if not validate_user_contact(request.session['registration']['users']):
-        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
+    val = validate(request.session, require_location=False)
+    if val is not None:
+        return val
 
+    request.session['registration']['conditions'] = True
     errors = request.GET.has_key(invalid_location)
     if request.method == 'POST':
         request.session['registration']['country'] = request.POST['country']
@@ -150,16 +147,11 @@ def household(request):
     return render(request, 'enrollment/household.html', context)
 
 def verification(request):
-    if not request.session.has_key('registration'):
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if len(request.session['registration']['users']) == 0:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if not validate_user_contact(request.session['registration']['users']):
-        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
-    if not validate_location(request.session['registration']['country'], request.session['registration']['address'], request.session['registration']['zipcode']):
-        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
-    request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
+    val = validate(request.session, require_location=True)
+    if val is not None:
+        return val
 
+    request.session['registration']['location'] = Zipcode.objects.get(zip_code=request.session['registration']['zipcode']).location
     now = datetime.now()
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
@@ -196,6 +188,10 @@ def verification(request):
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
+    val = validate(request.session, require_location=True)
+    if val is not None:
+        return val
+
     if not request.session.has_key('registration'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(request.session['registration']['users']) == 0:
@@ -324,6 +320,17 @@ def updateIndices(session):
         user['index'] = i
         i += 1
     session.modified = True
+
+def validate(session, require_location):
+    if not session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if len(session['registration']['users']) == 0:
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_user_contact(session['registration']['users']):
+        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
+    if require_location:
+        if not validate_location(session['registration'].get('country', ''), session['registration'].get('address', ''), session['registration'].get('zipcode', '')):
+            return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
 
 def validate_user(user):
     # Name or address is empty
