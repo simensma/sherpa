@@ -107,8 +107,7 @@ def registration(request, user):
 def remove(request, user):
     del request.session['registration']['users'][int(user)]
     if(len(request.session['registration']['users']) == 0):
-        del request.session['registration']['address']
-        del request.session['registration']['zipcode']
+        del request.session['registration']
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
