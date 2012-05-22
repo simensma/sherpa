@@ -214,6 +214,7 @@ def payment(request):
         # If the user specified someone, everyone except that member is household
         for user in request.session['registration']['users']:
             if user['index'] == int(request.POST['main-member']):
+                # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
                 user['household'] = False
