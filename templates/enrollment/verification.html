@@ -73,7 +73,7 @@
     <div class="alert alert-warning">
       <a class="close">x</a>
       <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
-      Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet (TODO: existing.name) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
+      Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
     </div>
   </div>
   {% endif %}
@@ -95,7 +95,7 @@
     <tbody>
       {% if existing %}
       <tr class="main">
-        <td>{{ existing }}</td>
+        <td>{{ existing_name }}</td>
         <td>Hovedmedlem</td>
         <td>-</td>
       </tr>

@@ -193,6 +193,25 @@ def verification(request):
     if val is not None:
         return val
 
+    # If existing member is specified, save details and change to that address
+    existing_name = ''
+    if request.session['registration']['existing'] != '':
+        actor = Actor.objects.get(actno=request.session['registration']['existing'])
+        existing_name = "%s %s" % (actor.first_name, actor.last_name)
+        address = ActorAddress.objects.get(actseqno=actor.seqno)
+        request.session['registration']['location']['country'] = address.country
+        if address.country == 'NO':
+            request.session['registration']['location']['address1'] = address.a1
+        elif address.country == 'DK' or address.country == 'SE':
+            request.session['registration']['location']['address1'] = address.a1
+            request.session['registration']['location']['zipcode'] = address.a2
+            request.session['registration']['location']['city'] = address.a3
+        else:
+            request.session['registration']['location']['country'] = address.country
+            request.session['registration']['location']['address1'] = address.a1
+            request.session['registration']['location']['address2'] = address.a2
+            request.session['registration']['location']['address3'] = address.a3
+
     if request.session['registration']['location']['country'] == 'NO':
         request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
 
@@ -217,7 +236,7 @@ def verification(request):
     context = {'users': request.session['registration']['users'],
         'country': FocusCountry.objects.get(code=request.session['registration']['location']['country']),
         'location': request.session['registration']['location'],
-        'existing': request.session['registration']['existing'],
+        'existing': request.session['registration']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year, 'price_main': PRICE_MAIN,
         'price_household': PRICE_HOUSEHOLD, 'price_senior': PRICE_SENIOR,
