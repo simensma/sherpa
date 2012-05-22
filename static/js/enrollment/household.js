@@ -89,13 +89,13 @@ $(document).ready(function() {
     });
 
     /* Existing */
-    $("div.existing").hide();
     $("a.existing").click(function() {
         $("a.existing").hide();
         $("div.existing").show();
     });
 
-    $("form#household button.search").click(function() {
+    $("form#household button.search").click(function(e) {
+        e.preventDefault();
         var button = $(this);
         button.attr('disabled', true);
         $("form#household img.existing.ajaxloader").show();
@@ -117,5 +117,12 @@ $(document).ready(function() {
             $("form#household img.existing.ajaxloader").hide();
         });
     });
+
+    if(invalid_existing) {
+        $("a.existing").hide();
+        $("form#household button.search").click();
+    } else {
+        $("div.existing").hide();
+    }
 
 });

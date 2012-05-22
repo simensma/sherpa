@@ -8,6 +8,10 @@
 
 {% block body %}
 
+<script>
+  var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
+</script>
+
 {% if errors %}
 <script>
   // Trigger form validations
@@ -18,6 +22,17 @@
 {% endif %}
 
 {% include 'enrollment/progress.html' with step=2 %}
+
+{% if invalid_existing %}
+<div class="row">
+  <div class="offset2 span5">
+    <div class="alert alert-error">
+      <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
+      Vennligst sjekk at all oppgitt medlemsnummer for eksisterende medlem på samme adresse er korrekt.
+    </div>
+  </div>
+</div>
+{% endif %}
 
 {% if errors %}
 <div class="row">

@@ -27,6 +27,7 @@ nonexistent_main_member_key = 'ikke-eksisterende-hovedmedlem'
 no_main_member_key = 'mangler-hovedmedlem'
 invalid_payment_method = 'ugyldig-betalingsmetode'
 invalid_location = 'ugyldig-adresse'
+invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -113,7 +114,7 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
-    val = validate(request.session, require_location=False)
+    val = validate(request.session, require_location=False, require_existing=False)
     if val is not None:
         return val
 
@@ -157,6 +158,7 @@ def household(request):
     context = {'users': request.session['registration']['users'],
         'location': request.session['registration'].get('location', ''),
         'existing': request.session['registration'].get('existing', ''),
+        'invalid_existing': request.GET.has_key(invalid_existing),
         'countries_norway': countries_norway, 'main': main,
         'yearbook': request.session['registration'].get('yearbook', ''),
         'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE,
@@ -186,7 +188,7 @@ def existing(request):
         pass # Todo
 
 def verification(request):
-    val = validate(request.session, require_location=True)
+    val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
 
@@ -230,7 +232,7 @@ def verification(request):
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
-    val = validate(request.session, require_location=True)
+    val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
 
@@ -373,7 +375,7 @@ def updateIndices(session):
         i += 1
     session.modified = True
 
-def validate(session, require_location):
+def validate(session, require_location, require_existing):
     if not session.has_key('registration'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(session['registration']['users']) == 0:
@@ -383,6 +385,9 @@ def validate(session, require_location):
     if require_location:
         if not session['registration'].has_key('location') or not validate_location(session['registration']['location']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
+    if require_existing:
+        if session['registration']['existing'] != '' and not validate_existing(session['registration']['existing'], session['registration']['location']['zipcode'], session['registration']['location']['country']):
+            return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
 
 def validate_user(user):
     # Name or address is empty
@@ -451,6 +456,25 @@ def validate_phone(phone):
 def validate_email(email):
     # Email matches anything@anything.anything
     return len(re.findall('.+@.+\..+', email)) > 0
+
+def validate_existing(id, zipcode, country):
+    if country == 'NO':
+        try:
+            actor = Actor.objects.get(actno=id)
+        except Actor.DoesNotExist:
+            return False
+
+        if not ActorAddress.objects.filter(actseqno=actor.seqno, pcode=data['zipcode'], ctrycode=country).exists():
+            return False
+    else:
+        try:
+            actor = Actor.objects.get(actno=id)
+        except Actor.DoesNotExist:
+            return False
+
+        if not ActorAddress.objects.filter(actseqno=actor.seqno, ctrycode=country).exists():
+            return False
+    return True
 
 def price_of(age, household):
     if household:
