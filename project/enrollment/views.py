@@ -352,6 +352,9 @@ def result(request, invoice):
                 focus_user = FocusUser.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
+            # Remove all registration session data. Only on success;
+            # on fail, the user may want to re-enter their data.
+            del request.session['registration']
             context = {'status': 'success'}
         else:
             context = {'status': 'fail', 'message': dom.find(".//ResponseText").text}
