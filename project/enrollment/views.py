@@ -168,24 +168,25 @@ def household(request):
 
 def existing(request):
     data = json.loads(request.POST['data'])
-    if data['country'] == 'NO':
-        if(len(data['zipcode']) != 4):
-            return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
-        try:
-            actor = Actor.objects.get(actno=data['id'])
-        except Actor.DoesNotExist:
-            return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
-        try:
-            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'], country=data['country'])
-        except ActorAddress.DoesNotExist:
-            return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
+    if data['country'] == 'NO' and len(data['zipcode']) != 4:
+        return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
+    try:
+        actor = Actor.objects.get(actno=data['id'])
+    except Actor.DoesNotExist:
+        return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
+    try:
+        if data['country'] == 'NO':
+            # Include zipcode for norwegian members
+            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'], ctrycode=data['country'])
+        else:
+            address = ActorAddress.objects.get(actseqno=actor.seqno, ctrycode=data['country'])
+    except ActorAddress.DoesNotExist:
+        return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
-        return HttpResponse(json.dumps({
-            'name': "%s %s" % (actor.first_name, actor.last_name),
-            'address': address.a1
-        }))
-    else:
-        pass # Todo
+    return HttpResponse(json.dumps({
+        'name': "%s %s" % (actor.first_name, actor.last_name),
+        'address': address.a1
+    }))
 
 def verification(request):
     val = validate(request.session, require_location=True, require_existing=True)
