@@ -20,12 +20,6 @@ class Migration(SchemaMigration):
         # Changing field 'Variant.page'
         db.alter_column('page_variant', 'page_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['page.Page'], null=True))
 
-        # Adding field 'Page.publisher'
-        db.add_column('page_page', 'publisher', self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['user.Profile']), keep_default=False)
-
-        # Adding field 'Column.offset'
-        db.add_column('page_column', 'offset', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
-
 
     def backwards(self, orm):
         
@@ -40,12 +34,6 @@ class Migration(SchemaMigration):
 
         # User chose to not deal with backwards NULL issues for 'Variant.page'
         raise RuntimeError("Cannot reverse this migration. 'Variant.page' and its values cannot be restored.")
-
-        # Deleting field 'Page.publisher'
-        db.delete_column('page_page', 'publisher_id')
-
-        # Deleting field 'Column.offset'
-        db.delete_column('page_column', 'offset')
 
 
     models = {
