@@ -109,7 +109,11 @@
         <button class="btn search"><i class="icon-search"></i> Søk</button>
         <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
         <br>
-        Hvis ikke, bare klikk på "Gå videre".
+        Hvis ikke, la feltet stå tomt og klikk på "Gå videre".
+      </div>
+
+      <div class="existing-result">
+        <p><span class="description">Hovedmedlem: </span><span class="result"></span></p>
       </div>
 
       <p><a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a> <button class="btn btn-success btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button></p>

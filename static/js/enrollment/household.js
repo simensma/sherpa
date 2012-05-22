@@ -96,6 +96,7 @@ $(document).ready(function() {
 
     $("form#household button.search").click(function(e) {
         e.preventDefault();
+        $("div.existing-result").show();
         var button = $(this);
         button.attr('disabled', true);
         $("form#household img.existing.ajaxloader").show();
@@ -104,17 +105,38 @@ $(document).ready(function() {
             zipcode: $("form#household input[name='zipcode']").val(),
             country: $("form#household select[name='country'] option:selected").val()
         }
+        $("div.existing-result span.result").hide();
+        $("div.existing-result span.result").removeClass('success');
+        $("div.existing-result span.result").removeClass('error');
         $.ajax({
             url: '/innmelding/eksisterende/',
             type: 'POST',
             data: 'data=' + encodeURIComponent(JSON.stringify(data))
         }).done(function(result) {
-            alert(result);
+            result = JSON.parse(result);
+            if(result.error == 'bad_zipcode') {
+                $("div.existing-result span.result").text("Du må oppgi riktig postnummer før du søker.");
+                $("div.existing-result span.description").hide();
+                $("div.existing-result span.result").addClass('error');
+            } else if(result.error == 'actor.does_not_exist') {
+                $("div.existing-result span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
+                $("div.existing-result span.description").hide();
+                $("div.existing-result span.result").addClass('error');
+            } else if(result.error == 'actoraddress.does_not_exist') {
+                $("div.existing-result span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
+                $("div.existing-result span.description").hide();
+                $("div.existing-result span.result").addClass('error');
+            } else if(result.name != '') {
+                $("div.existing-result span.result").text(result.name + ', ' + result.address);
+                $("div.existing-result span.description").show();
+                $("div.existing-result span.result").addClass('success');
+            }
         }).fail(function(result) {
             $(document.body).html(result.responseText);
         }).always(function() {
             button.removeAttr('disabled');
             $("form#household img.existing.ajaxloader").hide();
+            $("div.existing-result span.result").show();
         });
     });
 
@@ -123,6 +145,7 @@ $(document).ready(function() {
         $("form#household button.search").click();
     } else {
         $("div.existing").hide();
+        $("div.existing-result").hide();
     }
 
 });

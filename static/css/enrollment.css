@@ -20,6 +20,22 @@ form#household button.search {
     margin-bottom: 10px;
 }
 
+div.existing-result p {
+    font-size: 120%;
+}
+
+div.existing-result p span.result {
+    font-weight: bold;
+}
+
+div.existing-result p span.result.success {
+    color: rgb(60, 180, 60);
+}
+
+div.existing-result p span.result.error {
+    color: rgb(180, 60, 60);
+}
+
 form#registration input[type='text'], form#household input[type='text'], form#household select {
     color: black;
     font-size: 120%;
