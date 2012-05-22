@@ -17,6 +17,7 @@ from lxml import etree
 MONTH_THRESHOLD = 10
 
 KEY_PRICE = 100
+FOREIGN_YEARBOOK_PRICE = 100
 
 # GET parameters used for error handling
 contact_missing_key = 'mangler-kontaktinfo'
@@ -126,7 +127,11 @@ def household(request):
         location['zipcode'] = request.POST['zipcode']
         location['city'] = request.POST.get('city', '')
         request.session['registration']['location'] = location
-        request.session.modified = True
+        request.session['registration']['yearbook'] = location['country'] != 'NO' and request.POST.has_key('yearbook')
+        request.session['registration']['attempted_yearbook'] = False
+        if request.session['registration']['yearbook'] and request.POST['existing'] != '':
+            request.session['registration']['yearbook'] = False
+            request.session['registration']['attempted_yearbook'] = True
         if request.POST.has_key('existing'):
             request.session['registration']['existing'] = request.POST['existing']
 
@@ -134,6 +139,13 @@ def household(request):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
+        request.session.modified = True
+
+    main = False
+    for user in request.session['registration']['users']:
+        if user['age'] >= AGE_STUDENT:
+            main = True
+            break
 
     countries = FocusCountry.objects.all()
     countries_norway = countries.get(code='NO')
@@ -144,7 +156,9 @@ def household(request):
     context = {'users': request.session['registration']['users'],
         'location': request.session['registration'].get('location', ''),
         'existing': request.session['registration'].get('existing', ''),
-        'countries_norway': countries_norway,
+        'countries_norway': countries_norway, 'main': main,
+        'yearbook': request.session['registration'].get('yearbook', ''),
+        'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE,
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors}
     return render(request, 'enrollment/household.html', context)
@@ -187,7 +201,10 @@ def verification(request):
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
         'no_main_member': request.GET.has_key(no_main_member_key),
-        'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
+        'invalid_payment_method': request.GET.has_key(invalid_payment_method),
+        'yearbook': request.session['registration']['yearbook'],
+        'attempted_yearbook': request.session['registration']['attempted_yearbook'],
+        'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE}
     return render(request, 'enrollment/verification.html', context)
 
 def payment(request):
@@ -209,6 +226,7 @@ def payment(request):
         # If a pre-existing main member is specified, everyone is household
         for user in request.session['registration']['users']:
             user['household'] = True
+            user['yearbook'] = False
         linked_to = request.session['registration']['existing']
     elif request.POST['main-member'] != '':
         # If the user specified someone, everyone except that member is household
@@ -218,9 +236,11 @@ def payment(request):
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
                 user['household'] = False
+                user['yearbook'] = True
                 main = user
             else:
                 user['household'] = True
+                user['yearbook'] = False
         if main == None:
             # The specified main-member index doesn't exist
             return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
@@ -229,6 +249,7 @@ def payment(request):
         # so no main/household status applies.
         for user in request.session['registration']['users']:
             user['household'] = False
+            user['yearbook'] = False
             # Verify that all members are below student age
             if user['age'] >= AGE_STUDENT:
                 return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
@@ -237,8 +258,8 @@ def payment(request):
     if main != None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
-            request.session['registration']['location'], main['phone'], main['email'], None,
-            request.POST['payment-method'])
+            request.session['registration']['location'], main['phone'], main['email'],
+            main['yearbook'], None, request.POST['payment-method'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -247,7 +268,7 @@ def payment(request):
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['location'], user['phone'], user['email'],
-            linked_to, request.POST['payment-method'])
+            user['yearbook'], linked_to, request.POST['payment-method'])
 
     # Cool. If we're paying by invoice, just forward to result page
     if request.POST['payment-method'] == 'invoice':
@@ -259,6 +280,10 @@ def payment(request):
         sum += price_of(user['age'], user['household'])
         if user.has_key('key'):
             sum += KEY_PRICE
+
+    # Pay for yearbook if foreign
+    if request.session['registration']['yearbook']:
+        sum += FOREIGN_YEARBOOK_PRICE
 
     now = datetime.now()
     year = now.year
@@ -423,17 +448,22 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, location, phone, email, linked_to, payment_method):
+def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, linked_to, payment_method):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
-    receive_yearbook = True # ???
-    yearbook = 152
     type = focus_type_of(age, linked_to != None)
     payment_method = focus_payment_method_code(payment_method)
     price = price_of(age, linked_to != None)
     linked_to = '' if linked_to == None else str(linked_to)
+    if location['country'] == 'NO':
+        # Override yearbook value for norwegians based on age and household status
+        yearbook = focus_receive_yearbook(age, linked_to)
+    if yearbook:
+        yearbook_type = 152
+    else:
+        yearbook_type = ''
 
     adr1 = location['address1']
     if location['country'] == 'NO':
@@ -461,8 +491,8 @@ def add_focus_user(name, dob, age, gender, location, phone, email, linked_to, pa
     seq.save()
     user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
-        country=location['country'], phone='', email=email, receive_yearbook=receive_yearbook,
-        type=type, yearbook=yearbook, payment_method=payment_method, mob=phone, postnr=zip_code,
+        country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
+        yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zip_code,
         poststed=city, language=language, totalprice=price)
     user.save()
     return seq.next
@@ -481,3 +511,11 @@ def focus_type_of(age, household):
     else:                    return 105
     # 104 = ?
     # 108 = Lifelong member
+
+def focus_receive_yearbook(age, linked_to):
+    if linked_to != '':
+        return False
+    elif age >= AGE_STUDENT:
+        return True
+    else:
+        return False

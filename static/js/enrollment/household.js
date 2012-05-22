@@ -41,17 +41,20 @@ $(document).ready(function() {
         if(sel.val() == 'NO') {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
+            $("form#household div.yearbook").hide();
             $("form#household input[name='city']").attr('disabled', true);
             $("form#household input[name='zipcode']").keyup(searchZip);
             $("form#household input[name='zipcode']").keyup();
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
+            $("form#household div.yearbook").show();
             $("form#household input[name='city']").removeAttr('disabled');
             $("form#household input[name='zipcode']").off('keyup');
         } else {
             $("form#household div.world").show();
             $("form#household div.scandinavia").hide();
+            $("form#household div.yearbook").show();
         }
     }
 

@@ -10,6 +10,7 @@
 
 <script>
   var price_key = {{ keyprice }};
+  var price_foreign_yearbook = {{ foreign_yearbook_price }};
   var price_main = {{ price_main }};
   var price_household = {{ price_household }};
   var price_senior = {{ price_senior }};
@@ -66,6 +67,17 @@
     </div>
   </div>
   {% endif %}
+
+  {% if attempted_yearbook %}
+  <div class="offset3 span6">
+    <div class="alert alert-warning">
+      <a class="close">x</a>
+      <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
+      Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet (TODO: existing.name) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
+    </div>
+  </div>
+  {% endif %}
+
 
 <div class="offset2 span8">
   <h2>Registrerte opplysninger</h2>
@@ -174,6 +186,15 @@
         <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
         <td><span class="keyprice">{{ keyprice }}</span>,-</td>
       </tr>
+      {% endif %}
+      {% if yearbook %}
+        <tr>
+          {% if multiple_main and not existing %}
+            <td></td>
+          {% endif %}
+          <td colspan="2">Årbok og Fjell og Vidde</td>
+          <td><span class="yearbook-price">{{ foreign_yearbook_price }}</span>,-</td>
+        </tr>
       {% endif %}
     </tbody>
     <tfoot>

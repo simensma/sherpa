@@ -76,6 +76,13 @@
             <input type="text" class="span3" name="address3" value="{{ location.address3 }}">
           </div>
         </div>
+        {% if main %}
+        <div class="control-group yearbook">
+          <label class="checkbox">
+            <input type="checkbox" name="yearbook"{% if yearbook %} checked{% endif %}> Motta Årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_yearbook_price }}
+          </label>
+        </div>
+        {% endif %}
       </div>
 
       <p>Bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med et <strong>eksisterende</strong> medlem på denne adressen?</p>

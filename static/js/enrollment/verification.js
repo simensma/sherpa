@@ -124,6 +124,9 @@ function calculatePrices() {
     $("table.prices td span.keyprice").each(function() {
         totalPrice += Number($(this).text());
     });
+    $("table.prices span.yearbook-price").each(function() {
+        totalPrice += Number($(this).text());
+    });
     $("table.prices tr[data-index]").each(function() {
         var age = $(this).attr('data-age');
         var price = priceOf(age);
