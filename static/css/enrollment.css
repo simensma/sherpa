@@ -16,6 +16,10 @@ form#household select option[disabled] {
     background-color: rgb(215, 215, 215);
 }
 
+form#household button.search {
+    margin-bottom: 10px;
+}
+
 form#registration input[type='text'], form#household input[type='text'], form#household select {
     color: black;
     font-size: 120%;

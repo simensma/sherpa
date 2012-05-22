@@ -62,7 +62,7 @@
             <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
             <input type="text" class="span2" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
             <input type="text" class="span3" name="city" value="{{ location.city }}" disabled>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader" alt="Laster poststed..." title="Laster poststed...">
           </div>
         </div>
         <div class="world">
@@ -90,7 +90,10 @@
 
       <div class="well existing">
         Hvis {% if users|length > 1 %}dere{% else %}du{% endif %} bor sammen med et eksisterende medlem kan {% if users|length > 1 %}dere{% else %}du{% endif %} få billigere medlemsskap som husstandsmedlem{% if users|length > 1 %}mer{% endif %}. <a href="{% url enrollment.views.types %}" target="_blank">Les mer om medlemstypene her</a>.<br>
-        <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer..."><br>
+        <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
+        <button class="btn search"><i class="icon-search"></i> Søk</button>
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
+        <br>
         Hvis ikke, bare klikk på "Gå videre".
       </div>
 

@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     function searchZip() {
         if($(this).val().match(/^\d{4}$/)) {
-            $("form#household img.ajaxloader").show();
+            $("form#household img.zip.ajaxloader").show();
             $.ajax({
                 url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
                 type: 'POST'
@@ -27,7 +27,7 @@ $(document).ready(function() {
                 $("form#household input[name='city']").val("Ukjent postnummer");
                 $("form#household div.control-group.zipcode").addClass('error');
             }).always(function(result) {
-                $("form#household img.ajaxloader").hide();
+                $("form#household img.zip.ajaxloader").hide();
             });
         } else {
             $("form#household input[name='city']").val("");
@@ -95,5 +95,27 @@ $(document).ready(function() {
         $("div.existing").show();
     });
 
+    $("form#household button.search").click(function() {
+        var button = $(this);
+        button.attr('disabled', true);
+        $("form#household img.existing.ajaxloader").show();
+        var data = {
+            id: $("form#household input[name='existing']").val(),
+            zipcode: $("form#household input[name='zipcode']").val(),
+            country: $("form#household select[name='country'] option:selected").val()
+        }
+        $.ajax({
+            url: '/innmelding/eksisterende/',
+            type: 'POST',
+            data: 'data=' + encodeURIComponent(JSON.stringify(data))
+        }).done(function(result) {
+            alert(result);
+        }).fail(function(result) {
+            $(document.body).html(result.responseText);
+        }).always(function() {
+            button.removeAttr('disabled');
+            $("form#household img.existing.ajaxloader").hide();
+        });
+    });
 
 });

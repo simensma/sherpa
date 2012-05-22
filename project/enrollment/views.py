@@ -5,11 +5,12 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import Context, loader
 
-from user.models import Zipcode, FocusCountry, FocusUser, FocusActType
+from user.models import Zipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress
 
 from datetime import datetime
 import requests
 import re
+import json
 from lxml import etree
 
 # From the start of this month, memberships are for the remaining year AND next year
@@ -162,6 +163,27 @@ def household(request):
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors}
     return render(request, 'enrollment/household.html', context)
+
+def existing(request):
+    data = json.loads(request.POST['data'])
+    if data['country'] == 'NO':
+        if(len(data['zipcode']) != 4):
+            return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
+        try:
+            actor = Actor.objects.get(actno=data['id'])
+        except Actor.DoesNotExist:
+            return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
+        try:
+            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'])
+        except ActorAddress.DoesNotExist:
+            return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
+
+        return HttpResponse(json.dumps({
+            'name': "%s %s" % (actor.first_name, actor.last_name),
+            'address': address.a1
+        }))
+    else:
+        pass # Todo
 
 def verification(request):
     val = validate(request.session, require_location=True)
