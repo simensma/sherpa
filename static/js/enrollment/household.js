@@ -88,4 +88,12 @@ $(document).ready(function() {
         }
     });
 
+    /* Existing */
+    $("div.existing").hide();
+    $("a.existing").click(function() {
+        $("a.existing").hide();
+        $("div.existing").show();
+    });
+
+
 });
