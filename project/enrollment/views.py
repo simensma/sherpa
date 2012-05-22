@@ -177,9 +177,9 @@ def existing(request):
     try:
         if data['country'] == 'NO':
             # Include zipcode for norwegian members
-            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'], ctrycode=data['country'])
+            address = ActorAddress.objects.get(actseqno=actor.seqno, zipcode=data['zipcode'], country=data['country'])
         else:
-            address = ActorAddress.objects.get(actseqno=actor.seqno, ctrycode=data['country'])
+            address = ActorAddress.objects.get(actseqno=actor.seqno, country=data['country'])
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
@@ -465,7 +465,7 @@ def validate_existing(id, zipcode, country):
         except Actor.DoesNotExist:
             return False
 
-        if not ActorAddress.objects.filter(actseqno=actor.seqno, pcode=zipcode, ctrycode=country).exists():
+        if not ActorAddress.objects.filter(actseqno=actor.seqno, zipcode=zipcode, country=country).exists():
             return False
     else:
         try:
@@ -473,7 +473,7 @@ def validate_existing(id, zipcode, country):
         except Actor.DoesNotExist:
             return False
 
-        if not ActorAddress.objects.filter(actseqno=actor.seqno, ctrycode=country).exists():
+        if not ActorAddress.objects.filter(actseqno=actor.seqno, country=country).exists():
             return False
     return True
 
