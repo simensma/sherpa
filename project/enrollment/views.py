@@ -464,7 +464,7 @@ def validate_existing(id, zipcode, country):
         except Actor.DoesNotExist:
             return False
 
-        if not ActorAddress.objects.filter(actseqno=actor.seqno, pcode=data['zipcode'], ctrycode=country).exists():
+        if not ActorAddress.objects.filter(actseqno=actor.seqno, pcode=zipcode, ctrycode=country).exists():
             return False
     else:
         try:
