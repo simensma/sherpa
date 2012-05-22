@@ -9,6 +9,7 @@
 {% block body %}
 
 <script>
+  var existing = {% if existing %}true{% else %}false{% endif %};
   var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
 </script>
 

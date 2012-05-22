@@ -140,7 +140,7 @@ $(document).ready(function() {
         });
     });
 
-    if(invalid_existing) {
+    if(existing) {
         $("a.existing").hide();
         $("form#household button.search").click();
     } else {
