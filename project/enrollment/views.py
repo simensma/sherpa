@@ -176,7 +176,7 @@ def existing(request):
         except Actor.DoesNotExist:
             return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
         try:
-            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'])
+            address = ActorAddress.objects.get(actseqno=actor.seqno, pcode=data['zipcode'], country=data['country'])
         except ActorAddress.DoesNotExist:
             return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
