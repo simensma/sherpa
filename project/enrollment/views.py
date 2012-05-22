@@ -335,6 +335,21 @@ def payment(request):
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
 
+    # Infer order number
+    if main != None:
+        order_number = 'I_%s' % main['id']
+    else:
+        found = False
+        for user in request.session['registration']['users']:
+            if user['age'] >= AGE_STUDENT:
+                order_number = 'I_%s' % user['id']
+                found = True
+                break
+        if not found:
+            order_number = 'I'
+            for user in request.session['registration']['users']:
+                order_number += '_%s' % user['id']
+
     t = loader.get_template('enrollment/payment-terminal.html')
     c = Context({'year': year, 'next_year': next_year})
     desc = t.render(c)
@@ -343,7 +358,7 @@ def payment(request):
     r = requests.get(REGISTER_URL, params={
         'merchantId': settings.NETS_MERCHANT_ID,
         'token': settings.NETS_TOKEN,
-        'orderNumber': 'TBD',
+        'orderNumber': order_number,
         'currencyCode': 'NOK',
         'amount': sum * 100,
         'orderDescription': desc,
