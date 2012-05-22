@@ -28,6 +28,7 @@ no_main_member_key = 'mangler-hovedmedlem'
 invalid_payment_method = 'ugyldig-betalingsmetode'
 invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
+too_many_underage = 'for-mange-ungdomsmedlemmer'
 
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
@@ -104,7 +105,8 @@ def registration(request, user):
 
     context = {'users': request.session['registration']['users'], 'user': user,
         'saved': saved, 'errors': errors, 'contact_missing': contact_missing,
-        'conditions': request.session['registration'].get('conditions', '')}
+        'conditions': request.session['registration'].get('conditions', ''),
+        'too_many_underage': request.GET.has_key(too_many_underage)}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
@@ -400,6 +402,8 @@ def validate(session, require_location, require_existing):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(session['registration']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_youth_count(session['registration']['users']):
+        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), too_many_underage))
     if not validate_user_contact(session['registration']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     if require_location:
@@ -495,6 +499,18 @@ def validate_existing(id, zipcode, country):
         if not ActorAddress.objects.filter(actseqno=actor.seqno, country=country).exists():
             return False
     return True
+
+def validate_youth_count(users):
+    # Based on order number length, which is 32.
+    # MemberID is 7 chars, order number format is I[_<memberid>]+ so 4 users = 33 chars.
+    if len(users) <= 3:
+        return True
+    at_least_one_main_member = False
+    for user in users:
+        if user['age'] >= AGE_STUDENT:
+            at_least_one_main_member = True
+            break
+    return at_least_one_main_member
 
 def price_of(age, household):
     if household:

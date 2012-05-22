@@ -25,6 +25,13 @@
 
 <div class="row">
 <div class="offset2 span5">
+{% if too_many_underage %}
+<div class="notice-alert">
+  <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
+  <p>Du har registrert {{ users|length }} medlemmer, hvorav ingen er gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks 3 slike medlemmer av gangen.</p>
+  <p>Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik begrensning.</p>
+</div>
+{% endif %}
 {% if errors %}
   <div class="alert alert-error">
     <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>

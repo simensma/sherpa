@@ -149,3 +149,13 @@ table.prices div.desc {
 table.prices div.data {
     margin-left: 70px; /* estimated width of previous sibling div.desc */
 }
+
+div.notice-alert {
+    padding: 10px;
+    border: 1px solid rgb(95, 95, 95);
+    margin-bottom: 20px;
+}
+
+div.notice-alert h2 {
+    margin-bottom: 10px;
+}
