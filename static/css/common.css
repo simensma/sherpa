@@ -68,6 +68,7 @@ img {
 
 nav#menus {
   margin-bottom: 40px;
+  font-size: 14px;
 }
 
 nav#menus div.border {
@@ -75,7 +76,7 @@ nav#menus div.border {
   position: absolute;
   width: 100%;
   left: 0;
-  margin-top: 26px;
+  margin-top: 8px;
   border-bottom: 1px solid rgb(229, 229, 229);
 }
 
@@ -91,11 +92,20 @@ nav#menus li {
 }
 
 nav#menus li a {
-  font-size: 14px;
   color: rgb(30, 30, 30);
 }
 
 nav#menus li.active a {
+  font-weight: bold;
+}
+
+nav#menus div.menu-breadcrumb {
+  margin-top: 17px;
+  color: rgb(121, 121, 121);
+}
+
+nav#menus div.menu-breadcrumb em {
+  font-style: normal;
   font-weight: bold;
 }
 
