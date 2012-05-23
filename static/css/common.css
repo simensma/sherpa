@@ -67,7 +67,16 @@ img {
 /* Menus */
 
 nav#menus {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
+}
+
+nav#menus div.border {
+  clear: both;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin-top: 26px;
+  border-bottom: 1px solid rgb(229, 229, 229);
 }
 
 nav#menus ul {
