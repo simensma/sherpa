@@ -6,13 +6,32 @@
  * Fonts and general styles
  */
 
+@font-face {
+  font-family: "DTL Nobel Oldstyle";
+  src: url('/static/fonts/dtl-nobel-oldstyle.eot');
+  src: url('/static/fonts/dtl-nobel-oldstyle.eot?#iefix') format('embedded-opentype'),
+       url('/static/fonts/dtl-nobel-oldstyle.woff') format('woff'),
+       url('/static/fonts/dtl-nobel-oldstyle.ttf') format('truetype'),
+       url('/static/fonts/dtl-nobel-oldstyle.svg') format('svg');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "DTL Nobel Oldstyle";
+  src: url('/static/fonts/dtl-nobel-oldstyle-bold.eot');
+  src: url('/static/fonts/dtl-nobel-oldstyle-bold.eot?#iefix') format('embedded-opentype'),
+       url('/static/fonts/dtl-nobel-oldstyle-bold.woff') format('woff'),
+       url('/static/fonts/dtl-nobel-oldstyle-bold.ttf') format('truetype'),
+       url('/static/fonts/dtl-nobel-oldstyle-bold.svg') format('svg');
+  font-weight: bold;
+}
+
 body, p {
   font-family: georgia, times, serif !important;
 }
 
 h1, h2, h3, h4, h5, h6, input, button, select, textarea {
-  /* Temporary, until our profile font arrives */
-  font-family: sans-serif;
+  font-family: "DTL Nobel Oldstyle";
 }
 
 h1 {
