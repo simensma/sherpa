@@ -2,7 +2,7 @@
 
 {% block body %}
   <nav id="dashboard">
-    <h1>Internett</h1>
+    <h1 class="sherpa">Internett</h1>
     <ul>
       <li><a href="{% url admin.cms.views.page.list %}">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg"><br>Websider</a></li>
@@ -10,7 +10,7 @@
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg"><br>Artikler</a></li>
     </ul>
 
-    <h1>Forvaltning</h1>
+    <h1 class="sherpa">Forvaltning</h1>
     <ul>
       <li><a href="http://www.turistforeningen.no/admin/activity.php">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity-tmp.jpg"><br>Aktiviteter</a><br><span style="font-size: 60%; position: relative; top: -5px">(Har du forslag til bilde? Send til Ali!)</span></li>
@@ -27,7 +27,7 @@
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/folders.jpg"><br>Filer</a></li>
     </ul>
 
-    <h1>Teknisk</h1>
+    <h1 class="sherpa">Teknisk</h1>
     <ul>
       <li><a href="{% url admin.analytics.views.visitors_list %}">
         <img src="{{ STATIC_URL }}img/icons/sherpa-dashboard/statistics.jpg"><br>Analyse</a></li>

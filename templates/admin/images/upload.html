@@ -27,7 +27,7 @@
   </div>
 
   <form class="image-uploader" action="{% url admin.images.views.upload_image current_album.id %}" method="post" enctype="multipart/form-data" target="iframe">
-    <h1>Last opp nye bilder</h1>
+    <h1 class="sherpa">Last opp nye bilder</h1>
     <input type="file" name="files" multiple><br>
     {% csrf_token %}
     <input class="btn" type="submit" value="Last opp valgte bilder til albumet '{{ current_album.name }}'">
