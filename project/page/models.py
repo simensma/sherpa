@@ -109,7 +109,7 @@ def delete_column(sender, **kwargs):
 class Content(models.Model):
     column = models.ForeignKey('page.Column')
     content = models.TextField()
-    type = models.CharField(max_length=1, choices=(('widget', 'Widget'), ('html', 'HTML'), ('image', 'Image'), ('title', 'Title')))
+    type = models.CharField(max_length=255, choices=(('widget', 'Widget'), ('html', 'HTML'), ('image', 'Image'), ('title', 'Title')))
     # Note: 'order' should be unique, but it's not enforced because
     # when deleting and cascading orders, two orders will temporarily clash.
     order = models.IntegerField()
