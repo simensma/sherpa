@@ -60,6 +60,11 @@ footer div.sponsors {
   margin-top: 40px;
 }
 
+footer div.sponsors img {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
 /* Search box, preliminary for groups */
 
 div#searchbox {
