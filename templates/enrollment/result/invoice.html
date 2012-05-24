@@ -1,0 +1,60 @@
+{% extends 'enrollment/result/main.html' %}
+
+{% block result %}
+
+<div class="row">
+  <div id="result" class="span8">
+
+    <h1>Velkommen som medlem!</h1>
+
+    <p>
+      Du blir medlem i [medlemsforening]
+    </p>
+
+    <p>
+      Du vil i løpet av kort tid motta medlemskort og faktura i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
+    </p>
+
+    <p>
+      Kvittering på denne registreringen er sendt på e-post til [e-postadresse]
+    </p>
+
+    <div id="boxes">
+      <div class="box">
+        <h2>Planlegg turen på UT.no</h2>
+        <p>
+          På <a href="http://www.ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+        </p>
+      </div>
+
+      <div class="box">
+        <h2>Hva skjer der du bor</h2>
+        <p>
+          [Medlemsforening] arrangerer fellesturer og aktiviteter hele året.
+        </p>
+      </div>
+
+      <div class="box">
+        <h2>Min side</h2>
+        <p>
+          Registrer deg på Min side og få tilgang til våre medlemstjenester.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="span4">
+    <div class="well">
+      <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
+      <p>
+        Kontakt medlemsservice:<br>
+        Telefon: 4000 1970<br>
+        Åpent alle hverdager:<br>
+        Kl. 09.00 - 16.00<br>
+        E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

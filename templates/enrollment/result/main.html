@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+{% include 'enrollment/progress.html' with step=0 %}
+{% block result %}{% endblock %}
+{% endblock %}

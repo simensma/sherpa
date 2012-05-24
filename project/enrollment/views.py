@@ -375,7 +375,7 @@ def payment(request):
 
 def result(request, invoice):
     if invoice:
-        context = {'status': 'invoice'}
+        result = 'invoice'
     elif request.GET['responseCode'] == 'OK':
         r = requests.get(PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
@@ -394,12 +394,12 @@ def result(request, invoice):
             # Remove all registration session data. Only on success;
             # on fail, the user may want to re-enter their data.
             del request.session['registration']
-            context = {'status': 'success'}
+            result = 'success'
         else:
-            context = {'status': 'fail', 'message': dom.find(".//ResponseText").text}
+            result = 'fail'
     else:
-        context = {'status': 'cancel'}
-    return render(request, 'enrollment/result.html', context)
+        result = 'cancel'
+    return render(request, 'enrollment/result/%s.html' % result)
 
 def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location
