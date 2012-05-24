@@ -71,24 +71,24 @@
         </div>
         <div class="control-group address1">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="span3" name="address1" value="{{ location.address1 }}">
+          <input type="text" class="input-large" name="address1" value="{{ location.address1 }}">
         </div>
         <div class="scandinavia">
           <div class="control-group zipcode">
             <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-            <input type="text" class="span2" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
-            <input type="text" class="span3" name="city" value="{{ location.city }}" disabled>
+            <input type="text" class="input-small" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
+            <input type="text" class="input-medium" name="city" value="{{ location.city }}" disabled>
             <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader" alt="Laster poststed..." title="Laster poststed...">
           </div>
         </div>
         <div class="world">
           <div class="control-group address2">
             <label> Adresse 2</label>
-            <input type="text" class="span3" name="address2" value="{{ location.address2 }}">
+            <input type="text" class="input-medium" name="address2" value="{{ location.address2 }}">
           </div>
           <div class="control-group address3">
             <label> Adresse 3</label>
-            <input type="text" class="span3" name="address3" value="{{ location.address3 }}">
+            <input type="text" class="input-medium" name="address3" value="{{ location.address3 }}">
           </div>
         </div>
         {% if main %}
