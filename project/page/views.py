@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from page.models import Page, Variant, Version
 from analytics.models import Visitor, Pageview
 from string import split
@@ -10,7 +10,11 @@ from page.views_widgets import *
 variant_key = 'var'
 
 def page(request, slug):
-    page = Page.objects.get(slug=slug)
+    try:
+        page = Page.objects.get(slug=slug)
+    except Page.DoesNotExist:
+        # This is (as of this writing) the only point of entry to the 404 template.
+        raise Http404
     matched_variant = match_user(request, page)
     requested_variant = request.GET.get(variant_key)
     if(requested_variant == None):
