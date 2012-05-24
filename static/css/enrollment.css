@@ -159,3 +159,13 @@ div.notice-alert {
 div.notice-alert h2 {
     margin-bottom: 10px;
 }
+
+div#result div#boxes div.box {
+    float: left;
+    width: 31%;
+    margin: 1%;
+}
+
+div#result div#boxes div.box h2 {
+    font-size: 20px;
+}
