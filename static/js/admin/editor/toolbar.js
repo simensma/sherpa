@@ -35,7 +35,12 @@ $(document).ready(function() {
                 node = parent;
                 parent = node.parent();
             }
-            node.replaceWith($('<' + $(this).val() + '></' + $(this).val() + '>').prepend(node.contents()));
+            var replacement = $('<' + $(this).val() + '></' + $(this).val() + '>');
+            var clazz = $(this).attr('data-class');
+            if(clazz !== undefined) {
+                replacement.addClass(clazz);
+            }
+            node.replaceWith(replacement.prepend(node.contents()));
         });
         $("#toolbar select").val("default");
     });

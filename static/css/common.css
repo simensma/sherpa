@@ -55,11 +55,6 @@ h3 {
   font-size: 18px;
 }
 
-/* Todo - this isn't used anywhere yet */
-.lede {
-  font-size: 20px;
-}
-
 img {
   max-width: 100%;
 }
@@ -128,6 +123,11 @@ article .row, article .row-fluid {
 article p {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+article p.lede {
+  font-family: "DTL Nobel Oldstyle" !important;
+  font-size: 20px;
 }
 
 /* Article preview */
