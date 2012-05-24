@@ -169,3 +169,11 @@ div#result div#boxes div.box {
 div#result div#boxes div.box h2 {
     font-size: 20px;
 }
+
+p.receipt-success {
+    color: green;
+}
+
+p.receipt-error {
+    color: red;
+}

@@ -1,4 +1,7 @@
 {% extends 'enrollment/result/main.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/result.js"></script>
+{% endblock %}
 
 {% block result %}
 
@@ -16,10 +19,13 @@
       Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til [dato 14 dager frem i tid] eller få tilsendt gratis kvittering på SMS. Kvittering er også sendt på e-post til [e-postadresse]
     </p>
 
-    <p>
-      Send gratis kvittering på SMS til [mobilnummer]<br>
-      SMS er sendt til <mobilnummer>
-    </p>
+    {% csrf_token %}
+    {% for user in users %}
+      <button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
+        <i class="icon-signal"></i>
+        Send gratis kvittering på SMS til {{ user.phone }}
+      </button>
+    {% endfor %}
 
     <div id="boxes">
       <div class="box">

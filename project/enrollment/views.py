@@ -12,6 +12,7 @@ import requests
 import re
 import json
 from lxml import etree
+from urllib import quote_plus
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -33,6 +34,9 @@ too_many_underage = 'for-mange-ungdomsmedlemmer'
 REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
+
+SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
+SMS_RECEIPT_MESSAGE = "Kvitteringsmelding TBD."
 
 # Temporary hardcoded prices
 PRICE_MAIN = 550
@@ -396,7 +400,22 @@ def result(request, invoice):
             result = 'fail'
     else:
         result = 'cancel'
-    return render(request, 'enrollment/result/%s.html' % result)
+    context = {'users': request.session['registration']['users']}
+    return render(request, 'enrollment/result/%s.html' % result, context)
+
+def sms(request):
+    index = int(request.POST['index'])
+    if not request.session['registration'].has_key('success'):
+        return HttpResponse(json.dumps({'error': 'not_registered'}))
+    if request.session['registration']['users'][index].has_key('sms_sent'):
+        return HttpResponse(json.dumps({'error': 'already_sent'}))
+    number = request.session['registration']['users'][index]['phone']
+    r = requests.get(SMS_URL % (quote_plus(number), quote_plus(SMS_RECEIPT_MESSAGE)))
+    status = re.findall('Status: .*', r.text)
+    if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+        return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
+    request.session['registration']['users'][index]['sms_sent'] = True
+    return HttpResponse(json.dumps({'error': 'none'}))
 
 def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location
