@@ -25,6 +25,9 @@ $(document).ready(function() {
             // Don't add to anchors with more than text nodes as children
             return $(this);
         }
+        if($(this).attr('href') === undefined || $(this).attr('href') === false) {
+            return $(this);
+        }
         var hostname = $(this).get(0).hostname;
         if(hostname != '' && hostname != location.hostname) {
             $(this).addClass('external');
