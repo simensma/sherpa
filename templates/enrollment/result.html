@@ -80,7 +80,33 @@
 
 {% elif status == 'cancel' %}
 
-  <h2>Cancel</h2>
+<div class="row">
+  <div id="result" class="span8">
+
+    <h1><img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_196_circle_exclamation_mark.png" alt="!"> Betalingen ble avbrutt</h1>
+
+    <p>
+     Medlemskapet blir ikke registrert før betalingen er gjennomført og godkjent i vår betalingsløsning.
+    </p>
+
+    <p>
+      <a href="{% url enrollment.views.verification %}">Gå tilbake</a> for å starte betaling på nytt.
+    </p>
+  </div>
+
+  <div class="span4">
+    <div class="well">
+      <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
+      <p>
+        Kontakt medlemsservice:<br>
+        Telefon: 4000 1970<br>
+        Åpent alle hverdager:<br>
+        Kl. 09.00 - 16.00<br>
+        E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+      </p>
+    </div>
+  </div>
+</div>
 
 {% endif %}
 
