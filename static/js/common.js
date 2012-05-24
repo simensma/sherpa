@@ -19,6 +19,18 @@ $(document).ready(function() {
     /* For any close button, close its parent alert */
     $("a.close").click(function() { $(this).parent().hide(); });
 
+    /* Add class to external links */
+    $("a").each(function() {
+        if($(this).children().length > 0) {
+            // Don't add to anchors with more than text nodes as children
+            return $(this);
+        }
+        var hostname = $(this).get(0).hostname;
+        if(hostname != '' && hostname != location.hostname) {
+            $(this).addClass('external');
+        }
+    });
+
 });
 
 $.fn.enableDialog = function() {

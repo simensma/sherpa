@@ -63,6 +63,11 @@ a {
   color: rgb(216, 42, 32);
 }
 
+a.external:not(.noexternal) {
+  padding-right: 22px;
+  background: url('/static/img/icons/glyph/red/glyphicons_152_new_window.png') center right no-repeat;
+}
+
 a:hover {
   color: rgb(255, 0, 21);
 }
