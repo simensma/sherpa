@@ -13,7 +13,7 @@ from page.views_widgets import parse_widget
 
 @login_required
 def list(request):
-    versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True)
+    versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True).order_by('-variant__article__created')
     for version in versions:
         version.load_preview()
     context = {'versions': versions}
