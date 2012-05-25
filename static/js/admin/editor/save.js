@@ -51,7 +51,7 @@ $(document).ready(function() {
             columns = columns.concat([column]);
         });
         var contents = [];
-        $("article div.html, article div.title, article div.lede").each(function() {
+        $("article div.html").each(function() {
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
