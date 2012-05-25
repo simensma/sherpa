@@ -1,48 +1,34 @@
 /* Editing widgets */
 $(document).ready(function() {
 
-    /* This file can be heavily refactored */
-
-    // Save quote-widget
-    $("div.dialog.widget-edit.quote button.save").click(function() {
-        var content = JSON.stringify({
-            widget: "quote",
-            quote: $("div.dialog.widget-edit.quote textarea[name='quote']").val(),
-            author: $("div.dialog.widget-edit.quote input[name='author']").val()
-        });
-        if(widgetBeingEdited !== undefined) {
-            $("div.dialog.widget-edit.quote").dialog('close');
-            enableOverlay();
-            saveWidget(widgetBeingEdited, content);
-        } else {
-            $(this).parents(".dialog").dialog('close');
-            addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
-                widgetPosition.order, content, 'widget', widgetAdded);
-        }
-    });
-
-    // Save articles-widget
-    $("div.dialog.widget-edit.articles button.save").click(function() {
-        var count = $("div.dialog.widget-edit.articles input[name='count']").val();
-        if(isNaN(Number(count))) {
-            alert("Du må angi et tall for antall artikler som skal vises!");
-            return $(this);
-        } else if(count < 1) {
-            alert("Du må vise minst én artikkel!");
+    // Save any widget
+    $("div.dialog.widget-edit button.save").click(function() {
+        var content = validateContent($(this).parents("div.dialog.widget-edit"));
+        if(content === false) {
             return $(this);
         }
-        var content = JSON.stringify({
-            widget: "articles",
-            count: count
-        });
+        $("div.dialog.widget-edit").dialog('close');
         if(widgetBeingEdited !== undefined) {
-            $("div.dialog.widget-edit.articles").dialog('close');
             enableOverlay();
-            saveWidget(widgetBeingEdited, content);
+            $.ajax({
+                url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
+                type: 'POST',
+                data: 'content=' + encodeURIComponent(content)
+            }).done(function(result) {
+                result = JSON.parse(result);
+                widgetBeingEdited.contents().remove();
+                widgetBeingEdited.append(result.content);
+                widgetBeingEdited.attr('data-json', result.json);
+            }).always(function() {
+                disableOverlay();
+            });
         } else {
-            $(this).parents(".dialog").dialog('close');
             addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
-                widgetPosition.order, content, 'widget', widgetAdded);
+                widgetPosition.order, content, 'widget', function(wrapper) {
+                    refreshSort();
+                    removeEmpties();
+                    setEmpties();
+            });
         }
     });
 
@@ -67,36 +53,38 @@ $(document).ready(function() {
 
 });
 
-function widgetAdded(wrapper) {
-    refreshSort();
-    removeEmpties();
-    setEmpties();
-}
-
-function saveWidget(widget, content) {
-    $.ajax({
-        url: '/sherpa/cms/widget/oppdater/' + widget.attr('data-id') + '/',
-        type: 'POST',
-        data: 'content=' + encodeURIComponent(content)
-    }).done(function(result) {
-        result = JSON.parse(result);
-        widget.contents().remove();
-        widget.append(result.content);
-        widget.attr('data-json', result.json);
-    }).always(function() {
-        disableOverlay();
-    });
+function validateContent(widget) {
+    if(widget.attr('data-widget') == 'quote') {
+        return JSON.stringify({
+            widget: "quote",
+            quote: widget.find("textarea[name='quote']").val(),
+            author: widget.find("input[name='author']").val()
+        });
+    } else if(widget.attr('data-widget') == 'articles') {
+        var count = widget.find("input[name='count']").val();
+        if(isNaN(Number(count))) {
+            alert("Du må angi et tall for antall artikler som skal vises!");
+            return false;
+        } else if(count < 1) {
+            alert("Du må vise minst én artikkel!");
+            return false;
+        }
+        return JSON.stringify({
+            widget: "articles",
+            count: count
+        });
+    }
 }
 
 function editWidget() {
     widgetBeingEdited = $(this);
     var widget = JSON.parse($(this).attr('data-json'));
     if(widget.widget == 'quote') {
-        $("div.dialog.widget-edit.quote textarea[name='quote']").val(widget.quote);
-        $("div.dialog.widget-edit.quote input[name='author']").val(widget.author);
-        $("div.dialog.widget-edit.quote").dialog('open');
+        $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
+        $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
+        $("div.dialog.widget-edit[data-widget='quote']").dialog('open');
     } else if(widget.widget == 'articles') {
-        $("div.dialog.widget-edit.articles input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit.articles").dialog('open');
+        $("div.dialog.widget-edit[data-widget='articles'] input[name='count']").val(widget.count);
+        $("div.dialog.widget-edit[data-widget='articles']").dialog('open');
     }
 }

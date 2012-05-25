@@ -203,7 +203,7 @@ $(document).ready(function() {
         widgetBeingEdited = undefined;
         $(this).parents("#dialog-add-widget").dialog('close');
         $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
-        $("div.dialog.widget-edit." + $(this).attr('data-widget')).dialog('open');
+        $("div.dialog.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").dialog('open');
     });
 
     // Remove content (text/image/widget)
