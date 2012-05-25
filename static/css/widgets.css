@@ -4,51 +4,77 @@
 
 /* promo widget */
 
-div.widget div.promo {
+div.promo {
   width: 100%;
   background-color: rgb(216, 42, 32);
   height: 511px; /* The height of the background-image */
 }
 
-div.widget div.promo div.left {
+div.promo div.left {
   float: left;
   background: url('/static/img/widgets/promo/komdegut.jpg') no-repeat 100% 100%;
   width: 50%;
   height: 100%;
 }
 
-div.widget div.promo div.left div.menu {
+div.promo div.left div.menu {
   position: relative;
   float: left;
   z-index: 1;
 }
 
-div.widget div.promo div.left div.menu ul {
+div.promo div.left div.menu ul {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-div.widget div.promo div.left div.menu li {
+div.promo div.left div.menu li {
   padding: 5px;
   background-color: white;
   border: 1px solid #777;
   width: 120%;
+}
+
+div.promo div.left div.menu li.active {
+  background-color: rgb(216, 42, 32);
+  color: white;
+}
+
+div.promo div.left div.menu li:not(.active):hover {
+  background-color: #777;
+  cursor: pointer;
+}
+
+div.promo div.left div.menu li a {
   color: #777;
 }
 
-div.widget div.promo div.right {
+div.promo div.left div.menu li.active a {
+  color: white;
+}
+
+div.promo div.left div.menu li:not(.active):hover a {
+  color: white;
+  text-decoration: underline;
+}
+
+div.promo div.right {
   width: 46%;
   padding: 2% 2% 2% 52%;
   color: white;
 }
 
-div.widget div.promo div.right p.lede {
+div.promo div.right h1 {
+  border-bottom: none;
+}
+
+div.promo div.right p.lede {
   font-variant: small-caps;
   font-style: italic;
 }
 
-div.widget div.promo div.right img {
+div.promo div.right img {
   padding-left: 10%;
 }
 
