@@ -1,0 +1,21 @@
+<h1>Siste nyheter</h1>
+
+{% for version in widget.versions %}
+  <div class="article-preview">
+    {% if not version.hide_thumbnail %}
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+      </a>
+    {% endif %}
+    <h2>
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        {{ version.title.content|striptags }}
+      </a>
+    </h2>
+    <div class="lede">
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        {{ version.lede.content|removetags:"a"|safe|truncatewords:40 }}
+      </a>
+    </div>
+  </div>
+{% endfor %}

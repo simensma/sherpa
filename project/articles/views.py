@@ -10,7 +10,7 @@ import json
 def index(request):
     return HttpResponse()
 
-def show(request, article):
+def show(request, article, text):
     # Assume no segmentation for now
     article = Article.objects.get(id=article)
     variant = Variant.objects.get(article=article, segment=None)

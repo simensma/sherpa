@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
-from page.models import Row, Column, Content
+from page.models import Version, Row, Column, Content
 from articles.models import Article
 
 import json
@@ -36,3 +36,12 @@ def parse_widget(widget):
             'author': article.publisher.user.get_full_name(),
             'email': "TBD",
             'publishdate': article.pub_date}
+    elif(widget['widget'] == "articles"):
+        versions = Version.objects.filter(
+            variant__article__isnull=False, variant__segment__isnull=True,
+            variant__article__published=True, active=True
+            ).order_by('-variant__article__pub_date')[:widget['count']]
+        for version in versions:
+            version.load_preview()
+        return {'json': json.dumps(widget), 'template': 'widgets/articles/display.html',
+                'versions': versions, }
