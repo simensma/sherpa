@@ -19,6 +19,7 @@ $(document).ready(function() {
                 widgetBeingEdited.contents().remove();
                 widgetBeingEdited.append(result.content);
                 widgetBeingEdited.attr('data-json', result.json);
+                disableIframes(widgetBeingEdited);
             }).always(function() {
                 disableOverlay();
             });

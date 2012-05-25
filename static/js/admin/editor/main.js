@@ -11,6 +11,7 @@ $(document).ready(function() {
     $("div.no-save-warning").hide();
     setEmpties();
     enableEditing();
+    disableIframes($("article div.widget"));
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
@@ -573,6 +574,9 @@ $(document).ready(function() {
             } else {
                 prev.after(wrapper);
             }
+            if(type == 'widget') {
+                disableIframes(wrapper);
+            }
             // Disable the overlay _before_ calling the provided 'done' function
             disableOverlay();
             done(wrapper);
@@ -582,6 +586,19 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
+        });
+    }
+
+    window.disableIframes = disableIframes;
+    function disableIframes(content) {
+        // Can't capture click events in iframes, so replace them
+        content.find("iframe").each(function() {
+            var width = $(this).css('width');
+            var height = $(this).css('height');
+            var div = $('<div style="background: url(/static/img/iframe-placeholder.png) top left repeat">&nbsp;</div>');
+            div.css('width', width);
+            div.css('height', height);
+            $(this).replaceWith(div);
         });
     }
 
