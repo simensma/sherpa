@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     /* This file can be heavily refactored */
 
-    // Save/remove quote-widget
+    // Save quote-widget
     $("div.dialog.widget-edit.quote button.save").click(function() {
         var content = JSON.stringify({
             widget: "quote",
@@ -20,26 +20,8 @@ $(document).ready(function() {
                 widgetPosition.order, content, 'widget', widgetAdded);
         }
     });
-    $("div.dialog.widget-edit.quote button.remove").click(function() {
-        $(this).parents(".dialog").dialog('close');
-        $.ajax({
-            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(widgetBeingEdited.attr('data-id')) + '/',
-            type: 'POST'
-        }).done(function(result) {
-            if(widgetBeingEdited.siblings().length == 0) {
-                setEmpty(widgetBeingEdited.parent());
-            }
-            widgetBeingEdited.remove();
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            refreshSort();
-            doneRemoving();
-            disableOverlay();
-        });
-    });
 
-    // Save/remove articles-widget
+    // Save articles-widget
     $("div.dialog.widget-edit.articles button.save").click(function() {
         var count = $("div.dialog.widget-edit.articles input[name='count']").val();
         if(isNaN(Number(count))) {
@@ -63,7 +45,9 @@ $(document).ready(function() {
                 widgetPosition.order, content, 'widget', widgetAdded);
         }
     });
-    $("div.dialog.widget-edit.articles button.remove").click(function() {
+
+    // Remove any widget
+    $("div.dialog.widget-edit button.remove").click(function() {
         $(this).parents(".dialog").dialog('close');
         $.ajax({
             url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(widgetBeingEdited.attr('data-id')) + '/',
