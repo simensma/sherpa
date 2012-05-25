@@ -5,7 +5,12 @@ from django.http import HttpResponseRedirect
 from page.models import Version, Row, Column, Content
 from articles.models import Article
 
+from lxml import etree
+import requests
 import json
+import re
+
+BLOG_URL = "http://blogg.turistforeningen.no/feed/"
 
 def parse_content(request, version):
     rows = Row.objects.filter(version=version).order_by('order')
@@ -45,3 +50,20 @@ def parse_widget(widget):
             version.load_preview()
         return {'json': json.dumps(widget), 'template': 'widgets/articles/display.html',
                 'versions': versions, }
+    elif(widget['widget'] == "blog"):
+        r = requests.get(BLOG_URL)
+        root = etree.fromstring(r.content)
+        entries = []
+        for item in root.find('channel').findall('item')[:int(widget['count'])]:
+            content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
+            content_truncated = re.sub('<.*?>', '', content[:300])
+            image = None
+            m = re.search('<img.*?src="(.*?)" ', content)
+            if m != None:
+                image = m.group(1)
+            entries.append({
+                'title': item.find('title').text,
+                'content': content_truncated,
+                'image': image})
+        return {'json': json.dumps(widget), 'template': 'widgets/blog/display.html',
+                'entries': entries}

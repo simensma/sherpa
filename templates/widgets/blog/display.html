@@ -1,0 +1,13 @@
+<h1>Siste fra bloggen</h1>
+
+{% for entry in widget.entries %}
+  <div class="blog-item">
+    <h2>{{ entry.title }}</h2>
+    {% if entry.image %}
+      <img src="{{ entry.image }}" alt="{{ entry.title }}">
+    {% endif %}
+    <p>{{ entry.content }}...</p>
+    <hr>
+    <div style="clear: both;"></div>
+  </div>
+{% endfor %}

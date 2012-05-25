@@ -68,3 +68,10 @@ div.widget div.editor p em {
 div.widget div.editor hr {
   margin: 0;
 }
+
+/* Blog listing */
+
+div.blog-item img {
+  float: left;
+  max-width: 40%;
+}
