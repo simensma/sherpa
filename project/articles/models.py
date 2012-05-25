@@ -9,6 +9,7 @@ class Article(models.Model):
     hide_thumbnail = models.BooleanField()
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
     publisher = models.ForeignKey('user.Profile')
 
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")

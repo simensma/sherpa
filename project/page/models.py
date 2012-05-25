@@ -25,6 +25,7 @@ class Page(models.Model):
     slug = models.CharField(max_length=50, unique=True)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
     publisher = models.ForeignKey('user.Profile')
 
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
