@@ -1,0 +1,76 @@
+/* Membershipservice */
+
+table#service-boxes {
+  width: 100%;
+}
+
+table#service-boxes td {
+  border: 1px solid rgb(212, 212, 212);
+  padding: 20px 20px 20px 65px;
+}
+
+table#service-boxes td a {
+  color: rgb(51, 51, 51);
+}
+
+table#service-boxes td:hover {
+  cursor: pointer;
+  background-color: rgb(216, 42, 32) !important;
+}
+
+table#service-boxes td:hover a {
+  color: white;
+  text-decoration: underline;
+}
+
+table#service-boxes td.renewal {
+  background: url('/static/img/icons/netlife/human.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.renewal:hover {
+  background: url('/static/img/icons/netlife/human-hover.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.order-key {
+  background: url('/static/img/icons/netlife/key.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.order-key:hover {
+  background: url('/static/img/icons/netlife/key-hover.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.address {
+  background: url('/static/img/icons/netlife/mail.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.address:hover {
+  background: url('/static/img/icons/netlife/mail-hover.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.forgot-id {
+  background: url('/static/img/icons/netlife/membercard.png') center left 10px no-repeat;
+}
+
+table#service-boxes td.forgot-id:hover {
+  background: url('/static/img/icons/netlife/membercard-hover.png') center left 10px no-repeat;
+}
+
+dl dt {
+  color: rgb(216, 42, 32);
+  font-weight: normal;
+  padding-left: 40px;
+  line-height: 1.4em;
+  background: url('/static/img/icons/netlife/question.png') center left 10px no-repeat;
+}
+
+dl dt:hover {
+  text-decoration: underline;
+  background: url('/static/img/icons/netlife/question-hover.png') center left 10px no-repeat;
+  cursor: pointer;
+}
+
+dl dd {
+  margin: 10px 0 20px 40px;
+  padding: 13px;
+  background-color: rgb(242, 242, 242);
+}
