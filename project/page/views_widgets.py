@@ -70,3 +70,6 @@ def parse_widget(widget):
                 'image': image})
         return {'json': json.dumps(widget), 'template': 'widgets/blog/display.html',
                 'entries': entries}
+    elif(widget['widget'] == "embed"):
+        return {'json': json.dumps(widget), 'template': 'widgets/embed/display.html',
+                'code': widget['code']}

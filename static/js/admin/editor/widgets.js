@@ -87,6 +87,16 @@ function validateContent(widget) {
             widget: "blog",
             count: count
         });
+    } else if(widget.attr('data-widget') == 'embed') {
+        var code = widget.find("textarea[name='code']").val();
+        if(code == '') {
+            alert("Du må jo legg inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
+            return false;
+        }
+        return JSON.stringify({
+            widget: "embed",
+            code: code
+        });
     }
 }
 
@@ -103,5 +113,8 @@ function editWidget() {
     } else if(widget.widget == 'blog') {
         $("div.dialog.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
         $("div.dialog.widget-edit[data-widget='blog']").dialog('open');
+    } else if(widget.widget == 'embed') {
+        $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
+        $("div.dialog.widget-edit[data-widget='embed']").dialog('open');
     }
 }
