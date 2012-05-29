@@ -12,17 +12,21 @@
       <div class="offset{{ column.offset }} span{{ column.span }}">
         {% for content in column.contents %}
           {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
-            {{ content.content|safe }}
+            <div class="content">
+              {{ content.content|safe }}
+            </div>
           {% elif content.type == 'image' %}
-            {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
-            {% if content.content.anchor %}</a>{% endif %}
-            <p class="img-desc">{{ content.content.description }}</p>
-            {% if content.content.photographer %}
-              <p class="img-desc">Foto: {{ content.content.photographer }}</p>
+            <div class="content">
+              {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
+                <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
+              {% if content.content.anchor %}</a>{% endif %}
+              <p class="img-desc">{{ content.content.description }}</p>
+              {% if content.content.photographer %}
+                <p class="img-desc">Foto: {{ content.content.photographer }}</p>
+            </div>
             {% endif %}
           {% elif content.type == 'widget' %}
-            <div class="widget {{ content.content.widget }}">
+            <div class="content widget {{ content.content.widget }}">
               {% include content.content.template with widget=content.content %}
             </div>
           {% endif %}

@@ -19,9 +19,9 @@
     <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
       {% for content in column.contents %}
         {% if content.type == 'html' %}
-          <div class="html editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+          <div class="content html editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
-          <div class="image" data-id="{{ content.id }}">
+          <div class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
               <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
@@ -31,11 +31,11 @@
             </p>
           </div>
         {% elif content.type == 'title' %}
-          <div class="title editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+          <div class="content title editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'lede' %}
-          <div class="lede editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+          <div class="content lede editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'widget' %}
-          <div class="widget {{ content.content.widget }}{% if content.content.static %} static{% endif %}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+          <div class="content widget {{ content.content.widget }}{% if content.content.static %} static{% endif %}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
             {% include content.content.template with widget=content.content %}
           </div>
         {% endif %}
