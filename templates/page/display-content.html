@@ -20,10 +20,12 @@
               {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
               {% if content.content.anchor %}</a>{% endif %}
-              <p class="img-desc">{{ content.content.description }}</p>
-              {% if content.content.photographer %}
-                <p class="img-desc">Foto: {{ content.content.photographer }}</p>
-              {% endif %}
+              <div class="img-desc">
+                <p>{{ content.content.description }}</p>
+                {% if content.content.photographer %}
+                  <p>Foto: {{ content.content.photographer }}</p>
+                {% endif %}
+              </div>
             </div>
           {% elif content.type == 'widget' %}
             <div class="content widget {{ content.content.widget }}">
