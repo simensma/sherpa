@@ -176,6 +176,11 @@ article p.lede {
   line-height: 1.4;
 }
 
+article p.img-desc {
+  font-family: "DTL Nobel Oldstyle" !important;
+  line-height: 1.3;
+}
+
 /* Article preview */
 
 div.article-preview img, img.article-thumbnail {

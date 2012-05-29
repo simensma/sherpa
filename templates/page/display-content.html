@@ -17,9 +17,9 @@
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
               <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
-            <p>{{ content.content.description }}</p>
+            <p class="img-desc">{{ content.content.description }}</p>
             {% if content.content.photographer %}
-              <p>Foto: {{ content.content.photographer }}</p>
+              <p class="img-desc">Foto: {{ content.content.photographer }}</p>
             {% endif %}
           {% elif content.type == 'widget' %}
             <div class="widget {{ content.content.widget }}">
