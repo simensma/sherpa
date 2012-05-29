@@ -121,6 +121,10 @@ div.widget.articles div.article-preview h3, div.widget.blog div.blog-item h3 {
 
 div.widget.articles div.article-preview div.lede a, div.widget.blog div.blog-item div.lede a {
   color: rgb(51, 51, 51);
+  /* Negate properties set by the common 'p.lede'. This is *copied* from the standard p look */
+  font-family: georgia, times, serif !important;
+  font-size: 16px !important;
+  line-height: 24px !important;
 }
 
 div.widget.articles div.article-preview div.lede a:hover, div.widget.blog div.blog-item div.lede a:hover {
