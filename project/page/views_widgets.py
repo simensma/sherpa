@@ -71,5 +71,8 @@ def parse_widget(widget):
     elif(widget['widget'] == "embed"):
         data = {'code': widget['code']}
 
-    data.update({'json': json.dumps(widget), 'template': 'widgets/%s/display.html' % widget['widget']})
+    data.update({
+        'json': json.dumps(widget),
+        'template': 'widgets/%s/display.html' % widget['widget'],
+        'widget': widget['widget']})
     return data

@@ -20,7 +20,7 @@
               <p>Foto: {{ content.content.photographer }}</p>
             {% endif %}
           {% elif content.type == 'widget' %}
-            <div class="widget">
+            <div class="widget {{ content.content.widget }}">
               {% include content.content.template with widget=content.content %}
             </div>
           {% endif %}
