@@ -85,6 +85,7 @@ div.widget.quote blockquote {
 }
 
 div.widget.quote blockquote {
+  color: rgb(80, 80, 80);
   font-size: 18px;
   font-style: italic;
 }
