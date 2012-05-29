@@ -221,8 +221,6 @@ def parse_objects(parents, albums, images):
     for album in albums:
         objects['albums'].append({'id': album.id, 'name': album.name})
     for image in images:
-        if image.photographer == '':
-            image.photographer = 'Ingen fotograf oppgitt'
         objects['images'].append({'key': image.key, 'extension': image.extension,
             'width': image.width, 'height': image.height,
             'photographer': image.photographer, 'description': image.description})
