@@ -15,7 +15,7 @@ table#service-boxes td a {
 
 table#service-boxes td:hover {
   cursor: pointer;
-  background-color: rgb(216, 42, 32) !important;
+  background-color: rgb(216, 45, 32) !important;
 }
 
 table#service-boxes td:hover a {
@@ -56,7 +56,7 @@ table#service-boxes td.forgot-id:hover {
 }
 
 dl dt {
-  color: rgb(216, 42, 32);
+  color: rgb(216, 45, 32);
   font-weight: normal;
   padding-left: 40px;
   line-height: 1.5;

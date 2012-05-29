@@ -6,7 +6,7 @@
 
 div.widget.promo {
   width: 100%;
-  background-color: rgb(216, 42, 32);
+  background-color: rgb(216, 45, 32);
   height: 511px; /* The height of the background-image */
 }
 
@@ -37,7 +37,7 @@ div.widget.promo div.left div.menu li {
 }
 
 div.widget.promo div.left div.menu li.active {
-  background-color: rgb(216, 42, 32);
+  background-color: rgb(216, 45, 32);
   color: white;
 }
 

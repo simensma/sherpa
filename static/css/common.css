@@ -62,7 +62,7 @@ img, iframe {
 }
 
 a {
-  color: rgb(216, 42, 32);
+  color: rgb(216, 45, 32);
 }
 
 a.external:not(.noexternal) {
@@ -99,7 +99,7 @@ div.alert-error {
 /* Override bootstrap red button */
 
 .btn-danger {
-  background-color: rgb(216, 42, 32) !important;
+  background-color: rgb(216, 45, 32) !important;
   background-image: none !important;
 }
 
