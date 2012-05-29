@@ -55,7 +55,7 @@ h3 {
   font-size: 18px;
 }
 
-img {
+img, iframe {
   max-width: 100%;
 }
 
