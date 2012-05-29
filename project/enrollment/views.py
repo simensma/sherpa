@@ -489,6 +489,11 @@ def validate_location(location):
         if location['zipcode'].strip() == '':
             return False
 
+    if location['country'] == 'SE' or location['country'] == 'DK':
+        # No city provided
+        if location['city'].strip() == '':
+            return False
+
     if location['country'] == 'NO':
         # Zipcode does not exist
         if not Zipcode.objects.filter(zip_code=location['zipcode']).exists():
