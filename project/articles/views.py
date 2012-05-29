@@ -15,6 +15,7 @@ def show(request, article, text):
     article = Article.objects.get(id=article)
     variant = Variant.objects.get(article=article, segment=None)
     version = Version.objects.get(variant=variant, active=True)
+    version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
@@ -27,5 +28,5 @@ def show(request, article, text):
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'page': version.variant.page}
+    context = {'rows': rows, 'version': version}
     return render(request, "page/article.html", context)

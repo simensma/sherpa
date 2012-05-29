@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% block title %}{{ version.title.content|striptags }}{% endblock %}
+
 {% block body %}
 
 {% include 'page/display-content.html' %}
