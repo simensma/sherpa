@@ -34,12 +34,12 @@ def parse_content(request, version):
 # Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(widget):
     if(widget['widget'] == "quote"):
-        return {'json': json.dumps(widget), 'template': 'widgets/quote/display.html', 'quote': widget['quote'], 'author': widget['author']}
+        data = {'quote': widget['quote'], 'author': widget['author']}
     elif(widget['widget'] == "promo"):
-        return {'json': json.dumps(widget), 'template': 'widgets/promo/display.html'}
+        data = {}
     elif(widget['widget'] == "editor"):
         article = Article.objects.get(id=widget['article'])
-        return {'json': json.dumps(widget), 'template': 'widgets/editor/display.html',
+        data = {
             'static': True,
             'author': article.publisher.user.get_full_name(),
             'email': "TBD",
@@ -51,8 +51,7 @@ def parse_widget(widget):
             ).order_by('-variant__article__pub_date')[:widget['count']]
         for version in versions:
             version.load_preview()
-        return {'json': json.dumps(widget), 'template': 'widgets/articles/display.html',
-                'versions': versions, }
+        data = {'versions': versions}
     elif(widget['widget'] == "blog"):
         r = requests.get(BLOG_URL)
         root = etree.fromstring(r.content)
@@ -68,8 +67,9 @@ def parse_widget(widget):
                 'title': item.find('title').text,
                 'content': content_truncated,
                 'image': image})
-        return {'json': json.dumps(widget), 'template': 'widgets/blog/display.html',
-                'entries': entries}
+        data = {'entries': entries}
     elif(widget['widget'] == "embed"):
-        return {'json': json.dumps(widget), 'template': 'widgets/embed/display.html',
-                'code': widget['code']}
+        data = {'code': widget['code']}
+
+    data.update({'json': json.dumps(widget), 'template': 'widgets/%s/display.html' % widget['widget']})
+    return data
