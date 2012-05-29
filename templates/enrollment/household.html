@@ -24,11 +24,9 @@
 </script>
 {% endif %}
 
-{% include 'enrollment/progress.html' with step=2 %}
-
 {% if invalid_existing %}
 <div class="row">
-  <div class="offset2 span5">
+  <div class="offset2 span8">
     <div class="alert alert-error">
       <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
       Vennligst sjekk at all oppgitt medlemsnummer for eksisterende medlem på samme adresse er korrekt.
@@ -39,7 +37,7 @@
 
 {% if errors %}
 <div class="row">
-  <div class="offset2 span5">
+  <div class="offset2 span8">
     <div class="alert alert-error">
       <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
       Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
@@ -49,7 +47,10 @@
 {% endif %}
 
 <div class="row">
-  <div class="offset2 span8">
+  <div class="span8">
+
+    {% include 'enrollment/progress.html' with step=2 %}
+
     <form id="household" action="{% url enrollment.views.household %}" method="post">
       {% csrf_token %}
 
@@ -118,7 +119,10 @@
         </div>
 
       </div>
-    <p><a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a> <button class="btn btn-danger btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button></p>
+      <p>
+        <a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
+        <button class="btn btn-danger btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
+      </p>
     </form>
   </div>
 </div>
