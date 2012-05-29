@@ -16,7 +16,7 @@
               {{ content.content|safe }}
             </div>
           {% elif content.type == 'image' %}
-            <div class="content">
+            <div class="content image">
               {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
               {% if content.content.anchor %}</a>{% endif %}

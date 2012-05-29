@@ -180,7 +180,22 @@ article p.lede {
   line-height: 1.4;
 }
 
+article div.image {
+  position: relative;
+}
+
+article div.img-desc {
+  background-color: rgba(0, 0, 0, 0.75);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 4px 12px 10px 12px;
+  z-index: 1;
+}
+
 article div.img-desc p {
+  color: white;
   font-family: "DTL Nobel Oldstyle" !important;
   line-height: 1.3;
 }
