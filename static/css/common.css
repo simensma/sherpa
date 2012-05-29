@@ -72,7 +72,7 @@ a:hover {
   color: rgb(255, 0, 21);
 }
 
-/* Menus */
+/* Menus (main menu and admin) */
 
 nav#menus {
   margin-bottom: 20px;
@@ -105,6 +105,8 @@ nav#menus li a {
 
 nav#menus li.active a {
   font-weight: bold;
+  padding-bottom: 8px;
+  border-bottom: 3px solid;
 }
 
 nav#menus div.menu-breadcrumb {
