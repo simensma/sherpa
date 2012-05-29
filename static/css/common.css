@@ -29,7 +29,7 @@
 body, p, label {
   font-family: georgia, times, serif !important;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 1.5;
 }
 
 input, button, select, textarea {
@@ -50,7 +50,7 @@ h1 {
 
 h2 {
   font-size: 28px;
-  line-height: 1.2em;
+  line-height: 1.2;
 }
 
 h3 {
@@ -159,7 +159,7 @@ article p {
 article p.lede {
   font-family: "DTL Nobel Oldstyle" !important;
   font-size: 20px;
-  line-height: 28px;
+  line-height: 1.4;
 }
 
 /* Article preview */

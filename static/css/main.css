@@ -22,7 +22,7 @@ div.social-icons h1 {
   text-transform: none;
   font-weight: normal;
   font-size: 100%;
-  line-height: 1em;
+  line-height: 1;
   margin-bottom: 0;
   border-bottom: none;
   text-transform: uppercase;
@@ -56,7 +56,7 @@ footer div.services h2 {
 }
 
 footer div.services a {
-  line-height: 24px;
+  line-height: 1.5;
   color: black;
 }
 

@@ -14,7 +14,7 @@ article .insertable, article .empty {
   color: rgb(125, 125, 125);
   font-size: 180%;
   font-style: italic;
-  line-height: 100%;
+  line-height: 1;
 }
 
 article .hover-remove {
