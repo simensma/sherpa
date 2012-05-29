@@ -479,8 +479,9 @@ def validate_location(location):
     if not FocusCountry.objects.filter(code=location['country']).exists():
         return False
 
+    # No address provided for other countries than Norway
+    # (Some Norwegians actually don't have a street address)
     if location['country'] != 'NO':
-        # No address provided
         if location['address1'].strip() == '':
             return False
 
