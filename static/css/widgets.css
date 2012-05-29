@@ -115,7 +115,7 @@ div.widget.articles div.article-preview {
   margin-bottom: 20px;
 }
 
-div.widget.articles div.article-preview img, img.article-thumbnail {
+div.widget.articles div.article-preview img {
   float: left;
   margin-right: 20px;
   max-width: 140px;
