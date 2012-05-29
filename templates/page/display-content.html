@@ -21,9 +21,9 @@
                 <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
               {% if content.content.anchor %}</a>{% endif %}
               <div class="img-desc">
-                <p>{{ content.content.description }}</p>
+                {{ content.content.description }}
                 {% if content.content.photographer %}
-                  <p>Foto: {{ content.content.photographer }}</p>
+                  Foto: {{ content.content.photographer }}
                 {% endif %}
               </div>
             </div>

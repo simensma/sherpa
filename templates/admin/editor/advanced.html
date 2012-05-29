@@ -26,10 +26,10 @@
               <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
             <div class="img-desc">
-              <p class="description">{{ content.content.description }}</p>
-              <p class="photographer">Foto:
+              <span class="description">{{ content.content.description }}</span>
+              <span class="photographer">Foto:
                 <span class="content">{{ content.content.photographer }}</span>
-              </p>
+              </span>
             </div>
           </div>
         {% elif content.type == 'title' %}

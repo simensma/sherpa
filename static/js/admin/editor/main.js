@@ -45,7 +45,7 @@ $(document).ready(function() {
     }
 
     /* Hide empty image photographer description */
-    $("article div.image p.photographer").each(function() {
+    $("article div.image span.photographer").each(function() {
         if($(this).children("span.content").text() == "") {
             $(this).hide();
         }
@@ -55,8 +55,8 @@ $(document).ready(function() {
     function changeImage() {
         currentImage = $(this).find("img");
         var content = $(this);
-        var currentDescription = content.find("p.description");
-        var currentPhotographer = content.find("p.photographer span.content");
+        var currentDescription = content.find("span.description");
+        var currentPhotographer = content.find("span.photographer span.content");
         var anchor = $(this).find("a").attr('href');
         if(anchor === undefined) {
             anchor = '';
@@ -82,12 +82,13 @@ $(document).ready(function() {
             }
             currentImage.attr('src', src);
             currentImage.attr('alt', description);
+            debugger;
             currentDescription.text(description);
             currentPhotographer.text(photographer);
             if(photographer == '') {
-                currentPhotographer.parent("p.photographer").hide();
+                currentPhotographer.parent("span.photographer").hide();
             } else {
-                currentPhotographer.parent("p.photographer").show();
+                currentPhotographer.parent("span.photographer").show();
             }
             $("div.editor-header div.save button.save").click();
         }, function() {
@@ -158,7 +159,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img src="" alt=""><p class="description"></p><p class="photographer">Foto: <span class="content"></span></p>');
+            var image = $('<img src="" alt=""><div class="img-desc"><span class="description"></span><span class="photographer">Foto: <span class="content"></span>');
             function imageDone(wrapper) {
                 var image = wrapper.find("img");
                 image.click();

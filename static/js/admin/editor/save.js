@@ -68,8 +68,8 @@ $(document).ready(function() {
             }
             var image = {
                 src: $(this).find('img').attr('src'),
-                description: $(this).find('p.description').text(),
-                photographer: $(this).find('p.photographer span.content').text(),
+                description: $(this).find('span.description').text(),
+                photographer: $(this).find('span.photographer span.content').text(),
                 anchor: anchor
             };
             var content = {

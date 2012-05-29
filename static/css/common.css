@@ -194,7 +194,7 @@ article div.img-desc {
   z-index: 1;
 }
 
-article div.img-desc p {
+article div.img-desc, article div.img-desc span {
   color: white;
   font-family: "DTL Nobel Oldstyle" !important;
   line-height: 1.3;
