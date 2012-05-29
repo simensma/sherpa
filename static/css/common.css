@@ -96,6 +96,17 @@ div.alert-error {
   background-color: rgb(243, 192, 188) !important;
 }
 
+/* Override bootstrap red button */
+
+.btn-danger {
+  background-color: rgb(216, 42, 32) !important;
+  background-image: none !important;
+}
+
+.btn-danger:hover {
+  background-color: rgb(246, 72, 62) !important;
+}
+
 /* Menus (main menu and admin) */
 
 nav#menus {
