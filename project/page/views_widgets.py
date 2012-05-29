@@ -65,6 +65,7 @@ def parse_widget(widget):
                 image = m.group(1)
             entries.append({
                 'title': item.find('title').text,
+                'link': item.find('link').text,
                 'content': content_truncated,
                 'image': image})
         data = {'entries': entries}

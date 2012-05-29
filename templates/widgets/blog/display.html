@@ -2,11 +2,21 @@
 
 {% for entry in widget.entries %}
   <div class="blog-item">
-    <h2>{{ entry.title }}</h2>
+    <h3>
+      <a href="{{ entry.link }}">
+        {{ entry.title }}
+      </a>
+    </h3>
     {% if entry.image %}
-      <img src="{{ entry.image }}" alt="{{ entry.title }}">
+      <a href="{{ entry.link }}">
+        <img src="{{ entry.image }}" alt="{{ entry.title }}">
+      </a>
     {% endif %}
-    <p>{{ entry.content }}...</p>
+    <p>
+      <a href="{{ entry.link }}">
+        {{ entry.content }}...
+      </a>
+    </p>
     <hr>
     <div style="clear: both;"></div>
   </div>
