@@ -83,17 +83,12 @@ $(document).ready(function() {
     $("form#household").submit(function(e) {
         if($(this).find("input[name='address1']").val() == '' &&
            $("form#household select[name='country'] option:selected").val() == 'NO' &&
-           !confirm("Har du virkelig ingen adresse?\n\nDet finnes enkelte husstander i Norge som kun har postnummer og -sted, uten gateadresse. Hvis du bor på en av disse kan du gå videre, hvis ikke, trykk avbryt og fyll inn adressen.")) {
+           !confirm("Har du glemt å fylle ut gateadressen?\n\nHvis du ikke har gateadresse, klikker du bare OK for å gå videre.")) {
                 e.preventDefault();
         }
     });
 
     /* Existing */
-    $("a.existing").click(function() {
-        $("a.existing").hide();
-        $("div.existing").show();
-    });
-
     $("form#household button.search").click(function(e) {
         e.preventDefault();
         $("div.existing-result").show();
@@ -141,10 +136,8 @@ $(document).ready(function() {
     });
 
     if(existing) {
-        $("a.existing").hide();
         $("form#household button.search").click();
     } else {
-        $("div.existing").hide();
         $("div.existing-result").hide();
     }
 

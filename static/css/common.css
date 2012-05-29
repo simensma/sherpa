@@ -26,9 +26,10 @@
   font-weight: bold;
 }
 
-body, p {
+body, p, label {
   font-family: georgia, times, serif !important;
   font-size: 16px;
+  line-height: 24px;
 }
 
 input, button, select, textarea {
@@ -37,13 +38,14 @@ input, button, select, textarea {
 
 h1, h2, h3, h4, h5, h6, input, button, select, textarea {
   font-family: "DTL Nobel Oldstyle";
+  line-height: normal;
 }
 
 h1 {
   text-transform: uppercase;
   font-size: 40px;
   border-bottom: 4px solid rgb(35, 35, 35);
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 h2 {
@@ -70,6 +72,28 @@ a.external:not(.noexternal) {
 
 a:hover {
   color: rgb(255, 0, 21);
+}
+
+/* Negate bootstrap border-radius for wells */
+div.well {
+  border-radius: none !important;
+}
+
+/* Override bootstrap alert-boxes */
+
+div.alert {
+  font-family: "DTL Nobel Oldstyle";
+}
+
+div.alert-info {
+  border-color: rgb(180, 180, 180) !important;
+  background-color: rgb(220, 220, 220) !important;
+  color: rgb(51, 51, 51) !important;
+}
+
+div.alert-error {
+  color: black !important;
+  background-color: rgb(243, 192, 188) !important;
 }
 
 /* Menus (main menu and admin) */
@@ -135,6 +159,7 @@ article p {
 article p.lede {
   font-family: "DTL Nobel Oldstyle" !important;
   font-size: 20px;
+  line-height: 28px;
 }
 
 /* Article preview */

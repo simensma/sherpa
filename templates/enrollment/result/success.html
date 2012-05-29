@@ -6,9 +6,14 @@
 {% block result %}
 
 <div class="row">
+  <div id="result" class="span12">
+    <h1>Velkommen som medlem!</h1>
+  </div>
+</div>
+
+<div class="row">
   <div id="result" class="span8">
 
-    <h1>Velkommen som medlem!</h1>
 
     <p>
       Du er medlem i [medlemsforening]<br>
@@ -21,29 +26,31 @@
 
     {% csrf_token %}
     {% for user in users %}
-      <button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
-        <i class="icon-signal"></i>
-        Send gratis kvittering på SMS til {{ user.phone }}
-      </button>
+      {% if user.phone != '' %}
+        <button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
+          <i class="icon-signal"></i>
+          Send gratis kvittering på SMS til {{ user.phone }}
+        </button>
+      {% endif %}
     {% endfor %}
 
     <div id="boxes">
       <div class="box">
-        <h2>Planlegg turen på UT.no</h2>
+        <h3>Planlegg turen på UT.no</h3>
         <p>
           På <a href="http://www.ut.no/">UT.no</a> finner du hytter og turer over hele landet.
         </p>
       </div>
 
       <div class="box">
-        <h2>Hva skjer der du bor</h2>
+        <h3>Hva skjer der du bor</h3>
         <p>
           [Medlemsforening] arrangerer fellesturer og aktiviteter hele året.
         </p>
       </div>
 
       <div class="box">
-        <h2>Min side</h2>
+        <h3>Min side</h3>
         <p>
           Registrer deg på Min side og få tilgang til våre medlemstjenester.
         </p>
@@ -59,7 +66,7 @@
         Telefon: 4000 1970<br>
         Åpent alle hverdager:<br>
         Kl. 09.00 - 16.00<br>
-        E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+        <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
       </p>
     </div>
   </div>

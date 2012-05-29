@@ -100,24 +100,23 @@
         {% endif %}
       </div>
 
-      <p>
-        <a class="existing" href="javascript:undefined">Klikk her hvis {% if users|length > 1 %}dere{% else %}du{% endif %} bor sammen med et <strong>eksisterende</strong> medlem på denne adressen.</a>
-      </p>
+      <div class="well">
+        <h2>Husstandsmedlemskap</h2>
+        <p>
+          Bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med et <strong>eksisterende</strong> hovedmedlem, kan {% if users|length > 1 %}dere{% else %}du{% endif %} få billigere medlemsskap som husstandsmedlem{% if users|length > 1 %}mer{% endif %}.
+        </p>
+        <p>
+          <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
+          <button class="btn search"><i class="icon-search"></i> Søk</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
+        </p>
 
-      <div class="well existing">
-        Hvis {% if users|length > 1 %}dere{% else %}du{% endif %} bor sammen med et eksisterende medlem kan {% if users|length > 1 %}dere{% else %}du{% endif %} få billigere medlemsskap som husstandsmedlem{% if users|length > 1 %}mer{% endif %}. <a href="{% url enrollment.views.types %}" target="_blank">Les mer om medlemstypene her</a>.<br>
-        <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
-        <button class="btn search"><i class="icon-search"></i> Søk</button>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
-        <br>
-        Hvis ikke, la feltet stå tomt og klikk på "Gå videre".
+        <div class="existing-result">
+          <p><span class="description">Hovedmedlem: </span><span class="result"></span></p>
+        </div>
+
       </div>
-
-      <div class="existing-result">
-        <p><span class="description">Hovedmedlem: </span><span class="result"></span></p>
-      </div>
-
-      <p><a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a> <button class="btn btn-success btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button></p>
+    <p><a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a> <button class="btn btn-danger btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button></p>
     </form>
   </div>
 </div>

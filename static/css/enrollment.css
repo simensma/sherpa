@@ -2,6 +2,7 @@
 
 form#registration label, form#household label {
     font-size: 110%;
+    font-family: "DTL Nobel Oldstyle" !important;
 }
 
 form#registration .control-group:not(.error,.warning) label, form#household .control-group:not(.error,.warning) label {
@@ -51,6 +52,10 @@ form#registration button, form#household button {
     margin-bottom: 3px;
 }
 
+table.memberlist {
+    margin-top: 20px;
+}
+
 table.memberlist td {
     background-color: white;
     font-size: 120%;
@@ -69,6 +74,10 @@ table.memberlist span.remove {
 table.main-member tr.main {
     background-color: rgb(235, 235, 235);
     font-weight: bold;
+}
+
+table.prices {
+    margin-top: 25px;
 }
 
 table.prices tbody td {
@@ -91,12 +100,6 @@ table.prices tfoot tr th {
     font-size: 120%;
 }
 
-table.prices tfoot a.pricelist {
-    float: right;
-    font-size: 90%;
-    margin-right: 10px;
-}
-
 p.address {
     border: 1px solid #dddddd;
     padding: 12px;
@@ -109,16 +112,14 @@ table.registration-progress {
 }
 
 table.registration-progress td.step:first-of-type {
-    border-left: 1px solid rgb(135, 135, 135);
+    border-left: 3px solid rgb(255, 255, 255);
 }
 
 table.registration-progress td.step {
     height: 18px; /* 48 (height of arrow-image) - padding */
     background-color: #dcddde;
     padding: 15px 30px 15px 15px;
-    border-top: 1px solid rgb(135, 135, 135);
-    border-right: 1px solid rgb(135, 135, 135);
-    border-bottom: 1px solid rgb(135, 135, 135);
+    border-right: 3px solid rgb(255, 255, 255);
 }
 
 table.registration-progress td.step.current {

@@ -1,17 +1,17 @@
-<h1>Siste nyheter</h1>
+<h1 class="article-list">Siste nyheter</h1>
 
 {% for version in widget.versions %}
   <div class="article-preview">
+    <h3>
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        {{ version.title.content|striptags }}
+      </a>
+    </h3>
     {% if not version.hide_thumbnail %}
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
         <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
       </a>
     {% endif %}
-    <h2>
-      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-        {{ version.title.content|striptags }}
-      </a>
-    </h2>
     <div class="lede">
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
         {{ version.lede.content|removetags:"a"|safe|truncatewords:40 }}
@@ -19,3 +19,4 @@
     </div>
   </div>
 {% endfor %}
+<p><a>Se eldre nyheter...</a></p>

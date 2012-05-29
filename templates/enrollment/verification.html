@@ -88,7 +88,7 @@
           <th></th>
         {% endif %}
         <th>Personopplysninger</th>
-        <th>Medlemskategori</th>
+        <th>Medlemstype</th>
         <th>Pris</th>
       </tr>
     </thead>
@@ -129,7 +129,7 @@
                 {% if country.code != 'NO' %}<br>{% endif %}
               {% endif %}
               {% if user.phone %}Telefon:<br>{% endif %}
-              {% if user.email %}Epost:{% endif %}
+              {% if user.email %}E-post:{% endif %}
             </div>
             <div class="data">
               {{ user.name }}<br>
@@ -199,7 +199,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt<a href="{% url enrollment.views.types %}" target="_blank" class="pricelist">(Se prisliste)</a></th>
+        <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
         <th><span class="totalprice"></span>,-</th>
       </tr>
     </tfoot>
@@ -215,7 +215,7 @@
     </div>
   </form>
 
-  <div class="alert alert-warning invoice-info">
+  <div class="alert alert-error invoice-info">
     <a class="close">x</a>
     <strong><i class="icon-info-sign"></i> Med faktura blir du ikke medlem før du har betalt</strong><br>
     Om du ønsker å motta medlemsnummer med en gang, må du betale online med bankkort. Hvis ikke blir du ikke registrert medlem før fakturaen blir betalt.
@@ -223,7 +223,7 @@
 
   {% if multiple_main and not existing %}
   <p>
-    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være minst {{ age_student }} år. <a href="{% url enrollment.views.types %}" target="_blank">Les mer her</a>
+    <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være minst {{ age_student }} år.
   </p>
   {% endif %}
 

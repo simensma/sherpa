@@ -101,3 +101,40 @@ div.blog-item img {
   float: left;
   max-width: 40%;
 }
+
+/* Articles and blog listing */
+
+div.widget h1.article-list {
+  font-size: 120%;
+  font-weight: normal;
+  border-bottom: 1px solid rgb(170, 170, 170);
+}
+
+
+div.widget div.article-preview {
+  margin-bottom: 20px;
+}
+
+div.widget div.article-preview img, img.article-thumbnail {
+  float: left;
+  margin-right: 20px;
+  max-width: 140px;
+  max-height: 140px;
+}
+
+div.widget div.article-preview h3 {
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+div.widget div.article-preview div.lede {
+  display: inline;
+}
+
+div.widget div.article-preview div.lede a {
+  color: rgb(51, 51, 51);
+}
+
+div.widget div.article-preview div.lede a:hover {
+  text-decoration: none;
+}

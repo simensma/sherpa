@@ -21,14 +21,16 @@ div.social-icons {
 div.social-icons h1 {
   text-transform: none;
   font-weight: normal;
-  font-size: 140%;
+  font-size: 100%;
   line-height: 1em;
   margin-bottom: 0;
   border-bottom: none;
+  text-transform: uppercase;
 }
 
-div.social-icons a, div.social-icons h3 a {
+div.social-icons a {
   color: rgb(118, 118, 118);
+  font-family: "DTL Nobel Oldstyle";
 }
 
 div.social-icons img.social {
@@ -47,12 +49,24 @@ footer {
 }
 
 footer div.services h2 {
-  font-size: 150%;
+  font-size: 110%;
   font-weight: normal;
+  text-transform: uppercase;
+  margin-bottom: 15px;
 }
 
 footer div.services a {
-  font-size: 110%;
+  line-height: 24px;
+  color: black;
+}
+
+footer div.services a:hover {
+  color: rgb(216, 42, 32);
+}
+
+footer div.services ul {
+  list-style-type: none;
+  margin-left: auto;
 }
 
 footer div.sponsors {

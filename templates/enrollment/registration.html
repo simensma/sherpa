@@ -24,7 +24,7 @@
 {% include 'enrollment/progress.html' with step=1 %}
 
 <div class="row">
-<div class="offset2 span5">
+<div class="offset2 span8">
 {% if too_many_underage %}
 <div class="notice-alert">
   <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
@@ -40,8 +40,8 @@
 {% endif %}
 {% if contact_missing %}
   <div class="alert alert-error">
-    <a class="close">x</a><strong>Ugyldig kontaktinformasjon.</strong><br>
-    Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og epost).
+    <a class="close">x</a><strong><i class="icon-warning-sign"></i> Ugyldig kontaktinformasjon.</strong><br>
+    Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post).
   </div>
 {% endif %}
 {% if saved and not errors %}
@@ -50,6 +50,62 @@
     Du kan legge til flere medlemmer hvis alle bor på samme adresse. Når du er ferdig, klikk "Gå videre" i boksen til høyre.
   </div>
 {% endif %}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="offset2 span5">
+{% if users %}
+    <div class="well">
+      <h2>Du har registrert:</h2>
+      <table class="table table-bordered memberlist">
+      {% for user in users %}
+        <tr>
+          <td>
+            <a href="{% url enrollment.views.registration user.index %}" title="Rediger {{ user.name }}">
+              {% if user.name %}
+                {{ user.name }}
+              {% else %}
+                (Anonym)
+              {% endif %}
+            </a>
+            <span class="remove">
+              <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+      </table>
+      <label class="checkbox">
+        <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
+      </label>
+      <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right"></i></a></p>
+    </div>
+    <h2>Legg til flere medlemmer på samme adresse:</h2>
+    <br>
+{% endif %}
+
+
+  </div>
+<div class="span3">
+  <div class="well">
+    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
+    <p>
+      Kontakt medlemsservice:<br>
+      Telefon: 4000 1970<br>
+      Åpent alle hverdager:<br>
+      Kl. 09.00 - 16.00<br>
+      <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+    </p>
+  </div>
+</div>
+</div>
+
+{# Fiks radene her #}
+
+<div class="row">
+<div class="offset2 span5">
 <form id="registration" action="{% url enrollment.views.registration %}" method="post">
   {% csrf_token %}
   {% if user.index >= 0 %}
@@ -65,77 +121,28 @@
   </div>
   <div class="control-group gender">
     <label> Kjønn <span class="asterisk red">*</span></label>
-    <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
-    <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
+    <label class="checkbox">
+      <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
+    </label>
+    <label class="checkbox">
+      <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
+    </label>
   </div>
   <div class="control-group phone">
     <label> Mobiltelefon <span class="asterisk">*</span></label>
     <input type="text" class="input-medium" name="phone" value="{{ user.phone }}">
   </div>
   <div class="control-group email">
-    <label> Epost <span class="asterisk">*</span></label>
+    <label> E-post <span class="asterisk">*</span></label>
     <input type="text" class="input-large" name="email" value="{{ user.email }}">
   </div>
   <label class="checkbox">
     <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
   </label>
-  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% if users|length > 0 %} på samme adresse{% endif %}{% endif %}</button><br>
+  <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
 </form>
 
 </div>
-
-{% if users %}
-<div class="span3">
-  <div class="well">
-    <h2>Medlemmer</h2>
-    <table class="table table-bordered memberlist">
-    {% for user in users %}
-      <tr>
-        <td>
-          <a href="{% url enrollment.views.registration user.index %}" title="Rediger {{ user.name }}">
-            {% if user.name %}
-              {{ user.name }}
-            {% else %}
-              (Anonym)
-            {% endif %}
-          </a>
-          <span class="remove">
-            <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
-          </span>
-        </td>
-      </tr>
-    {% endfor %}
-    </table>
-    <label class="checkbox">
-      <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
-    </label>
-    <p><a href="{% url enrollment.views.household %}" class="btn btn-success btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right"></i></a></p>
-  </div>
-</div>
-{% endif %}
-
-<div class="span3">
-  <div class="well">
-    <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
-    <p>
-      Kontakt medlemsservice:<br>
-      Telefon: 4000 1970<br>
-      Åpent alle hverdager:<br>
-      Kl. 09.00 - 16.00<br>
-      E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
-    </p>
-  </div>
-</div>
-
-<div class="span3">
-  <div class="well">
-    <p>
-      <span class="asterisk red">*</span> = Obligatorisk felt<br>
-      <span class="asterisk">*</span> = Obligatorisk for én person (for deg som melder inn flere)
-    </p>
-  </div>
-</div>
-
 </div>
 
 {% endblock %}
