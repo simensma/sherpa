@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'user',
     'enrollment',
     'group',
+    'memberservice',
 )
 
 LOGGING = {

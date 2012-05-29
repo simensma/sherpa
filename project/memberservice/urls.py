@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('membership.views',
+urlpatterns = patterns('memberservice.views',
     url(r'^$', 'index'),
 )

@@ -2,4 +2,4 @@
 from django.shortcuts import render
 
 def index(request):
-    return render(request, 'membership/index.html')
+    return render(request, 'memberservice/index.html')

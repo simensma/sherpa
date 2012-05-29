@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^innmelding/', include('enrollment.urls')),
 
     # Membership-service
-    url(r'^medlem/', include('membership.urls')),
+    url(r'^medlemsservice/', include('memberservice.urls')),
 
     # Redirect some known paths to the old site
     url(r'^images/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/images/"}),
