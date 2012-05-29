@@ -164,6 +164,10 @@ article .row, article .row-fluid {
   margin-bottom: 0.6em;
 }
 
+article div.content {
+  margin-bottom: 20px;
+}
+
 /* No margins to paragraphs */
 article p {
   margin-top: 0;
