@@ -110,7 +110,6 @@ div.widget.articles h1.article-list {
   border-bottom: 1px solid rgb(170, 170, 170);
 }
 
-
 div.widget.articles div.article-preview {
   margin-bottom: 20px;
 }
@@ -125,10 +124,6 @@ div.widget.articles div.article-preview img {
 div.widget.articles div.article-preview h3 {
   font-weight: normal;
   margin-bottom: 10px;
-}
-
-div.widget.articles div.article-preview div.lede {
-  display: inline;
 }
 
 div.widget.articles div.article-preview div.lede a {
