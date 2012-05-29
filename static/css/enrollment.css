@@ -116,9 +116,9 @@ table.registration-progress td.step:first-of-type {
 }
 
 table.registration-progress td.step {
-    height: 18px; /* 48 (height of arrow-image) - padding */
+    /* Line-height is 24px so set vertical padding to max 48 (height of arrow-image) - line-height */
     background-color: #dcddde;
-    padding: 15px 30px 15px 15px;
+    padding: 12px 30px 12px 15px;
     border-right: 3px solid rgb(255, 255, 255);
 }
 
