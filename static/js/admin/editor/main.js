@@ -565,7 +565,7 @@ $(document).ready(function() {
             if(type == 'html' || type == 'title' || type == 'lede') {
                 editable = ' editable';
             }
-            var wrapper = $('<div class="' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
+            var wrapper = $('<div class="content ' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
             if(result.json !== undefined) {
                 wrapper.attr('data-json', result.json);
             }
