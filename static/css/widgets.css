@@ -104,7 +104,7 @@ div.blog-item img {
 
 /* Articles and blog listing */
 
-div.widget.articles h1.article-list {
+div.widget.articles h1 {
   font-size: 120%;
   font-weight: normal;
   border-bottom: 1px solid rgb(170, 170, 170);
