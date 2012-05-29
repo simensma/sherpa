@@ -78,6 +78,23 @@ div.widget.promo div.right img {
   padding-left: 10%;
 }
 
+/* Quote */
+
+div.widget.quote blockquote {
+  margin-left: 20px;
+}
+
+div.widget.quote blockquote {
+  font-size: 18px;
+  font-style: italic;
+}
+
+div.widget.quote blockquote small {
+  font-size: 15px;
+  font-style: normal;
+  margin-top: 5px;
+}
+
 /* Editor (metadata for articles (writer, publication date etc)) */
 
 div.widget.editor p {
