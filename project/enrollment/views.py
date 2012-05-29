@@ -484,7 +484,8 @@ def validate_location(location):
         if location['address1'].strip() == '':
             return False
 
-        # No zipcode provided
+    # Require zipcode for all scandinavian countries
+    if location['country'] == 'NO' or location['country'] == 'SE' or location['country'] == 'DK':
         if location['zipcode'].strip() == '':
             return False
 
