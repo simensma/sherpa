@@ -6,6 +6,7 @@
   <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-dropdown.js"></script>
   <!--[if lte IE 9]><script src="{{ STATIC_URL }}js/placeholder-ie.js"></script><![endif]-->
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}js/trim-ie.js"></script><![endif]-->
   <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
@@ -50,6 +51,21 @@
         <div style="clear: both;"></div>
         <div class="border"></div>
         <div class="menu-breadcrumb">
+          <div class="language-bar">
+            <ul class="nav nav-pills">
+              <li class="dropdown" id="menu1">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+                  Language
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="http://www.turistforeningen.no/deutsch">Deutsch</a></li>
+                  <li><a href="http://www.turistforeningen.no/francais">Française</a></li>
+                  <li><a href="http://www.turistforeningen.no/english">English</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
           Forsiden / <em>Brødsmulesti</em>
         </div>
       </nav>

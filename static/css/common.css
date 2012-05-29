@@ -157,6 +157,11 @@ nav#menus div.menu-breadcrumb em {
   font-weight: bold;
 }
 
+nav#menus div.menu-breadcrumb div.language-bar {
+  margin-top: -7px;
+  float: right;
+}
+
 /* Articles */
 
 article .row, article .row-fluid {
