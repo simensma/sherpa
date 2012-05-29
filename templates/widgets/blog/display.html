@@ -8,16 +8,15 @@
       </a>
     </h3>
     {% if entry.image %}
-      <a href="{{ entry.link }}">
+      <a class="noexternal" href="{{ entry.link }}">
         <img src="{{ entry.image }}" alt="{{ entry.title }}">
       </a>
     {% endif %}
-    <p>
-      <a href="{{ entry.link }}">
+    <div class="lede">
+      <a class="noexternal" href="{{ entry.link }}">
         {{ entry.content }}...
       </a>
-    </p>
-    <hr>
+    </div>
     <div style="clear: both;"></div>
   </div>
 {% endfor %}
