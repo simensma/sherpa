@@ -14,7 +14,7 @@
     {% endif %}
     <div class="lede">
       <a class="noexternal" href="{{ entry.link }}">
-        {{ entry.content }}...
+        {{ entry.content|truncatewords:30 }}
       </a>
     </div>
     <div style="clear: both;"></div>

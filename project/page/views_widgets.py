@@ -58,7 +58,7 @@ def parse_widget(widget):
         entries = []
         for item in root.find('channel').findall('item')[:int(widget['count'])]:
             content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
-            content_truncated = re.sub('<.*?>', '', content[:300])
+            content_truncated = re.sub('<.*?>', '', content)
             image = None
             m = re.search('<img.*?src="(.*?)" ', content)
             if m != None:
