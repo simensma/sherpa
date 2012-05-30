@@ -34,6 +34,9 @@ $(document).ready(function() {
         }
     });
 
+    /* Enable any popovers */
+    $("*[data-popover]").popover();
+
 });
 
 $.fn.enableDialog = function() {
