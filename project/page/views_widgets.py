@@ -28,7 +28,7 @@ def parse_content(request, version):
     context = {'rows': rows, 'page': version.variant.page}
     # Used temporary for static promo content
     if request.path == '/':
-        context['promo'] = 'widgets/promo/static/main.html'
+        context['promo'] = 'widgets/promo/static/index.html'
     return render(request, "page/page.html", context)
 
 # Note: This is also imported by some views in admin, and a view in articles
