@@ -65,6 +65,11 @@ $(document).ready(function() {
         }
     });
 
+    /* Close conditions-dialog */
+    $("div.dialog.conditions a.close-dialog").click(function() {
+        $("div.dialog.conditions").dialog('close');
+    });
+
 });
 
 function validateDatepicker() {

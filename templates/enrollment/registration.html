@@ -81,7 +81,7 @@
         {% endfor %}
         </table>
         <label class="checkbox">
-          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="{% url enrollment.views.conditions %}" target="_blank">betingelsene</a>
+          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" class="dialog-button" data-dialog=".dialog.conditions">betingelsene</a>
         </label>
         <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right"></i></a></p>
       </div>
@@ -138,6 +138,28 @@
       </p>
     </div>
   </div>
+</div>
+
+{# Conditions dialog #}
+<div class="dialog conditions" data-width="90%">
+  <h1>Betingelser for medlemskap i Den Norske Turistforening</h1>
+  <ul>
+    <li>Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret og
+  gjelder fra 1. januar til 31. desember. Etter 1. oktober kan man kjøpe
+  medlemskap for påfølgende år. </li>
+    <li>Medlemskapet er personlig.</li>
+    <li>Det er ingen angrerett på betalt medlemsskap.</li>
+    <li>Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%) gis rett til honnørmedlemskap. Student/Ungdomsmedlemskap gjelder kun ungdom i alder 19 - 26 år.</li>
+    <li>Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig med stempel eller oblat fra bank/post.</li>
+    <li>DNT forplikter seg til ikke å videreformidle personlige opplysninger til andre enn våre egne lokalforeninger.</li>
+  </ul>
+
+  <p>
+    Sist endret: 15. mars 2012.<br>
+    Med forbehold om endringer i løpet av medlemsåret.
+  </p>
+
+  <p><a href="javascript:undefined" class="btn btn-danger btn-large close-dialog"><i class="icon-remove"></i> Lukk vindu</a></p>
 </div>
 
 {% endblock %}

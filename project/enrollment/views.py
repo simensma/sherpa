@@ -58,9 +58,6 @@ def index(request):
 def types(request):
     return render(request, 'enrollment/types.html')
 
-def conditions(request):
-    return render(request, 'enrollment/conditions.html')
-
 def registration(request, user):
     if not request.session.has_key('registration'):
         request.session['registration'] = {'users': []}
