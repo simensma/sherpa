@@ -165,6 +165,7 @@ def household(request):
     return render(request, 'enrollment/household.html', context)
 
 def existing(request):
+    # Note: This logic is duplicated in validate_existing()
     data = json.loads(request.POST['data'])
     if data['country'] == 'NO' and len(data['zipcode']) != 4:
         return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
@@ -172,6 +173,7 @@ def existing(request):
         actor = Actor.objects.get(actno=data['id'])
     except Actor.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
+
     try:
         if data['country'] == 'NO':
             # Include zipcode for norwegian members
@@ -180,6 +182,10 @@ def existing(request):
             address = ActorAddress.objects.get(actseqno=actor.seqno, country=data['country'])
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
+
+    age = datetime.now().year - actor.birth_date.year
+    if age < AGE_STUDENT:
+        return HttpResponse(json.dumps({'error': 'actor.too_young', 'age': age}))
 
     return HttpResponse(json.dumps({
         'name': "%s %s" % (actor.first_name, actor.last_name),
@@ -520,6 +526,10 @@ def validate_existing(id, zipcode, country):
         actor = Actor.objects.get(actno=id)
     except Actor.DoesNotExist:
         return False
+
+    if datetime.now().year - actor.birth_date.year < AGE_STUDENT:
+        return False
+
     if country == 'NO':
         if not ActorAddress.objects.filter(actseqno=actor.seqno, zipcode=zipcode, country=country).exists():
             return False

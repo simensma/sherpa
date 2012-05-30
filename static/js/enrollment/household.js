@@ -117,6 +117,10 @@ $(document).ready(function() {
                 $("div.existing-result span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
                 $("div.existing-result span.description").hide();
                 $("div.existing-result span.result").addClass('error');
+            } else if(result.error == 'actor.too_young') {
+                $("div.existing-result span.result").text("Det angitte medlemmet er bare " + result.age + " år ved utgangen av året, og kan ikke være hovedmedlem.");
+                $("div.existing-result span.description").hide();
+                $("div.existing-result span.result").addClass('error');
             } else if(result.error == 'actoraddress.does_not_exist') {
                 $("div.existing-result span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
                 $("div.existing-result span.description").hide();

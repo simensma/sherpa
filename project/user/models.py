@@ -76,7 +76,7 @@ class Actor(models.Model):
     actno = models.IntegerField(db_column=u'ActNo')
     last_name = models.CharField(max_length=50, db_column=u'Nm', blank=True)
     first_name = models.CharField(max_length=50, db_column=u'FiNm', blank=True)
-    bdt = models.DateTimeField(null=True, db_column=u'BDt', blank=True)
+    birth_date = models.DateTimeField(null=True, db_column=u'BDt', blank=True)
     pno = models.CharField(max_length=50, db_column=u'PNo', blank=True)
     sex = models.CharField(max_length=1, db_column=u'Sex', blank=True)
     orgno = models.CharField(max_length=50, db_column=u'OrgNo', blank=True)
