@@ -46,7 +46,8 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'WARNING',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True
         }
     },
     'loggers': {
