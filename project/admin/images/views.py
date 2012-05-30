@@ -144,6 +144,16 @@ def upload_image(request, album):
                 exif = {}
                 if hasattr(img, '_getexif') and img._getexif() is not None:
                     for tag, value in img._getexif().items():
+                        if tag == 37500:
+                            # MakerNote data, see: https://en.wikipedia.org/wiki/Exchangeable_image_file_format#MakerNote_data
+                            continue
+                        try:
+                            # No more known binary tags. Attempt to recursively encode the data:
+                            json.dumps(value)
+                        except UnicodeDecodeError:
+                            # Skip this tag, it's not a text string
+                            # TODO: Should log a warning with the tag string here.
+                            continue
                         exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 ext = file.name.split(".")[-1].lower()
