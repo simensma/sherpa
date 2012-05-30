@@ -378,6 +378,7 @@ def payment(request):
 def result(request, invoice):
     if invoice:
         result = 'invoice'
+        skip_header = True
     elif request.GET['responseCode'] == 'OK':
         r = requests.get(PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
@@ -394,11 +395,14 @@ def result(request, invoice):
                 focus_user.payed = True
                 focus_user.save()
             result = 'success'
+            skip_header = True
         else:
             result = 'fail'
+            skip_header = False
     else:
         result = 'cancel'
-    context = {'users': request.session['registration']['users']}
+        skip_header = False
+    context = {'users': request.session['registration']['users'], 'skip_header': skip_header}
     return render(request, 'enrollment/result/%s.html' % result, context)
 
 def sms(request):

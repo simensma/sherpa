@@ -2,11 +2,13 @@
 
 {% block body %}
 
+{% if not skip_header %}
 <div class="row">
   <div class="span12">
     <h1>Bli medlem</h1>
   </div>
 </div>
+{% endif %}
 
 {% block enrollment %}{% endblock %}
 {% endblock %}
