@@ -75,8 +75,42 @@ footer div.sponsors {
 }
 
 footer div.sponsors img {
-  margin-left: 6px;
-  margin-right: 6px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+footer div.sponsors img.onecall {
+  margin-right: 20px !important;
+}
+
+@media (max-width: 980px) {
+  footer div.sponsors-underline {
+    display: none;
+  }
+}
+
+footer div.sponsors-underline div {
+  float: left;
+  font-family: "DTL Nobel" !important;
+  font-size: 14px;
+  color: rgb(145, 145, 145);
+  border-top: 2px solid rgb(195, 195, 195);
+  margin-top: 15px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-top: 5px;
+}
+
+footer div.sponsors-underline div.main {
+  width: 162px;
+}
+
+footer div.sponsors-underline div.tour {
+  width: 511px;
+}
+
+footer div.sponsors-underline div.other {
+  width: 216px;
 }
 
 /* Search box, preliminary for groups */
