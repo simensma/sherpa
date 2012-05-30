@@ -260,10 +260,6 @@ def payment(request):
     if val is not None:
         return val
 
-    if not request.session.has_key('registration'):
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if len(request.session['registration']['users']) == 0:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if request.POST.get('payment-method', '') != 'card' and request.POST.get('payment-method', '') != 'invoice':
         return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_payment_method))
 
