@@ -48,11 +48,16 @@ LOGGING = {
             'level': 'WARNING',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'error.log'
         }
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'file'],
             'level': 'DEBUG',
             'propagate': True,
         },
