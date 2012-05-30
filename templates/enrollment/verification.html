@@ -1,6 +1,8 @@
 {% extends 'enrollment/index.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/verification.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tooltip.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-popover.js"></script>
 {% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
@@ -78,7 +80,7 @@
           <thead>
             <tr>
               {% if multiple_main and not existing %}
-                <th>Hovedmedlem</th>
+                <th data-popover data-title="Hovedmedlem" data-content="Hovedmedlemmet er den som <i>husstandsmedlemmer</i> kan knyttes opp til, og må være minst {{ age_student }} år.">Hovedmedlem</th>
               {% endif %}
               <th>Personopplysninger</th>
               <th>Medlemstype</th>
@@ -198,12 +200,6 @@
         </table>
 
       </div>
-
-      {% if multiple_main and not existing %}
-      <p>
-        <i class="icon-info-sign"></i> <em>Hovedmedlemmet</em> er den som <em>husstandsmedlemmer</em> kan knyttes opp til, og må være minst {{ age_student }} år.
-      </p>
-      {% endif %}
 
       <p>Medlemskapet vil gjelde for <strong>{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</strong>.</p>
 
