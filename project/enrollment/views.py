@@ -68,7 +68,6 @@ def registration(request, user):
     if user is not None:
         user = request.session['registration']['users'][int(user)]
 
-    saved = False
     errors = False
     if(request.method == 'POST'):
         new_user = {}
@@ -99,7 +98,6 @@ def registration(request, user):
                 request.session['registration']['users'][int(request.POST['user'])] = new_user
             else:
                 request.session['registration']['users'].append(new_user)
-            saved = True
 
     contact_missing = request.GET.has_key(contact_missing_key)
     updateIndices(request.session)
@@ -108,7 +106,7 @@ def registration(request, user):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
     context = {'users': request.session['registration']['users'], 'user': user,
-        'saved': saved, 'errors': errors, 'contact_missing': contact_missing,
+        'errors': errors, 'contact_missing': contact_missing,
         'conditions': request.session['registration'].get('conditions', ''),
         'too_many_underage': request.GET.has_key(too_many_underage)}
     return render(request, 'enrollment/registration.html', context)
