@@ -31,15 +31,23 @@ $(document).ready(function() {
         }
     });
 
+    window.phone_required = false;
     $("form#registration input[name='phone']").focusout(function() {
         if($(this).val() != "" && ($(this).val().length < 8 || $(this).val().match(/[a-z]/i))) {
             $(this).parents("div.control-group").addClass('error');
         }
+        if(phone_required && $(this).val() == '') {
+            $(this).parents("div.control-group").addClass('error');
+        }
     });
 
+    window.email_required = false;
     $("form#registration input[name='email']").focusout(function() {
         if($(this).val() != "" && !$(this).val().match(/.+@.+\..+/)) {
             // Email provided, but invalid
+            $(this).parents("div.control-group").addClass('error');
+        }
+        if(email_required && $(this).val() == "") {
             $(this).parents("div.control-group").addClass('error');
         }
     });

@@ -23,6 +23,13 @@
 </script>
 {% endif %}
 
+<script>
+  $(document).ready(function() {
+    phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+    email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+  });
+</script>
+
 <div class="row">
   <div class="offset2 span8">
     {% if too_many_underage %}
@@ -105,11 +112,11 @@
         </label>
       </div>
       <div class="control-group phone">
-        <label> Mobiltelefon <span class="asterisk">*</span></label>
+        <label> Mobiltelefon {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
         <input type="text" class="input-medium" name="phone" value="{{ user.phone }}">
       </div>
       <div class="control-group email">
-        <label> E-post <span class="asterisk">*</span></label>
+        <label> E-post {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
         <input type="text" class="input-large" name="email" value="{{ user.email }}">
       </div>
       <label class="checkbox">
