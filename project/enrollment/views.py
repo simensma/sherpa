@@ -516,20 +516,14 @@ def validate_email(email):
     return len(re.findall('.+@.+\..+', email)) > 0
 
 def validate_existing(id, zipcode, country):
+    try:
+        actor = Actor.objects.get(actno=id)
+    except Actor.DoesNotExist:
+        return False
     if country == 'NO':
-        try:
-            actor = Actor.objects.get(actno=id)
-        except Actor.DoesNotExist:
-            return False
-
         if not ActorAddress.objects.filter(actseqno=actor.seqno, zipcode=zipcode, country=country).exists():
             return False
     else:
-        try:
-            actor = Actor.objects.get(actno=id)
-        except Actor.DoesNotExist:
-            return False
-
         if not ActorAddress.objects.filter(actseqno=actor.seqno, country=country).exists():
             return False
     return True
