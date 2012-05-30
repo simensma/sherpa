@@ -44,9 +44,9 @@ $(document).ready(function() {
         if(high != low) {
             // Recommend the cheapest price
             $("table.prices tr[data-age]").eq(low.index).addClass('main');
-            var info = $('<div class="offset2 span8"><div class="alert alert-info"><a class="close">x</a><strong><img src="/static/img/icons/glyph/original/glyphicons_195_circle_info.png"> Rabattmulighet!</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div></div>');
+            var info = $('<div class="alert alert-info"><a class="close">x</a><strong><img src="/static/img/icons/glyph/original/glyphicons_195_circle_info.png"> Rabattmulighet!</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div>');
             info.find("a.close").click(function() { $(this).parent().remove(); });
-            $("table.prices").parent().before(info);
+            $("div.errors").append(info);
         } else {
             // No price differences, set the first member as main member
             var done = false;
