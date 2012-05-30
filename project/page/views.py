@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseServerError
+from django.template import RequestContext, loader
 from page.models import Page, Variant, Version
 from analytics.models import Visitor, Pageview
 from string import split
@@ -55,3 +56,8 @@ def match_user(request, page):
 
 def redirect(request, url, prefix):
     return HttpResponseRedirect("%s%s" % (prefix, url))
+
+def server_error(request, template_name='500.html'):
+    # Use a custom server_error view because the default doesn't use RequestContext
+    t = loader.get_template(template_name)
+    return HttpResponseServerError(t.render(RequestContext(request)))

@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
+handler500 = 'page.views.server_error'
+
 urlpatterns = patterns('',
     # Sherpa admin interface
     url(r'^sherpa/', include('admin.urls')),
