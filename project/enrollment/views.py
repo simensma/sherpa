@@ -55,9 +55,6 @@ AGE_SCHOOL = 13
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
-def types(request):
-    return render(request, 'enrollment/types.html')
-
 def registration(request, user):
     if not request.session.has_key('registration'):
         request.session['registration'] = {'users': []}
