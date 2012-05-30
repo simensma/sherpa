@@ -8,7 +8,7 @@ form#registration.border, form#household div.border, div.verification.border {
 
 form#registration label, form#household label {
     font-size: 110%;
-    font-family: "DTL Nobel Oldstyle" !important;
+    font-family: "DTL Nobel" !important;
 }
 
 form#registration .control-group:not(.error,.warning) label, form#household .control-group:not(.error,.warning) label {
