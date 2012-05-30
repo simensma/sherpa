@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'enrollment/index.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/verification.js"></script>
 {% endblock %}
@@ -8,7 +8,7 @@
 
 {% block title %}Innmelding{% endblock %}
 
-{% block body %}
+{% block enrollment %}
 
 <script>
   var price_key = {{ keyprice }};

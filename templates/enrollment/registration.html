@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'enrollment/index.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
@@ -10,7 +10,7 @@
 
 {% block title %}Innmelding{% endblock %}
 
-{% block body %}
+{% block enrollment %}
 
 {% if errors %}
 <script>
