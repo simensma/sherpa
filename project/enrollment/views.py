@@ -249,11 +249,20 @@ def verification(request):
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
         'no_main_member': request.GET.has_key(no_main_member_key),
-        'invalid_payment_method': request.GET.has_key(invalid_payment_method),
         'yearbook': request.session['registration']['yearbook'],
         'attempted_yearbook': request.session['registration']['attempted_yearbook'],
         'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE}
     return render(request, 'enrollment/verification.html', context)
+
+def payment_method(request):
+    val = validate(request.session, require_location=True, require_existing=True)
+    if val is not None:
+        return val
+
+    request.session['registration']['main_member'] = request.POST.get('main-member', '')
+
+    context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
+    return render(request, 'enrollment/payment.html', context)
 
 def payment(request):
     val = validate(request.session, require_location=True, require_existing=True)
@@ -261,7 +270,7 @@ def payment(request):
         return val
 
     if request.POST.get('payment-method', '') != 'card' and request.POST.get('payment-method', '') != 'invoice':
-        return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_payment_method))
+        return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
 
     # Figure out who's a household-member, who's not, and who's the main member
     main = None
@@ -272,10 +281,10 @@ def payment(request):
             user['household'] = True
             user['yearbook'] = False
         linked_to = request.session['registration']['existing']
-    elif request.POST['main-member'] != '':
+    elif request.session['registration']['main_member'] != '':
         # If the user specified someone, everyone except that member is household
         for user in request.session['registration']['users']:
-            if user['index'] == int(request.POST['main-member']):
+            if user['index'] == int(request.session['registration']['main_member']):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))

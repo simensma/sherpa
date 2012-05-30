@@ -1,0 +1,66 @@
+{% extends 'enrollment/index.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/payment.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block title %}Innmelding{% endblock %}
+
+{% block enrollment %}
+
+{% if invalid_payment_method %}
+  <div class="row">
+    <div class="offset3 span6">
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
+        Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="row">
+  <div class="span8">
+
+    {% include 'enrollment/progress.html' with step=4 %}
+
+    <form id="payment" action="{% url enrollment.views.payment %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="main-member" value="">
+      <div class="control-group payment-method">
+        <label> Velg betalingsmåte:</label>
+        <input type="radio" name="payment-method" value="card" checked> VISA / MASTERCARD<br>
+        <input type="radio" name="payment-method" value="invoice"> Få tilsendt faktura
+      </div>
+
+      <div class="alert alert-info">
+        <strong><i class="icon-info-sign"></i> Med faktura blir du ikke medlem før du har betalt</strong><br>
+        Om du ønsker å motta medlemsnummer med en gang, må du betale online med bankkort. Hvis ikke blir du ikke registrert medlem før fakturaen blir betalt.
+      </div>
+
+      <p>
+        <a class="btn btn-large" href="{% url enrollment.views.verification %}"><i class="icon-arrow-left"></i> Tilbake</a>
+        <button class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
+      </p>
+    </form>
+
+  </div>
+
+  <div class="span4">
+    <div class="well">
+      <p><i class="icon-info-sign"></i> <strong>Har du spørsmål?</strong></p>
+      <p>
+        Kontakt medlemsservice:<br>
+        Telefon: 4000 1970<br>
+        <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a><br>
+        Åpent alle hverdager:<br>
+        Kl. 09.00 - 16.00
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
