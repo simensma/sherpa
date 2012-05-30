@@ -259,7 +259,7 @@ def payment_method(request):
     if val is not None:
         return val
 
-    request.session['registration']['main_member'] = request.POST.get('main-member', '')
+    request.session['registration']['main-member'] = request.POST.get('main-member', '')
 
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
     return render(request, 'enrollment/payment.html', context)
