@@ -107,6 +107,12 @@ div.alert-error {
   background-color: rgb(246, 72, 62) !important;
 }
 
+/* Override bootstrap radio input */
+
+input[type='radio'], input[type='checkbox'] {
+  border: none;
+}
+
 /* Menus (main menu and admin) */
 
 nav#menus {
