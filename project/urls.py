@@ -17,6 +17,9 @@ urlpatterns = patterns('',
     # Enrollment
     url(r'^innmelding/', include('enrollment.urls')),
 
+    # Membership
+    url(r'^medlem/', include('membership.urls')),
+
     # Membership-service
     url(r'^medlemsservice/', include('memberservice.urls')),
 

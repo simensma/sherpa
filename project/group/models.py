@@ -2,7 +2,7 @@ from django.db import models
 
 class Group(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
-    my_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
+    focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
     parent = models.IntegerField(db_column='gr_parent', null=True, blank=True)
     fo_id = models.IntegerField(db_column='gr_fo_id', null=True, blank=True)
     name = models.CharField(db_column='gr_name', max_length=100, blank=True)
