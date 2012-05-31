@@ -31,5 +31,6 @@ class Group(models.Model):
     county = models.TextField(db_column='gr_county', blank=True)
     facebook = models.TextField(db_column='gr_facebook', blank=True)
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
+    map = models.TextField(db_column='gr_map', blank=True)
     class Meta:
         db_table = u'groups'
