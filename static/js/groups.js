@@ -2,7 +2,9 @@ $(document).ready(function() {
 
     $("div.loading").hide();
 
-    $("input[type='radio']").change(function() {
+    performSearch();
+    $("input[type='radio']").change(performSearch);
+    function performSearch() {
         var category = $("input[type='radio'][name='category']:checked").val();
         var county = $("input[type='radio'][name='county']:checked").val();
         $("div#results div.result").remove();
@@ -28,6 +30,6 @@ $(document).ready(function() {
         }).always(function() {
             $("div.loading").hide();
         });
-    });
+    }
 
 });
