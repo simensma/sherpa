@@ -46,6 +46,21 @@ def filter(request):
         groups = groups.filter(id__in=filter_ids)
     result = []
     for g in groups:
+        # If the group has no address, use the parents address
+        if g.post_address == '':
+            next_parent = g.parent
+            while g.post_address == '':
+                try:
+                    parent = Group.objects.get(id=next_parent)
+                    g.post_address = parent.post_address
+                    g.visit_address = parent.visit_address
+                    g.zip = parent.zip
+                    g.ziparea = parent.ziparea
+                    next_parent = parent.parent
+                except Group.DoesNotExist:
+                    break
+
+        # Render the group result
         t = loader.get_template('groups/group-result.html')
         r = RequestContext(request, {'group': g})
         result.append(t.render(r))
