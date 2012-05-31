@@ -7,12 +7,12 @@ $(document).ready(function() {
     function performSearch() {
         var category = $("input[type='radio'][name='category']:checked").val();
         var county = $("input[type='radio'][name='county']:checked").val();
-        $("div#results div.result").remove();
+        $("table#results").children().remove();
         if(category == 'all' && county == 'all') {
-            $("div#results div.all").show();
+            $("div.all").show();
             return $(this);
         } else {
-            $("div#results div.all").hide();
+            $("div.all").hide();
         }
         $("div.loading").show();
         $.ajax({
@@ -25,7 +25,7 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             for(var i=0; i<result.length; i++) {
-                $("div#results").append(result[i]);
+                $("table#results").append(result[i]);
             }
         }).always(function() {
             $("div.loading").hide();
