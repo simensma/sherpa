@@ -13,11 +13,11 @@
     {% if group.email %}
       <p>E-post: <a href="{{ group.email }}">{{ group.email }}</a></p>
     {% endif %}
-    {% if group.facebook %}
-      <p>Facebook: <a href="{{ group.facebook }}">Besøk på Facebook</a></p>
-    {% endif %}
     {% if group.phone %}
       <p>Tlf: {{ group.phone }}</p>
+    {% endif %}
+    {% if group.facebook %}
+      <p><a href="{{ group.facebook }}">Besøk oss på Facebook</a></p>
     {% endif %}
     {% if group.post_address %}
       <p>Postadresse: {{ group.post_address }}, {{ group.zip }} {{ group.ziparea }}</p>
