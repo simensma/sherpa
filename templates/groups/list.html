@@ -33,7 +33,7 @@
         <td class="counties">
           <div class="county"><input type="radio" name="county" value="all"{% if chosen_county == '' %} checked{% endif %}> Alle</div>
           {% for county in counties %}
-            <div class="county"><input type="radio" name="county" value="{{ county.code }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}</div>
+            <div class="county"><input type="radio" name="county" value="{{ county.sherpa_id }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}</div>
           {% endfor %}
         </td>
       </tr>

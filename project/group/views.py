@@ -42,10 +42,13 @@ def filter(request):
             return HttpResponse('{}')
         groups = groups.filter(type="|%s" % request.POST['category'].title())
     if request.POST['county'] != 'all':
-        codes = []
-        for zip in Zipcode.objects.filter(city_code__startswith=request.POST['county']):
-            codes.append(zip.zip_code)
-        groups = groups.filter(zip__in=codes)
+        # Sherpa stores groups with multiple counties as text with '|' as separator :(
+        # So we'll have to pick all of them and programatically check the county
+        filter_ids = []
+        for group in groups.exclude(county=None):
+            if request.POST['county'] in group.county.split('|'):
+                filter_ids.append(group.id)
+        groups = groups.filter(id__in=filter_ids)
     result = []
     for g in groups:
         t = loader.get_template('groups/group-result.html')
