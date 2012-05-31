@@ -26,8 +26,8 @@
           <input type="radio" name="category" value="all"{% if chosen_category == '' %} checked{% endif %}>
           Alle<br>
           {% for category in categories %}
-            <input type="radio" name="category" value="{{ category.type }}"{% if chosen_category|lower == category.type|cut:'|'|lower %} checked{% endif %}>
-            {{ category.type|cut:'|' }}<br>
+            <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}>
+            {{ category.name }}<br>
           {% endfor %}
         </td>
         <td class="counties">

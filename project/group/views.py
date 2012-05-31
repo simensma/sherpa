@@ -8,16 +8,17 @@ from user.models import *
 
 import json
 
+# Define categories and their order here. This is duplicated in the Sherpa DB.
+categories = [
+    {'name': 'Medlemsforeninger', 'db': 'Hovedforening'},
+    {'name': 'Lokale turlag', 'db': 'Underforening'},
+    {'name': 'Barnas turlag', 'db': 'Barn'},
+    {'name': 'Ungdomsgrupper', 'db': 'Ungdom'},
+    {'name': 'Fjellsportgrupper', 'db': 'Fjellsport'},
+    {'name': 'Seniorgrupper', 'db': 'Senior'},
+    {'name': 'Andre turgrupper', 'db': 'Annet'}]
+
 def index(request):
-    categories = Group.objects.exclude(type='').filter(
-        Q(type='|Hovedforening') |
-        Q(type='|Underforening') |
-        Q(type='|Barn') |
-        Q(type='|Ungdom') |
-        Q(type='|Fjellsport') |
-        Q(type='|Senior') |
-        Q(type='|Annet')
-        ).order_by('type').distinct('type')
     counties = County.objects.exclude(sherpa_id=None).order_by('code')
     context = {'categories': categories, 'counties': counties,
         'chosen_category': request.GET.get('kategori', ''),
@@ -31,7 +32,15 @@ def filter(request):
         return HttpResponse('{}')
     groups = Group.objects.all()
     if request.POST['category'] != 'all':
-        groups = groups.filter(type=request.POST['category'])
+        exists = False
+        for category in categories:
+            if request.POST['category'].title() == category['db']:
+                exists = True
+                break
+        if not exists:
+            # Invalid category provided
+            return HttpResponse('{}')
+        groups = groups.filter(type="|%s" % request.POST['category'].title())
     if request.POST['county'] != 'all':
         codes = []
         for zip in Zipcode.objects.filter(city_code__startswith=request.POST['county']):
