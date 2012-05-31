@@ -75,6 +75,7 @@
     <form id="verification" action="{% url enrollment.views.payment_method %}" method="post">
       <div class="verification border">
         {% csrf_token %}
+        <input type="hidden" name="main-member" value="">
         <h2>Registrerte opplysninger</h2>
         <table class="table prices">
           <thead>
@@ -99,7 +100,7 @@
               <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
                 {% if multiple_main and not existing and user.age >= age_student %}
                   <td class="choose-main">
-                    <input type="radio" name="main-member" value="{{ user.index }}">
+                    <input type="radio" name="main" value="{{ user.index }}">
                   </td>
                 {% endif %}
                 {% if multiple_main and not existing and user.age < age_student %}
@@ -205,7 +206,7 @@
 
       <p>
         <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
-        <button class="btn btn-danger btn-large">Bekreft <i class="icon-arrow-right"></i></button>
+        <a href="javascript:undefined" class="btn btn-danger btn-large verify">Bekreft <i class="icon-arrow-right"></i></a>
       </p>
 
     </form>

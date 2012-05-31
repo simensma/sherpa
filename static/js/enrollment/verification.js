@@ -43,7 +43,7 @@ $(document).ready(function() {
 
         if(high != low) {
             // Recommend the cheapest price
-            $("table.prices tr[data-age]").eq(low.index).addClass('main').find("input[name='main-member']").click();
+            $("table.prices tr[data-age]").eq(low.index).addClass('main').find("input[name='main']").click();
             var info = $('<div class="alert alert-info"><a class="close">x</a><strong><img src="/static/img/icons/glyph/original/glyphicons_195_circle_info.png"> Rabattmulighet!</strong><br>Siden ' + low.name + ' er ' + typeOf(low.age).toLowerCase() + ', har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.</div>');
             info.find("a.close").click(function() { $(this).parent().remove(); });
             $("div.errors").append(info);
@@ -55,16 +55,25 @@ $(document).ready(function() {
                     return;
                 }
                 if($(this).attr('data-age') > 18) {
-                    $(this).addClass('main').find("input[name='main-member']").click();
+                    $(this).addClass('main').find("input[name='main']").click();
                     done = true;
                 }
             });
         }
     }
 
+    $("a.verify").click(function() {
+        var form = $("form#verification");
+        var main = $("table.prices tr.main");
+        if(main.attr('data-index') !== undefined) {
+            form.find("input[name='main-member']").val(main.attr('data-index'));
+        }
+        form.submit();
+    });
+
     calculatePrices();
     orderListByAge();
-    $("table.prices input[name='main-member']").click(function() {
+    $("table.prices input[name='main']").click(function() {
         $("table.prices tr").removeClass('main');
         $(this).parents("tr").addClass('main');
         calculatePrices();
