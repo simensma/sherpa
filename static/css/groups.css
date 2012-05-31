@@ -1,3 +1,17 @@
 div#searchbox {
   margin-bottom: 40px;
 }
+
+div#searchbox th {
+  text-align: left;
+}
+
+div#searchbox th h2 {
+  font-size: 20px;
+}
+
+div#searchbox td {
+  font-family: "DTL Nobel" !important;
+  font-size: 16px;
+  color: rgb(100, 100, 100);
+}

@@ -18,20 +18,16 @@
   <div id="content">
     <table>
       <tr>
-        <th>Velg type</th>
-        <th>Fylke</th>
+        <th><h2>Velg type</h2></th>
+        <th><h2>Fylke</h2></th>
       </tr>
       <tr>
         <td class="categories">
-          <p>
-            <input type="radio" name="category" value="all"{% if chosen_category == '' %} checked{% endif %}>
-            Alle
-          </p>
+          <input type="radio" name="category" value="all"{% if chosen_category == '' %} checked{% endif %}>
+          Alle<br>
           {% for category in categories %}
-            <p>
-              <input type="radio" name="category" value="{{ category.type }}"{% if chosen_category|lower == category.type|cut:'|'|lower %} checked{% endif %}>
-              {{ category.type|cut:'|' }}
-            </p>
+            <input type="radio" name="category" value="{{ category.type }}"{% if chosen_category|lower == category.type|cut:'|'|lower %} checked{% endif %}>
+            {{ category.type|cut:'|' }}<br>
           {% endfor %}
         </td>
         <td class="counties">
