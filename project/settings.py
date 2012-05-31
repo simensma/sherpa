@@ -11,7 +11,7 @@ AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 
 MANAGERS = ADMINS = (
-    ('Ali Kaafarani', 'ali.kaafarani@turistforeningen.no'),
+    ('Ali Kaafarani', 'ali@kvikshaug.no'),
 )
 
 TIME_ZONE = 'Europe/Oslo'
