@@ -16,7 +16,7 @@ categories = [
     {'name': 'Ungdomsgrupper', 'db': 'Ungdom'},
     {'name': 'Fjellsportgrupper', 'db': 'Fjellsport'},
     {'name': 'Seniorgrupper', 'db': 'Senior'},
-    {'name': 'Andre turgrupper', 'db': 'Annet'}]
+    {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
     counties = County.objects.exclude(sherpa_id=None).order_by('code')
