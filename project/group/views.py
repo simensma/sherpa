@@ -37,7 +37,4 @@ def filter(request):
         for zip in Zipcode.objects.filter(city_code__startswith=request.POST['county']):
             codes.append(zip.zip_code)
         group_objs = group_objs.filter(zip__in=codes)
-    groups = []
-    for group in group_objs:
-        groups.append({'name': group.name})
     return HttpResponse(serializers.serialize('json', group_objs))
