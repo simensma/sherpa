@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     $("div.loading").hide();
+    $("div.no-results").hide();
 
     performSearch();
     $("input[type='radio']").change(performSearch);
@@ -15,6 +16,7 @@ $(document).ready(function() {
             $("div.all").hide();
         }
         $("div.loading").show();
+        $("div.no-results").hide();
         $.ajax({
             url: '/foreninger/filtrer/',
             type: 'POST',
@@ -26,6 +28,9 @@ $(document).ready(function() {
             result = JSON.parse(result);
             for(var i=0; i<result.length; i++) {
                 $("table#results").append(result[i]);
+            }
+            if(result.length == 0) {
+                $("div.no-results").show();
             }
             $("table#results div.map").hide();
             $("table#results a.close-map").hide();
