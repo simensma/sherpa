@@ -22,12 +22,12 @@
         <td class="categories">
           <p>
             <input type="radio" name="category" value="all" checked>
-            Alle (<span class="count"></span>)
+            Alle
           </p>
           {% for category in categories %}
             <p>
               <input type="radio" name="category" value="{{ category.type }}">
-              {{ category.type|cut:'|' }} (<span class="count"></span>)
+              {{ category.type|cut:'|' }}
             </p>
           {% endfor %}
         </td>
