@@ -27,9 +27,24 @@ $(document).ready(function() {
             for(var i=0; i<result.length; i++) {
                 $("table#results").append(result[i]);
             }
+            $("table#results div.map").hide();
+            $("table#results a.close-map").hide();
         }).always(function() {
             $("div.loading").hide();
         });
     }
 
+    /* Toggle maps */
+    $(document).on('click', 'table#results a.open-map', function() {
+        var id = $(this).attr('data-id');
+        $(this).hide();
+        $("table#results a.close-map[data-id='" + id + "']").show();
+        $("table#results div.map[data-id='" + id + "']").show();
+    });
+    $(document).on('click', 'table#results a.close-map', function() {
+        var id = $(this).attr('data-id');
+        $(this).hide();
+        $("table#results a.open-map[data-id='" + id + "']").show();
+        $("table#results div.map[data-id='" + id + "']").hide();
+    });
 });
