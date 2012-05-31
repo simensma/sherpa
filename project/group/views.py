@@ -18,7 +18,7 @@ def index(request):
         Q(type='|Senior') |
         Q(type='|Annet')
         ).order_by('type').distinct('type')
-    counties = County.objects.exclude(focus_id=None).order_by('code')
+    counties = County.objects.exclude(sherpa_id=None).order_by('code')
     context = {'categories': categories, 'counties': counties}
     return render(request, 'groups/list.html', context)
 

@@ -14,7 +14,7 @@ class Zipcode(models.Model):
 
 class County(models.Model):
     code = models.CharField(max_length=2)
-    focus_id = models.IntegerField(null=True)
+    sherpa_id = models.IntegerField(null=True)
     name = models.CharField(max_length=100)
 
 
