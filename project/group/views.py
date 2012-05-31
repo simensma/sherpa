@@ -27,20 +27,15 @@ def index(request):
     return render(request, 'groups/list.html', context)
 
 def filter(request):
-    if request.POST['category'] == 'all' and request.POST['county'] == 'all':
-        # Shouldn't happen unless someone manually sends such a request
+    exists = False
+    for category in categories:
+        if request.POST['category'].title() == category['db']:
+            exists = True
+            break
+    if not exists:
+        # Invalid category provided
         return HttpResponse('{}')
-    groups = Group.objects.all()
-    if request.POST['category'] != 'all':
-        exists = False
-        for category in categories:
-            if request.POST['category'].title() == category['db']:
-                exists = True
-                break
-        if not exists:
-            # Invalid category provided
-            return HttpResponse('{}')
-        groups = groups.filter(type="|%s" % request.POST['category'].title())
+    groups = Group.objects.filter(type="|%s" % request.POST['category'].title())
     if request.POST['county'] != 'all':
         # Sherpa stores groups with multiple counties as text with '|' as separator :(
         # So we'll have to pick all of them and programatically check the county
