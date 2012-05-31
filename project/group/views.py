@@ -26,6 +26,9 @@ def index(request):
     return render(request, 'groups/list.html', context)
 
 def filter(request):
+    if request.POST['category'] == 'all' and request.POST['county'] == 'all':
+        # Shouldn't happen unless someone manually sends such a request
+        return HttpResponse('{}')
     group_objs = Group.objects.all()
     if request.POST['category'] != 'all':
         group_objs = group_objs.filter(type=request.POST['category'])

@@ -2,6 +2,9 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/groups.js"></script>
 {% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/groups.css" media="screen">
+{% endblock %}
 
 {% block title %}DNT der du bor{% endblock %}
 
@@ -48,7 +51,9 @@
 </div>
 
 <div id="results">
-
+  <div class="info">
+    <h2>Vennligst velg fylke og/eller kategori i boksen over.</h2>
+  </div>
 </div>
 
 {% endblock %}

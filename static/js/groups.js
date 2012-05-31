@@ -5,7 +5,13 @@ $(document).ready(function() {
     $("input[type='radio']").change(function() {
         var category = $("input[type='radio'][name='category']:checked").val();
         var county = $("input[type='radio'][name='county']:checked").val();
-        $("div#results").children().remove();
+        $("div#results div.result").remove();
+        if(category == 'all' && county == 'all') {
+            $("div#results div.info").show();
+            return $(this);
+        } else {
+            $("div#results div.info").hide();
+        }
         $("div.loading").show();
         $.ajax({
             url: '/foreninger/filtrer/',
