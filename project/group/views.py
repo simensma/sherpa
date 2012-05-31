@@ -19,7 +19,10 @@ def index(request):
         Q(type='|Annet')
         ).order_by('type').distinct('type')
     counties = County.objects.exclude(sherpa_id=None).order_by('code')
-    context = {'categories': categories, 'counties': counties}
+    context = {'categories': categories, 'counties': counties,
+        'chosen_category': request.GET.get('kategori', ''),
+        'chosen_county': request.GET.get('fylke', '')
+    }
     return render(request, 'groups/list.html', context)
 
 def filter(request):

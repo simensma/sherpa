@@ -21,20 +21,20 @@
       <tr>
         <td class="categories">
           <p>
-            <input type="radio" name="category" value="all" checked>
+            <input type="radio" name="category" value="all"{% if chosen_category == '' %} checked{% endif %}>
             Alle
           </p>
           {% for category in categories %}
             <p>
-              <input type="radio" name="category" value="{{ category.type }}">
+              <input type="radio" name="category" value="{{ category.type }}"{% if chosen_category|lower == category.type|cut:'|'|lower %} checked{% endif %}>
               {{ category.type|cut:'|' }}
             </p>
           {% endfor %}
         </td>
         <td class="counties">
-          <div class="county"><input type="radio" name="county" value="all" checked> Alle</div>
+          <div class="county"><input type="radio" name="county" value="all"{% if chosen_county == '' %} checked{% endif %}> Alle</div>
           {% for county in counties %}
-            <div class="county"><input type="radio" name="county" value="{{ county.code }}"> {{ county.name }}</div>
+            <div class="county"><input type="radio" name="county" value="{{ county.code }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}</div>
           {% endfor %}
         </td>
       </tr>
