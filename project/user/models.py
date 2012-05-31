@@ -176,3 +176,19 @@ class ActorAddress(models.Model):
     crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
     class Meta:
         db_table = u'ActAd'
+
+class FocusZipcode(models.Model):
+    postcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
+    postarea = models.CharField(max_length=40, db_column=u'PostArea')
+    county1no = models.CharField(max_length=10, db_column=u'County1No', blank=True)
+    county1name = models.CharField(max_length=40, db_column=u'County1Name', blank=True)
+    county2no = models.CharField(max_length=10, db_column=u'County2No', blank=True)
+    county2name = models.CharField(max_length=40, db_column=u'County2Name', blank=True)
+    district1 = models.IntegerField(null=True, db_column=u'District1', blank=True)
+    district2 = models.IntegerField(null=True, db_column=u'District2', blank=True)
+    crby = models.CharField(max_length=25, db_column=u'CrBy', blank=True)
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
+    chby = models.CharField(max_length=25, db_column=u'ChBy', blank=True)
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt', blank=True)
+    class Meta:
+        db_table = u'PostalCode'
