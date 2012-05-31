@@ -24,7 +24,7 @@
       <tr>
         <td class="categories">
           {% for category in categories %}
-            <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}>
+            <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}{% if category.db == 'Hovedforening' and chosen_category == '' %} checked{% endif %}>
             {{ category.name }}<br>
           {% endfor %}
         </td>
