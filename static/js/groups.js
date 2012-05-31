@@ -45,6 +45,11 @@ $(document).ready(function() {
         $(this).hide();
         $("table#results a.close-map[data-id='" + id + "']").show();
         $("table#results div.map[data-id='" + id + "']").show();
+        // Actually load the iframe
+        var iframe = $("table#results div.map[data-id='" + id + "'] iframe");
+        if(iframe.attr('src') == '') {
+            iframe.attr('src', iframe.attr('data-src'));
+        }
     });
     $(document).on('click', 'table#results a.close-map', function() {
         var id = $(this).attr('data-id');
