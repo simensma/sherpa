@@ -9,10 +9,10 @@ $(document).ready(function() {
         var county = $("input[type='radio'][name='county']:checked").val();
         $("div#results div.result").remove();
         if(category == 'all' && county == 'all') {
-            $("div#results div.info").show();
+            $("div#results div.all").show();
             return $(this);
         } else {
-            $("div#results div.info").hide();
+            $("div#results div.all").hide();
         }
         $("div.loading").show();
         $.ajax({
