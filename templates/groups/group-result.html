@@ -1,9 +1,11 @@
 <tr>
   <td>
-    <div class="logo">
-      <span class="text">{{ group.name }}</span>
-      <img src="{{ STATIC_URL }}img/header-logo-part.png">
-    </div>
+    <a href="{{ group.url }}">
+      <div class="logo">
+        <span class="text">{{ group.name }}</span>
+        <img src="{{ STATIC_URL }}img/header-logo-part.png">
+      </div>
+    </a>
     <h2>{{ group.name }}</h2>
     {% if group.url %}
       <p><a href="{{ group.url }}">{{ group.url }}</a></p>
