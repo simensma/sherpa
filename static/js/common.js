@@ -35,11 +35,7 @@ $(document).ready(function() {
     });
 
     /* Enable any popovers */
-    if(typeof($("*[data-popover]").popover) !== 'undefined') {
-        // Check that the function exists, in case the popover-js isn't loaded
-        // (Which it won't be for pages without popover)
-        $("*[data-popover]").popover();
-    }
+    $("*[data-popover]").popover();
 
 });
 
