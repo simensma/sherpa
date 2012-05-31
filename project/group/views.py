@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.core import serializers
 
@@ -9,7 +9,15 @@ from user.models import *
 import json
 
 def index(request):
-    categories = Group.objects.exclude(type='').order_by('type').distinct('type')
+    categories = Group.objects.exclude(type='').filter(
+        Q(type='|Hovedforening') |
+        Q(type='|Underforening') |
+        Q(type='|Barn') |
+        Q(type='|Ungdom') |
+        Q(type='|Fjellsport') |
+        Q(type='|Senior') |
+        Q(type='|Annet')
+        ).order_by('type').distinct('type')
     counties = County.objects.all().order_by('code')
     context = {'categories': categories, 'counties': counties}
     return render(request, 'groups/list.html', context)
