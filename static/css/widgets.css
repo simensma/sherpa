@@ -150,6 +150,10 @@ div.widget.promo div.wrapper.kurs div.right {
   color: black;
 }
 
+div.widget.promo div.wrapper.tur-for-alle {
+  background-color: rgb(122, 130, 65);
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
