@@ -276,4 +276,50 @@
   </div>
 </div>
 
+{% if group %}
+<div class="row">
+  <div class="span8">
+    <div class="well">
+      <h2>{{ group.name }}</h2>
+      {% if group.url %}
+        <p><a href="{{ group.url }}">{{ group.url }}</a></p>
+      {% endif %}
+      {% if group.email %}
+        <p>E-post: <a href="{{ group.email }}">{{ group.email }}</a></p>
+      {% endif %}
+      {% if group.phone %}
+        <p>Tlf: {{ group.phone }}</p>
+      {% endif %}
+      {% if group.facebook %}
+        <p><a href="{{ group.facebook }}">Besøk oss på Facebook</a></p>
+      {% endif %}
+      {% if group.post_address %}
+        <p>Postadresse: {{ group.post_address }}, {{ group.zip }} {{ group.ziparea }}</p>
+        {% endif %}
+      {% if group.visit_address %}
+        <p>Besøksadresse: {{ group.visit_address }}</p>
+      {% endif %}
+      {% if group.map %}
+        <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ group.map }}"></iframe>
+      {% endif %}
+    </div>
+  </div>
+  <div class="span4">
+    <div class="well">
+      <h2>Medlemsservice</h2>
+      Trenger du turtips?<br>
+      Finn turer og hytter på <a href="http://www.ut.no/">UT.no</a><br><br>
+
+      <h3>Har du spørsmål om medlemskap?</h3>
+      <a href="{% url membership.views.service %}">Gå til medlemsservice</a><br>
+      Ring: 4000 1970<br>
+      E-post: <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a><br>
+      Åpent alle hverdager: kl. 09.00 - 16.00<br><br>
+
+      Ta gjerne kontakt med oss på <a href="http://www.facebook.com/turistforeningen">Facebook</a> eller <a href="https://twitter.com/turistforening">Twitter</a>.
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

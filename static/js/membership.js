@@ -25,5 +25,4 @@ $(document).ready(function() {
         $("div.benefits-toggle-buttons div.show-button").toggle();
     });
 
-
 });
