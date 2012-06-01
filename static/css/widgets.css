@@ -2,31 +2,35 @@
  * Styles for all widgets
  */
 
-/* promo widget */
+/* Promo widget */
 
-div.widget.promo {
-  width: 100%;
-  background-color: rgb(216, 45, 32);
-  height: 511px; /* The height of the background-image */
+div.widget.promo div.wrapper {
+  position: relative;
 }
+
+/* Promo - left side */
 
 div.widget.promo div.left {
   float: left;
-  background: url('/static/img/widgets/promo/komdegut.jpg') no-repeat 100% 100%;
   width: 50%;
   height: 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
 }
 
+div.widget.promo div.left img.background-image {
+  max-width: 470px;
+}
+
+/* Promo - left side - menu */
+
 div.widget.promo div.left div.menu {
-  position: relative;
-  float: left;
-  z-index: 1;
+  position: absolute;
   top: 20px;
   font-size: 15px;
 }
 
 div.widget.promo div.left div.menu ul {
-  padding: 0;
   margin: 0;
   list-style: none;
 }
@@ -36,10 +40,9 @@ div.widget.promo div.left div.menu li:first-of-type {
 }
 
 div.widget.promo div.left div.menu li {
-  padding: 5px;
+  padding: 5px 10px;
   background-color: white;
-  width: 120%;
-  border-top: 1px solid rgb(200, 200, 200);
+  border-top: 1px solid rgb(210, 210, 210);
 }
 
 div.widget.promo div.left div.menu li.active {
@@ -65,10 +68,13 @@ div.widget.promo div.left div.menu li:not(.active):hover a {
   text-decoration: underline;
 }
 
+/* Promo - right side */
+
 div.widget.promo div.right {
-  width: 46%;
-  padding: 2% 2% 2% 52%;
   color: white;
+  float: right;
+  width: 46%;
+  padding: 15px 2% 15px 2%;
 }
 
 div.widget.promo div.right h1 {
@@ -80,8 +86,28 @@ div.widget.promo div.right p.lede {
   font-style: italic;
 }
 
+div.widget.promo div.right p.button {
+  text-align: center;
+}
+
+div.widget.promo div.right p.sponsor {
+  font-size: 15px;
+  font-style: italic;
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  width: 450px;
+}
+
 div.widget.promo div.right img {
   padding-left: 10%;
+}
+
+/* Promo - colors for the different sections */
+
+div.widget.promo div.wrapper.sommer {
+  background-color: rgb(216, 45, 32);
 }
 
 /* Quote */
