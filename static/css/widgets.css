@@ -126,6 +126,14 @@ div.widget.promo div.wrapper.fjellsport {
   background-color: rgb(76, 77, 79);
 }
 
+div.widget.promo div.wrapper.senior {
+  background-color: rgb(220, 220, 220);
+}
+
+div.widget.promo div.wrapper.senior div.right {
+  color: black;
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
