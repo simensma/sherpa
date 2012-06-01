@@ -110,6 +110,10 @@ div.widget.promo div.wrapper.sommer {
   background-color: rgb(216, 45, 32);
 }
 
+div.widget.promo div.wrapper.fellesturer {
+  background-color: rgb(60, 90, 168);
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
