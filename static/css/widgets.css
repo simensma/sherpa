@@ -134,6 +134,14 @@ div.widget.promo div.wrapper.senior div.right {
   color: black;
 }
 
+div.widget.promo div.wrapper.skole {
+  background-color: rgb(183, 219, 193);
+}
+
+div.widget.promo div.wrapper.skole div.right {
+  color: black;
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
