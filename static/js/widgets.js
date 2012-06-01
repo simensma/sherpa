@@ -5,6 +5,8 @@ $(document).ready(function() {
     /* Promo-box */
 
     $("div.widget.promo div.menu li").click(function() {
-        window.location = $(this).children("a").attr('href');
+        if($(this).children("a").length > 0) {
+            window.location = $(this).children("a").attr('href');
+        }
     });
 });
