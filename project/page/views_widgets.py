@@ -27,8 +27,16 @@ def parse_content(request, version):
         row.columns = columns
     context = {'rows': rows, 'page': version.variant.page}
     # Used temporary for static promo content
-    if request.path == '/':
-        context['promo'] = 'widgets/promo/static/index.html'
+    if request.path == '/':                 context['promo'] = 'widgets/promo/static/sommerapning.html'
+    elif request.path == '/fellesturer/':   context['promo'] = 'widgets/promo/static/fellesturer.html'
+    elif request.path == '/hytter/':        context['promo'] = 'widgets/promo/static/hytter.html'
+    elif request.path == '/barn/':          context['promo'] = 'widgets/promo/static/barn.html'
+    elif request.path == '/ungdom/':        context['promo'] = 'widgets/promo/static/ungdom.html'
+    elif request.path == '/fjellsport/':    context['promo'] = 'widgets/promo/static/fjellsport.html'
+    elif request.path == '/senior/':        context['promo'] = 'widgets/promo/static/senior.html'
+    elif request.path == '/skole/':         context['promo'] = 'widgets/promo/static/skole.html'
+    elif request.path == '/kurs/':          context['promo'] = 'widgets/promo/static/kurs.html'
+    elif request.path == '/tur-for-alle/':  context['promo'] = 'widgets/promo/static/tur-for-alle.html'
     return render(request, "page/page.html", context)
 
 # Note: This is also imported by some views in admin, and a view in articles
