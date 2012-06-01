@@ -8,4 +8,9 @@ $(document).ready(function() {
         $(this).attr('src', '/static/img/icons/glyph/original/glyphicons_195_circle_info.png');
     });
 
+    $("div#faq dl dd").hide();
+    $("div#faq dl dt").click(function() {
+        $(this).next().toggle();
+    });
+
 });

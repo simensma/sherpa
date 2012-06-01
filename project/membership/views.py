@@ -19,3 +19,6 @@ def zipcode_search(request):
     zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
     group = Group.objects.get(focus_id=zipcode.main_group_id)
     return HttpResponseRedirect(reverse('membership.views.benefits', args=[group.id]))
+
+def service(request):
+    return render(request, 'membership/service.html')

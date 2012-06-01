@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/memberservice.js"></script>
+  <script src="{{ STATIC_URL }}js/membership.js"></script>
 {% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/memberservice.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/membership.css" media="screen">
 {% endblock %}
 
 {% block title %}Medlemsservice{% endblock %}
@@ -17,7 +17,7 @@
 </div>
 
 <div class="row">
-  <div class="span8">
+  <div id="faq" class="span8">
 
     <h3>Medlemskap</h3>
     <dl>
