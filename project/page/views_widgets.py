@@ -31,7 +31,7 @@ def parse_content(request, version):
     elif request.path == '/fellesturer/':   context['promo'] = 'widgets/promo/static/fellesturer.html'
     elif request.path == '/hytter/':        context['promo'] = 'widgets/promo/static/hytter.html'
     elif request.path == '/barn/':          context['promo'] = 'widgets/promo/static/barn.html'
-    elif request.path == '/ungdom/':        context['promo'] = 'widgets/promo/static/ungdom.html'
+    elif request.path == '/ung/':           context['promo'] = 'widgets/promo/static/ung.html'
     elif request.path == '/fjellsport/':    context['promo'] = 'widgets/promo/static/fjellsport.html'
     elif request.path == '/senior/':        context['promo'] = 'widgets/promo/static/senior.html'
     elif request.path == '/skole/':         context['promo'] = 'widgets/promo/static/skole.html'

@@ -122,6 +122,10 @@ div.widget.promo div.wrapper.barn {
   background-color: rgb(107, 58, 55);
 }
 
+div.widget.promo div.wrapper.ung {
+  background-color: rgb(122, 130, 65);
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
