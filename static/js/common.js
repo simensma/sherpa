@@ -20,7 +20,7 @@ $(document).ready(function() {
     $("a.close").click(function() { $(this).parent().hide(); });
 
     /* Add class to external links */
-    $("a").each(function() {
+    $("a:not(.btn)").each(function() {
         if($(this).children().length > 0) {
             // Don't add to anchors with more than text nodes as children
             return $(this);
