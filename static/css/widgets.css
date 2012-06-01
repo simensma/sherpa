@@ -114,6 +114,10 @@ div.widget.promo div.wrapper.fellesturer {
   background-color: rgb(60, 90, 168);
 }
 
+div.widget.promo div.wrapper.hytter {
+  background-color: rgb(58, 81, 40);
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
