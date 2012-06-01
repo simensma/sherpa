@@ -21,6 +21,8 @@ div.widget.promo div.left div.menu {
   position: relative;
   float: left;
   z-index: 1;
+  top: 20px;
+  font-size: 15px;
 }
 
 div.widget.promo div.left div.menu ul {
@@ -29,11 +31,15 @@ div.widget.promo div.left div.menu ul {
   list-style: none;
 }
 
+div.widget.promo div.left div.menu li:first-of-type {
+  border-top: none;
+}
+
 div.widget.promo div.left div.menu li {
   padding: 5px;
   background-color: white;
-  border: 1px solid #777;
   width: 120%;
+  border-top: 1px solid rgb(200, 200, 200);
 }
 
 div.widget.promo div.left div.menu li.active {
@@ -42,7 +48,7 @@ div.widget.promo div.left div.menu li.active {
 }
 
 div.widget.promo div.left div.menu li:not(.active):hover {
-  background-color: #777;
+  background-color: rgb(150, 150, 150);
   cursor: pointer;
 }
 
