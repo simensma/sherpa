@@ -118,6 +118,10 @@ div.widget.promo div.wrapper.hytter {
   background-color: rgb(58, 81, 40);
 }
 
+div.widget.promo div.wrapper.barn {
+  background-color: rgb(107, 58, 55);
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
