@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
 
 from group.models import Group
 from user.models import FocusZipcode
@@ -18,7 +19,7 @@ def benefits(request, group):
 def zipcode_search(request):
     zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
     group = Group.objects.get(focus_id=zipcode.main_group_id)
-    return HttpResponseRedirect(reverse('membership.views.benefits', args=[group.id]))
+    return HttpResponseRedirect("%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name)))
 
 def service(request):
     return render(request, 'membership/service.html')
