@@ -5,14 +5,14 @@ urlpatterns = patterns('admin',
     url(r'^$', 'views.index'),
 
     # CMS
-    url(r'^cms/', include('project.admin.cms.urls')),
+    url(r'^cms/', include('admin.cms.urls')),
 
     # Articles
-    url(r'^artikler/', include('project.admin.articles.urls')),
+    url(r'^artikler/', include('admin.articles.urls')),
 
     # Analytics
-    url(r'^analyse/', include('project.admin.analytics.urls')),
+    url(r'^analyse/', include('admin.analytics.urls')),
 
     # Image archive
-    url(r'^bildearkiv/', include('project.admin.images.urls')),
+    url(r'^bildearkiv/', include('admin.images.urls')),
 )

@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
 from django.contrib.auth.decorators import login_required
-from project.page.models import Menu, Page, Variant
+from page.models import Menu, Page, Variant
 
 import json
 

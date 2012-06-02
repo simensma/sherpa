@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 
-from project.page.views_widgets import parse_widget
-from project.page.models import Menu, Page, Variant, Version, Row, Column, Content
+from page.views_widgets import parse_widget
+from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 import json
 
