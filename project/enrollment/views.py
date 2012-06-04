@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import Context, loader
 
-from user.models import Zipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress
+from group.models import Group
+from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress
 
 from datetime import datetime
 import requests
@@ -217,7 +218,12 @@ def verification(request):
             request.session['registration']['location']['address3'] = address.a3
 
     if request.session['registration']['location']['country'] == 'NO':
+        # Get the city name for this zipcode
         request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
+
+        # Figure out which group this member belongs to
+        zipcode = FocusZipcode.objects.get(postcode=request.session['registration']['location']['zipcode'])
+        request.session['registration']['group'] = Group.objects.get(focus_id=zipcode.main_group_id)
 
     now = datetime.now()
     year = now.year
@@ -240,6 +246,7 @@ def verification(request):
     context = {'users': request.session['registration']['users'],
         'country': FocusCountry.objects.get(code=request.session['registration']['location']['country']),
         'location': request.session['registration']['location'],
+        'group': request.session['registration'].get('group', ''),
         'existing': request.session['registration']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year, 'price_main': PRICE_MAIN,

@@ -200,7 +200,12 @@
 
       </div>
 
-      <p>Medlemskapet vil gjelde for <strong>{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</strong>.</p>
+      <p>
+        {% if group %}
+          {% if users|length == 1 %}Du{% else %}Dere{% endif %} vil meldes inn i <a href="{{ group.url }}">{{ group.name }}</a>.<br>
+        {% endif %}
+        Medlemskapet vil gjelde for <strong>{{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %}</strong>.
+      </p>
 
       <p>
         <a class="btn btn-large" href="{% url enrollment.views.household %}"><i class="icon-arrow-left"></i> Tilbake</a>
