@@ -7,29 +7,56 @@
 
 <div class="row">
   <div id="result" class="span12">
-    <h1>Velkommen som medlem(mer), [navn]!</h1>
+    <h1>Velkommen som medlem{% if users|length == 1 %}, {{ users.0.name }}{% else %}mer{% endif %}!</h1>
   </div>
 </div>
 
 <div class="row">
   <div id="result" class="span8">
 
-    <p>
-      Du er medlem i [medlemsforening]<br>
-      Ditt medlemsnummer er: [medlemsid]
-    </p>
+    {% if users|length == 1 %}
+      <p>
+        Du er nå medlem i <a href="{{ group.url }}">{{ group.name }}</a>.<br>
+        Ditt medlemsnummer er: {{ users.0.id }}
+      </p>
+    {% else %}
+      <p>
+        Dere er nå medlemmer i <a href="{{ group.url }}">{{ group.name }}</a>.<br>
+        Deres medlemsnumre:
+      </p>
+      <table class="table">
+        <tr>
+          <th>Navn</th>
+          <th>Medlemsnummer</th>
+        </tr>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.id }}</td>
+        </tr>
+      {% endfor %}
+      </table>
+    {% endif %}
 
     <p>
-      Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til [dato 14 dager frem i tid] eller få tilsendt gratis kvittering på SMS. Kvittering er også sendt på e-post til [e-postadresse]
+      Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}, eller få tilsendt gratis kvittering på SMS.
+      {% if users|length == 1 %}
+        Kvittering er også sendt på e-post til <strong>{{ users.0.email }}</strong>.
+      {% else %}
+        Kvittering er også sendt på e-post til følgende adresser:
+        {% for email in emails %}
+          <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
+        {% endfor %}
+      {% endif %}
     </p>
 
     {% csrf_token %}
     {% for user in users %}
       {% if user.phone != '' %}
-        <button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
+        <p><button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
           <i class="icon-signal"></i>
           Send gratis kvittering på SMS til {{ user.phone }}
-        </button>
+        </button></p>
       {% endif %}
     {% endfor %}
 
@@ -44,14 +71,14 @@
       <div class="box">
         <h3>Hva skjer der du bor</h3>
         <p>
-          [Medlemsforening] arrangerer fellesturer og aktiviteter hele året.
+          <a href="{{ group.url }}">{{ group.name }}</a> arrangerer fellesturer og aktiviteter hele året.
         </p>
       </div>
 
       <div class="box">
         <h3>Min side</h3>
         <p>
-          Registrer deg på Min side og få tilgang til våre medlemstjenester.
+          Registrer deg på <a href="http://minside.turistforeningen.no">Min side</a> og få tilgang til våre medlemstjenester.
         </p>
       </div>
     </div>

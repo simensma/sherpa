@@ -8,7 +8,7 @@ from django.template import Context, loader
 from group.models import Group
 from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 import re
 import json
@@ -18,6 +18,9 @@ from urllib import quote_plus
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
 MONTH_THRESHOLD = 10
+
+# Number of days the temporary membership proof is valid
+TEMPORARY_PROOF_VALIDITY = 14
 
 KEY_PRICE = 100
 FOREIGN_YEARBOOK_PRICE = 100
@@ -414,7 +417,17 @@ def result(request, invoice):
     else:
         result = 'cancel'
         skip_header = False
-    context = {'users': request.session['registration']['users'], 'skip_header': skip_header}
+
+    # Collect emails to a separate list for easier template formatting
+    emails = []
+    for user in request.session['registration']['users']:
+        if user['email'] != '':
+            emails.append(user['email'])
+
+    proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
+    context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
+        'group': request.session['registration']['group'],
+        'proof_validity_end': proof_validity_end, 'emails': emails}
     return render(request, 'enrollment/result/%s.html' % result, context)
 
 def sms(request):
