@@ -7,7 +7,7 @@ from django.conf import settings
 from django.template import Context, loader
 
 from group.models import Group
-from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress
+from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress, FocusPrice
 
 from datetime import datetime, timedelta
 import requests
@@ -44,14 +44,6 @@ SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cell
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
-
-# Temporary hardcoded prices
-PRICE_MAIN = 550
-PRICE_HOUSEHOLD = 250
-PRICE_SENIOR = 425
-PRICE_STUDENT = 295
-PRICE_SCHOOL = 175
-PRICE_CHILD = 110
 
 # Hardcoded ages
 AGE_SENIOR = 68
@@ -235,6 +227,13 @@ def verification(request):
         zipcode = FocusZipcode.objects.get(postcode=request.session['registration']['location']['zipcode'])
         request.session['registration']['group'] = Group.objects.get(focus_id=zipcode.main_group_id)
 
+        # Get the prices for that group
+        request.session['registration']['price'] = FocusPrice.objects.get(group_id=request.session['registration']['group'].focus_id)
+    else:
+        # Foreign member, use default prices.
+        # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
+        request.session['registration']['price'] = FocusPrice.objects.get(group_id=10)
+
     now = datetime.now()
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
@@ -259,9 +258,8 @@ def verification(request):
         'group': request.session['registration'].get('group', ''),
         'existing': request.session['registration']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main, 'year': year, 'next_year': next_year, 'price_main': PRICE_MAIN,
-        'price_household': PRICE_HOUSEHOLD, 'price_senior': PRICE_SENIOR,
-        'price_student': PRICE_STUDENT, 'price_school': PRICE_SCHOOL, 'price_child': PRICE_CHILD,
+        'main': main, 'year': year, 'next_year': next_year,
+        'price': request.session['registration']['price'],
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
@@ -329,7 +327,8 @@ def payment(request):
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['registration']['location'], main['phone'], main['email'],
-            main['yearbook'], None, request.POST['payment-method'])
+            main['yearbook'], None, request.POST['payment-method'],
+            request.session['registration']['price'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -338,7 +337,8 @@ def payment(request):
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['location'], user['phone'], user['email'],
-            user['yearbook'], linked_to, request.POST['payment-method'])
+            user['yearbook'], linked_to, request.POST['payment-method'],
+            request.session['registration']['price'])
 
     # Cool. If we're paying by invoice, just forward to result page
     if request.POST['payment-method'] == 'invoice':
@@ -347,7 +347,7 @@ def payment(request):
     # Paying with card. Calculate the order details
     sum = 0
     for user in request.session['registration']['users']:
-        sum += price_of(user['age'], user['household'])
+        sum += price_of(user['age'], user['household'], request.session['registration']['price'])
         if user.has_key('key'):
             sum += KEY_PRICE
 
@@ -616,18 +616,18 @@ def validate_youth_count(users):
             break
     return at_least_one_main_member
 
-def price_of(age, household):
+def price_of(age, household, price):
     if household:
-        return min(price_of_age(age), PRICE_HOUSEHOLD)
+        return min(price_of_age(age, price), price.household)
     else:
-        return price_of_age(age)
+        return price_of_age(age, price)
 
-def price_of_age(age):
-    if age >= AGE_SENIOR:    return PRICE_SENIOR
-    elif age >= AGE_MAIN:    return PRICE_MAIN
-    elif age >= AGE_STUDENT: return PRICE_STUDENT
-    elif age >= AGE_SCHOOL:  return PRICE_SCHOOL
-    else:                    return PRICE_CHILD
+def price_of_age(age, price):
+    if age >= AGE_SENIOR:    return price.senior
+    elif age >= AGE_MAIN:    return price.main
+    elif age >= AGE_STUDENT: return price.student
+    elif age >= AGE_SCHOOL:  return price.school
+    else:                    return price.child
 
 def polite_title(str):
     # If the string is all lowercase or uppercase, apply titling for it
@@ -637,14 +637,14 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, linked_to, payment_method):
+def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, linked_to, payment_method, price):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to != None)
     payment_method = focus_payment_method_code(payment_method)
-    price = price_of(age, linked_to != None)
+    price = price_of(age, linked_to != None, price)
     linked_to = '' if linked_to == None else str(linked_to)
     if location['country'] == 'NO':
         # Override yearbook value for norwegians based on age and household status
