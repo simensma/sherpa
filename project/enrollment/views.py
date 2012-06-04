@@ -414,6 +414,7 @@ def result(request, invoice):
                 focus_user.payed = True
                 focus_user.save()
             prepare_and_send_email(request.session['registration']['users'], request.session['registration']['group'], 'card')
+            request.session['registration']['success'] = True
             result = 'success'
             skip_header = True
         else:
