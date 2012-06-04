@@ -18,6 +18,7 @@ def benefits(request, group):
 
 def zipcode_search(request):
     zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
+    # Note: Redirecting requires performing the group lookup twice
     group = Group.objects.get(focus_id=zipcode.main_group_id)
     return HttpResponseRedirect("%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name)))
 
