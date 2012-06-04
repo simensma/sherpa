@@ -36,28 +36,35 @@
       {% endif %}
     </p>
 
-    <div id="boxes">
-      <div class="box">
-        <h2>Planlegg turen på UT.no</h2>
-        <p>
-          På <a href="http://www.ut.no/">UT.no</a> finner du hytter og turer over hele landet.
-        </p>
-      </div>
+    {% if location.country == 'NO' %}
+      <div id="boxes">
+        <div class="box">
+          <h2>Planlegg turen på UT.no</h2>
+          <p>
+            På <a href="http://www.ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+          </p>
+        </div>
 
-      <div class="box">
-        <h2>Hva skjer der du bor</h2>
-        <p>
-          <a href="{{ group.url }}">{{ group.name }}</a> arrangerer fellesturer og aktiviteter hele året.
-        </p>
-      </div>
+        <div class="box">
+          <h2>Hva skjer der du bor</h2>
+          <p>
+            <a href="{{ group.url }}">{{ group.name }}</a> arrangerer fellesturer og aktiviteter hele året.
+          </p>
+        </div>
 
-      <div class="box">
-        <h2>Min side</h2>
-        <p>
-          Registrer deg på <a href="http://www.turistforeningen.no/minside/">Min side</a> og få tilgang til våre medlemstjenester.
-        </p>
+        <div class="box">
+          <h2>Min side</h2>
+          <p>
+            Registrer deg på <a href="http://www.turistforeningen.no/minside/">Min side</a> og få tilgang til våre medlemstjenester.
+          </p>
+        </div>
       </div>
-    </div>
+    {% else %}
+      <h2>Planlegg turen på UT.no</h2>
+      <p>
+        På <a href="http://www.ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+      </p>
+    {% endif %}
   </div>
 
   <div class="span4">

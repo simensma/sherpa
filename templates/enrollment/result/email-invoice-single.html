@@ -11,13 +11,13 @@ Hvis du har spørsmål om ditt medlemskap, kan du kontakte DNTs medlemsservice p
 Planlegg turen på UT.no:
 På http://www.ut.no/ finner du hytter og turer over hele landet.
 
-Hva skjer der du bor:
+{% if location.country == 'NO' %}Hva skjer der du bor:
 {{ group.name }} ({{ group.url }}) arrangerer fellesturer og aktiviteter hele året.
 
 Min side:
 Registrer deg på Min side og få tilgang til våre medlemstjenester: http://www.turistforeningen.no/minside/
 
-God tur!
+{% endif %}God tur!
 
 Mvh
 Den Norske Turistforening

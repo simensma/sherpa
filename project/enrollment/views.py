@@ -230,6 +230,9 @@ def verification(request):
         # Get the prices for that group
         request.session['registration']['price'] = FocusPrice.objects.get(group_id=request.session['registration']['group'].focus_id)
     else:
+        # Foreign members are registered with DNT Oslo og Omegn, which has focus group ID 10
+        request.session['registration']['group'] = Group.objects.get(focus_id=10)
+
         # Foreign member, use default prices.
         # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
         request.session['registration']['price'] = FocusPrice.objects.get(group_id=10)
@@ -255,7 +258,7 @@ def verification(request):
     context = {'users': request.session['registration']['users'],
         'country': FocusCountry.objects.get(code=request.session['registration']['location']['country']),
         'location': request.session['registration']['location'],
-        'group': request.session['registration'].get('group', ''),
+        'group': request.session['registration']['group'],
         'existing': request.session['registration']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year,
@@ -399,7 +402,9 @@ def payment(request):
 
 def result(request, invoice):
     if invoice:
-        prepare_and_send_email(request.session['registration']['users'], request.session['registration'].get('group', ''), 'invoice')
+        prepare_and_send_email(request.session['registration']['users'],
+            request.session['registration']['group'],
+            request.session['registration']['location'], 'invoice')
         result = 'invoice'
         skip_header = True
     elif request.GET['responseCode'] == 'OK':
@@ -417,7 +422,9 @@ def result(request, invoice):
                 focus_user = FocusUser.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
-            prepare_and_send_email(request.session['registration']['users'], request.session['registration'].get('group', ''), 'card')
+            prepare_and_send_email(request.session['registration']['users'],
+                request.session['registration']['group'],
+                request.session['registration']['location'], 'card')
             request.session['registration']['success'] = True
             result = 'success'
             skip_header = True
@@ -436,8 +443,9 @@ def result(request, invoice):
 
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
-        'group': request.session['registration'].get('group', ''),
-        'proof_validity_end': proof_validity_end, 'emails': emails}
+        'group': request.session['registration']['group'],
+        'proof_validity_end': proof_validity_end, 'emails': emails,
+        'location': request.session['registration']['location']}
     return render(request, 'enrollment/result/%s.html' % result, context)
 
 def sms(request):
@@ -470,7 +478,7 @@ def sms(request):
     request.session['registration']['users'][index]['sms_sent'] = True
     return HttpResponse(json.dumps({'error': 'none'}))
 
-def prepare_and_send_email(users, group, payment_method):
+def prepare_and_send_email(users, group, location, payment_method):
     email_recipients = []
     for user in users:
         if user['email'] != '':
