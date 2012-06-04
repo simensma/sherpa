@@ -21,6 +21,9 @@ urlpatterns = patterns('',
     url(r'^medlem/', include('membership.urls')),
     url(r'^medlemsservice/', 'membership.views.service'),
 
+    # User page - redirect to the old site temporarily
+    url(r'^minside/', 'page.views.redirect', kwargs={'prefix': 'http://minside.turistforeningen.no/', 'url': ''}),
+
     # Redirect some known paths to the old site
     url(r'^images/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/images/"}),
     url(r'^album/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/album/"}),
