@@ -1,0 +1,10 @@
+Velkommen som medlem!
+
+Medlemskontigent {{ year }}{% if next_year %}, samt ut {{ year|add:1 }}{% endif %} er betalt for:
+{% for user in users %}{{ user.name }}, medlemsnummer {{ user.id }}{% endfor %}
+
+Denne SMS gjelder som bevis.
+
+Mvh
+DNT Medlemsservice
+Tlf: 40001870

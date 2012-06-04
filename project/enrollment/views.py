@@ -40,7 +40,6 @@ TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 
 SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
-SMS_RECEIPT_MESSAGE = "Kvitteringsmelding TBD."
 
 # Temporary hardcoded prices
 PRICE_MAIN = 550
@@ -431,13 +430,27 @@ def result(request, invoice):
     return render(request, 'enrollment/result/%s.html' % result, context)
 
 def sms(request):
+    # Verify that this is a valid SMS request
     index = int(request.POST['index'])
     if not request.session['registration'].has_key('success'):
         return HttpResponse(json.dumps({'error': 'not_registered'}))
     if request.session['registration']['users'][index].has_key('sms_sent'):
         return HttpResponse(json.dumps({'error': 'already_sent'}))
     number = request.session['registration']['users'][index]['phone']
-    r = requests.get(SMS_URL % (quote_plus(number), quote_plus(SMS_RECEIPT_MESSAGE)))
+
+    # Render the SMS template
+    now = datetime.now()
+    year = now.year
+    next_year = now.month >= MONTH_THRESHOLD
+    t = loader.get_template('enrollment/result/sms.html')
+    c = Context({'year': year, 'next_year': next_year,
+        'users': request.session['registration']['users']})
+    sms_message = t.render(c)
+
+    # Send the message
+    r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+
+    # Check and return status
     status = re.findall('Status: .*', r.text)
     if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
         return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
