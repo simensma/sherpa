@@ -39,7 +39,7 @@
     {% endif %}
 
     <p>
-      Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}, eller få tilsendt gratis kvittering på SMS.
+      Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}.
       {% if users|length == 1 %}
         Kvittering er også sendt på e-post til <strong>{{ users.0.email }}</strong>.
       {% else %}
@@ -50,15 +50,17 @@
       {% endif %}
     </p>
 
-    {% csrf_token %}
-    {% for user in users %}
-      {% if user.phone != '' %}
-        <p><button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
-          <i class="icon-signal"></i>
-          Send gratis kvittering på SMS til {{ user.phone }}
-        </button></p>
-      {% endif %}
-    {% endfor %}
+    {% if users.location.country == 'NO' %}
+      {% csrf_token %}
+      {% for user in users %}
+        {% if user.phone != '' %}
+          <p><button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
+            <i class="icon-signal"></i>
+            Send gratis kvittering på SMS til {{ user.phone }}
+          </button></p>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
 
     <div id="boxes">
       <div class="box">

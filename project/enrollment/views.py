@@ -443,6 +443,8 @@ def result(request, invoice):
 def sms(request):
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
+    if request.session['registration']['location']['country'] != 'NO':
+        return HttpResponse(json.dumps({'error': 'foreign_number'}))
     if not request.session['registration'].has_key('success'):
         return HttpResponse(json.dumps({'error': 'not_registered'}))
     if request.session['registration']['users'][index].has_key('sms_sent'):

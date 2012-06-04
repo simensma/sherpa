@@ -15,6 +15,9 @@ $(document).ready(function() {
             if(result.error == 'none') {
                 button.after('<p class="receipt-success">Kvittering har blitt sendt på SMS til ' + number + '.</p>');
                 button.remove();
+            } else if(result.error == 'foreign_number') {
+                button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. Vennligst kontakt medlemsservice for å motta SMS-kvittering.</p>');
+                button.remove();
             } else if(result.error == 'not_registered') {
                 button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. Vennligst kontakt medlemsservice for å motta SMS-kvittering.</p>');
                 button.remove();
