@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404, HttpResponseServerError
+from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
 from page.models import Page, Variant, Version
 from analytics.models import Visitor, Pageview
@@ -56,6 +56,16 @@ def match_user(request, page):
 
 def redirect(request, url, prefix):
     return HttpResponseRedirect("%s%s" % (prefix, url))
+
+def page_not_found(request, template_name='404.html'):
+    # Use a custom page_not_found view to add GET parameters
+    get_params = ''
+    for key, val in request.GET.items():
+        get_params = '%s&%s=%s' % (get_params, key, val)
+    path = "%s?%s" % (request.path, get_params[1:])
+    t = loader.get_template(template_name)
+    c = RequestContext(request, {'path': path})
+    return HttpResponseNotFound(t.render(c))
 
 def server_error(request, template_name='500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
