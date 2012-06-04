@@ -192,3 +192,16 @@ class FocusZipcode(models.Model):
     chdt = models.DateTimeField(null=True, db_column=u'ChDt', blank=True)
     class Meta:
         db_table = u'PostalCode'
+
+class FocusPrice(models.Model):
+    group_id = models.IntegerField(primary_key=True, db_column=u'Region')
+    main = models.IntegerField(null=True, db_column=u'C101', blank=True)
+    student = models.IntegerField(null=True, db_column=u'C102', blank=True)
+    senior = models.IntegerField(null=True, db_column=u'C103', blank=True)
+    lifelong = models.IntegerField(null=True, db_column=u'C104', blank=True)
+    child = models.IntegerField(null=True, db_column=u'C105', blank=True)
+    school = models.IntegerField(null=True, db_column=u'C106', blank=True)
+    household = models.IntegerField(null=True, db_column=u'C107', blank=True)
+    unknown = models.IntegerField(null=True, db_column=u'C108', blank=True)
+    class Meta:
+        db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
