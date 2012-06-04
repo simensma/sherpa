@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 
 from analytics.models import Visitor, Request
 
+#@login_required
+def my_page(request):
+    return HttpResponseRedirect("http://minside.turistforeningen.no/")
+
 @login_required
 def home(request):
     return render(request, 'user/home.html')

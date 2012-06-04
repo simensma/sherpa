@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^artikler/', include('articles.urls')),
 
     # User authentication
-    url(r'^bruker/', include('user.urls')),
+    url(r'^', include('user.urls')),
     url(r'^foreninger/', include('group.urls')),
 
     # Enrollment
@@ -20,9 +20,6 @@ urlpatterns = patterns('',
     # Membership
     url(r'^medlem/', include('membership.urls')),
     url(r'^medlemsservice/', 'membership.views.service'),
-
-    # User page - redirect to the old site temporarily
-    url(r'^minside/', 'page.views.redirect', kwargs={'prefix': 'http://minside.turistforeningen.no/', 'url': ''}),
 
     # Redirect some known paths to the old site
     url(r'^images/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/images/"}),
