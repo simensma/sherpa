@@ -25,6 +25,7 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 if(result.location != undefined) {
                     $("form#household input[name='city']").val(result.location);
+                    $("form#household div.control-group.zipcode").removeClass('error');
                 } else if(result.error == "does_not_exist") {
                     $("form#household input[name='city']").val("Ukjent postnummer");
                     $("form#household div.control-group.zipcode").addClass('error');
