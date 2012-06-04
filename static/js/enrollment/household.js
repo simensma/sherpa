@@ -22,9 +22,15 @@ $(document).ready(function() {
                 url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
                 type: 'POST'
             }).done(function(result) {
-                $("form#household input[name='city']").val(result);
+                result = JSON.parse(result);
+                if(result.location != undefined) {
+                    $("form#household input[name='city']").val(result.location);
+                } else if(result.error == "does_not_exist") {
+                    $("form#household input[name='city']").val("Ukjent postnummer");
+                    $("form#household div.control-group.zipcode").addClass('error');
+                }
             }).fail(function(result) {
-                $("form#household input[name='city']").val("Ukjent postnummer");
+                $("form#household input[name='city']").val("Teknisk feil");
                 $("form#household div.control-group.zipcode").addClass('error');
             }).always(function(result) {
                 $("form#household img.zip.ajaxloader").hide();

@@ -497,8 +497,10 @@ def prepare_and_send_email(users, group, location, payment_method):
     send_mail(subject, message, EMAIL_FROM, email_recipients)
 
 def zipcode(request, code):
-    location = Zipcode.objects.get(zip_code=code).location
-    return HttpResponse(location)
+    try:
+        return HttpResponse(json.dumps({'location': Zipcode.objects.get(zip_code=code).location}))
+    except Zipcode.DoesNotExist:
+        return HttpResponse(json.dumps({'error': 'does_not_exist'}))
 
 def updateIndices(session):
     i = 0
