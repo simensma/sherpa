@@ -8,7 +8,7 @@ from analytics.models import Visitor, Request
 
 #@login_required
 def my_page(request):
-    return HttpResponseRedirect("http://minside.turistforeningen.no/")
+    return HttpResponseRedirect("https://minside.turistforeningen.no/")
 
 @login_required
 def home(request):
