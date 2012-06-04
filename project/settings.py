@@ -9,11 +9,11 @@ LOGIN_URL = '/bruker/logg-inn/'
 
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
+OLD_SITE = 'gammel.turistforeningen.no'
 
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
 )
-
 TIME_ZONE = 'Europe/Oslo'
 LANGUAGE_CODE = 'nb' # See http://www.i18nguy.com/unicode/language-identifiers.html
 USE_I18N = True
