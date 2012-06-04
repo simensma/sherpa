@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
 from group.models import Group
-from user.models import FocusZipcode
+from user.models import FocusZipcode, FocusPrice
 
 def index(request):
     return render(request, 'membership/index.html')
@@ -13,7 +13,12 @@ def index(request):
 def benefits(request, group):
     if group != None:
         group = Group.objects.get(id=group)
-    context = {'group': group}
+        price = FocusPrice.objects.get(group_id=group.focus_id)
+    else:
+        # No group-attachment provided, use default prices.
+        # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
+        price = FocusPrice.objects.get(group_id=10)
+    context = {'group': group, 'price': price}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
