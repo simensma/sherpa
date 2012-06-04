@@ -225,6 +225,8 @@ def verification(request):
             request.session['registration']['location']['address2'] = address.a2
             request.session['registration']['location']['address3'] = address.a3
 
+    if request.session['registration'].has_key('group'):
+        del request.session['registration']['group']
     if request.session['registration']['location']['country'] == 'NO':
         # Get the city name for this zipcode
         request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
@@ -397,7 +399,7 @@ def payment(request):
 
 def result(request, invoice):
     if invoice:
-        prepare_and_send_email(request.session['registration']['users'], request.session['registration']['group'], 'invoice')
+        prepare_and_send_email(request.session['registration']['users'], request.session['registration'].get('group', ''), 'invoice')
         result = 'invoice'
         skip_header = True
     elif request.GET['responseCode'] == 'OK':
@@ -415,7 +417,7 @@ def result(request, invoice):
                 focus_user = FocusUser.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
-            prepare_and_send_email(request.session['registration']['users'], request.session['registration']['group'], 'card')
+            prepare_and_send_email(request.session['registration']['users'], request.session['registration'].get('group', ''), 'card')
             request.session['registration']['success'] = True
             result = 'success'
             skip_header = True
@@ -434,7 +436,7 @@ def result(request, invoice):
 
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
-        'group': request.session['registration']['group'],
+        'group': request.session['registration'].get('group', ''),
         'proof_validity_end': proof_validity_end, 'emails': emails}
     return render(request, 'enrollment/result/%s.html' % result, context)
 
