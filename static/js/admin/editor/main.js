@@ -44,6 +44,13 @@ $(document).ready(function() {
         selection = rangy.getSelection();
     }
 
+    /* Hide completely empty image descriptions */
+    $("article div.image span.description").each(function() {
+        if($(this).text() == "") {
+            $(this).parents("div.img-desc").hide();
+        }
+    });
+
     /* Hide empty image photographer description */
     $("article div.image span.photographer").each(function() {
         if($(this).children("span.content").text() == "") {
@@ -85,6 +92,11 @@ $(document).ready(function() {
             debugger;
             currentDescription.text(description);
             currentPhotographer.text(photographer);
+            if(description == '') {
+                currentDescription.parents("div.img-desc").hide();
+            } else {
+                currentDescription.parents("div.img-desc").show();
+            }
             if(photographer == '') {
                 currentPhotographer.parent("span.photographer").hide();
             } else {
