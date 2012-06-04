@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from django.conf import settings
 from django.template import Context, loader
 
@@ -40,6 +41,9 @@ TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 
 SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
+EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
+EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
+EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
 
 # Temporary hardcoded prices
 PRICE_MAIN = 550
@@ -391,6 +395,7 @@ def payment(request):
 
 def result(request, invoice):
     if invoice:
+        prepare_and_send_email(request.session['registration']['users'], request.session['registration']['group'], 'invoice')
         result = 'invoice'
         skip_header = True
     elif request.GET['responseCode'] == 'OK':
@@ -408,6 +413,7 @@ def result(request, invoice):
                 focus_user = FocusUser.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
+            prepare_and_send_email(request.session['registration']['users'], request.session['registration']['group'], 'card')
             result = 'success'
             skip_header = True
         else:
@@ -456,6 +462,23 @@ def sms(request):
         return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
     request.session['registration']['users'][index]['sms_sent'] = True
     return HttpResponse(json.dumps({'error': 'none'}))
+
+def prepare_and_send_email(users, group, payment_method):
+    email_recipients = []
+    for user in users:
+        if user['email'] != '':
+            email_recipients.append(user['email'])
+    if len(users) == 1:
+        subject = EMAIL_SUBJECT_SINGLE
+        template = 'email-%s-single.html' % payment_method
+    else:
+        subject = EMAIL_SUBJECT_MULTIPLE
+        template = 'email-%s-multiple.html' % payment_method
+    proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
+    t = loader.get_template('enrollment/result/%s' % template)
+    c = Context({'group': group, 'users': users, 'proof_validity_end': proof_validity_end})
+    message = t.render(c)
+    send_mail(subject, message, EMAIL_FROM, email_recipients)
 
 def zipcode(request, code):
     location = Zipcode.objects.get(zip_code=code).location
