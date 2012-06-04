@@ -696,8 +696,8 @@ def focus_type_of(age, household):
     elif age >= AGE_STUDENT: return 102
     elif age >= AGE_SCHOOL:  return 106
     else:                    return 105
-    # 104 = ?
-    # 108 = Lifelong member
+    # 104 = Lifelong member
+    # 108 = Unknown (price is duplicate of household)
 
 def focus_receive_yearbook(age, linked_to):
     if linked_to != '':
