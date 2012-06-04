@@ -37,6 +37,16 @@ $(document).ready(function() {
     /* Enable any popovers */
     $("*[data-popover]").popover();
 
+
+});
+
+$(window).load(function() {
+    /* Shrink image-description-width to image width (for those cases where image isn't 100%) */
+    $("article div.content.image").each(function() {
+        var desc = $(this).find("div.img-desc");
+        var strip = Number(desc.css('padding-left').replace('px', '')) + Number(desc.css('padding-right').replace('px', ''));
+        desc.width($(this).find("img").innerWidth() - strip);
+    });
 });
 
 $.fn.enableDialog = function() {
