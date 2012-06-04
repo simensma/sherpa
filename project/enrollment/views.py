@@ -180,6 +180,8 @@ def existing(request):
         actor = Actor.objects.get(actno=data['id'])
     except Actor.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
+    except ValueError:
+        return HttpResponse(json.dumps({'error': 'invalid_id'}))
 
     try:
         if data['country'] == 'NO':

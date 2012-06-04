@@ -113,6 +113,10 @@ $(document).ready(function() {
                 $("div.existing-result span.result").text("Du må oppgi riktig postnummer før du søker.");
                 $("div.existing-result span.description").hide();
                 $("div.existing-result span.result").addClass('error');
+            } else if(result.error == 'invalid_id') {
+                $("div.existing-result span.result").text("Ugyldig medlemsnummer oppgitt.");
+                $("div.existing-result span.description").hide();
+                $("div.existing-result span.result").addClass('error');
             } else if(result.error == 'actor.does_not_exist') {
                 $("div.existing-result span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
                 $("div.existing-result span.description").hide();
