@@ -595,7 +595,6 @@ $(document).ready(function() {
             // Todo
         }).always(function(result) {
             refreshSort();
-            doneRemoving();
             disableOverlay();
         });
     }
