@@ -72,6 +72,10 @@ article div[contenteditable='true']:hover:not(.selected) {
   background-color: rgb(235, 235, 235);
 }
 
+article div.html.empty {
+  border: 1px solid rgb(95, 95, 95);
+}
+
 article .moveable {
   cursor: move;
 }
