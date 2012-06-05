@@ -36,20 +36,7 @@ $(document).ready(function() {
     // Remove any widget
     $("div.dialog.widget-edit button.remove").click(function() {
         $(this).parents(".dialog").dialog('close');
-        $.ajax({
-            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(widgetBeingEdited.attr('data-id')) + '/',
-            type: 'POST'
-        }).done(function(result) {
-            if(widgetBeingEdited.siblings().length == 0) {
-                setEmpty(widgetBeingEdited.parent());
-            }
-            widgetBeingEdited.remove();
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            refreshSort();
-            disableOverlay();
-        });
+        removeContent(widgetBeingEdited);
     });
 
 });

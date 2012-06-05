@@ -104,21 +104,7 @@ $(document).ready(function() {
             }
             $("div.editor-header div.save button.save").click();
         }, function() {
-            $.ajax({
-                url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                if(content.siblings().length == 0) {
-                    setEmpty(content.parent());
-                }
-                content.remove();
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                refreshSort();
-                doneRemoving();
-                disableOverlay();
-            });
+            removeContent(content);
         });
     }
 
@@ -248,22 +234,7 @@ $(document).ready(function() {
             });
             confirmation.find("button.confirm").click(function() {
                 confirmation.remove();
-                enableOverlay();
-                $.ajax({
-                    url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-                    type: 'POST'
-                }).done(function(result) {
-                    if(content.siblings().length == 0) {
-                        setEmpty(content.parent());
-                    }
-                    content.remove();
-                }).fail(function(result) {
-                    // Todo
-                }).always(function(result) {
-                    refreshSort();
-                    doneRemoving();
-                    disableOverlay();
-                });
+                removeContent(content);
             });
         });
     });
@@ -606,6 +577,26 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
+        });
+    }
+
+    window.removeContent = removeContent;
+    function removeContent(content) {
+        enableOverlay();
+        $.ajax({
+            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
+            type: 'POST'
+        }).done(function(result) {
+            if(content.siblings().length == 0) {
+                setEmpty(content.parent());
+            }
+            content.remove();
+        }).fail(function(result) {
+            // Todo
+        }).always(function(result) {
+            refreshSort();
+            doneRemoving();
+            disableOverlay();
         });
     }
 
