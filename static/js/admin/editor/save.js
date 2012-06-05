@@ -80,7 +80,7 @@ $(document).ready(function() {
             contents = contents.concat([content]);
         });
 
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
             type: 'POST',
             data: "rows=" + encodeURIComponent(JSON.stringify(rows)) +

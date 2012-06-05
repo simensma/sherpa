@@ -10,7 +10,7 @@ $(document).ready(function() {
         $("div.dialog.widget-edit").dialog('close');
         if(widgetBeingEdited !== undefined) {
             enableOverlay();
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
                 type: 'POST',
                 data: 'content=' + encodeURIComponent(content)

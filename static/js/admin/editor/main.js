@@ -313,7 +313,7 @@ $(document).ready(function() {
                        {span: 3, offset: 0, order: 3}]
         }
         var order = insertable.prevAll(":not(.insertable)").length;
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/kolonner/ny/',
             type: 'POST',
             data: "version=" + encodeURIComponent($("article").attr("data-id")) +
@@ -378,7 +378,7 @@ $(document).ready(function() {
             confirmation.find("button.confirm").click(function() {
                 confirmation.remove();
                 enableOverlay();
-                $.ajax({
+                $.ajaxQueue({
                     url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
                     type: 'POST'
                 }).done(function(result) {
@@ -543,7 +543,7 @@ $(document).ready(function() {
     window.addContent = addContent;
     function addContent(prev, parent, column, order, content, type, done) {
         enableOverlay();
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/innhold/ny/',
             type: 'POST',
             data: "column=" + encodeURIComponent(column) +
@@ -582,8 +582,7 @@ $(document).ready(function() {
 
     window.removeContent = removeContent;
     function removeContent(content) {
-        enableOverlay();
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
             type: 'POST'
         }).done(function(result) {
@@ -595,7 +594,6 @@ $(document).ready(function() {
             // Todo
         }).always(function(result) {
             refreshSort();
-            disableOverlay();
         });
     }
 
