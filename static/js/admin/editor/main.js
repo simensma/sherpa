@@ -317,23 +317,9 @@ $(document).ready(function() {
         });
     });
 
-    $("#dialog-columns img").click(function() {
+    $("#dialog-columns img[data-choice]").click(function() {
         $(this).parents("#dialog-columns").dialog('close');
-    });
-    $("#dialog-columns img.full").click(function() {
-        addColumns(0);
-    });
-    $("#dialog-columns img.sidebar").click(function() {
-        addColumns(1);
-    });
-    $("#dialog-columns img.two").click(function() {
-        addColumns(2);
-    });
-    $("#dialog-columns img.three").click(function() {
-        addColumns(3);
-    });
-    $("#dialog-columns img.four").click(function() {
-        addColumns(4);
+        addColumns($(this).attr('data-choice'));
     });
 
     function addColumns(choice) {
