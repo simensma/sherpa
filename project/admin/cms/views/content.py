@@ -31,8 +31,12 @@ def add(request):
 @login_required
 def delete(request, content):
     if request.is_ajax():
-        content = Content.objects.get(id=content)
-        content.delete()
+        try:
+            content = Content.objects.get(id=content)
+            content.delete()
+        except Content.DoesNotExist:
+            # Ignore; it's being deleted anyway
+            pass
         return HttpResponse()
 
 @login_required
