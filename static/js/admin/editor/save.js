@@ -35,7 +35,7 @@ $(document).ready(function() {
         $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
         $("div.no-save-warning").hide();
         var rows = [];
-        $("article div.row").each(function() {
+        $("article > div.row-fluid").each(function() {
             var row = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
