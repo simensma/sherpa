@@ -12,6 +12,11 @@ header div.search form.form-search {
   margin-top: 20px;
 }
 
+nav#menus div.login {
+  float: right;
+  margin-right: 35px;
+}
+
 nav#menus div.menu-breadcrumb {
   margin-top: 17px;
   color: rgb(121, 121, 121);
