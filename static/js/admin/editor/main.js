@@ -220,7 +220,7 @@ $(document).ready(function() {
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click');
+            $(document).off('mouseenter mouseleave click', 'div.html, div.widget:not(.static), div.image');
             enableEditing();
             enableToolbar();
         }
