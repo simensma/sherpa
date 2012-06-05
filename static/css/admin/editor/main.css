@@ -65,15 +65,21 @@ article div.image:hover, article div.widget:not(.static):hover {
 }
 
 article div[contenteditable='true'].selected {
+  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+  border: 1px solid rgb(65, 65, 65);
   background-color: rgb(215, 215, 215);
 }
 
 article div[contenteditable='true']:hover:not(.selected) {
+  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+  border: 1px solid rgb(120, 120, 120);
   background-color: rgb(235, 235, 235);
 }
 
 article div.html.empty {
-  border: 1px solid rgb(95, 95, 95);
+  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+  border: 1px solid rgb(255, 95, 95);
+  background-color: rgb(255, 220, 220);
 }
 
 article .moveable {
