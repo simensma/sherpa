@@ -24,13 +24,9 @@ def login(request):
     elif(request.method == 'POST'):
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
-            if user.is_active:
-                merge_visitor(request.session, user.get_profile())
-                log_user_in(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
-            else:
-                context = {'error': "Din konto er blitt dekativert."}
-                return render(request, 'user/login.html', context)
+            merge_visitor(request.session, user.get_profile())
+            log_user_in(request, user)
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         else:
             context = {'error': "Ugyldig brukernavn og/eller passord.", 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)
