@@ -106,6 +106,9 @@ $(document).ready(function() {
     $("#toolbar a.button.hr").click(function(event) {
         document.execCommand('inserthorizontalrule', false, null);
     });
+    $("#toolbar a.button.remove-format").click(function(event) {
+        document.execCommand('removeformat', false, null);
+    });
 
     /* Show tooltip for toolbar formatting buttons */
 
