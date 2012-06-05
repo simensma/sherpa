@@ -332,6 +332,9 @@ $(document).ready(function() {
     $("#dialog-columns img.three").click(function() {
         addColumns(3);
     });
+    $("#dialog-columns img.four").click(function() {
+        addColumns(4);
+    });
 
     function addColumns(choice) {
         if(choice == 0) {
@@ -346,6 +349,11 @@ $(document).ready(function() {
             columns = [{span: 4, offset: 0, order: 0},
                        {span: 4, offset: 0, order: 1},
                        {span: 4, offset: 0, order: 2}]
+        } else if(choice == 4) {
+            columns = [{span: 3, offset: 0, order: 0},
+                       {span: 3, offset: 0, order: 1},
+                       {span: 3, offset: 0, order: 2},
+                       {span: 3, offset: 0, order: 3}]
         }
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajax({
