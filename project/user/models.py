@@ -3,8 +3,12 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    text = models.CharField(max_length=200)
-    # Much more person data
+    phone = models.CharField(max_length=20)
+    # At some point, this model will be extended to contain member data, syncing with Focus.
+    # It will also be connected with:
+    # - Djangos Group model
+    # - Djangos permission system.
+    # - "group.Group", might need to be renamed. (Associations?)
 
 class Zipcode(models.Model):
     zip_code = models.CharField(max_length=4)
