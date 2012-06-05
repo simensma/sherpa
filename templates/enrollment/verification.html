@@ -105,47 +105,26 @@
                   <td></td>
                 {% endif %}
                 <td>
-                  <div class="desc">
-                    Navn:<br>
-                    Kjønn:<br>
-                    Født:<br>
-                    {% if users|length == 1 and not existing %}
-                      Adresse:
-                      {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
-                        {% if location.address1 %}<br>{% endif %}
-                        <br>
-                      {% else %}
-                        {% if location.address1 %}<br>{% endif %}
-                        {% if location.address2 %}<br>{% endif %}
-                        {% if location.address3 %}<br>{% endif %}
-                      {% endif %}
-                      {% if country.code != 'NO' %}<br>{% endif %}
+                  {{ user.name }}<br>
+                  {% if user.gender == 'm' %}
+                    Mann
+                  {% elif user.gender == 'f' %}
+                    Kvinne
+                  {% endif %}<br>
+                  {{ user.dob|date:"j. F Y" }}<br>
+                  {% if users|length == 1 and not existing %}
+                    {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
+                      {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                      {{ location.zipcode }} {{ location.city }}<br>
+                    {% else %}
+                      {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                      {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
+                      {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
                     {% endif %}
-                    {% if user.phone %}Telefon:<br>{% endif %}
-                    {% if user.email %}E-post:{% endif %}
-                  </div>
-                  <div class="data">
-                    {{ user.name }}<br>
-                    {% if user.gender == 'm' %}
-                      Mann
-                    {% elif user.gender == 'f' %}
-                      Kvinne
-                    {% endif %}<br>
-                    {{ user.dob|date:"j. F Y" }}<br>
-                    {% if users|length == 1 and not existing %}
-                      {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
-                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                        {{ location.zipcode }} {{ location.city }}<br>
-                      {% else %}
-                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                        {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
-                        {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
-                      {% endif %}
-                      {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
-                    {% endif %}
-                    {% if user.phone %}{{ user.phone }}<br>{% endif %}
-                    {% if user.email %}{{ user.email }}{% endif %}
-                  </div>
+                    {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
+                  {% endif %}
+                  {% if user.phone %}{{ user.phone }}<br>{% endif %}
+                  {% if user.email %}{{ user.email }}{% endif %}
                 </td>
                 <td class="type"></td>
                 <td><span class="price"></span>,-</td>

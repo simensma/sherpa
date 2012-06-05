@@ -165,15 +165,6 @@ span.asterisk.red {
     color: red;
 }
 
-table.prices div.desc {
-    float: left;
-    font-style: italic;
-}
-
-table.prices div.data {
-    margin-left: 70px; /* estimated width of previous sibling div.desc */
-}
-
 div.notice-alert {
     padding: 10px;
     border: 1px solid rgb(95, 95, 95);
