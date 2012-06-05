@@ -492,7 +492,7 @@ $(document).ready(function() {
     window.disableEditing = disableEditing;
     function disableEditing() {
         $("article div.editable").removeAttr('contenteditable');
-        $("article div.image img").off('click focus focusout');
+        $(document).off('click', 'div.image');
         $(document).off('click', 'div.widget');
     }
     window.enableEditing = enableEditing;
