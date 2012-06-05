@@ -174,3 +174,9 @@ div#searchbox div.county {
 div#results h1 {
   font-size: 120%;
 }
+
+/* Login page */
+
+div#login h2 {
+  margin-bottom: 15px;
+}

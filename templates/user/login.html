@@ -5,16 +5,39 @@
 
 {% if error %}<p>{{ error }}</p>{% endif %}
 
-<div class="row">
-  <div class="offset4 span4">
-    <h1>Logg inn</h1>
-    <form action="{% url user.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
-    {% csrf_token %}
-    Navn: <input type="text" name="username"><br>
-    Passord: <input type="password" name="password"><br>
-    <input type="submit">
-    </form>
+<div id="login">
+  <div class="row">
+    <div class="span12">
+      <h1>Logg inn</h1>
     </div>
+  </div>
+
+  <div class="row">
+    <div class="span6">
+      <form action="{% url user.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
+        {% csrf_token %}
+        <table class="table">
+          <tr>
+            <td>Brukernavn:</td>
+            <td><input type="text" name="username"></td>
+          </tr>
+          <tr>
+            <td>Passord:</td>
+            <td><input type="password" name="password"></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <div class="span6">
+      <h2>Velkommen til nye Sherpa!</h2>
+      <p>
+        Her kan du logge på nye Sherpa. Det er ikke så forferdelig mange ting du kan gjøre her foreløpig, men vi jobber kontinuerlig med å få ting på plass!
+      </p>
+      <p>
+        Hvis du ikke har fått bruker må du foreløpig kontakte Ali eller Hans. Du kan ikke bruke ditt gamle Sherpa-brukernavn og passord her.
+      </p>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
