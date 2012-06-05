@@ -44,6 +44,17 @@ $(document).ready(function() {
         selection = rangy.getSelection();
     }
 
+    /* Automatically remove empty html contents */
+    $(document).on('focusout', 'article div.html', function() {
+        if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
+            $(this).addClass('empty');
+            $(this).focus(function() {
+                $(this).removeClass('empty');
+            });
+        }
+    });
+    $("article div.html").focusout();
+
     /* Hide completely empty image descriptions */
     $("article div.image span.description").each(function() {
         if($(this).text() == "") {

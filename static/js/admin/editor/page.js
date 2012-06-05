@@ -1,16 +1,5 @@
 $(document).ready(function() {
 
-    /* Automatically remove empty html contents */
-    $(document).on('focusout', 'article div.html', function() {
-        if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
-            $(this).addClass('empty');
-            $(this).focus(function() {
-                $(this).removeClass('empty');
-            });
-        }
-    });
-    $("article div.html").focusout();
-
     /* Publish/unpublish */
 
     if($("div.status[data-published]").length == 0) {
