@@ -29,12 +29,8 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    $("div.editor-header div.save button.save").click(function() {
-        clearInterval(updateSaveCountID);
-        $(this).attr('disabled', true);
-        $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
-        $("div.no-save-warning").hide();
-        var rows = [];
+    function collectRows() {
+        var rows = []
         $("article > div.row-fluid").each(function() {
             var row = {
                 id: $(this).attr('data-id'),
@@ -42,6 +38,10 @@ $(document).ready(function() {
             };
             rows = rows.concat([row]);
         });
+        return rows;
+    }
+
+    function collectColumns() {
         var columns = [];
         $("article div.column").each(function() {
             var column = {
@@ -50,6 +50,10 @@ $(document).ready(function() {
             };
             columns = columns.concat([column]);
         });
+        return columns;
+    }
+
+    function collectContents() {
         var contents = [];
         $("article > div.row-fluid > div.column > div.html, article > div.row-fluid > div.column > div.title, article > div.row-fluid > div.column > div.lede").each(function() {
             var content = {
@@ -79,13 +83,20 @@ $(document).ready(function() {
             };
             contents = contents.concat([content]);
         });
+        return contents;
+    }
 
+    $("div.editor-header div.save button.save").click(function() {
+        clearInterval(updateSaveCountID);
+        $(this).attr('disabled', true);
+        $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
+        $("div.no-save-warning").hide();
         $.ajaxQueue({
             url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
             type: 'POST',
-            data: "rows=" + encodeURIComponent(JSON.stringify(rows)) +
-                  "&columns=" + encodeURIComponent(JSON.stringify(columns)) +
-                  "&contents=" + encodeURIComponent(JSON.stringify(contents))
+            data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
+                  "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
+                  "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
         }).done(function(result) {
             lastSaveCount = 0;
         }).fail(function(result) {
