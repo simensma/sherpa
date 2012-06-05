@@ -153,21 +153,6 @@ nav#menus li.active a {
   z-index: 5;
 }
 
-nav#menus div.menu-breadcrumb {
-  margin-top: 17px;
-  color: rgb(121, 121, 121);
-}
-
-nav#menus div.menu-breadcrumb em {
-  font-style: normal;
-  font-weight: bold;
-}
-
-nav#menus div.menu-breadcrumb div.language-bar {
-  margin-top: -7px;
-  float: right;
-}
-
 /* Articles */
 
 article .row, article .row-fluid {

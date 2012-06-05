@@ -2,7 +2,7 @@
  * The main stylesheet for turistforeningen.no
  */
 
-/* Header search */
+/* Header */
 
 header div.search {
   text-align: right;
@@ -10,6 +10,21 @@ header div.search {
 
 header div.search form.form-search {
   margin-top: 20px;
+}
+
+nav#menus div.menu-breadcrumb {
+  margin-top: 17px;
+  color: rgb(121, 121, 121);
+}
+
+nav#menus div.menu-breadcrumb em {
+  font-style: normal;
+  font-weight: bold;
+}
+
+nav#menus div.menu-breadcrumb div.language-bar {
+  margin-top: -7px;
+  float: right;
 }
 
 /* Social icons above footer */
