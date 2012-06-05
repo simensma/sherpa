@@ -549,6 +549,19 @@ $(document).ready(function() {
         $("article .column").children("div.empty.well").remove();
     }
 
+    window.disableIframes = disableIframes;
+    function disableIframes(content) {
+        // Can't capture click events in iframes, so replace them
+        content.find("iframe").each(function() {
+            var width = $(this).css('width');
+            var height = $(this).css('height');
+            var div = $('<div style="background: url(/static/img/iframe-placeholder.png) top left repeat">&nbsp;</div>');
+            div.css('width', width);
+            div.css('height', height);
+            $(this).replaceWith(div);
+        });
+    }
+
     /**
      * Major DOM changes.
      * Typically includes an ajax request and,
@@ -593,19 +606,6 @@ $(document).ready(function() {
             $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
-        });
-    }
-
-    window.disableIframes = disableIframes;
-    function disableIframes(content) {
-        // Can't capture click events in iframes, so replace them
-        content.find("iframe").each(function() {
-            var width = $(this).css('width');
-            var height = $(this).css('height');
-            var div = $('<div style="background: url(/static/img/iframe-placeholder.png) top left repeat">&nbsp;</div>');
-            div.css('width', width);
-            div.css('height', height);
-            $(this).replaceWith(div);
         });
     }
 
