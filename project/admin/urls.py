@@ -15,4 +15,7 @@ urlpatterns = patterns('admin',
 
     # Image archive
     url(r'^bildearkiv/', include('admin.images.urls')),
+
+    # Users
+    url(r'^brukere/', include('admin.users.urls')),
 )
