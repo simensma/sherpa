@@ -36,7 +36,7 @@ def login(request):
             log_user_in(request, user)
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         else:
-            context = {'error': "Ugyldig brukernavn og/eller passord.", 'next': request.GET.get('next')}
+            context = {'invalid_credentials': True, 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)
 
 def logout(request):

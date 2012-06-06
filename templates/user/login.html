@@ -3,8 +3,6 @@
 
 {% block body %}
 
-{% if error %}<p>{{ error }}</p>{% endif %}
-
 <div id="login">
   <div class="row">
     <div class="span12">
@@ -43,6 +41,13 @@
       </div>
     </div>
     <div class="span6">
+      {% if invalid_credentials %}
+        <div class="alert alert-danger">
+          <a class="close">x</a>
+          <strong>Feil brukernavn eller passord</strong><br>
+          Vennligst prøv igjen. Du kan bruke e-post i stedet for brukernavn hvis du vil.
+        </div>
+      {% endif %}
       <h2>Velkommen til nye Sherpa!</h2>
       <p>
         Her kan du logge på nye Sherpa. Hvis du ikke har fått bruker må du foreløpig kontakte Ali eller Hans; du kan ikke bruke ditt gamle Sherpa-brukernavn og passord her.
