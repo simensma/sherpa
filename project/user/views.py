@@ -16,7 +16,7 @@ from user.models import Profile
 
 #@login_required
 def home(request):
-    return HttpResponseRedirect("https://minside.turistforeningen.no/")
+    return HttpResponseRedirect("https://www2.turistforeningen.no/minside/")
 
 @login_required
 def home_temporary(request):
