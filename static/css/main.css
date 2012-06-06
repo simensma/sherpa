@@ -94,7 +94,6 @@ footer div.services h2 {
   font-size: 110%;
   font-weight: normal;
   text-transform: uppercase;
-  margin-bottom: 15px;
 }
 
 footer div.services a {
@@ -198,10 +197,6 @@ div#results h1 {
 }
 
 /* Login page */
-
-div#login h2 {
-  margin-bottom: 15px;
-}
 
 div#login h3 {
   margin-bottom: 10px;
