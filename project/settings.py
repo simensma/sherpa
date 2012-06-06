@@ -14,6 +14,10 @@ OLD_SITE = 'gammel.turistforeningen.no'
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
 )
+
+DEFAULT_FROM_EMAIL = 'Den Norske Turistforening <no-reply@turistforeningen.no>'
+SERVER_EMAIL = 'DNT Django <server-errors@turistforeningen.no>'
+
 TIME_ZONE = 'Europe/Oslo'
 LANGUAGE_CODE = 'nb' # See http://www.i18nguy.com/unicode/language-identifiers.html
 USE_I18N = True
