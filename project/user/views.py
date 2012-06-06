@@ -108,5 +108,8 @@ def restore_password(request, key):
         # Everything is in order. Reset the password.
         profile.user.set_password(request.POST['password'])
         profile.user.save()
+        profile.password_restore_key = None
+        profile.password_restore_date = None
+        profile.save()
         context = {'success': True}
         return render(request, 'user/restore-password.html', context)
