@@ -93,7 +93,6 @@ $(document).ready(function() {
         $("div.no-save-warning").hide();
         $.ajaxQueue({
             url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
-            type: 'POST',
             data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
                   "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))

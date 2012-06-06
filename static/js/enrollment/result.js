@@ -8,7 +8,6 @@ $(document).ready(function() {
         var number = $(this).attr('data-number');
         $.ajax({
             url: '/innmelding/sms/',
-            type: 'POST',
             data: 'index=' + encodeURIComponent(index)
         }).done(function(result) {
             result = JSON.parse(result);

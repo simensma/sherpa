@@ -112,7 +112,6 @@ $(document).ready(function() {
         $("div.existing-result span.result").removeClass('error');
         $.ajax({
             url: '/innmelding/eksisterende/',
-            type: 'POST',
             data: 'data=' + encodeURIComponent(JSON.stringify(data))
         }).done(function(result) {
             result = JSON.parse(result);

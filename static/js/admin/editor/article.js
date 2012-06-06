@@ -39,7 +39,6 @@ $(document).ready(function() {
         $("div.status button.publish, div.status button.unpublish").attr('disabled', true);
         $.ajax({
             url: '/sherpa/artikler/publiser/' + $("div.editor-header").attr('data-id') + '/',
-            type: 'POST',
             data: 'status=' + encodeURIComponent(JSON.stringify({'status': status}))
         }).done(done).always(function() {
             $("div.status button.publish, div.status button.unpublish").removeAttr('disabled');
@@ -92,7 +91,6 @@ $(document).ready(function() {
     function saveImage() {
         $.ajax({
             url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/',
-            type: 'POST',
             data: 'thumbnail=' + encodeURIComponent($("div.editor-header img.article-thumbnail").attr('src'))
         });
     }

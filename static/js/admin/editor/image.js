@@ -125,7 +125,6 @@ function search(phrase) {
     var ajaxLoader = hideContent();
     $.ajax({
         url: '/sherpa/bildearkiv/søk/',
-        type: 'POST',
         data: "query=" + encodeURIComponent(phrase)
     }).done(function(result) {
         result = JSON.parse(result);

@@ -12,7 +12,6 @@ $(document).ready(function() {
             enableOverlay();
             $.ajaxQueue({
                 url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
-                type: 'POST',
                 data: 'content=' + encodeURIComponent(content)
             }).done(function(result) {
                 result = JSON.parse(result);

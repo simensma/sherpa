@@ -326,7 +326,6 @@ $(document).ready(function() {
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajaxQueue({
             url: '/sherpa/cms/kolonner/ny/',
-            type: 'POST',
             data: "version=" + encodeURIComponent($("article").attr("data-id")) +
                   "&order=" + encodeURIComponent(order) +
                   "&columns=" + encodeURIComponent(JSON.stringify(columns))
@@ -556,7 +555,6 @@ $(document).ready(function() {
         enableOverlay();
         $.ajaxQueue({
             url: '/sherpa/cms/innhold/ny/',
-            type: 'POST',
             data: "column=" + encodeURIComponent(column) +
                   "&order=" + encodeURIComponent(order) +
                   "&content=" + encodeURIComponent(content) +

@@ -37,7 +37,6 @@ $(document).ready(function() {
         // Check dynamically that the slug is unique
         $.ajax({
             url: '/sherpa/cms/side/ny/unik/',
-            type: 'POST',
             data: 'slug=' + encodeURIComponent(lookupVal)
         }).done(function(result) {
             result = JSON.parse(result);
@@ -161,7 +160,6 @@ $(document).ready(function() {
             });
             $.ajax({
                 url: '/sherpa/cms/meny/sorter/',
-                type: 'POST',
                 data: 'menus=' + encodeURIComponent(JSON.stringify(items))
             }).fail(function(result) {
                 // Todo
@@ -185,7 +183,6 @@ $(document).ready(function() {
         }
         $.ajax({
             url: '/sherpa/cms/meny/' + ajaxUrl,
-            type: 'POST',
             data: 'name=' + encodeURIComponent(name) +
                   '&url=' + encodeURIComponent(url)
         }).done(function(result) {

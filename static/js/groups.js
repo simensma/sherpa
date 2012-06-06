@@ -19,7 +19,6 @@ $(document).ready(function() {
         $("div.no-results").hide();
         $.ajax({
             url: '/foreninger/filtrer/',
-            type: 'POST',
             data: 'category=' + encodeURIComponent(category) +
                   '&county=' + encodeURIComponent(county)
         }).fail(function(result) {
