@@ -1,12 +1,5 @@
 $(document).ready(function() {
 
-    $("nav#menus div.language-bar select").change(function() {
-        var val = $(this).children("option:selected").val();
-        if(val != '') {
-            window.location = val;
-        }
-    });
-
     /* Restore password */
     $("div#forgot-password").hide();
     $("div#login a.forgot").click(function() {
