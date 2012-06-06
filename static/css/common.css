@@ -181,6 +181,7 @@ article div.image {
 }
 
 article div.img-desc {
+  background-color: rgb(0, 0, 0); /* For older browsers, fall-back to black background */
   background-color: rgba(0, 0, 0, 0.75);
   position: absolute;
   left: 0;
