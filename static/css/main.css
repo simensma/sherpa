@@ -4,6 +4,10 @@
 
 /* Header */
 
+header {
+  font-size: 14px !important;
+}
+
 header div.search {
   text-align: right;
 }
@@ -12,25 +16,42 @@ header div.search form.form-search {
   margin-top: 20px;
 }
 
-nav#menus div.login {
-  float: right;
-  margin-right: 35px;
+header div.login {
+  margin-top: 6px;
+  text-align: right;
 }
 
-nav#menus div.menu-breadcrumb {
-  margin-top: 17px;
+header div.login a {
+  color: rgb(30, 30, 30);
+}
+
+header div.border {
+  clear: both;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin-top: -3px;
+  border-bottom: 1px solid rgb(229, 229, 229);
+}
+
+header div.menu-breadcrumb {
+  margin-top: 5px;
   color: rgb(121, 121, 121);
 }
 
-nav#menus div.menu-breadcrumb em {
+header div.menu-breadcrumb em {
   font-style: normal;
   font-weight: bold;
 }
 
-nav#menus div.menu-breadcrumb div.language-bar {
-  margin-top: -7px;
+header ul.language-bar {
   float: right;
 }
+
+header ul.language-bar li.dropdown a {
+  color: rgb(30, 30, 30);
+}
+
 
 /* Social icons above footer */
 
