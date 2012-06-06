@@ -198,10 +198,6 @@ div#results h1 {
 
 /* Login page */
 
-div#login h3 {
-  margin-bottom: 10px;
-}
-
 div#login button.login {
   width: 150px;
 }
