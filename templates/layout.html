@@ -56,7 +56,7 @@
             <a href="{% url admin.views.index %}">Sherpa</a> |
             <a href="{% url user.views.logout %}">Logg ut</a>
           {% else %}
-            <a href="https://minside.turistforeningen.no/">Min side</a>
+            <a href="{% url user.views.home %}">Min side</a>
           {% endif %}
         </div>
         <div style="clear: both;"></div>

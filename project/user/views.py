@@ -15,18 +15,18 @@ from analytics.models import Visitor, Request
 from user.models import Profile
 
 #@login_required
-def my_page(request):
+def home(request):
     return HttpResponseRedirect("https://minside.turistforeningen.no/")
 
 @login_required
-def home(request):
+def home_temporary(request):
     return render(request, 'user/home.html')
 
 def login(request):
     if(request.method == 'GET'):
         if(request.user.is_authenticated()):
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_temporary')))
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
     elif(request.method == 'POST'):
@@ -34,7 +34,7 @@ def login(request):
         if user is not None:
             merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_temporary')))
         else:
             context = {'invalid_credentials': True, 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)

@@ -4,7 +4,14 @@
 {% block body %}
 <h1>Min side</h1>
 
-<p>Velkommen, {{ user.username }}! Du liker: {{ user.get_profile.text }}</p>
+<p>Velkommen {{ user.first_name }}!</p>
 
-<p><a href="{% url user.views.logout %}">Logg ut</a></p>
+<p>
+  Her kommer nye "Min side" en gang i fremtiden, men foreløpig er det ingenting å gjøre her.
+</p>
+
+<p>
+  <a href="{% url admin.views.index %}">Gå til Sherpa</a>
+</p>
+
 {% endblock %}
