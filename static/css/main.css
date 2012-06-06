@@ -180,3 +180,7 @@ div#results h1 {
 div#login h2 {
   margin-bottom: 15px;
 }
+
+div#login button.login {
+  width: 150px;
+}
