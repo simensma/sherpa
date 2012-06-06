@@ -1,0 +1,72 @@
+{% extends "admin/layout.html" %}
+{% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/users.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/users.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<script>
+  var password_length = {{ password_length }};
+</script>
+
+<div class="row">
+  <div class="span6">
+    <h2>Ny Sherpa-bruker</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <form action="{% url admin.users.views.new %}" method="post">
+      {% csrf_token %}
+      <div class="control-group name">
+        <label>Fullt navn</label>
+        <input type="text" class="input-large" name="name">
+      </div>
+      <div class="control-group name">
+        <label>Brukernavn</label>
+        <input type="text" class="input-medium" name="username">
+      </div>
+      <div class="control-group password">
+        <label>Passord</label>
+        <input type="password" class="input-large" name="password">
+      </div>
+      <div class="control-group password-duplicate">
+        <label>Gjenta passord</label>
+        <input type="password" class="input-large" name="password-duplicate">
+      </div>
+      <div class="control-group phone">
+        <label> Mobiltelefon</label>
+        <input type="text" class="input-medium" name="phone">
+      </div>
+      <div class="control-group email">
+        <label> E-post</label>
+        <input type="text" class="input-large" name="email">
+      </div>
+      <button type="submit" class="btn btn-large"><i class="icon-user"></i> Lagre bruker</button>
+    </form>
+  </div>
+  <div class="span6 info-area">
+    {% if value_error %}
+      <div class="alert alert-danger">
+        <a class="close">x</a>
+        <strong>Vennligst fyll inn minst navn, brukernavn og et passord på minst {{ password_length }} tegn.</strong>
+      </div>
+    {% endif %}
+    {% if integrity_error %}
+      <div class="alert alert-danger">
+        <a class="close">x</a>
+        <strong>Brukernavnet er allerede i bruk! Vennligst velg et annet brukernavn.</strong>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
