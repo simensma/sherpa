@@ -18,7 +18,7 @@ $(document).ready(function() {
     }
 
     /* For any close button, close its parent alert */
-    $("a.close").click(function() { $(this).parent().hide(); });
+    $(document).on('click', 'a.close', function() { $(this).parent().hide(); });
 
     /* Add class to external links */
     $("a:not(.btn)").each(function() {
