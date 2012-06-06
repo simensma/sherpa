@@ -23,6 +23,7 @@ header div.login {
 
 header div.login a {
   color: rgb(30, 30, 30);
+  margin-left: 15px;
 }
 
 header div.border {
