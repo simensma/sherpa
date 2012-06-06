@@ -1,11 +1,18 @@
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as log_user_in, logout as log_user_out
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.template import Context, loader
+from django.utils import crypto
+
+from datetime import datetime, timedelta
+import json
 
 from analytics.models import Visitor, Request
+from user.models import Profile
 
 #@login_required
 def my_page(request):
@@ -61,3 +68,45 @@ def merge_visitor(session, profile):
         # apply this one to the profile
         visitor.profile = profile
         visitor.save()
+
+def send_restore_password_email(request):
+    try:
+        user = User.objects.get(email=request.POST['email'])
+    except User.DoesNotExist:
+        return HttpResponse(json.dumps({'status': 'invalid_email'}))
+    profile = user.get_profile()
+    key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+    profile.password_restore_key = key
+    profile.password_restore_date = datetime.now()
+    profile.save()
+    t = loader.get_template('user/restore-password-email.html')
+    c = Context({'user': user})
+    user.email_user("Gjenopprettelse av passord", t.render(c))
+    return HttpResponse(json.dumps({'status': 'success'}))
+
+def restore_password(request, key):
+    try:
+        profile = Profile.objects.get(password_restore_key=key)
+    except Profile.DoesNotExist:
+        context = {'no_such_key': True}
+        return render(request, 'user/restore-password.html', context)
+    deadline = profile.password_restore_date + timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
+    if datetime.now() > deadline:
+        # We've passed the deadline for key validity
+        context = {'key_expired': True, 'validity_period': settings.RESTORE_PASSWORD_VALIDITY}
+        return render(request, 'user/restore-password.html', context)
+
+    # Passed all tests, looks like we're ready to reset the password
+    if request.method == 'GET':
+        context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH}
+        return render(request, 'user/restore-password.html', context)
+    elif request.method == 'POST':
+        if request.POST['password'] != request.POST['password-duplicate'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+            context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH,
+                'unacceptable_password': True}
+            return render(request, 'user/restore-password.html', context)
+        # Everything is in order. Reset the password.
+        profile.user.set_password(request.POST['password'])
+        profile.user.save()
+        context = {'success': True}
+        return render(request, 'user/restore-password.html', context)

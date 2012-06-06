@@ -11,6 +11,11 @@ AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 OLD_SITE = 'gammel.turistforeningen.no'
 
+# For now, require only a minimum password length of 6. This might need to be reconsidered.
+USER_PASSWORD_LENGTH = 6
+RESTORE_PASSWORD_KEY_LENGTH = 40
+RESTORE_PASSWORD_VALIDITY = 12 # Hours
+
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
 )
