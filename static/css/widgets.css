@@ -211,7 +211,7 @@ div.widget.articles div.article-preview div.lede a, div.widget.blog div.blog-ite
 }
 
 /* Negate properties set by the common 'article p.lede'. This is *copied* from the standard p look */
-div.widget.articles div.article-preview div.lede p.lede {
+div.widget.blog div.blog-item div.lede, div.widget.articles div.article-preview div.lede p.lede {
   font-family: georgia, times, serif !important;
   font-size: 16px !important;
   line-height: 1.5 !important;
