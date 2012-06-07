@@ -80,6 +80,11 @@ class Version(models.Model):
             except IndexError:
                 # There are no images in this article
                 self.hide_thumbnail = True
+        # Statically use the 150px version. This should be optimized; save
+        # the available sizes with the model and use the smalles appropriate one.
+        if self.thumbnail != None:
+            t = self.thumbnail
+            self.thumbnail = t[:t.rfind('.')] + '-150' + t[t.rfind('.'):]
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
