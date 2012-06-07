@@ -56,10 +56,15 @@ $(document).ready(function() {
     function collectContents() {
         var contents = [];
         $("article > div.row-fluid > div.column > div.html, article > div.row-fluid > div.column > div.title, article > div.row-fluid > div.column > div.lede").each(function() {
+            if($(this).is('[data-placeholder]')) {
+                var html = '';
+            } else {
+                var html = $(this).html();
+            }
             var content = {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
-                content: $(this).html()
+                content: html
             };
             contents = contents.concat([content]);
         });

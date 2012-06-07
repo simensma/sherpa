@@ -163,7 +163,7 @@ article p {
   margin-bottom: 0;
 }
 
-article p.lede {
+article div.lede, article p.lede {
   font-family: "DTL Nobel" !important;
   font-size: 20px;
   line-height: 1.4;

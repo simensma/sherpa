@@ -45,15 +45,28 @@ $(document).ready(function() {
     }
 
     /* Highlight empty html contents */
+    $(document).on('click', 'article div.html[data-placeholder], article div.lede[data-placeholder]', function() {
+        $(this).removeAttr('data-placeholder');
+        $(this).text('');
+        $(this).attr('contenteditable', true);
+        $(this).focus();
+    });
     $(document).on('focusout', 'article div.html, article div.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
             $(this).addClass('empty');
             $(this).focus(function() {
                 $(this).removeClass('empty');
             });
+            $(this).removeAttr('contenteditable');
+            $(this).attr('data-placeholder', true);
+            if($(this).hasClass('html')) {
+                $(this).text("Klikk for å legge til tekst...");
+            } else if($(this).hasClass('lede')) {
+                $(this).text("Klikk for å legge til ingress...");
+            }
         }
     });
-    $("article div.html").focusout();
+    $("article div.html, article div.lede").focusout();
 
     /* Hide completely empty image descriptions */
     $("article div.image span.description").each(function() {

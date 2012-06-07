@@ -9,7 +9,7 @@ article .insertable {
   color: rgb(195, 195, 195) !important;
 }
 
-article .insertable, article .empty {
+article .insertable, article .empty:not(.editable) {
   text-align: center;
   color: rgb(125, 125, 125);
   font-size: 180%;
@@ -62,6 +62,14 @@ article div.image:hover, article div.widget:not(.static):hover {
   opacity: 0.5;
   filter: alpha(opacity=50);
   cursor: alias;
+}
+
+article div[data-placeholder] {
+  font-style: italic;
+}
+
+article div[data-placeholder]:hover {
+  cursor: text;
 }
 
 article div[contenteditable='true'].selected {
