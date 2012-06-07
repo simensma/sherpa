@@ -2,6 +2,7 @@ from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.db.models import Min
+from django.conf import settings
 
 import json
 
@@ -82,7 +83,7 @@ class Version(models.Model):
                 self.hide_thumbnail = True
         # Statically use the 150px version. This should be optimized; save
         # the available sizes with the model and use the smalles appropriate one.
-        if self.thumbnail != None:
+        if self.thumbnail != None and settings.AWS_BUCKET in self.thumbnail:
             t = self.thumbnail
             self.thumbnail = t[:t.rfind('.')] + '-150' + t[t.rfind('.'):]
 
