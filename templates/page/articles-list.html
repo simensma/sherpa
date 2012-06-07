@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Artikler{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Artikler</h1>
+  </div>
+</div>
+
+{% for version in versions %}
+    <h2>
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        {{ version.title.content|striptags }}
+      </a>
+    </h2>
+    {% if not version.hide_thumbnail %}
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+      </a>
+    {% endif %}
+    <div class="lede">
+      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+        {{ version.lede.content|removetags:"a"|safe }}
+      </a>
+    </div>
+{% endfor %}
+
+<h3>
+  Våre tidligere publiserte artikler finner du foreløpig på <a href="http://gammel.turistforeningen.no/article.php">våre gamle sider</a>.
+</h3>
+
+{% endblock %}

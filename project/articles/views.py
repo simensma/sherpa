@@ -8,7 +8,14 @@ from page.views_widgets import parse_widget
 import json
 
 def index(request):
-    return HttpResponse()
+    versions = Version.objects.filter(
+        variant__article__isnull=False, variant__segment__isnull=True,
+        variant__article__published=True, active=True
+        ).order_by('-variant__article__pub_date')[:20]
+    for version in versions:
+        version.load_preview()
+    context = {'versions': versions}
+    return render(request, "page/articles-list.html", context)
 
 def show(request, article, text):
     # Assume no segmentation for now
