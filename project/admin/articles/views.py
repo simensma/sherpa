@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from datetime import datetime
 import json
 
 from articles.models import Article
@@ -58,6 +59,8 @@ def publish(request, article):
     article = Article.objects.get(id=article)
     article.published = json.loads(request.POST['status'])['status']
     article.publisher = request.user.get_profile()
+    if article.pub_date == None:
+        article.pub_date = datetime.now()
     article.save()
     return HttpResponse()
 
