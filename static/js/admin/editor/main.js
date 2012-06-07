@@ -45,7 +45,7 @@ $(document).ready(function() {
     }
 
     /* Highlight empty html contents */
-    $(document).on('focusout', 'article div.html', function() {
+    $(document).on('focusout', 'article div.html, article div.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
             $(this).addClass('empty');
             $(this).focus(function() {
