@@ -45,13 +45,6 @@ def parse_widget(widget):
         data = {'quote': widget['quote'], 'author': widget['author']}
     elif(widget['widget'] == "promo"):
         data = {}
-    elif(widget['widget'] == "editor"):
-        article = Article.objects.get(id=widget['article'])
-        data = {
-            'static': True,
-            'author': article.publisher.user.get_full_name(),
-            'email': "TBD",
-            'publishdate': article.pub_date}
     elif(widget['widget'] == "articles"):
         versions = Version.objects.filter(
             variant__article__isnull=False, variant__segment__isnull=True,

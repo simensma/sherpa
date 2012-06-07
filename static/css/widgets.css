@@ -183,23 +183,6 @@ div.widget.quote blockquote small {
   margin-top: 5px;
 }
 
-/* Editor (metadata for articles (writer, publication date etc)) */
-
-div.widget.editor p {
-  font-size: 0.9em;
-  margin: 0;
-}
-
-div.widget.editor p em {
-  font-weight: bold;
-  color: rgb(119, 119, 119);
-  text-transform: uppercase;
-}
-
-div.widget.editor hr {
-  margin: 0;
-}
-
 /* Articles and blog listing */
 
 div.widget.articles h1, div.widget.blog h1 {
