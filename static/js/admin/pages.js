@@ -108,7 +108,7 @@ $(document).ready(function() {
             return;
         }
         if($("div.page-dialog input[name='title']").val().length == 0) {
-            alert("Du må jo skrive inn en tittel på siden før du oppretter den!");
+            alert("Du må skrive inn en tittel på siden før du oppretter den!");
             return;
         }
         $("div.page-dialog input[name='template']").val($(this).attr('data-template'));
