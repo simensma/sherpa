@@ -25,6 +25,7 @@ div.widget.promo div.left img.background-image {
 /* Promo - left side - menu */
 
 div.widget.promo div.left div.menu {
+  font-family: "DTL Nobel";
   position: absolute;
   top: 20px;
   font-size: 15px;
@@ -40,7 +41,7 @@ div.widget.promo div.left div.menu li:first-of-type {
 }
 
 div.widget.promo div.left div.menu li {
-  padding: 5px 10px;
+  padding: 5px 20px 5px 10px;
   background-color: white;
   border-top: 1px solid rgb(210, 210, 210);
 }
@@ -56,7 +57,7 @@ div.widget.promo div.left div.menu li:not(.active):hover {
 }
 
 div.widget.promo div.left div.menu li a {
-  color: #777;
+  color: rgb(80, 80, 80);
 }
 
 div.widget.promo div.left div.menu li.active a {
@@ -81,23 +82,36 @@ div.widget.promo div.right h1 {
   border-bottom: none;
 }
 
+div.widget.promo div.right h1.lede {
+  margin-bottom: 0;
+}
+
 div.widget.promo div.right p.lede {
+  font-size: 18px;
+  font-weight: bold;
   font-variant: small-caps;
-  font-style: italic;
+  margin-bottom: 20px;
 }
 
 div.widget.promo div.right p.button {
-  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
 div.widget.promo div.right p.sponsor {
-  font-size: 15px;
+  font-size: 14px;
   font-style: italic;
   text-align: right;
+  margin-top: 55px;
+  padding-left: 60px;
+}
+
+div.widget.promo div.right p.sponsor a {
+  float: right;
 }
 
 div.widget.promo div.right img {
-  padding-left: 10%;
+  margin-left: 15px;
 }
 
 /* Promo - colors for the different sections */
@@ -127,7 +141,7 @@ div.widget.promo div.wrapper.fjellsport {
 }
 
 div.widget.promo div.wrapper.senior {
-  background-color: rgb(220, 220, 220);
+  background-color: rgb(232, 232, 232);
 }
 
 div.widget.promo div.wrapper.senior div.right {

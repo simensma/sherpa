@@ -14,7 +14,7 @@
     {% endif %}
     <div class="lede">
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-        {{ version.lede.content|removetags:"a"|safe|truncatewords:30 }}
+        {{ version.lede.content|removetags:"a"|safe|truncatewords:15 }}
       </a>
     </div>
   </div>
