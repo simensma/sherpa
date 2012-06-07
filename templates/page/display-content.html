@@ -20,7 +20,7 @@
               {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
               {% if content.content.anchor %}</a>{% endif %}
-              {% if content.content.description != '' %}
+              {% if content.content.description.empty %}
                 <div class="img-desc">
                   {{ content.content.description }}
                   {% if content.content.photographer %}
