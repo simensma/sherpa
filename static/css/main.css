@@ -6,6 +6,7 @@
 
 header {
   font-size: 14px !important;
+  font-family: "DTL Nobel";
 }
 
 header div.search {
@@ -53,6 +54,11 @@ header ul.language-bar li.dropdown a {
   color: rgb(30, 30, 30);
 }
 
+header ul.dropdown-menu {
+  position: absolute;
+  left: -65px;
+}
+
 
 /* Social icons above footer */
 
@@ -83,7 +89,7 @@ div.social-icons img.social {
 /* Footer */
 
 footer {
-  background-color: #e8e8e9;
+  background-color: rgb(232, 232, 232);
   border-top: 1px solid rgb(195, 195, 195);
   margin-top: 20px;
   padding-bottom: 100px;

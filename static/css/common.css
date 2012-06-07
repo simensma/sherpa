@@ -32,11 +32,11 @@ body, p, label {
   line-height: 1.5;
 }
 
-input, button, select, textarea {
+input, button, select, textarea, a.btn {
   font-size: 16px !important;
 }
 
-h1, h2, h3, h4, h5, h6, input, button, select, textarea {
+h1, h2, h3, h4, h5, h6, input, button, select, textarea, a.btn {
   font-family: "DTL Nobel";
   line-height: normal;
 }
@@ -119,6 +119,7 @@ input[type='radio'], input[type='checkbox'] {
 
 nav#menus {
   margin-top: 6px;
+  font-family: "DTL Nobel";
 }
 
 nav#menus ul {
