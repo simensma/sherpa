@@ -44,7 +44,7 @@ $(document).ready(function() {
         selection = rangy.getSelection();
     }
 
-    /* Automatically remove empty html contents */
+    /* Highlight empty html contents */
     $(document).on('focusout', 'article div.html', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
             $(this).addClass('empty');
