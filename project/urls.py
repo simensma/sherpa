@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
 handler404 = 'page.views.page_not_found'
@@ -25,6 +26,9 @@ urlpatterns = patterns('',
     # Redirect some known paths to the old site
     url(r'^images/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/images/"}),
     url(r'^album/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/album/"}),
+
+    # Search
+    url(ur'^søk/', 'page.views.search'),
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slug': ""}),

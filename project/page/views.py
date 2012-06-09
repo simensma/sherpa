@@ -43,6 +43,10 @@ def page(request, slug):
         save_pageview(request, requested_variant, version, requested_variant.segment, matched_segment)
         return parse_content(request, version)
 
+def search(request):
+    context = {}
+    return render(request, 'page/search.html', context)
+
 def save_pageview(request, variant, version, requested_segment, matched_segment):
     pageview = Pageview(request=request.session['request'], variant=variant,
         active_version=version, requested_segment=requested_segment, matched_segment=matched_segment)
