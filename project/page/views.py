@@ -3,10 +3,11 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
-from page.models import Page, Variant, Version
-from analytics.models import Visitor, Pageview
+
 from string import split
 
+from page.models import Page, Variant, Version
+from analytics.models import Visitor, Pageview
 from page.views_widgets import *
 
 variant_key = 'var'
