@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
+from django.db.models import Q
 
 from string import split
 
@@ -45,7 +46,13 @@ def page(request, slug):
         return parse_content(request, version)
 
 def search(request):
-    context = {}
+    q = request.POST['query']
+    hits = Content.objects.filter(
+        Q(type='html') | Q(type='title') | Q(type='lede'),
+        column__row__version__active=True,
+        column__row__version__variant__segment=None,
+        content__icontains=q)
+    context = {'search_query': q, 'hits': hits}
     return render(request, 'page/search.html', context)
 
 def save_pageview(request, variant, version, requested_segment, matched_segment):

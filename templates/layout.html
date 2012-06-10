@@ -36,7 +36,7 @@
     <div class="span6 search">
       <form action="{% url page.views.search %}" method="post" class="form-search">
         {% csrf_token %}
-        <input type="text" value="" class="input-medium">
+        <input type="text" name="query" value="{{ search_query }}" class="input-medium">
         <button type="submit" class="btn">Søk</button>
       </form>
     </div>

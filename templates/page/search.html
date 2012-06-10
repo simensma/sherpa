@@ -6,4 +6,10 @@
 
 <h1>Søk</h1>
 
+{% for hit in hits %}
+  {{ hit.content }}
+{% endfor %}
+
+Count: {{ hits|length }}
+
 {% endblock %}
