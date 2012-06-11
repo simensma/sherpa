@@ -14,12 +14,8 @@ import json
 from analytics.models import Visitor, Request
 from user.models import Profile
 
-#@login_required
-def home(request):
-    return HttpResponseRedirect("https://www2.turistforeningen.no/minside/")
-
 @login_required
-def home_temporary(request):
+def home(request):
     return render(request, 'user/home.html')
 
 def login(request):
