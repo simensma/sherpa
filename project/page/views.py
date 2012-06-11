@@ -67,8 +67,8 @@ def match_user(request, page):
             return variant
     return None
 
-def redirect(request, url, prefix):
-    return HttpResponseRedirect("%s%s%s" % (prefix, url, get_params(request.GET)))
+def redirect(request, url, slug):
+    return HttpResponseRedirect("%s%s%s" % (url, slug, get_params(request.GET)))
 
 def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters

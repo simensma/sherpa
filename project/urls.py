@@ -7,7 +7,7 @@ handler500 = 'page.views.server_error'
 urlpatterns = patterns('',
     # Sherpa admin interface
     url(r'^sherpa/', include('admin.urls')),
-    url(r'^admin/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': '/sherpa/'}),
+    url(r'^admin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': '/sherpa/'}),
 
     # Articles
     url(r'^artikler/', include('articles.urls')),
@@ -27,8 +27,8 @@ urlpatterns = patterns('',
     url(ur'^søk/', 'page.views.search'),
 
     # Redirect known paths to the old site
-    url(r'^images/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/images/"}),
-    url(r'^album/(?P<url>.*)', 'page.views.redirect', kwargs={'prefix': "http://www.turistforeningen.no/album/"}),
+    url(r'^images/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': "http://www.turistforeningen.no/images/"}),
+    url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': "http://www.turistforeningen.no/album/"}),
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slug': ""}),
