@@ -7,7 +7,6 @@ handler500 = 'page.views.server_error'
 urlpatterns = patterns('',
     # Sherpa admin interface
     url(r'^sherpa/', include('admin.urls')),
-    url(r'^admin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': '/sherpa/'}),
 
     # Articles
     url(r'^artikler/', include('articles.urls')),
