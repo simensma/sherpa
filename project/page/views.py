@@ -57,6 +57,11 @@ def search(request):
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
         return render(request, 'page/search.html', context)
+
+    # Save IDs in these to avoid duplicating search results
+    article_hits = []
+    page_hits = []
+
     hits = []
     contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
@@ -66,12 +71,18 @@ def search(request):
     for content in contents:
         version = content.column.row.version
         if version.variant.article != None:
+            if version.variant.article.id in article_hits:
+                continue
+            article_hits.append(version.variant.article.id)
             version.load_preview()
             hits.append({
                 'title': striptags(version.title.content),
                 'url': 'http://%s%s' % (request.site, reverse('articles.views.show', args=[version.variant.article.id, slugify(striptags(version.title.content))]))
                 })
         elif version.variant.page != None:
+            if version.variant.page.id in page_hits:
+                continue
+            page_hits.append(version.variant.page.id)
             page = version.variant.page
             if page.slug == '': url = 'http://%s/' % (request.site)
             else:               url = 'http://%s/%s/' % (request.site, page.slug)
