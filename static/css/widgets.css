@@ -8,62 +8,53 @@ div.widget.promo div.wrapper {
   position: relative;
 }
 
-/* Promo - left side */
+/* Promo - Background-image and menu */
 
-div.widget.promo div.left {
-  float: left;
+div.widget.promo img.background-image {
   width: 50%;
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
 }
 
-div.widget.promo div.left img.background-image {
-  max-width: 470px;
-}
-
-/* Promo - left side - menu */
-
-div.widget.promo div.left div.menu {
+div.widget.promo div.menu {
   font-family: "DTL Nobel";
   position: absolute;
   top: 20px;
   font-size: 15px;
 }
 
-div.widget.promo div.left div.menu ul {
+div.widget.promo div.menu ul {
   margin: 0;
   list-style: none;
 }
 
-div.widget.promo div.left div.menu li:first-of-type {
+div.widget.promo div.menu li:first-of-type {
   border-top: none;
 }
 
-div.widget.promo div.left div.menu li {
+div.widget.promo div.menu li {
   padding: 5px 20px 5px 10px;
   background-color: white;
   border-top: 1px solid rgb(210, 210, 210);
 }
 
-div.widget.promo div.left div.menu li.active {
+div.widget.promo div.menu li.active {
   background-color: rgb(216, 45, 32);
   color: white;
 }
 
-div.widget.promo div.left div.menu li:not(.active):hover {
+div.widget.promo div.menu li:not(.active):hover {
   background-color: rgb(150, 150, 150);
   cursor: pointer;
 }
 
-div.widget.promo div.left div.menu li a {
+div.widget.promo div.menu li a {
   color: rgb(80, 80, 80);
 }
 
-div.widget.promo div.left div.menu li.active a {
+div.widget.promo div.menu li.active a {
   color: white;
 }
 
-div.widget.promo div.left div.menu li:not(.active):hover a {
+div.widget.promo div.menu li:not(.active):hover a {
   color: white;
   text-decoration: underline;
 }
