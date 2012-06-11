@@ -9,7 +9,7 @@ LOGIN_URL = '/bruker/logg-inn/'
 
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
-OLD_SITE = 'gammel.turistforeningen.no'
+OLD_SITE = 'www2.turistforeningen.no'
 
 # For now, require only a minimum password length of 6. This might need to be reconsidered.
 USER_PASSWORD_LENGTH = 6
