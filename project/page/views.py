@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
 from django.db.models import Q
+from django.template.defaultfilters import slugify, striptags
 
 from string import split
 
@@ -45,12 +46,32 @@ def page(request, slug):
         return parse_content(request, version)
 
 def search(request):
+    # Very simple search for now
+    if not request.POST.has_key('query'):
+        return render(request, 'page/search.html')
     q = request.POST['query']
-    hits = Content.objects.filter(
+    hits = []
+    contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
         column__row__version__active=True,
         column__row__version__variant__segment=None,
         content__icontains=q)
+    for content in contents:
+        version = content.column.row.version
+        if version.variant.article != None:
+            version.load_preview()
+            hits.append({
+                'title': striptags(version.title.content),
+                'url': 'http://%s%s' % (request.site, reverse('articles.views.show', args=[version.variant.article.id, slugify(striptags(version.title.content))]))
+                })
+        elif version.variant.page != None:
+            page = version.variant.page
+            if page.slug == '': url = 'http://%s/' % (request.site)
+            else:               url = 'http://%s/%s/' % (request.site, page.slug)
+            hits.append({
+                'title': page.title,
+                'url': url})
+
     context = {'search_query': q, 'hits': hits}
     return render(request, 'page/search.html', context)
 

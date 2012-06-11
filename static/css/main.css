@@ -198,8 +198,18 @@ div#searchbox div.county {
   width: 33%;
 }
 
-div#results h1 {
-  font-size: 120%;
+/* Search-results */
+
+div#search-results p.hits {
+  color: rgb(100, 100, 100);
+}
+
+div#search-results div.search-result {
+  margin-bottom: 20px;
+}
+
+div#search-results div.search-result h2 {
+  margin-bottom: 0;
 }
 
 /* Login page */
