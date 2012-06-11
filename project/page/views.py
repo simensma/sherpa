@@ -13,6 +13,9 @@ from page.views_widgets import *
 
 variant_key = 'var'
 
+# Require at least this number of characters when searching
+SEARCH_CHAR_LIMIT = 3
+
 def page(request, slug):
     try:
         page = Page.objects.get(slug=slug)
@@ -49,6 +52,11 @@ def search(request):
     # Very simple search for now
     if not request.POST.has_key('query'):
         return render(request, 'page/search.html')
+    if len(request.POST['query']) < SEARCH_CHAR_LIMIT:
+        context = {'search_query': request.POST['query'],
+            'query_too_short': True,
+            'search_char_limit': SEARCH_CHAR_LIMIT}
+        return render(request, 'page/search.html', context)
     hits = []
     contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
