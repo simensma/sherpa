@@ -68,7 +68,9 @@ def match_user(request, page):
     return None
 
 def redirect(request, url, slug="", permanent=False):
-    uri = "%s%s%s" % (url, slug, get_params(request.GET))
+    params = get_params(request.GET)
+    if '?' in url or '?' in slug: params = '&%s' % params[1:]
+    uri = "%s%s%s" % (url, slug, params)
     if permanent: return HttpResponsePermanentRedirect(uri)
     else:         return HttpResponseRedirect(uri)
 
