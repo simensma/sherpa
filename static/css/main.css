@@ -38,6 +38,9 @@ header div.border {
 
 header div.menu-breadcrumb {
   margin-top: 5px;
+}
+
+header div.menu-breadcrumb, header div.menu-breadcrumb a {
   color: rgb(121, 121, 121);
 }
 
