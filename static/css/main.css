@@ -233,3 +233,31 @@ div#forgot-password p.info.failure {
 div#restore-password table td.info {
   color: rgb(216, 45, 32);
 }
+
+/* Article listing */
+
+div#article-list h2 {
+  margin-bottom: 0;
+}
+
+div#article-list p.date {
+  color: rgb(120, 120, 120);
+  font-size: 14px;
+}
+
+div#article-list img {
+  float: left;
+  margin-right: 15px;
+}
+
+div#article-list div.preview-lede a {
+  color: rgb(51, 51, 51);
+}
+
+div#article-list h3 {
+  margin-top: 40px;
+}
+
+div#article-list div.item {
+  margin-bottom: 25px;
+}
