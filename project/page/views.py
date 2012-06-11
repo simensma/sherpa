@@ -68,14 +68,11 @@ def match_user(request, page):
     return None
 
 def redirect(request, url, prefix):
-    return HttpResponseRedirect("%s%s" % (prefix, url))
+    return HttpResponseRedirect("%s%s%s" % (prefix, url, get_params(request.GET)))
 
 def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters
-    get_params = ''
-    for key, val in request.GET.items():
-        get_params = '%s&%s=%s' % (get_params, key, val)
-    path = "%s?%s" % (request.path, get_params[1:])
+    path = "%s%s" % (request.path, get_params(request.GET))
     t = loader.get_template(template_name)
     c = RequestContext(request, {'path': path, 'old_site': settings.OLD_SITE})
     return HttpResponseNotFound(t.render(c))
@@ -84,3 +81,9 @@ def server_error(request, template_name='500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))
+
+def get_params(get):
+    params = ''
+    for key, val in get.items():
+        params = '%s&%s=%s' % (params, key, val)
+    return "?%s" % params[1:]
