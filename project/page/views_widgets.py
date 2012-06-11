@@ -25,7 +25,7 @@ def parse_content(request, version):
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'page': version.variant.page}
+    context = {'rows': rows, 'version': version}
     # Used temporary for static promo content
     if request.path == '/':                 context['promo'] = 'widgets/promo/static/sommerapning.html'
     elif request.path == '/fellesturer/':   context['promo'] = 'widgets/promo/static/fellesturer.html'

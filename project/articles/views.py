@@ -35,5 +35,5 @@ def show(request, article, text):
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'article': article, 'version': version}
+    context = {'rows': rows, 'version': version}
     return render(request, "page/article.html", context)

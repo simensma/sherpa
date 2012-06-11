@@ -10,11 +10,11 @@
 <div class="row">
   <div class="span12">
     <div class="byline">
-      <a href="mailto:{{ article.publisher.user.email }}">
-        <img src="{% gravatar article.publisher.user.email %}">
+      <a href="mailto:{{ version.variant.article.publisher.user.email }}">
+        <img src="{% gravatar version.variant.article.publisher.user.email %}">
       </a>
       <p>
-        Skrevet av <a href="mailto:{{ article.publisher.user.email }}">{{ article.publisher.user.get_full_name }}</a> den {{ article.pub_date|date:"j. F Y" }}
+        Skrevet av <a href="mailto:{{ version.variant.article.publisher.user.email }}">{{ version.variant.article.publisher.user.get_full_name }}</a> den {{ version.variant.article.pub_date|date:"j. F Y" }}
       </p>
     </div>
   </div>
