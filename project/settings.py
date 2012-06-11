@@ -80,7 +80,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    "context_processors.menus"
+    "context_processors.menus",
+    "context_processors.old_site"
 )
 
 MIDDLEWARE_CLASSES = (

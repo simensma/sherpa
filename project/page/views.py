@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
@@ -78,7 +77,7 @@ def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters
     path = "%s%s" % (request.path, get_params(request.GET))
     t = loader.get_template(template_name)
-    c = RequestContext(request, {'path': path, 'old_site': settings.OLD_SITE})
+    c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
 
 def server_error(request, template_name='500.html'):

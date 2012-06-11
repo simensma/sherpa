@@ -1,4 +1,5 @@
 from django.core.urlresolvers import resolve
+from django.conf import settings
 
 from page.models import Menu
 
@@ -18,3 +19,6 @@ def menus(request):
                 menu.active = True
                 break
         return {'menus': menus}
+
+def old_site(request):
+    return {'old_site': settings.OLD_SITE}
