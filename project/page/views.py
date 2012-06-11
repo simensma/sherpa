@@ -63,11 +63,22 @@ def search(request):
     page_hits = []
 
     hits = []
+    pages = Page.objects.filter(title__icontains=request.POST['query'])
     contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
         column__row__version__active=True,
         column__row__version__variant__segment=None,
         content__icontains=request.POST['query'])
+    for page in pages:
+        if page.id in page_hits:
+            continue
+        page_hits.append(page.id)
+        if page.slug == '': url = 'http://%s/' % (request.site)
+        else:               url = 'http://%s/%s/' % (request.site, page.slug)
+        hits.append({
+            'title': page.title,
+            'url': url})
+
     for content in contents:
         version = content.column.row.version
         if version.variant.article != None:
