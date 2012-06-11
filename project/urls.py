@@ -27,8 +27,7 @@ urlpatterns = patterns('',
     url(ur'^søk/', 'page.views.search'),
 
     # Redirect known paths to the old site
-    url(r'^images/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': "http://www.turistforeningen.no/images/"}),
-    url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': "http://www.turistforeningen.no/album/"}),
+    url(r'^', include('url_redirects')),
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slug': ""}),
