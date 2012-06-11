@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
@@ -14,7 +15,7 @@ def index(request):
         ).order_by('-variant__article__pub_date')[:20]
     for version in versions:
         version.load_preview()
-    context = {'versions': versions}
+    context = {'versions': versions, 'old_site': settings.OLD_SITE}
     return render(request, "page/articles-list.html", context)
 
 def show(request, article, text):
