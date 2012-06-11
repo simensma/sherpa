@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
 from django.db.models import Q
 
@@ -67,8 +67,10 @@ def match_user(request, page):
             return variant
     return None
 
-def redirect(request, url, slug=""):
-    return HttpResponseRedirect("%s%s%s" % (url, slug, get_params(request.GET)))
+def redirect(request, url, slug="", permanent=False):
+    uri = "%s%s%s" % (url, slug, get_params(request.GET))
+    if permanent: return HttpResponsePermanentRedirect(uri)
+    else:         return HttpResponseRedirect(uri)
 
 def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters
