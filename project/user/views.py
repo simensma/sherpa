@@ -22,7 +22,7 @@ def login(request):
     if(request.method == 'GET'):
         if(request.user.is_authenticated()):
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_temporary')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
     elif(request.method == 'POST'):
@@ -30,7 +30,7 @@ def login(request):
         if user is not None:
             merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_temporary')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         else:
             context = {'invalid_credentials': True, 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)
