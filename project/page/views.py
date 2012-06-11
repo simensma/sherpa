@@ -49,13 +49,12 @@ def search(request):
     # Very simple search for now
     if not request.POST.has_key('query'):
         return render(request, 'page/search.html')
-    q = request.POST['query']
     hits = []
     contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
         column__row__version__active=True,
         column__row__version__variant__segment=None,
-        content__icontains=q)
+        content__icontains=request.POST['query'])
     for content in contents:
         version = content.column.row.version
         if version.variant.article != None:
@@ -72,7 +71,7 @@ def search(request):
                 'title': page.title,
                 'url': url})
 
-    context = {'search_query': q, 'hits': hits}
+    context = {'search_query': request.POST['query'], 'hits': hits}
     return render(request, 'page/search.html', context)
 
 def save_pageview(request, variant, version, requested_segment, matched_segment):
