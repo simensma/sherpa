@@ -12,7 +12,7 @@
         <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
       </a>
     {% endif %}
-    <div class="lede">
+    <div class="preview-lede">
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
         {{ version.lede.content|removetags:"a"|safe|truncatewords:15 }}
       </a>

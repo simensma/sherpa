@@ -196,15 +196,8 @@ div.widget.articles div.article-preview h3, div.widget.blog div.blog-item h3 {
   font-weight: normal;
 }
 
-div.widget.articles div.article-preview div.lede a, div.widget.blog div.blog-item div.lede a {
+div.widget.articles div.article-preview div.preview-lede a, div.widget.blog div.blog-item div.preview-lede a {
   color: rgb(51, 51, 51);
-}
-
-/* Negate properties set by the common 'article p.lede'. This is *copied* from the standard p look */
-div.widget.blog div.blog-item div.lede, div.widget.articles div.article-preview div.lede p.lede {
-  font-family: georgia, times, serif !important;
-  font-size: 16px !important;
-  line-height: 1.5 !important;
 }
 
 div.widget.articles div.article-preview div.lede a:hover, div.widget.blog div.blog-item div.lede a:hover {
