@@ -33,7 +33,7 @@ header div.border {
   width: 100%;
   left: 0;
   margin-top: -3px;
-  border-bottom: 1px solid rgb(229, 229, 229);
+  border-top: 1px solid rgb(229, 229, 229);
 }
 
 header div.menu-breadcrumb {
