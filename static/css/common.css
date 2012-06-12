@@ -131,6 +131,9 @@ nav#menus li {
   display: inline;
   list-style: none;
   margin-right: 15px;
+  font-family: "DTL Nobel" !important;
+  font-size: 14px !important;
+  line-height: 18px;
 }
 
 nav#menus li a {

@@ -53,6 +53,12 @@ header ul.language-bar {
   float: right;
 }
 
+header ul.language-bar li {
+  font-family: "DTL Nobel" !important;
+  font-size: 14px !important;
+  line-height: 18px;
+}
+
 header ul.language-bar li.dropdown a {
   color: rgb(30, 30, 30);
 }
