@@ -26,7 +26,7 @@ def login(request):
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
     elif(request.method == 'POST'):
-        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        user = authenticate(username=request.POST['email'], password=request.POST['password'])
         if user is not None:
             merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)

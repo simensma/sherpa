@@ -218,7 +218,7 @@ def search_json(request):
                 Q(exif__icontains=word) |
                 Q(uploader__user__first_name__icontains=word) |
                 Q(uploader__user__last_name__icontains=word) |
-                Q(uploader__user__username__icontains=word) |
+                Q(uploader__user__email__icontains=word) |
                 Q(tags__name__icontains=word)
         )
     objects = parse_objects([], [], images)

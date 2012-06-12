@@ -1,19 +1,5 @@
 $(document).ready(function() {
 
-    /* Suggest username based on name */
-    $("form input[name='name']").keyup(function() {
-        var suggestedUsername = '';
-        var names = $(this).val().split(' ');
-        suggestedUsername += names[0];
-        if(names.length > 1) {
-            for(var i=1; i<names.length; i++) {
-                suggestedUsername += names[i].substring(0, 1);
-            }
-        }
-
-        $("form input[name='username']").val(suggestedUsername.toLowerCase());
-    });
-
     /* Ensure passwords are identical and long enough */
     $("form").submit(function(e) {
         if($(this).find("input[name='password']").val() != $(this).find("input[name='password-duplicate']").val()) {

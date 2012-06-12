@@ -30,9 +30,13 @@
         <label>Fullt navn</label>
         <input type="text" class="input-large" name="name">
       </div>
-      <div class="control-group name">
-        <label>Brukernavn</label>
-        <input type="text" class="input-medium" name="username">
+      <div class="control-group email">
+        <label> E-post</label>
+        <input type="text" class="input-large" name="email">
+      </div>
+      <div class="control-group phone">
+        <label> Mobiltelefon</label>
+        <input type="text" class="input-medium" name="phone">
       </div>
       <div class="control-group password">
         <label>Passord</label>
@@ -42,14 +46,6 @@
         <label>Gjenta passord</label>
         <input type="password" class="input-large" name="password-duplicate">
       </div>
-      <div class="control-group phone">
-        <label> Mobiltelefon</label>
-        <input type="text" class="input-medium" name="phone">
-      </div>
-      <div class="control-group email">
-        <label> E-post</label>
-        <input type="text" class="input-large" name="email">
-      </div>
       <button type="submit" class="btn btn-large"><i class="icon-user"></i> Lagre bruker</button>
     </form>
   </div>
@@ -57,13 +53,14 @@
     {% if value_error %}
       <div class="alert alert-danger">
         <a class="close">x</a>
-        <strong>Vennligst fyll inn minst navn, brukernavn og et passord på minst {{ password_length }} tegn.</strong>
+        <strong>Vennligst fyll inn minst navn, e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
       </div>
     {% endif %}
     {% if integrity_error %}
       <div class="alert alert-danger">
         <a class="close">x</a>
-        <strong>Brukernavnet er allerede i bruk! Vennligst velg et annet brukernavn.</strong>
+        <strong>E-postadressen er allerede i bruk!</strong><br>
+        Er du sikker på at du ikke allerede har en registrert bruker? Hvis du har glemt passordet ditt, kan du opprette et nytt ved å trykke "Glemt passord"-linken på <a href="{% url user.views.login %}">login-siden</a>.</strong>
       </div>
     {% endif %}
   </div>

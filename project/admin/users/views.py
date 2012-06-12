@@ -29,7 +29,8 @@ def new(request):
             split = request.POST['name'].split(' ')
             first_name = split[0]
             last_name = ' '.join(split[1:])
-            user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+            # Need unique username, and need email for 'user.email_user()', so duplicate it.
+            user = User.objects.create_user(request.POST['email'], request.POST['email'], request.POST['password'])
             user.first_name = first_name
             user.last_name = last_name
             user.save()

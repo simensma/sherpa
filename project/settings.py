@@ -93,8 +93,3 @@ MIDDLEWARE_CLASSES = (
     'middleware.Analytics',
     'middleware.Sites',
 )
-
-AUTHENTICATION_BACKENDS = (
-    'auth_backends.EmailBackend',
-    'django.contrib.auth.backends.ModelBackend'
-)

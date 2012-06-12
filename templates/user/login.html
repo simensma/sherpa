@@ -18,10 +18,9 @@
         <table class="table">
           <tr>
             <td>
-              Brukernavn<br>
-              eller e-post:
+              E-postadresse:
             </td>
-            <td><input type="text" name="username" class="input-large"></td>
+            <td><input type="text" name="email" class="input-large"></td>
           </tr>
           <tr>
             <td>Passord:</td>
@@ -35,7 +34,7 @@
       </form>
 
       <div id="forgot-password">
-        <h3>Har du glemt ditt brukernavn eller passord?</h3>
+        <h3>Har du glemt ditt passord?</h3>
         <input type="text" name="email" placeholder="Fyll ut din e-post adresse...">
         <button class="btn restore-password">Gjenopprett passord</button>
         <p class="info"></p>
@@ -45,13 +44,13 @@
       {% if invalid_credentials %}
         <div class="alert alert-danger">
           <a class="close">x</a>
-          <strong>Feil brukernavn eller passord</strong><br>
-          Vennligst prøv igjen. Du kan bruke e-post i stedet for brukernavn hvis du vil.
+          <strong>Feil e-postadresse eller passord</strong><br>
+          Vennligst prøv igjen.
         </div>
       {% endif %}
       <h2>Velkommen til nye Sherpa!</h2>
       <p>
-        Her kan du logge på nye Sherpa. Hvis du ikke har fått bruker må du foreløpig kontakte Ali eller Hans; du kan ikke bruke ditt gamle Sherpa-brukernavn og passord her.
+        Her kan du logge på nye Sherpa. Hvis du ikke har fått bruker må du foreløpig kontakte Ali eller Hans; du kan ikke bruke din gamle Sherpa-bruker her.
       </p>
       <p>
         Vi håper du blir fornøyd! Husk at veldig mye gjenstår før vi er ferdige, men ikke nøl med å ta kontakt dersom du har tilbakemeldinger.
