@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
+from django.views.decorators.cache import cache_page
 
 from group.models import Group
 from user.models import FocusZipcode, FocusPrice
@@ -16,6 +17,7 @@ def index(request):
         'unregistered_zipcode': request.GET.get(unregistered_zipcode, ''),}
     return render(request, 'membership/index.html', context)
 
+@cache_page(60 * 60)
 def benefits(request, group):
     if group != None:
         group = Group.objects.get(id=group)
