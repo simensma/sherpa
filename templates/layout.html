@@ -59,7 +59,7 @@
           <a href="{% url admin.views.index %}">Sherpa</a>
           <a href="{% url user.views.logout %}">Logg ut</a>
         {% else %}
-          <a href="{% url user.views.home %}">Min side</a>
+          <a href="https://{{ old_site }}/minside/">Min side</a>
         {% endif %}
       </div>
     </div>
