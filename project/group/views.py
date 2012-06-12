@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django.core.cache import cache
 
 from group.models import Group
 from user.models import *
@@ -27,6 +28,12 @@ def index(request):
     return render(request, 'groups/list.html', context)
 
 def filter(request):
+    # Return cached filter if exists
+    cache_timeout = 60 * 60 * 5
+    cached_filter = cache.get('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
+    if cached_filter != None:
+        return HttpResponse(json.dumps(cached_filter))
+
     exists = False
     for category in categories:
         if request.POST['category'].title() == category['db']:
@@ -64,4 +71,5 @@ def filter(request):
         t = loader.get_template('groups/group-result.html')
         r = RequestContext(request, {'group': g})
         result.append(t.render(r))
+    cache.set('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, cache_timeout)
     return HttpResponse(json.dumps(result))
