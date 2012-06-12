@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Htt
 from django.template import RequestContext, loader
 from django.db.models import Q
 from django.template.defaultfilters import slugify, striptags
+from django.views.decorators.csrf import csrf_exempt
 
 from string import split
 
@@ -48,12 +49,13 @@ def page(request, slug):
         save_pageview(request, requested_variant, version, requested_variant.segment, matched_segment)
         return parse_content(request, version)
 
+@csrf_exempt
 def search(request):
     # Very simple search for now
-    if not request.POST.has_key('query'):
+    if not request.GET.has_key('q'):
         return render(request, 'page/search.html')
-    if len(request.POST['query']) < SEARCH_CHAR_LIMIT:
-        context = {'search_query': request.POST['query'],
+    if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
+        context = {'search_query': request.GET['q'],
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
         return render(request, 'page/search.html', context)
@@ -63,12 +65,12 @@ def search(request):
     page_hits = []
 
     hits = []
-    pages = Page.objects.filter(title__icontains=request.POST['query'])
+    pages = Page.objects.filter(title__icontains=request.GET['q'])
     contents = Content.objects.filter(
         Q(type='html') | Q(type='title') | Q(type='lede'),
         column__row__version__active=True,
         column__row__version__variant__segment=None,
-        content__icontains=request.POST['query'])
+        content__icontains=request.GET['q'])
     for page in pages:
         if page.id in page_hits:
             continue
@@ -101,7 +103,7 @@ def search(request):
                 'title': page.title,
                 'url': url})
 
-    context = {'search_query': request.POST['query'], 'hits': hits}
+    context = {'search_query': request.GET['q'], 'hits': hits}
     return render(request, 'page/search.html', context)
 
 def save_pageview(request, variant, version, requested_segment, matched_segment):
