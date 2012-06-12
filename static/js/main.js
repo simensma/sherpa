@@ -6,6 +6,12 @@ $(document).ready(function() {
         $(this).hide();
         $("div#forgot-password").show();
     });
+    $("div#forgot-password input[name='email']").keyup(function(e) {
+        if(e.which == 13) {
+            // Enter
+            $("div#forgot-password button.restore-password").click();
+        }
+    });
     $("div#forgot-password button.restore-password").click(function() {
         $("div#forgot-password p.info").removeClass('success').removeClass('failure').text("");
         $(this).attr('disabled', true);
