@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from group.models import Group
 from user.models import FocusZipcode, FocusPrice
@@ -30,11 +31,17 @@ def benefits(request, group):
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
+    cached_url = cache.get('membership.zipcode_search.%s' % (request.POST['zipcode']))
+    if cached_url != None:
+        return HttpResponseRedirect(cached_url)
+
     try:
         zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
         # Note: Redirecting requires performing the group lookup twice
         group = Group.objects.get(focus_id=zipcode.main_group_id)
-        return HttpResponseRedirect("%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name)))
+        url = "%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name))
+        cache.set('membership.zipcode_search.%s' % (request.POST['zipcode']), url, 60 * 60 * 24)
+        return HttpResponseRedirect(url)
     except FocusZipcode.DoesNotExist:
         return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), invalid_zipcode, request.POST['zipcode']))
     except Group.DoesNotExist:
