@@ -47,7 +47,7 @@
           <form method="post" action="{% url membership.views.zipcode_search %}">
             {% csrf_token %}
             <p class="search">
-              <input type="text" name="zipcode" class="input-medium" placeholder="Postnummer...">
+              <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
               <button class="btn btn-danger">OK</button><br>
               <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
             </p>

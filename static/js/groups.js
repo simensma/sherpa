@@ -1,9 +1,20 @@
 $(document).ready(function() {
 
     $("div.loading").hide();
+    $("div.count").hide();
     $("div.no-results").hide();
 
+    // Mark the initially checked labels
+    function setActive() {
+        $("label.active").removeClass('active');
+        $("input[type='radio']:checked").each(function() {
+            $(this).parent('label').addClass('active');
+        });
+    }
+
+    setActive();
     performSearch();
+    $("input[type='radio']").change(setActive);
     $("input[type='radio']").change(performSearch);
     function performSearch() {
         var category = $("input[type='radio'][name='category']:checked").val();
@@ -16,6 +27,7 @@ $(document).ready(function() {
             $("div.all").hide();
         }
         $("div.loading").show();
+        $("div.count").hide();
         $("div.no-results").hide();
         $.ajax({
             url: '/foreninger/filtrer/',
@@ -33,6 +45,8 @@ $(document).ready(function() {
             }
             $("table#results div.map").hide();
             $("table#results a.close-map").hide();
+            $("div.count").show();
+            $("div.count span.count").text(result.length);
         }).always(function() {
             $("div.loading").hide();
         });

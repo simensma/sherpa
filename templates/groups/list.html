@@ -20,19 +20,30 @@
     <table>
       <tr>
         <th><h2>Velg type</h2></th>
-        <th><h2>Fylke</h2></th>
+        <th><h2>Velg fylke</h2></th>
       </tr>
       <tr>
         <td class="categories">
           {% for category in categories %}
-            <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}{% if category.db == 'Hovedforening' and chosen_category == '' %} checked{% endif %}>
-            {{ category.name }}<br>
+            <label class="radio">
+              <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}{% if category.db == 'Foreninger' and chosen_category == '' %} checked{% endif %}>
+              {{ category.name }}
+            </label>
           {% endfor %}
         </td>
         <td class="counties">
-          <div class="county"><input type="radio" name="county" value="all"{% if chosen_county == '' %} checked{% endif %}> Alle</div>
+          <div class="county">
+            <label class="radio">
+              <input type="radio" name="county" value="all"{% if chosen_county == '' %} checked{% endif %}>
+              Hele landet
+            </label>
+          </div>
           {% for county in counties %}
-            <div class="county"><input type="radio" name="county" value="{{ county.sherpa_id }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}</div>
+            <div class="county">
+              <label class="radio">
+                <input type="radio" name="county" value="{{ county.sherpa_id }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}
+              </label>
+            </div>
           {% endfor %}
         </td>
       </tr>
@@ -43,6 +54,10 @@
 <div class="loading">
   <h2>Laster, vennligst vent...</h2>
   <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+</div>
+
+<div class="count">
+  Viser <span class="count"></span> foreninger/grupper
 </div>
 
 <div class="all">
@@ -56,13 +71,15 @@
 <table id="results" class="table">
 </table>
 
-<h2>Savner du et turtilbud der bor?</h2>
-<p>
-  Gjør noe med det og start opp ei turgruppe i regi av DNT! Ta kontakt med din nærmeste medlemsforening og foreslå muligheten for ei lokal turgruppe der du bor.
-</p>
+<div class="well">
+  <h2>Savner du et turtilbud der bor?</h2>
+  <p>
+    Gjør noe med det og start opp ei turgruppe i regi av DNT! Ta kontakt med din nærmeste medlemsforening og foreslå muligheten for ei lokal turgruppe der du bor.
+  </p>
 
-<p>
-  Du kan også kontakte DNTs administrasjon på telefon 4000 1868 eller <a href="mailto:info@turistforeningen.no">info@turistforeningen.no</a> for tips om hvordan du bør gå frem.
-</p>
+  <p>
+    Du kan også kontakte DNTs administrasjon på telefon 4000 1868 eller <a href="mailto:info@turistforeningen.no">info@turistforeningen.no</a> for tips om hvordan du bør gå frem.
+  </p>
+</div>
 
 {% endblock %}

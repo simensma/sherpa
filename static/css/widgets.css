@@ -111,7 +111,7 @@ div.widget.promo div.wrapper.sommer {
 }
 
 div.widget.promo div.wrapper.fellesturer {
-  background-color: rgb(60, 90, 168);
+  background-color: rgb(19, 42, 86);
 }
 
 div.widget.promo div.wrapper.hytter {
@@ -119,15 +119,19 @@ div.widget.promo div.wrapper.hytter {
 }
 
 div.widget.promo div.wrapper.barn {
-  background-color: rgb(107, 58, 55);
+  background-color: rgb(206, 86, 0);
 }
 
 div.widget.promo div.wrapper.ung {
-  background-color: rgb(122, 130, 65);
+  background-color: rgb(36, 49, 83);
 }
 
 div.widget.promo div.wrapper.fjellsport {
-  background-color: rgb(76, 77, 79);
+  background-color: rgb(172, 195, 213);
+}
+
+div.widget.promo div.wrapper.fjellsport div.right {
+  color: black;
 }
 
 div.widget.promo div.wrapper.senior {
@@ -139,7 +143,7 @@ div.widget.promo div.wrapper.senior div.right {
 }
 
 div.widget.promo div.wrapper.skole {
-  background-color: rgb(183, 219, 193);
+  background-color: rgb(178, 210, 238);
 }
 
 div.widget.promo div.wrapper.skole div.right {
@@ -147,15 +151,11 @@ div.widget.promo div.wrapper.skole div.right {
 }
 
 div.widget.promo div.wrapper.kurs {
-  background-color: rgb(233, 213, 84);
-}
-
-div.widget.promo div.wrapper.kurs div.right {
-  color: black;
+  background-color: rgb(204, 54, 2);
 }
 
 div.widget.promo div.wrapper.tur-for-alle {
-  background-color: rgb(122, 130, 65);
+  background-color: rgb(38, 53, 26);
 }
 
 /* Quote */

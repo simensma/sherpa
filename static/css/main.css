@@ -184,7 +184,8 @@ div#searchbox table {
 }
 
 div#searchbox td.categories {
-  width: 200px;
+  width: 250px;
+  vertical-align: top;
 }
 
 div#searchbox td.categories p {

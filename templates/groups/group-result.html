@@ -2,8 +2,7 @@
   <td>
     {% if group.url %}<a href="{{ group.url }}">{% endif %}
       <div class="logo">
-        <span class="text">{{ group.name }}</span>
-        <img src="{{ STATIC_URL }}img/header-logo-part.png">
+        {{ group.name }}
       </div>
     {% if group.url %}</a>{% endif %}
     <h2>{{ group.name }}</h2>
@@ -29,6 +28,11 @@
           <a href="javascript:undefined" class="open-map" data-id="{{ group.id }}">Se kart <i class="icon-arrow-down"></i></a>
           <a href="javascript:undefined" class="close-map" data-id="{{ group.id }}">Skjul kart <i class="icon-arrow-up"></i></a>
         {% endif %}
+      </p>
+    {% endif %}
+    {% if parents|length > 0 %}
+      <p>
+        Tilknyttet <a href="{{ parents.0.url }}">{{ parents.0.name }}</a>
       </p>
     {% endif %}
     {% if group.map %}

@@ -1,7 +1,7 @@
 /* Zipcode-search */
 
 div#membership-box {
-  background-image: url('/static/img/membership/zipcode_search.jpg');
+  background-image: url('/static/img/membership/zipcode_search.png');
   width: 940px;
   height: 474px;
   margin-bottom: 40px;
@@ -37,6 +37,7 @@ div#membership-box div.wrapper div#search-box input {
 }
 
 div#membership-box div.wrapper div#search-box button {
+  height: 40px;
   margin-bottom: 10px;
 }
 
@@ -92,7 +93,7 @@ div.membership {
 }
 
 div.membership a.membership {
-  font-size: 30px;
+  font-size: 30px !important;
   padding-top: 20px;
   width: 80%;
   height: 40px;

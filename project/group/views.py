@@ -11,12 +11,11 @@ import json
 
 # Define categories and their order here. This is duplicated in the Sherpa DB.
 categories = [
-    {'name': 'Medlemsforeninger', 'db': 'Hovedforening'},
-    {'name': 'Lokale turlag', 'db': 'Underforening'},
-    {'name': 'Barnas turlag', 'db': 'Barn'},
-    {'name': 'Ungdomsgrupper', 'db': 'Ungdom'},
-    {'name': 'Fjellsportgrupper', 'db': 'Fjellsport'},
-    {'name': 'Seniorgrupper', 'db': 'Senior'},
+    {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
+    {'name': 'Barnas Turlag', 'db': 'Barn'},
+    {'name': 'DNT Ung', 'db': 'Ungdom'},
+    {'name': 'DNT Fjellsport', 'db': 'Fjellsport'},
+    {'name': 'DNT Senior', 'db': 'Senior'},
     {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
@@ -40,7 +39,11 @@ def filter(request):
     if not exists:
         # Invalid category provided
         return HttpResponse('{}')
-    groups = Group.objects.filter(type="|%s" % request.POST['category'].title())
+    if request.POST['category'].title() == 'Foreninger':
+        # Special case, include both of the following:
+        groups = Group.objects.filter(Q(type="|Hovedforening") | Q(type="|Underforening"))
+    else:
+        groups = Group.objects.filter(type="|%s" % request.POST['category'].title())
     if request.POST['county'] != 'all':
         # Sherpa stores groups with multiple counties as text with '|' as separator :(
         # So we'll have to pick all of them and programatically check the county
@@ -49,25 +52,34 @@ def filter(request):
             if request.POST['county'] in group.county.split('|'):
                 filter_ids.append(group.id)
         groups = groups.filter(id__in=filter_ids)
+
+    groups = groups.order_by('name')
     result = []
-    for g in groups:
+
+    for group in groups:
+        # Assign parents
+        parents = []
+        try:
+            parent = Group.objects.get(id=group.parent)
+            while parent != None:
+                parents.append(parent)
+                parent = Group.objects.get(id=parent.parent)
+        except Group.DoesNotExist:
+            pass
+
         # If the group has no address, use the parents address
-        if g.post_address == '':
-            next_parent = g.parent
-            while g.post_address == '':
-                try:
-                    parent = Group.objects.get(id=next_parent)
-                    g.post_address = parent.post_address
-                    g.visit_address = parent.visit_address
-                    g.zip = parent.zip
-                    g.ziparea = parent.ziparea
-                    next_parent = parent.parent
-                except Group.DoesNotExist:
+        if group.post_address == '':
+            for parent in parents:
+                if parent.post_address != '':
+                    group.post_address = parent.post_address
+                    group.visit_address = parent.visit_address
+                    group.zip = parent.zip
+                    group.ziparea = parent.ziparea
                     break
 
         # Render the group result
         t = loader.get_template('groups/group-result.html')
-        r = RequestContext(request, {'group': g})
+        r = RequestContext(request, {'group': group, 'parents': parents})
         result.append(t.render(r))
     cache.set('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)
     return HttpResponse(json.dumps(result))
