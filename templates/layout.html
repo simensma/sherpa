@@ -70,7 +70,26 @@
   <div class="row">
     <div class="span10">
       <div class="menu-breadcrumb">
-        Forsiden / <em>Brødsmulesti</em>
+        <a href="/">Forsiden</a>
+          {# Too much template logic, but can't see a better way to do this. #}
+          {% if page_hierarchy %}
+            {% for page in page_hierarchy %}
+              /
+              {% if forloop.last %}<em>{% endif %}
+                <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
+              {% if forloop.last %}</em>{% endif %}
+            {% endfor %}
+          {% elif version.variant.page %}
+            {% if version.variant.page.slug != '' %}
+              / <em><a href="">{{ version.variant.page.title }}</a></em>
+            {% endif %}
+          {% elif version.variant.article %}
+            / <a href="{% url articles.views.index %}">Artikler</a>
+            / <em><a href="">{{ version.title.content|striptags }}</a></em>
+          {% else %}
+            {# Fall back to the static title #}
+            / <em><a href="">{% block breadcrumb_title %}Turistforeningen{% endblock %}</a></em>
+          {% endif %}
       </div>
     </div>
 
