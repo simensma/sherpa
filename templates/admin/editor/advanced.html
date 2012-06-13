@@ -18,8 +18,8 @@
   {% for column in row.columns %}
     <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
       {% for content in column.contents %}
-        {% if content.type == 'html' %}
-          <div class="content html editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
+        {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
+          <div class="content {{ content.type }} editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
           <div class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
@@ -32,10 +32,6 @@
               </span>
             </div>
           </div>
-        {% elif content.type == 'title' %}
-          <div class="content title editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
-        {% elif content.type == 'lede' %}
-          <div class="content lede editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'widget' %}
           <div class="content widget {{ content.content.widget }}{% if content.content.static %} static{% endif %}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
             {% include content.content.template with widget=content.content %}
