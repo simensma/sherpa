@@ -52,6 +52,10 @@
               <td><span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span></td>
               <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
             </tr>
+            <tr>
+              <td></td>
+              <td><button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button></td>
+            </tr>
           </table>
         </div>
         <a class="btn btn-danger delete-article" href="{% url admin.articles.views.delete version.variant.article.id %}">

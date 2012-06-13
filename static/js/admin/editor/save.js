@@ -91,9 +91,20 @@ $(document).ready(function() {
         return contents;
     }
 
-    $("div.editor-header div.save button.save").click(function() {
-        clearInterval(updateSaveCountID);
+    $("div.editor-header div.save button.save").click(save);
+    $("div.editor-header div.save button.preview").click(function() {
+        $(this).html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
         $(this).attr('disabled', true);
+        var url = $(this).attr('data-href');
+        save(function() {
+            window.location = url;
+        });
+    });
+
+    window.save = save;
+    function save(callback) {
+        clearInterval(updateSaveCountID);
+        $("div.editor-header div.save button.save").attr('disabled', true);
         $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
         $("div.no-save-warning").hide();
         $.ajaxQueue({
@@ -103,6 +114,9 @@ $(document).ready(function() {
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
         }).done(function(result) {
             lastSaveCount = 0;
+            if(typeof(callback) == 'function') {
+                callback();
+            }
         }).fail(function(result) {
             // Todo
             $(document.body).html(result.responseText);
@@ -110,6 +124,6 @@ $(document).ready(function() {
             updateSaveCount();
             $("div.editor-header div.save button.save").removeAttr('disabled');
         });
-    });
+    }
 
 });
