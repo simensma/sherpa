@@ -64,7 +64,8 @@ def registration(request, user):
     errors = False
     if(request.method == 'POST'):
         new_user = {}
-        new_user['name'] = polite_title(request.POST['name'])
+        # Titleize and strip whitespace before/after dash
+        new_user['name'] = re.sub('\s*-\s*', '-', polite_title(request.POST['name']))
         new_user['phone'] = request.POST['phone']
         new_user['email'] = request.POST['email'].lower()
         new_user['gender'] = request.POST.get('gender', '')
