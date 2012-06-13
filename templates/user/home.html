@@ -8,11 +8,11 @@
 <p>Velkommen {{ user.first_name }}!</p>
 
 <p>
-  Her kommer nye "Min side" en gang i fremtiden, men foreløpig er det ingenting å gjøre her.
+  Siden du har konto i <strong>nye</strong> Sherpa, er du nå kommet til den nye Min side. Disse sidene er ikke klare ennå, men når de blir det, vil de være felles for både medlemmer og Sherpa-brukere.
 </p>
 
 <p>
-  <a href="{% url admin.views.index %}">Gå til Sherpa</a>
+  Du kan gå til <a href="https://{{ old_site }}/minside/">de gamle sidene</a>, endre <a href="">brukeropplysningene dine</a>, eller gå til <a href="{% url admin.views.index %}">Sherpa</a>.
 </p>
 
 {% endblock %}
