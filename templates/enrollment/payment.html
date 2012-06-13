@@ -28,15 +28,14 @@
     <form id="payment" action="{% url enrollment.views.payment %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="main-member" value="">
+      <h2> Velg betalingsmåte:</h2>
       <div class="control-group payment-method">
-        <label> Velg betalingsmåte:</label>
         <input type="radio" name="payment-method" value="card" checked> VISA / MASTERCARD<br>
         <input type="radio" name="payment-method" value="invoice"> Få tilsendt faktura
       </div>
 
-      <div class="alert alert-info">
-        <strong><i class="icon-info-sign"></i> Med faktura blir du ikke medlem før du har betalt</strong><br>
-        Om du ønsker å motta medlemsnummer med en gang, må du betale online med bankkort. Hvis ikke blir du ikke registrert medlem før fakturaen blir betalt.
+      <div class="alert alert-info invoice-info">
+        <strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet gyldig før betalingen er registrert i vårt system.
       </div>
 
       <p>
