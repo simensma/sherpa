@@ -104,6 +104,7 @@ table.memberlist span.remove {
 div.members label {
     font-family: "DTL Nobel" !important;
     font-size: 16px;
+    margin-bottom: 20px;
 }
 
 table.main-member tr.main {
