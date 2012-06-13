@@ -11,9 +11,10 @@ urlpatterns = patterns('',
     url(r'^minside/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/minside/' % settings.OLD_SITE}),
     url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
 
-    # Old images
+    # Old static content
     url(r'^images/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/images/' % settings.OLD_SITE}),
     url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/album/' % settings.OLD_SITE}),
+    url(r'^files/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
 
     # All sites go to old pages with subdomain
     url(ur'^alesund/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://alesund.turistforeningen.no/', 'permanent': True}),
