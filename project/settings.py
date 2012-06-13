@@ -5,7 +5,7 @@ from local_settings import *
 
 ROOT_URLCONF = 'urls'
 AUTH_PROFILE_MODULE='user.Profile'
-LOGIN_URL = '/bruker/logg-inn/'
+LOGIN_URL = '/minside/logg-inn/'
 
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'

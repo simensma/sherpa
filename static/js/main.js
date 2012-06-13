@@ -19,7 +19,7 @@ $(document).ready(function() {
         $(this).text("Sender e-post...");
         var button = $(this);
         $.ajax({
-            url: '/bruker/gjenopprett-passord/e-post/',
+            url: '/minside/gjenopprett-passord/e-post/',
             data: 'email=' + encodeURIComponent($("div#forgot-password input[name='email']").val())
         }).done(function(result) {
             result = JSON.parse(result);

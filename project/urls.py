@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^artikler/', include('articles.urls')),
 
     # User authentication
-    url(r'^', include('user.urls')),
+    url(r'^minside/', include('user.urls')),
     url(r'^foreninger/', include('group.urls')),
 
     # Enrollment
