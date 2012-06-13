@@ -102,13 +102,14 @@
       </div>
       <div class="control-group gender">
         <label> Kjønn <span class="asterisk red">*</span></label>
-        <label class="radio">
+        <label class="radio gender">
           <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
         </label>
-        <label class="radio">
+        <label class="radio gender">
           <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
         </label>
       </div>
+      <div style="clear: both;"></div>
       <div class="control-group phone">
         <label> Mobiltelefon {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
         <input type="text" class="input-medium" name="phone" value="{{ user.phone }}">

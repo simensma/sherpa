@@ -15,6 +15,12 @@ form#registration .control-group:not(.error,.warning) label, form#household .con
     color: black;
 }
 
+form#registration label.gender {
+    width: 60px;
+    float: left;
+    margin-bottom: 15px;
+}
+
 /* Negate defaults and JQuery-UI design */
 
 div.dialog.conditions h1 {
