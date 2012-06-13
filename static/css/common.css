@@ -36,7 +36,7 @@ input, button, select, textarea, a.btn {
   font-size: 16px !important;
 }
 
-h1, h2, h3, h4, h5, h6, input, button, select, textarea, a.btn {
+h1, h2, h3, h4, h5, h6, input, button, textarea, a.btn {
   font-family: "DTL Nobel";
   line-height: normal;
 }
