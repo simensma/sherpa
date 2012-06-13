@@ -87,7 +87,8 @@ table.memberlist {
 
 table.memberlist td {
     background-color: white;
-    font-size: 120%;
+    font-family: "DTL Nobel";
+    font-size: 20px;
     padding: 10px;
 }
 
@@ -98,6 +99,11 @@ table.memberlist td:hover {
 
 table.memberlist span.remove {
     float: right;
+}
+
+div.members label {
+    font-family: "DTL Nobel" !important;
+    font-size: 16px;
 }
 
 table.main-member tr.main {

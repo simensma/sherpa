@@ -58,7 +58,7 @@
     {% include 'enrollment/progress.html' with step=1 %}
 
     {% if users %}
-      <div class="well">
+      <div class="well members">
         <h2>Du har registrert:</h2>
         <table class="table table-bordered memberlist">
         {% for user in users %}
@@ -83,7 +83,8 @@
         </label>
         <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right"></i></a></p>
       </div>
-      <h2>Legg til flere medlemmer på samme adresse:</h2>
+      <h2>Meld inn flere i familien/husstanden:</h2>
+      <p>Du kan kun melde inn flere samtidig hvis alle bor på samme adresse.</p>
       <br>
     {% endif %}
 
