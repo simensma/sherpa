@@ -32,7 +32,7 @@ body, p, label, li {
   line-height: 1.5;
 }
 
-input, button, select, textarea, a.btn {
+input, button, textarea, a.btn {
   font-size: 16px !important;
 }
 

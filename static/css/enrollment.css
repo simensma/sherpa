@@ -68,6 +68,9 @@ div.existing-result p span.result.error {
 
 form#registration input[type='text'], form#household input[type='text'], form#household select {
     color: black;
+}
+
+form#registration input[type='text'], form#household input[type='text'] {
     font-size: 120%;
     padding: 8px;
 }
