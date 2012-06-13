@@ -3,6 +3,7 @@ from django.conf import settings
 
 urlpatterns = patterns('user.views',
     url(r'^midlertidig/$', 'home'),
+    url(r'^konto/$', 'account'),
     url(r'^logg-inn/$', 'login'),
     url(r'^logg-ut/$', 'logout'),
     url(r'^gjenopprett-passord/e-post/$', 'send_restore_password_email'),

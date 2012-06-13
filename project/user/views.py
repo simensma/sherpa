@@ -7,17 +7,53 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template import Context, loader
 from django.utils import crypto
+from django.db.utils import IntegrityError
 
 from datetime import datetime, timedelta
 import json
 import md5
+import re
 
 from analytics.models import Visitor, Request
 from user.models import Profile
 
+update_success = 'oppdatert'
+
 @login_required
 def home(request):
     return render(request, 'user/home.html')
+
+@login_required
+def account(request):
+    context = {'password_length': settings.USER_PASSWORD_LENGTH,
+        'update_success': request.GET.has_key(update_success)}
+    if request.method == 'POST':
+        try:
+            if len(request.POST['name']) == 0:
+                raise ValueError("No name provided")
+            if len(re.findall('.+@.+\..+', request.POST['email'])) == 0:
+                raise ValueError("Invalid email address")
+            if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+                raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
+            split = request.POST['name'].split(' ')
+            first_name = split[0]
+            last_name = ' '.join(split[1:])
+            request.user.username = username(request.POST['email'])
+            request.user.email = request.POST['email']
+            if len(request.POST['password']) > 0:
+                request.user.set_password(request.POST['password'])
+            request.user.first_name = first_name
+            request.user.last_name = last_name
+            request.user.save()
+            profile = request.user.get_profile()
+            profile.phone = request.POST['phone']
+            profile.save()
+            return HttpResponseRedirect("%s?%s" % (reverse('user.views.account'), update_success))
+        except ValueError:
+            context['value_error'] = True
+        except IntegrityError as e:
+            context['integrity_error'] = True
+    return render(request, 'user/account.html', context)
 
 def login(request):
     if(request.method == 'GET'):
