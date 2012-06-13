@@ -59,7 +59,6 @@ def parse_widget(widget):
         entries = []
         for item in root.find('channel').findall('item')[:int(widget['count'])]:
             content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
-            content_truncated = re.sub('<.*?>', '', content)
             image = None
             m = re.search('<img.*?src="(.*?)" ', content)
             if m != None:
@@ -67,7 +66,7 @@ def parse_widget(widget):
             entries.append({
                 'title': item.find('title').text,
                 'link': item.find('link').text,
-                'content': content_truncated,
+                'content': content,
                 'image': image})
         data = {'entries': entries}
     elif(widget['widget'] == "embed"):
