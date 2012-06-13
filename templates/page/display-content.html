@@ -12,7 +12,7 @@
       <div class="offset{{ column.offset }} span{{ column.span }}">
         {% for content in column.contents %}
           {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
-            <div class="content">
+            <div class="content {{ content.type }}">
               {{ content.content|safe }}
             </div>
           {% elif content.type == 'image' %}
