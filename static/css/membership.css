@@ -99,7 +99,8 @@ div.membership {
 
 div.membership a.membership {
   font-size: 30px !important;
-  padding-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   width: 80%;
   height: 40px;
 }
