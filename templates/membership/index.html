@@ -11,25 +11,13 @@
 
 {% block body %}
 
-{% if invalid_zipcode %}
+{% if invalid_zipcode or unregistered_zipcode %}
   <div class="row">
     <div class="offset2 span8">
       <div class="alert alert-danger">
         <a class="close">x</a>
-        <strong>Ugyldig postnummer</strong><br>
-        Ifølge postens postnummerregister, er ikke postnummeret <strong>{{ invalid_zipcode }}</strong> i bruk i Norge. Hvis du mener dette er feil, vennligst ta kontakt med medlemsservice.
-      </div>
-    </div>
-  </div>
-{% endif %}
-
-{% if unregistered_zipcode %}
-  <div class="row">
-    <div class="offset2 span8">
-      <div class="alert alert-danger">
-        <a class="close">x</a>
-        <strong>Ingen lokalforening funnet!</strong><br>
-        Som følge av en teknisk svikt har vi ikke fått registrert den lokale medlemsforeningen som tilhører postnummer <strong>{{ unregistered_zipcode }}</strong>. Vennligst ta kontakt med medlemsservice og informer oss om dette, så skal vi fikse det så snart som mulig.
+        <strong>Dette vet vi ikke hvor er.</strong><br>
+        Vi kjenner dessverre ikke igjen postnummer <strong>{{ invalid_zipcode }}{{ unregistered_zipcode }}</strong>. Sjekk at du har skrevet riktig eller ta kontakt med DNTs medlemsservice.
       </div>
     </div>
   </div>
