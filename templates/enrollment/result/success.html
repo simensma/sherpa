@@ -16,12 +16,12 @@
 
     {% if users|length == 1 %}
       <p>
-        Du er nå medlem i <a href="{{ group.url }}">{{ group.name }}</a>.<br>
+        Du er nå medlem i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.<br>
         Ditt medlemsnummer er: {{ users.0.id }}
       </p>
     {% else %}
       <p>
-        Dere er nå medlemmer i <a href="{{ group.url }}">{{ group.name }}</a>.<br>
+        Dere er nå medlemmer i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.<br>
         Deres medlemsnumre:
       </p>
       <table class="table">
