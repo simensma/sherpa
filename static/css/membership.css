@@ -80,18 +80,6 @@ div.benefits-large.cabins {
   background-image: url('/static/img/membership/benefits-cabins.jpg');
 }
 
-div.benefits-category {
-  position: relative;
-}
-
-div.benefits-category div.title {
-  font-family: "DTL Nobel" !important;
-  background-color: white;
-  position: absolute;
-  top: 0;
-  padding: 2px 6px;
-}
-
 div.membership {
   text-align: center;
   margin-top: 100px;
@@ -103,6 +91,13 @@ div.membership a.membership {
   padding-bottom: 10px;
   width: 80%;
   height: 40px;
+}
+
+div#benefits h2 {
+  font-family: "DTL Nobel" !important;
+  font-size: 20px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  padding-bottom: 5px;
 }
 
 div#benefits div.row {
@@ -182,6 +177,10 @@ table.prices td[data-popover] {
 
 table.prices td[data-popover]:hover {
   background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+}
+
+div.group-data {
+  margin-top: 60px;
 }
 
 iframe.map {
