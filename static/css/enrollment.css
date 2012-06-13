@@ -204,3 +204,9 @@ p.receipt-success {
 p.receipt-error {
     color: red;
 }
+
+/* Verification */
+
+p.group-info {
+    margin-bottom: 30px;
+}
