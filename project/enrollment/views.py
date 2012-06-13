@@ -497,7 +497,8 @@ def prepare_and_send_email(users, group, location, payment_method):
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     t = loader.get_template('enrollment/result/%s' % template)
-    c = Context({'group': group, 'users': users, 'proof_validity_end': proof_validity_end})
+    c = Context({'users': users, 'group': group, 'location': location,
+        'proof_validity_end': proof_validity_end})
     message = t.render(c)
     send_mail(subject, message, EMAIL_FROM, email_recipients)
 
