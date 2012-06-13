@@ -40,7 +40,14 @@ $(document).ready(function() {
             if(clazz !== undefined) {
                 replacement.addClass(clazz);
             }
-            node.replaceWith(replacement.prepend(node.contents()));
+            if(node.get(0).nodeType == 3) {
+                // Text node - wrap the text in the new node instead of replacing it
+                replacement.append(node.clone());
+                node.parent().prepend(replacement);
+                node.remove();
+            } else {
+                node.replaceWith(replacement.prepend(node.contents()));
+            }
         });
         $("#toolbar select").val("default");
     });
