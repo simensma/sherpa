@@ -265,3 +265,7 @@ div#faq dl dd {
   padding: 13px;
   background-color: rgb(242, 242, 242);
 }
+
+form.zipcode_search_small button {
+  margin-bottom: 10px;
+}
