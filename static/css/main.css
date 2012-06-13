@@ -222,6 +222,12 @@ div#search-results div.search-result h2 {
   margin-bottom: 0;
 }
 
+div#search-results h2 span.published {
+  color: rgb(120, 120, 120);
+  font-size: 16px;
+  font-weight: normal;
+}
+
 /* Login page */
 
 div#login button.login {

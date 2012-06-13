@@ -90,7 +90,8 @@ def search(request):
             version.load_preview()
             hits.append({
                 'title': striptags(version.title.content),
-                'url': 'http://%s%s' % (request.site, reverse('articles.views.show', args=[version.variant.article.id, slugify(striptags(version.title.content))]))
+                'url': 'http://%s%s' % (request.site, reverse('articles.views.show', args=[version.variant.article.id, slugify(striptags(version.title.content))])),
+                'pub_date': version.variant.article.pub_date
                 })
         elif version.variant.page != None:
             if version.variant.page.id in page_hits:
