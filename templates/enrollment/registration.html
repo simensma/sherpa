@@ -117,9 +117,6 @@
         <label> E-post {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
         <input type="text" class="input-large" name="email" value="{{ user.email }}">
       </div>
-      <label class="checkbox">
-        <input type="checkbox" name="key"{% if user.key %} checked{% endif %}> Jeg ønsker nøkkel til DNT-hyttene (100,- i depositum)
-      </label>
       <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
     </form>
   </div>
