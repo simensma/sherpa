@@ -29,14 +29,19 @@
 
 <header class="row">
   <div class="span2 logo">
-  <a href="{% url admin.views.index %}">
-    <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening">
-  </a>
+    <a href="{% url admin.views.index %}">
+      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening">
+    </a>
   </div>
-  <div class="span10 line">
-  <h1 class="sherpa">
-    {% block header %}<a href="{% url admin.views.index%}">Sherpa</a>{% endblock %}
-  </h1>
+  <div class="span8 line">
+    <h1 class="sherpa">
+      {% block header %}<a href="{% url admin.views.index%}">Sherpa</a>{% endblock %}
+    </h1>
+  </div>
+  <div class="span2 line right">
+    <a href="/">Forsiden</a><br>
+    <a href="{% url user.views.home %}">Min side</a><br>
+    <a href="{% url user.views.logout %}">Logg ut</a>
   </div>
 </header>
 

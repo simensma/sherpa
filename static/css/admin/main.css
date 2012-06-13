@@ -24,6 +24,12 @@ header .line {
   height: 115px;
 }
 
+header div.right {
+  text-align: right;
+  padding-top: 20px;
+  height: 95px; /* Logo image height (115) - padding-top */
+}
+
 header h1 {
   /* Based on the logo image height */
   margin-top: 25px;
