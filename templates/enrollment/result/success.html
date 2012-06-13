@@ -21,8 +21,7 @@
       </p>
     {% else %}
       <p>
-        Dere er nå medlemmer i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.<br>
-        Deres medlemsnumre:
+        Dere er nå medlemmer i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.
       </p>
       <table class="table">
         <tr>
@@ -39,11 +38,10 @@
     {% endif %}
 
     <p>
-      Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}.
       {% if users|length == 1 %}
-        Kvittering er også sendt på e-post til <strong>{{ users.0.email }}</strong>.
+        Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}. Kvittering er også sendt på e-post til <strong>{{ users.0.email }}</strong>.
       {% else %}
-        Kvittering er også sendt på e-post til følgende adresser:
+        Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}. Kvittering er også sendt på e-post til følgende adresser:
         {% for email in emails %}
           <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
         {% endfor %}
