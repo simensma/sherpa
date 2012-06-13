@@ -170,6 +170,20 @@ div#benefits dl dd {
   background-color: rgb(242, 242, 242);
 }
 
+table.prices td {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+table.prices td[data-popover] {
+  padding-left: 20px;
+  background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+}
+
+table.prices td[data-popover]:hover {
+  background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+}
+
 iframe.map {
   width: 100%;
   height: 400px;
