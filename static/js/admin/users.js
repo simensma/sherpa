@@ -15,8 +15,24 @@ $(document).ready(function() {
         }
     });
 
+    $("form input").focus(function() {
+        $(this).parents("div.control-group").removeClass('error');
+    });
+
     $("form input[type='password']").focus(function() {
         $("form input[type='password']").parents("div.control-group").removeClass('error');
+    });
+
+    $("form input[name='name']").focusout(function() {
+        if($(this).val().length == 0) {
+            $(this).parents("div.control-group").addClass('error');
+        }
+    });
+
+    $("form input[name='email']").focusout(function() {
+        if(!$(this).val().match(/.+@.+\..+/)) {
+            $(this).parents("div.control-group").addClass('error');
+        }
     });
 
     function addInfo(header) {

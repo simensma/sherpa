@@ -25,6 +25,10 @@ def new(request):
         return render(request, 'admin/users/new.html', context)
     elif request.method == 'POST':
         try:
+            if len(request.POST['name']) == 0:
+                raise ValueError("No name provided")
+            if len(re.findall('.+@.+\..+', request.POST['email'])) == 0:
+                raise ValueError("Invalid email address")
             if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
             split = request.POST['name'].split(' ')
