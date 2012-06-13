@@ -1,23 +1,10 @@
 {% extends "layout.html" %}
-{% load gravatar %}
 
 {% block title %}{{ version.title.content|striptags }}{% endblock %}
 
 {% block body %}
 
 {% include 'page/display-content.html' %}
-
-<div class="row">
-  <div class="span12">
-    <div class="byline">
-      <a href="mailto:{{ version.variant.article.publisher.user.email }}">
-        <img src="{% gravatar version.variant.article.publisher.user.email %}">
-      </a>
-      <p>
-        Skrevet av <a href="mailto:{{ version.variant.article.publisher.user.email }}">{{ version.variant.article.publisher.user.get_full_name }}</a> den {{ version.variant.article.pub_date|date:"j. F Y" }}
-      </p>
-    </div>
-  </div>
-</div>
+{% include 'page/article-byline.html' %}
 
 {% endblock %}
