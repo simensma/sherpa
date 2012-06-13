@@ -74,7 +74,6 @@ def edit_version(request, version):
     version = Version.objects.get(id=version)
     version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
-    title = None
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
@@ -82,13 +81,11 @@ def edit_version(request, version):
             for content in contents:
                 if content.type == 'widget':
                     content.content = parse_widget(json.loads(content.content))
-                elif content.type == 'title':
-                    title = content.content
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'title': title, 'version': version}
+    context = {'rows': rows, 'version': version}
     return render(request, 'admin/articles/edit_version.html', context)
 
 def create_template(template, version, title):
