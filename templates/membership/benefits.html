@@ -264,11 +264,13 @@
     </table>
 
     <p>
-      {% if group %}
-        Prisene gjelder for medlemskap i {{ group.name }}. Andre medlemsforeninger kan ha andre priser.
-      {% else %}
-        Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.
-      {% endif %}
+      <em>
+        {% if group %}
+          Prisene gjelder for medlemskap i {{ group.name }}. Andre medlemsforeninger kan ha andre priser.
+        {% else %}
+          Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.
+        {% endif %}
+      </em>
     </p>
   </div>
   <div class="span4 membership">
