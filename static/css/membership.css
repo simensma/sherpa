@@ -91,6 +91,7 @@ div.membership a.membership {
   padding-bottom: 10px;
   width: 80%;
   height: 40px;
+  text-transform: uppercase;
 }
 
 div#benefits h2 {
