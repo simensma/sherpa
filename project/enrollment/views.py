@@ -402,12 +402,16 @@ def payment(request):
     ))
 
 def result(request, invoice):
+    users = request.session['registration']['users']
+    group = request.session['registration']['group']
+    location = request.session['registration']['location']
     if invoice:
         prepare_and_send_email(request.session['registration']['users'],
             request.session['registration']['group'],
             request.session['registration']['location'], 'invoice')
         result = 'invoice'
         skip_header = True
+        del request.session['registration']
     elif request.GET['responseCode'] == 'OK':
         r = requests.get(PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
@@ -429,6 +433,7 @@ def result(request, invoice):
             request.session['registration']['success'] = True
             result = 'success'
             skip_header = True
+            del request.session['registration']
         else:
             result = 'fail'
             skip_header = False
@@ -438,15 +443,14 @@ def result(request, invoice):
 
     # Collect emails to a separate list for easier template formatting
     emails = []
-    for user in request.session['registration']['users']:
+    for user in users:
         if user['email'] != '':
             emails.append(user['email'])
 
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
-        'group': request.session['registration']['group'],
-        'proof_validity_end': proof_validity_end, 'emails': emails,
-        'location': request.session['registration']['location']}
+    context = {'users': users, 'skip_header': skip_header,
+        'group': group, 'proof_validity_end': proof_validity_end, 'emails': emails,
+        'location': location}
     return render(request, 'enrollment/result/%s.html' % result, context)
 
 def sms(request):
