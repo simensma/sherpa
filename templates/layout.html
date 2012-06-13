@@ -161,47 +161,48 @@
   <div class="container">
     <div class="row services">
       <div class="span3">
-        <h2>Tilbudet vårt</h2>
+        <h2>Vårt tilbud</h2>
         <ul>
-          <li><a href="#">Fellesturer</a></li>
-          <li><a href="#">Hytter</a></li>
-          <li><a href="#">Stier</a></li>
-          <li><a href="#">Kurs</a></li>
-          <li><a href="#">Bli turleder</a></li>
-          <li><a href="#">Kartbutikk</a></li>
+          <li><a href="/fellesturer/">Fellesturer</a></li>
+          <li><a href="/hytter/">Hytter og ruter</a></li>
+          <li><a href="/kurs/">Kurs og utdanning</a></li>
+          <li><a href="/skole/">Skole</a></li>
+          <li><a href="/turutstyr-og-kart/">Turutstyr og kart</a></li>
+          <li><a href="https://{{ old_site }}/fjelltreffen">Fjelltreffen</a></li>
+          <li><a href="http://ut.no">UT.no</a></li>
         </ul>
       </div>
       <div class="span3">
-        <h2>Interessegrupper</h2>
+        <h2>Turgrupper</h2>
         <ul>
-          <li><a href="#">Barnas Turlag</a></li>
-          <li><a href="#">Seniorgruppa</a></li>
-          <li><a href="#">Fjellsport</a></li>
-          <li><a href="#">Trilleturer</a></li>
-          <li><a href="#">Bli turleder</a></li>
-          <li><a href="#">DNT Ung</a></li>
+          <li><a href="/barn/">Barnas Turlag</a></li>
+          <li><a href="/ung/">DNT ung</a></li>
+          <li><a href="/fjellsport/">DNT fjellsport</a></li>
+          <li><a href="/senior/">DNT senior</a></li>
+          <li><a href="{% url group.views.index %}">DNT der du bor</a></li>
         </ul>
       </div>
       <div class="span3">
         <h2>Medlemskap</h2>
         <ul>
-          <li><a href="#">Bli medlem</a></li>
-          <li><a href="#">Bestill nøkkel</a></li>
-          <li><a href="#">Endre adresse</a></li>
-          <li><a href="#">Gavemedlem</a></li>
-          <li><a href="#">Bedriftstilbud</a></li>
-          <li><a href="#">Bidra</a></li>
+          <li><a href="{% url membership.views.index %}">Bli medlem</a></li>
+          <li><a href="{% url membership.views.service %}">Medlemsservice</a></li>
+          <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
+          <li><a href="http://{{ old_site }}/form2.php?form=gavemedlemskap">Gavemedlemskap</a></li>
+          <li><a href="http://{{ old_site }}/form2.php?form=verving">Verv en venn</a></li>
+          <li><a href="https://{{ old_site }}/minside/">Min side</a></li>
         </ul>
       </div>
       <div class="span3">
         <h2>Turistforeningen</h2>
         <ul>
-          <li><a href="#">Kontakt oss</a></li>
-          <li><a href="#">Hva jobber DNT for?</a></li>
-          <li><a href="#">Magasiner/bøker</a></li>
-          <li><a href="#">Partnere</a></li>
-          <li><a href="#">Ledige stillinger</a></li>
-          <li><a href="#">Organisasjonen</a></li>
+          <li><a href="/kontakt/">Kontakt oss</a></li>
+          <li><a href="/presse/">For presse</a></li>
+          <li><a href="/samfunnsansvar/">Vårt samfunnsansvar</a></li>
+          <li><a href="/organisasjonen/">Organisasjonen</a></li>
+          <li><a href="/jobb/">Ledige stillinger</a></li>
+          <li><a href="/publikasjoner/">Publikasjoner</a></li>
+          <li><a href="/partnere/">Våre sponsorer</a></li>
         </ul>
       </div>
     </div>
