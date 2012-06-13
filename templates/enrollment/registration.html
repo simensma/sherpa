@@ -28,8 +28,12 @@
   });
 </script>
 
+
 <div class="row">
-  <div class="offset2 span8">
+  <div class="span8">
+
+    {% include 'enrollment/progress.html' with step=1 %}
+
     {% if too_many_underage %}
       <div class="notice-alert">
         <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
@@ -49,13 +53,6 @@
         Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post).
       </div>
     {% endif %}
-  </div>
-</div>
-
-<div class="row">
-  <div class="span8">
-
-    {% include 'enrollment/progress.html' with step=1 %}
 
     {% if users %}
       <div class="well members">

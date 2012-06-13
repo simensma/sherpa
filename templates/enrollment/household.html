@@ -22,32 +22,24 @@
 </script>
 {% endif %}
 
-{% if invalid_existing %}
-<div class="row">
-  <div class="offset2 span8">
-    <div class="alert alert-error">
-      <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
-      Vennligst sjekk at all oppgitt medlemsnummer for eksisterende medlem på samme adresse er korrekt.
-    </div>
-  </div>
-</div>
-{% endif %}
-
-{% if errors %}
-<div class="row">
-  <div class="offset2 span8">
-    <div class="alert alert-error">
-      <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
-      Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
-    </div>
-  </div>
-</div>
-{% endif %}
-
 <div class="row">
   <div class="span8">
 
     {% include 'enrollment/progress.html' with step=2 %}
+
+    {% if invalid_existing %}
+      <div class="alert alert-error">
+        <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
+        Vennligst sjekk at all oppgitt medlemsnummer for eksisterende medlem på samme adresse er korrekt.
+      </div>
+    {% endif %}
+
+    {% if errors %}
+      <div class="alert alert-error">
+        <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
+        Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+      </div>
+    {% endif %}
 
     <form id="household" action="{% url enrollment.views.household %}" method="post">
       {% csrf_token %}

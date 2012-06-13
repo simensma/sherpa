@@ -8,22 +8,18 @@
 
 {% block enrollment %}
 
-{% if invalid_payment_method %}
-  <div class="row">
-    <div class="offset3 span6">
+<div class="row">
+  <div class="span8">
+
+    {% include 'enrollment/progress.html' with step=4 %}
+
+    {% if invalid_payment_method %}
       <div class="alert alert-error">
         <a class="close">x</a>
         <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
         Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
       </div>
-    </div>
-  </div>
-{% endif %}
-
-<div class="row">
-  <div class="span8">
-
-    {% include 'enrollment/progress.html' with step=4 %}
+    {% endif %}
 
     <form id="payment" action="{% url enrollment.views.payment %}" method="post">
       {% csrf_token %}

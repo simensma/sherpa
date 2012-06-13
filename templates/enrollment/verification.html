@@ -25,48 +25,45 @@
 </script>
 
 <div class="row">
-  <div class="offset3 span6 errors">
-
-    {% if invalid_main_member %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-warning-sign"></i> Ugyldig hovedmedlem</strong><br>
-        En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-      </div>
-    {% endif %}
-
-    {% if no_main_member %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-warning-sign"></i> Mangler hovedmedlem</strong><br>
-        En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn studentmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-      </div>
-    {% endif %}
-
-    {% if nonexistent_main_member %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-warning-sign"></i> Ikke-eksisterende hovedmedlem</strong><br>
-        En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-      </div>
-    {% endif %}
-
-    {% if attempted_yearbook %}
-    <div class="offset3 span6">
-      <div class="alert alert-warning">
-        <a class="close">x</a>
-        <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
-        Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
-      </div>
-    {% endif %}
-
-  </div>
-</div>
-
-<div class="row">
   <div class="span8">
 
     {% include 'enrollment/progress.html' with step=3 %}
+
+    <div class="errors">
+
+      {% if invalid_main_member %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong><i class="icon-warning-sign"></i> Ugyldig hovedmedlem</strong><br>
+          En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+        </div>
+      {% endif %}
+
+      {% if no_main_member %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong><i class="icon-warning-sign"></i> Mangler hovedmedlem</strong><br>
+          En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn studentmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+        </div>
+      {% endif %}
+
+      {% if nonexistent_main_member %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong><i class="icon-warning-sign"></i> Ikke-eksisterende hovedmedlem</strong><br>
+          En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+        </div>
+      {% endif %}
+
+      {% if attempted_yearbook %}
+        <div class="alert alert-warning">
+          <a class="close">x</a>
+          <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
+          Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
+        </div>
+      {% endif %}
+
+    </div>
 
     <form id="verification" action="{% url enrollment.views.payment_method %}" method="post">
       <div class="verification border">
