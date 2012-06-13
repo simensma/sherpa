@@ -210,3 +210,10 @@ p.receipt-error {
 p.group-info {
     margin-bottom: 30px;
 }
+
+/* Result */
+
+p.sms {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

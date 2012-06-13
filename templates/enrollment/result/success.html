@@ -54,8 +54,7 @@
       {% csrf_token %}
       {% for user in users %}
         {% if user.phone != '' %}
-          <p><button class="btn btn-success phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
-            <i class="icon-signal"></i>
+          <p class="sms"><button class="btn btn-danger phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
             Send gratis kvittering på SMS til {{ user.phone }}
           </button></p>
         {% endif %}
