@@ -28,6 +28,12 @@ div#membership-box div.wrapper div#search-box h2 {
   font-size: 22px;
 }
 
+div#membership-box div.wrapper div#search-box p.intro {
+  font-family: "DTL Nobel" !important;
+  font-size: 18px;
+  line-height: 1.5em;
+}
+
 div#membership-box div.wrapper div#search-box p.search {
   margin-top: 12px;
 }
@@ -50,11 +56,9 @@ div.benefits-large {
 }
 
 div.benefits-large div.text {
+  font-family: "DTL Nobel" !important;
   background-color: white;
   position: absolute;
-}
-
-div.benefits-large div.text {
   padding: 5px;
   font-size: 20px;
 }
@@ -81,6 +85,7 @@ div.benefits-category {
 }
 
 div.benefits-category div.title {
+  font-family: "DTL Nobel" !important;
   background-color: white;
   position: absolute;
   top: 0;
@@ -143,6 +148,7 @@ div.benefits-toggle-buttons div.hide-button {
 }
 
 div#benefits dl dt {
+  font-family: "DTL Nobel" !important;
   color: rgb(216, 45, 32);
   font-weight: normal;
   padding-left: 40px;
