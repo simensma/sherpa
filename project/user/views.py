@@ -10,6 +10,7 @@ from django.utils import crypto
 
 from datetime import datetime, timedelta
 import json
+import md5
 
 from analytics.models import Visitor, Request
 from user.models import Profile
@@ -26,7 +27,7 @@ def login(request):
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
     elif(request.method == 'POST'):
-        user = authenticate(username=request.POST['email'], password=request.POST['password'])
+        user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
             merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)
@@ -109,3 +110,10 @@ def restore_password(request, key):
         profile.save()
         context = {'success': True}
         return render(request, 'user/restore-password.html', context)
+
+# This returns a username value based on the email address.
+# Define it as the first 30 hex-characters of the MD5 hash of the stripped, lowercase email.
+# This is because the username field has a 30 character max length, which makes it unsuitable for
+# actual e-mail addresses. This gives a 16^30 collision chance which is acceptable.
+def username(email):
+    return md5.new(email.strip().lower()).hexdigest()[:30]
