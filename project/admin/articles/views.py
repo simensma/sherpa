@@ -71,6 +71,18 @@ def delete(request, article):
 
 @login_required
 def edit_version(request, version):
+    rows, version = parse_version_content(version)
+    context = {'rows': rows, 'version': version}
+    return render(request, 'admin/articles/edit_version.html', context)
+
+def preview(request, version):
+    rows, version = parse_version_content(version)
+    # Pretend publish date is now, just for the preivew
+    version.variant.article.pub_date = datetime.now()
+    context = {'rows': rows, 'version': version}
+    return render(request, 'admin/articles/preview.html', context)
+
+def parse_version_content(version):
     version = Version.objects.get(id=version)
     version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
@@ -85,8 +97,7 @@ def edit_version(request, version):
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'version': version}
-    return render(request, 'admin/articles/edit_version.html', context)
+    return rows, version
 
 def create_template(template, version, title):
     if template == '0':

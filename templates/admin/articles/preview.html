@@ -1,0 +1,19 @@
+{% extends "admin/layout.html" %}
+{% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → Forhåndsvisning{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <p><a href="{% url admin.articles.views.edit_version version.id %}">Tilbake til redigering</a></p>
+  </div>
+</div>
+
+{% include 'page/display-content.html' %}
+{% include 'page/article-byline.html' %}
+
+{% endblock %}

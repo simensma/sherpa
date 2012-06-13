@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.articles.views',
@@ -7,6 +8,7 @@ urlpatterns = patterns('admin.articles.views',
     url(r'^bilde/(?P<article>\d+)/slett/$', 'image_delete'),
     url(r'^bilde/(?P<article>\d+)/skjul/$', 'image_hide'),
     url(r'^editor/(?P<version>\d+)/$', 'edit_version'),
+    url(ur'^forhåndsvisning/(?P<version>\d+)/$', 'preview'),
     url(r'^publiser/(?P<article>\d+)/$', 'publish'),
     url(r'^slett/(?P<article>\d+)/$', 'delete'),
 )
