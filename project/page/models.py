@@ -139,18 +139,6 @@ class Ad(models.Model):
     sha1_hash = models.CharField(max_length=40)
     content_type = models.CharField(max_length=200)
 
-    @staticmethod
-    def get_active_ad(page):
-        ads = AdPlacement.objects.filter(start_date__lte=datetime.now(),
-            end_date__gte=datetime.now(), placement=page)
-
-        if len(ads) == 0:
-            return None
-        ad = ads[random.randint(0, len(ads) - 1)]
-        ad.views += 1
-        ad.save()
-        return ad.ad
-
     def url(self):
         return "http://%s/%s%s.%s" % (settings.AWS_BUCKET, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
@@ -178,3 +166,15 @@ class AdPlacement(models.Model):
         ('core_accessibility', 'Kjerneside: Tur for alle')))
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
+
+    @staticmethod
+    def get_active_ad(page):
+        ads = AdPlacement.objects.filter(start_date__lte=datetime.now(),
+            end_date__gte=datetime.now(), placement=page)
+
+        if len(ads) == 0:
+            return None
+        ad = ads[random.randint(0, len(ads) - 1)]
+        ad.views += 1
+        ad.save()
+        return ad
