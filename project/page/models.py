@@ -151,11 +151,7 @@ def delete_image_post(sender, **kwargs):
     conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, kwargs['instance'].sha1_hash, kwargs['instance'].extension))
 
 class AdPlacement(models.Model):
-    ad = models.ForeignKey('page.Ad')
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    placement = models.CharField(max_length=100, choices=(
-        ('articles', 'Artikler'),
+    PLACEMENTS = (('articles', 'Artikler'),
         ('core_frontpage', 'Kjerneside: Forsiden'),
         ('core_joint_trip', 'Kjerneside: Fellesturer'),
         ('core_cabins', 'Kjerneside: Hytter og ruter'),
@@ -165,7 +161,12 @@ class AdPlacement(models.Model):
         ('core_senior', 'Kjerneside: Senior'),
         ('core_school', 'Kjerneside: Skole'),
         ('core_education', 'Kjerneside: Kurs og utdanning'),
-        ('core_accessibility', 'Kjerneside: Tur for alle')))
+        ('core_accessibility', 'Kjerneside: Tur for alle'))
+
+    ad = models.ForeignKey('page.Ad')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    placement = models.CharField(max_length=100, choices=PLACEMENTS)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
