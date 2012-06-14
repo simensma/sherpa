@@ -131,6 +131,7 @@ def delete_content(sender, **kwargs):
 
 class Ad(models.Model):
     name = models.CharField(max_length=200)
+    extension = models.CharField(max_length=4)
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
     content_type = models.CharField(max_length=200)
