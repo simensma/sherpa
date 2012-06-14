@@ -141,15 +141,15 @@ class Ad(models.Model):
 
     @staticmethod
     def get_active_ad(page):
-        ads = Ad.objects.filter(adplacement__start_date__lte=datetime.now(),
-            adplacement__end_date__gte=datetime.now(),
-            adplacement__placement=page)
+        ads = AdPlacement.objects.filter(start_date__lte=datetime.now(),
+            end_date__gte=datetime.now(), placement=page)
+
         if len(ads) == 0:
             return None
         ad = ads[random.randint(0, len(ads) - 1)]
-        ad.adplacement.views += 1
-        ad.adplacement.save()
-        return ad
+        ad.views += 1
+        ad.save()
+        return ad.ad
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
