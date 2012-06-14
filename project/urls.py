@@ -25,6 +25,9 @@ urlpatterns = patterns('',
     # Search
     url(ur'^søk/', 'page.views.search'),
 
+    # Ads
+    url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),
+
     # Redirect known paths to the old site
     url(r'^', include('url_redirects')),
 

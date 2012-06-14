@@ -5,11 +5,12 @@ from django.template import RequestContext, loader
 from django.db.models import Q
 from django.template.defaultfilters import slugify, striptags
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 from string import split
 import json
 
-from page.models import Page, Variant, Version, Row, Column, Content
+from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article
 from analytics.models import Visitor, Pageview
 from page.widgets import parse_widget
@@ -135,6 +136,12 @@ def search(request):
 
     context = {'search_query': request.GET['q'], 'hits': hits}
     return render(request, 'page/search.html', context)
+
+def ad(request, ad):
+    ad = AdPlacement.objects.get(id=ad)
+    ad.clicks += 1
+    ad.save()
+    return HttpResponseRedirect(ad.ad.destination)
 
 def save_pageview(request, variant, version, requested_segment, matched_segment):
     pageview = Pageview(request=request.session['request'], variant=variant,
