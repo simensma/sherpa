@@ -54,7 +54,7 @@ def image_details(request, image):
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
-    if(album is None):
+    if album is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
         album = Album.objects.get(id=album)
@@ -78,7 +78,7 @@ def update_album(request):
         album.name = request.POST['name']
         album.save()
     parent = albums[0].parent
-    if(parent is None):
+    if parent is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
@@ -87,13 +87,13 @@ def update_album(request):
 def update_images(request):
     images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
     for image in images:
-        if(request.POST['description'] != ""):
+        if request.POST['description'] != "":
             image.description = request.POST['description']
-        if(request.POST['photographer'] != ""):
+        if request.POST['photographer'] != "":
             image.photographer = request.POST['photographer']
-        if(request.POST['credits'] != ""):
+        if request.POST['credits'] != "":
             image.credits = request.POST['credits']
-        if(request.POST['licence'] != ""):
+        if request.POST['licence'] != "":
             image.licence = request.POST['licence']
         image.save()
         # Note: Intentionally not removing old tags upon update.
@@ -117,13 +117,13 @@ def filter_tags(request):
 
 @login_required
 def upload_image(request, album):
-    if(request.method == 'GET'):
+    if request.method == 'GET':
         current_album = Album.objects.get(id=album)
         parents = list_parents(current_album)
         context = {'current_album': current_album, 'albumpath': parents}
         return render(request, 'admin/images/upload.html', context)
-    elif(request.method == 'POST'):
-        if(len(request.FILES.getlist('files')) == 0):
+    elif request.method == 'POST':
+        if len(request.FILES.getlist('files')) == 0:
             return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
         parsed_images = []
         ids = []

@@ -62,14 +62,14 @@ def registration(request, user):
         user = request.session['registration']['users'][int(user)]
 
     errors = False
-    if(request.method == 'POST'):
+    if request.method == 'POST':
         new_user = {}
         # Titleize and strip whitespace before/after dash
         new_user['name'] = re.sub('\s*-\s*', '-', polite_title(request.POST['name']))
         new_user['phone'] = request.POST['phone']
         new_user['email'] = request.POST['email'].lower()
         new_user['gender'] = request.POST.get('gender', '')
-        if(request.POST.get('key') == 'on'):
+        if request.POST.get('key') == 'on':
             new_user['key'] = True
 
         try:
@@ -107,7 +107,7 @@ def registration(request, user):
 
 def remove(request, user):
     del request.session['registration']['users'][int(user)]
-    if(len(request.session['registration']['users']) == 0):
+    if len(request.session['registration']['users']) == 0:
         del request.session['registration']
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
@@ -246,10 +246,10 @@ def verification(request):
     student_or_older_count = 0
     main = None
     for user in request.session['registration']['users']:
-        if(main == None or (user['age'] < main['age'] and user['age'] >= AGE_STUDENT)):
+        if main == None or (user['age'] < main['age'] and user['age'] >= AGE_STUDENT):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
-        if(user['age'] >= AGE_STUDENT):
+        if user['age'] >= AGE_STUDENT:
             student_or_older_count += 1
         if user.has_key('key'):
             keycount += 1

@@ -27,8 +27,8 @@ def page(request, slug):
         raise Http404
     matched_variant = match_user(request, page)
     requested_variant = request.GET.get(variant_key)
-    if(requested_variant == None):
-        if(matched_variant == None):
+    if requested_variant == None:
+        if matched_variant == None:
             # No variant requested, and no variant matched. The default, simple view for a page.
             default_variant = Variant.objects.get(page=page, segment__isnull=True)
             version = Version.objects.get(variant=default_variant, active=True)
@@ -44,7 +44,7 @@ def page(request, slug):
         requested_variant = Variant.objects.get(id=requested_variant)
         version = Version.objects.get(variant=requested_variant, active=True)
         # In case the user happens to requests a variant without actually matching any
-        if(matched_variant == None):
+        if matched_variant == None:
             matched_segment = None
         else:
             matched_segment = matched_variant.segment
@@ -144,7 +144,7 @@ def match_user(request, page):
     variants = Variant.objects.filter(page=page, segment__isnull=False).order_by('priority')
     visitor = Visitor.objects.get(id=request.session['visitor'])
     for variant in variants:
-        if(variant.segment.match(request, visitor)):
+        if variant.segment.match(request, visitor):
             return variant
     return None
 

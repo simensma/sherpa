@@ -12,7 +12,7 @@ import json
 @login_required
 def new(request):
     max_order = Menu.objects.aggregate(Max('order'))['order__max']
-    if(max_order is None):
+    if max_order is None:
         max_order = 0
     menu = Menu(name=request.POST['name'], url=request.POST['url'], order=(max_order + 1))
     menu.save()

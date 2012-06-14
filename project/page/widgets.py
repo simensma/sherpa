@@ -9,11 +9,11 @@ BLOG_URL = "http://blogg.turistforeningen.no/feed/"
 
 # Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(widget):
-    if(widget['widget'] == "quote"):
+    if widget['widget'] == "quote":
         data = {'quote': widget['quote'], 'author': widget['author']}
-    elif(widget['widget'] == "promo"):
+    elif widget['widget'] == "promo":
         data = {}
-    elif(widget['widget'] == "articles"):
+    elif widget['widget'] == "articles":
         versions = Version.objects.filter(
             variant__article__isnull=False, variant__segment__isnull=True,
             variant__article__published=True, active=True
@@ -21,7 +21,7 @@ def parse_widget(widget):
         for version in versions:
             version.load_preview()
         data = {'versions': versions}
-    elif(widget['widget'] == "blog"):
+    elif widget['widget'] == "blog":
         r = requests.get(BLOG_URL)
         root = etree.fromstring(r.content)
         entries = []
@@ -37,7 +37,7 @@ def parse_widget(widget):
                 'content': content,
                 'image': image})
         data = {'entries': entries}
-    elif(widget['widget'] == "embed"):
+    elif widget['widget'] == "embed":
         data = {'code': widget['code']}
 
     data.update({

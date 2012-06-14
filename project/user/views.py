@@ -56,13 +56,13 @@ def account(request):
     return render(request, 'user/account.html', context)
 
 def login(request):
-    if(request.method == 'GET'):
-        if(request.user.is_authenticated()):
+    if request.method == 'GET':
+        if request.user.is_authenticated():
             # User is already authenticated, skip login
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
-    elif(request.method == 'POST'):
+    elif request.method == 'POST':
         user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
             merge_visitor(request.session, user.get_profile())
@@ -78,16 +78,16 @@ def logout(request):
 
 def merge_visitor(session, profile):
     visitor = Visitor.objects.get(id=session['visitor'])
-    if(visitor.profile == profile):
+    if visitor.profile == profile:
         # The user already has connected this visitor to the correct profile
         # This might happen if the user logs in twice, somehow.
         return
-    if(visitor.profile != None):
+    if visitor.profile != None:
         # Whoa! The user has connected this visitor to a _different_ profile!
         # Could this ever happen? We should probably log this and analyze
         # what happened, if it occurs.
         return
-    if(Visitor.objects.filter(profile=profile).exists()):
+    if Visitor.objects.filter(profile=profile).exists():
         # The user's profile already has a Visitor, so merge all the
         # requests over and delete the 'extra' visitor
         requests = Request.objects.filter(visitor=visitor)
