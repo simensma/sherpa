@@ -13,9 +13,9 @@ import json
 categories = [
     {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
     {'name': 'Barnas Turlag', 'db': 'Barn'},
-    {'name': 'DNT Ung', 'db': 'Ungdom'},
-    {'name': 'DNT Fjellsport', 'db': 'Fjellsport'},
-    {'name': 'DNT Senior', 'db': 'Senior'},
+    {'name': 'DNT ung', 'db': 'Ungdom'},
+    {'name': 'DNT fjellsport', 'db': 'Fjellsport'},
+    {'name': 'DNT senior', 'db': 'Senior'},
     {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
