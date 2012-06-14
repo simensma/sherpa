@@ -173,5 +173,5 @@ class AdPlacement(models.Model):
         ('core_school', 'Kjerneside: Skole'),
         ('core_education', 'Kjerneside: Kurs og utdanning'),
         ('core_accessibility', 'Kjerneside: Tur for alle')))
-    views = models.IntegerField()
-    clicks = models.IntegerField()
+    views = models.IntegerField(default=0)
+    clicks = models.IntegerField(default=0)
