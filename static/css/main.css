@@ -283,3 +283,14 @@ div#article-list div.item {
 div#first-visit.modal h3 {
   margin-bottom: 0;
 }
+
+div.ad {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+div.ad p.ad-label {
+  font-family: "DTL Nobel" !important;
+  font-size: 12px;
+  margin-bottom: 0px;
+}
