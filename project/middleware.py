@@ -31,15 +31,15 @@ class Analytics():
             visitor = Visitor.objects.get(id=request.session['visitor'])
 
         requestObject = Request(
-          visitor=visitor,
-          http_method=request.method,
-          path=request.path,
-          server_host=request.get_host(),
-          client_ip=request.META.get('REMOTE_ADDR', ''),
-          client_host=request.META.get('REMOTE_HOST', ''),
-          referrer=request.META.get('HTTP_REFERER', ''),
-          enter=datetime.now(),
-          ajax=request.is_ajax())
+            visitor=visitor,
+            http_method=request.method,
+            path=request.path,
+            server_host=request.get_host(),
+            client_ip=request.META.get('REMOTE_ADDR', ''),
+            client_host=request.META.get('REMOTE_HOST', ''),
+            referrer=request.META.get('HTTP_REFERER', ''),
+            enter=datetime.now(),
+            ajax=request.is_ajax())
         requestObject.save()
 
         for key, value in request.GET.items():
