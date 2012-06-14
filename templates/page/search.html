@@ -7,34 +7,62 @@
   <h1>Søk</h1>
 
   {% if query_too_short %}
+
     <p>
       Vennligst bruk minst {{ search_char_limit }} tegn når du søker, ellers vil du få alt for mange treff.
     </p>
-  {% else %}
-    {% if hits|length == 0 %}
-      <p>
-        Beklager, vi fant ingen sider eller artikler som inneholder "<strong>{{ search_query }}</strong>".
-      </p>
-    {% else %}
 
-      <p class="hits">
-        Antall treff: {{ hits|length }}
-      </p>
+  {% elif hits|length == 0 %}
 
-      {% for hit in hits %}
-        <div class="search-result">
-          <h2>
-            <a href="{{ hit.url }}">{{ hit.title }}</a>
-            {% if hit.pub_date %}
-              <span class="published">(Publisert: {{ hit.pub_date|date:"j. F Y" }})</span>
-            {% endif %}
-          </h2>
-        </div>
-      {% endfor %}
-    {% endif %}
+    <p>Vi fant dessverre ingenting som inneholdt "<strong>{{ search_query }}</strong>".</p>
+
     <p>
-      Kanskje det du leter etter ligger på våre <a href="http://{{ old_site }}/">gamle sider</a>?
+      <a href="http://{{ old_site }}/">Våre gamle nettsider</a> er fortsatt tilgjengelige, i tilfelle du ikke finner det du leter etter her. Inntil videre vil deler av innholdet og tjenestene, som <a href="http://{{ old_site }}/activity.php">turer og aktiviteter</a>, <a href="https://{{ old_site }}/fjelltreffen/">Fjelltreffen</a> og <a href="https://{{ old_site }}/minside/">Min side</a> være på de gamle sidene, mens vi jobber med å flytte dette over.
     </p>
+
+    <h3>Spørsmål?</h3>
+    <p>
+      <a href="/kontakt/">Ta kontakt med oss</a> hvis du lurer på noe.
+    </p>
+
+    <h3>Skal du ut på tur?</h3>
+    <p>
+      På <a href="http://ut.no">UT.no</a> finner du alle våre hytter, ruter, forslag til fine turer og mye mer.
+    </p>
+
+  {% else %}
+
+    <p class="hits">
+      Du søkte etter "<strong>{{ search_query }}</strong>". Antall treff: {{ hits|length }}
+    </p>
+
+    {% for hit in hits %}
+      <div class="search-result">
+        <h2>
+          <a href="{{ hit.url }}">{{ hit.title }}</a>
+          {% if hit.pub_date %}
+            <span class="published">(Publisert: {{ hit.pub_date|date:"j. F Y" }})</span>
+          {% endif %}
+        </h2>
+      </div>
+    {% endfor %}
+
+    <h3>Fant du ikke det du lette etter?</h3>
+    <p>
+      <a href="http://{{ old_site }}/">Våre gamle nettsider</a> er fortsatt tilgjengelige, i tilfelle du ikke finner det du leter etter her. Inntil videre vil deler av innholdet og tjenestene, som <a href="http://{{ old_site }}/activity.php">turer og aktiviteter</a>, <a href="https://{{ old_site }}/fjelltreffen/">Fjelltreffen</a> og <a href="https://{{ old_site }}/minside/">Min side</a> være på de gamle sidene, mens vi jobber med å flytte dette over.
+    </p>
+
+    <h3>Spørsmål?</h3>
+    <p>
+      Ta kontakt med oss hvis du lurer på noe.
+    </p>
+
+    <h3>Skal du ut på tur?</h3>
+    <p>
+      På <a href="http://ut.no">UT.no</a> finner du alle våre hytter, ruter, forslag til fine turer og mye mer.
+    </p>
+
   {% endif %}
+
 </div>
 {% endblock %}
