@@ -2,7 +2,8 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
 urlpatterns = patterns('user.views',
-    url(r'^midlertidig/$', 'home'),
+    url(r'^$', 'home'),
+    url(r'^midlertidig/$', 'home_new'),
     url(r'^konto/$', 'account'),
     url(r'^logg-inn/$', 'login'),
     url(r'^logg-ut/$', 'logout'),

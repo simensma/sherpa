@@ -19,8 +19,11 @@ from user.models import Profile
 
 update_success = 'oppdatert'
 
-@login_required
 def home(request):
+    return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
+
+@login_required
+def home_new(request):
     return render(request, 'user/home.html')
 
 @login_required
@@ -59,7 +62,7 @@ def login(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         context = {'next': request.GET.get('next')}
         return render(request, 'user/login.html', context)
     elif request.method == 'POST':
@@ -67,7 +70,7 @@ def login(request):
         if user is not None:
             merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
             context = {'invalid_credentials': True, 'next': request.GET.get('next')}
             return render(request, 'user/login.html', context)
