@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
 
     # Old static content
+    url(r'^img/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/img/' % settings.OLD_SITE}),
     url(r'^images/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/images/' % settings.OLD_SITE}),
     url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/album/' % settings.OLD_SITE}),
     url(r'^files/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
