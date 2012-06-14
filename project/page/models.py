@@ -126,3 +126,31 @@ def delete_content(sender, **kwargs):
     for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=kwargs['instance'].order):
         content.order = (content.order-1)
         content.save();
+
+### Advertisements
+
+class Ad(models.Model):
+    name = models.CharField(max_length=200)
+    destination = models.CharField(max_length=2048)
+    sha1_hash = models.CharField(max_length=40)
+    type = models.CharField(max_length=100, choices=(
+        ('image', 'Image'), ('flash', 'Flash')))
+
+class AdPlacement(models.Model):
+    ad = models.ForeignKey('page.Ad')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    placement = models.CharField(max_length=100, choices=(
+        ('articles', 'Articles'),
+        ('core_frontpage', 'Kjerneside: Forsiden'),
+        ('core_joint_trip', 'Kjerneside: Fellesturer'),
+        ('core_cabins', 'Kjerneside: Hytter og ruter'),
+        ('core_children', 'Kjerneside: Barn'),
+        ('core_youth', 'Kjerneside: Ungdom'),
+        ('core_mountainsports', 'Kjerneside: Fjellsport'),
+        ('core_senior', 'Kjerneside: Senior'),
+        ('core_school', 'Kjerneside: Skole'),
+        ('core_education', 'Kjerneside: Kurs og utdanning'),
+        ('core_accessibility', 'Kjerneside: Tur for alle')))
+    views = models.IntegerField()
+    clicks = models.IntegerField()
