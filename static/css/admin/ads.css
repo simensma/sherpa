@@ -2,7 +2,7 @@ form#upload table {
   width: 600px;
 }
 
-form#upload table td {
+form#upload table td, form.placement table td {
   padding: 5px;
 }
 

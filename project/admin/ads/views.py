@@ -12,6 +12,9 @@ from lib import S3
 
 from page.models import Ad, AdPlacement
 
+invalid_date = 'ugyldig-datoformat'
+added = 'annonse-lagt-til'
+
 @login_required
 def list(request):
     ads = Ad.objects.all()
@@ -19,7 +22,9 @@ def list(request):
     for place in AdPlacement.PLACEMENTS:
         placements = AdPlacement.objects.filter(placement=place[0]).order_by('start_date', 'end_date')
         pages.append({'page': place, 'placements': placements})
-    context = {'ads': ads, 'pages': pages}
+    context = {'ads': ads, 'pages': pages,
+        'invalid_date': request.GET.has_key(invalid_date),
+        'added': request.GET.has_key(added)}
     return render(request, 'admin/ads/list.html', context)
 
 @login_required
@@ -55,3 +60,16 @@ def upload(request):
         sha1_hash=hash, width=width, height=height, content_type=file.content_type)
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
+
+@login_required
+def place(request):
+    try:
+        ad = Ad.objects.get(id=request.POST['ad'])
+        start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
+        end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
+        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date,
+            placement=request.POST['placement'])
+        ap.save()
+    except ValueError:
+        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+    return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))

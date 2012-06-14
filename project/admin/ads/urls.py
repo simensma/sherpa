@@ -4,4 +4,5 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('admin.ads.views',
     url(r'^$', 'list'),
     url(r'^ny/$', 'upload'),
+    url(r'^ny-visning/$', 'place'),
 )
