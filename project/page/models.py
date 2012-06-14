@@ -5,6 +5,8 @@ from django.db.models import Min
 from django.conf import settings
 from lib import S3
 
+from datetime import datetime
+import random
 import json
 
 class Menu(models.Model):
@@ -136,6 +138,18 @@ class Ad(models.Model):
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
     content_type = models.CharField(max_length=200)
+
+    @staticmethod
+    def get_active_ad(page):
+        ads = Ad.objects.filter(adplacement__start_date__lte=datetime.now(),
+            adplacement__end_date__gte=datetime.now(),
+            adplacement__placement=page)
+        if len(ads) == 0:
+            return None
+        ad = ads[random.randint(0, len(ads) - 1)]
+        ad.adplacement.views += 1
+        ad.adplacement.save()
+        return ad
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
