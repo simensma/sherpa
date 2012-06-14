@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="span12">
+      {% if ad.ad.content_type == 'application/x-shockwave-flash' %}
+        <object data="{{ ad.ad.url }}" type="{{ ad.ad.content_type }}">
+          <param name="flashvars" value="clickTAG={% url page.views.ad ad.id %}">
+        </object>
+      {% else %}
+        <a href="{% url page.views.ad ad.id %}">
+          <img src="{{ ad.ad.url }}" alt="{{ ad.ad.name }}">
+        </a>
+      {% endif %}
+  </div>
+</div>

@@ -67,16 +67,37 @@ def parse_content(request, version):
         row.columns = columns
     context = {'rows': rows, 'version': version}
     # Used temporary for static promo content
-    if request.path == '/':                 context['promo'] = 'widgets/promo/static/sommerapning.html'
-    elif request.path == '/fellesturer/':   context['promo'] = 'widgets/promo/static/fellesturer.html'
-    elif request.path == '/hytter/':        context['promo'] = 'widgets/promo/static/hytter.html'
-    elif request.path == '/barn/':          context['promo'] = 'widgets/promo/static/barn.html'
-    elif request.path == '/ung/':           context['promo'] = 'widgets/promo/static/ung.html'
-    elif request.path == '/fjellsport/':    context['promo'] = 'widgets/promo/static/fjellsport.html'
-    elif request.path == '/senior/':        context['promo'] = 'widgets/promo/static/senior.html'
-    elif request.path == '/skole/':         context['promo'] = 'widgets/promo/static/skole.html'
-    elif request.path == '/kurs/':          context['promo'] = 'widgets/promo/static/kurs.html'
-    elif request.path == '/tur-for-alle/':  context['promo'] = 'widgets/promo/static/tur-for-alle.html'
+
+    if request.path == '/':
+        context['promo'] = 'widgets/promo/static/sommerapning.html'
+        context['ad'] = AdPlacement.get_active_ad('core_frontpage')
+    elif request.path == '/fellesturer/':
+        context['promo'] = 'widgets/promo/static/fellesturer.html'
+        context['ad'] = AdPlacement.get_active_ad('core_joint_trip')
+    elif request.path == '/hytter/':
+        context['promo'] = 'widgets/promo/static/hytter.html'
+        context['ad'] = AdPlacement.get_active_ad('core_cabins')
+    elif request.path == '/barn/':
+        context['promo'] = 'widgets/promo/static/barn.html'
+        context['ad'] = AdPlacement.get_active_ad('core_children')
+    elif request.path == '/ung/':
+        context['promo'] = 'widgets/promo/static/ung.html'
+        context['ad'] = AdPlacement.get_active_ad('core_youth')
+    elif request.path == '/fjellsport/':
+        context['promo'] = 'widgets/promo/static/fjellsport.html'
+        context['ad'] = AdPlacement.get_active_ad('core_mountainsports')
+    elif request.path == '/senior/':
+        context['promo'] = 'widgets/promo/static/senior.html'
+        context['ad'] = AdPlacement.get_active_ad('core_senior')
+    elif request.path == '/skole/':
+        context['promo'] = 'widgets/promo/static/skole.html'
+        context['ad'] = AdPlacement.get_active_ad('core_school')
+    elif request.path == '/kurs/':
+        context['promo'] = 'widgets/promo/static/kurs.html'
+        context['ad'] = AdPlacement.get_active_ad('core_education')
+    elif request.path == '/tur-for-alle/':
+        context['promo'] = 'widgets/promo/static/tur-for-alle.html'
+        context['ad'] = AdPlacement.get_active_ad('core_accessibility')
     return render(request, "page/page.html", context)
 
 @csrf_exempt

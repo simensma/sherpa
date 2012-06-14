@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from articles.models import Article
-from page.models import Variant, Version, Row, Column, Content
+from page.models import AdPlacement, Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 
 import json
@@ -35,5 +35,5 @@ def show(request, article, text):
                     content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'version': version}
+    context = {'rows': rows, 'version': version, 'ad': AdPlacement.get_active_ad('articles')}
     return render(request, "page/article.html", context)
