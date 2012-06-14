@@ -155,7 +155,7 @@ class AdPlacement(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     placement = models.CharField(max_length=100, choices=(
-        ('articles', 'Articles'),
+        ('articles', 'Artikler'),
         ('core_frontpage', 'Kjerneside: Forsiden'),
         ('core_joint_trip', 'Kjerneside: Fellesturer'),
         ('core_cabins', 'Kjerneside: Hytter og ruter'),
