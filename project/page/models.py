@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.db import models
 from django.db.models import Min
 from django.conf import settings
+from lib import S3
 
 import json
 
@@ -135,6 +136,12 @@ class Ad(models.Model):
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
     content_type = models.CharField(max_length=200)
+
+# Upon image delete, delete the corresponding object from S3
+@receiver(post_delete, sender=Ad, dispatch_uid="page.models")
+def delete_image_post(sender, **kwargs):
+    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, kwargs['instance'].sha1_hash, kwargs['instance'].extension))
 
 class AdPlacement(models.Model):
     ad = models.ForeignKey('page.Ad')

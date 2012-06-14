@@ -1,15 +1,43 @@
 {% extends "admin/layout.html" %}
 {% block title %}Annonser &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.ads.views.list %}">Annonser</a>{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/ads.css" media="screen">
+{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/ads.js"></script>
+{% endblock %}
 {% block body %}
 
 <div class="row">
   <div class="span12">
-    <h1>Annonser</h1>
-
     {% for ad in ads %}
       <p>{{ ad.name }}</p>
     {% endfor %}
+
+    <h2>Last opp ny annonse</h2>
+    <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data" target="iframe">
+      {% csrf_token %}
+      <table>
+        <tr>
+          <td>Navn</td>
+          <td><input type="text" name="name"></td>
+        </tr>
+        <tr>
+          <td>Lenker til (URL):</td>
+          <td><input type="text" name="destination"></td>
+        </tr>
+        <tr>
+          <td>Fil</td>
+          <td><input type="file" name="files" multiple></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><button class="btn">Last opp</button></td>
+        </tr>
+      </table>
+    </form>
+    <iframe name="iframe" style="display: none;"></iframe>
   </div>
 </div>
 

@@ -1,0 +1,7 @@
+form#upload table {
+  width: 600px;
+}
+
+form#upload table td {
+  padding: 5px;
+}

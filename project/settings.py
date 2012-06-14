@@ -7,6 +7,7 @@ ROOT_URLCONF = 'urls'
 AUTH_PROFILE_MODULE='user.Profile'
 LOGIN_URL = '/minside/logg-inn/'
 
+AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
