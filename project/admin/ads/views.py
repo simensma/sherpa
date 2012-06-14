@@ -21,29 +21,31 @@ def list(request):
 
 @login_required
 def upload(request):
-    if len(request.FILES.getlist('files')) == 0:
-        return render(request, 'admin/ads/iframe.html', {'result': 'no_files'})
-    for file in request.FILES.getlist('files'):
-        # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
-        # file into memory instead of streaming it to AWS. This might need to be
-        # optimized at some point.
-        data = file.read()
+    if not request.FILES.has_key('ad'):
+        # TODO error handling
+        return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-        # Calculate the sha1-hash
-        sha1 = hashlib.sha1()
-        sha1.update(data)
-        hash = sha1.hexdigest()
+    file = request.FILES['ad']
+    # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
+    # file into memory instead of streaming it to AWS. This might need to be
+    # optimized at some point.
+    data = file.read()
 
-        # File extension and image type
-        ext = file.name.split(".")[-1].lower()
+    # Calculate the sha1-hash
+    sha1 = hashlib.sha1()
+    sha1.update(data)
+    hash = sha1.hexdigest()
 
-        conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        conn.put(settings.AWS_BUCKET, "%s%s.%s"
-            % (settings.AWS_ADS_PREFIX, hash, ext), S3.S3Object(data),
-            {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
-        )
+    # File extension and image type
+    ext = file.name.split(".")[-1].lower()
 
-        ad = Ad(name=request.POST['name'], extension=ext, destination=request.POST['destination'],
-            sha1_hash=hash, content_type=file.content_type)
-        ad.save()
-    return render(request, 'admin/images/iframe.html', {'result': 'success'})
+    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    conn.put(settings.AWS_BUCKET, "%s%s.%s"
+        % (settings.AWS_ADS_PREFIX, hash, ext), S3.S3Object(data),
+        {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
+    )
+
+    ad = Ad(name=request.POST['name'], extension=ext, destination=request.POST['destination'],
+        sha1_hash=hash, content_type=file.content_type)
+    ad.save()
+    return HttpResponseRedirect(reverse('admin.ads.views.list'))

@@ -16,7 +16,7 @@
     {% endfor %}
 
     <h2>Last opp ny annonse</h2>
-    <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data" target="iframe">
+    <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data">
       {% csrf_token %}
       <table>
         <tr>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
           <td>Fil</td>
-          <td><input type="file" name="files" multiple></td>
+          <td><input type="file" name="ad"></td>
         </tr>
         <tr>
           <td></td>
@@ -37,7 +37,6 @@
         </tr>
       </table>
     </form>
-    <iframe name="iframe" style="display: none;"></iframe>
   </div>
 </div>
 
