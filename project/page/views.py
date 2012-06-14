@@ -7,10 +7,12 @@ from django.template.defaultfilters import slugify, striptags
 from django.views.decorators.csrf import csrf_exempt
 
 from string import split
+import json
 
-from page.models import Page, Variant, Version
+from page.models import Page, Variant, Version, Row, Column, Content
+from articles.models import Article
 from analytics.models import Visitor, Pageview
-from page.views_widgets import *
+from page.widgets import parse_widget
 
 variant_key = 'var'
 
@@ -48,6 +50,33 @@ def page(request, slug):
             matched_segment = matched_variant.segment
         save_pageview(request, requested_variant, version, requested_variant.segment, matched_segment)
         return parse_content(request, version)
+
+def parse_content(request, version):
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'widget':
+                    content.content = parse_widget(json.loads(content.content))
+                elif content.type == 'image':
+                    content.content = json.loads(content.content)
+            column.contents = contents
+        row.columns = columns
+    context = {'rows': rows, 'version': version}
+    # Used temporary for static promo content
+    if request.path == '/':                 context['promo'] = 'widgets/promo/static/sommerapning.html'
+    elif request.path == '/fellesturer/':   context['promo'] = 'widgets/promo/static/fellesturer.html'
+    elif request.path == '/hytter/':        context['promo'] = 'widgets/promo/static/hytter.html'
+    elif request.path == '/barn/':          context['promo'] = 'widgets/promo/static/barn.html'
+    elif request.path == '/ung/':           context['promo'] = 'widgets/promo/static/ung.html'
+    elif request.path == '/fjellsport/':    context['promo'] = 'widgets/promo/static/fjellsport.html'
+    elif request.path == '/senior/':        context['promo'] = 'widgets/promo/static/senior.html'
+    elif request.path == '/skole/':         context['promo'] = 'widgets/promo/static/skole.html'
+    elif request.path == '/kurs/':          context['promo'] = 'widgets/promo/static/kurs.html'
+    elif request.path == '/tur-for-alle/':  context['promo'] = 'widgets/promo/static/tur-for-alle.html'
+    return render(request, "page/page.html", context)
 
 @csrf_exempt
 def search(request):

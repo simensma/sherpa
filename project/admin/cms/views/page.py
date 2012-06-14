@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 
-from page.views_widgets import parse_widget
+from page.widgets import parse_widget
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 import json

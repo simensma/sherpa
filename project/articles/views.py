@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
-from page.views_widgets import parse_widget
+from page.widgets import parse_widget
 
 import json
 
