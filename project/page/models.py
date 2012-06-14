@@ -170,6 +170,15 @@ class AdPlacement(models.Model):
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
+    def is_old(self): return self.end_date < datetime.now()
+    def is_current(self): return self.start_date < datetime.now() and self.end_date > datetime.now()
+    def is_new(self): return self.start_date > datetime.now()
+
+    def state(self):
+        if self.is_old(): return 'old'
+        elif self.is_current(): return 'current'
+        elif self.is_new(): return 'new'
+
     @staticmethod
     def get_active_ad(page):
         ads = AdPlacement.objects.filter(start_date__lte=datetime.now(),

@@ -15,7 +15,7 @@ from page.models import Ad, AdPlacement
 @login_required
 def list(request):
     ads = Ad.objects.all()
-    placements = AdPlacement.objects.all()
+    placements = AdPlacement.objects.all().order_by('start_date', 'end_date')
     context = {'ads': ads, 'placements': placements}
     return render(request, 'admin/ads/list.html', context)
 

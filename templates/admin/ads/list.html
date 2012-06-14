@@ -11,27 +11,33 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Visninger</h2>
-    <table class="table">
+    <h1 class="sherpa">Visninger</h1>
+    <table class="table placements">
       <tr>
         <th>Annonse</th>
         <th>Fra</th>
         <th>Til</th>
         <th>Visninger</th>
         <th>Klikk</th>
+        <th>Status</th>
       </tr>
       {% for placement in placements %}
-        <tr>
+        <tr class="{{ placement.state }}">
           <td>{{ placement.ad.name }}</td>
           <td>{{ placement.start_date|date:"j. F Y" }}</td>
           <td>{{ placement.end_date|date:"j. F Y" }}</td>
           <td>{{ placement.views }}</td>
           <td>{{ placement.clicks }}</td>
+          <td>
+            {% if placement.is_old %}Utgått{% endif %}
+            {% if placement.is_current %}Aktiv{% endif %}
+            {% if placement.is_new %}På vent{% endif %}
+          </td>
         </tr>
       {% endfor %}
     </table>
 
-    <h2>Annonser</h2>
+    <h1 class="sherpa">Annonser</h1>
     <table class="table">
       <tr>
         <th>Navn</th>

@@ -5,3 +5,11 @@ form#upload table {
 form#upload table td {
   padding: 5px;
 }
+
+table.placements tr.old td {
+  color: rgb(120, 120, 120);
+}
+
+table.placements tr.current td {
+  color: rgb(27, 205, 11);
+}
