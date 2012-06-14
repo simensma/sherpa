@@ -11,9 +11,29 @@
 
 <div class="row">
   <div class="span12">
-    {% for ad in ads %}
-      <p>{{ ad.name }}</p>
-    {% endfor %}
+    <h2>Annonser</h2>
+    <table class="table">
+      <tr>
+        <th>Navn</th>
+        <th>Lenker til</th>
+        <th>Innhold</th>
+        <th>Innholdstype</th>
+        <th>Størrelse (Flash)</th>
+      </tr>
+      {% for ad in ads %}
+        <tr>
+          <td>{{ ad.name }}</td>
+          <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
+          <td><a href="{{ ad.url }}">Klikk her</a></td>
+          <td>{{ ad.content_type }}</td>
+          <td>
+            {% if ad.width and ad.height %}
+              {{ ad.width }} x {{ ad.height }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
 
     <h2>Last opp ny annonse</h2>
     <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data">
