@@ -22,3 +22,10 @@ def menus(request):
 
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
+
+def first_visit(request):
+    context = {}
+    if not request.session.has_key('first_visit'):
+        request.session['first_visit'] = True
+        context['first_visit'] = True
+    return context

@@ -277,3 +277,9 @@ div#article-list h3 {
 div#article-list div.item {
   margin-bottom: 40px;
 }
+
+/* First visit modal popup */
+
+div#first-visit.modal h3 {
+  margin-bottom: 0;
+}

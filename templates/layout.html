@@ -9,6 +9,7 @@
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-dropdown.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tooltip.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-popover.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-modal.js"></script>
   <!--[if lte IE 9]><script src="{{ STATIC_URL }}js/placeholder-ie.js"></script><![endif]-->
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}js/trim-ie.js"></script><![endif]-->
   <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
@@ -26,6 +27,10 @@
   {% block extra_css %}{% endblock %}
 </head>
 <body>
+
+{% if first_visit %}
+  {% include 'first-visit.html' %}
+{% endif %}
 
 <div class="container">
 
