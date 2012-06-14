@@ -149,14 +149,15 @@ div#benefits dl dt {
   font-family: "DTL Nobel" !important;
   color: rgb(216, 45, 32);
   font-weight: normal;
-  padding-left: 40px;
+  padding-left: 20px;
   padding-top: 5px;
   padding-bottom: 5px;
   line-height: 1.5;
-  background: url('/static/img/icons/glyph/original/glyphicons_195_circle_info.png') center left 10px no-repeat;
+  background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
 }
 
 div#benefits dl dt:hover {
+  background-image: url('/static/img/icons/netlife/icon-info-hover.png');
   text-decoration: underline;
   cursor: pointer;
 }
