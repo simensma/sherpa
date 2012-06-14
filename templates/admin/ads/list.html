@@ -6,36 +6,52 @@
 {% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/ads.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
 {% endblock %}
 {% block body %}
 
 <div class="row">
   <div class="span12">
     <h1 class="sherpa">Visninger</h1>
-    <table class="table placements">
-      <tr>
-        <th>Annonse</th>
-        <th>Fra</th>
-        <th>Til</th>
-        <th>Visninger</th>
-        <th>Klikk</th>
-        <th>Status</th>
-      </tr>
-      {% for placement in placements %}
-        <tr class="{{ placement.state }}">
-          <td>{{ placement.ad.name }}</td>
-          <td>{{ placement.start_date|date:"j. F Y" }}</td>
-          <td>{{ placement.end_date|date:"j. F Y" }}</td>
-          <td>{{ placement.views }}</td>
-          <td>{{ placement.clicks }}</td>
-          <td>
-            {% if placement.is_old %}Utgått{% endif %}
-            {% if placement.is_current %}Aktiv{% endif %}
-            {% if placement.is_new %}På vent{% endif %}
-          </td>
-        </tr>
+
+    <ul class="nav nav-pills pages">
+      {% for page in pages %}
+      <li{% if forloop.first %} class="active"{% endif %}>
+        <a href="#{{ page.page.0 }}" data-toggle="tab">{{ page.page.1 }}</a>
+      </li>
       {% endfor %}
-    </table>
+    </ul>
+
+    <div class="tab-content">
+      {% for page in pages %}
+        <div id="{{ page.page.0 }}" class="tab-pane fade{% if forloop.first %} in active{% endif %}">
+          <table class="table placements">
+            <tr>
+              <th>Annonse</th>
+              <th>Fra</th>
+              <th>Til</th>
+              <th>Visninger</th>
+              <th>Klikk</th>
+              <th>Status</th>
+            </tr>
+            {% for placement in page.placements %}
+              <tr class="{{ placement.state }}">
+                <td>{{ placement.ad.name }}</td>
+                <td>{{ placement.start_date|date:"j. F Y" }}</td>
+                <td>{{ placement.end_date|date:"j. F Y" }}</td>
+                <td>{{ placement.views }}</td>
+                <td>{{ placement.clicks }}</td>
+                <td>
+                  {% if placement.is_old %}Utgått{% endif %}
+                  {% if placement.is_current %}Aktiv{% endif %}
+                  {% if placement.is_new %}På vent{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      {% endfor %}
+    </div>
 
     <h1 class="sherpa">Annonser</h1>
     <table class="table">

@@ -152,16 +152,16 @@ def delete_image_post(sender, **kwargs):
 
 class AdPlacement(models.Model):
     PLACEMENTS = (('articles', 'Artikler'),
-        ('core_frontpage', 'Kjerneside: Forsiden'),
-        ('core_joint_trip', 'Kjerneside: Fellesturer'),
-        ('core_cabins', 'Kjerneside: Hytter og ruter'),
-        ('core_children', 'Kjerneside: Barn'),
-        ('core_youth', 'Kjerneside: Ungdom'),
-        ('core_mountainsports', 'Kjerneside: Fjellsport'),
-        ('core_senior', 'Kjerneside: Senior'),
-        ('core_school', 'Kjerneside: Skole'),
-        ('core_education', 'Kjerneside: Kurs og utdanning'),
-        ('core_accessibility', 'Kjerneside: Tur for alle'))
+        ('core_frontpage', 'Forsiden'),
+        ('core_joint_trip', 'Fellesturer'),
+        ('core_cabins', 'Hytter og ruter'),
+        ('core_children', 'Barn'),
+        ('core_youth', 'Ungdom'),
+        ('core_mountainsports', 'Fjellsport'),
+        ('core_senior', 'Senior'),
+        ('core_school', 'Skole'),
+        ('core_education', 'Kurs og utdanning'),
+        ('core_accessibility', 'Tur for alle'))
 
     ad = models.ForeignKey('page.Ad')
     start_date = models.DateTimeField()

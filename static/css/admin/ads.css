@@ -13,3 +13,9 @@ table.placements tr.old td {
 table.placements tr.current td {
   color: rgb(27, 205, 11);
 }
+
+ul.pages a {
+  font-size: 14px;
+  color: rgb(0, 136, 204); /* Duplicated from bootstrap */
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Duplicated from bootstrap */
+}
