@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.utils import IntegrityError
 
+import re
+
 from user.models import Profile
 from user.views import username
 
