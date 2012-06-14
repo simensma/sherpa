@@ -7,7 +7,8 @@
         <img src="{% gravatar version.variant.article.publisher.user.email %}">
       </a>
       <p>
-        Skrevet av <a href="mailto:{{ version.variant.article.publisher.user.email }}">{{ version.variant.article.publisher.user.get_full_name }}</a> den {{ version.variant.article.pub_date|date:"j. F Y" }}
+        Skrevet av <a href="mailto:{{ version.variant.article.publisher.user.email }}">{{ version.variant.article.publisher.user.get_full_name }}</a> {{ version.variant.article.pub_date|date:"j. F Y" }}<br>
+        <a class="email" href="mailto:{{ version.variant.article.publisher.user.email }}">{{ version.variant.article.publisher.user.email }}</a>
       </p>
     </div>
   </div>

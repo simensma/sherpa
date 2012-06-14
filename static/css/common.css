@@ -207,7 +207,14 @@ div.byline img {
 }
 
 div.byline p {
-  margin-top: 16px; /* Vertical center based on the byline image height and text line-height. */
+  margin-top: 0px; /* Vertical center based on the byline image height and text line-height. */
+  font-family: "DTL Nobel" !important;
+  line-height: 1.2;
+}
+
+div.byline p a.email {
+  color: rgb(120, 120, 120);
+  font-size: 14px;
 }
 
 /* Article preview */
