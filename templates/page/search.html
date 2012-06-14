@@ -43,7 +43,7 @@
           {% if hit.pub_date %}
             <span class="published">(Publisert: {{ hit.pub_date|date:"j. F Y" }})</span>
           {% endif %}
-        </h2>
+        </h2><p class="url"><a href="{{ hit.url }}">{{ hit.url }}</a></p>
       </div>
     {% endfor %}
 
