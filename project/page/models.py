@@ -142,7 +142,7 @@ class Ad(models.Model):
     def url(self):
         return "http://%s/%s%s.%s" % (settings.AWS_BUCKET, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
-# Upon image delete, delete the corresponding object from S3
+# Upon ad delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
 def delete_image_post(sender, **kwargs):
     conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
