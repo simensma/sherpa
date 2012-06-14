@@ -133,8 +133,7 @@ class Ad(models.Model):
     name = models.CharField(max_length=200)
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
-    type = models.CharField(max_length=100, choices=(
-        ('image', 'Image'), ('flash', 'Flash')))
+    content_type = models.CharField(max_length=200)
 
 class AdPlacement(models.Model):
     ad = models.ForeignKey('page.Ad')
