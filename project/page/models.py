@@ -5,7 +5,7 @@ from django.db.models import Min
 from django.conf import settings
 from lib import S3
 
-from datetime import datetime
+from datetime import date
 import random
 import json
 
@@ -164,15 +164,15 @@ class AdPlacement(models.Model):
         ('core_accessibility', 'Tur for alle'))
 
     ad = models.ForeignKey('page.Ad')
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     placement = models.CharField(max_length=100, choices=PLACEMENTS)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
-    def is_old(self): return self.end_date < datetime.now()
-    def is_current(self): return self.start_date < datetime.now() and self.end_date > datetime.now()
-    def is_new(self): return self.start_date > datetime.now()
+    def is_old(self): return self.end_date < date.today()
+    def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()
+    def is_new(self): return self.start_date > date.today()
 
     def state(self):
         if self.is_old(): return 'old'
@@ -181,8 +181,8 @@ class AdPlacement(models.Model):
 
     @staticmethod
     def get_active_ad(page):
-        ads = AdPlacement.objects.filter(start_date__lte=datetime.now(),
-            end_date__gte=datetime.now(), placement=page)
+        ads = AdPlacement.objects.filter(start_date__lte=date.today(),
+            end_date__gte=date.today(), placement=page)
 
         if len(ads) == 0:
             return None
