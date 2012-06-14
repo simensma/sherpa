@@ -4,6 +4,10 @@
 
 /* Promo widget */
 
+div.widget.promo {
+  margin-bottom: 30px;
+}
+
 div.widget.promo div.wrapper {
   position: relative;
 }
