@@ -1,0 +1,16 @@
+{% extends "admin/layout.html" %}
+{% block title %}Annonser &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.ads.views.list %}">Annonser</a>{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Annonser</h1>
+
+    {% for ad in ads %}
+      <p>{{ ad.name }}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

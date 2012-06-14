@@ -18,4 +18,7 @@ urlpatterns = patterns('admin',
 
     # Users
     url(r'^brukere/', include('admin.users.urls')),
+
+    # Advertisement
+    url(r'^annonser/', include('admin.ads.urls')),
 )
