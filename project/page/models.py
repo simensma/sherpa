@@ -138,6 +138,8 @@ class Ad(models.Model):
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
     content_type = models.CharField(max_length=200)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
 
     def url(self):
         return "http://%s/%s%s.%s" % (settings.AWS_BUCKET, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)

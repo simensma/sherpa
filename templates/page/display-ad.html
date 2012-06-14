@@ -1,7 +1,7 @@
 <div class="row">
   <div class="span12">
       {% if ad.ad.content_type == 'application/x-shockwave-flash' %}
-        <object data="{{ ad.ad.url }}" type="{{ ad.ad.content_type }}">
+        <object data="{{ ad.ad.url }}" type="{{ ad.ad.content_type }}" width="{{ ad.ad.width }}" height="{{ ad.ad.height }}">
           <param name="flashvars" value="clickTAG={% url page.views.ad ad.id %}">
         </object>
       {% else %}

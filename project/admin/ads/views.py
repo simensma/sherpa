@@ -39,6 +39,9 @@ def upload(request):
     # File extension and image type
     ext = file.name.split(".")[-1].lower()
 
+    width = None if request.POST['width'] == '' else request.POST['width']
+    height = None if request.POST['height'] == '' else request.POST['height']
+
     conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     conn.put(settings.AWS_BUCKET, "%s%s.%s"
         % (settings.AWS_ADS_PREFIX, hash, ext), S3.S3Object(data),
@@ -46,6 +49,6 @@ def upload(request):
     )
 
     ad = Ad(name=request.POST['name'], extension=ext, destination=request.POST['destination'],
-        sha1_hash=hash, content_type=file.content_type)
+        sha1_hash=hash, width=width, height=height, content_type=file.content_type)
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
