@@ -40,7 +40,7 @@ def zipcode_search(request):
         # Note: Redirecting requires performing the group lookup twice
         group = Group.objects.get(focus_id=zipcode.main_group_id)
         url = "%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name))
-        cache.set('membership.zipcode_search.%s' % (request.POST['zipcode']), url, 60 * 60 * 24)
+        cache.set('membership.zipcode_search.%s' % (request.POST['zipcode']), url, 60 * 60 * 24 * 7)
         return HttpResponseRedirect(url)
     except FocusZipcode.DoesNotExist:
         return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), invalid_zipcode, request.POST['zipcode']))
