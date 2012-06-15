@@ -363,20 +363,30 @@ def payment(request):
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
 
-    # Infer order number
+    # Infer order details based on (poor) conventions.
     if main != None:
         order_number = 'I_%s' % main['id']
+        first_name = main['name'].split(' ')[0]
+        last_name = main['name'].split(' ')[1:]
+        email = main['email']
     else:
         found = False
         for user in request.session['registration']['users']:
             if user['age'] >= AGE_STUDENT:
                 order_number = 'I_%s' % user['id']
+                first_name = user['name'].split(' ')[0]
+                last_name = user['name'].split(' ')[1:]
+                email = user['email']
                 found = True
                 break
         if not found:
             order_number = 'I'
             for user in request.session['registration']['users']:
                 order_number += '_%s' % user['id']
+            # Just use the name of the first user.
+            first_name = request.session['registration']['users'][0]['name'].split(' ')[0]
+            last_name = request.session['registration']['users'][0]['name'].split(' ')[1:]
+            email = request.session['registration']['users'][0]['email']
 
     t = loader.get_template('enrollment/payment-terminal.html')
     c = Context({'year': year, 'next_year': next_year})
@@ -387,6 +397,9 @@ def payment(request):
         'merchantId': settings.NETS_MERCHANT_ID,
         'token': settings.NETS_TOKEN,
         'orderNumber': order_number,
+        'customerFirstName': first_name,
+        'customerLastName': last_name,
+        'customerEmail': email,
         'currencyCode': 'NOK',
         'amount': sum * 100,
         'orderDescription': desc,
