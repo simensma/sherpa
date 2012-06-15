@@ -331,8 +331,8 @@ def payment(request):
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['registration']['location'], main['phone'], main['email'],
-            main['yearbook'], None, request.POST['payment-method'],
-            request.session['registration']['price'])
+            main['yearbook'], request.session['registration']['yearbook'], None,
+            request.POST['payment-method'], request.session['registration']['price'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -341,8 +341,8 @@ def payment(request):
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['location'], user['phone'], user['email'],
-            user['yearbook'], linked_to, request.POST['payment-method'],
-            request.session['registration']['price'])
+            user['yearbook'], request.session['registration']['yearbook'],
+            linked_to, request.POST['payment-method'], request.session['registration']['price'])
 
     # Cool. If we're paying by invoice, just forward to result page
     if request.POST['payment-method'] == 'invoice':
@@ -660,7 +660,7 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, linked_to, payment_method, price):
+def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, wants_yearbook, linked_to, payment_method, price):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -672,6 +672,10 @@ def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, lin
     if location['country'] == 'NO':
         # Override yearbook value for norwegians based on age and household status
         yearbook = focus_receive_yearbook(age, linked_to)
+    else:
+        # If foreigners wants the yearbook, keep the value (based on membership type),
+        # if not set to False
+        yearbook = yearbook and wants_yearbook
     if yearbook:
         yearbook_type = 152
     else:
