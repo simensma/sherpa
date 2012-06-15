@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify, striptags
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.core.cache import cache
 
 from string import split
 import json
@@ -53,21 +54,24 @@ def page(request, slug):
         return parse_content(request, version)
 
 def parse_content(request, version):
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(json.loads(content.content))
-                elif content.type == 'image':
-                    content.content = json.loads(content.content)
-            column.contents = contents
-        row.columns = columns
-    context = {'rows': rows, 'version': version}
-    # Used temporary for static promo content
+    context = cache.get('content.version.%s' % version.id)
+    if context == None:
+        rows = Row.objects.filter(version=version).order_by('order')
+        for row in rows:
+            columns = Column.objects.filter(row=row).order_by('order')
+            for column in columns:
+                contents = Content.objects.filter(column=column).order_by('order')
+                for content in contents:
+                    if content.type == 'widget':
+                        content.content = parse_widget(json.loads(content.content))
+                    elif content.type == 'image':
+                        content.content = json.loads(content.content)
+                column.contents = contents
+            row.columns = columns
+        context = {'rows': rows, 'version': version}
+        cache.set('content.version.%s' % version.id, context, 60 * 30)
 
+    # Used temporary for static promo content
     if request.path == '/':
         context['promo'] = 'widgets/promo/static/sommerapning.html'
         context['ad'] = AdPlacement.get_active_ad('core_frontpage')
