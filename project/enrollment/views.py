@@ -695,15 +695,16 @@ def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, lin
     # 1. Django ORM-level transactions didn't seem to work (rollback had no effect)
     # 2. Raw execution *could* be used but avoids Djangos SQL-injection
     seq = FocusActType.objects.get(type='P')
-    seq.next = seq.next + 7
+    memberid = seq.next
+    seq.next = memberid + 7
     seq.save()
-    user = FocusUser(member_id=seq.next, last_name=last_name, first_name=first_name, dob=dob,
+    user = FocusUser(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
         country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
         yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zip_code,
         poststed=city, language=language, totalprice=price)
     user.save()
-    return seq.next
+    return memberid
 
 def focus_payment_method_code(method):
     if method == 'card':      return 4
