@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template import Context, loader
+from django.core.cache import cache
 
 from group.models import Group
 from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress, FocusPrice
@@ -225,18 +226,27 @@ def verification(request):
         request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
 
         # Figure out which group this member belongs to
-        zipcode = FocusZipcode.objects.get(postcode=request.session['registration']['location']['zipcode'])
-        request.session['registration']['group'] = Group.objects.get(focus_id=zipcode.main_group_id)
-
-        # Get the prices for that group
-        request.session['registration']['price'] = FocusPrice.objects.get(group_id=request.session['registration']['group'].focus_id)
+        group = cache.get('zipcode.group.%s' % request.session['registration']['location']['zipcode'])
+        if group == None:
+            zipcode = FocusZipcode.objects.get(postcode=request.session['registration']['location']['zipcode'])
+            group = Group.objects.get(focus_id=zipcode.main_group_id)
+            cache.set('zipcode.group.%s' % request.session['registration']['location']['zipcode'], group, 60 * 60 * 24 * 7)
+        request.session['registration']['group'] = group
     else:
-        # Foreign members are registered with DNT Oslo og Omegn, which has focus group ID 10
-        request.session['registration']['group'] = Group.objects.get(focus_id=10)
+        # Foreign members are registered with DNT Oslo og Omegn
+        oslo_group_id = 2 # This is the current ID for that group
+        group = cache.get('group.%s' % oslo_group_id)
+        if group == None:
+            group = Group.objects.get(id=oslo_group_id)
+            cache.set('group.%s' % oslo_group_id, group, 60 * 60 * 24)
+        request.session['registration']['group'] = group
 
-        # Foreign member, use default prices.
-        # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
-        request.session['registration']['price'] = FocusPrice.objects.get(group_id=10)
+    # Get the prices for that group
+    price = cache.get('group.price.%s' % request.session['registration']['group'].focus_id)
+    if price == None:
+        price = FocusPrice.objects.get(group_id=request.session['registration']['group'].focus_id)
+        cache.set('group.price.%s' % request.session['registration']['group'].focus_id, price, 60 * 60 * 24 * 7)
+    request.session['registration']['price'] = price
 
     now = datetime.now()
     year = now.year
