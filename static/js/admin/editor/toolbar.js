@@ -75,7 +75,7 @@ $(document).ready(function() {
             reset();
         });
         function reset() {
-            $("#toolbar p.anchor-insert, #toolbar .formatting div.anchor-buttons").remove();
+            $("#toolbar p.anchor-insert, #toolbar div.anchor-buttons").remove();
             $("#toolbar *").show();
         }
         $("#toolbar").append(p, buttons);
