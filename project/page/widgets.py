@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from lxml import etree
 import requests
 import json
@@ -22,21 +24,25 @@ def parse_widget(widget):
             version.load_preview()
         data = {'versions': versions}
     elif widget['widget'] == "blog":
-        r = requests.get(BLOG_URL)
-        root = etree.fromstring(r.content)
-        entries = []
-        for item in root.find('channel').findall('item')[:int(widget['count'])]:
-            content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
-            image = None
-            m = re.search('<img.*?src="(.*?)" ', content)
-            if m != None:
-                image = m.group(1)
-            entries.append({
-                'title': item.find('title').text,
-                'link': item.find('link').text,
-                'content': content,
-                'image': image})
-        data = {'entries': entries}
+        # This is a pretty heavy query, so cache it for a while
+        data = cache.get('widgets.blog')
+        if data == None:
+            r = requests.get(BLOG_URL)
+            root = etree.fromstring(r.content)
+            entries = []
+            for item in root.find('channel').findall('item')[:int(widget['count'])]:
+                content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
+                image = None
+                m = re.search('<img.*?src="(.*?)" ', content)
+                if m != None:
+                    image = m.group(1)
+                entries.append({
+                    'title': item.find('title').text,
+                    'link': item.find('link').text,
+                    'content': content,
+                    'image': image})
+            data = {'entries': entries}
+            cache.set('widgets.blog', data, 60 * 60 * 6)
     elif widget['widget'] == "embed":
         data = {'code': widget['code']}
 
