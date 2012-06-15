@@ -138,7 +138,6 @@ urlpatterns = patterns('',
     # Old redirects, keep them at the old site
     url(r'^140/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php?fo_id=6007' % settings.OLD_SITE}),
     url(r'^aktiviteter/$', 'page.views.redirect', kwargs={'url': 'http://%s/activity.php?fo_id=2513' % settings.OLD_SITE}),
-    url(r'^allemannsretten/$', 'page.views.redirect', kwargs={'url': 'http://%s/article.php?ar_id=7371&fo_id=5' % settings.OLD_SITE}),
     url(r'^aretsgave/$', 'page.views.redirect', kwargs={'url': 'http://%s/aretsgave.php' % settings.OLD_SITE}),
     url(r'^austagder/$', 'page.views.redirect', kwargs={'url': 'http://%s/aust-agder' % settings.OLD_SITE}),
     url(r'^bodo/$', 'page.views.redirect', kwargs={'url': 'http://www.bot.no/'}),
