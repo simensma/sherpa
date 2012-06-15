@@ -3,6 +3,12 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from datetime import datetime
 
+# Make sure models are loaded. This fixes a TypeError that
+# occurs when restarting the gunicorn server.
+from django.db.models.loading import cache as model_cache
+if not model_cache.loaded:
+    model_cache.get_models()
+
 class Sites():
     def process_request(self, request):
         request.site = Site.objects.get(domain=request.get_host().split(":")[0])
