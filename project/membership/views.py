@@ -18,7 +18,7 @@ def index(request):
         'unregistered_zipcode': request.GET.get(unregistered_zipcode, ''),}
     return render(request, 'membership/index.html', context)
 
-@cache_page(60 * 60)
+@cache_page(60 * 60 * 24)
 def benefits(request, group):
     if group != None:
         group = Group.objects.get(id=group)
