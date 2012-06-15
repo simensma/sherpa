@@ -20,13 +20,13 @@ def index(request):
 
 @cache_page(60 * 60 * 24)
 def benefits(request, group):
-    if group != None:
-        group = Group.objects.get(id=group)
-        price = FocusPrice.objects.get(group_id=group.focus_id)
-    else:
+    if group == None:
         # No group-attachment provided, use default prices.
         # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
-        price = FocusPrice.objects.get(group_id=10)
+        focus_id = 10
+    else:
+        focus_id = Group.objects.get(id=group).focus_id
+    price = FocusPrice.objects.get(group_id=focus_id)
     context = {'group': group, 'price': price}
     return render(request, 'membership/benefits.html', context)
 
