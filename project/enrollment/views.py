@@ -411,6 +411,7 @@ def result(request, invoice):
             request.session['registration']['location'], 'invoice')
         result = 'invoice'
         skip_header = True
+        request.session['registration_success'] = True
         del request.session['registration']
     elif request.GET['responseCode'] == 'OK':
         r = requests.get(PROCESS_URL, params={
@@ -430,9 +431,11 @@ def result(request, invoice):
             prepare_and_send_email(request.session['registration']['users'],
                 request.session['registration']['group'],
                 request.session['registration']['location'], 'card')
-            request.session['registration']['success'] = True
             result = 'success'
             skip_header = True
+            request.session['registration_sms']['country'] = request.session['registration']['location']['country']
+            request.session['registration_success'] = True
+            request.session['registration_sms']['users'] = request.session['registration']['users']
             del request.session['registration']
         else:
             result = 'fail'
@@ -456,13 +459,13 @@ def result(request, invoice):
 def sms(request):
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
-    if request.session['registration']['location']['country'] != 'NO':
+    if request.session['registration_sms']['country'] != 'NO':
         return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if not request.session['registration'].has_key('success'):
+    if not request.session.has_key('registration_success'):
         return HttpResponse(json.dumps({'error': 'not_registered'}))
-    if request.session['registration']['users'][index].has_key('sms_sent'):
+    if request.session['registration_sms']['users'][index].has_key('sms_sent'):
         return HttpResponse(json.dumps({'error': 'already_sent'}))
-    number = request.session['registration']['users'][index]['phone']
+    number = request.session['registration_sms']['users'][index]['phone']
 
     # Render the SMS template
     now = datetime.now()
@@ -470,7 +473,7 @@ def sms(request):
     next_year = now.month >= MONTH_THRESHOLD
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
-        'users': request.session['registration']['users']})
+        'users': request.session['registration_sms']['users']})
     sms_message = t.render(c)
 
     # Send the message
@@ -480,7 +483,7 @@ def sms(request):
     status = re.findall('Status: .*', r.text)
     if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
         return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
-    request.session['registration']['users'][index]['sms_sent'] = True
+    request.session['registration_sms']['users'][index]['sms_sent'] = True
     return HttpResponse(json.dumps({'error': 'none'}))
 
 def prepare_and_send_email(users, group, location, payment_method):
