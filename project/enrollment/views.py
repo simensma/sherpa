@@ -433,6 +433,7 @@ def result(request, invoice):
                 request.session['registration']['location'], 'card')
             result = 'success'
             skip_header = True
+            request.session['registration_sms'] = {}
             request.session['registration_sms']['country'] = request.session['registration']['location']['country']
             request.session['registration_success'] = True
             request.session['registration_sms']['users'] = request.session['registration']['users']
