@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
-from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from group.models import Group
@@ -18,34 +17,40 @@ def index(request):
         'unregistered_zipcode': request.GET.get(unregistered_zipcode, ''),}
     return render(request, 'membership/index.html', context)
 
-@cache_page(60 * 60 * 24)
-def benefits(request, group):
-    if group == None:
+def benefits(request, group_id):
+    if group_id == None:
         # No group-attachment provided, use default prices.
-        # Temporarily use the prices of group 10 (DNT Oslo og Omegn)
-        focus_id = 10
-    else:
-        focus_id = Group.objects.get(id=group).focus_id
-    price = FocusPrice.objects.get(group_id=focus_id)
+        # Temporarily use the prices of group with OUR id 2 (not focus-id) - DNT Oslo og Omegn.
+        group_id = 2
+
+    group = cache.get('group.%s' % group_id)
+    if group == None:
+        group = Group.objects.get(id=group_id)
+        cache.set('group.%s' % group_id, group, 60 * 60 * 24)
+
+    price = cache.get('group.price.%s' % group.focus_id)
+    if price == None:
+        price = FocusPrice.objects.get(group_id=group.focus_id)
+        cache.set('group.price.%s' % group.focus_id, price, 60 * 60 * 24 * 7)
+
     context = {'group': group, 'price': price}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
-    cached_url = cache.get('membership.zipcode_search.%s' % (request.POST['zipcode']))
-    if cached_url != None:
-        return HttpResponseRedirect(cached_url)
+    group = cache.get('zipcode.group.%s' % request.POST['zipcode'])
+    if group == None:
+        try:
+            zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
+            # Note: Redirecting requires performing the group lookup twice
+            group = Group.objects.get(focus_id=zipcode.main_group_id)
+            cache.set('zipcode.group.%s' % request.POST['zipcode'], group, 60 * 60 * 24 * 7)
+        except FocusZipcode.DoesNotExist:
+            return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), invalid_zipcode, request.POST['zipcode']))
+        except Group.DoesNotExist:
+            return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), unregistered_zipcode, request.POST['zipcode']))
 
-    try:
-        zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
-        # Note: Redirecting requires performing the group lookup twice
-        group = Group.objects.get(focus_id=zipcode.main_group_id)
-        url = "%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name))
-        cache.set('membership.zipcode_search.%s' % (request.POST['zipcode']), url, 60 * 60 * 24 * 7)
-        return HttpResponseRedirect(url)
-    except FocusZipcode.DoesNotExist:
-        return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), invalid_zipcode, request.POST['zipcode']))
-    except Group.DoesNotExist:
-        return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), unregistered_zipcode, request.POST['zipcode']))
+    url = "%s-%s/" % (reverse('membership.views.benefits', args=[group.id])[:-1], slugify(group.name))
+    return HttpResponseRedirect(url)
 
 def service(request):
     return render(request, 'membership/service.html')
