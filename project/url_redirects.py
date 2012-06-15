@@ -17,6 +17,9 @@ urlpatterns = patterns('',
     url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/album/' % settings.OLD_SITE}),
     url(r'^files/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
 
+    # Old dynamic content that we want directly redirected
+    url(r'^booking.php$', 'page.views.redirect', kwargs={'url': 'http://%s/booking.php' % settings.OLD_SITE}),
+
     # All sites go to old pages with subdomain
     url(ur'^alesund/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://alesund.turistforeningen.no/', 'permanent': True}),
     url(ur'^alta/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://alta.turistforeningen.no/', 'permanent': True}),
