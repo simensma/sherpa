@@ -103,10 +103,10 @@ def create_template(template, version, title):
     if template == '0':
         contents = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.jpg", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
             {'type': 'html', 'content': """<p><br></p>"""},
-            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.jpg", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()
@@ -118,7 +118,7 @@ def create_template(template, version, title):
     elif template == '1':
         contents_upper = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.jpg", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
         ]
         contents_lower_left = [
@@ -126,7 +126,7 @@ def create_template(template, version, title):
         ]
         contents_lower_right = [
             {'type': 'html', 'content': """<p><br></p>"""},
-            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.jpg", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()
