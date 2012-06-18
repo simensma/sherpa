@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^files/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
 
     # Old dynamic content that we want directly redirected
+    url(r'^activity.php$', 'page.views.redirect', kwargs={'url': 'http://%s/activity.php' % settings.OLD_SITE}),
+    url(r'^article.php$', 'page.views.redirect', kwargs={'url': 'http://%s/article.php' % settings.OLD_SITE}),
     url(r'^booking.php$', 'page.views.redirect', kwargs={'url': 'http://%s/booking.php' % settings.OLD_SITE}),
     url(r'^payment/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/payment/' % settings.OLD_SITE}),
 
