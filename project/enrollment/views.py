@@ -498,7 +498,7 @@ def sms(request):
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
         'users': request.session['registration_sms']['users']})
-    sms_message = t.render(c)
+    sms_message = t.render(c).encode('utf-8')
 
     # Send the message
     r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
