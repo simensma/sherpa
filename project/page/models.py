@@ -8,6 +8,7 @@ from lib import S3
 from datetime import date
 import random
 import json
+import re
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)
@@ -88,6 +89,8 @@ class Version(models.Model):
         # the available sizes with the model and use the smalles appropriate one.
         if self.thumbnail != None and settings.AWS_BUCKET in self.thumbnail:
             t = self.thumbnail
+            # Remove previous size spec if existing
+            t = re.sub('-\d{3}\.', '.', t)
             self.thumbnail = t[:t.rfind('.')] + '-150' + t[t.rfind('.'):]
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
