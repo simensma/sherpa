@@ -46,7 +46,7 @@
 {% for version in versions %}
 <tr>
   <td><a href="{% url admin.cms.views.page.edit_version version.id %}">{{ version.variant.page.title }}</a></td>
-  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">http://{{ site.domain }}/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a></td>
+  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a></td>
 </tr>
 {% endfor %}
 </tbody>
