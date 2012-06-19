@@ -696,8 +696,8 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         # Override yearbook value for norwegians based on age and household status
         yearbook = focus_receive_yearbook(age, linked_to)
     else:
-        # If foreigners wants the yearbook, keep the value (based on membership type),
-        # if not set to False
+        # Foreigners need to pay shipment price for the yearbook, so if they match the
+        # criteria to receive it, let them choose whether or not to get it
         yearbook = can_have_yearbook and wants_yearbook
         if yearbook:
             price += FOREIGN_SHIPMENT_PRICE
