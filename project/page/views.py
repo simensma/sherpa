@@ -180,16 +180,22 @@ def match_user(request, page):
             return variant
     return None
 
-def redirect(request, url, slug="", permanent=False):
-    params = get_params(request.GET)
-    if '?' in url or '?' in slug: params = '&%s' % params[1:]
-    uri = "%s%s%s" % (url, slug, params)
+def redirect(request, url, slug="", params={}, permanent=False):
+    param_str = request.GET.copy()
+    param_str.update(params)
+    param_str = param_str.urlencode()
+    if param_str != '':
+        param_str = "?%s" % param_str
+    uri = "%s%s%s" % (url, slug, param_str)
     if permanent: return HttpResponsePermanentRedirect(uri)
     else:         return HttpResponseRedirect(uri)
 
 def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters
-    path = "%s%s" % (request.path, get_params(request.GET))
+    param_str = request.GET.urlencode()
+    if param_str != '':
+        param_str = "?%s" % param_str
+    path = "%s%s" % (request.path, param_str)
     t = loader.get_template(template_name)
     c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
@@ -198,9 +204,3 @@ def server_error(request, template_name='500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))
-
-def get_params(get):
-    params = ''
-    for key, val in get.items():
-        params = '%s&%s=%s' % (params, key, val)
-    return "?%s" % params[1:]
