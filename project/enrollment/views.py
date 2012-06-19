@@ -699,6 +699,8 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         # If foreigners wants the yearbook, keep the value (based on membership type),
         # if not set to False
         yearbook = can_have_yearbook and wants_yearbook
+        if yearbook:
+            price += FOREIGN_SHIPMENT_PRICE
     if yearbook:
         yearbook_type = 152
     else:
