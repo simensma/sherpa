@@ -683,7 +683,7 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, wants_yearbook, linked_to, payment_method, price):
+def add_focus_user(name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
     first_name = ' '.join(name.split(' ')[:-1])
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
@@ -698,7 +698,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, yearbook, wan
     else:
         # If foreigners wants the yearbook, keep the value (based on membership type),
         # if not set to False
-        yearbook = yearbook and wants_yearbook
+        yearbook = can_have_yearbook and wants_yearbook
     if yearbook:
         yearbook_type = 152
     else:
