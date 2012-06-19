@@ -10,7 +10,7 @@
 
 <script>
   var price_key = {{ keyprice }};
-  var price_foreign_yearbook = {{ foreign_yearbook_price }};
+  var price_shipment_yearbook = {{ foreign_shipment_price }};
   var price_main = {{ price.main }};
   var price_household = {{ price.household }};
   var price_senior = {{ price.senior }};
@@ -160,7 +160,7 @@
                   <td></td>
                 {% endif %}
                 <td colspan="2">Årbok og Fjell og Vidde</td>
-                <td><span class="yearbook-price">{{ foreign_yearbook_price }}</span>,-</td>
+                <td><span class="yearbook-price">{{ foreign_shipment_price }}</span>,-</td>
               </tr>
             {% endif %}
           </tbody>

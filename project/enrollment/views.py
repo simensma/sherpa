@@ -25,7 +25,7 @@ MONTH_THRESHOLD = 10
 TEMPORARY_PROOF_VALIDITY = 14
 
 KEY_PRICE = 100
-FOREIGN_YEARBOOK_PRICE = 100
+FOREIGN_SHIPMENT_PRICE = 100
 
 # GET parameters used for error handling
 contact_missing_key = 'mangler-kontaktinfo'
@@ -160,7 +160,7 @@ def household(request):
         'invalid_existing': request.GET.has_key(invalid_existing),
         'countries_norway': countries_norway, 'main': main,
         'yearbook': request.session['registration'].get('yearbook', ''),
-        'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE,
+        'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors}
     return render(request, 'enrollment/household.html', context)
@@ -280,7 +280,7 @@ def verification(request):
         'no_main_member': request.GET.has_key(no_main_member_key),
         'yearbook': request.session['registration']['yearbook'],
         'attempted_yearbook': request.session['registration']['attempted_yearbook'],
-        'foreign_yearbook_price': FOREIGN_YEARBOOK_PRICE}
+        'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE}
     return render(request, 'enrollment/verification.html', context)
 
 def payment_method(request):
@@ -367,7 +367,7 @@ def payment(request):
 
     # Pay for yearbook if foreign
     if request.session['registration']['yearbook']:
-        sum += FOREIGN_YEARBOOK_PRICE
+        sum += FOREIGN_SHIPMENT_PRICE
 
     now = datetime.now()
     year = now.year
