@@ -107,6 +107,10 @@ div.widget.promo div.right p.sponsor a {
   float: right;
 }
 
+div.widget.promo div.right p.sponsor a.kvikk-lunsj {
+  width: 80px;
+}
+
 div.widget.promo div.right img {
   margin-left: 15px;
 }
