@@ -34,7 +34,8 @@ def list_albums(request, album):
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
     context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images}
+               'current_album': current_album, 'images': images,
+               'aws_bucket': settings.AWS_BUCKET}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -47,7 +48,8 @@ def image_details(request, image):
     else:
         taken = None
     tags = image.tags.all()
-    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags}
+    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags,
+        'aws_bucket': settings.AWS_BUCKET}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
