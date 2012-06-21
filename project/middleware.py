@@ -1,6 +1,7 @@
 from analytics.models import Visitor, Request, Parameter, Pageview
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.http import HttpResponsePermanentRedirect
 from datetime import datetime
 
 # Make sure models are loaded. This fixes a TypeError that
@@ -8,6 +9,15 @@ from datetime import datetime
 from django.db.models.loading import cache as model_cache
 if not model_cache.loaded:
     model_cache.get_models()
+
+class RedirectTrailingDot():
+    def process_request(self, request):
+        # If hostname contains a trailing dot, strip it with redirect
+        # - mainly to support the sites framework.
+        # This should preferably be in the nginx config, but it seems to ignore the trailing dot.
+        domain, port = request.get_host().split(':')
+        if domain.endswith('.'):
+            return HttpResponsePermanentRedirect("http://%s:%s%s" % (domain[:-1], port, request.get_full_path()))
 
 class Sites():
     def process_request(self, request):
