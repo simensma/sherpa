@@ -744,7 +744,7 @@ def focus_payment_method_code(method):
     elif method == 'invoice': return 1
 
 def focus_type_of(age, household):
-    if household and age >= AGE_MAIN and age < AGE_SENIOR:
+    if household and age >= AGE_STUDENT:
                              return 107
     elif age >= AGE_SENIOR:  return 103
     elif age >= AGE_MAIN:    return 101
