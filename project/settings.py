@@ -10,6 +10,7 @@ LOGIN_URL = '/minside/logg-inn/'
 AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
+AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
 
 # For now, require only a minimum password length of 6. This might need to be reconsidered.

@@ -145,7 +145,7 @@ class Ad(models.Model):
     height = models.IntegerField(null=True)
 
     def url(self):
-        return "http://%s/%s%s.%s" % (settings.AWS_BUCKET, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
+        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
 # Upon ad delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
