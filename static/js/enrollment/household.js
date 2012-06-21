@@ -1,14 +1,5 @@
 $(document).ready(function() {
 
-    $("form#household div.household").hide();
-    $("form#household input[name='household']").click(function() {
-        if($(this).prop('checked')) {
-            $("form#household div.household").show();
-        } else {
-            $("form#household div.household").hide();
-        }
-    });
-
     $("form#household img.ajaxloader").hide();
     $("form#household input[name='zipcode']").keyup(searchZip);
     if($("form#household select[name='country'] option:selected").val() == 'NO') {
