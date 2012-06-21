@@ -636,7 +636,7 @@ def validate_email(email):
 def validate_existing(id, zipcode, country):
     try:
         actor = Actor.objects.get(actno=id)
-    except Actor.DoesNotExist:
+    except (Actor.DoesNotExist, ValueError):
         return False
 
     if datetime.now().year - actor.birth_date.year < AGE_STUDENT:
