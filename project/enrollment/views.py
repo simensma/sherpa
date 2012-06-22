@@ -37,10 +37,6 @@ invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 too_many_underage = 'for-mange-ungdomsmedlemmer'
 
-REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
-TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
-PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
-
 SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
@@ -403,7 +399,7 @@ def payment(request):
     desc = t.render(c)
 
     # Send the transaction registration to Nets
-    r = requests.get(REGISTER_URL, params={
+    r = requests.get(settings.NETS_REGISTER_URL, params={
         'merchantId': settings.NETS_MERCHANT_ID,
         'token': settings.NETS_TOKEN,
         'orderNumber': order_number,
@@ -437,7 +433,7 @@ def result(request, invoice):
         request.session['registration_success'] = True
         del request.session['registration']
     elif request.GET['responseCode'] == 'OK':
-        r = requests.get(PROCESS_URL, params={
+        r = requests.get(settings.NETS_PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
             'token': settings.NETS_TOKEN,
             'operation': 'SALE',

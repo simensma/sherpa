@@ -13,6 +13,11 @@ AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
 
+# NETS URLs used for payment
+NETS_REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
+NETS_TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
+NETS_PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
+
 # For now, require only a minimum password length of 6. This might need to be reconsidered.
 USER_PASSWORD_LENGTH = 6
 RESTORE_PASSWORD_KEY_LENGTH = 40
