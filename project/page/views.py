@@ -195,7 +195,11 @@ def page_not_found(request, template_name='404.html'):
     param_str = request.GET.urlencode()
     if param_str != '':
         param_str = "?%s" % param_str
-    path = "%s%s" % (request.path, param_str)
+    path = request.path
+    if path.find(".php") != -1:
+        # Remove trailing slash for old php files
+        path = path[:-1]
+    path = "%s%s" % (path, param_str)
     t = loader.get_template(template_name)
     c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
