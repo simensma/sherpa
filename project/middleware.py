@@ -10,6 +10,20 @@ from django.db.models.loading import cache as model_cache
 if not model_cache.loaded:
     model_cache.get_models()
 
+class DecodeQueryString(object):
+    def process_request(self, request):
+        # Some browsers (guess which), and also the Bing bot, don't follow the spec, and send
+        # non-ascii query string characters, without using percent-encoding.
+        # Guess the encoding, trying ascii first, and re-encode with utf-8
+        for encoding in ['ascii', 'utf-8', 'iso-8859-1', 'windows-1252']:
+            try:
+                request.META['QUERY_STRING'] = request.META['QUERY_STRING'].decode(encoding).encode('utf-8')
+                return
+            except UnicodeDecodeError:
+                pass
+        # Unable to decode the query string. Just leave it as it is, and if any later usage
+        # of it leads to a decoding error, let it happen and be logged for further inspection.
+
 class RedirectTrailingDot():
     def process_request(self, request):
         # If hostname contains a trailing dot, strip it with redirect
