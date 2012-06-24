@@ -62,6 +62,8 @@ function validateContent(widget) {
         });
     } else if(widget.attr('data-widget') == 'blog') {
         var count = widget.find("input[name='count']").val();
+        var category = widget.find("select[name='category']").val();
+
         if(isNaN(Number(count))) {
             alert("Du må angi et tall for antall blogginnlegg som skal vises!");
             return false;
@@ -71,7 +73,8 @@ function validateContent(widget) {
         }
         return JSON.stringify({
             widget: "blog",
-            count: count
+            count: count,
+            category : category
         });
     } else if(widget.attr('data-widget') == 'embed') {
         var code = widget.find("textarea[name='code']").val();
