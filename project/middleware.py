@@ -18,19 +18,17 @@ class RedirectTrailingDot():
         domain = request.get_host().split(':', 1)[0]
         if domain.endswith('.'):
             return HttpResponsePermanentRedirect("http://%s%s" % (domain[:-1], request.get_full_path()))
-        return None
 
 class Sites():
     def process_request(self, request):
         request.site = Site.objects.get(domain=request.get_host().split(":")[0])
-        return None
 
 class Analytics():
     def process_request(self, request):
         # Don't process requests to static files
         statics = ['/favicon.ico', '/robots.txt']
         if request.path in statics or request.path.startswith(settings.STATIC_URL):
-            return None
+            return
 
         # Store new visitor sessions
         if not 'visitor' in request.session:
@@ -64,7 +62,6 @@ class Analytics():
             p.save()
 
         request.session['request'] = requestObject
-        return None
 
     def process_response(self, request, response):
         if 'request' in request.session:
