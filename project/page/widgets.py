@@ -4,6 +4,7 @@ from lxml import etree
 import requests
 import json
 import re
+import random
 
 from page.models import Version
 
@@ -15,6 +16,9 @@ def parse_widget(widget):
         data = {'quote': widget['quote'], 'author': widget['author']}
     elif widget['widget'] == "promo":
         data = {}
+    elif widget['widget'] == 'carousel':
+        # NO! BAD HAVARD, dont use hax, create an id(but not now)
+        data = {'id':random.randint(0,10000), 'images':widget['images']}
     elif widget['widget'] == "articles":
         versions = Version.objects.filter(
             variant__article__isnull=False, variant__segment__isnull=True,

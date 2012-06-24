@@ -38,7 +38,24 @@ $(document).ready(function() {
         removeContent(widgetBeingEdited);
     });
 
+    // add another pictureline to carousell
+    $("div.dialog.widget-edit button.add-image").click(function() {
+        listImages(true);
+    });
 });
+
+function getUrlsFromCarouselEdit(widget){
+    var rows = widget.find("table[name='imagetable'] tbody").children();
+
+    var list = [];
+    for(var i = 0; i < rows.length; i++){
+        var value = $(rows[i].cells).find("input[name^='url']").val();
+        if(value.trim().length > 1){
+            list.push(value);
+        }
+    }
+    return list;
+}
 
 function validateContent(widget) {
     if(widget.attr('data-widget') == 'quote') {
@@ -46,6 +63,11 @@ function validateContent(widget) {
             widget: "quote",
             quote: widget.find("textarea[name='quote']").val(),
             author: widget.find("input[name='author']").val()
+        });
+    } else if(widget.attr('data-widget') == 'carousel') {
+        return JSON.stringify({
+            widget: "carousel",
+            images: getUrlsFromCarouselEdit(widget)
         });
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
@@ -95,15 +117,54 @@ function editWidget() {
     if(widget.widget == 'quote') {
         $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
         $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
-        $("div.dialog.widget-edit[data-widget='quote']").dialog('open');
     } else if(widget.widget == 'articles') {
         $("div.dialog.widget-edit[data-widget='articles'] input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit[data-widget='articles']").dialog('open');
     } else if(widget.widget == 'blog') {
         $("div.dialog.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit[data-widget='blog']").dialog('open');
+        $("div.dialog.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
     } else if(widget.widget == 'embed') {
         $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
-        $("div.dialog.widget-edit[data-widget='embed']").dialog('open');
+    }else if(widget.widget == 'carousel') {
+        listImages(false);
+    }
+    $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
+}
+
+function listImages(add){
+    var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+    var length = widget.images.length;
+
+    var urls = widget.images;
+
+    if(add == true){
+        urls = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
+        console.log(urls);
+        length = urls.length +1;
+    }
+
+    $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr").remove();
+    for(var i = 0; i < length; i++){
+        var value = urls[i];
+        if(i == urls.length){
+            value = "";
+        }
+        $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable']").append(
+            "<tr name='"+ i +"'>" + 
+                "<td><input type='text' class='input-xlarge' value='" + value + "' name='url"+ i +"'></td>" +
+                "<td><button class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn bilde i arkivet</button></td>" +
+                "<td><button name='"+ i +"' class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern bilde</button></td>" +
+            "</tr>"
+        );
+
+        $("div.dialog.widget-edit[data-widget='carousel'] button[name='"+ i +"']").click(function(){
+            var name = $(this).attr('name');
+            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='"+ name +"']").remove();
+            
+            console.log(widget.images);
+            widget.images = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
+            console.log(widget.images);
+
+            widgetBeingEdited.attr('data-json', JSON.stringify(widget));
+        });
     }
 }
