@@ -66,7 +66,9 @@ $(document).ready(function() {
     $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
         console.log(imageList.length);
         imageList.splice(currentIndex, 1);
-        currentIndex--;
+        if(currentIndex > 0){
+            currentIndex--;
+        }
         console.log(imageList.length);
 
         var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
@@ -187,9 +189,11 @@ function displayCurrentImage(){
     }
 
     if(currentIndex == imageList.length -1){
-        $("div.dialog.widget-edit button.next").text("+ Nytt bilde");
+        $("div.dialog.widget-edit button.next").text(" Nytt bilde");
+        $("div.dialog.widget-edit button.next").prepend("<i class='icon-plus'></i>");
     }else{
-        $("div.dialog.widget-edit button.next").text("Neste bilde >");
+        $("div.dialog.widget-edit button.next").text("Neste bilde ")
+        $("div.dialog.widget-edit button.next").append("<i class='icon-chevron-right'></i>");
     }
 }
 
