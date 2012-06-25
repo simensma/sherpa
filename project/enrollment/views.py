@@ -296,6 +296,7 @@ def payment(request):
 
     if request.POST.get('payment-method', '') != 'card' and request.POST.get('payment-method', '') != 'invoice':
         return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
+    request.session['registration']['payment-method'] = request.POST['payment-method']
 
     # Figure out who's a household-member, who's not, and who's the main member
     main = None
@@ -338,7 +339,7 @@ def payment(request):
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['registration']['location'], main['phone'], main['email'],
             main['yearbook'], request.session['registration']['yearbook'], None,
-            request.POST['payment-method'], request.session['registration']['price'])
+            request.session['registration']['payment-method'], request.session['registration']['price'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -348,11 +349,12 @@ def payment(request):
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['location'], user['phone'], user['email'],
             user['yearbook'], request.session['registration']['yearbook'],
-            linked_to, request.POST['payment-method'], request.session['registration']['price'])
+            linked_to, request.session['registration']['payment-method'],
+            request.session['registration']['price'])
 
     # Cool. If we're paying by invoice, just forward to result page
-    if request.POST['payment-method'] == 'invoice':
-        return HttpResponseRedirect(reverse('enrollment.views.result', kwargs={'invoice': True}))
+    if request.session['registration']['payment-method'] == 'invoice':
+        return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
 
     # Paying with card. Calculate the order details
     sum = 0
@@ -409,7 +411,7 @@ def payment(request):
         'currencyCode': 'NOK',
         'amount': sum * 100,
         'orderDescription': desc,
-        'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.result", kwargs={'invoice': False}))
+        'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.process_card"))
     })
 
     # Sweet, almost done, now just send the user to complete the transaction
@@ -420,19 +422,18 @@ def payment(request):
         settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
     ))
 
-def result(request, invoice):
-    users = request.session['registration']['users']
-    group = request.session['registration']['group']
-    location = request.session['registration']['location']
-    if invoice:
-        prepare_and_send_email(request.session['registration']['users'],
-            request.session['registration']['group'],
-            request.session['registration']['location'], 'invoice')
-        result = 'invoice'
-        skip_header = True
-        request.session['registration_success'] = True
-        del request.session['registration']
-    elif request.GET['responseCode'] == 'OK':
+def process_invoice(request):
+    prepare_and_send_email(request.session['registration']['users'],
+        request.session['registration']['group'],
+        request.session['registration']['location'], 'invoice')
+
+    request.session['registration_complete'] = request.session['registration']
+    request.session['registration_complete']['result'] = 'invoice'
+    del request.session['registration']
+    return HttpResponseRedirect(reverse('enrollment.views.result'))
+
+def process_card(request):
+    if request.GET['responseCode'] == 'OK':
         r = requests.get(settings.NETS_PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
             'token': settings.NETS_TOKEN,
@@ -450,42 +451,55 @@ def result(request, invoice):
             prepare_and_send_email(request.session['registration']['users'],
                 request.session['registration']['group'],
                 request.session['registration']['location'], 'card')
-            result = 'success'
-            skip_header = True
-            request.session['registration_sms'] = {}
-            request.session['registration_sms']['country'] = request.session['registration']['location']['country']
-            request.session['registration_success'] = True
-            request.session['registration_sms']['users'] = request.session['registration']['users']
+            request.session['registration_complete'] = request.session['registration']
+            request.session['registration_complete']['payment_method'] = 'card'
+            request.session['registration_complete']['result'] = 'success'
             del request.session['registration']
         else:
-            result = 'fail'
-            skip_header = False
+            request.session['registration']['result'] = 'fail'
     else:
-        result = 'cancel'
-        skip_header = False
+        request.session['registration']['result'] = 'cancel'
+    return HttpResponseRedirect(reverse('enrollment.views.result'))
+
+def result(request):
+    if request.session.has_key('registration_complete'):
+        # Enrollment was successfully completed (card or invoice)
+        registration = request.session['registration_complete']
+    elif request.session.has_key('registration'):
+        # Payment failed. Note: This key will exist if a new enrollment has been started
+        # after a successful old enrollment, but check the completion key first in case
+        # the user just went back to the receipt page.
+        registration = request.session['registration']
+    else:
+        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+
+    # If a registration has been initiated without being completed
+    if not registration.has_key('result'):
+        return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     # Collect emails to a separate list for easier template formatting
     emails = []
-    for user in users:
+    for user in registration['users']:
         if user['email'] != '':
             emails.append(user['email'])
 
+    skip_header = registration['result'] == 'invoice' or registration['result'] == 'success'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = {'users': users, 'skip_header': skip_header,
-        'group': group, 'proof_validity_end': proof_validity_end, 'emails': emails,
-        'location': location}
-    return render(request, 'enrollment/result/%s.html' % result, context)
+    context = {'users': registration['users'], 'skip_header': skip_header,
+        'group': registration['group'], 'proof_validity_end': proof_validity_end,
+        'emails': emails, 'location': registration['location']}
+    return render(request, 'enrollment/result/%s.html' % registration['result'], context)
 
 def sms(request):
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
-    if request.session['registration_sms']['country'] != 'NO':
-        return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if not request.session.has_key('registration_success'):
+    if not request.session.has_key('registration_complete'):
         return HttpResponse(json.dumps({'error': 'not_registered'}))
-    if request.session['registration_sms']['users'][index].has_key('sms_sent'):
+    if request.session['registration_complete']['location']['country'] != 'NO':
+        return HttpResponse(json.dumps({'error': 'foreign_number'}))
+    if request.session['registration_complete']['users'][index].has_key('sms_sent'):
         return HttpResponse(json.dumps({'error': 'already_sent'}))
-    number = request.session['registration_sms']['users'][index]['phone']
+    number = request.session['registration_complete']['users'][index]['phone']
 
     # Render the SMS template
     now = datetime.now()
@@ -493,7 +507,7 @@ def sms(request):
     next_year = now.month >= MONTH_THRESHOLD
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
-        'users': request.session['registration_sms']['users']})
+        'users': request.session['registration_complete']['users']})
     sms_message = t.render(c).encode('utf-8')
 
     # Send the message
@@ -503,7 +517,8 @@ def sms(request):
     status = re.findall('Status: .*', r.text)
     if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
         return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
-    request.session['registration_sms']['users'][index]['sms_sent'] = True
+    request.session['registration_complete']['users'][index]['sms_sent'] = True
+    request.session.modified = True
     return HttpResponse(json.dumps({'error': 'none'}))
 
 def prepare_and_send_email(users, group, location, payment_method):
