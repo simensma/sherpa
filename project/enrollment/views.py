@@ -417,7 +417,7 @@ def payment(request):
     request.session.modified = True
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-        TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
+        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
     ))
 
 def result(request, invoice):
