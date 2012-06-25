@@ -13,6 +13,6 @@ urlpatterns = patterns('enrollment.views',
     url(r'^resultat/$', 'result', {'invoice': False}),
     url(r'^resultat/faktura/$', 'result', {'invoice': True}),
 
-    url(r'^stedsnavn/(?P<code>\d+)/$', 'zipcode'),
+    url(r'^stedsnavn/(?P<zipcode>\d+)/$', 'zipcode'),
     url(r'^sms/$', 'sms'),
 )
