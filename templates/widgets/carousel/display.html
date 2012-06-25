@@ -3,9 +3,9 @@
 
 		{% for image in widget.images%}
 			{% if forloop.counter == 1 %}
-				<div class="active item"><img src="{{ image }}"></div>
+				<div class="active item"><img src="{{ image.url }}"></div>
 			{% else %}
-				<div class="item"><img src="{{ image }}"></div>
+				<div class="item"><img src="{{ image.url }}"></div>
 			{% endif %}
 		{% endfor %}
 	</div>

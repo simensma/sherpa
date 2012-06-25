@@ -44,14 +44,23 @@ $(document).ready(function() {
     });
 });
 
-function getUrlsFromCarouselEdit(widget){
+function getImagesFromCarouselEdit(widget){
     var rows = widget.find("table[name='imagetable'] tbody").children();
 
     var list = [];
     for(var i = 0; i < rows.length; i++){
-        var value = $(rows[i].cells).find("input[name^='url']").val();
-        if(value.trim().length > 1){
-            list.push(value);
+        var url = $(rows[i].cells).find("input[name^='url']").val();
+        i++;
+        var description = $(rows[i].cells).find("input[name^='description']").val();
+        i++;
+        var photographer = $(rows[i].cells).find("input[name^='photographer']").val();
+
+        if(url.trim().length > 1){
+            list.push({
+                url: url,
+                description: description,
+                photographer: photographer
+            });
         }
     }
     return list;
@@ -66,7 +75,7 @@ function validateContent(widget) {
         });
     } else if(widget.attr('data-widget') == 'carousel') {
 
-        var list = getUrlsFromCarouselEdit(widget);
+        var list = getImagesFromCarouselEdit(widget);
         if(list.length < 1){
             alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bilde-funksjonen.)");
             return false;
@@ -137,29 +146,48 @@ function editWidget() {
     $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
 }
 
+
+var imageList = [];
 function listImages(add){
     var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
     var length = widget.images.length;
 
-    var urls = widget.images;
+    var images = widget.images;
+    var descriptions = widget.descriptions
 
     if(add == true){
-        urls = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
-        console.log(urls);
-        length = urls.length + 1;
+        images = getImagesFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
+        length = images.length + 1;
     }
 
     $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr").remove();
     for(var i = 0; i < length; i++){
-        var value = urls[i];
-        if(i == urls.length){
-            value = "";
+        var url;
+        var description;
+        var photographer;
+        if(i == images.length){
+            url = "";
+            description = "";
+            photographer = "";
+        }else{
+            url = images[i].url;
+            description = images[i].description;
+            photographer = images[i].photographer;
         }
         $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable']").append(
             "<tr name='"+ i +"'>" + 
-                "<td><input name='url"+ i +"' type='text' class='input-xlarge' value='" + value + "'></td>" +
+                "<td><label>Url:</label></td>" +
+                "<td><input name='url"+ i +"' type='text' class='input-xlarge' value='" + url + "'></td>" +
                 "<td><button name='choose"+ i +"'' class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn bilde i arkivet</button></td>" +
                 "<td><button name='remove"+ i +"' class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern bilde</button></td>" +
+            "</tr>" + 
+            "<tr name='descriptionrow"+ i +"'>" + 
+                "<td><label>Beskrivelse:</label></td>" +
+                "<td><input name='description"+ i +"' type='text' class='input-xlarge' value='" + description + "'></td>" +
+            "</tr>" +
+            "<tr name='photographerrow"+ i +"'>" + 
+                "<td><label>Fotograf:</label></td>"+
+                "<td><input name='photographer"+ i +"' type='text' class='input-xlarge' value='" + photographer + "'></td>" +
             "</tr>"
         );
 
@@ -168,7 +196,9 @@ function listImages(add){
             var name = $(this).attr('name');
             var index = name.charAt(name.length -1);
             $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='"+ index +"']").remove();
-            widget.images = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
+            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='descriptionrow"+ index +"']").remove();
+            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='photographerrow"+ index +"']").remove();
+            widget.images = getImagesFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
             widgetBeingEdited.attr('data-json', JSON.stringify(widget));
         });
 
