@@ -14,10 +14,10 @@ class DecodeQueryString(object):
     def process_request(self, request):
         # Some browsers (guess which), and also the Bing bot, don't follow the spec, and send
         # non-ascii query string characters, without using percent-encoding.
-        # Guess the encoding, trying ascii first, and re-encode with utf-8
+        # Guess the encoding, trying ascii first, and re-encode with default charset
         for encoding in ['ascii', 'utf-8', 'iso-8859-1', 'windows-1252']:
             try:
-                request.META['QUERY_STRING'] = request.META['QUERY_STRING'].decode(encoding).encode('utf-8')
+                request.META['QUERY_STRING'] = request.META['QUERY_STRING'].decode(encoding).encode(settings.DEFAULT_CHARSET)
                 return
             except UnicodeDecodeError:
                 pass
