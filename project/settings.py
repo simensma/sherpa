@@ -95,7 +95,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'middleware.DecodeQueryString',
-    'django.middleware.common.CommonMiddleware',
+    # Use a monkeypatch for Djangos CommonMiddleware. See middleware.py for more info
+    'middleware.CommonMiddlewareMonkeypatched',
+    #'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
