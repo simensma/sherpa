@@ -65,9 +65,16 @@ function validateContent(widget) {
             author: widget.find("input[name='author']").val()
         });
     } else if(widget.attr('data-widget') == 'carousel') {
+
+        var list = getUrlsFromCarouselEdit(widget);
+        if(list.length < 1){
+            alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bilde-funksjonen.)");
+            return false;
+        }
+
         return JSON.stringify({
             widget: "carousel",
-            images: getUrlsFromCarouselEdit(widget)
+            images: list
         });
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
@@ -139,7 +146,7 @@ function listImages(add){
     if(add == true){
         urls = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
         console.log(urls);
-        length = urls.length +1;
+        length = urls.length + 1;
     }
 
     $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr").remove();
@@ -150,21 +157,34 @@ function listImages(add){
         }
         $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable']").append(
             "<tr name='"+ i +"'>" + 
-                "<td><input type='text' class='input-xlarge' value='" + value + "' name='url"+ i +"'></td>" +
-                "<td><button class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn bilde i arkivet</button></td>" +
-                "<td><button name='"+ i +"' class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern bilde</button></td>" +
+                "<td><input name='url"+ i +"' type='text' class='input-xlarge' value='" + value + "'></td>" +
+                "<td><button name='choose"+ i +"'' class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn bilde i arkivet</button></td>" +
+                "<td><button name='remove"+ i +"' class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern bilde</button></td>" +
             "</tr>"
         );
 
-        $("div.dialog.widget-edit[data-widget='carousel'] button[name='"+ i +"']").click(function(){
+        //remove clicked
+        $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove"+ i +"']").click(function(){
             var name = $(this).attr('name');
-            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='"+ name +"']").remove();
-            
-            console.log(widget.images);
+            var index = name.charAt(name.length -1);
+            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='"+ index +"']").remove();
             widget.images = getUrlsFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
-            console.log(widget.images);
-
             widgetBeingEdited.attr('data-json', JSON.stringify(widget));
+        });
+
+        //choose clicked
+        $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose"+ i +"']").click(function(){
+            carouselMode = true;
+            var name = $(this).attr('name');
+            var index = name.charAt(name.length -1);
+
+            openImageDialog(undefined, undefined, undefined, undefined, function(src){
+                $("div.dialog.widget-edit[data-widget='carousel'] input[name='url"+ index +"']").val(src);
+                carouselMode = false;
+            }, undefined);
+            $("div#dialog-change-image div.image-details").hide();
+            $("div#dialog-change-image div.image-archive-chooser").show();
+
         });
     }
 }

@@ -10,6 +10,8 @@ var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
 var imagePickedCallback; // Called when an image is picked in the dialog
 var imageRemovedCallback; // Called when an image is removed, from the dialog
 
+var carouselMode = false;
+
 $(document).ready(function() {
 
     bcList = $("div#dialog-change-image div#imagearchive ul.breadcrumb");
@@ -23,8 +25,12 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image button.cancel-chooser").click(function() {
-        $("div#dialog-change-image div.image-archive-chooser").hide();
-        $("div#dialog-change-image div.image-details").show();
+        if(carouselMode == false){
+            $("div#dialog-change-image div.image-archive-chooser").hide();
+            $("div#dialog-change-image div.image-details").show();
+        }else{
+            $("div#dialog-change-image").dialog('close');
+        }
     });
 
     $("div#dialog-change-image input[name='src']").keyup(function() {
@@ -81,9 +87,11 @@ $(document).ready(function() {
 });
 
 function openImageDialog(src, anchor, description, photographer, saveCallback, removeCallback) {
+
     $("div#dialog-change-image div.image-archive-chooser").hide();
     $("div#dialog-change-image div.image-details").show();
     $("div#dialog-change-image img.preview").attr('src', src);
+
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
     dialog.find("input[name='src']").val(src);
@@ -107,6 +115,7 @@ function openImageDialog(src, anchor, description, photographer, saveCallback, r
     } else {
         dialog.find("tr.photographer").hide();
     }
+
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 }
@@ -181,12 +190,18 @@ function updateContents(parents, albums, images, emptyText) {
     for(var i=0; i<images.length; i++) {
         var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '" data-photographer="' + images[i].photographer + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
         item.click(function() {
-            $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
-            $("div#dialog-change-image input[name='description']").val($(this).attr('data-description'));
-            $("div#dialog-change-image input[name='photographer']").val($(this).attr('data-photographer'));
-            $("div#dialog-change-image div.image-archive-chooser").hide();
-            $("div#dialog-change-image div.image-details").show();
-            $("div#dialog-change-image img.preview").attr('src', "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+            if(carouselMode == false){
+                $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+                $("div#dialog-change-image input[name='description']").val($(this).attr('data-description'));
+                $("div#dialog-change-image input[name='photographer']").val($(this).attr('data-photographer'));
+                $("div#dialog-change-image div.image-archive-chooser").hide();
+                $("div#dialog-change-image div.image-details").show();
+                $("div#dialog-change-image img.preview").attr('src', "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+            }else{
+                $("div#dialog-change-image").dialog('close');
+                imagePickedCallback("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+            }
+            
         });
         $("div#dialog-change-image div#imagearchive ul#images").append(item);
     }
