@@ -116,6 +116,10 @@ function openImageDialog(src, anchor, description, photographer, saveCallback, r
         dialog.find("tr.photographer").hide();
     }
 
+    if(carouselMode){
+        $("div#dialog-change-image div.image-details").hide();
+        $("div#dialog-change-image div.image-archive-chooser").show();
+    }
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 }
@@ -190,16 +194,21 @@ function updateContents(parents, albums, images, emptyText) {
     for(var i=0; i<images.length; i++) {
         var item = $('<li data-path="' + images[i].key + '.' + images[i].extension + '" data-description="' + images[i].description + '" data-photographer="' + images[i].photographer + '"><p><img src="http://cdn.turistforeningen.no/images/' + images[i].key + '-150.' + images[i].extension + '" alt="Thumbnail"></p>' + images[i].width + ' x ' + images[i].height + '<br>' + images[i].photographer + '</li>');
         item.click(function() {
+
+            var url = "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path');
+            var description = $(this).attr('data-photographer');
+            var photographer = $(this).attr('data-photographer');
+
             if(carouselMode == false){
-                $("div#dialog-change-image input[name='src']").val("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
-                $("div#dialog-change-image input[name='description']").val($(this).attr('data-description'));
-                $("div#dialog-change-image input[name='photographer']").val($(this).attr('data-photographer'));
+                $("div#dialog-change-image input[name='src']").val(url);
+                $("div#dialog-change-image input[name='description']").val(description);
+                $("div#dialog-change-image input[name='photographer']").val(photographer);
                 $("div#dialog-change-image div.image-archive-chooser").hide();
                 $("div#dialog-change-image div.image-details").show();
                 $("div#dialog-change-image img.preview").attr('src', "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
             }else{
                 $("div#dialog-change-image").dialog('close');
-                imagePickedCallback("http://cdn.turistforeningen.no/images/" + $(this).attr('data-path'));
+                imagePickedCallback(url, description, photographer);
             }
             
         });

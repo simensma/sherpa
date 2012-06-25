@@ -38,33 +38,56 @@ $(document).ready(function() {
         removeContent(widgetBeingEdited);
     });
 
-    // add another pictureline to carousell
-    $("div.dialog.widget-edit button.add-image").click(function() {
-        listImages(true);
+    //carousel nagiation
+    $("div.dialog.widget-edit button.previous").click(function() {
+        if(currentIndex > 0){
+            currentIndex--;
+        }
+        displayCurrentImage();
+    });
+
+    $("div.dialog.widget-edit button.next").click(function() {
+        if(currentIndex == imageList.length -1){
+            if(imageList[currentIndex].url.trim().length > 0){
+                imageList.push({
+                    url:"",
+                    description:"",
+                    photographer:""
+                });
+                currentIndex++;
+            }
+        }else{
+            currentIndex++; 
+        }
+        displayCurrentImage();
+    });
+
+    //remove clicked
+    $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
+        console.log(imageList.length);
+        imageList.splice(currentIndex, 1);
+        currentIndex--;
+        console.log(imageList.length);
+
+        var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+        displayCurrentImage();
+        widget.images = imageList;
+        widgetBeingEdited.attr('data-json', JSON.stringify(widget));
+    });
+
+    //choose clicked
+    $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
+        carouselMode = true;
+
+        openImageDialog(undefined, undefined, undefined, undefined, function(url, description, photographer){
+            imageList[currentIndex].url = url;
+            imageList[currentIndex].description = description;
+            imageList[currentIndex].photographer = photographer;
+            displayCurrentImage();
+            carouselMode = false;
+        }, undefined);
     });
 });
-
-function getImagesFromCarouselEdit(widget){
-    var rows = widget.find("table[name='imagetable'] tbody").children();
-
-    var list = [];
-    for(var i = 0; i < rows.length; i++){
-        var url = $(rows[i].cells).find("input[name^='url']").val();
-        i++;
-        var description = $(rows[i].cells).find("input[name^='description']").val();
-        i++;
-        var photographer = $(rows[i].cells).find("input[name^='photographer']").val();
-
-        if(url.trim().length > 1){
-            list.push({
-                url: url,
-                description: description,
-                photographer: photographer
-            });
-        }
-    }
-    return list;
-}
 
 function validateContent(widget) {
     if(widget.attr('data-widget') == 'quote') {
@@ -75,15 +98,19 @@ function validateContent(widget) {
         });
     } else if(widget.attr('data-widget') == 'carousel') {
 
-        var list = getImagesFromCarouselEdit(widget);
-        if(list.length < 1){
+        if(imageList.length < 1){
             alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bilde-funksjonen.)");
             return false;
+        }
+        for(var i = 0; i < imageList.length; i++){
+            if(imageList[i].url.trim().length < 1){
+                imageList.splice(i, 1);
+            }
         }
 
         return JSON.stringify({
             widget: "carousel",
-            images: list
+            images: imageList
         });
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
@@ -141,80 +168,39 @@ function editWidget() {
     } else if(widget.widget == 'embed') {
         $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
     }else if(widget.widget == 'carousel') {
-        listImages(false);
+        listImages();
     }
     $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
 }
 
+function displayCurrentImage(){
+    $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(imageList[currentIndex].url);
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
+    
+    if(imageList[currentIndex].url.trim().length < 1){
+        var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('default');
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
+    }else{
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
+    }
 
+    if(currentIndex == imageList.length -1){
+        $("div.dialog.widget-edit button.next").text("+ Nytt bilde");
+    }else{
+        $("div.dialog.widget-edit button.next").text("Neste bilde >");
+    }
+}
+
+var currentIndex = 0;
 var imageList = [];
-function listImages(add){
+function listImages(){
+    currentIndex = 0;
+    imageList = [];
+
     var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
     var length = widget.images.length;
-
-    var images = widget.images;
-    var descriptions = widget.descriptions
-
-    if(add == true){
-        images = getImagesFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
-        length = images.length + 1;
-    }
-
-    $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr").remove();
-    for(var i = 0; i < length; i++){
-        var url;
-        var description;
-        var photographer;
-        if(i == images.length){
-            url = "";
-            description = "";
-            photographer = "";
-        }else{
-            url = images[i].url;
-            description = images[i].description;
-            photographer = images[i].photographer;
-        }
-        $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable']").append(
-            "<tr name='"+ i +"'>" + 
-                "<td><label>Url:</label></td>" +
-                "<td><input name='url"+ i +"' type='text' class='input-xlarge' value='" + url + "'></td>" +
-                "<td><button name='choose"+ i +"'' class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn bilde i arkivet</button></td>" +
-                "<td><button name='remove"+ i +"' class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern bilde</button></td>" +
-            "</tr>" + 
-            "<tr name='descriptionrow"+ i +"'>" + 
-                "<td><label>Beskrivelse:</label></td>" +
-                "<td><input name='description"+ i +"' type='text' class='input-xlarge' value='" + description + "'></td>" +
-            "</tr>" +
-            "<tr name='photographerrow"+ i +"'>" + 
-                "<td><label>Fotograf:</label></td>"+
-                "<td><input name='photographer"+ i +"' type='text' class='input-xlarge' value='" + photographer + "'></td>" +
-            "</tr>"
-        );
-
-        //remove clicked
-        $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove"+ i +"']").click(function(){
-            var name = $(this).attr('name');
-            var index = name.charAt(name.length -1);
-            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='"+ index +"']").remove();
-            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='descriptionrow"+ index +"']").remove();
-            $("div.dialog.widget-edit[data-widget='carousel'] table[name='imagetable'] tr[name='photographerrow"+ index +"']").remove();
-            widget.images = getImagesFromCarouselEdit($("div.dialog.widget-edit[data-widget='carousel']"));
-            widgetBeingEdited.attr('data-json', JSON.stringify(widget));
-        });
-
-        //choose clicked
-        $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose"+ i +"']").click(function(){
-            carouselMode = true;
-            var name = $(this).attr('name');
-            var index = name.charAt(name.length -1);
-
-            openImageDialog(undefined, undefined, undefined, undefined, function(src){
-                $("div.dialog.widget-edit[data-widget='carousel'] input[name='url"+ index +"']").val(src);
-                carouselMode = false;
-            }, undefined);
-            $("div#dialog-change-image div.image-details").hide();
-            $("div#dialog-change-image div.image-archive-chooser").show();
-
-        });
-    }
+    imageList = widget.images;
+    displayCurrentImage();
 }
