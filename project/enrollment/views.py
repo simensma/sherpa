@@ -219,7 +219,7 @@ def verification(request):
         del request.session['registration']['group']
     if request.session['registration']['location']['country'] == 'NO':
         # Get the city name for this zipcode
-        request.session['registration']['location']['city'] = Zipcode.objects.get(zip_code=request.session['registration']['location']['zipcode']).location
+        request.session['registration']['location']['city'] = Zipcode.objects.get(zipcode=request.session['registration']['location']['zipcode']).location
 
         # Figure out which group this member belongs to
         group = cache.get('zipcode.group.%s' % request.session['registration']['location']['zipcode'])
@@ -525,9 +525,9 @@ def prepare_and_send_email(users, group, location, payment_method):
     message = t.render(c)
     send_mail(subject, message, EMAIL_FROM, email_recipients)
 
-def zipcode(request, code):
+def zipcode(request, zipcode):
     try:
-        return HttpResponse(json.dumps({'location': Zipcode.objects.get(zip_code=code).location}))
+        return HttpResponse(json.dumps({'location': Zipcode.objects.get(zipcode=zipcode).location}))
     except Zipcode.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'does_not_exist'}))
 
@@ -607,7 +607,7 @@ def validate_location(location):
 
     if location['country'] == 'NO':
         # Zipcode does not exist
-        if not Zipcode.objects.filter(zip_code=location['zipcode']).exists():
+        if not Zipcode.objects.filter(zipcode=location['zipcode']).exists():
             return False
 
     # All tests passed!
@@ -706,17 +706,17 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     if location['country'] == 'NO':
         adr2 = ''
         adr3 = ''
-        zip_code = location['zipcode']
+        zipcode = location['zipcode']
         city = location['city']
     elif location['country'] == 'DK' or location['country'] == 'SE':
         adr2 = "%s %s" % (location['zipcode'], location['city'])
         adr3 = ''
-        zip_code = '0000'
+        zipcode = '0000'
         city = ''
     else:
         adr2 = location['address2']
         adr3 = location['address3']
-        zip_code = '0000'
+        zipcode = '0000'
         city = ''
 
     # Possible race condition here if other apps use these tables
@@ -730,7 +730,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     user = FocusUser(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
         country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
-        yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zip_code,
+        yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zipcode,
         poststed=city, language=language, totalprice=price)
     user.save()
     return memberid

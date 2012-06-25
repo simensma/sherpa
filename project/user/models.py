@@ -15,7 +15,7 @@ class Profile(models.Model):
     # - "group.Group", might need to be renamed. (Associations?)
 
 class Zipcode(models.Model):
-    zip_code = models.CharField(max_length=4)
+    zipcode = models.CharField(max_length=4)
     location = models.CharField(max_length=100)
     city_code = models.CharField(max_length=4)
     city = models.CharField(max_length=100)
