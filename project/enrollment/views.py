@@ -224,7 +224,7 @@ def verification(request):
         # Figure out which group this member belongs to
         group = cache.get('zipcode.group.%s' % request.session['registration']['location']['zipcode'])
         if group == None:
-            zipcode = FocusZipcode.objects.get(postcode=request.session['registration']['location']['zipcode'])
+            zipcode = FocusZipcode.objects.get(zipcode=request.session['registration']['location']['zipcode'])
             group = Group.objects.get(focus_id=zipcode.main_group_id)
             cache.set('zipcode.group.%s' % request.session['registration']['location']['zipcode'], group, 60 * 60 * 24 * 7)
         request.session['registration']['group'] = group

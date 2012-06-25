@@ -40,7 +40,7 @@ def zipcode_search(request):
     group = cache.get('zipcode.group.%s' % request.POST['zipcode'])
     if group == None:
         try:
-            zipcode = FocusZipcode.objects.get(postcode=request.POST['zipcode'])
+            zipcode = FocusZipcode.objects.get(zipcode=request.POST['zipcode'])
             # Note: Redirecting requires performing the group lookup twice
             group = Group.objects.get(focus_id=zipcode.main_group_id)
             cache.set('zipcode.group.%s' % request.POST['zipcode'], group, 60 * 60 * 24 * 7)

@@ -186,7 +186,7 @@ class ActorAddress(models.Model):
         db_table = u'ActAd'
 
 class FocusZipcode(models.Model):
-    postcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
+    zipcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
     postarea = models.CharField(max_length=40, db_column=u'PostArea')
     county1no = models.CharField(max_length=10, db_column=u'County1No', blank=True)
     county1name = models.CharField(max_length=40, db_column=u'County1Name', blank=True)
