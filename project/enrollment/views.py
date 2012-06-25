@@ -413,11 +413,11 @@ def payment(request):
     })
 
     # Sweet, almost done, now just send the user to complete the transaction
-    request.session['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
+    request.session['registration']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
     request.session.modified = True
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['transaction_id']
+        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
     ))
 
 def result(request, invoice):
@@ -437,7 +437,7 @@ def result(request, invoice):
             'merchantId': settings.NETS_MERCHANT_ID,
             'token': settings.NETS_TOKEN,
             'operation': 'SALE',
-            'transactionId': request.session['transaction_id']
+            'transactionId': request.session['registration']['transaction_id']
         })
         dom = etree.fromstring(r.text)
         code = dom.find(".//ResponseCode").text
