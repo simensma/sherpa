@@ -8,52 +8,6 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'FocusActType'
-        db.create_table(u'ActType', (
-            ('type', self.gf('django.db.models.fields.CharField')(max_length=1, primary_key=True, db_column=u'ActType')),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50, db_column=u'ActNm')),
-            ('next', self.gf('django.db.models.fields.IntegerField')(db_column=u'NextNo')),
-            ('last', self.gf('django.db.models.fields.IntegerField')(db_column=u'LastNo')),
-        ))
-        db.send_create_signal('user', ['FocusActType'])
-
-        # Adding model 'FocusUser'
-        db.create_table(u'CustTurist_members', (
-            ('tempid', self.gf('django.db.models.fields.FloatField')(default=None, null=True, db_column=u'tempID')),
-            ('member_id', self.gf('django.db.models.fields.IntegerField')(primary_key=True, db_column=u'memberID')),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Lastname')),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Firstname')),
-            ('dob', self.gf('django.db.models.fields.DateTimeField')(db_column=u'Birthdate')),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=1, db_column=u'Gender')),
-            ('linked_to', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'LinkedTo')),
-            ('enlisted_by', self.gf('django.db.models.fields.CharField')(default=0, max_length=255, db_column=u'EnlistedBy')),
-            ('enlisted_article', self.gf('django.db.models.fields.CharField')(default=None, max_length=255, db_column=u'EnlistedArticle')),
-            ('adr1', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Adr1')),
-            ('adr2', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Adr2')),
-            ('adr3', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Adr3')),
-            ('country', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Country')),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Phone')),
-            ('email', self.gf('django.db.models.fields.TextField')(db_column=u'Email')),
-            ('receive_yearbook', self.gf('django.db.models.fields.BooleanField')(default=False, db_column=u'ReceiveYearbook')),
-            ('type', self.gf('django.db.models.fields.FloatField')(db_column=u'Type')),
-            ('yearbook', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Yearbook')),
-            ('payment_method', self.gf('django.db.models.fields.FloatField')(db_column=u'Paymethod')),
-            ('contract_giro', self.gf('django.db.models.fields.BooleanField')(default=False, db_column=u'ContractGiro')),
-            ('mob', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Mob')),
-            ('postnr', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Postnr')),
-            ('poststed', self.gf('django.db.models.fields.CharField')(max_length=255, db_column=u'Poststed')),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('totalprice', self.gf('django.db.models.fields.FloatField')(db_column=u'TotalPrice')),
-            ('payed', self.gf('django.db.models.fields.BooleanField')(default=False, db_column=u'Payed')),
-            ('reg_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_column=u'Regdate', blank=True)),
-            ('receive_email', self.gf('django.db.models.fields.BooleanField')(default=True, db_column=u'ReceiveEmail')),
-            ('receive_sms', self.gf('django.db.models.fields.BooleanField')(default=True, db_column=u'ReceiveSms')),
-            ('submitted_by', self.gf('django.db.models.fields.CharField')(default=None, max_length=255, null=True, db_column=u'SubmittedBy')),
-            ('submitted_date', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, db_column=u'SubmittedDt')),
-            ('updated_card', self.gf('django.db.models.fields.BooleanField')(default=False, db_column=u'UpdatedCard')),
-        ))
-        db.send_create_signal('user', ['FocusUser'])
-
         # Adding model 'FocusCountry'
         db.create_table('user_focuscountry', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -65,12 +19,6 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         
-        # Deleting model 'FocusActType'
-        db.delete_table(u'ActType')
-
-        # Deleting model 'FocusUser'
-        db.delete_table(u'CustTurist_members')
-
         # Deleting model 'FocusCountry'
         db.delete_table('user_focuscountry')
 

@@ -8,37 +8,6 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'FocusPrice'
-        db.create_table(u'Cust_Turist_Region_PriceCode_CrossTable', (
-            ('group_id', self.gf('django.db.models.fields.IntegerField')(primary_key=True, db_column=u'Region')),
-            ('main', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C101', blank=True)),
-            ('student', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C102', blank=True)),
-            ('senior', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C103', blank=True)),
-            ('lifelong', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C104', blank=True)),
-            ('child', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C105', blank=True)),
-            ('school', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C106', blank=True)),
-            ('household', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C107', blank=True)),
-            ('unknown', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'C108', blank=True)),
-        ))
-        db.send_create_signal('user', ['FocusPrice'])
-
-        # Adding model 'FocusZipcode'
-        db.create_table(u'PostalCode', (
-            ('postcode', self.gf('django.db.models.fields.CharField')(max_length=9, primary_key=True, db_column=u'PostCode')),
-            ('postarea', self.gf('django.db.models.fields.CharField')(max_length=40, db_column=u'PostArea')),
-            ('county1no', self.gf('django.db.models.fields.CharField')(max_length=10, db_column=u'County1No', blank=True)),
-            ('county1name', self.gf('django.db.models.fields.CharField')(max_length=40, db_column=u'County1Name', blank=True)),
-            ('county2no', self.gf('django.db.models.fields.CharField')(max_length=10, db_column=u'County2No', blank=True)),
-            ('county2name', self.gf('django.db.models.fields.CharField')(max_length=40, db_column=u'County2Name', blank=True)),
-            ('main_group_id', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'District1', blank=True)),
-            ('local_group_id', self.gf('django.db.models.fields.IntegerField')(null=True, db_column=u'District2', blank=True)),
-            ('crby', self.gf('django.db.models.fields.CharField')(max_length=25, db_column=u'CrBy', blank=True)),
-            ('crdt', self.gf('django.db.models.fields.DateTimeField')(null=True, db_column=u'CrDt', blank=True)),
-            ('chby', self.gf('django.db.models.fields.CharField')(max_length=25, db_column=u'ChBy', blank=True)),
-            ('chdt', self.gf('django.db.models.fields.DateTimeField')(null=True, db_column=u'ChDt', blank=True)),
-        ))
-        db.send_create_signal('user', ['FocusZipcode'])
-
         # Deleting field 'Profile.text'
         db.delete_column('user_profile', 'text')
 
@@ -48,12 +17,6 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         
-        # Deleting model 'FocusPrice'
-        db.delete_table(u'Cust_Turist_Region_PriceCode_CrossTable')
-
-        # Deleting model 'FocusZipcode'
-        db.delete_table(u'PostalCode')
-
         # Adding field 'Profile.text'
         db.add_column('user_profile', 'text', self.gf('django.db.models.fields.CharField')(default='', max_length=200), keep_default=False)
 
