@@ -102,7 +102,8 @@ class CommonMiddlewareMonkeypatched(object):
     Its purpose is to decode the query string with the encoding specified in settings,
     instead of ascii.
 
-    ".decode(settings.DEFAULT_CHARSET)" has been appended to the second last line.
+    ".decode(settings.DEFAULT_CHARSET)" has been appended to the second last line in
+    process_request.
 
     At the time of this writing, we're running on Django 1.4.
     When updating, REMEMBER TO UPDATE THIS MONKEYPATCH ACCORDINGLY!
