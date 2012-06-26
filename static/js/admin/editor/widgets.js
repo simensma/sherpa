@@ -79,15 +79,12 @@ $(document).ready(function() {
 
     //choose clicked
     $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
-        carouselMode = true;
-
-        openImageDialog(undefined, undefined, undefined, undefined, function(url, description, photographer){
-            imageList[currentIndex].url = url.trim();
-            imageList[currentIndex].description = description.trim();
-            imageList[currentIndex].photographer = photographer.trim();
+        chooseImagefromArchive(function(url, description, photographer){
+            imageList[currentIndex].url = url;
+            imageList[currentIndex].description = description;
+            imageList[currentIndex].photographer = photographer;
             displayCurrentImage();
-            carouselMode = false;
-        }, undefined);
+        });
     });
 
     //updating data in "model" on key up

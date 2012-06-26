@@ -8,17 +8,17 @@ div#dialog-change-image button.button-aligned {
   margin-bottom: 10px;
 }
 
-div#dialog-change-image div#imagearchive div#contentlist div.album {
+div#dialog-image-archive-chooser div#imagearchive div#contentlist div.album {
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
-div#dialog-change-image div#imagearchive div#contentlist img.album {
+div#dialog-image-archive-chooser div#imagearchive div#contentlist img.album {
   float: left;
   width: 25px;
 }
 
-div#dialog-change-image div#imagearchive ul#images li {
+div#dialog-image-archive-chooser div#imagearchive ul#images li {
   display: block;
   width: 200px;
   border: 1px solid #888;
