@@ -82,12 +82,23 @@ $(document).ready(function() {
         carouselMode = true;
 
         openImageDialog(undefined, undefined, undefined, undefined, function(url, description, photographer){
-            imageList[currentIndex].url = url;
-            imageList[currentIndex].description = description;
-            imageList[currentIndex].photographer = photographer;
+            imageList[currentIndex].url = url.trim();
+            imageList[currentIndex].description = description.trim();
+            imageList[currentIndex].photographer = photographer.trim();
             displayCurrentImage();
             carouselMode = false;
         }, undefined);
+    });
+
+    //updating data in "model" on key up
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
+        imageList[currentIndex].url = $(this).val().trim();
+    });
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
+        imageList[currentIndex].description = $(this).val().trim();
+    });
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").keyup(function(){
+        imageList[currentIndex].photographer = $(this).val().trim();
     });
 });
 

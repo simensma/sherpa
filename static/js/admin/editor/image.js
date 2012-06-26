@@ -196,7 +196,7 @@ function updateContents(parents, albums, images, emptyText) {
         item.click(function() {
 
             var url = "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path');
-            var description = $(this).attr('data-photographer');
+            var description = $(this).attr('data-description');
             var photographer = $(this).attr('data-photographer');
 
             if(carouselMode == false){
