@@ -51,6 +51,7 @@ $(document).ready(function() {
 function openImageDialog(src, anchor, description, photographer, saveCallback, removeCallback) {
 
     $("div#dialog-change-image div.image-details").show();
+    $("div#dialog-change-image div.empty-src").hide();
     $("div#dialog-change-image img.preview").attr('src', src);
 
     var dialog = $("div#dialog-change-image");
