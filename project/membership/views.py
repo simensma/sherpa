@@ -37,6 +37,8 @@ def benefits(request, group_id):
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
+    if not request.POST.has_key('zipcode'):
+        return HttpResponseRedirect(reverse('membership.views.index'))
     group = cache.get('zipcode.group.%s' % request.POST['zipcode'])
     if group == None:
         try:
