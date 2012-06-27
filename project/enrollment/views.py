@@ -511,15 +511,17 @@ def sms(request):
     sms_message = t.render(c).encode('utf-8')
 
     # Send the message
-    r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
-
-    # Check and return status
-    status = re.findall('Status: .*', r.text)
-    if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
-        return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
-    request.session['registration_complete']['users'][index]['sms_sent'] = True
-    request.session.modified = True
-    return HttpResponse(json.dumps({'error': 'none'}))
+    try:
+        r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+        # Check and return status
+        status = re.findall('Status: .*', r.text)
+        if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+            return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
+        request.session['registration_complete']['users'][index]['sms_sent'] = True
+        request.session.modified = True
+        return HttpResponse(json.dumps({'error': 'none'}))
+    except requests.ConnectionError:
+        return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(users, group, location, payment_method):
     email_recipients = []

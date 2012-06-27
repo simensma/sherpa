@@ -24,6 +24,9 @@ $(document).ready(function() {
             } else if(result.error == 'already_sent') {
                 button.after('<p class="receipt-error">SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil.</p>');
                 button.remove();
+            } else if(result.error == 'connection_error') {
+                button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. ' + memberserviceBackup + '</p>');
+                button.remove();
             } else if(result.error == 'service_fail') {
                 button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. Feilmelding oppgitt er:</p><pre>' + result.message + '</pre><p class="receipt-error">' + memberserviceBackup + '</p>');
                 button.remove();
