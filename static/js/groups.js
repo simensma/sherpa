@@ -35,7 +35,7 @@ $(document).ready(function() {
             data: 'category=' + encodeURIComponent(category) +
                   '&county=' + encodeURIComponent(county)
         }).fail(function(result) {
-            $(document.body).html(result.responseText);
+            $("div.syntaxerror").show();
         }).done(function(result) {
             try {
                 result = JSON.parse(result);
