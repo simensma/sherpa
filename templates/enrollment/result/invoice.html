@@ -37,30 +37,30 @@
     </p>
 
     {% if location.country == 'NO' %}
-      <div id="boxes">
-        <div class="box">
-          <h2>Planlegg turen på UT.no</h2>
+      <div class="row-fluid result-subheader">
+        <div class="span4">
+          <h3>Planlegg turen på UT.no</h3>
           <p>
             På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
           </p>
         </div>
 
-        <div class="box">
-          <h2>Hva skjer der du bor</h2>
+        <div class="span4">
+          <h3>Hva skjer der du bor</h3>
           <p>
             <a href="{{ group.url }}">{{ group.name }}</a> arrangerer fellesturer og aktiviteter hele året.
           </p>
         </div>
 
-        <div class="box">
-          <h2>Min side</h2>
+        <div class="span4">
+          <h3>Min side</h3>
           <p>
             Registrer deg på <a href="{% url user.views.home %}">Min side</a> og få tilgang til våre medlemstjenester.
           </p>
         </div>
       </div>
     {% else %}
-      <h3 class="boxes">Planlegg turen på UT.no</h3>
+      <h3 class="result-subheader">Planlegg turen på UT.no</h3>
       <p>
         På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
       </p>

@@ -187,18 +187,8 @@ div.notice-alert {
     margin-bottom: 20px;
 }
 
-div#result div#boxes, h3.boxes {
+.result-subheader {
     margin-top: 40px;
-}
-
-div#result div#boxes div.box {
-    float: left;
-    width: 31%;
-    margin: 1% 2% 1% 0;
-}
-
-div#result div#boxes div.box h2 {
-    font-size: 20px;
 }
 
 p.receipt-success {
