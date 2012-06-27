@@ -29,6 +29,7 @@ $(document).ready(function() {
         $("div.loading").show();
         $("div.count").hide();
         $("div.no-results").hide();
+        $("div.syntaxerror").hide();
         $.ajax({
             url: '/foreninger/filtrer/',
             data: 'category=' + encodeURIComponent(category) +
@@ -36,17 +37,24 @@ $(document).ready(function() {
         }).fail(function(result) {
             $(document.body).html(result.responseText);
         }).done(function(result) {
-            result = JSON.parse(result);
-            for(var i=0; i<result.length; i++) {
-                $("table#results").append(result[i]);
+            try {
+                result = JSON.parse(result);
+                for(var i=0; i<result.length; i++) {
+                    $("table#results").append(result[i]);
+                }
+                if(result.length == 0) {
+                    $("div.no-results").show();
+                }
+                $("table#results div.map").hide();
+                $("table#results a.close-map").hide();
+                $("div.count").show();
+                $("div.count span.count").text(result.length);
+            } catch(SyntaxError) {
+                // Not sure why this would ever happen?
+                // I'd like to refresh the window and assume next try would work, but that
+                // could lead to an infinite loop :) so just inform the user of an error.
+                $("div.syntaxerror").show();
             }
-            if(result.length == 0) {
-                $("div.no-results").show();
-            }
-            $("table#results div.map").hide();
-            $("table#results a.close-map").hide();
-            $("div.count").show();
-            $("div.count span.count").text(result.length);
         }).always(function() {
             $("div.loading").hide();
         });

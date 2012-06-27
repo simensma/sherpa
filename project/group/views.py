@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count, Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
@@ -27,6 +28,8 @@ def index(request):
     return render(request, 'groups/list.html', context)
 
 def filter(request):
+    if not request.POST.has_key('category') or not request.POST.has_key('county'):
+        return HttpResponseRedirect(reverse('group.views.index'))
     result = cache.get('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result == None:
         exists = False
