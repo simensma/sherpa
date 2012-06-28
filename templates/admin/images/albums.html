@@ -16,7 +16,7 @@
     <tr>
       <td>
         <form style="margin: 0;" action="{% if current_album %}{% url admin.images.views.upload_image current_album.id %}{% endif %}" method="get">
-        <button class="btn btn-success"{% if not current_album %} disabled{% endif %}><i class="icon-picture"></i> Last opp nytt bilde her</button>
+        <button type="submit" class="btn btn-success"{% if not current_album %} disabled{% endif %}><i class="icon-picture"></i> Last opp nytt bilde her</button>
         </form>
       </td>
       <td><button class="btn btn-success dialog-button" data-dialog=".album-dialog"><i class="icon-folder-open"></i> Opprett nytt album her</button></td>
