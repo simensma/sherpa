@@ -103,9 +103,13 @@ def registration(request, user):
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
-    del request.session['registration']['users'][int(user)]
-    if len(request.session['registration']['users']) == 0:
-        del request.session['registration']
+    # If the index is too high, ignore it and redirect the user back.
+    # This should only happen if the user messes with back/forwards buttons in their browser,
+    # and they'll at LEAST notice it the member list and price sum in the verification view.
+    if len(request.session['registration']['users']) >= int(user) + 1:
+        del request.session['registration']['users'][int(user)]
+        if len(request.session['registration']['users']) == 0:
+            del request.session['registration']
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
