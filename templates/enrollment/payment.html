@@ -25,9 +25,9 @@
       {% csrf_token %}
       <input type="hidden" name="main-member" value="">
       <h2> Velg betalingsmåte:</h2>
-      <div class="control-group payment-method">
-        <input type="radio" name="payment-method" value="card" checked> VISA / MASTERCARD<br>
-        <input type="radio" name="payment-method" value="invoice"> Få tilsendt faktura
+      <div class="control-group">
+        <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD<br>
+        <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
       </div>
 
       <div class="alert alert-info invoice-info">

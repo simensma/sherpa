@@ -299,9 +299,9 @@ def payment(request):
     if val is not None:
         return val
 
-    if request.POST.get('payment-method', '') != 'card' and request.POST.get('payment-method', '') != 'invoice':
+    if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
         return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
-    request.session['registration']['payment-method'] = request.POST['payment-method']
+    request.session['registration']['payment_method'] = request.POST['payment_method']
 
     # Figure out who's a household-member, who's not, and who's the main member
     main = None
@@ -344,7 +344,7 @@ def payment(request):
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['registration']['location'], main['phone'], main['email'],
             main['yearbook'], request.session['registration']['yearbook'], None,
-            request.session['registration']['payment-method'], request.session['registration']['price'])
+            request.session['registration']['payment_method'], request.session['registration']['price'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
@@ -354,11 +354,11 @@ def payment(request):
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
             request.session['registration']['location'], user['phone'], user['email'],
             user['yearbook'], request.session['registration']['yearbook'],
-            linked_to, request.session['registration']['payment-method'],
+            linked_to, request.session['registration']['payment_method'],
             request.session['registration']['price'])
 
     # Cool. If we're paying by invoice, just forward to result page
-    if request.session['registration']['payment-method'] == 'invoice':
+    if request.session['registration']['payment_method'] == 'invoice':
         return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
 
     # Paying with card. Calculate the order details
