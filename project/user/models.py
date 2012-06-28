@@ -70,14 +70,6 @@ class FocusUser(models.Model):
     class Meta:
         db_table = u'CustTurist_members'
 
-class FocusActType(models.Model):
-    type = models.CharField(max_length=1, primary_key=True, db_column=u'ActType')
-    name = models.CharField(max_length=50, db_column=u'ActNm')
-    next = models.IntegerField(db_column=u'NextNo')
-    last = models.IntegerField(db_column=u'LastNo')
-    class Meta:
-        db_table = u'ActType'
-
 class Actor(models.Model):
     seqno = models.AutoField(primary_key=True, db_column=u'SeqNo')
     type = models.CharField(max_length=50, db_column=u'Type')

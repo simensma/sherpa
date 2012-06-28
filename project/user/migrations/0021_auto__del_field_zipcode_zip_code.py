@@ -166,13 +166,6 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'sherpa_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
         },
-        'user.focusacttype': {
-            'Meta': {'object_name': 'FocusActType', 'db_table': "u'ActType'"},
-            'last': ('django.db.models.fields.IntegerField', [], {'db_column': "u'LastNo'"}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'db_column': "u'ActNm'"}),
-            'next': ('django.db.models.fields.IntegerField', [], {'db_column': "u'NextNo'"}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '1', 'primary_key': 'True', 'db_column': "u'ActType'"})
-        },
         'user.focuscountry': {
             'Meta': {'object_name': 'FocusCountry'},
             'code': ('django.db.models.fields.CharField', [], {'max_length': '2'}),

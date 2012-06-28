@@ -6,9 +6,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template import Context, loader
 from django.core.cache import cache
+from django.db import transaction, connections
 
 from group.models import Group
-from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, FocusActType, Actor, ActorAddress, FocusPrice
+from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, Actor, ActorAddress, FocusPrice
 
 from datetime import datetime, timedelta
 import requests
@@ -740,14 +741,13 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         zipcode = '0000'
         city = ''
 
-    # Possible race condition here if other apps use these tables
-    # Transactions aren't used because:
-    # 1. Django ORM-level transactions didn't seem to work (rollback had no effect)
-    # 2. Raw execution *could* be used but avoids Djangos SQL-injection
-    seq = FocusActType.objects.get(type='P')
-    memberid = seq.next
-    seq.next = memberid + 7
-    seq.save()
+    # Fetch and increment memberid with stored procedure
+    with transaction.commit_manually():
+        cursor = connections['focus'].cursor()
+        cursor.execute("exec sp_custTurist_updateMemberId")
+        memberid = cursor.fetchone()[0]
+        connections['focus'].commit_unless_managed()
+
     user = FocusUser(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
         country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
