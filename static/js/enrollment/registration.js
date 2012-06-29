@@ -43,7 +43,7 @@ $(document).ready(function() {
 
     window.email_required = false;
     $("form#registration input[name='email']").focusout(function() {
-        if($(this).val() != "" && !$(this).val().match(/.+@.+\..+/)) {
+        if($(this).val() != "" && !$(this).val().match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/)) {
             // Email provided, but invalid
             $(this).parents("div.control-group").addClass('error');
         }

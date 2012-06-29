@@ -648,8 +648,8 @@ def validate_phone(phone):
     return len(phone) >= 8 and len(re.findall('[a-z]', phone, re.I)) == 0
 
 def validate_email(email):
-    # Email matches anything@anything.anything
-    return len(re.findall('.+@.+\..+', email)) > 0
+    # Email matches anything@anything.anything, without whitespace
+    return len(re.findall('^[^\s]+@[^\s]+\.[^\s]+$', email)) > 0
 
 def validate_existing(id, zipcode, country):
     try:
