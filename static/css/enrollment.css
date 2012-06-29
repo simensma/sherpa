@@ -211,3 +211,7 @@ p.sms {
     margin-top: 15px;
     margin-bottom: 15px;
 }
+
+table td.sum {
+    font-weight: bold;
+}

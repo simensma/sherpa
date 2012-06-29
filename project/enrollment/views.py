@@ -357,20 +357,22 @@ def payment(request):
             linked_to, request.session['registration']['payment_method'],
             request.session['registration']['price'])
 
-    # Cool. If we're paying by invoice, just forward to result page
-    if request.session['registration']['payment_method'] == 'invoice':
-        return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
-
-    # Paying with card. Calculate the order details
-    sum = 0
+    # Calculate the prices and membership type
+    request.session['registration']['price_sum'] = 0
     for user in request.session['registration']['users']:
-        sum += price_of(user['age'], user['household'], request.session['registration']['price'])
+        user['price'] = price_of(user['age'], user['household'], request.session['registration']['price'])
+        user['type'] = type_of(user['age'], user['household'])
+        request.session['registration']['price_sum'] += user['price']
         if user.has_key('key'):
-            sum += KEY_PRICE
+            request.session['registration']['price_sum'] += KEY_PRICE
 
     # Pay for yearbook if foreign
     if request.session['registration']['yearbook']:
-        sum += FOREIGN_SHIPMENT_PRICE
+        request.session['registration']['price_sum'] += FOREIGN_SHIPMENT_PRICE
+
+    # Paying with card. If we're paying by invoice, just forward to result page
+    if request.session['registration']['payment_method'] == 'invoice':
+        return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
 
     now = datetime.now()
     year = now.year
@@ -414,7 +416,7 @@ def payment(request):
         'customerLastName': last_name,
         'customerEmail': email,
         'currencyCode': 'NOK',
-        'amount': sum * 100,
+        'amount': request.session['registration']['price_sum'] * 100,
         'orderDescription': desc,
         'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.process_card"))
     })
@@ -478,6 +480,9 @@ def result(request):
     else:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
+    registration['payment_method'] = 'card'
+    registration['result'] = 'success'
+
     # If a registration has been initiated without being completed
     if not registration.has_key('result'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
@@ -492,7 +497,8 @@ def result(request):
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': registration['users'], 'skip_header': skip_header,
         'group': registration['group'], 'proof_validity_end': proof_validity_end,
-        'emails': emails, 'location': registration['location']}
+        'emails': emails, 'location': registration['location'],
+        'price_sum': registration['price_sum']}
     return render(request, 'enrollment/result/%s.html' % registration['result'], context)
 
 def sms(request):
@@ -691,6 +697,14 @@ def price_of_age(age, price):
     elif age >= AGE_STUDENT: return price.student
     elif age >= AGE_SCHOOL:  return price.school
     else:                    return price.child
+
+def type_of(age, household):
+    if household and age >= AGE_STUDENT: return 'Husstandsmedlem'
+    elif age >= AGE_SENIOR:              return 'Honnørmedlem'
+    elif age >= AGE_MAIN:                return 'Hovedmedlem'
+    elif age >= AGE_STUDENT:             return 'Student/ungdomsmedlem'
+    elif age >= AGE_SCHOOL:              return 'Skoleungdomsmedlem'
+    else:                                return 'Barnemedlem'
 
 def polite_title(str):
     # If the string is all lowercase or uppercase, apply titling for it

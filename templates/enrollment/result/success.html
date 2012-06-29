@@ -14,28 +14,37 @@
 <div class="row">
   <div id="result" class="span8">
 
-    {% if users|length == 1 %}
-      <p>
-        Du er nå medlem i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.<br>
-        Ditt medlemsnummer er: {{ users.0.id }}
-      </p>
-    {% else %}
-      <p>
+    <p>
+      {% if users|length == 1 %}
+        Du er nå medlem i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.
+      {% else %}
         Dere er nå medlemmer i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.
-      </p>
-      <table class="table">
-        <tr>
-          <th>Navn</th>
-          <th>Medlemsnummer</th>
-        </tr>
-      {% for user in users %}
-        <tr>
-          <td>{{ user.name }}</td>
-          <td>{{ user.id }}</td>
-        </tr>
-      {% endfor %}
-      </table>
+      {% endif %}
+    </p>
+
+    <table class="table">
+      <tr>
+        <th>Navn</th>
+        <th>Medlemsnummer</th>
+        <th>Medlemstype</th>
+        <th>Pris</th>
+      </tr>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.id }}</td>
+        <td>{{ user.type }}</td>
+        <td>{{ user.price }},-</td>
+      </tr>
+    {% endfor %}
+    {% if users|length > 1 %}
+      <tr>
+        <td class="sum">Totalt:</td>
+        <td colspan="2"></td>
+        <td class="sum">{{ price_sum }},-</td>
+      </tr>
     {% endif %}
+    </table>
 
     <p>
       {% if users|length == 1 %}
