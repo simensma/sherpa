@@ -72,11 +72,11 @@ class Analytics():
         requestObject = Request(
             visitor=visitor,
             http_method=request.method,
-            path=request.path,
+            path=request.path[:2048],
             server_host=request.get_host(),
             client_ip=request.META.get('REMOTE_ADDR', ''),
             client_host=request.META.get('REMOTE_HOST', ''),
-            referrer=request.META.get('HTTP_REFERER', ''),
+            referrer=request.META.get('HTTP_REFERER', '')[:2048],
             enter=datetime.now(),
             ajax=request.is_ajax())
         requestObject.save()
