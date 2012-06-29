@@ -643,8 +643,7 @@ def validate_user_contact(users):
     return False
 
 def validate_phone(phone):
-    # Phone no. is non-empty (empty is allowed) and less than 8 chars
-    # (allow >8, in case it's formatted with whitespace)
+    # Allow >8 chars in case it's formatted with whitespace
     return len(phone) >= 8 and len(re.findall('[a-z]', phone, re.I)) == 0
 
 def validate_email(email):
