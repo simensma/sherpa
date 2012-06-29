@@ -4,7 +4,7 @@ $(document).ready(function() {
         changeMonth: true,
         changeYear: true,
         firstDay: 1,
-        yearRange: "-120:c",
+        yearRange: "1900:c", // Based on earliest possible mssql smalldatetime value
         dateFormat: 'dd.mm.yy',
         dayNames: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
         dayNamesShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
