@@ -1,8 +1,18 @@
 from analytics.models import Visitor, Request, Parameter, Pageview
+from django import http
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
+from django.core.mail import mail_managers
+from django.utils.http import urlquote
+from django.core import urlresolvers
+from django.utils.log import getLogger
+
 from datetime import datetime
+import hashlib
+import re
+
+logger = getLogger('django.request')
 
 # Make sure models are loaded. This fixes a TypeError that
 # occurs when restarting the gunicorn server.
@@ -81,19 +91,6 @@ class Analytics():
         if 'request' in request.session:
             del request.session['request']
         return response
-
-import hashlib
-import re
-
-from django.conf import settings
-from django import http
-from django.core.mail import mail_managers
-from django.utils.http import urlquote
-from django.core import urlresolvers
-from django.utils.log import getLogger
-
-logger = getLogger('django.request')
-
 
 class CommonMiddlewareMonkeypatched(object):
     """
