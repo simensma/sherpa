@@ -63,9 +63,9 @@ def registration(request, user):
     if request.method == 'POST':
         new_user = {}
         # Titleize and strip whitespace before/after dash
-        new_user['name'] = re.sub('\s*-\s*', '-', polite_title(request.POST['name']))
-        new_user['phone'] = request.POST['phone']
-        new_user['email'] = request.POST['email'].lower()
+        new_user['name'] = re.sub('\s*-\s*', '-', polite_title(request.POST['name'].strip()))
+        new_user['phone'] = request.POST['phone'].strip()
+        new_user['email'] = request.POST['email'].lower().strip()
         new_user['gender'] = request.POST.get('gender', '')
         if request.POST.get('key') == 'on':
             new_user['key'] = True
