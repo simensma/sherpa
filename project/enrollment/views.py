@@ -104,6 +104,9 @@ def registration(request, user):
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+
     # If the index is too high, ignore it and redirect the user back.
     # This should only happen if the user messes with back/forwards buttons in their browser,
     # and they'll at LEAST notice it the member list and price sum in the verification view.
