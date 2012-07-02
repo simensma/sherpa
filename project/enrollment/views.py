@@ -480,9 +480,6 @@ def result(request):
     else:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    registration['payment_method'] = 'card'
-    registration['result'] = 'success'
-
     # If a registration has been initiated without being completed
     if not registration.has_key('result'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
