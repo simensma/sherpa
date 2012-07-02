@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^article.php$', 'page.views.redirect', kwargs={'url': 'http://%s/article.php' % settings.OLD_SITE}),
     url(r'^booking.php$', 'page.views.redirect', kwargs={'url': 'http://%s/booking.php' % settings.OLD_SITE}),
     url(r'^payment/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/payment/' % settings.OLD_SITE}),
+    url(r'^list.php$', 'page.views.redirect', kwargs={'url': 'http://%s/list.php' % settings.OLD_SITE}),
 
     # Old XML feeds
     url(r'^xml_activity_ut2.php$', 'page.views.redirect', kwargs={'url': 'http://%s/xml_activity_ut2.php' % settings.OLD_SITE}),
