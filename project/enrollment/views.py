@@ -432,7 +432,8 @@ def payment(request):
 def process_invoice(request):
     prepare_and_send_email(request.session['registration']['users'],
         request.session['registration']['group'],
-        request.session['registration']['location'], 'invoice')
+        request.session['registration']['location'], 'invoice',
+        request.session['registration']['price_sum'])
 
     request.session['registration_complete'] = request.session['registration']
     request.session['registration_complete']['result'] = 'invoice'
@@ -457,7 +458,8 @@ def process_card(request):
                 focus_user.save()
             prepare_and_send_email(request.session['registration']['users'],
                 request.session['registration']['group'],
-                request.session['registration']['location'], 'card')
+                request.session['registration']['location'], 'card',
+                request.session['registration']['price_sum'])
             request.session['registration_complete'] = request.session['registration']
             request.session['registration_complete']['payment_method'] = 'card'
             request.session['registration_complete']['result'] = 'success'
@@ -531,7 +533,7 @@ def sms(request):
     except requests.ConnectionError:
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
-def prepare_and_send_email(users, group, location, payment_method):
+def prepare_and_send_email(users, group, location, payment_method, price_sum):
     email_recipients = []
     for user in users:
         if user['email'] != '':
@@ -546,7 +548,7 @@ def prepare_and_send_email(users, group, location, payment_method):
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     t = loader.get_template('enrollment/result/%s' % template)
     c = Context({'users': users, 'group': group, 'location': location,
-        'proof_validity_end': proof_validity_end})
+        'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
     message = t.render(c)
     send_mail(subject, message, EMAIL_FROM, email_recipients)
 

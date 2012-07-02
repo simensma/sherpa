@@ -2,10 +2,9 @@ Hei!
 
 Velkommen som medlemmer i DNT og {{ group.name }}.
 
-Medlemsnumre for dere er:
+{% for user in users %}{{ user.name }}, {{ user.type }} (kr. {{ user.price }}), medlemsnr: {{ user.id }}
+{% endfor %}Totalsum: {{ price_sum }},-
 
-{% for user in users %}{{ user.name }}: {{ user.id }}
-{% endfor %}
 Dere vil i løpet av kort tid motta medlemskort i posten.
 
 Mer informasjon om medlemskapet og medlemsfordelene finner dere på http://www.turistforeningen.no/medlem/
