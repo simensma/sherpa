@@ -57,28 +57,28 @@ def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def registration(request, user):
-    if request.session.has_key('registration'):
-        if request.session['registration']['state'] == 'payment':
+    if request.session.has_key('enrollment'):
+        if request.session['enrollment']['state'] == 'payment':
             # Payment has been initiated but the user goes back to the registration page - why?
             # Maybe it failed, and they want to retry registration?
             # Reset the state and let them reinitiate payment when they're ready.
-            request.session['registration']['state'] = 'registration'
-        elif request.session['registration']['state'] == 'complete':
+            request.session['enrollment']['state'] = 'registration'
+        elif request.session['enrollment']['state'] == 'complete':
             # A previous registration has been completed, but a new one has been initiated.
             # Remove the old one and start over.
-            del request.session['registration']
+            del request.session['enrollment']
 
     # Check if this is a first-time registration (or start-over if the previous one was deleted)
     if not request.session.has_key('registration'):
-        request.session['registration'] = {'users': [], 'state': 'registration'}
-    elif not request.session['registration'].has_key('state'):
+        request.session['enrollment'] = {'users': [], 'state': 'registration'}
+    elif not request.session['enrollment'].has_key('state'):
         # Temporary if-branch:
         # Since the 'state' key was recently added to the session dict,
         # add it for old users who revisit this page.
-        request.session['registration']['state'] = 'registration'
+        request.session['enrollment']['state'] = 'registration'
 
     if user is not None:
-        user = request.session['registration']['users'][int(user)]
+        user = request.session['enrollment']['users'][int(user)]
 
     errors = False
     if request.method == 'POST':
@@ -108,9 +108,9 @@ def registration(request, user):
                 user = new_user
         else:
             if request.POST.has_key('user'):
-                request.session['registration']['users'][int(request.POST['user'])] = new_user
+                request.session['enrollment']['users'][int(request.POST['user'])] = new_user
             else:
-                request.session['registration']['users'].append(new_user)
+                request.session['enrollment']['users'].append(new_user)
 
     contact_missing = request.GET.has_key(contact_missing_key)
     updateIndices(request.session)
@@ -118,23 +118,23 @@ def registration(request, user):
     if not errors and request.POST.has_key('forward'):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
-    context = {'users': request.session['registration']['users'], 'user': user,
+    context = {'users': request.session['enrollment']['users'], 'user': user,
         'errors': errors, 'contact_missing': contact_missing,
-        'conditions': request.session['registration'].get('conditions', ''),
+        'conditions': request.session['enrollment'].get('conditions', ''),
         'too_many_underage': request.GET.has_key(too_many_underage)}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
-    if not request.session.has_key('registration'):
+    if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     # If the index is too high, ignore it and redirect the user back.
     # This should only happen if the user messes with back/forwards buttons in their browser,
     # and they'll at LEAST notice it the member list and price sum in the verification view.
-    if len(request.session['registration']['users']) >= int(user) + 1:
-        del request.session['registration']['users'][int(user)]
-        if len(request.session['registration']['users']) == 0:
-            del request.session['registration']
+    if len(request.session['enrollment']['users']) >= int(user) + 1:
+        del request.session['enrollment']['users'][int(user)]
+        if len(request.session['enrollment']['users']) == 0:
+            del request.session['enrollment']
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
@@ -142,16 +142,16 @@ def household(request):
     if val is not None:
         return val
 
-    if request.session['registration']['state'] == 'payment':
+    if request.session['enrollment']['state'] == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['registration']['state'] = 'registration'
-    elif request.session['registration']['state'] == 'complete':
+        request.session['enrollment']['state'] = 'registration'
+    elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
-    request.session['registration']['conditions'] = True
+    request.session['enrollment']['conditions'] = True
     errors = request.GET.has_key(invalid_location)
     if request.method == 'POST':
         location = {}
@@ -161,23 +161,23 @@ def household(request):
         location['address3'] = polite_title(request.POST['address3'])
         location['zipcode'] = request.POST['zipcode']
         location['city'] = request.POST.get('city', '')
-        request.session['registration']['location'] = location
-        request.session['registration']['yearbook'] = location['country'] != 'NO' and request.POST.has_key('yearbook')
-        request.session['registration']['attempted_yearbook'] = False
-        if request.session['registration']['yearbook'] and request.POST['existing'] != '':
-            request.session['registration']['yearbook'] = False
-            request.session['registration']['attempted_yearbook'] = True
+        request.session['enrollment']['location'] = location
+        request.session['enrollment']['yearbook'] = location['country'] != 'NO' and request.POST.has_key('yearbook')
+        request.session['enrollment']['attempted_yearbook'] = False
+        if request.session['enrollment']['yearbook'] and request.POST['existing'] != '':
+            request.session['enrollment']['yearbook'] = False
+            request.session['enrollment']['attempted_yearbook'] = True
         if request.POST.has_key('existing'):
-            request.session['registration']['existing'] = request.POST['existing']
+            request.session['enrollment']['existing'] = request.POST['existing']
 
-        if validate_location(request.session['registration']['location']):
+        if validate_location(request.session['enrollment']['location']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
         request.session.modified = True
 
     main = False
-    for user in request.session['registration']['users']:
+    for user in request.session['enrollment']['users']:
         if user['age'] >= AGE_STUDENT:
             main = True
             break
@@ -188,12 +188,12 @@ def household(request):
     countries_other = countries.filter(scandinavian=False)
 
     updateIndices(request.session)
-    context = {'users': request.session['registration']['users'],
-        'location': request.session['registration'].get('location', ''),
-        'existing': request.session['registration'].get('existing', ''),
+    context = {'users': request.session['enrollment']['users'],
+        'location': request.session['enrollment'].get('location', ''),
+        'existing': request.session['enrollment'].get('existing', ''),
         'invalid_existing': request.GET.has_key(invalid_existing),
         'countries_norway': countries_norway, 'main': main,
-        'yearbook': request.session['registration'].get('yearbook', ''),
+        'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors}
@@ -234,47 +234,47 @@ def verification(request):
     if val is not None:
         return val
 
-    if request.session['registration']['state'] == 'payment':
+    if request.session['enrollment']['state'] == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['registration']['state'] = 'registration'
-    elif request.session['registration']['state'] == 'complete':
+        request.session['enrollment']['state'] = 'registration'
+    elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     # If existing member is specified, save details and change to that address
     existing_name = ''
-    if request.session['registration']['existing'] != '':
-        actor = Actor.objects.get(actno=request.session['registration']['existing'])
+    if request.session['enrollment']['existing'] != '':
+        actor = Actor.objects.get(actno=request.session['enrollment']['existing'])
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
         address = ActorAddress.objects.get(actseqno=actor.seqno)
-        request.session['registration']['location']['country'] = address.country
+        request.session['enrollment']['location']['country'] = address.country
         if address.country == 'NO':
-            request.session['registration']['location']['address1'] = address.a1
+            request.session['enrollment']['location']['address1'] = address.a1
         elif address.country == 'DK' or address.country == 'SE':
-            request.session['registration']['location']['address1'] = address.a1
-            request.session['registration']['location']['zipcode'] = address.a2
-            request.session['registration']['location']['city'] = address.a3
+            request.session['enrollment']['location']['address1'] = address.a1
+            request.session['enrollment']['location']['zipcode'] = address.a2
+            request.session['enrollment']['location']['city'] = address.a3
         else:
-            request.session['registration']['location']['country'] = address.country
-            request.session['registration']['location']['address1'] = address.a1
-            request.session['registration']['location']['address2'] = address.a2
-            request.session['registration']['location']['address3'] = address.a3
+            request.session['enrollment']['location']['country'] = address.country
+            request.session['enrollment']['location']['address1'] = address.a1
+            request.session['enrollment']['location']['address2'] = address.a2
+            request.session['enrollment']['location']['address3'] = address.a3
 
-    if request.session['registration'].has_key('group'):
-        del request.session['registration']['group']
-    if request.session['registration']['location']['country'] == 'NO':
+    if request.session['enrollment'].has_key('group'):
+        del request.session['enrollment']['group']
+    if request.session['enrollment']['location']['country'] == 'NO':
         # Get the city name for this zipcode
-        request.session['registration']['location']['city'] = Zipcode.objects.get(zipcode=request.session['registration']['location']['zipcode']).location
+        request.session['enrollment']['location']['city'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).location
 
         # Figure out which group this member belongs to
-        group = cache.get('zipcode.group.%s' % request.session['registration']['location']['zipcode'])
+        group = cache.get('zipcode.group.%s' % request.session['enrollment']['location']['zipcode'])
         if group == None:
-            zipcode = FocusZipcode.objects.get(zipcode=request.session['registration']['location']['zipcode'])
+            zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
             group = Group.objects.get(focus_id=zipcode.main_group_id)
-            cache.set('zipcode.group.%s' % request.session['registration']['location']['zipcode'], group, 60 * 60 * 24 * 7)
-        request.session['registration']['group'] = group
+            cache.set('zipcode.group.%s' % request.session['enrollment']['location']['zipcode'], group, 60 * 60 * 24 * 7)
+        request.session['enrollment']['group'] = group
     else:
         # Foreign members are registered with DNT Oslo og Omegn
         oslo_group_id = 2 # This is the current ID for that group
@@ -282,14 +282,14 @@ def verification(request):
         if group == None:
             group = Group.objects.get(id=oslo_group_id)
             cache.set('group.%s' % oslo_group_id, group, 60 * 60 * 24)
-        request.session['registration']['group'] = group
+        request.session['enrollment']['group'] = group
 
     # Get the prices for that group
-    price = cache.get('group.price.%s' % request.session['registration']['group'].focus_id)
+    price = cache.get('group.price.%s' % request.session['enrollment']['group'].focus_id)
     if price == None:
-        price = FocusPrice.objects.get(group_id=request.session['registration']['group'].focus_id)
-        cache.set('group.price.%s' % request.session['registration']['group'].focus_id, price, 60 * 60 * 24 * 7)
-    request.session['registration']['price'] = price
+        price = FocusPrice.objects.get(group_id=request.session['enrollment']['group'].focus_id)
+        cache.set('group.price.%s' % request.session['enrollment']['group'].focus_id, price, 60 * 60 * 24 * 7)
+    request.session['enrollment']['price'] = price
 
     now = datetime.now()
     year = now.year
@@ -298,7 +298,7 @@ def verification(request):
     keycount = 0
     student_or_older_count = 0
     main = None
-    for user in request.session['registration']['users']:
+    for user in request.session['enrollment']['users']:
         if main == None or (user['age'] < main['age'] and user['age'] >= AGE_STUDENT):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
@@ -309,20 +309,20 @@ def verification(request):
     keyprice = keycount * KEY_PRICE
     multiple_main = student_or_older_count > 1
     updateIndices(request.session)
-    context = {'users': request.session['registration']['users'],
-        'country': FocusCountry.objects.get(code=request.session['registration']['location']['country']),
-        'location': request.session['registration']['location'],
-        'group': request.session['registration']['group'],
-        'existing': request.session['registration']['existing'], 'existing_name': existing_name,
+    context = {'users': request.session['enrollment']['users'],
+        'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
+        'location': request.session['enrollment']['location'],
+        'group': request.session['enrollment']['group'],
+        'existing': request.session['enrollment']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year,
-        'price': request.session['registration']['price'],
+        'price': request.session['enrollment']['price'],
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
         'no_main_member': request.GET.has_key(no_main_member_key),
-        'yearbook': request.session['registration']['yearbook'],
-        'attempted_yearbook': request.session['registration']['attempted_yearbook'],
+        'yearbook': request.session['enrollment']['yearbook'],
+        'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE}
     return render(request, 'enrollment/verification.html', context)
 
@@ -331,16 +331,16 @@ def payment_method(request):
     if val is not None:
         return val
 
-    if request.session['registration']['state'] == 'payment':
+    if request.session['enrollment']['state'] == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['registration']['state'] = 'registration'
-    elif request.session['registration']['state'] == 'complete':
+        request.session['enrollment']['state'] = 'registration'
+    elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
-    request.session['registration']['main_member'] = request.POST.get('main-member', '')
+    request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
     return render(request, 'enrollment/payment.html', context)
@@ -350,38 +350,38 @@ def payment(request):
     if val is not None:
         return val
 
-    if request.session['registration']['state'] == 'registration':
+    if request.session['enrollment']['state'] == 'registration':
         # All right, enter payment state
-        request.session['registration']['state'] = 'payment'
-    elif request.session['registration']['state'] == 'payment':
+        request.session['enrollment']['state'] = 'payment'
+    elif request.session['enrollment']['state'] == 'payment':
         # Already in payment state, skip payment and redirect forwards to processing
-        if request.session['registration']['payment_method'] == 'invoice':
+        if request.session['enrollment']['payment_method'] == 'invoice':
             return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
-        elif request.session['registration']['payment_method'] == 'card':
+        elif request.session['enrollment']['payment_method'] == 'card':
             return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
+                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
             ))
-    elif request.session['registration']['state'] == 'complete':
+    elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
         return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
-    request.session['registration']['payment_method'] = request.POST['payment_method']
+    request.session['enrollment']['payment_method'] = request.POST['payment_method']
 
     # Figure out who's a household-member, who's not, and who's the main member
     main = None
     linked_to = None
-    if request.session['registration']['existing'] != '':
+    if request.session['enrollment']['existing'] != '':
         # If a pre-existing main member is specified, everyone is household
-        for user in request.session['registration']['users']:
+        for user in request.session['enrollment']['users']:
             user['household'] = True
             user['yearbook'] = False
-        linked_to = request.session['registration']['existing']
-    elif request.session['registration']['main_member'] != '':
+        linked_to = request.session['enrollment']['existing']
+    elif request.session['enrollment']['main_member'] != '':
         # If the user specified someone, everyone except that member is household
-        for user in request.session['registration']['users']:
-            if user['index'] == int(request.session['registration']['main_member']):
+        for user in request.session['enrollment']['users']:
+            if user['index'] == int(request.session['enrollment']['main_member']):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_STUDENT:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
@@ -397,7 +397,7 @@ def payment(request):
     else:
         # In this case, one or more members below student age are registered,
         # so no main/household status applies.
-        for user in request.session['registration']['users']:
+        for user in request.session['enrollment']['users']:
             user['household'] = False
             user['yearbook'] = False
             # Verify that all members are below student age
@@ -408,36 +408,36 @@ def payment(request):
     if main != None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
-            request.session['registration']['location'], main['phone'], main['email'],
-            main['yearbook'], request.session['registration']['yearbook'], None,
-            request.session['registration']['payment_method'], request.session['registration']['price'])
+            request.session['enrollment']['location'], main['phone'], main['email'],
+            main['yearbook'], request.session['enrollment']['yearbook'], None,
+            request.session['enrollment']['payment_method'], request.session['enrollment']['price'])
         linked_to = main['id']
 
     # Right, let's add the rest of them
-    for user in request.session['registration']['users']:
+    for user in request.session['enrollment']['users']:
         if user == main:
             continue
         user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
-            request.session['registration']['location'], user['phone'], user['email'],
-            user['yearbook'], request.session['registration']['yearbook'],
-            linked_to, request.session['registration']['payment_method'],
-            request.session['registration']['price'])
+            request.session['enrollment']['location'], user['phone'], user['email'],
+            user['yearbook'], request.session['enrollment']['yearbook'],
+            linked_to, request.session['enrollment']['payment_method'],
+            request.session['enrollment']['price'])
 
     # Calculate the prices and membership type
-    request.session['registration']['price_sum'] = 0
-    for user in request.session['registration']['users']:
-        user['price'] = price_of(user['age'], user['household'], request.session['registration']['price'])
+    request.session['enrollment']['price_sum'] = 0
+    for user in request.session['enrollment']['users']:
+        user['price'] = price_of(user['age'], user['household'], request.session['enrollment']['price'])
         user['type'] = type_of(user['age'], user['household'])
-        request.session['registration']['price_sum'] += user['price']
+        request.session['enrollment']['price_sum'] += user['price']
         if user.has_key('key'):
-            request.session['registration']['price_sum'] += KEY_PRICE
+            request.session['enrollment']['price_sum'] += KEY_PRICE
 
     # Pay for yearbook if foreign
-    if request.session['registration']['yearbook']:
-        request.session['registration']['price_sum'] += FOREIGN_SHIPMENT_PRICE
+    if request.session['enrollment']['yearbook']:
+        request.session['enrollment']['price_sum'] += FOREIGN_SHIPMENT_PRICE
 
     # If we're paying by invoice, skip ahead to invoice processing
-    if request.session['registration']['payment_method'] == 'invoice':
+    if request.session['enrollment']['payment_method'] == 'invoice':
         return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
 
     # Paying with card, move on.
@@ -453,7 +453,7 @@ def payment(request):
         email = main['email']
     else:
         found = False
-        for user in request.session['registration']['users']:
+        for user in request.session['enrollment']['users']:
             if user['age'] >= AGE_STUDENT:
                 order_number = 'I_%s' % user['id']
                 first_name = user['name'].split(' ')[0]
@@ -463,12 +463,12 @@ def payment(request):
                 break
         if not found:
             order_number = 'I'
-            for user in request.session['registration']['users']:
+            for user in request.session['enrollment']['users']:
                 order_number += '_%s' % user['id']
             # Just use the name of the first user.
-            first_name = request.session['registration']['users'][0]['name'].split(' ')[0]
-            last_name = request.session['registration']['users'][0]['name'].split(' ')[1:]
-            email = request.session['registration']['users'][0]['email']
+            first_name = request.session['enrollment']['users'][0]['name'].split(' ')[0]
+            last_name = request.session['enrollment']['users'][0]['name'].split(' ')[1:]
+            email = request.session['enrollment']['users'][0]['email']
 
     t = loader.get_template('enrollment/payment-terminal.html')
     c = Context({'year': year, 'next_year': next_year})
@@ -483,54 +483,54 @@ def payment(request):
         'customerLastName': last_name,
         'customerEmail': email,
         'currencyCode': 'NOK',
-        'amount': request.session['registration']['price_sum'] * 100,
+        'amount': request.session['enrollment']['price_sum'] * 100,
         'orderDescription': desc,
         'redirectUrl': "http://%s%s" % (request.site, reverse("enrollment.views.process_card"))
     })
 
     # Sweet, almost done, now just send the user to complete the transaction
-    request.session['registration']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
+    request.session['enrollment']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
     request.session.modified = True
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
+        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
     ))
 
 def process_invoice(request):
-    if not request.session.has_key('registration'):
+    if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    if request.session['registration']['state'] == 'registration':
+    if request.session['enrollment']['state'] == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
-    elif request.session['registration']['state'] == 'payment':
+    elif request.session['enrollment']['state'] == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
-        request.session['registration']['state'] = 'complete'
-    elif request.session['registration']['state'] == 'complete':
+        request.session['enrollment']['state'] = 'complete'
+    elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
-    prepare_and_send_email(request.session['registration']['users'],
-        request.session['registration']['group'],
-        request.session['registration']['location'], 'invoice',
-        request.session['registration']['price_sum'])
+    prepare_and_send_email(request.session['enrollment']['users'],
+        request.session['enrollment']['group'],
+        request.session['enrollment']['location'], 'invoice',
+        request.session['enrollment']['price_sum'])
 
-    request.session['registration']['result'] = 'invoice'
+    request.session['enrollment']['result'] = 'invoice'
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def process_card(request):
-    if not request.session.has_key('registration'):
+    if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    if request.session['registration']['state'] == 'registration':
+    if request.session['enrollment']['state'] == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         # Note, *this* makes it impossible to use a previously verified transaction id
         # on a *second* registration by skipping the payment view and going straight to this check.
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
-    elif request.session['registration']['state'] == 'payment':
+    elif request.session['enrollment']['state'] == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
-        request.session['registration']['state'] = 'complete'
-    elif request.session['registration']['state'] == 'complete':
+        request.session['enrollment']['state'] = 'complete'
+    elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
@@ -539,67 +539,67 @@ def process_card(request):
             'merchantId': settings.NETS_MERCHANT_ID,
             'token': settings.NETS_TOKEN,
             'operation': 'SALE',
-            'transactionId': request.session['registration']['transaction_id']
+            'transactionId': request.session['enrollment']['transaction_id']
         })
         dom = etree.fromstring(r.text)
         code = dom.find(".//ResponseCode").text
         if code == 'OK':
             # Register the payment in focus
-            for user in request.session['registration']['users']:
+            for user in request.session['enrollment']['users']:
                 focus_user = FocusUser.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
-            prepare_and_send_email(request.session['registration']['users'],
-                request.session['registration']['group'],
-                request.session['registration']['location'], 'card',
-                request.session['registration']['price_sum'])
-            request.session['registration']['result'] = 'success'
+            prepare_and_send_email(request.session['enrollment']['users'],
+                request.session['enrollment']['group'],
+                request.session['enrollment']['location'], 'card',
+                request.session['enrollment']['price_sum'])
+            request.session['enrollment']['result'] = 'success'
         else:
-            request.session['registration']['result'] = 'fail'
+            request.session['enrollment']['result'] = 'fail'
     else:
-        request.session['registration']['result'] = 'cancel'
+        request.session['enrollment']['result'] = 'cancel'
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def result(request):
-    if not request.session.has_key('registration'):
+    if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    if request.session['registration']['state'] == 'registration':
+    if request.session['enrollment']['state'] == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
-    elif request.session['registration']['state'] == 'payment':
+    elif request.session['enrollment']['state'] == 'payment':
         # Not done with payments, why is the user here? Redirect back to payment processing
-        if request.session['registration']['payment_method'] == 'invoice':
+        if request.session['enrollment']['payment_method'] == 'invoice':
             return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
-        elif request.session['registration']['payment_method'] == 'card':
+        elif request.session['enrollment']['payment_method'] == 'card':
             return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
+                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
             ))
 
     # Collect emails to a separate list for easier template formatting
     emails = []
-    for user in request.session['registration']['users']:
+    for user in request.session['enrollment']['users']:
         if user['email'] != '':
             emails.append(user['email'])
 
-    skip_header = request.session['registration']['result'] == 'invoice' or request.session['registration']['result'] == 'success'
+    skip_header = request.session['enrollment']['result'] == 'invoice' or request.session['enrollment']['result'] == 'success'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
-        'group': request.session['registration']['group'], 'proof_validity_end': proof_validity_end,
-        'emails': emails, 'location': request.session['registration']['location'],
-        'price_sum': request.session['registration']['price_sum']}
-    return render(request, 'enrollment/result/%s.html' % request.session['registration']['result'], context)
+    context = {'users': request.session['enrollment']['users'], 'skip_header': skip_header,
+        'group': request.session['enrollment']['group'], 'proof_validity_end': proof_validity_end,
+        'emails': emails, 'location': request.session['enrollment']['location'],
+        'price_sum': request.session['enrollment']['price_sum']}
+    return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
-    if request.session['registration']['state'] != 'complete':
+    if request.session['enrollment']['state'] != 'complete':
         return HttpResponse(json.dumps({'error': 'enrollment_uncompleted'}))
-    if request.session['registration']['location']['country'] != 'NO':
+    if request.session['enrollment']['location']['country'] != 'NO':
         return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if request.session['registration']['users'][index].has_key('sms_sent'):
+    if request.session['enrollment']['users'][index].has_key('sms_sent'):
         return HttpResponse(json.dumps({'error': 'already_sent'}))
-    number = request.session['registration']['users'][index]['phone']
+    number = request.session['enrollment']['users'][index]['phone']
 
     # Render the SMS template
     now = datetime.now()
@@ -607,7 +607,7 @@ def sms(request):
     next_year = now.month >= MONTH_THRESHOLD
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
-        'users': request.session['registration']['users']})
+        'users': request.session['enrollment']['users']})
     sms_message = t.render(c).encode('utf-8')
 
     # Send the message
@@ -617,7 +617,7 @@ def sms(request):
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
             return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
-        request.session['registration']['users'][index]['sms_sent'] = True
+        request.session['enrollment']['users'][index]['sms_sent'] = True
         request.session.modified = True
         return HttpResponse(json.dumps({'error': 'none'}))
     except requests.ConnectionError:
@@ -650,25 +650,25 @@ def zipcode(request, zipcode):
 
 def updateIndices(session):
     i = 0
-    for user in session['registration']['users']:
+    for user in session['enrollment']['users']:
         user['index'] = i
         i += 1
     session.modified = True
 
 def validate(session, require_location, require_existing):
-    if not session.has_key('registration'):
+    if not session.has_key('enrollment'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if len(session['registration']['users']) == 0:
+    if len(session['enrollment']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if not validate_youth_count(session['registration']['users']):
+    if not validate_youth_count(session['enrollment']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), too_many_underage))
-    if not validate_user_contact(session['registration']['users']):
+    if not validate_user_contact(session['enrollment']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     if require_location:
-        if not session['registration'].has_key('location') or not validate_location(session['registration']['location']):
+        if not session['enrollment'].has_key('location') or not validate_location(session['enrollment']['location']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     if require_existing:
-        if session['registration']['existing'] != '' and not validate_existing(session['registration']['existing'], session['registration']['location']['zipcode'], session['registration']['location']['country']):
+        if session['enrollment']['existing'] != '' and not validate_existing(session['enrollment']['existing'], session['enrollment']['location']['zipcode'], session['enrollment']['location']['country']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
 
 def validate_user(user):
