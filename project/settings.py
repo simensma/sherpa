@@ -1,3 +1,4 @@
+# encoding: utf-8
 # Django settings for Sherpa.
 # See https://docs.djangoproject.com/en/1.3/ref/settings/
 
@@ -25,6 +26,7 @@ RESTORE_PASSWORD_VALIDITY = 12 # Hours
 
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
+    ('Håvard Eidheim', 'eidheim@live.no'),
 )
 
 DEFAULT_FROM_EMAIL = 'Den Norske Turistforening <no-reply@turistforeningen.no>'
