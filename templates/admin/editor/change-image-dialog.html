@@ -9,7 +9,7 @@
       <tr>
         <td>Bildets adresse:</td>
         <td><input type="text" class="input-xlarge" name="src"></td>
-        <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button>
+        <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button></td>
       </tr>
       <tr class="description">
         <td>Beskrivelse:</td>
@@ -31,9 +31,11 @@
         </td>
       </tr>
     </table>
-    <div style="margin-top: 25px;">
-      <h2>Valgt bilde:</h2>
-      <img class="preview" src="{{ STATIC_URL }}img/placeholder.png" style="max-width: 100%">
+
+    <br>
+    <h2>Her kan du croppe bildet:</h2>
+    <div style="max-width:600px;" class="preview-container">
+      <img class="preview" src="{{ STATIC_URL }}img/placeholder.png">
     </div>
   </div>
 </div>

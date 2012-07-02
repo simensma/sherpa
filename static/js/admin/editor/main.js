@@ -68,22 +68,39 @@ $(document).ready(function() {
     });
     $("article div.html, article div.lede").focusout();
 
+
     /* Hide completely empty image descriptions */
-    $("article div.image span.description").each(function() {
-        if($(this).text() == "") {
-            $(this).parents("div.img-desc").hide();
-        }
+    $("article div.image").each(function() {
+        var content = $(this);
+        hidePictureText(content);
     });
 
-    /* Hide empty image photographer description */
-    $("article div.image span.photographer").each(function() {
-        if($(this).children("span.content").text() == "") {
-            $(this).hide();
+    function hidePictureText(content){
+        var description = content.find("span.description").text();
+        var photographer = content.find("span.photographer span.content").text();
+
+        if(description == '' && photographer == ''){
+            content.find("div.img-desc").hide();
+        }else{
+            content.find("div.img-desc").show();
         }
-    });
+
+        if(description == '') {
+            content.find("span.description").hide();
+        } else {
+            content.find("span.description").show();
+        }
+
+        if(photographer == '') {
+            content.find("span.photographer").hide();
+        } else {
+            content.find("span.photographer").show();
+        }
+    }
 
     /* Change image sources upon being clicked. */
     function changeImage() {
+
         currentImage = $(this).find("img");
         var content = $(this);
         var currentDescription = content.find("span.description");
@@ -92,7 +109,8 @@ $(document).ready(function() {
         if(anchor === undefined) {
             anchor = '';
         }
-        openImageDialog(currentImage.attr('src'), anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
+        openImageDialog(currentImage, anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
+
             if(anchor.length == 0) {
                 // No link
                 if(currentImage.parent("a").length > 0) {
@@ -113,29 +131,18 @@ $(document).ready(function() {
             }
             currentImage.attr('src', src);
             currentImage.attr('alt', description);
-            debugger;
+
             currentDescription.text(description);
             currentPhotographer.text(photographer);
-            if(description == '') {
-                currentDescription.parents("div.img-desc").hide();
-            } else {
-                currentDescription.parents("div.img-desc").show();
-            }
-            if(photographer == '') {
-                currentPhotographer.parent("span.photographer").hide();
-            } else {
-                currentPhotographer.parent("span.photographer").show();
-            }
+            hidePictureText(content);
+
             $("div.editor-header div.save button.save").click();
         }, function() {
             removeContent(content);
         });
     }
 
-    /**
-     * Content changes (text, images, widgets)
-     */
-
+    //Content changes (text, images, widgets)
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
 

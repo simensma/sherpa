@@ -21,11 +21,14 @@
         {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
           <div class="content {{ content.type }} editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
-          <div class="content image" data-id="{{ content.id }}">
+          <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px; {% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
+              <img  src="{{ content.content.src }}" 
+              {% if content.content.style %}style="{{ content.content.style }}" {% endif %}
+              {% if content.content.selection %}selection="{{ content.content.selection }}" {% endif %}
+              alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}
-            <div class="img-desc">
+            <div style="width:auto" class="img-desc">
               <span class="description">{{ content.content.description }}</span>
               <span class="photographer">Foto:
                 <span class="content">{{ content.content.photographer }}</span>

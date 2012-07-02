@@ -97,7 +97,7 @@ $(document).ready(function() {
 
     $("div.editor-header img.article-thumbnail").click(function() {
         var image = $(this);
-        openImageDialog($(this).attr('src'), undefined, undefined, undefined, function(src, anchor, alt) {
+        openImageDialog($(this), undefined, undefined, undefined, function(src, anchor, description, photographer) {
             image.attr('src', src);
             saveImage();
         }, function() {

@@ -1,5 +1,6 @@
 var imagePickedCallback; // Called when an image is picked in the dialog
 var imageRemovedCallback; // Called when an image is removed, from the dialog
+var currentImage;
 
 $(document).ready(function() {
 
@@ -9,6 +10,9 @@ $(document).ready(function() {
             $("div#dialog-change-image input[name='description']").val(description);
             $("div#dialog-change-image input[name='photographer']").val(photographer);
             $("div#dialog-change-image img.preview").attr('src', url);
+
+            currentCropperInstance.cancelSelection();
+            openImageCropper($("div#dialog-change-image img.preview"), $("div#dialog-change-image"), undefined);
         });
     });
 
@@ -18,6 +22,10 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image button.insert-image").click(function() {
+
+        addCssCropping(currentImage, currentImage.parent());
+        currentCropperInstance.cancelSelection();
+
         var dialog = $(this).parents("div#dialog-change-image");
         var src = dialog.find("input[name='src']").val();
         if(src == "") {
@@ -43,12 +51,16 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image button.remove-image").click(function() {
+        currentCropperInstance.cancelSelection();
         $(this).parents("div#dialog-change-image").dialog('close');
         imageRemovedCallback();
     });
 });
 
-function openImageDialog(src, anchor, description, photographer, saveCallback, removeCallback) {
+function openImageDialog(image, anchor, description, photographer, saveCallback, removeCallback) {
+    currentImage = image;
+
+    var src = image.attr("src");
 
     $("div#dialog-change-image div.image-details").show();
     $("div#dialog-change-image div.empty-src").hide();
@@ -77,6 +89,8 @@ function openImageDialog(src, anchor, description, photographer, saveCallback, r
     } else {
         dialog.find("tr.photographer").hide();
     }
+
+    openImageCropper($("div#dialog-change-image img.preview"), dialog, image.attr("selection"));
 
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
