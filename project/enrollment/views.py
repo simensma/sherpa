@@ -461,7 +461,6 @@ def process_card(request):
                 request.session['registration']['location'], 'card',
                 request.session['registration']['price_sum'])
             request.session['registration_complete'] = request.session['registration']
-            request.session['registration_complete']['payment_method'] = 'card'
             request.session['registration_complete']['result'] = 'success'
             del request.session['registration']
         else:
