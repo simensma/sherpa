@@ -370,10 +370,11 @@ def payment(request):
     if request.session['registration']['yearbook']:
         request.session['registration']['price_sum'] += FOREIGN_SHIPMENT_PRICE
 
-    # Paying with card. If we're paying by invoice, just forward to result page
+    # If we're paying by invoice, skip ahead to invoice processing
     if request.session['registration']['payment_method'] == 'invoice':
         return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
 
+    # Paying with card, move on.
     now = datetime.now()
     year = now.year
     next_year = now.month >= MONTH_THRESHOLD
