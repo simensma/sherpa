@@ -18,7 +18,7 @@ $(document).ready(function() {
             } else if(result.error == 'foreign_number') {
                 button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
                 button.remove();
-            } else if(result.error == 'not_registered') {
+            } else if(result.error == 'enrollment_uncompleted') {
                 button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
                 button.remove();
             } else if(result.error == 'already_sent') {

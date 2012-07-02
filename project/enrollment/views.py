@@ -49,12 +49,33 @@ AGE_MAIN = 27
 AGE_STUDENT = 19
 AGE_SCHOOL = 13
 
+# Registration states: 'registration' -> 'payment' -> 'complete'
+# These are used in most views to know where the user came from and where
+# they should be headed.
+
 def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def registration(request, user):
+    if request.session.has_key('registration'):
+        if request.session['registration']['state'] == 'payment':
+            # Payment has been initiated but the user goes back to the registration page - why?
+            # Maybe it failed, and they want to retry registration?
+            # Reset the state and let them reinitiate payment when they're ready.
+            request.session['registration']['state'] = 'registration'
+        elif request.session['registration']['state'] == 'complete':
+            # A previous registration has been completed, but a new one has been initiated.
+            # Remove the old one and start over.
+            del request.session['registration']
+
+    # Check if this is a first-time registration (or start-over if the previous one was deleted)
     if not request.session.has_key('registration'):
-        request.session['registration'] = {'users': []}
+        request.session['registration'] = {'users': [], 'state': 'registration'}
+    elif not request.session['registration'].has_key('state'):
+        # Temporary if-branch:
+        # Since the 'state' key was recently added to the session dict,
+        # add it for old users who revisit this page.
+        request.session['registration']['state'] = 'registration'
 
     if user is not None:
         user = request.session['registration']['users'][int(user)]
@@ -120,6 +141,15 @@ def household(request):
     val = validate(request.session, require_location=False, require_existing=False)
     if val is not None:
         return val
+
+    if request.session['registration']['state'] == 'payment':
+        # Payment has been initiated but the user goes back here - why?
+        # Reset the state and let them reinitiate payment when they're ready.
+        request.session['registration']['state'] = 'registration'
+    elif request.session['registration']['state'] == 'complete':
+        # A previous registration has been completed, so why would the user come directly here?
+        # Just redirect them back to registration which will restart a new registration.
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     request.session['registration']['conditions'] = True
     errors = request.GET.has_key(invalid_location)
@@ -203,6 +233,15 @@ def verification(request):
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
+
+    if request.session['registration']['state'] == 'payment':
+        # Payment has been initiated but the user goes back here - why?
+        # Reset the state and let them reinitiate payment when they're ready.
+        request.session['registration']['state'] = 'registration'
+    elif request.session['registration']['state'] == 'complete':
+        # A previous registration has been completed, so why would the user come directly here?
+        # Just redirect them back to registration which will restart a new registration.
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     # If existing member is specified, save details and change to that address
     existing_name = ''
@@ -292,6 +331,15 @@ def payment_method(request):
     if val is not None:
         return val
 
+    if request.session['registration']['state'] == 'payment':
+        # Payment has been initiated but the user goes back here - why?
+        # Reset the state and let them reinitiate payment when they're ready.
+        request.session['registration']['state'] = 'registration'
+    elif request.session['registration']['state'] == 'complete':
+        # A previous registration has been completed, so why would the user come directly here?
+        # Just redirect them back to registration which will restart a new registration.
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+
     request.session['registration']['main_member'] = request.POST.get('main-member', '')
 
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
@@ -301,6 +349,21 @@ def payment(request):
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
+
+    if request.session['registration']['state'] == 'registration':
+        # All right, enter payment state
+        request.session['registration']['state'] = 'payment'
+    elif request.session['registration']['state'] == 'payment':
+        # Already in payment state, skip payment and redirect forwards to processing
+        if request.session['registration']['payment_method'] == 'invoice':
+            return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
+        elif request.session['registration']['payment_method'] == 'card':
+            return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
+            ))
+    elif request.session['registration']['state'] == 'complete':
+        # Registration has already been completed, redirect forwards to results page
+        return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
         return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
@@ -434,17 +497,43 @@ def payment(request):
     ))
 
 def process_invoice(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+
+    if request.session['registration']['state'] == 'registration':
+        # Whoops, how did we get here without going through payment first? Redirect back.
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+    elif request.session['registration']['state'] == 'payment':
+        # Cool, this is where we want to be. Update the state to 'complete'
+        request.session['registration']['state'] = 'complete'
+    elif request.session['registration']['state'] == 'complete':
+        # Registration has already been completed, redirect forwards to results page
+        return HttpResponseRedirect(reverse('enrollment.views.result'))
+
     prepare_and_send_email(request.session['registration']['users'],
         request.session['registration']['group'],
         request.session['registration']['location'], 'invoice',
         request.session['registration']['price_sum'])
 
-    request.session['registration_complete'] = request.session['registration']
-    request.session['registration_complete']['result'] = 'invoice'
-    del request.session['registration']
+    request.session['registration']['result'] = 'invoice'
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def process_card(request):
+    if not request.session.has_key('registration'):
+        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+
+    if request.session['registration']['state'] == 'registration':
+        # Whoops, how did we get here without going through payment first? Redirect back.
+        # Note, *this* makes it impossible to use a previously verified transaction id
+        # on a *second* registration by skipping the payment view and going straight to this check.
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+    elif request.session['registration']['state'] == 'payment':
+        # Cool, this is where we want to be. Update the state to 'complete'
+        request.session['registration']['state'] = 'complete'
+    elif request.session['registration']['state'] == 'complete':
+        # Registration has already been completed, redirect forwards to results page
+        return HttpResponseRedirect(reverse('enrollment.views.result'))
+
     if request.GET['responseCode'] == 'OK':
         r = requests.get(settings.NETS_PROCESS_URL, params={
             'merchantId': settings.NETS_MERCHANT_ID,
@@ -464,9 +553,7 @@ def process_card(request):
                 request.session['registration']['group'],
                 request.session['registration']['location'], 'card',
                 request.session['registration']['price_sum'])
-            request.session['registration_complete'] = request.session['registration']
-            request.session['registration_complete']['result'] = 'success'
-            del request.session['registration']
+            request.session['registration']['result'] = 'success'
         else:
             request.session['registration']['result'] = 'fail'
     else:
@@ -474,45 +561,45 @@ def process_card(request):
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def result(request):
-    if request.session.has_key('registration_complete'):
-        # Enrollment was successfully completed (card or invoice)
-        registration = request.session['registration_complete']
-    elif request.session.has_key('registration'):
-        # Payment failed. Note: This key will exist if a new enrollment has been started
-        # after a successful old enrollment, but check the completion key first in case
-        # the user just went back to the receipt page.
-        registration = request.session['registration']
-    else:
+    if not request.session.has_key('registration'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    # If a registration has been initiated without being completed
-    if not registration.has_key('result'):
-        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+    if request.session['registration']['state'] == 'registration':
+        # Whoops, how did we get here without going through payment first? Redirect back.
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+    elif request.session['registration']['state'] == 'payment':
+        # Not done with payments, why is the user here? Redirect back to payment processing
+        if request.session['registration']['payment_method'] == 'invoice':
+            return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
+        elif request.session['registration']['payment_method'] == 'card':
+            return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['registration']['transaction_id']
+            ))
 
     # Collect emails to a separate list for easier template formatting
     emails = []
-    for user in registration['users']:
+    for user in request.session['registration']['users']:
         if user['email'] != '':
             emails.append(user['email'])
 
-    skip_header = registration['result'] == 'invoice' or registration['result'] == 'success'
+    skip_header = request.session['registration']['result'] == 'invoice' or request.session['registration']['result'] == 'success'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = {'users': registration['users'], 'skip_header': skip_header,
-        'group': registration['group'], 'proof_validity_end': proof_validity_end,
-        'emails': emails, 'location': registration['location'],
-        'price_sum': registration['price_sum']}
-    return render(request, 'enrollment/result/%s.html' % registration['result'], context)
+    context = {'users': request.session['registration']['users'], 'skip_header': skip_header,
+        'group': request.session['registration']['group'], 'proof_validity_end': proof_validity_end,
+        'emails': emails, 'location': request.session['registration']['location'],
+        'price_sum': request.session['registration']['price_sum']}
+    return render(request, 'enrollment/result/%s.html' % request.session['registration']['result'], context)
 
 def sms(request):
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
-    if not request.session.has_key('registration_complete'):
-        return HttpResponse(json.dumps({'error': 'not_registered'}))
-    if request.session['registration_complete']['location']['country'] != 'NO':
+    if request.session['registration']['state'] != 'complete':
+        return HttpResponse(json.dumps({'error': 'enrollment_uncompleted'}))
+    if request.session['registration']['location']['country'] != 'NO':
         return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if request.session['registration_complete']['users'][index].has_key('sms_sent'):
+    if request.session['registration']['users'][index].has_key('sms_sent'):
         return HttpResponse(json.dumps({'error': 'already_sent'}))
-    number = request.session['registration_complete']['users'][index]['phone']
+    number = request.session['registration']['users'][index]['phone']
 
     # Render the SMS template
     now = datetime.now()
@@ -520,7 +607,7 @@ def sms(request):
     next_year = now.month >= MONTH_THRESHOLD
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
-        'users': request.session['registration_complete']['users']})
+        'users': request.session['registration']['users']})
     sms_message = t.render(c).encode('utf-8')
 
     # Send the message
@@ -530,7 +617,7 @@ def sms(request):
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
             return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
-        request.session['registration_complete']['users'][index]['sms_sent'] = True
+        request.session['registration']['users'][index]['sms_sent'] = True
         request.session.modified = True
         return HttpResponse(json.dumps({'error': 'none'}))
     except requests.ConnectionError:
