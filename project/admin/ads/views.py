@@ -73,3 +73,16 @@ def place(request):
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
     return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))
+
+@login_required
+def replace(request):
+    try:
+        placement = AdPlacement.objects.get(id=request.POST['id'])
+        placement.ad = Ad.objects.get(id=request.POST['ad'])
+        placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
+        placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
+        placement.placement = request.POST['placement']
+        placement.save()
+    except ValueError:
+        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+    return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))

@@ -21,6 +21,15 @@ $(document).ready(function() {
         });
     });
 
+    $("table.placements tr.placement").click(function() {
+        var form = $("div.placement-dialog form");
+        form.find("input[name='id']").val($(this).attr('data-id'));
+        form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
+        form.find("select[name='placement'] option[value='" + $(this).attr('data-placement') + "']").prop('selected', true);
+        form.find("input[name='start_date']").val($(this).attr('data-start-date'));
+        form.find("input[name='end_date']").val($(this).attr('data-end-date'));
+    });
+
 });
 
 function uploadComplete(result) {

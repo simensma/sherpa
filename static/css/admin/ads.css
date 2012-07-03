@@ -14,6 +14,15 @@ table.placements tr.current td {
   color: rgb(27, 205, 11);
 }
 
+table.placements tr.placement:hover {
+  cursor: pointer;
+}
+
+table.placements tr.placement:hover td {
+  color: rgb(0, 0, 255);
+  text-decoration: underline;
+}
+
 ul.pages a {
   font-size: 14px;
   color: rgb(0, 136, 204); /* Duplicated from bootstrap */

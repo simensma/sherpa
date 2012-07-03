@@ -5,4 +5,5 @@ urlpatterns = patterns('admin.ads.views',
     url(r'^$', 'list'),
     url(r'^ny/$', 'upload'),
     url(r'^ny-visning/$', 'place'),
+    url(r'^oppdater-visning/$', 'replace'),
 )
