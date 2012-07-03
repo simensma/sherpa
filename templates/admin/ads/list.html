@@ -132,7 +132,7 @@
       </table>
     </form>
 
-    <table class="table">
+    <table class="table ads">
       <tr>
         <th>Navn</th>
         <th>Lenker til</th>
@@ -140,7 +140,7 @@
       </tr>
       {% for ad in ads %}
         <tr>
-          <td>{{ ad.name }}</td>
+          <td class="ad dialog-button" data-dialog=".ad-dialog" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">{{ ad.name }}</td>
           <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
           <td>
             <a href="{{ ad.url }}">{{ ad.extension }}</a>
@@ -192,6 +192,38 @@
         <td><button type="submit" class="btn">Oppdater visning</button></td>
       </tr>
     </table>
+  </form>
+</div>
+
+<div class="dialog ad-dialog" data-title="Annonsedetaljer" data-width="80%">
+  <form method="post" action="{% url admin.ads.views.rename_ad %}">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="">
+    <table>
+      <tr>
+        <td>Navn</td>
+        <td><input type="text" name="name" class="input-xlarge"></td>
+      </tr>
+      <tr>
+        <td>Lenker til (URL):</td>
+        <td><input type="text" name="destination" class="input-xlarge"></td>
+      </tr>
+      <tr>
+        <td>Bredde x Høyde (kun hvis Flash)</td>
+        <td>
+          <input type="text" name="width" class="input-small"> x
+          <input type="text" name="height" class="input-small">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type="submit" class="btn">Last opp</button></td>
+      </tr>
+    </table>
+    <p>
+      Foreløpig kan du ikke endre fila du lasta opp; lag heller en ny<br>
+      annonse med navn "v2" og pek visningen til den nye annonsen.
+    </p>
   </form>
 </div>
 

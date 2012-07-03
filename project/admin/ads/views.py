@@ -62,6 +62,16 @@ def upload(request):
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 @login_required
+def rename_ad(request):
+    ad = Ad.objects.get(id=request.POST['id'])
+    ad.name = request.POST['name']
+    ad.destination = request.POST['destination']
+    if ad.width != None: ad.width = request.POST['width']
+    if ad.height != None: ad.height = request.POST['height']
+    ad.save()
+    return HttpResponseRedirect(reverse('admin.ads.views.list'))
+
+@login_required
 def place(request):
     try:
         ad = Ad.objects.get(id=request.POST['ad'])

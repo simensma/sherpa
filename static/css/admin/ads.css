@@ -14,7 +14,7 @@ table.placements tr.current td {
   color: rgb(27, 205, 11);
 }
 
-table.placements tr.placement:hover td {
+table.placements tr.placement:hover td, table.ads td.ad:hover {
   cursor: pointer;
   color: rgb(0, 0, 255);
   text-decoration: underline;

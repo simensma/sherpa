@@ -30,6 +30,14 @@ $(document).ready(function() {
         form.find("input[name='end_date']").val($(this).attr('data-end-date'));
     });
 
+    $("table.ads td.ad").click(function() {
+        var form = $("div.ad-dialog form");
+        form.find("input[name='id']").val($(this).attr('data-id'));
+        form.find("input[name='name']").val($(this).attr('data-name'));
+        form.find("input[name='destination']").val($(this).attr('data-destination'));
+        form.find("input[name='width']").val($(this).attr('data-width'));
+        form.find("input[name='height']").val($(this).attr('data-height'));
+    });
 });
 
 function uploadComplete(result) {
