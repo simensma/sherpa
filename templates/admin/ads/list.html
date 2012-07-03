@@ -107,18 +107,15 @@
         <th>Navn</th>
         <th>Lenker til</th>
         <th>Innhold</th>
-        <th>Innholdstype</th>
-        <th>Størrelse (Flash)</th>
       </tr>
       {% for ad in ads %}
         <tr>
           <td>{{ ad.name }}</td>
           <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
-          <td><a href="{{ ad.url }}">Klikk her</a></td>
-          <td>{{ ad.content_type }}</td>
           <td>
+            <a href="{{ ad.url }}">{{ ad.extension }}</a>
             {% if ad.width and ad.height %}
-              {{ ad.width }} x {{ ad.height }}
+              ({{ ad.width }} x {{ ad.height }})
             {% endif %}
           </td>
         </tr>
