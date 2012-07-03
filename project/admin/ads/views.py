@@ -28,7 +28,7 @@ def list(request):
     return render(request, 'admin/ads/list.html', context)
 
 @login_required
-def upload(request):
+def create_ad(request):
     if not request.FILES.has_key('ad'):
         # TODO error handling
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
@@ -62,7 +62,7 @@ def upload(request):
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 @login_required
-def rename_ad(request):
+def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
     ad.name = request.POST['name']
     ad.destination = request.POST['destination']
@@ -72,7 +72,7 @@ def rename_ad(request):
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 @login_required
-def place(request):
+def create_placement(request):
     try:
         ad = Ad.objects.get(id=request.POST['ad'])
         start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
@@ -85,7 +85,7 @@ def place(request):
     return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))
 
 @login_required
-def replace(request):
+def update_placement(request):
     try:
         placement = AdPlacement.objects.get(id=request.POST['id'])
         placement.ad = Ad.objects.get(id=request.POST['ad'])

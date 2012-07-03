@@ -68,7 +68,7 @@
             </table>
           {% endif %}
 
-          <form class="placement" method="post" action="{% url admin.ads.views.place %}">
+          <form class="placement" method="post" action="{% url admin.ads.views.create_placement %}">
             {% csrf_token %}
             <input type="hidden" name="placement" value="{{ page.page.0 }}">
             <table>
@@ -103,7 +103,7 @@
     </div>
 
     <h2>Last opp ny annonse</h2>
-    <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data">
+    <form id="upload" method="post" action="{% url admin.ads.views.create_ad %}" enctype="multipart/form-data">
       {% csrf_token %}
       <table>
         <tr>
@@ -156,7 +156,7 @@
 
 {# Dialogs #}
 <div class="dialog placement-dialog" data-title="Annonsevisning" data-width="auto">
-  <form class="placement" method="post" action="{% url admin.ads.views.replace %}">
+  <form class="placement" method="post" action="{% url admin.ads.views.update_placement %}">
     {% csrf_token %}
     <input type="hidden" name="id" value="">
     <table>
@@ -196,7 +196,7 @@
 </div>
 
 <div class="dialog ad-dialog" data-title="Annonsedetaljer" data-width="80%">
-  <form method="post" action="{% url admin.ads.views.rename_ad %}">
+  <form method="post" action="{% url admin.ads.views.update_ad %}">
     {% csrf_token %}
     <input type="hidden" name="id" value="">
     <table>
