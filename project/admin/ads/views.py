@@ -17,7 +17,7 @@ added = 'annonse-lagt-til'
 
 @login_required
 def list(request):
-    ads = Ad.objects.all()
+    ads = Ad.objects.all().order_by('name')
     pages = []
     for place in AdPlacement.PLACEMENTS:
         placements = AdPlacement.objects.filter(placement=place[0]).order_by('start_date', 'end_date')
