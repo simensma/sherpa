@@ -19,9 +19,9 @@ added = 'annonse-lagt-til'
 def list(request):
     ads = Ad.objects.all().order_by('name')
     pages = []
-    for place in AdPlacement.PLACEMENTS:
-        placements = AdPlacement.objects.filter(placement=place[0]).order_by('start_date', 'end_date')
-        pages.append({'page': place, 'placements': placements})
+    for page in AdPlacement.PLACEMENTS:
+        placements = AdPlacement.objects.filter(placement=page[0]).order_by('start_date', 'end_date')
+        pages.append({'page': page, 'placements': placements})
     context = {'ads': ads, 'pages': pages,
         'invalid_date': request.GET.has_key(invalid_date),
         'added': request.GET.has_key(added)}
