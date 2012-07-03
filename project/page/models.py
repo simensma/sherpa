@@ -154,8 +154,8 @@ def delete_image_post(sender, **kwargs):
     conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, kwargs['instance'].sha1_hash, kwargs['instance'].extension))
 
 class AdPlacement(models.Model):
-    PLACEMENTS = (('articles', 'Artikler'),
-        ('core_frontpage', 'Forsiden'),
+    PLACEMENTS = (('core_frontpage', 'Forsiden'),
+        ('articles', 'Artikler'),
         ('core_joint_trip', 'Fellesturer'),
         ('core_cabins', 'Hytter og ruter'),
         ('core_children', 'Barn'),
