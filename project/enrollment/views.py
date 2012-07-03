@@ -69,7 +69,7 @@ def registration(request, user):
             del request.session['enrollment']
 
     # Check if this is a first-time registration (or start-over if the previous one was deleted)
-    if not request.session.has_key('registration'):
+    if not request.session.has_key('enrollment'):
         request.session['enrollment'] = {'users': [], 'state': 'registration'}
     elif not request.session['enrollment'].has_key('state'):
         # Temporary if-branch:
