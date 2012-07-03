@@ -196,7 +196,7 @@
 </div>
 
 <div class="dialog ad-dialog" data-title="Annonsedetaljer" data-width="80%">
-  <form method="post" action="{% url admin.ads.views.update_ad %}">
+  <form method="post" action="{% url admin.ads.views.update_ad %}" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="id" value="">
     <table>
@@ -207,6 +207,10 @@
       <tr>
         <td>Lenker til (URL):</td>
         <td><input type="text" name="destination" class="input-xlarge"></td>
+      </tr>
+      <tr>
+        <td>Ny fil</td>
+        <td><input type="file" name="ad"></td>
       </tr>
       <tr>
         <td>Bredde x Høyde (kun hvis Flash)</td>
@@ -220,10 +224,6 @@
         <td><button type="submit" class="btn">Last opp</button></td>
       </tr>
     </table>
-    <p>
-      Foreløpig kan du ikke endre fila du lasta opp; lag heller en ny<br>
-      annonse med navn "v2" og pek visningen til den nye annonsen.
-    </p>
   </form>
 </div>
 

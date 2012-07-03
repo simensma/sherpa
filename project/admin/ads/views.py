@@ -50,6 +50,9 @@ def update_ad(request):
     ad.destination = request.POST['destination']
     if ad.width != None: ad.width = request.POST['width']
     if ad.height != None: ad.height = request.POST['height']
+    if request.FILES.has_key('ad'):
+        ad.delete_file()
+        ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
