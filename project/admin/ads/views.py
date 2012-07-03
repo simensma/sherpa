@@ -33,31 +33,13 @@ def create_ad(request):
         # TODO error handling
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-    file = request.FILES['ad']
-    # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
-    # file into memory instead of streaming it to AWS. This might need to be
-    # optimized at some point.
-    data = file.read()
-
-    # Calculate the sha1-hash
-    sha1 = hashlib.sha1()
-    sha1.update(data)
-    hash = sha1.hexdigest()
-
-    # File extension and image type
-    ext = file.name.split(".")[-1].lower()
-
+    hash, extension, content_type = upload(request.FILES['ad'])
     width = None if request.POST['width'] == '' else request.POST['width'].strip()
     height = None if request.POST['height'] == '' else request.POST['height'].strip()
 
-    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    conn.put(settings.AWS_BUCKET, "%s%s.%s"
-        % (settings.AWS_ADS_PREFIX, hash, ext), S3.S3Object(data),
-        {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
-    )
-
-    ad = Ad(name=request.POST['name'].strip(), extension=ext, destination=request.POST['destination'].strip(),
-        sha1_hash=hash, width=width, height=height, content_type=file.content_type)
+    ad = Ad(name=request.POST['name'].strip(), extension=extension,
+        destination=request.POST['destination'].strip(), sha1_hash=hash,
+        width=width, height=height, content_type=content_type)
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
@@ -96,3 +78,24 @@ def update_placement(request):
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
     return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))
+
+def upload(file):
+    # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
+    # file into memory instead of streaming it to AWS. This might need to be
+    # optimized at some point.
+    data = file.read()
+
+    # Calculate the sha1-hash and file extension
+    sha1 = hashlib.sha1()
+    sha1.update(data)
+    hash = sha1.hexdigest()
+    extension = file.name.split(".")[-1].lower()
+
+    # Upload to AWS
+    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    conn.put(settings.AWS_BUCKET, "%s%s.%s"
+        % (settings.AWS_ADS_PREFIX, hash, extension), S3.S3Object(data),
+        {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
+    )
+
+    return (hash, extension, file.content_type)
