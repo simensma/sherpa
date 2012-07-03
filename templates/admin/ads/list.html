@@ -14,8 +14,6 @@
 
 <div class="row">
   <div class="span12">
-    <h1 class="sherpa">Visninger</h1>
-
     <ul class="nav nav-pills pages">
       {% for page in pages %}
       <li{% if forloop.first %} class="active"{% endif %}>
@@ -104,67 +102,6 @@
       {% endfor %}
     </div>
 
-    <div class="dialog placement-dialog" data-title="Annonsevisning" data-width="auto">
-      <form class="placement" method="post" action="{% url admin.ads.views.replace %}">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="">
-        <table>
-          <tr>
-            <td>Annonse</td>
-            <td>
-              <select name="ad">
-                {% for ad in ads %}
-                  <option value="{{ ad.id }}">{{ ad.name }}</option>
-                {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Side</td>
-            <td>
-              <select name="placement">
-                {% for page in pages %}
-                  <option value="{{ page.page.0 }}">{{ page.page.1 }}</option>
-                {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Start/stopp visning:</td>
-            <td>
-              <input type="text" name="start_date" class="input-medium date">
-              <input type="text" name="end_date" class="input-medium date">
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><button type="submit" class="btn">Oppdater visning</button></td>
-          </tr>
-        </table>
-      </form>
-    </div>
-
-    <h1 class="sherpa">Annonser</h1>
-    <table class="table">
-      <tr>
-        <th>Navn</th>
-        <th>Lenker til</th>
-        <th>Innhold</th>
-      </tr>
-      {% for ad in ads %}
-        <tr>
-          <td>{{ ad.name }}</td>
-          <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
-          <td>
-            <a href="{{ ad.url }}">{{ ad.extension }}</a>
-            {% if ad.width and ad.height %}
-              ({{ ad.width }} x {{ ad.height }})
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-
     <h2>Last opp ny annonse</h2>
     <form id="upload" method="post" action="{% url admin.ads.views.upload %}" enctype="multipart/form-data">
       {% csrf_token %}
@@ -194,7 +131,68 @@
         </tr>
       </table>
     </form>
+
+    <table class="table">
+      <tr>
+        <th>Navn</th>
+        <th>Lenker til</th>
+        <th>Innhold</th>
+      </tr>
+      {% for ad in ads %}
+        <tr>
+          <td>{{ ad.name }}</td>
+          <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
+          <td>
+            <a href="{{ ad.url }}">{{ ad.extension }}</a>
+            {% if ad.width and ad.height %}
+              ({{ ad.width }} x {{ ad.height }})
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
+</div>
+
+{# Dialogs #}
+<div class="dialog placement-dialog" data-title="Annonsevisning" data-width="auto">
+  <form class="placement" method="post" action="{% url admin.ads.views.replace %}">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="">
+    <table>
+      <tr>
+        <td>Annonse</td>
+        <td>
+          <select name="ad">
+            {% for ad in ads %}
+              <option value="{{ ad.id }}">{{ ad.name }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Side</td>
+        <td>
+          <select name="placement">
+            {% for page in pages %}
+              <option value="{{ page.page.0 }}">{{ page.page.1 }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Start/stopp visning:</td>
+        <td>
+          <input type="text" name="start_date" class="input-medium date">
+          <input type="text" name="end_date" class="input-medium date">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type="submit" class="btn">Oppdater visning</button></td>
+      </tr>
+    </table>
+  </form>
 </div>
 
 {% endblock %}
