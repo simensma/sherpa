@@ -2,10 +2,16 @@
   <div class="span12">
       <p class="ad-label">Annonse</p>
       {% if ad.ad.content_type == 'application/x-shockwave-flash' %}
-        <object data="{{ ad.ad.url }}" type="{{ ad.ad.content_type }}" width="{{ ad.ad.width }}" height="{{ ad.ad.height }}">
-          <param name="movie" value="{{ ad.ad.url }}">
-          <param name="flashvars" value="clickTAG={% url page.views.ad ad.id %}">
-        </object>
+        <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
+        <script>
+          {# Require flash version 9, not sure if this is reasonable? #}
+          swfobject.embedSWF("{{ ad.ad.url }}", "ad", "{{ ad.ad.width }}", "{{ ad.ad.height }}", "9.0.0");
+        </script>
+        <div id="ad">
+          <a href="{% url page.views.ad ad.id %}">
+            <img src="{{ ad.ad.fallback_url }}" alt="{{ ad.ad.name }}">
+          </a>
+        </div>
       {% else %}
         <a href="{% url page.views.ad ad.id %}">
           <img src="{{ ad.ad.url }}" alt="{{ ad.ad.name }}">

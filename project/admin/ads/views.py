@@ -34,12 +34,19 @@ def create_ad(request):
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
     hash, extension, content_type = upload(request.FILES['ad'])
+    fallback_hash = None
+    fallback_extension = None
+    fallback_content_type = None
+
+    if request.FILES.has_key('ad_fallback'):
+        fallback_hash, fallback_extension, fallback_content_type = upload(request.FILES['ad_fallback'])
     width = None if request.POST['width'] == '' else request.POST['width'].strip()
     height = None if request.POST['height'] == '' else request.POST['height'].strip()
 
     ad = Ad(name=request.POST['name'].strip(), extension=extension,
         destination=request.POST['destination'].strip(), sha1_hash=hash,
-        width=width, height=height, content_type=content_type)
+        width=width, height=height, content_type=content_type, fallback_extension=fallback_extension,
+        fallback_sha1_hash=fallback_hash, fallback_content_type=fallback_content_type)
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
@@ -53,6 +60,9 @@ def update_ad(request):
     if request.FILES.has_key('ad'):
         ad.delete_file()
         ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
+    if request.FILES.has_key('ad_fallback'):
+        ad.delete_fallback_file()
+        ad.fallback_sha1_hash, ad.fallback_extension, ad.fallback_content_type = upload(request.FILES['ad_fallback'])
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 

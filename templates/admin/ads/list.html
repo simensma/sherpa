@@ -119,6 +119,10 @@
           <td><input type="file" name="ad"></td>
         </tr>
         <tr>
+          <td>Bilde-fallback for flash</td>
+          <td><input type="file" name="ad_fallback"></td>
+        </tr>
+        <tr>
           <td>Bredde x Høyde (kun hvis Flash)</td>
           <td>
             <input type="text" name="width" class="input-small"> x
@@ -144,6 +148,9 @@
           <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
           <td>
             <a href="{{ ad.url }}">{{ ad.extension }}</a>
+            {% if ad.fallback_sha1_hash %}
+              <a href="{{ ad.fallback_url }}">{{ ad.fallback_extension }}</a>
+            {% endif %}
             {% if ad.width and ad.height %}
               ({{ ad.width }} x {{ ad.height }})
             {% endif %}
@@ -211,6 +218,10 @@
       <tr>
         <td>Ny fil</td>
         <td><input type="file" name="ad"></td>
+      </tr>
+      <tr>
+        <td>Ny fallback</td>
+        <td><input type="file" name="ad_fallback"></td>
       </tr>
       <tr>
         <td>Bredde x Høyde (kun hvis Flash)</td>

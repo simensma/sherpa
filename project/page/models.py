@@ -143,18 +143,29 @@ class Ad(models.Model):
     content_type = models.CharField(max_length=200)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
+    fallback_extension = models.CharField(max_length=4, null=True)
+    fallback_sha1_hash = models.CharField(max_length=40, null=True)
+    fallback_content_type = models.CharField(max_length=200, null=True)
 
     def url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
+
+    def fallback_url(self):
+        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
 
     def delete_file(self):
         conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
+    def delete_fallback_file(self):
+        conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
+
 # Upon ad delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
 def delete_ad(sender, **kwargs):
     kwargs['instance'].delete_file()
+    kwargs['instance'].delete_fallback_file()
 
 class AdPlacement(models.Model):
     PLACEMENTS = (('core_frontpage', 'Forsiden'),
