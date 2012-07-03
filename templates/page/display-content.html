@@ -16,13 +16,18 @@
               {{ content.content|safe }}
             </div>
           {% elif content.type == 'image' %}
-            <div class="content image">
+            <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px; {% endif %}overflow:hidden;" class="content image">
               {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-                <img src="{{ content.content.src }}" alt="{{ content.content.description }}">
+                <img src="{{ content.content.src }}" 
+                {% if content.content.style %}style="{{ content.content.style }}" {% endif %}
+                {% if content.content.selection %}selection="{{ content.content.selection }}" {% endif %}
+                alt="{{ content.content.description }}">
               {% if content.content.anchor %}</a>{% endif %}
-              {% if content.content.description.strip %}
+              {% if content.content.description.strip or content.content.photographer %}
                 <div class="img-desc">
-                  {{ content.content.description }}
+                  {% if content.content.description.strip %}
+                    {{ content.content.description }}
+                  {% endif %}
                   {% if content.content.photographer %}
                     Foto: {{ content.content.photographer }}
                   {% endif %}

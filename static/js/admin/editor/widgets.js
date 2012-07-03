@@ -38,6 +38,65 @@ $(document).ready(function() {
         removeContent(widgetBeingEdited);
     });
 
+    //carousel nagiation
+    $("div.dialog.widget-edit button.previous").click(function() {
+        if(currentIndex > 0){
+            currentIndex--;
+        }
+        displayCurrentImage();
+    });
+
+    $("div.dialog.widget-edit button.next").click(function() {
+        if(currentIndex == imageList.length -1){
+            if(imageList[currentIndex].url.trim().length > 0){
+                imageList.push({
+                    url:"",
+                    description:"",
+                    photographer:""
+                });
+                currentIndex++;
+            }
+        }else{
+            currentIndex++; 
+        }
+        displayCurrentImage();
+    });
+
+    //remove clicked
+    $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
+        console.log(imageList.length);
+        imageList.splice(currentIndex, 1);
+        if(currentIndex > 0){
+            currentIndex--;
+        }
+        console.log(imageList.length);
+
+        var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+        displayCurrentImage();
+        widget.images = imageList;
+        widgetBeingEdited.attr('data-json', JSON.stringify(widget));
+    });
+
+    //choose clicked
+    $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
+        chooseImagefromArchive(function(url, description, photographer){
+            imageList[currentIndex].url = url;
+            imageList[currentIndex].description = description;
+            imageList[currentIndex].photographer = photographer;
+            displayCurrentImage();
+        });
+    });
+
+    //updating data in "model" on key up
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
+        imageList[currentIndex].url = $(this).val().trim();
+    });
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
+        imageList[currentIndex].description = $(this).val().trim();
+    });
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").keyup(function(){
+        imageList[currentIndex].photographer = $(this).val().trim();
+    });
 });
 
 function validateContent(widget) {
@@ -46,6 +105,22 @@ function validateContent(widget) {
             widget: "quote",
             quote: widget.find("textarea[name='quote']").val(),
             author: widget.find("input[name='author']").val()
+        });
+    } else if(widget.attr('data-widget') == 'carousel') {
+
+        if(imageList.length < 1){
+            alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bilde-funksjonen.)");
+            return false;
+        }
+        for(var i = 0; i < imageList.length; i++){
+            if(imageList[i].url.trim().length < 1){
+                imageList.splice(i, 1);
+            }
+        }
+
+        return JSON.stringify({
+            widget: "carousel",
+            images: imageList
         });
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
@@ -62,6 +137,8 @@ function validateContent(widget) {
         });
     } else if(widget.attr('data-widget') == 'blog') {
         var count = widget.find("input[name='count']").val();
+        var category = widget.find("select[name='category']").val();
+
         if(isNaN(Number(count))) {
             alert("Du må angi et tall for antall blogginnlegg som skal vises!");
             return false;
@@ -71,7 +148,8 @@ function validateContent(widget) {
         }
         return JSON.stringify({
             widget: "blog",
-            count: count
+            count: count,
+            category : category
         });
     } else if(widget.attr('data-widget') == 'embed') {
         var code = widget.find("textarea[name='code']").val();
@@ -92,15 +170,49 @@ function editWidget() {
     if(widget.widget == 'quote') {
         $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
         $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
-        $("div.dialog.widget-edit[data-widget='quote']").dialog('open');
     } else if(widget.widget == 'articles') {
         $("div.dialog.widget-edit[data-widget='articles'] input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit[data-widget='articles']").dialog('open');
     } else if(widget.widget == 'blog') {
         $("div.dialog.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit[data-widget='blog']").dialog('open');
+        $("div.dialog.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
     } else if(widget.widget == 'embed') {
         $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
-        $("div.dialog.widget-edit[data-widget='embed']").dialog('open');
+    }else if(widget.widget == 'carousel') {
+        listImages();
     }
+    $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
+}
+
+function displayCurrentImage(){
+    $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(imageList[currentIndex].url);
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
+    
+    if(imageList[currentIndex].url.trim().length < 1){
+        var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('default');
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
+    }else{
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
+    }
+
+    if(currentIndex == imageList.length -1){
+        $("div.dialog.widget-edit button.next").text(" Nytt bilde");
+        $("div.dialog.widget-edit button.next").prepend("<i class='icon-plus'></i>");
+    }else{
+        $("div.dialog.widget-edit button.next").text("Neste bilde ")
+        $("div.dialog.widget-edit button.next").append("<i class='icon-chevron-right'></i>");
+    }
+}
+
+var currentIndex = 0;
+var imageList = [];
+function listImages(){
+    currentIndex = 0;
+    imageList = [];
+
+    var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+    var length = widget.images.length;
+    imageList = widget.images;
+    displayCurrentImage();
 }
