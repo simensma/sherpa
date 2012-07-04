@@ -2,13 +2,11 @@ var currentCropperInstance;
 var currentCropperImage;
 var currentCropperImageTag;
 
-function addCssCropping(image, wrapper){
+//this one needs parentWidth to calculate parent Height
+function addCssCropping(parentWidth, callback){
 	var sel = currentCropperInstance.getSelection();
 	if(sel.width <= 0 || sel.height <= 0){
-		wrapper.css("height", "auto");
-		image.removeAttr("style");
-		image.removeAttr("selection");
-		image.removeAttr("parentHeight");
+		callback(undefined, undefined, undefined);
 		return;
 	}
 
@@ -16,12 +14,7 @@ function addCssCropping(image, wrapper){
 	var cropperHeight = cropperWidth * (currentCropperImage.height / currentCropperImage.width);
 
 	var resizeRatio = sel.height / sel.width;
-
-	var parentWidth = wrapper.width();
-	var parentHeight = wrapper.width() * resizeRatio;
-	wrapper.css("height", Math.floor(parentHeight) + "px");
-	//stored in the image for use on first render
-	image.attr("parentHeight", Math.floor(parentHeight));
+	var parentHeight = parentWidth * resizeRatio;
 
 	//zoom
 	var imgWidth = cropperWidth / sel.width;
@@ -40,15 +33,15 @@ function addCssCropping(image, wrapper){
 		"margin-top": -(marginTop*100) + "%",
 		"margin-bottom": -(marginBot*100) + "%"
 	};
-	image.css(cssMap);
 
-	var selection = JSON.stringify({
+	var selection = {
 		"x1":(sel.x1 / cropperWidth),
 		"y1":(sel.y1 / cropperHeight),
 		"x2":(sel.x2 / cropperWidth),
 		"y2":(sel.y2 / cropperHeight)
-	});
-	image.attr("selection", selection);
+	};
+	//handling of data left to implementing components
+	callback(cssMap, selection, Math.floor(parentHeight));
 }
 
 function closeImageCropper(){
@@ -62,26 +55,38 @@ var initialSelection;
 function openImageCropper(img, parent, selection){
 	initialSelection = undefined;
 	if(selection != undefined){
-		initialSelection = JSON.parse(selection);
+		initialSelection = selection;
 	}
 
-	currentCropperImageTag = img;
-	currentCropperInstance = img.imgAreaSelect({ 
+	var options = { 
 		instance: true,
 		handles: true,
 		parent: parent,
 		onInit: function(imag, selection){
 			currentCropperImage = imag;
-			setSelection(initialSelection)
+			setSelection(initialSelection);
 		},
 		onSelectChange: function(imag, selection){
 			currentCropperImage = imag;
 		}
-	});
+	}
+	
+	currentCropperImageTag = img;
+	currentCropperInstance = img.imgAreaSelect(options);
 	if(currentCropperImage != undefined){
 		currentCropperInstance.cancelSelection();
 		setSelection(initialSelection);
 	}	
+}
+
+function setImageCropperRatio(width, height){
+	if(width != undefined && height != undefined && !isNaN(width/height) && width > 0 && height > 0){
+		currentCropperInstance.setOptions({aspectRatio:(width+":"+height)});
+		currentCropperInstance.update();
+	}else{
+		currentCropperInstance.setOptions({aspectRatio:""});
+		currentCropperInstance.update();
+	}
 }
 
 function setSelection(s){

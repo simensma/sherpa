@@ -1,4 +1,4 @@
-<div class="dialog widget-edit" data-widget="carousel" data-title="Bildekarusell-widget" data-width="auto">
+<div class="dialog widget-edit" data-widget="carousel" data-title="Bildekarusell-widget" data-width="60%">
     <p>	
     	<table>
 	    	<tr> 
@@ -22,18 +22,26 @@
             </tr>
         </table> 
 
-        <br> 
-        <br> 
+        <br>
 
         <button class="btn btn-success btn-large save"><i class="icon-ok"></i> Lagre widget</button>
         <button class="btn btn-danger btn-large remove"><i class="icon-warning-sign"></i> Slett widget</button>
 
-        <br> 
+        <br>
         <br>
 
-	    <h2>Valgt bilde:</h2>
-        <div style="overflow:hidden;">
-	       <img name="preview" default="{{ STATIC_URL }}img/placeholder.png" src=""></img>
+	    <h2>Her kan du croppe bildet:</h2>
+        <div style="max-width:100%; overflow:hidden;">
+            <table>
+            <tr>
+                <td><label>Cropratio:</label></td>
+                <td><input style="width:30px;" name="ratio-width" type="text" class="input-small"></td>
+                <td><label>/</label></td>
+                <td><input style="width:30px;" name="ratio-height" type="text" class="input-small"></td>
+                <td><label>(Karusellen kan se penere ut hvis du cropper alle bildene til samme ratio)</label></td>
+            </tr>
+            </table>
+	       <img name="preview" default="{{ STATIC_URL }}/img/blank_placeholder.png" src="{{ STATIC_URL }}/img/blank_placeholder.png"></img>
         </div>
     </p>
 </div>

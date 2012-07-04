@@ -1,6 +1,13 @@
 /* Editing widgets */
 $(document).ready(function() {
 
+    //carousel, stop spinning
+    $('.carousel').each(function(){
+        $(this).carousel({
+            interval:false
+        });
+    });
+    
     // Save any widget
     $("div.dialog.widget-edit button.save").click(function() {
         var content = validateContent($(this).parents("div.dialog.widget-edit"));
@@ -8,46 +15,30 @@ $(document).ready(function() {
             return $(this);
         }
         $("div.dialog.widget-edit").dialog('close');
-        if(widgetBeingEdited !== undefined) {
-            enableOverlay();
-            $.ajaxQueue({
-                url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
-                data: 'content=' + encodeURIComponent(content)
-            }).done(function(result) {
-                result = JSON.parse(result);
-                widgetBeingEdited.contents().remove();
-                widgetBeingEdited.append(result.content);
-                widgetBeingEdited.attr('data-json', result.json);
-                disableIframes(widgetBeingEdited);
-            }).always(function() {
-                disableOverlay();
-            });
-        } else {
-            addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column,
-                widgetPosition.order, content, 'widget', function(wrapper) {
-                    refreshSort();
-                    removeEmpties();
-                    setEmpties();
-            });
-        }
+        saveWidget(content);
     });
 
     // Remove any widget
     $("div.dialog.widget-edit button.remove").click(function() {
         $(this).parents(".dialog").dialog('close');
-        removeContent(widgetBeingEdited);
+        if(widgetBeingEdited != undefined){
+            removeContent(widgetBeingEdited);
+        }
     });
 
-    //carousel nagiation
+    //the code below in the readyfunction is the carousel
+    //navigation
     $("div.dialog.widget-edit button.previous").click(function() {
+        saveCropping();
         if(currentIndex > 0){
             currentIndex--;
         }
         displayCurrentImage();
     });
-
     $("div.dialog.widget-edit button.next").click(function() {
+        saveCropping();
         if(currentIndex == imageList.length -1){
+            //another image is added if you are at the last image and the current image isn't a blank
             if(imageList[currentIndex].url.trim().length > 0){
                 imageList.push({
                     url:"",
@@ -64,23 +55,27 @@ $(document).ready(function() {
 
     //remove clicked
     $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
-        console.log(imageList.length);
         imageList.splice(currentIndex, 1);
         if(currentIndex > 0){
             currentIndex--;
         }
-        console.log(imageList.length);
-
-        var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+        //if the user just deleted the only image, fill it with blanks
+        if(imageList.length <= 0){
+            imageList.push({
+                url:"",
+                description:"",
+                photographer:""
+            });
+            currentIndex = 0;
+        }
         displayCurrentImage();
-        widget.images = imageList;
-        widgetBeingEdited.attr('data-json', JSON.stringify(widget));
     });
 
     //choose clicked
     $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
         chooseImagefromArchive(function(url, description, photographer){
             imageList[currentIndex].url = url;
+            imageList[currentIndex].selection = undefined;
             imageList[currentIndex].description = description;
             imageList[currentIndex].photographer = photographer;
             displayCurrentImage();
@@ -90,6 +85,8 @@ $(document).ready(function() {
     //updating data in "model" on key up
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
         imageList[currentIndex].url = $(this).val().trim();
+        imageList[currentIndex].selection = undefined;
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
     });
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
         imageList[currentIndex].description = $(this).val().trim();
@@ -97,7 +94,50 @@ $(document).ready(function() {
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").keyup(function(){
         imageList[currentIndex].photographer = $(this).val().trim();
     });
+
+    //ratio
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").keyup(function(){
+        currentRatioWidth = parseInt($(this).val().trim());
+        setRatio();
+    });
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").keyup(function(){
+        currentRatioHeight = parseInt($(this).val().trim());
+        setRatio();
+    });
 });
+
+function saveWidget(content){
+    if(widgetBeingEdited !== undefined) {
+        enableOverlay();
+        $.ajaxQueue({
+            url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
+            data: 'content=' + encodeURIComponent(content)
+        }).done(function(result) {
+            result = JSON.parse(result);
+            widgetBeingEdited.contents().remove();
+            widgetBeingEdited.append(result.content);
+            widgetBeingEdited.attr('data-json', result.json);
+            disableIframes(widgetBeingEdited);
+        }).always(function() {
+            disableOverlay();
+        });
+    } else {
+        addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column, widgetPosition.order, content, 'widget', function(wrapper) {
+                refreshSort();
+                removeEmpties();
+                setEmpties();
+        });
+    }
+}
+
+function setRatio(){
+    var r = currentRatioWidth/currentRatioHeight;
+    if(!isNaN(r) && currentRatioWidth > 0 && currentRatioHeight > 0){
+        setImageCropperRatio(currentRatioWidth, currentRatioHeight);
+    }else{
+        setImageCropperRatio(0, 0);
+    }
+}
 
 function validateContent(widget) {
     if(widget.attr('data-widget') == 'quote') {
@@ -107,9 +147,15 @@ function validateContent(widget) {
             author: widget.find("input[name='author']").val()
         });
     } else if(widget.attr('data-widget') == 'carousel') {
-
-        if(imageList.length < 1){
-            alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bilde-funksjonen.)");
+        saveCropping();
+        var numImages = 0;
+        for(var i = 0; i < imageList.length; i++){
+            if(imageList[i].url.trim().length > 0){
+                numImages++;
+            }
+        }
+        if(numImages < 1){
+            alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bildeelementet)");
             return false;
         }
         for(var i = 0; i < imageList.length; i++){
@@ -117,7 +163,6 @@ function validateContent(widget) {
                 imageList.splice(i, 1);
             }
         }
-
         return JSON.stringify({
             widget: "carousel",
             images: imageList
@@ -164,9 +209,16 @@ function validateContent(widget) {
     }
 }
 
+function openWidgetDialog(type, parentWidth){
+    if(type == 'carousel') {
+        listImages(parentWidth);
+    }
+}
+
 function editWidget() {
     widgetBeingEdited = $(this);
     var widget = JSON.parse($(this).attr('data-json'));
+    $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
     if(widget.widget == 'quote') {
         $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
         $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
@@ -180,17 +232,20 @@ function editWidget() {
     }else if(widget.widget == 'carousel') {
         listImages();
     }
-    $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
 }
 
 function displayCurrentImage(){
+    if(currentCropperInstance != undefined){
+        currentCropperInstance.cancelSelection();
+    }
+
     $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(imageList[currentIndex].url);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
     
-    if(imageList[currentIndex].url.trim().length < 1){
-        var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('default');
+    if(imageList[currentIndex].url.trim().length <= 1){
+        var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
     }else{
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
@@ -203,16 +258,72 @@ function displayCurrentImage(){
         $("div.dialog.widget-edit button.next").text("Neste bilde ")
         $("div.dialog.widget-edit button.next").append("<i class='icon-chevron-right'></i>");
     }
+
+    //hax, the onload function is for when you are changing images and the selector needs a new height
+    $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").load(function(){
+        openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
+        setRatio();
+    });
+    //the load dosent load on the first item for some reasopn, needs this :(
+    openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
+    setRatio();
 }
 
 var currentIndex = 0;
 var imageList = [];
-function listImages(){
-    currentIndex = 0;
-    imageList = [];
+var currentRatioWidth = 0;
+var currentRatioHeight = 0;
+var newWidgetParentWidth = 0;
 
-    var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
-    var length = widget.images.length;
-    imageList = widget.images;
+function listImages(parentWidth){
+    currentIndex = 0;
+    newWidgetParentWidth = 0;
+    try{
+        currentRatioWidth = parseInt($(this).val().trim());
+        currentRatioHeight = parseInt($(this).val().trim());
+    }catch(e){
+        currentRatioWidth = 0;
+        currentRatioHeight = 0;
+    }
+
+    if(widgetBeingEdited == undefined){
+        newWidgetParentWidth = parentWidth;
+        imageList = [{
+            url:"",
+            description:"",
+            photographer:""
+        }];
+    }else{
+        var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+        imageList = widget.images;
+    }
     displayCurrentImage();
+}
+
+function saveCropping(){
+    var parentWidth = 0;
+    if(widgetBeingEdited == undefined){
+        parentWidth = newWidgetParentWidth;
+    }else{
+        parentWidth = widgetBeingEdited.width();
+    }
+
+    addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
+        if(cssMap == undefined){
+            imageList[currentIndex].style = undefined;
+            imageList[currentIndex].selection = undefined;
+            imageList[currentIndex].parentHeight = undefined;
+            return;
+        }
+
+        var style = "";
+        for(var key in cssMap) {
+            if(cssMap.hasOwnProperty(key)){
+                style += key + ":" + cssMap[key] + ";";
+            }
+        }
+        imageList[currentIndex].style = style;
+        imageList[currentIndex].selection = selection;
+        imageList[currentIndex].parentHeight = parentHeight;
+    });
 }

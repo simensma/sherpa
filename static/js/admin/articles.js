@@ -1,5 +1,12 @@
 $(document).ready(function() {
 
+	//carousel, stop spinning
+    $('.carousel').each(function(){
+    	$(this).carousel({
+    		interval:false
+    	});
+    });
+	
     /* New article dialog */
 
     $("div.article-dialog img[data-template]").click(function() {

@@ -206,7 +206,7 @@ $(document).ready(function() {
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
-
+    widgetStartWidth = 0;
     $("#toolbar a.button.widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -218,6 +218,9 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
+            //console.log($("article .column"));
+            widgetStartWidth = $("article .column").width();
+            //console.log("startbredde: " + widgetStartWidth);
             $("#dialog-add-widget").dialog('open');
             enableToolbar();
             widgetPosition = {
@@ -235,6 +238,9 @@ $(document).ready(function() {
         $(this).parents("#dialog-add-widget").dialog('close');
         $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
         $("div.dialog.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").dialog('open');
+        if($(this).attr('data-widget') == "carousel" ){
+            openWidgetDialog($(this).attr('data-widget'), widgetStartWidth);
+        }
     });
 
     // Remove content (text/image/widget)
@@ -586,6 +592,9 @@ $(document).ready(function() {
                 editable = ' editable';
             }
             var wrapper = $('<div class="content ' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
+            if(type == "image"){
+                wrapper.css("overflow", "hidden");
+            }
             if(result.json !== undefined) {
                 wrapper.attr('data-json', result.json);
             }

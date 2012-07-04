@@ -5,6 +5,13 @@ $(document).ready(function() {
         $("a.header-title").text($(this).text());
     });
 
+    //carousel, stop spinning
+    $('.carousel').each(function(){
+        $(this).carousel({
+            interval:false
+        });
+    });
+
     /* Publish/unpublish */
 
     if($("div.status[data-published]").length == 0) {

@@ -7,6 +7,8 @@ import json
 
 class Migration(DataMigration):
 
+    "Write your forwards methods here."
+    # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
     def forwards(self, orm):
         widgets = orm['page.Content'].objects.filter(type='widget')
 
@@ -17,9 +19,7 @@ class Migration(DataMigration):
             raw_widget.content = json.dumps(parsed_data)
             raw_widget.save()
 
-        "Write your forwards methods here."
-        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-
+    "Write your backwards methods here."
     def backwards(self, orm):
         widgets = orm['page.Content'].objects.filter(type='widget')
 
@@ -29,8 +29,6 @@ class Migration(DataMigration):
                 parsed_data['category'] = None
             raw_widget.content = json.dumps(parsed_data)
             raw_widget.save()
-
-        "Write your backwards methods here."
 
     models = {
         'analytics.segment': {

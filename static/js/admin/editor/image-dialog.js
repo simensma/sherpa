@@ -1,8 +1,16 @@
 var imagePickedCallback; // Called when an image is picked in the dialog
 var imageRemovedCallback; // Called when an image is removed, from the dialog
 var currentImage;
+var cancelRequested 
 
 $(document).ready(function() {
+
+    $("div#dialog-change-image").parent().find("a.ui-dialog-titlebar-close").click(function() {
+        if(currentImage.attr("src").trim().length < 1){
+            currentCropperInstance.cancelSelection();
+            imageRemovedCallback();
+        }
+    });
 
     $("div#dialog-change-image button.choose-image").click(function() {
         chooseImagefromArchive(function(url, description, photographer){
@@ -23,7 +31,22 @@ $(document).ready(function() {
 
     $("div#dialog-change-image button.insert-image").click(function() {
 
-        addCssCropping(currentImage, currentImage.parent());
+        addCssCropping(currentImage.parent().width(), function(cssMap, selection, parentHeight){
+            var image = currentImage;
+            var wrapper = currentImage.parent();
+
+            if(cssMap != undefined){
+                image.css(cssMap);
+                image.attr("selection", JSON.stringify(selection));
+                image.attr("parentHeight", parentHeight);
+                wrapper.css("height", parentHeight+"px");
+            }else{
+                image.removeAttr("style");
+                image.removeAttr("selection");
+                image.removeAttr("parentHeight");
+                wrapper.css("height", "auto");
+            }
+        });
         currentCropperInstance.cancelSelection();
 
         var dialog = $(this).parents("div#dialog-change-image");
@@ -68,6 +91,7 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
 
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');
+
     dialog.find("input[name='src']").val(src);
     if(anchor !== undefined) {
         dialog.find("input[name='anchor']").val(anchor);
@@ -90,8 +114,14 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
         dialog.find("tr.photographer").hide();
     }
 
-    openImageCropper($("div#dialog-change-image img.preview"), dialog, image.attr("selection"));
+    var sel = image.attr("selection");
+    if(sel == undefined || sel == ""){
+        sel = undefined;
+    }else{
+        sel = JSON.parse(sel);
+    }
 
+    openImageCropper($("div#dialog-change-image img.preview"), dialog, sel);
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 }
