@@ -25,7 +25,7 @@ MIN_QUERY_LENGTH = 3
 
 @login_required
 def list_albums(request, album):
-    albums = Album.objects.filter(parent=album)
+    albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
     images = None
     current_album = None
