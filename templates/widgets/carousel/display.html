@@ -1,0 +1,20 @@
+<div id="carousel{{ widget.id }}" class="carousel slide">
+	<div class="carousel-inner">
+		{% for image in widget.images %}
+			<div style="{% if image.parentHeight %}height:{{ image.parentHeight }}px;{% endif %} overflow:hidden;" class="{% if forloop.counter == 1 %}active item{%  else %}item{% endif %}">
+				<img src="{{ image.url }}" style="{{ image.style }}" selection="{{ image.selection }}">
+				{% if image.photographer or image.description %}
+					<div class="img-desc">
+                    	{{ image.description }}
+	        			{% if image.photographer %}
+                    		Foto: {{ image.photographer }}
+                 	 	{% endif %}
+	      			</div>
+      			{% endif %}
+			</div>
+		{% endfor %}
+	</div>
+
+	<a class="carousel-control left" href="#carousel{{ widget.id }}" data-slide="prev">&lsaquo;</a>
+	<a class="carousel-control right" href="#carousel{{ widget.id }}" data-slide="next">&rsaquo;</a>
+</div>

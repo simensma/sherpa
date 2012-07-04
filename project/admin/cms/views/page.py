@@ -12,6 +12,10 @@ from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 import json
 
+#return the list of categories to use in the blogwidget, can and should be replaced with wordpress jsonapi
+def category_list():
+    return ['Alle', 'Barn', 'Dugnad', 'Folkehelse', 'Naturforvaltning', 'Skole', 'Ungdom']
+
 @login_required
 def list(request):
     versions = Version.objects.filter(variant__page__isnull=False, active=True).order_by('-variant__page__created')
@@ -61,7 +65,7 @@ def edit_version(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows, 'version': version}
+        context = {'rows': rows, 'version': version, 'categories':category_list()}
         return render(request, 'admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)

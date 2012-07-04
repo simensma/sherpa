@@ -41,8 +41,9 @@ $(document).ready(function() {
 
 });
 
-$(window).load(function() {
-    /* Shrink image-description-width to image width (for those cases where image isn't 100%) */
+//this had to die, messes with descriptiosize ehen cropping images, but seems to work fine without
+/*$(window).load(function() {
+    //Shrink image-description-width to image width (for those cases where image isn't 100%)
     $("article div.content.image").each(function() {
         var desc = $(this).find("div.img-desc");
         if(desc.length > 0) {
@@ -50,7 +51,7 @@ $(window).load(function() {
             desc.width($(this).find("img").innerWidth() - strip);
         }
     });
-});
+});*/
 
 $.fn.enableDialog = function() {
     return this.each(function() {
