@@ -159,11 +159,11 @@ def upload_image(request, album):
                         exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 ext = file.name.split(".")[-1].lower()
-                # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
                 for size in thumb_sizes:
                     fp = StringIO()
                     img_copy = img.copy()
                     img_copy.thumbnail([size, size])
+                    # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
                     img_copy.save(fp, "jpeg" if ext == "jpg" else ext)
                     thumbs.append({'size': size, 'data': fp.getvalue()})
 
