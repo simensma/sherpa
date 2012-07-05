@@ -16,8 +16,8 @@ $(document).ready(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
-    $("#toolbar select").change(function() {
-        $("select option:selected").each(function() {
+    $("#toolbar select.formatting").change(function() {
+        $("#toolbar select.formatting option:selected").each(function() {
             // The smart thing to do here would be:
             // document.execCommand('formatblock', false, $(this).val());
             // But IE doesn't support that, so. FML.
