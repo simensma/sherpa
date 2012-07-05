@@ -310,7 +310,7 @@ function saveCropping(){
 
     addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
         if(cssMap == undefined){
-            imageList[currentIndex].style = undefined;
+            imageList[currentIndex].style = "width:100%;";
             imageList[currentIndex].selection = undefined;
             imageList[currentIndex].parentHeight = undefined;
             return;

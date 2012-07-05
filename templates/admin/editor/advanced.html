@@ -24,7 +24,7 @@
           <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
               <img  src="{{ content.content.src }}" 
-              {% if content.content.style %}style="{{ content.content.style }}" {% endif %}
+              style="{% if content.content.style %}{{ content.content.style }}{% else %}width:100%;{% endif %}" 
               {% if content.content.selection %}selection="{{ content.content.selection }}" {% endif %}
               alt="{{ content.content.description }}">
             {% if content.content.anchor %}</a>{% endif %}

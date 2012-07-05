@@ -44,6 +44,7 @@ $(document).ready(function() {
                 image.removeAttr("style");
                 image.removeAttr("selection");
                 image.removeAttr("parentHeight");
+                image.css("width", "100%");
                 wrapper.css("height", "auto");
             }
         });

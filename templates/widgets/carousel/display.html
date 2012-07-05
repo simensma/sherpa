@@ -2,7 +2,7 @@
 	<div class="carousel-inner">
 		{% for image in widget.images %}
 			<div style="{% if image.parentHeight %}height:{{ image.parentHeight }}px;{% endif %} overflow:hidden;" class="{% if forloop.counter == 1 %}active item{%  else %}item{% endif %}">
-				<img src="{{ image.url }}" style="{{ image.style }}" selection="{{ image.selection }}">
+				<img src="{{ image.url }}" style="{% if image.style %}{{ image.style }}{% else %}width:100%;{% endif %}" selection="{{ image.selection }}">
 				{% if image.photographer or image.description %}
 					<div class="img-desc">
                     	{{ image.description }}
