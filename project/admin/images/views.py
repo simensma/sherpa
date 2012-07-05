@@ -180,13 +180,15 @@ def upload_image(request, album):
         album = Album.objects.get(id=album)
         for image in parsed_images:
             conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
-                '.' + image['ext'], S3.S3Object(image['data']),
+            conn.put(settings.AWS_BUCKET, "%s%s.%s" %
+                (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
+                S3.S3Object(image['data']),
                 {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
             )
             for thumb in image['thumbs']:
-                conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
-                    "-" + str(thumb['size']) + '.' + image['ext'], S3.S3Object(thumb['data']),
+                conn.put(settings.AWS_BUCKET, "%s%s-%s.%s" %
+                    (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
+                    S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
             image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
