@@ -37,13 +37,13 @@ $(document).ready(function() {
 
             if(cssMap != undefined){
                 image.css(cssMap);
-                image.attr("selection", JSON.stringify(selection));
-                image.attr("parentHeight", parentHeight);
+                image.attr("data-selection", JSON.stringify(selection));
+                image.attr("data-parentHeight", parentHeight);
                 wrapper.css("height", parentHeight+"px");
             }else{
                 image.removeAttr("style");
-                image.removeAttr("selection");
-                image.removeAttr("parentHeight");
+                image.removeAttr("data-selection");
+                image.removeAttr("data-parentHeight");
                 image.css("width", "100%");
                 wrapper.css("height", "auto");
             }
@@ -115,7 +115,7 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
         dialog.find("tr.photographer").hide();
     }
 
-    var sel = image.attr("selection");
+    var sel = image.attr("data-selection");
     if(sel == undefined || sel == ""){
         sel = undefined;
     }else{

@@ -24,9 +24,9 @@
           <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
               <img  src="{{ content.content.src }}" 
-              style="{% if content.content.style %}{{ content.content.style }}{% else %}width:100%;{% endif %}" 
-              {% if content.content.selection %}selection="{{ content.content.selection }}" {% endif %}
-              alt="{{ content.content.description }}">
+              {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
+              {% if content.content.selection %}data-selection="{{ content.content.selection }}"{% endif %}
+              {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}}>
             {% if content.content.anchor %}</a>{% endif %}
             <div style="width:auto" class="img-desc">
               <span class="description">{{ content.content.description }}</span>
@@ -90,7 +90,7 @@
 {% include 'admin/editor/image-from-archive-dialog.html' %}
 
 {# Changing image #}
-{% include 'admin/editor/change-image-dialog.html' %}
+{% include 'admin/editor/image-dialog.html' %}
 
 {# Insert button #}
 <div id="dialog-add-button" class="dialog" data-title="Legg til ny knapp" data-width="auto">

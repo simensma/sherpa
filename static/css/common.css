@@ -176,8 +176,13 @@ article div.image {
   position: relative;
 }
 
+
 article div.image img {
   display: block;
+}
+
+article div.image img, div.widget.carousel img {
+  width: 100%;
 }
 
 article div.img-desc {

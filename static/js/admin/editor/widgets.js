@@ -123,9 +123,9 @@ function saveWidget(content){
         });
     } else {
         addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column, widgetPosition.order, content, 'widget', function(wrapper) {
-                refreshSort();
-                removeEmpties();
-                setEmpties();
+            refreshSort();
+            removeEmpties();
+            setEmpties();
         });
     }
 }
