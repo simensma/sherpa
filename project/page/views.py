@@ -69,7 +69,7 @@ def parse_content(request, version):
                 column.contents = contents
             row.columns = columns
         context = {'rows': rows, 'version': version}
-        cache.set('content.version.%s' % version.id, context, 60 * 30)
+        cache.set('content.version.%s' % version.id, context, 60 * 10)
 
     # Used temporary for static promo content
     if request.path == '/':
