@@ -1,26 +1,27 @@
 <h1>Siste nyheter</h1>
 
 {% for version in widget.versions %}
-  <div class="article-preview">
-    <h3>
-      <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-        {{ version.title.content|striptags }}
-      </a>
-    </h3>
+  <h3>
+    <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+      {{ version.title.content|striptags }}
+    </a>
+  </h3>
+  <div class="row-fluid preview">
     {% if not version.hide_thumbnail %}
+    <div class="span4">
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
         <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
       </a>
+    </div>
     {% endif %}
-    <div class="preview-lede">
+    <div class="span8">
       <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
         {{ version.lede.content|striptags|safe|truncatewords:15 }}
       </a>
     </div>
-    <div style="clear: both;"></div>
   </div>
 {% endfor %}
 
-<p>
+<p class="more">
   <a href="{% url articles.views.index %}">Se eldre nyheter</a>
 </p>

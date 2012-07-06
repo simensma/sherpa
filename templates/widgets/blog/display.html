@@ -1,26 +1,33 @@
 <h1>Siste fra bloggen</h1>
 
 {% for entry in widget.entries %}
-  <div class="blog-item">
-    <h3>
-      <a href="{{ entry.link }}">
-        {{ entry.title }}
-      </a>
-    </h3>
+  <h3>
+    <a href="{{ entry.link }}">
+      {{ entry.title }}
+    </a>
+  </h3>
+  <div class="row-fluid preview">
     {% if entry.image %}
-      <a class="noexternal" href="{{ entry.link }}">
-        <img src="{{ entry.image }}" alt="{{ entry.title }}">
-      </a>
+        <div class="span4">
+          <a class="noexternal" href="{{ entry.link }}">
+            <img src="{{ entry.image }}" alt="{{ entry.title }}">
+          </a>
+        </div>
+        <div class="span8">
+          <a class="noexternal" href="{{ entry.link }}">
+            {{ entry.content|striptags|safe|truncatewords:15 }}
+          </a>
+        </div>
+    {% else %}
+      <div class="span12">
+        <a class="noexternal" href="{{ entry.link }}">
+          {{ entry.content|striptags|safe|truncatewords:25 }}
+        </a>
+      </div>
     {% endif %}
-    <div class="preview-lede">
-      <a class="noexternal" href="{{ entry.link }}">
-        {{ entry.content|striptags|safe|truncatewords:15 }}
-      </a>
-    </div>
-    <div style="clear: both;"></div>
   </div>
 {% endfor %}
 
-<p>
+<p class="more">
   <a href="http://blogg.turistforeningen.no/">Gå til bloggen</a>
 </p>

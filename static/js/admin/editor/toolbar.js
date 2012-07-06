@@ -16,8 +16,8 @@ $(document).ready(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
-    $("#toolbar select").change(function() {
-        $("select option:selected").each(function() {
+    $("#toolbar select.formatting").change(function() {
+        $("#toolbar select.formatting option:selected").each(function() {
             // The smart thing to do here would be:
             // document.execCommand('formatblock', false, $(this).val());
             // But IE doesn't support that, so. FML.
@@ -28,6 +28,12 @@ $(document).ready(function() {
             var node = $(selection.anchorNode);
             if(node.find(".editable").length != 0) {
                 alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
+                return $(this);
+            }
+            if(node.hasClass('editable')) {
+                // No wrapper node, browser uses content div as wrapper. We'll not be able to
+                // format the requested block as expected.
+                alert("Whoops, det har oppstått en teknisk feil som er litt vanskelig å forklare! I hovedsak skyldes det at browseren din ikke genererer HTML-markup slik den burde.\n\nPrøv å fjerne linjeskiftene rundt teksten du vil formatere for så å lage nye, slik at det genereres nye DOM-elementer. Du kan også prøve \"Fjern formatering\"-knappen.\n\nHvis ikke det funker, er du rett og slett nødt til å bruke en annen browser, som f.eks. Opera.\n\nBeklager dette! Vi vil prøve å lage en manuell fiks for dette problemet snart.");
                 return $(this);
             }
             var parent = node.parent();

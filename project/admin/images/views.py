@@ -25,7 +25,7 @@ MIN_QUERY_LENGTH = 3
 
 @login_required
 def list_albums(request, album):
-    albums = Album.objects.filter(parent=album)
+    albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
     images = None
     current_album = None
@@ -159,11 +159,11 @@ def upload_image(request, album):
                         exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 ext = file.name.split(".")[-1].lower()
-                # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
                 for size in thumb_sizes:
                     fp = StringIO()
                     img_copy = img.copy()
-                    img_copy.thumbnail([size, size])
+                    img_copy.thumbnail([size, size], pil.ANTIALIAS)
+                    # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
                     img_copy.save(fp, "jpeg" if ext == "jpg" else ext)
                     thumbs.append({'size': size, 'data': fp.getvalue()})
 
@@ -180,13 +180,15 @@ def upload_image(request, album):
         album = Album.objects.get(id=album)
         for image in parsed_images:
             conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
-                '.' + image['ext'], S3.S3Object(image['data']),
+            conn.put(settings.AWS_BUCKET, "%s%s.%s" %
+                (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
+                S3.S3Object(image['data']),
                 {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
             )
             for thumb in image['thumbs']:
-                conn.put(settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX + image['key'] +
-                    "-" + str(thumb['size']) + '.' + image['ext'], S3.S3Object(thumb['data']),
+                conn.put(settings.AWS_BUCKET, "%s%s-%s.%s" %
+                    (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
+                    S3.S3Object(thumb['data']),
                     {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
                 )
             image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
