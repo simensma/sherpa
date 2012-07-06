@@ -65,7 +65,7 @@ def parse_widget(widget):
                 if entries_matched >= int(widget['count']):
                     break
             data = {'entries':entries}
-            cache.set('widgets.blog' + widget['category'], data, 60 * 60 * 1)
+            cache.set('widgets.blog' + widget['category'], data, 60 * 10)
     elif widget['widget'] == "embed":
         data = {'code': widget['code']}
 
