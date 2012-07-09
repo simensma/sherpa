@@ -14,10 +14,10 @@ $(document).ready(function() {
 
     $("div#dialog-change-image button.choose-image").click(function() {
         chooseImagefromArchive(function(url, description, photographer){
-            $("div#dialog-change-image input[name='src']").val(url);
+            $("div#dialog-change-image input[name='src']").val(removeImageSizeFromUrl(url));
             $("div#dialog-change-image input[name='description']").val(description);
             $("div#dialog-change-image input[name='photographer']").val(photographer);
-            $("div#dialog-change-image img.preview").attr('src', url);
+            $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl(url, IMAGE_PPREVIEW_WIDTH));
 
             currentCropperInstance.cancelSelection();
             openImageCropper($("div#dialog-change-image img.preview"), $("div#dialog-change-image"), undefined);
@@ -25,30 +25,12 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image input[name='src']").keyup(function() {
-        $("div#dialog-change-image img.preview").attr('src', '/static/img/ajax-loader-small.gif');
-        $("div#dialog-change-image img.preview").attr('src', $(this).val());
+        //$("div#dialog-change-image img.preview").attr('src', '/static/img/ajax-loader-small.gif');
+        $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl($(this).val(), IMAGE_PPREVIEW_WIDTH));
+        currentCropperInstance.cancelSelection();
     });
 
     $("div#dialog-change-image button.insert-image").click(function() {
-
-        addCssCropping(currentImage.parent().width(), function(cssMap, selection, parentHeight){
-            var image = currentImage;
-            var wrapper = currentImage.parent();
-
-            if(cssMap != undefined){
-                image.css(cssMap);
-                image.attr("data-selection", JSON.stringify(selection));
-                image.attr("data-parentHeight", parentHeight);
-                wrapper.css("height", parentHeight+"px");
-            }else{
-                image.removeAttr("style");
-                image.removeAttr("data-selection");
-                image.removeAttr("data-parentHeight");
-                image.css("width", "100%");
-                wrapper.css("height", "auto");
-            }
-        });
-        currentCropperInstance.cancelSelection();
 
         var dialog = $(this).parents("div#dialog-change-image");
         var src = dialog.find("input[name='src']").val();
@@ -57,6 +39,31 @@ $(document).ready(function() {
             return;
         }
         $("div#dialog-change-image div.empty-src").hide();
+
+        var parentWidth = currentImage.parent().width();
+
+        addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
+            var image = currentImage;
+            var wrapper = currentImage.parent();
+
+            var newurl = $("div#dialog-change-image input[name='src']").val()
+
+            if(cssMap != undefined){
+                src = addImageSizeToUrl(newurl, bestSizeForImage(parentWidth * (parseFloat(cssMap["width"].replace("%", ""))/100)));
+                image.css(cssMap);
+                image.attr("data-selection", JSON.stringify(selection));
+                image.attr("data-parentHeight", parentHeight);
+                wrapper.css("height", parentHeight+"px");
+            }else{
+                src = addImageSizeToUrl(newurl, bestSizeForImage(parentWidth));
+                image.removeAttr("style");
+                image.removeAttr("data-selection");
+                image.removeAttr("data-parentHeight");
+                image.css("width", "100%");
+                wrapper.css("height", "auto");
+            }
+        });
+        currentCropperInstance.cancelSelection();
         dialog.dialog('close');
 
         var anchor = dialog.find("input[name='anchor']");
@@ -84,11 +91,11 @@ $(document).ready(function() {
 function openImageDialog(image, anchor, description, photographer, saveCallback, removeCallback) {
     currentImage = image;
 
-    var src = image.attr("src");
+    var src = removeImageSizeFromUrl(image.attr("src"));
 
     $("div#dialog-change-image div.image-details").show();
     $("div#dialog-change-image div.empty-src").hide();
-    $("div#dialog-change-image img.preview").attr('src', src);
+    $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl(src, IMAGE_PPREVIEW_WIDTH));
 
     var dialog = $("div#dialog-change-image");
     dialog.dialog('open');

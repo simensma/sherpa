@@ -1,0 +1,43 @@
+var LOCAL_IMAGE_PREFIX = "cdn.turistforeningen.no";
+var THUMB_SIZES = [1880, 940, 500, 150];
+var IMAGE_PPREVIEW_WIDTH = 940;
+
+function addImageSizeToUrl(url, size){
+    //if url not from turistforeningen, do nothing
+    if(url.indexOf(LOCAL_IMAGE_PREFIX) < 0){
+        return url;
+    }
+
+    //if the url has a -size in it, ignore it and use our own size instead, this could happen if the user explicitly types in an url with -size, or old images
+    url = url.replace(/-\d+/g, "");
+
+    //the requested size is the original size
+    if(size == undefined){
+        return url;
+    }
+
+    var parts = url.split(".");
+    var newurl = parts[0];
+    for(var i = 1; i< parts.length-1; i++){
+        newurl += "." + parts[i];
+    }
+    newurl += "-" + size + "." + parts[parts.length-1];
+    return newurl;
+}
+
+function removeImageSizeFromUrl(url){
+    if(url.indexOf(LOCAL_IMAGE_PREFIX) < 0){
+        return url;
+    }
+    return url.replace(/-\d+/g, '')
+}
+
+function bestSizeForImage(displayWidth){
+    for(var i = THUMB_SIZES.length-1; i >= 0; i--){
+        if(THUMB_SIZES[i] >= displayWidth){
+            console.log(THUMB_SIZES[i]);
+            return THUMB_SIZES[i];
+        }
+    }
+    return undefined;
+}

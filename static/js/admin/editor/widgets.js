@@ -1,9 +1,6 @@
-var IMAGE_PPREVIEW_WIDTH = 940;
 
 /* Editing widgets */
 $(document).ready(function() {
-
-    
 
     //carousel, stop spinning
     $('.carousel').each(function(){
@@ -216,7 +213,6 @@ function validateContent(widget) {
 function openWidgetDialog(type, parentWidth){
     if(type == 'carousel') {
         listImages(parentWidth);
-        console.log("sendt parentWidth: " + parentWidth);
     }
 }
 
@@ -239,28 +235,7 @@ function editWidget() {
     }
 }
 
-var localImagePrefix = 'cdn.turistforeningen.no';
 
-function addImageSizeToUrl(url, size){
-    console.log(url);
-    //if url not from turistforeningen
-    if(!url.lastIndexOf(url, 0) == 0){
-        console.log(url);
-        return url;
-    }
-    //if the url has a -size in it, ignore it and use out own size instead
-    url.replace(".*-\d+", "");
-    console.log(url);
-
-    var parts = url.split(".");
-    var newurl = parts[0];
-    for(var i = 1; i< parts.length-1; i++){
-        newurl += "." + parts[i];
-    }
-    newurl += "-" + size + "." + parts[parts.length-1];
-    console.log(newurl);
-    return newurl;
-}
 
 function displayCurrentImage(){
     if(currentCropperInstance != undefined){
@@ -268,7 +243,7 @@ function displayCurrentImage(){
     }
 
     $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(imageList[currentIndex].url);
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
     
@@ -338,10 +313,10 @@ function saveCropping(){
 
     addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
         if(cssMap == undefined){
-            console.log("no cropping done");
             imageList[currentIndex].style = "width:100%;";
             imageList[currentIndex].selection = undefined;
             imageList[currentIndex].parentHeight = undefined;
+            imageList[currentIndex].url = addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth));
             return;
         }
 
@@ -354,6 +329,6 @@ function saveCropping(){
         imageList[currentIndex].style = style;
         imageList[currentIndex].selection = selection;
         imageList[currentIndex].parentHeight = parentHeight;
-        console.log("cropping done parent height: " + parentHeight);
+        imageList[currentIndex].url = addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth * (parseFloat(cssMap["width"].replace("%", ""))/100) ));
     });
 }
