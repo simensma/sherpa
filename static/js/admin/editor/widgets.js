@@ -90,7 +90,7 @@ $(document).ready(function() {
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
         imageList[currentIndex].url = $(this).val().trim();
         imageList[currentIndex].selection = undefined;
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
     });
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
         imageList[currentIndex].description = $(this).val().trim();
@@ -239,13 +239,26 @@ function editWidget() {
     }
 }
 
-function setUrlSize(url, size){
+var localImagePrefix = 'cdn.turistforeningen.no';
+
+function addImageSizeToUrl(url, size){
+    console.log(url);
+    //if url not from turistforeningen
+    if(!url.lastIndexOf(url, 0) == 0){
+        console.log(url);
+        return url;
+    }
+    //if the url has a -size in it, ignore it and use out own size instead
+    url.replace(".*-\d+", "");
+    console.log(url);
+
     var parts = url.split(".");
     var newurl = parts[0];
     for(var i = 1; i< parts.length-1; i++){
         newurl += "." + parts[i];
     }
     newurl += "-" + size + "." + parts[parts.length-1];
+    console.log(newurl);
     return newurl;
 }
 
@@ -263,7 +276,7 @@ function displayCurrentImage(){
         var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
     }else{
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', setUrlSize(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
     }
 
     if(currentIndex == imageList.length -1){
