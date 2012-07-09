@@ -27,7 +27,7 @@ def delete_image_post(sender, **kwargs):
 
     conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
     for size in THUMB_SIZES:
-        conn.delete(settings.AWS_BUCKET, "%s%s-" + str(size) +".%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
+        conn.delete(settings.AWS_BUCKET, "%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
