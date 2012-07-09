@@ -1,5 +1,9 @@
+var IMAGE_PPREVIEW_WIDTH = 940;
+
 /* Editing widgets */
 $(document).ready(function() {
+
+    
 
     //carousel, stop spinning
     $('.carousel').each(function(){
@@ -212,6 +216,7 @@ function validateContent(widget) {
 function openWidgetDialog(type, parentWidth){
     if(type == 'carousel') {
         listImages(parentWidth);
+        console.log("sendt parentWidth: " + parentWidth);
     }
 }
 
@@ -234,6 +239,16 @@ function editWidget() {
     }
 }
 
+function setUrlSize(url, size){
+    var parts = url.split(".");
+    var newurl = parts[0];
+    for(var i = 1; i< parts.length-1; i++){
+        newurl += "." + parts[i];
+    }
+    newurl += "-" + size + "." + parts[parts.length-1];
+    return newurl;
+}
+
 function displayCurrentImage(){
     if(currentCropperInstance != undefined){
         currentCropperInstance.cancelSelection();
@@ -248,7 +263,7 @@ function displayCurrentImage(){
         var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
     }else{
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', imageList[currentIndex].url);
+        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', setUrlSize(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
     }
 
     if(currentIndex == imageList.length -1){
@@ -310,6 +325,7 @@ function saveCropping(){
 
     addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
         if(cssMap == undefined){
+            console.log("no cropping done");
             imageList[currentIndex].style = "width:100%;";
             imageList[currentIndex].selection = undefined;
             imageList[currentIndex].parentHeight = undefined;
@@ -325,5 +341,6 @@ function saveCropping(){
         imageList[currentIndex].style = style;
         imageList[currentIndex].selection = selection;
         imageList[currentIndex].parentHeight = parentHeight;
+        console.log("cropping done parent height: " + parentHeight);
     });
 }
