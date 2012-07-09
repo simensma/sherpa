@@ -18,7 +18,7 @@ from datetime import datetime
 # Pixel sizes we'll want to generate thumbnail images for
 # Note: A couple of places (the template, Image model etc.) has hardcoded
 # these thumb sizes.
-thumb_sizes = [940, 500, 451, 291, 150]
+THUMB_SIZES = [1880, 940, 500, 150]
 
 # Require this many characters for an image search (this is duplicated client-side)
 MIN_QUERY_LENGTH = 3
