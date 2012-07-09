@@ -79,6 +79,8 @@ $(document).ready(function() {
                 src: $(this).find('img').attr('src'),
                 style: $(this).find('img').attr('style'),
                 selection: $(this).find('img').attr('data-selection'),
+                ratioWidth: $(this).find('img').attr('data-ratio-width'),
+                ratioHeight: $(this).find('img').attr('data-ratio-height'),
                 parentHeight: $(this).find('img').attr('data-parentHeight'),
                 description: $(this).find('span.description').text(),
                 photographer: $(this).find('span.photographer span.content').text(),

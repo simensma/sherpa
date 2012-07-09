@@ -98,12 +98,12 @@ $(document).ready(function() {
 
     //ratio
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").keyup(function(){
-        currentRatioWidth = parseInt($(this).val().trim());
-        setRatio();
+        carouselCurrentRatioWidth = parseInt($(this).val().trim());
+        setCarouselRatio();
     });
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").keyup(function(){
-        currentRatioHeight = parseInt($(this).val().trim());
-        setRatio();
+        carouselCurrentRatioHeight = parseInt($(this).val().trim());
+        setCarouselRatio();
     });
 });
 
@@ -131,10 +131,17 @@ function saveWidget(content){
     }
 }
 
-function setRatio(){
-    var r = currentRatioWidth/currentRatioHeight;
-    if(!isNaN(r) && currentRatioWidth > 0 && currentRatioHeight > 0){
-        setImageCropperRatio(currentRatioWidth, currentRatioHeight);
+function setCarouselRatio(){
+    try{
+        carouselCurrentRatioWidth = parseInt($("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val().trim());
+        carouselCurrentRatioHeight = parseInt($("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val().trim());
+    }catch(e){
+        carouselCurrentRatioWidth = 0;
+        carouselCurrentRatioHeight = 0;
+    }
+
+    if(ratioIsValid(carouselCurrentRatioWidth, carouselCurrentRatioHeight)){
+        setImageCropperRatio(carouselCurrentRatioWidth, carouselCurrentRatioHeight);
     }else{
         setImageCropperRatio(0, 0);
     }
@@ -166,8 +173,11 @@ function validateContent(widget) {
         }
         return JSON.stringify({
             widget: "carousel",
+            ratioWidth:carouselCurrentRatioWidth,
+            ratioHeight:carouselCurrentRatioHeight,
             images: imageList
         });
+
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
         if(isNaN(Number(count))) {
@@ -200,7 +210,7 @@ function validateContent(widget) {
     } else if(widget.attr('data-widget') == 'embed') {
         var code = widget.find("textarea[name='code']").val();
         if(code == '') {
-            alert("Du må jo legg inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
+            alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
             return false;
         }
         return JSON.stringify({
@@ -235,8 +245,6 @@ function editWidget() {
     }
 }
 
-
-
 function displayCurrentImage(){
     if(currentCropperInstance != undefined){
         currentCropperInstance.cancelSelection();
@@ -265,29 +273,22 @@ function displayCurrentImage(){
     //hax, the onload function is for when you are changing images and the selector needs a new height
     $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").load(function(){
         openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
-        setRatio();
+        setCarouselRatio();
     });
     //the load dosent load on the first item for some reasopn, needs this :(
     openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
-    setRatio();
+    setCarouselRatio();
 }
 
 var currentIndex = 0;
 var imageList = [];
-var currentRatioWidth = 0;
-var currentRatioHeight = 0;
+var carouselCurrentRatioWidth = 0;
+var carouselCurrentRatioHeight = 0;
 var newWidgetParentWidth = 0;
 
 function listImages(parentWidth){
     currentIndex = 0;
     newWidgetParentWidth = 0;
-    try{
-        currentRatioWidth = parseInt($(this).val().trim());
-        currentRatioHeight = parseInt($(this).val().trim());
-    }catch(e){
-        currentRatioWidth = 0;
-        currentRatioHeight = 0;
-    }
 
     if(widgetBeingEdited == undefined){
         newWidgetParentWidth = parentWidth;
@@ -299,6 +300,16 @@ function listImages(parentWidth){
     }else{
         var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
         imageList = widget.images;
+
+        if(ratioIsValid(widget.ratioWidth, widget.ratioHeight)){
+            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val(widget.ratioWidth);
+            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val(widget.ratioHeight);
+            carouselCurrentRatioWidth = widget.ratioWidth;
+            carouselCurrentRatioHeight = widget.ratioHeight;
+        }else{
+            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val("");
+            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val("");
+        }
     }
     displayCurrentImage();
 }

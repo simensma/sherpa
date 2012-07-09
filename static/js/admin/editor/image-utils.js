@@ -41,3 +41,11 @@ function bestSizeForImage(displayWidth){
     }
     return undefined;
 }
+
+function ratioIsValid(width, height){
+    var r = width/height;
+    if(!isNaN(r) && width > 0 && height > 0){
+        return true;
+    }
+    return false;
+}

@@ -3,6 +3,9 @@ var imageRemovedCallback; // Called when an image is removed, from the dialog
 var currentImage;
 var cancelRequested 
 
+var imageCurrentRatioWidth = 0;
+var imageCurrentRatioHeight = 0;
+
 $(document).ready(function() {
 
     $("div#dialog-change-image").parent().find("a.ui-dialog-titlebar-close").click(function() {
@@ -25,7 +28,6 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image input[name='src']").keyup(function() {
-        //$("div#dialog-change-image img.preview").attr('src', '/static/img/ajax-loader-small.gif');
         $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl($(this).val(), IMAGE_PPREVIEW_WIDTH));
         currentCropperInstance.cancelSelection();
     });
@@ -63,6 +65,10 @@ $(document).ready(function() {
                 wrapper.css("height", "auto");
             }
         });
+
+        currentImage.attr("data-ratio-width", imageCurrentRatioWidth);
+        currentImage.attr("data-ratio-height", imageCurrentRatioHeight);
+
         currentCropperInstance.cancelSelection();
         dialog.dialog('close');
 
@@ -86,6 +92,16 @@ $(document).ready(function() {
         $(this).parents("div#dialog-change-image").dialog('close');
         imageRemovedCallback();
     });
+
+    $("div#dialog-change-image input[name='ratio-width']").keyup(function(){
+        imageCurrentRatioWidth = parseInt($(this).val().trim());
+        setImageRatio();
+    });
+    $("div#dialog-change-image input[name='ratio-height']").keyup(function(){
+        imageCurrentRatioHeight = parseInt($(this).val().trim());
+        setImageRatio();
+    });
+
 });
 
 function openImageDialog(image, anchor, description, photographer, saveCallback, removeCallback) {
@@ -129,7 +145,40 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
         sel = JSON.parse(sel);
     }
 
+    var ratioW = image.attr("data-ratio-width");
+    var ratioH = image.attr("data-ratio-height");
+    console.log(ratioW, ratioH);
+    imageCurrentRatioWidth = 0;
+    imageCurrentRatioHeight = 0;
+    $("div#dialog-change-image input[name='ratio-width']").val("");
+    $("div#dialog-change-image input[name='ratio-height']").val("");
+    if(ratioW != undefined && ratioH != undefined && ratioW != "" && ratioH != ""){
+        if(ratioIsValid(ratioW, ratioH)){
+            $("div#dialog-change-image input[name='ratio-width']").val(ratioW);
+            $("div#dialog-change-image input[name='ratio-height']").val(ratioH);
+        }
+    }
+
     openImageCropper($("div#dialog-change-image img.preview"), dialog, sel);
+    setImageRatio();
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
+}
+
+function setImageRatio(){
+    try{
+        imageCurrentRatioWidth = parseInt($("div#dialog-change-image input[name='ratio-width']").val().trim());
+        console.log(imageCurrentRatioWidth);
+        imageCurrentRatioHeight = parseInt($("div#dialog-change-image input[name='ratio-height']").val().trim());
+        console.log(imageCurrentRatioHeight)
+    }catch(e){
+        imageCurrentRatioWidth = 0;
+        imageCurrentRatioHeight = 0;
+    }
+
+    if(ratioIsValid(imageCurrentRatioWidth, imageCurrentRatioHeight)){
+        setImageCropperRatio(imageCurrentRatioWidth, imageCurrentRatioHeight);
+    }else{
+        setImageCropperRatio(0, 0);
+    }
 }
