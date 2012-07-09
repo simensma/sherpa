@@ -159,7 +159,7 @@ def upload_image(request, album):
                         exif[TAGS.get(tag, tag)] = value
                 thumbs = []
                 ext = file.name.split(".")[-1].lower()
-                for size in thumb_sizes:
+                for size in THUMB_SIZES:
                     fp = StringIO()
                     img_copy = img.copy()
                     img_copy.thumbnail([size, size], pil.ANTIALIAS)
