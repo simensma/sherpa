@@ -35,7 +35,7 @@ def show(request, article, text):
                     if content.type == 'widget':
                         content.content = parse_widget(json.loads(content.content))
                     elif content.type == 'image':
-                        #content.content = json.loads(content.content)
+                        content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
         context = {'rows': rows, 'version': version}
