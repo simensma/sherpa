@@ -25,12 +25,12 @@ $(document).ready(function() {
         }
     });
     function doSearch() {
-        var query = $("div#dialog-image-archive-chooser input[name='search']").val();
+        /*var query = $("div#dialog-image-archive-chooser input[name='search']").val();
         if(query.length < MIN_QUERY_LENGTH) {
             $("div#dialog-image-archive-chooser div.too-few-chars").show();
         } else {
             search(query);
-        }
+        }*/
     }
 });
 
