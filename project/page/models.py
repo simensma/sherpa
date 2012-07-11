@@ -90,7 +90,7 @@ class Version(models.Model):
         if self.thumbnail != None and settings.AWS_BUCKET in self.thumbnail:
             t = self.thumbnail
             # Remove previous size spec if existing
-            t = re.sub('-\d{3}\.', '.', t)
+            t = re.sub('-\d+\.', '.', t)
             self.thumbnail = t[:t.rfind('.')] + '-150' + t[t.rfind('.'):]
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
