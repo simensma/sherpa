@@ -162,6 +162,11 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
     setImageRatio();
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
+
+    //hax for preventing saving of empty image and databasecrash
+    if(src === undefined || src.trim().length <= 0){
+        imagePickedCallback("http://www.turistforeningen.no/static/img/placeholder.png", "", "", "");
+    }
 }
 
 function setImageRatio(){
