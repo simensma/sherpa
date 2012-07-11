@@ -16,10 +16,7 @@ from page.widgets import parse_widget
 def list(request):
     versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True).order_by('-variant__article__created')
     for version in versions:
-        if version.id == 87:
-            version.delete()
-        else:
-            version.load_preview()
+        version.load_preview()
     context = {'versions': versions}
     return render(request, 'admin/articles/list.html', context)
 
