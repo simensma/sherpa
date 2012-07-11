@@ -35,7 +35,6 @@ function removeImageSizeFromUrl(url){
 function bestSizeForImage(displayWidth){
     for(var i = THUMB_SIZES.length-1; i >= 0; i--){
         if(THUMB_SIZES[i] >= displayWidth){
-            console.log(THUMB_SIZES[i]);
             return THUMB_SIZES[i];
         }
     }

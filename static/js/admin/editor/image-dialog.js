@@ -147,7 +147,6 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
 
     var ratioW = image.attr("data-ratio-width");
     var ratioH = image.attr("data-ratio-height");
-    console.log(ratioW, ratioH);
     imageCurrentRatioWidth = 0;
     imageCurrentRatioHeight = 0;
     $("div#dialog-change-image input[name='ratio-width']").val("");
@@ -168,9 +167,7 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
 function setImageRatio(){
     try{
         imageCurrentRatioWidth = parseInt($("div#dialog-change-image input[name='ratio-width']").val().trim());
-        console.log(imageCurrentRatioWidth);
         imageCurrentRatioHeight = parseInt($("div#dialog-change-image input[name='ratio-height']").val().trim());
-        console.log(imageCurrentRatioHeight)
     }catch(e){
         imageCurrentRatioWidth = 0;
         imageCurrentRatioHeight = 0;
