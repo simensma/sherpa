@@ -50,6 +50,9 @@ function addTags(tags) {
         // Drop empty tags
         if(tags[i] == "") { continue; }
 
+        //comma is commonly associated with seperation of tags and other stuff, they are very likely not supposed to be there
+        tags[i] = tags[i].replace(",", "");
+
         // Don't add already added tags
         var cont = true;
         $("div#tags div.tag").each(function() {
