@@ -44,10 +44,11 @@ def createUserAlbum(user):
     except ObjectDoesNotExist:
         user_album = Album(name=user_name, parent=user_root)
         user_album.save()
+    return user_album;
 
 @login_required
 def fast_upload(request):
-    createUserAlbum(request.user)
+    user_album = createUserAlbum(request.user)
 
     try:
         file = request.FILES['file']
