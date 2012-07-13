@@ -20,4 +20,6 @@ urlpatterns = patterns('admin.images.views',
     url(r'^innhold/$', 'content_json', {'album': None}),
     url(r'^innhold/(?P<album>\d+)/$', 'content_json'),
     url(ur'^søk/$', 'search_json'),
+
+    url(r'^bilde/fort/nytt/$', 'fast_upload'),
 )

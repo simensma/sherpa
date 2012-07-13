@@ -1,8 +1,6 @@
 $(document).ready(function() {
 
-    // Enable autocomplete, parse tags on focus out, and when user presses space
-    // and the last character is a space
-    $("div.image-details input[name='tags']").autocomplete({
+    var autocompleteobject = {
         source: "/sherpa/bildearkiv/tag/filter/",
         open: function() { autocomplete = true; },
         close: function() { autocomplete = false; },
@@ -11,25 +9,34 @@ $(document).ready(function() {
             $(this).val("");
             addTags(ui.item.value);
         }
-    }).keydown(function(e) {
+    };
+
+    function keydown(e) {
         if(e.which == 13) {
             // Add the tag if user presses enter.
             e.preventDefault();
             addTags($(this).val());
             $(this).val("");
         }
-    }).keyup(function(e) {
+    }
+    function keyup(e) {
         var val = $(this).val();
         if(val.length > 1 && val[val.length-1] == ' ') {
             addTags(val);
             $(this).val("");
         }
-    }).focusout(function() {
+    }
+    function focusout() {
         if(!autocomplete) {
             addTags($(this).val());
             $(this).val("");
         }
-    });
+    }
+    
+    // Enable autocomplete, parse tags on focus out, and when user presses space
+    // and the last character is a space
+    $("div.image-details input[name='tags']").autocomplete(autocompleteobject).keydown(keydown).keyup(keyup).focusout(focusout);
+    $("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags']").autocomplete(autocompleteobject).keydown(keydown).keyup(keyup).focusout(focusout);
 });
 
 var autocomplete = false;
@@ -85,4 +92,5 @@ function serializeTags() {
     });
     list += "]"
     $("div.image-details input[name='tags-serialized']").val(list);
+    $("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags-serialized']").val(list);
 }

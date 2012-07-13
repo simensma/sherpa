@@ -53,10 +53,7 @@ function closeImageCropper(){
 
 var initialSelection;
 function openImageCropper(img, parent, selection){
-	initialSelection = undefined;
-	if(selection != undefined){
-		initialSelection = selection;
-	}
+	initialSelection = selection;
 
 	var options = { 
 		instance: true,
@@ -64,7 +61,6 @@ function openImageCropper(img, parent, selection){
 		parent: parent,
 		onInit: function(imag, selection){
 			currentCropperImage = imag;
-			setSelection(initialSelection);
 		},
 		onSelectChange: function(imag, selection){
 			currentCropperImage = imag;
@@ -73,10 +69,8 @@ function openImageCropper(img, parent, selection){
 	
 	currentCropperImageTag = img;
 	currentCropperInstance = img.imgAreaSelect(options);
-	if(currentCropperImage != undefined){
-		currentCropperInstance.cancelSelection();
-		setSelection(initialSelection);
-	}	
+	currentCropperInstance.cancelSelection();
+	setSelection(selection);
 }
 
 function setImageCropperRatio(width, height){
@@ -89,12 +83,26 @@ function setImageCropperRatio(width, height){
 	}
 }
 
+var insel;
 function setSelection(s){
-	if(s != undefined){
-		var cropperWidth = currentCropperImageTag.width();
-		var cropperHeight = cropperWidth * (currentCropperImage.height / currentCropperImage.width);
+	console.log("setselection")
+	console.log(s);
+	insel = undefined;
+	if(s !== undefined){
+		insel = s;
+		currentCropperImageTag.load(internatSetSelection);
+		internatSetSelection();
+	}
+}
 
-		currentCropperInstance.setSelection(cropperWidth * s.x1, cropperHeight * s.y1, cropperWidth * s.x2, cropperHeight * s.y2);
+function internatSetSelection(){
+	if(insel !== undefined){
+		console.log("loaded");
+		console.log(insel);
+		currentCropperInstance.cancelSelection();
+		var cropperWidth = currentCropperImageTag.width();
+		var cropperHeight = cropperWidth * (currentCropperImageTag.height() / currentCropperImageTag.width());
+		currentCropperInstance.setSelection(cropperWidth * insel.x1, cropperHeight * insel.y1, cropperWidth * insel.x2, cropperHeight * insel.y2);
 		currentCropperInstance.setOptions({ show: true });
 		currentCropperInstance.update();
 	}

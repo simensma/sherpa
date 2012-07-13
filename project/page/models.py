@@ -5,6 +5,7 @@ from django.db.models import Min
 from django.conf import settings
 from lib import S3
 
+from admin.images.views import THUMB_SIZES
 from datetime import date
 import random
 import json
@@ -91,7 +92,7 @@ class Version(models.Model):
             t = self.thumbnail
             # Remove previous size spec if existing
             t = re.sub('-\d+\.', '.', t)
-            self.thumbnail = t[:t.rfind('.')] + '-150' + t[t.rfind('.'):]
+            self.thumbnail = t[:t.rfind('.')] + '-' + str(min(THUMB_SIZES)) + t[t.rfind('.'):]
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):

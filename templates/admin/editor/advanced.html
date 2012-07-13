@@ -32,11 +32,9 @@
             {% if content.content.anchor %}</a>{% endif %}
             <div style="width:auto" class="img-desc">
               <span class="description">{{ content.content.description }}</span>
-              {#% if content.content.photographer %#}
                 <span class="photographer">Foto:
                   <span class="content">{{ content.content.photographer }}</span>
                 </span>
-              {#% endif %#}
             </div>
           </div>
         {% elif content.type == 'widget' %}
@@ -92,7 +90,7 @@
 {% include 'admin/editor/image-from-archive-dialog.html' %}
 
 {# Upload image #}
-{#% include 'admin/editor/image-fast-upload-dialog.html' %#}
+{% include 'admin/editor/image-fast-upload-dialog.html' %}
 
 {# Changing image #}
 {% include 'admin/editor/image-dialog.html' %}

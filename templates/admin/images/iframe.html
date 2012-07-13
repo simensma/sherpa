@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <title></title>
     <script>
+    {# the fast uploader rqueiers the url #}
+    {% if url %}
+      window.top.window.uploadComplete('{{ result }}', '{{ url }}');
+    {% else %}
       window.top.window.uploadComplete('{{ result }}', '{{ ids }}');
+    {% endif %}
     </script>
   </head>
   <body></body>

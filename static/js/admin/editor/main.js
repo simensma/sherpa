@@ -218,9 +218,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            //console.log($("article .column"));
             widgetStartWidth = $(this).outerWidth();
-            //console.log("startbredde: " + widgetStartWidth);
             $("#dialog-add-widget").dialog('open');
             enableToolbar();
             widgetPosition = {

@@ -16,16 +16,21 @@ $(document).ready(function() {
     });
 
     $("div#dialog-change-image button.choose-image").click(function() {
-        chooseImagefromArchive(function(url, description, photographer){
-            $("div#dialog-change-image input[name='src']").val(removeImageSizeFromUrl(url));
-            $("div#dialog-change-image input[name='description']").val(description);
-            $("div#dialog-change-image input[name='photographer']").val(photographer);
-            $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl(url, IMAGE_PPREVIEW_WIDTH));
-
-            currentCropperInstance.cancelSelection();
-            openImageCropper($("div#dialog-change-image img.preview"), $("div#dialog-change-image"), undefined);
-        });
+        chooseImagefromArchive(inputDataFromSource);
     });
+    $("div#dialog-change-image button.upload-image").click(function() {
+        openImageUpload(inputDataFromSource);
+    });
+
+    function inputDataFromSource(url, description, photographer){
+        $("div#dialog-change-image input[name='src']").val(removeImageSizeFromUrl(url));
+        $("div#dialog-change-image input[name='description']").val(description);
+        $("div#dialog-change-image input[name='photographer']").val(photographer);
+        $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl(url, IMAGE_PPREVIEW_WIDTH));
+
+        currentCropperInstance.cancelSelection();
+        openImageCropper($("div#dialog-change-image img.preview"), $("div#dialog-change-image"), undefined);
+    }
 
     $("div#dialog-change-image input[name='src']").keyup(function() {
         $("div#dialog-change-image img.preview").attr('src', addImageSizeToUrl($(this).val(), IMAGE_PPREVIEW_WIDTH));
@@ -163,7 +168,7 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 
-    //hax for preventing saving of empty image and databasecrash
+    //hax for preventing saving of empty image and crash of database as result
     if(src === undefined || src.trim().length <= 0){
         imagePickedCallback("http://www.turistforeningen.no/static/img/placeholder.png", "", "", "");
     }
