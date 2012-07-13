@@ -26,9 +26,9 @@ MIN_QUERY_LENGTH = 3
 
 SPEED_UPLOAD_ALBUM_NAME = "Brukeralbum"
 
-@login_required
-def fast_upload(request):
-    user_name = request.user.first_name + " " + request.user.last_name
+def createUserAlbum(user):
+    #create user album if it dosent exist
+    user_name = user.first_name + " " + user.last_name
 
     #get or create useruploads album
     try:
@@ -45,7 +45,10 @@ def fast_upload(request):
         user_album = Album(name=user_name, parent=user_root)
         user_album.save()
 
-    print request.FILES
+@login_required
+def fast_upload(request):
+    createUserAlbum(request.user)
+
     try:
         file = request.FILES['file']
     except KeyError:
@@ -69,6 +72,9 @@ def fast_upload(request):
 
 @login_required
 def list_albums(request, album):
+    #create user album if it dosent exist
+    createUserAlbum(request.user)
+
     albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
     images = None
