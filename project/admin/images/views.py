@@ -38,13 +38,13 @@ def fast_upload(request):
         user_root.save()
 
     #get or create user album in useruploads album
+    #if two users share name, they share album, this could be changed by using email
     try:
         user_album = Album.objects.get(name=user_name, parent=user_root)
     except ObjectDoesNotExist:
         user_album = Album(name=user_name, parent=user_root)
         user_album.save()
 
-    
     print request.FILES
     try:
         file = request.FILES['file']
@@ -108,9 +108,15 @@ def delete_items(request, album):
 
 @login_required
 def add_album(request, parent):
+    albumname = request.POST['name']
     if parent is not None:
         parent = Album.objects.get(id=parent)
-    album = Album(name=request.POST['name'], parent=parent)
+    elif albumname == SPEED_UPLOAD_ALBUM_NAME:
+        #ensure unique name if the name is the same as user-uploads
+        res = Album.objects.filter(name=request.POST['name'], parent=None)
+        albumname = albumname + str(len(res)+1)
+
+    album = Album(name=albumname, parent=parent)
     album.save()
     if parent is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
