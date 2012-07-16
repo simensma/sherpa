@@ -163,8 +163,14 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
         }
     }
 
+    $("div#dialog-change-image").imagesLoaded(function(){
+        openImageCropper($("div#dialog-change-image img.preview"), dialog, sel);
+        setImageRatio();
+    });
+
     openImageCropper($("div#dialog-change-image img.preview"), dialog, sel);
     setImageRatio();
+
     imagePickedCallback = saveCallback;
     imageRemovedCallback = removeCallback;
 

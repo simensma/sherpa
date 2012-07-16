@@ -85,20 +85,15 @@ function setImageCropperRatio(width, height){
 
 var insel;
 function setSelection(s){
-	console.log("setselection")
-	console.log(s);
 	insel = undefined;
 	if(s !== undefined){
 		insel = s;
-		currentCropperImageTag.load(internatSetSelection);
 		internatSetSelection();
 	}
 }
 
 function internatSetSelection(){
 	if(insel !== undefined){
-		console.log("loaded");
-		console.log(insel);
 		currentCropperInstance.cancelSelection();
 		var cropperWidth = currentCropperImageTag.width();
 		var cropperHeight = cropperWidth * (currentCropperImageTag.height() / currentCropperImageTag.width());

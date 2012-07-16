@@ -271,7 +271,7 @@ function displayCurrentImage(){
     }
 
     //hax, the onload function is for when you are changing images and the selector needs a new height
-    $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").load(function(){
+    $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").imagesLoaded(function(){
         openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
         setCarouselRatio();
     });
