@@ -86,14 +86,21 @@ $(document).ready(function() {
 
     //choose clicked
     $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
-        chooseImagefromArchive(function(url, description, photographer){
-            imageList[currentIndex].url = url;
-            imageList[currentIndex].selection = undefined;
-            imageList[currentIndex].description = description;
-            imageList[currentIndex].photographer = photographer;
-            displayCurrentImage();
-        });
+        chooseImagefromArchive(chooseFromSpurce);
     });
+
+    //upload clicked
+    $("div.dialog.widget-edit[data-widget='carousel'] button[name='upload']").click(function(){
+        openImageUpload(chooseFromSpurce);
+    });
+
+    function chooseFromSpurce(url, description, photographer){
+        imageList[currentIndex].url = url;
+        imageList[currentIndex].selection = undefined;
+        imageList[currentIndex].description = description;
+        imageList[currentIndex].photographer = photographer;
+        displayCurrentImage();
+    }
 
     //updating data in "model" on key up
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
