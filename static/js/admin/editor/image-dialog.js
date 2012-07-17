@@ -9,17 +9,7 @@ var imageCurrentRatioHeight = 0;
 
 $(document).ready(function() {
 
-    var ratioradio = "<table><tr>";
-    var r = PREDEFINED_CROP_RATIOS;
-    var first = "id='default'";
-    for(var key in r) {
-        if(r.hasOwnProperty(key)){
-            ratioradio += "<td><input type='radio' " + first + " name='ratio' value=" + r[key] + "> " + key + " </td>";
-            first = "";
-        }
-    }
-    ratioradio += "</tr></table>";
-    $("div#dialog-change-image div#ratio-radio").append(ratioradio);
+    $("div#dialog-change-image div#ratio-radio").append(getRatioRadioButtons);
 
     $("div#dialog-change-image").parent().find("a.ui-dialog-titlebar-close").click(function() {
         if(firstOpen){

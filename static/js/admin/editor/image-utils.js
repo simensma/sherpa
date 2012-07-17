@@ -15,6 +15,18 @@ var DEFAULT_CROP_RATIO = PREDEFINED_CROP_RATIOS.Fri;
 
 var DEFAULT_IMAGE = "http://www.turistforeningen.no/static/img/placeholder.png";
 
+function getRatioRadioButtons(){
+    var ratioradio = "<table><tr>";
+    var r = PREDEFINED_CROP_RATIOS;
+    for(var key in r) {
+        if(r.hasOwnProperty(key)){
+            ratioradio += "<td><input type='radio' name='ratio' value='" + r[key] + "'> " + key + " </td>";
+        }
+    }
+    ratioradio += "</tr></table>";
+    return ratioradio;
+}
+
 function addImageSizeToUrl(url, size){
     //if url not from turistforeningen, do nothing
     if(url.indexOf(LOCAL_IMAGE_PREFIX) < 0){

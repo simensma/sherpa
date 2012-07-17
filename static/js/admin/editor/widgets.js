@@ -2,17 +2,7 @@
 /* Editing widgets */
 $(document).ready(function() {
 
-    var ratioradio = "<table><tr>";
-    var r = PREDEFINED_CROP_RATIOS;
-    var first = "id='default'";
-    for(var key in r) {
-        if(r.hasOwnProperty(key)){
-            ratioradio += "<td><input type='radio' " + first + " name='ratio' value='" + r[key] + "'> " + key + " </td>";
-            first = "";
-        }
-    }
-    ratioradio += "</tr></table>";
-    $("div.dialog.widget-edit[data-widget='carousel'] div#ratio-radio").append(ratioradio);
+    $("div.dialog.widget-edit[data-widget='carousel'] div#ratio-radio").append(getRatioRadioButtons());
 
     //carousel, stop spinning
     $('.carousel').each(function(){
