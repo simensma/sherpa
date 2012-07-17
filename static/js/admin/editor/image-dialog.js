@@ -9,7 +9,7 @@ var imageCurrentRatioHeight = 0;
 
 $(document).ready(function() {
 
-    $("div#dialog-change-image div#ratio-radio").append(getRatioRadioButtons);
+    $("div#dialog-change-image div#ratio-radio").append(getRatioRadioButtons());
 
     $("div#dialog-change-image").parent().find("a.ui-dialog-titlebar-close").click(function() {
         if(firstOpen){
