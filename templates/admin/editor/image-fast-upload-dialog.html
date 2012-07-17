@@ -15,7 +15,7 @@
 	<form class="image-uploader" action="{% url admin.images.views.fast_upload %}" method="post" enctype="multipart/form-data" target="inlineframe">
 		{% csrf_token %}
 		<input type="file" name="file"><br>
-		<label>Beskrivelse av bildene:</label>
+		<label>Beskrivelse av bildet:</label>
 		<textarea name="description" class="span4" rows="3"></textarea>
 		<label>Fotograf:</label>
 		<input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
@@ -29,7 +29,7 @@
       	<div id="tags">
       	</div>
       	<div style="clear: both;"></div>
-		<input class="btn" type="submit" value="Last opp">
+		<input class="btn btn-success" type="submit" value="Last opp">
 		<input class="btn" type="reset" value="Tøm skjema">
 		<iframe name="inlineframe" style="display:none;"></iframe>
 	</form>

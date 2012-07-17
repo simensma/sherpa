@@ -2,6 +2,18 @@
 /* Editing widgets */
 $(document).ready(function() {
 
+    var ratioradio = "<table><tr>";
+    var r = PREDEFINED_CROP_RATIOS;
+    var first = "id='default'";
+    for(var key in r) {
+        if(r.hasOwnProperty(key)){
+            ratioradio += "<td><input type='radio' " + first + " name='ratio' value='" + r[key] + "'> " + key + " </td>";
+            first = "";
+        }
+    }
+    ratioradio += "</tr></table>";
+    $("div.dialog.widget-edit[data-widget='carousel'] div#ratio-radio").append(ratioradio);
+
     //carousel, stop spinning
     $('.carousel').each(function(){
         $(this).carousel({
@@ -97,13 +109,9 @@ $(document).ready(function() {
     });
 
     //ratio
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").keyup(function(){
-        carouselCurrentRatioWidth = parseInt($(this).val().trim());
-        setCarouselRatio();
-    });
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").keyup(function(){
-        carouselCurrentRatioHeight = parseInt($(this).val().trim());
-        setCarouselRatio();
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']").change(function(){
+        imageList[currentIndex].ratio = $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']:checked").val();
+        setCarouselRatio(true);
     });
 });
 
@@ -131,20 +139,11 @@ function saveWidget(content){
     }
 }
 
-function setCarouselRatio(){
-    try{
-        carouselCurrentRatioWidth = parseInt($("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val().trim());
-        carouselCurrentRatioHeight = parseInt($("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val().trim());
-    }catch(e){
-        carouselCurrentRatioWidth = 0;
-        carouselCurrentRatioHeight = 0;
-    }
-
-    if(ratioIsValid(carouselCurrentRatioWidth, carouselCurrentRatioHeight)){
-        setImageCropperRatio(carouselCurrentRatioWidth, carouselCurrentRatioHeight);
-    }else{
-        setImageCropperRatio(0, 0);
-    }
+function setCarouselRatio(change){
+    var rat = imageList[currentIndex].ratio.split(":");
+    var setWidth = parseInt(rat[0]);
+    var setHeight = parseInt(rat[1])
+    setImageCropperRatio(setWidth, setHeight, change);
 }
 
 function validateContent(widget) {
@@ -173,8 +172,6 @@ function validateContent(widget) {
         }
         return JSON.stringify({
             widget: "carousel",
-            ratioWidth:carouselCurrentRatioWidth,
-            ratioHeight:carouselCurrentRatioHeight,
             images: imageList
         });
 
@@ -250,16 +247,31 @@ function displayCurrentImage(){
         currentCropperInstance.cancelSelection();
     }
 
+    if(imageList[currentIndex].ratio == undefined){
+        if(currentIndex == 0){
+            imageList[currentIndex].ratio = DEFAULT_CAROUSEL_CROP_RATIO;
+        }else{
+            imageList[currentIndex].ratio = imageList[currentIndex-1].ratio
+        }
+    }
+    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']").each(function(){
+        if($(this).val() == imageList[currentIndex].ratio){
+            $(this).attr("checked", "checked");
+        }
+    });
+
     $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
     
-    if(imageList[currentIndex].url.trim().length <= 1){
+    if(imageList[currentIndex].url.trim().length < 1){
         var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
+        $("div.dialog.widget-edit[data-widget='carousel'] div#preview").hide();
     }else{
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+        $("div.dialog.widget-edit[data-widget='carousel'] div#preview").show();
     }
 
     if(currentIndex == imageList.length -1){
@@ -273,22 +285,23 @@ function displayCurrentImage(){
     //hax, the onload function is for when you are changing images and the selector needs a new height
     $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").imagesLoaded(function(){
         openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
-        setCarouselRatio();
+        setCarouselRatio(imageList[currentIndex].selection == undefined);
+        if(imageList[currentIndex].url.trim().length < 1){
+            currentCropperInstance.cancelSelection();
+        }
     });
-    //the load dosent load on the first item for some reasopn, needs this :(
-    openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
-    setCarouselRatio();
 }
 
 var currentIndex = 0;
 var imageList = [];
-var carouselCurrentRatioWidth = 0;
-var carouselCurrentRatioHeight = 0;
 var newWidgetParentWidth = 0;
 
 function listImages(parentWidth){
     currentIndex = 0;
     newWidgetParentWidth = 0;
+
+    var ratioWidth = 0;
+    var ratioHeight = 0;
 
     if(widgetBeingEdited == undefined){
         newWidgetParentWidth = parentWidth;
@@ -300,16 +313,8 @@ function listImages(parentWidth){
     }else{
         var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
         imageList = widget.images;
-
-        if(ratioIsValid(widget.ratioWidth, widget.ratioHeight)){
-            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val(widget.ratioWidth);
-            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val(widget.ratioHeight);
-            carouselCurrentRatioWidth = widget.ratioWidth;
-            carouselCurrentRatioHeight = widget.ratioHeight;
-        }else{
-            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-width']").val("");
-            $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio-height']").val("");
-        }
+        ratioWidth = widget.ratioWidth;
+        ratioHeight = widget.ratioHeight
     }
     displayCurrentImage();
 }

@@ -68,7 +68,6 @@ $(document).ready(function() {
     });
     $("article div.html, article div.lede").focusout();
 
-
     /* Hide completely empty image descriptions */
     $("article div.image").each(function() {
         var content = $(this);

@@ -73,14 +73,31 @@ function openImageCropper(img, parent, selection){
 	setSelection(selection);
 }
 
-function setImageCropperRatio(width, height){
+function setImageCropperRatio(width, height, change){
+	var cropperWidth = currentCropperImageTag.width();
+	var cropperHeight = cropperWidth * (currentCropperImageTag.height() / currentCropperImageTag.width());
+	
 	if(width != undefined && height != undefined && !isNaN(width/height) && width > 0 && height > 0){
 		currentCropperInstance.setOptions({aspectRatio:(width+":"+height)});
-		currentCropperInstance.update();
+		if(change){
+			var imgRatio = cropperWidth/cropperHeight;
+			var newRatio = width/height;
+
+			if(newRatio > imgRatio){
+				currentCropperInstance.setSelection(0, 0, cropperWidth, cropperWidth*(height/width));
+			}else{
+				currentCropperInstance.setSelection(0, 0, cropperHeight*(width/height), cropperHeight);
+			}
+		}
 	}else{
 		currentCropperInstance.setOptions({aspectRatio:""});
-		currentCropperInstance.update();
+		if(change){
+			currentCropperInstance.setSelection(0, 0, cropperWidth, cropperHeight);
+		}
 	}
+
+	currentCropperInstance.setOptions({ show: true });
+	currentCropperInstance.update();
 }
 
 var insel;

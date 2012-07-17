@@ -2,6 +2,19 @@ var LOCAL_IMAGE_PREFIX = "cdn.turistforeningen.no";
 var THUMB_SIZES = [1880, 940, 500, 150];
 var IMAGE_PPREVIEW_WIDTH = 940;
 
+//the default and the first of the predefines should(must) be the same
+var PREDEFINED_CROP_RATIOS = {
+    Fri:"0:0",
+    Widescreen:"16:9",
+    Landskap:"12:8",
+    Portrett:"3:4",
+    Firkant:"1:1"
+};
+var DEFAULT_CAROUSEL_CROP_RATIO = PREDEFINED_CROP_RATIOS.Widescreen;
+var DEFAULT_CROP_RATIO = PREDEFINED_CROP_RATIOS.Fri;
+
+var DEFAULT_IMAGE = "http://www.turistforeningen.no/static/img/placeholder.png";
+
 function addImageSizeToUrl(url, size){
     //if url not from turistforeningen, do nothing
     if(url.indexOf(LOCAL_IMAGE_PREFIX) < 0){
