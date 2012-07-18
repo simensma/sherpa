@@ -14,6 +14,7 @@
   <script src="{{ STATIC_URL }}js/admin/editor/widgets.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/article.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
 {% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/main.css" media="screen">
@@ -21,6 +22,8 @@
 {% endblock %}
 
 {% block body %}
+
+{% load dategtnow %}
 
 <div class="row">
   <div class="span12">
@@ -36,22 +39,22 @@
         </div>
       </div>
 
-      <div class="status"{% if version.variant.article.published %} data-published{% endif %}>
+      <div class="status" data-published="{% if version.variant.article.published %}true{% else %}{% endif %}">
         <div class="save">
           <table>
             <tr>
               <td>
-                <h1 class="sherpa publish">Artikkelen er
+                <h1 class="sherpa publish">Artikkelen 
                   {% if version.variant.article.published %}
-                    <span class="true">publisert</span>.
+                    {% if version.variant.article.pub_date|dategtnow %}
+                      <span>blir publisert <br> {{ version.variant.article.pub_date|date:"d.m.Y H:i" }}</span>
+                    {% else %}
+                      <span>er <span class="true">publisert</span>.</span>
+                    {% endif %}
                   {% else %}
-                    <span class="false">ikke publisert</span>.
+                    <span>er <span class="false">ikke publisert</span>.</span>
                   {% endif %}
                 </h1>
-              </td>
-              <td>
-                <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
-                <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
               </td>
             </tr>
             <tr>
@@ -68,7 +71,9 @@
           <i class="icon-warning-sign"></i> Slett artikkelen for godt
         </a>
       </div>
-
+      <br>
+      <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button><button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
+      <input type="text" class="input-large" name="article-datetime-field" value="{{ version.variant.article.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt..."><br>
       <div style="clear: both;"></div>
     </div>
   </div>

@@ -12,6 +12,8 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 
+import urllib
+
 @login_required
 def list(request):
     versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True).order_by('-variant__article__created')
@@ -56,11 +58,24 @@ def image_hide(request, article):
 
 @login_required
 def publish(request, article):
+    datetime_string = urllib.unquote_plus(request.POST["datetime"])
+    status =  urllib.unquote_plus(request.POST["status"])
+    
+    #date format is this one (dd.mm.yyyy hh:mm)
+    try:
+        date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
+        print date_object
+    except:
+        #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
+        date_object = None
+    
     article = Article.objects.get(id=article)
-    article.published = json.loads(request.POST['status'])['status']
+    article.published = json.loads(status)["status"]
     article.publisher = request.user.get_profile()
-    if article.pub_date == None:
+    if date_object == None:
         article.pub_date = datetime.now()
+    else:
+        article.pub_date = date_object
     article.save()
     return HttpResponse()
 

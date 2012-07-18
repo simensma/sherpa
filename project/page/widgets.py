@@ -5,6 +5,7 @@ import requests
 import json
 import re
 import random
+import datetime
 
 from page.models import Version
 
@@ -22,7 +23,7 @@ def parse_widget(widget):
     elif widget['widget'] == "articles":
         versions = Version.objects.filter(
             variant__article__isnull=False, variant__segment__isnull=True,
-            variant__article__published=True, active=True
+            variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
             ).order_by('-variant__article__pub_date')[:widget['count']]
         for version in versions:
             version.load_preview()

@@ -87,7 +87,7 @@ class Version(models.Model):
                 # There are no images in this article
                 self.hide_thumbnail = True
         # Statically use the 150px version. This should be optimized; save
-        # the available sizes with the model and use the smalles appropriate one.
+        # the available sizes with the model and use the smallest appropriate one.
         if self.thumbnail != None and settings.AWS_BUCKET in self.thumbnail:
             t = self.thumbnail
             # Remove previous size spec if existing

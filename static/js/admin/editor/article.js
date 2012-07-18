@@ -5,6 +5,12 @@ $(document).ready(function() {
         $("a.header-title").text($(this).text());
     });
 
+    $("input[name='article-datetime-field']").datetimepicker({
+        dateFormat: "dd.mm.yy",
+        seperator: " ",
+        timeFormat: "hh:mm"
+    });
+
     //carousel, stop spinning
     $('.carousel').each(function(){
         $(this).carousel({
@@ -13,32 +19,58 @@ $(document).ready(function() {
     });
 
     /* Publish/unpublish */
+    function publishUnpublish(){
+        
+        try{
+            var datetime = $("input[name='article-datetime-field']").datetimepicker('getDate');
+            var now = new Date();
+        }catch(e){
+            var datetime = 0;
+            var now = 0;
+        }
 
-    if($("div.status[data-published]").length == 0) {
-        $("div.status button.unpublish").hide();
-    } else {
-        $("div.status button.publish").hide();
+        $("div.status h1.publish").empty();
+
+        if($("div.status").attr("data-published").length > 0) {
+            console.log("published");
+            $("div.article button.publish").show();
+            $("div.article button.unpublish").show();
+            $("input[name='article-datetime-field']").show();
+            console.log();
+            if(datetime > now){
+                $("div.status h1.publish").append("Artikkelen blir publisert <br>" + $("input[name='article-datetime-field']").val());
+            }else{
+                $("div.status h1.publish").append("Artikkelen er <span class='true'>publisert</span>");
+                $("input[name='article-datetime-field']").val("")
+            }
+        } else {
+            console.log("not published");
+            $("div.article button.publish").show();
+            $("div.article button.unpublish").hide();
+            $("input[name='article-datetime-field']").show();
+            $("input[name='article-datetime-field']").val("")
+            $("div.status h1.publish").append("Artikkelen er <span class='false'>ikke publisert</span>");
+        }
     }
+    publishUnpublish();
 
-    $("div.status button.publish").click(function() {
+    $("div button.publish").click(function() {
         if(!confirm("Er du sikker på at du vil publisere denne artikkelen?")) {
             return;
         }
         setPublished(true, function() {
-            $("div.status h1.publish span.false").removeClass('false').addClass('true').text('publisert');
-            $("div.status button.publish").hide();
-            $("div.status button.unpublish").show();
+            $("div.status").attr("data-published", "true");
+            publishUnpublish();
         });
     });
 
-    $("div.status button.unpublish").click(function() {
+    $("div button.unpublish").click(function() {
         if(!confirm("Er du HELT sikker på at du vil trekke tilbake denne artikkelen? Den vil forsvinne fra nyhetsutlistingen, og ikke dukke opp som søkeresultat når en søker. Du bør ikke avpublisere en publisert artikkel med mindre du er HELT sikker.")) {
             return;
         }
         setPublished(false, function() {
-            $("div.status h1.publish span.true").removeClass('true').addClass('false').text('ikke publisert');
-            $("div.status button.publish").show();
-            $("div.status button.unpublish").hide();
+            $("div.status").attr("data-published", "");
+            publishUnpublish();
         });
     });
 
@@ -46,17 +78,18 @@ $(document).ready(function() {
         $("div.status button.publish, div.status button.unpublish").attr('disabled', true);
         $.ajax({
             url: '/sherpa/artikler/publiser/' + $("div.editor-header").attr('data-id') + '/',
-            data: 'status=' + encodeURIComponent(JSON.stringify({'status': status}))
+            data: {
+                datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
+                status : encodeURIComponent(JSON.stringify({'status': status}))
+            }
         }).done(done).always(function() {
             $("div.status button.publish, div.status button.unpublish").removeAttr('disabled');
         });
     }
 
-
     /* Change thumbnail-image */
-
     if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
-       $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {
+        $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {
         $("div.editor-header img.article-thumbnail").hide();
     }
 

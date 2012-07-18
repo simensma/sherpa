@@ -5,13 +5,14 @@ from django.core.cache import cache
 from articles.models import Article
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
+import datetime
 
 import json
 
 def index(request):
     versions = Version.objects.filter(
         variant__article__isnull=False, variant__segment__isnull=True,
-        variant__article__published=True, active=True
+        variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
         ).order_by('-variant__article__pub_date')[:20]
     for version in versions:
         version.load_preview()
