@@ -32,11 +32,9 @@ $(document).ready(function() {
         $("div.status h1.publish").empty();
 
         if($("div.status").attr("data-published").length > 0) {
-            console.log("published");
             $("div.article button.publish").show();
             $("div.article button.unpublish").show();
             $("input[name='article-datetime-field']").show();
-            console.log();
             if(datetime > now){
                 $("div.status h1.publish").append("Artikkelen blir publisert <br>" + $("input[name='article-datetime-field']").val());
             }else{
@@ -44,7 +42,6 @@ $(document).ready(function() {
                 $("input[name='article-datetime-field']").val("")
             }
         } else {
-            console.log("not published");
             $("div.article button.publish").show();
             $("div.article button.unpublish").hide();
             $("input[name='article-datetime-field']").show();
