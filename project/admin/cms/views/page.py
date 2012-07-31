@@ -18,7 +18,7 @@ def category_list():
 
 @login_required
 def list(request):
-    versions = Version.objects.filter(variant__page__isnull=False, active=True).order_by('-variant__page__created')
+    versions = Version.objects.filter(variant__page__isnull=False, active=True).order_by('variant__page__title')
     pages = Page.objects.all()
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus, 'site': request.site}
