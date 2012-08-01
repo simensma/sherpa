@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from group.models import Group
+from association.models import Association
 from user.models import *
 
 import json
@@ -25,12 +25,12 @@ def index(request):
         'chosen_category': request.GET.get('kategori', ''),
         'chosen_county': request.GET.get('fylke', '')
     }
-    return render(request, 'groups/list.html', context)
+    return render(request, 'associations/list.html', context)
 
 def filter(request):
     if not request.POST.has_key('category') or not request.POST.has_key('county'):
-        return HttpResponseRedirect(reverse('group.views.index'))
-    result = cache.get('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
+        return HttpResponseRedirect(reverse('association.views.index'))
+    result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result == None:
         exists = False
         for category in categories:
@@ -42,45 +42,45 @@ def filter(request):
             return HttpResponse('{}')
         if request.POST['category'].title() == 'Foreninger':
             # Special case, include both of the following:
-            groups = Group.objects.filter(Q(type="|Hovedforening") | Q(type="|Underforening"))
+            associations = Association.objects.filter(Q(type="|Hovedforening") | Q(type="|Underforening"))
         else:
-            groups = Group.objects.filter(type="|%s" % request.POST['category'].title())
+            associations = Association.objects.filter(type="|%s" % request.POST['category'].title())
         if request.POST['county'] != 'all':
-            # Sherpa stores groups with multiple counties as text with '|' as separator :(
+            # Sherpa stores associations with multiple counties as text with '|' as separator :(
             # So we'll have to pick all of them and programatically check the county
             filter_ids = []
-            for group in groups.exclude(county=None):
-                if request.POST['county'] in group.county.split('|'):
-                    filter_ids.append(group.id)
-            groups = groups.filter(id__in=filter_ids)
+            for association in associations.exclude(county=None):
+                if request.POST['county'] in association.county.split('|'):
+                    filter_ids.append(association.id)
+            associations = associations.filter(id__in=filter_ids)
 
-        groups = groups.order_by('name')
+        associations = associations.order_by('name')
         result = []
 
-        for group in groups:
+        for association in associations:
             # Assign parents
             parents = []
             try:
-                parent = Group.objects.get(id=group.parent)
+                parent = Association.objects.get(id=association.parent)
                 while parent != None:
                     parents.append(parent)
-                    parent = Group.objects.get(id=parent.parent)
-            except Group.DoesNotExist:
+                    parent = Association.objects.get(id=parent.parent)
+            except Association.DoesNotExist:
                 pass
 
-            # If the group has no address, use the parents address
-            if group.post_address == '':
+            # If the association has no address, use the parents address
+            if association.post_address == '':
                 for parent in parents:
                     if parent.post_address != '':
-                        group.post_address = parent.post_address
-                        group.visit_address = parent.visit_address
-                        group.zip = parent.zip
-                        group.ziparea = parent.ziparea
+                        association.post_address = parent.post_address
+                        association.visit_address = parent.visit_address
+                        association.zip = parent.zip
+                        association.ziparea = parent.ziparea
                         break
 
-            # Render the group result
-            t = loader.get_template('groups/group-result.html')
-            r = RequestContext(request, {'group': group, 'parents': parents})
+            # Render the association result
+            t = loader.get_template('associations/result.html')
+            r = RequestContext(request, {'association': association, 'parents': parents})
             result.append(t.render(r))
-        cache.set('groups.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)
+        cache.set('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)
     return HttpResponse(json.dumps(result))

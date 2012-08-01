@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     'articles',
     'user',
     'enrollment',
-    'group',
+    'association',
     'membership',
 )
 

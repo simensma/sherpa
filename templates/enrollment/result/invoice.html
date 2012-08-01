@@ -13,11 +13,11 @@
 
     {% if users|length == 1 %}
       <p>
-        Du blir medlem i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.
+        Du blir medlem i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
       </p>
     {% else %}
       <p>
-        Dere blir medlemmer i DNT og <a href="{{ group.url }}">{{ group.name }}</a>.
+        Dere blir medlemmer i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
       </p>
     {% endif %}
 
@@ -48,7 +48,7 @@
         <div class="span6">
           <h3>Hva skjer der du bor</h3>
           <p>
-            <a href="{{ group.url }}">{{ group.name }}</a> arrangerer fellesturer og aktiviteter hele året.
+            <a href="{{ association.url }}">{{ association.name }}</a> arrangerer fellesturer og aktiviteter hele året.
           </p>
         </div>
       </div>

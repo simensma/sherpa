@@ -1,6 +1,6 @@
 from django.db import models
 
-class Group(models.Model):
+class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
     parent = models.IntegerField(db_column='gr_parent', null=True, blank=True)

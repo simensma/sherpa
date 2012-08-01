@@ -8,7 +8,7 @@ from django.template import Context, loader
 from django.core.cache import cache
 from django.db import transaction, connections
 
-from group.models import Group
+from association.models import Association
 from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, Actor, ActorAddress, FocusPrice
 
 from datetime import datetime, timedelta
@@ -262,33 +262,33 @@ def verification(request):
             request.session['enrollment']['location']['address2'] = address.a2
             request.session['enrollment']['location']['address3'] = address.a3
 
-    if request.session['enrollment'].has_key('group'):
-        del request.session['enrollment']['group']
+    if request.session['enrollment'].has_key('association'):
+        del request.session['enrollment']['association']
     if request.session['enrollment']['location']['country'] == 'NO':
         # Get the city name for this zipcode
         request.session['enrollment']['location']['city'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).location
 
-        # Figure out which group this member belongs to
-        group = cache.get('zipcode.group.%s' % request.session['enrollment']['location']['zipcode'])
-        if group == None:
+        # Figure out which association this member belongs to
+        association = cache.get('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'])
+        if association == None:
             zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
-            group = Group.objects.get(focus_id=zipcode.main_group_id)
-            cache.set('zipcode.group.%s' % request.session['enrollment']['location']['zipcode'], group, 60 * 60 * 24 * 7)
-        request.session['enrollment']['group'] = group
+            association = Association.objects.get(focus_id=zipcode.main_association_id)
+            cache.set('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'], association, 60 * 60 * 24 * 7)
+        request.session['enrollment']['association'] = association
     else:
         # Foreign members are registered with DNT Oslo og Omegn
-        oslo_group_id = 2 # This is the current ID for that group
-        group = cache.get('group.%s' % oslo_group_id)
-        if group == None:
-            group = Group.objects.get(id=oslo_group_id)
-            cache.set('group.%s' % oslo_group_id, group, 60 * 60 * 24)
-        request.session['enrollment']['group'] = group
+        oslo_association_id = 2 # This is the current ID for that association
+        association = cache.get('association.%s' % oslo_association_id)
+        if association == None:
+            association = Association.objects.get(id=oslo_association_id)
+            cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
+        request.session['enrollment']['association'] = association
 
-    # Get the prices for that group
-    price = cache.get('group.price.%s' % request.session['enrollment']['group'].focus_id)
+    # Get the prices for that association
+    price = cache.get('association.price.%s' % request.session['enrollment']['association'].focus_id)
     if price == None:
-        price = FocusPrice.objects.get(group_id=request.session['enrollment']['group'].focus_id)
-        cache.set('group.price.%s' % request.session['enrollment']['group'].focus_id, price, 60 * 60 * 24 * 7)
+        price = FocusPrice.objects.get(association_id=request.session['enrollment']['association'].focus_id)
+        cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
 
     now = datetime.now()
@@ -312,7 +312,7 @@ def verification(request):
     context = {'users': request.session['enrollment']['users'],
         'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
         'location': request.session['enrollment']['location'],
-        'group': request.session['enrollment']['group'],
+        'association': request.session['enrollment']['association'],
         'existing': request.session['enrollment']['existing'], 'existing_name': existing_name,
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year,
@@ -511,7 +511,7 @@ def process_invoice(request):
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     prepare_and_send_email(request.session['enrollment']['users'],
-        request.session['enrollment']['group'],
+        request.session['enrollment']['association'],
         request.session['enrollment']['location'], 'invoice',
         request.session['enrollment']['price_sum'])
 
@@ -550,7 +550,7 @@ def process_card(request):
                 focus_user.payed = True
                 focus_user.save()
             prepare_and_send_email(request.session['enrollment']['users'],
-                request.session['enrollment']['group'],
+                request.session['enrollment']['association'],
                 request.session['enrollment']['location'], 'card',
                 request.session['enrollment']['price_sum'])
             request.session['enrollment']['result'] = 'success'
@@ -585,7 +585,7 @@ def result(request):
     skip_header = request.session['enrollment']['result'] == 'invoice' or request.session['enrollment']['result'] == 'success'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': request.session['enrollment']['users'], 'skip_header': skip_header,
-        'group': request.session['enrollment']['group'], 'proof_validity_end': proof_validity_end,
+        'association': request.session['enrollment']['association'], 'proof_validity_end': proof_validity_end,
         'emails': emails, 'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum']}
     return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
@@ -623,7 +623,7 @@ def sms(request):
     except requests.ConnectionError:
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
-def prepare_and_send_email(users, group, location, payment_method, price_sum):
+def prepare_and_send_email(users, association, location, payment_method, price_sum):
     email_recipients = []
     for user in users:
         if user['email'] != '':
@@ -637,7 +637,7 @@ def prepare_and_send_email(users, group, location, payment_method, price_sum):
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     t = loader.get_template('enrollment/result/%s' % template)
-    c = Context({'users': users, 'group': group, 'location': location,
+    c = Context({'users': users, 'association': association, 'location': location,
         'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
     message = t.render(c)
     send_mail(subject, message, EMAIL_FROM, email_recipients)

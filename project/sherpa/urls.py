@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
     # User authentication
     url(r'^minside/', include('user.urls')),
-    url(r'^foreninger/', include('group.urls')),
+    url(r'^foreninger/', include('association.urls')),
 
     # Enrollment
     url(r'^innmelding/', include('enrollment.urls')),

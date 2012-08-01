@@ -1,6 +1,6 @@
 Hei {{ users.0.name }}!
 
-Velkommen som medlem i DNT og {{ group.name }}.
+Velkommen som medlem i DNT og {{ association.name }}.
 
 {{ users.0.name }}, {{ users.0.type }} (kr. {{ users.0.price }}), medlemsnr: {{ users.0.id }}.
 
@@ -14,7 +14,7 @@ Planlegg turen på UT.no:
 På http://ut.no/ finner du hytter og turer over hele landet.
 
 {% if location.country == 'NO' %}Bli med på tur:
-{{ group.name }} arrangerer en rekke fellesturer og aktiviteter hele året. Sjekk tilbudet på {{ group.url }}
+{{ association.name }} arrangerer en rekke fellesturer og aktiviteter hele året. Sjekk tilbudet på {{ association.url }}
 
 {% endif %}God tur!
 

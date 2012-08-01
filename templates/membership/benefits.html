@@ -13,8 +13,8 @@
 
 <h1>Bli medlem</h1>
 
-{% if group %}
-  Din lokale medlemsforening blir <strong>{{ group.name }}</strong>. Her er dine medlemsfordeler og priser på medlemskap.
+{% if association %}
+  Din lokale medlemsforening blir <strong>{{ association.name }}</strong>. Her er dine medlemsfordeler og priser på medlemskap.
 {% else %}
   Her er alle medlemsfordelene og priser på medlemskap.
 {% endif %}
@@ -193,12 +193,12 @@
         <dd>
           Som DNT-medlem får du 20% rabatt på dagskort på <a href="http://www.strynsommerski.no/">Stryn Sommerski</a>. Husk medlemsbeviset!
         </dd>
-        {% if group %}
+        {% if association %}
           <dt>
             Lokale tilbud der du bor
           </dt>
           <dd>
-            {{ group.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ group.url }}">nettsidene til {{ group.name }}</a>.
+            {{ association.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ association.url }}">nettsidene til {{ association.name }}</a>.
           </dd>
         {% endif %}
       </dl>
@@ -253,8 +253,8 @@
 
     <p>
       <em>
-        {% if group %}
-          Prisene gjelder for medlemskap i {{ group.name }}. Andre medlemsforeninger kan ha andre priser.
+        {% if association %}
+          Prisene gjelder for medlemskap i {{ association.name }}. Andre medlemsforeninger kan ha andre priser.
         {% else %}
           Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.
         {% endif %}
@@ -267,31 +267,31 @@
   </div>
 </div>
 
-{% if group %}
-<div class="row group-data">
+{% if association %}
+<div class="row association-data">
   <div class="span8">
     <div class="well">
-      <h2>{{ group.name }}</h2>
-      {% if group.url %}
-        <p><a href="{{ group.url }}">{{ group.url }}</a></p>
+      <h2>{{ association.name }}</h2>
+      {% if association.url %}
+        <p><a href="{{ association.url }}">{{ association.url }}</a></p>
       {% endif %}
-      {% if group.email %}
-        <p>E-post: <a href="{{ group.email }}">{{ group.email }}</a></p>
+      {% if association.email %}
+        <p>E-post: <a href="{{ association.email }}">{{ association.email }}</a></p>
       {% endif %}
-      {% if group.phone %}
-        <p>Tlf: {{ group.phone }}</p>
+      {% if association.phone %}
+        <p>Tlf: {{ association.phone }}</p>
       {% endif %}
-      {% if group.facebook %}
-        <p><a href="{{ group.facebook }}">Besøk oss på Facebook</a></p>
+      {% if association.facebook %}
+        <p><a href="{{ association.facebook }}">Besøk oss på Facebook</a></p>
       {% endif %}
-      {% if group.post_address %}
-        <p>Postadresse: {{ group.post_address }}, {{ group.zip }} {{ group.ziparea }}</p>
+      {% if association.post_address %}
+        <p>Postadresse: {{ association.post_address }}, {{ association.zip }} {{ association.ziparea }}</p>
         {% endif %}
-      {% if group.visit_address %}
-        <p>Besøksadresse: {{ group.visit_address }}</p>
+      {% if association.visit_address %}
+        <p>Besøksadresse: {{ association.visit_address }}</p>
       {% endif %}
-      {% if group.map %}
-        <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ group.map }}"></iframe>
+      {% if association.map %}
+        <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ association.map }}"></iframe>
       {% endif %}
     </div>
   </div>

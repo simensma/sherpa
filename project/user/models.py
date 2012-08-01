@@ -11,7 +11,7 @@ class Profile(models.Model):
     # It will also be connected with:
     # - Djangos Group model
     # - Djangos permission system.
-    # - "group.Group", might need to be renamed. (Associations?)
+    # - "association.Association"
 
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
@@ -183,8 +183,8 @@ class FocusZipcode(models.Model):
     county1name = models.CharField(max_length=40, db_column=u'County1Name', blank=True)
     county2no = models.CharField(max_length=10, db_column=u'County2No', blank=True)
     county2name = models.CharField(max_length=40, db_column=u'County2Name', blank=True)
-    main_group_id = models.IntegerField(null=True, db_column=u'District1', blank=True)
-    local_group_id = models.IntegerField(null=True, db_column=u'District2', blank=True)
+    main_association_id = models.IntegerField(null=True, db_column=u'District1', blank=True)
+    local_association_id = models.IntegerField(null=True, db_column=u'District2', blank=True)
     crby = models.CharField(max_length=25, db_column=u'CrBy', blank=True)
     crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
     chby = models.CharField(max_length=25, db_column=u'ChBy', blank=True)
@@ -193,7 +193,7 @@ class FocusZipcode(models.Model):
         db_table = u'PostalCode'
 
 class FocusPrice(models.Model):
-    group_id = models.IntegerField(primary_key=True, db_column=u'Region')
+    association_id = models.IntegerField(primary_key=True, db_column=u'Region')
     main = models.IntegerField(null=True, db_column=u'C101', blank=True)
     student = models.IntegerField(null=True, db_column=u'C102', blank=True)
     senior = models.IntegerField(null=True, db_column=u'C103', blank=True)
