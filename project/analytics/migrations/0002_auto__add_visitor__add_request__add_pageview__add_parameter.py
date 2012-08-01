@@ -6,30 +6,111 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("user", "0001_initial"),
+        ("page", "0001_initial"),
+    )
+
     def forwards(self, orm):
         
-        # Adding field 'Ad.width'
-        db.add_column('page_ad', 'width', self.gf('django.db.models.fields.IntegerField')(null=True), keep_default=False)
+        # Adding model 'Visitor'
+        db.create_table('analytics_visitor', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['user.Profile'], unique=True, null=True)),
+        ))
+        db.send_create_signal('analytics', ['Visitor'])
 
-        # Adding field 'Ad.height'
-        db.add_column('page_ad', 'height', self.gf('django.db.models.fields.IntegerField')(null=True), keep_default=False)
+        # Adding model 'Request'
+        db.create_table('analytics_request', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('visitor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['analytics.Visitor'])),
+            ('http_method', self.gf('django.db.models.fields.CharField')(max_length=10)),
+            ('path', self.gf('django.db.models.fields.CharField')(max_length=2048)),
+            ('server_host', self.gf('django.db.models.fields.CharField')(max_length=2048)),
+            ('client_ip', self.gf('django.db.models.fields.CharField')(max_length=39)),
+            ('client_host', self.gf('django.db.models.fields.CharField')(max_length=2048)),
+            ('referrer', self.gf('django.db.models.fields.CharField')(max_length=2048)),
+            ('enter', self.gf('django.db.models.fields.DateTimeField')()),
+            ('ajax', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('analytics', ['Request'])
+
+        # Adding model 'Pageview'
+        db.create_table('analytics_pageview', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('request', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['analytics.Request'], unique=True)),
+            ('variant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['page.Variant'])),
+            ('active_version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['page.Version'])),
+            ('requested_segment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='requested', null=True, to=orm['analytics.Segment'])),
+            ('matched_segment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='matched', null=True, to=orm['analytics.Segment'])),
+        ))
+        db.send_create_signal('analytics', ['Pageview'])
+
+        # Adding model 'Parameter'
+        db.create_table('analytics_parameter', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('request', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['analytics.Request'])),
+            ('key', self.gf('django.db.models.fields.TextField')()),
+            ('value', self.gf('django.db.models.fields.TextField')()),
+        ))
+        db.send_create_signal('analytics', ['Parameter'])
 
 
     def backwards(self, orm):
         
-        # Deleting field 'Ad.width'
-        db.delete_column('page_ad', 'width')
+        # Deleting model 'Visitor'
+        db.delete_table('analytics_visitor')
 
-        # Deleting field 'Ad.height'
-        db.delete_column('page_ad', 'height')
+        # Deleting model 'Request'
+        db.delete_table('analytics_request')
+
+        # Deleting model 'Pageview'
+        db.delete_table('analytics_pageview')
+
+        # Deleting model 'Parameter'
+        db.delete_table('analytics_parameter')
 
 
     models = {
+        'analytics.pageview': {
+            'Meta': {'object_name': 'Pageview'},
+            'active_version': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Version']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'matched_segment': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'matched'", 'null': 'True', 'to': "orm['analytics.Segment']"}),
+            'request': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['analytics.Request']", 'unique': 'True'}),
+            'requested_segment': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'requested'", 'null': 'True', 'to': "orm['analytics.Segment']"}),
+            'variant': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Variant']"})
+        },
+        'analytics.parameter': {
+            'Meta': {'object_name': 'Parameter'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'key': ('django.db.models.fields.TextField', [], {}),
+            'request': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['analytics.Request']"}),
+            'value': ('django.db.models.fields.TextField', [], {})
+        },
+        'analytics.request': {
+            'Meta': {'object_name': 'Request'},
+            'ajax': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'client_host': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
+            'client_ip': ('django.db.models.fields.CharField', [], {'max_length': '39'}),
+            'enter': ('django.db.models.fields.DateTimeField', [], {}),
+            'http_method': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'path': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
+            'referrer': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
+            'server_host': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
+            'visitor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['analytics.Visitor']"})
+        },
         'analytics.segment': {
             'Meta': {'object_name': 'Segment'},
             'description': ('django.db.models.fields.TextField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+        },
+        'analytics.visitor': {
+            'Meta': {'object_name': 'Visitor'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'profile': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['user.Profile']", 'unique': 'True', 'null': 'True'})
         },
         'articles.article': {
             'Meta': {'object_name': 'Article'},
@@ -56,7 +137,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 14, 16, 47, 17, 386277)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 1, 16, 59, 10, 995542)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -64,7 +145,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 14, 16, 47, 17, 386090)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 1, 16, 59, 10, 995242)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -77,50 +158,6 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'page.ad': {
-            'Meta': {'object_name': 'Ad'},
-            'content_type': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'destination': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
-            'extension': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
-            'height': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'sha1_hash': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'width': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
-        },
-        'page.adplacement': {
-            'Meta': {'object_name': 'AdPlacement'},
-            'ad': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Ad']"}),
-            'clicks': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'end_date': ('django.db.models.fields.DateTimeField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'placement': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'start_date': ('django.db.models.fields.DateTimeField', [], {}),
-            'views': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-        },
-        'page.column': {
-            'Meta': {'object_name': 'Column'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'offset': ('django.db.models.fields.IntegerField', [], {}),
-            'order': ('django.db.models.fields.IntegerField', [], {}),
-            'row': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Row']"}),
-            'span': ('django.db.models.fields.IntegerField', [], {})
-        },
-        'page.content': {
-            'Meta': {'object_name': 'Content'},
-            'column': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Column']"}),
-            'content': ('django.db.models.fields.TextField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'order': ('django.db.models.fields.IntegerField', [], {}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
-        'page.menu': {
-            'Meta': {'object_name': 'Menu'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'order': ('django.db.models.fields.IntegerField', [], {}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '2048'})
-        },
         'page.page': {
             'Meta': {'object_name': 'Page'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -130,12 +167,6 @@ class Migration(SchemaMigration):
             'publisher': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
             'slug': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
-        'page.row': {
-            'Meta': {'object_name': 'Row'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'order': ('django.db.models.fields.IntegerField', [], {}),
-            'version': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Version']"})
         },
         'page.variant': {
             'Meta': {'object_name': 'Variant'},
@@ -165,4 +196,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['page']
+    complete_apps = ['analytics']

@@ -15,9 +15,11 @@ class Migration(SchemaMigration):
         # Adding model 'Article'
         db.create_table('articles_article', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('thumbnail', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
+            ('hide_thumbnail', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('published', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('pub_date', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('publisher', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['user.Profile'])),
         ))
         db.send_create_signal('articles', ['Article'])
@@ -32,11 +34,13 @@ class Migration(SchemaMigration):
     models = {
         'articles.article': {
             'Meta': {'object_name': 'Article'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'hide_thumbnail': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'pub_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'publisher': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+            'thumbnail': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
         },
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -53,7 +57,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 1, 16, 59, 23, 810079)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -61,7 +65,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 1, 16, 59, 23, 809920)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -77,7 +81,9 @@ class Migration(SchemaMigration):
         'user.profile': {
             'Meta': {'object_name': 'Profile'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'password_restore_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
+            'password_restore_key': ('django.db.models.fields.CharField', [], {'max_length': '40', 'unique': 'True', 'null': 'True'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
         }
     }
