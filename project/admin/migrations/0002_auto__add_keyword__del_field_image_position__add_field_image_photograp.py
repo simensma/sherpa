@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("user", "0021_auto__del_field_zipcode_zip_code"),
+    )
+
     def forwards(self, orm):
         
         # Adding model 'Keyword'
