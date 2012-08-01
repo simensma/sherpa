@@ -1,10 +1,10 @@
 # encoding: utf-8
 # Django settings for Sherpa.
-# See https://docs.djangoproject.com/en/1.3/ref/settings/
+# See https://docs.djangoproject.com/en/1.4/ref/settings/
 
-from local_settings import *
+from sherpa.local_settings import *
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'sherpa.urls'
 AUTH_PROFILE_MODULE='user.Profile'
 LOGIN_URL = '/minside/logg-inn/'
 
@@ -38,7 +38,7 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
-DATABASE_ROUTERS = ['db_routers.Router']
+DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -89,21 +89,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    "context_processors.menus",
-    "context_processors.old_site",
-    "context_processors.first_visit"
+    "sherpa.context_processors.menus",
+    "sherpa.context_processors.old_site",
+    "sherpa.context_processors.first_visit"
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'middleware.DecodeQueryString',
+    'sherpa.middleware.DecodeQueryString',
     # Use a monkeypatch for Djangos CommonMiddleware. See middleware.py for more info
-    'middleware.CommonMiddlewareMonkeypatched',
+    'sherpa.middleware.CommonMiddlewareMonkeypatched',
     #'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'middleware.RedirectTrailingDot',
-    'middleware.Analytics',
-    'middleware.Sites',
+    'sherpa.middleware.RedirectTrailingDot',
+    'sherpa.middleware.Analytics',
+    'sherpa.middleware.Sites',
 )
