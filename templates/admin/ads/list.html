@@ -145,7 +145,7 @@
       {% for ad in ads %}
         <tr>
           <td class="ad dialog-button" data-dialog=".ad-dialog" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">{{ ad.name }}</td>
-          <td><a href="{{ ad.destination }}">{{ ad.destination }}</a></td>
+          <td><a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a></td>
           <td>
             <a href="{{ ad.url }}">{{ ad.extension }}</a>
             {% if ad.fallback_sha1_hash %}
