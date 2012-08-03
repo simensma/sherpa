@@ -78,7 +78,10 @@ def registration(request, user):
         request.session['enrollment']['state'] = 'registration'
 
     if user is not None:
-        user = request.session['enrollment']['users'][int(user)]
+        try:
+            user = request.session['enrollment']['users'][int(user)]
+        except IndexError:
+            return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     errors = False
     if request.method == 'POST':
