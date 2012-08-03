@@ -203,6 +203,9 @@ def household(request):
     return render(request, 'enrollment/household.html', context)
 
 def existing(request):
+    if not request.is_ajax():
+        return HttpResponseRedirect(reverse('enrollment.views.household'))
+
     # Note: This logic is duplicated in validate_existing()
     data = json.loads(request.POST['data'])
     if data['country'] == 'NO' and len(data['zipcode']) != 4:
