@@ -17,6 +17,7 @@ import re
 import json
 from lxml import etree
 from urllib import quote_plus
+from smtplib import SMTPDataError
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -649,7 +650,14 @@ def prepare_and_send_email(users, association, location, payment_method, price_s
     c = Context({'users': users, 'association': association, 'location': location,
         'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
     message = t.render(c)
-    send_mail(subject, message, EMAIL_FROM, email_recipients)
+    try:
+        send_mail(subject, message, EMAIL_FROM, email_recipients)
+    except SMTPDataError:
+        # Silently ignore this error. The user will have to do without email receipt.
+        # TODO: Should probably log this error with detailed information.
+        # Experienced this error when someone registered "har@ikke.no" as their address,
+        # and got this message: (554, 'Message rejected: Address blacklisted.')
+        pass
 
 def zipcode(request, zipcode):
     try:
