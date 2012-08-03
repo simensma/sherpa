@@ -17,6 +17,7 @@ import re
 import json
 from lxml import etree
 from urllib import quote_plus
+from smtplib import SMTPDataError
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -78,7 +79,10 @@ def registration(request, user):
         request.session['enrollment']['state'] = 'registration'
 
     if user is not None:
-        user = request.session['enrollment']['users'][int(user)]
+        try:
+            user = request.session['enrollment']['users'][int(user)]
+        except IndexError:
+            return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     errors = False
     if request.method == 'POST':
@@ -200,6 +204,9 @@ def household(request):
     return render(request, 'enrollment/household.html', context)
 
 def existing(request):
+    if not request.is_ajax():
+        return HttpResponseRedirect(reverse('enrollment.views.household'))
+
     # Note: This logic is duplicated in validate_existing()
     data = json.loads(request.POST['data'])
     if data['country'] == 'NO' and len(data['zipcode']) != 4:
@@ -591,6 +598,9 @@ def result(request):
     return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
+    if not request.is_ajax():
+        return HttpResponseRedirect(reverse('enrollment.views.result'))
+
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
     if request.session['enrollment']['state'] != 'complete':
@@ -640,7 +650,14 @@ def prepare_and_send_email(users, association, location, payment_method, price_s
     c = Context({'users': users, 'association': association, 'location': location,
         'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
     message = t.render(c)
-    send_mail(subject, message, EMAIL_FROM, email_recipients)
+    try:
+        send_mail(subject, message, EMAIL_FROM, email_recipients)
+    except SMTPDataError:
+        # Silently ignore this error. The user will have to do without email receipt.
+        # TODO: Should probably log this error with detailed information.
+        # Experienced this error when someone registered "har@ikke.no" as their address,
+        # and got this message: (554, 'Message rejected: Address blacklisted.')
+        pass
 
 def zipcode(request, zipcode):
     try:
@@ -696,6 +713,15 @@ def validate_user(user):
         except ValueError:
             return False
     elif not isinstance(user['dob'], datetime):
+        return False
+
+    # Birthyear is below 1900 (MSSQLs datetime datatype will barf)
+    # Same as above, will be unicode when posted, but datetime when saved
+    if isinstance(user['dob'], unicode):
+        date_to_test = datetime.strptime(user['dob'], "%d.%m.%Y")
+    else:
+        date_to_test = user['dob']
+    if date_to_test.year < 1900:
         return False
 
     # All tests passed!
