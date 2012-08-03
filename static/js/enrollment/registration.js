@@ -73,7 +73,10 @@ $(document).ready(function() {
 });
 
 function validateDatepicker() {
-    if(!$("form#registration input[name='dob']").val().match(/\d\d\.\d\d\.\d\d\d\d/)) {
+    var dob = $("form#registration input[name='dob']").val();
+    if(!dob.match(/\d\d\.\d\d\.\d\d\d\d/)) {
+        $("form#registration div.control-group.dob").addClass('error');
+    } else if(Number(dob.substring(6)) < 1900) {
         $("form#registration div.control-group.dob").addClass('error');
     }
 }

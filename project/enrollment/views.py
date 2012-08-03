@@ -704,6 +704,15 @@ def validate_user(user):
     elif not isinstance(user['dob'], datetime):
         return False
 
+    # Birthyear is below 1900 (MSSQLs datetime datatype will barf)
+    # Same as above, will be unicode when posted, but datetime when saved
+    if isinstance(user['dob'], unicode):
+        date_to_test = datetime.strptime(user['dob'], "%d.%m.%Y")
+    else:
+        date_to_test = user['dob']
+    if date_to_test.year < 1900:
+        return False
+
     # All tests passed!
     return True
 
