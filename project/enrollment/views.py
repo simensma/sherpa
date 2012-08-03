@@ -597,6 +597,9 @@ def result(request):
     return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
+    if not request.is_ajax():
+        return HttpResponseRedirect(reverse('enrollment.views.result'))
+
     # Verify that this is a valid SMS request
     index = int(request.POST['index'])
     if request.session['enrollment']['state'] != 'complete':
