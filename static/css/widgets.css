@@ -121,8 +121,17 @@ div.widget.promo div.wrapper.sommer {
   background-color: rgb(216, 45, 32);
 }
 
-div.widget.promo div.wrapper.tipaatopp {
+div.widget.promo div.wrapper.ut {
   background-color: rgb(216, 45, 32);
+}
+
+div.widget.promo div.wrapper.ut a.white-link {
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+}
+
+div.widget.promo div.wrapper.ut a.white-link:hover {
+  color: rgb(78, 71, 179);
 }
 
 div.widget.promo div.wrapper.medlem {

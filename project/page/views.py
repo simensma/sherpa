@@ -73,7 +73,7 @@ def parse_content(request, version):
 
     # Used temporary for static promo content
     if request.path == '/':
-        context['promo'] = 'widgets/promo/static/tipaatopp.html'
+        context['promo'] = 'widgets/promo/static/ut.html'
         context['ad'] = AdPlacement.get_active_ad('core_frontpage')
     elif request.path == '/fellesturer/':
         context['promo'] = 'widgets/promo/static/fellesturer.html'
