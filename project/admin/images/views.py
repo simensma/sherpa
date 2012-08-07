@@ -94,9 +94,9 @@ def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = list_parents(image.album)
     exif = json.loads(image.exif)
-    if exif.has_key('DateTime'):
+    try:
         taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
-    else:
+    except Exception:
         taken = None
     tags = image.tags.all()
     context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags,
