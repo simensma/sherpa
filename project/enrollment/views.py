@@ -264,7 +264,8 @@ def verification(request):
             request.session['enrollment']['location']['zipcode'] = address.a2
             request.session['enrollment']['location']['city'] = address.a3
         else:
-            request.session['enrollment']['location']['country'] = address.country
+            # Uppercase the country code as Focus doesn't use consistent casing
+            request.session['enrollment']['location']['country'] = address.country.upper()
             request.session['enrollment']['location']['address1'] = address.a1
             request.session['enrollment']['location']['address2'] = address.a2
             request.session['enrollment']['location']['address3'] = address.a3
