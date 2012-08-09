@@ -860,8 +860,8 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         zipcode = location['zipcode']
         city = location['city']
     elif location['country'] == 'DK' or location['country'] == 'SE':
-        adr2 = "%s %s" % (location['zipcode'], location['city'])
-        adr3 = ''
+        adr2 = ''
+        adr3 = "%s-%s %s" % (location['country'], location['zipcode'], location['city'])
         zipcode = '0000'
         city = ''
     else:
