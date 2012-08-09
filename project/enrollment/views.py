@@ -260,9 +260,13 @@ def verification(request):
         if address.country == 'NO':
             request.session['enrollment']['location']['address1'] = address.a1
         elif address.country == 'DK' or address.country == 'SE':
-            request.session['enrollment']['location']['address1'] = address.a1
-            request.session['enrollment']['location']['zipcode'] = address.a2
-            request.session['enrollment']['location']['city'] = address.a3
+            # Don't change the user-provided address.
+            # The user might potentially provide a different address than the existing
+            # member, which isn't allowed, but this is preferable to trying to parse the
+            # existing address into zipcode, city etc.
+            # In order to enforce the same address, the address logic for DK and SE in
+            # add_focus_user would have to be rewritten.
+            pass
         else:
             # Uppercase the country code as Focus doesn't use consistent casing
             request.session['enrollment']['location']['country'] = address.country.upper()
