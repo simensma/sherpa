@@ -9,7 +9,8 @@ from django.core.cache import cache
 from django.db import transaction, connections
 
 from association.models import Association
-from user.models import Zipcode, FocusZipcode, FocusCountry, FocusUser, Actor, ActorAddress, FocusPrice
+from user.models import Zipcode, FocusCountry
+from focus.models import FocusZipcode, FocusUser, Actor, ActorAddress, FocusPrice
 
 from datetime import datetime, timedelta
 import requests

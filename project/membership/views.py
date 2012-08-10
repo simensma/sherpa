@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.core.cache import cache
 
 from association.models import Association
-from user.models import FocusZipcode, FocusPrice
+from focus.models import FocusZipcode, FocusPrice
 
 # Slug used for error-handling redirection
 invalid_zipcode = 'ugyldig-postnummer'
