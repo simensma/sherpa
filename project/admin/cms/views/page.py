@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
+from django.template import Context, loader
+from django.core.cache import cache
 
 from page.widgets import parse_widget
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
@@ -18,11 +20,21 @@ def category_list():
 
 @login_required
 def list(request):
-    versions = Version.objects.filter(variant__page__isnull=False, active=True).order_by('-variant__page__created')
-    pages = Page.objects.all()
+    versions = Version.objects.filter(variant__page__isnull=False, variant__page__parent__isnull=True, active=True).order_by('variant__page__title')
+    for version in versions:
+        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus, 'site': request.site}
     return render(request, 'admin/pages/list.html', context)
+
+@login_required
+def children(request, page):
+    versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
+    for version in versions:
+        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
+    t = loader.get_template('admin/pages/result.html')
+    c = Context({'versions': versions, 'level': request.POST['level']})
+    return HttpResponse(t.render(c))
 
 @login_required
 def new(request):
@@ -45,6 +57,29 @@ def check_slug(request):
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 @login_required
+def rename(request, page):
+    page = Page.objects.get(id=page)
+    page.title = request.POST['title']
+    page.save()
+    return HttpResponse()
+
+@login_required
+def parent(request, page):
+    page = Page.objects.get(id=page)
+    if request.POST['parent'] == 'None':
+        parent = None
+    else:
+        new_parent = Page.objects.get(id=request.POST['parent'])
+        parent = new_parent
+        while parent != None:
+            if parent.id == page.id:
+                return HttpResponse(json.dumps({'error': 'parent_in_parent'}))
+            parent = parent.parent
+    page.parent = new_parent
+    page.save()
+    return HttpResponse('{}')
+
+@login_required
 def delete(request, page):
     Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
@@ -52,6 +87,7 @@ def delete(request, page):
 @login_required
 def edit_version(request, version):
     if request.method == 'GET':
+        pages = Page.objects.all().order_by('title')
         version = Version.objects.get(id=version)
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
@@ -65,7 +101,7 @@ def edit_version(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows, 'version': version, 'categories':category_list()}
+        context = {'rows': rows, 'version': version, 'categories':category_list(), 'pages': pages}
         return render(request, 'admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)

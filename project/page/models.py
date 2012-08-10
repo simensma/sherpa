@@ -33,6 +33,7 @@ class Page(models.Model):
     pub_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     publisher = models.ForeignKey('user.Profile')
+    parent = models.ForeignKey('page.Page', null=True)
 
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):
@@ -68,6 +69,7 @@ class Version(models.Model):
     lede = None
     thumbnail = None
     hide_thumbnail = False
+    children = None # Used in page listing
 
     def load_preview(self):
         self.title = Content.objects.get(column__row__version=self, type='title')

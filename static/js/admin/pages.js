@@ -115,6 +115,51 @@ $(document).ready(function() {
         $(this).parents("form").submit();
     });
 
+    /* Expanding page-hierarchy */
+
+    $(document).on('click', 'a.expand', function() {
+        var i = $(this).children("i");
+        if(i.hasClass('icon-plus')) {
+            i.removeClass('icon-plus');
+            i.addClass('icon-minus');
+            var tr = $(this).parents("tr");
+            var level = Number($(this).parents("td").attr('data-level')) + 1;
+            var id = $(this).attr("data-id");
+            var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
+            $(this).parents("tr").after(loader);
+            $.ajax({
+                url: '/sherpa/cms/side/barn/' + id + '/',
+                method: 'POST',
+                data: 'level='+ encodeURIComponent(level)
+            }).done(function(result) {
+                $("table.pages tr.loader").remove();
+                tr.after(result);
+                updateLevels();
+            });
+        } else {
+            i.addClass('icon-plus');
+            i.removeClass('icon-minus');
+            removeChildren($(this).parents('tr'));
+        }
+    });
+
+    function removeChildren(tr) {
+        var children = $("table.pages tr[data-parent='" + tr.attr('data-id') + "']");
+        children.each(function() {
+            removeChildren($(this));
+        });
+        children.remove();
+    }
+
+    updateLevels();
+    function updateLevels() {
+        var indent = 24;
+        $("table.pages td[data-level]").each(function() {
+            var css = indent * Number($(this).attr('data-level')) + "px";
+            $(this).css('padding-left', css);
+        });
+    }
+
 });
 
 /* Menus */

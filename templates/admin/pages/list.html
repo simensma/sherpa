@@ -35,7 +35,7 @@
 {% if not versions %}
 <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
 {% else %}
-<table class="table table-striped">
+<table class="table pages">
 <thead>
 <tr>
   <th>Tittel</th>
@@ -43,12 +43,7 @@
 </tr>
 </thead>
 <tbody>
-{% for version in versions %}
-<tr>
-  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">{{ version.variant.page.title }}</a></td>
-  <td><a href="{% url admin.cms.views.page.edit_version version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a></td>
-</tr>
-{% endfor %}
+  {% include 'admin/pages/result.html' with versions=versions level=0 %}
 </tbody>
 </table>
 {% endif %}
@@ -105,7 +100,7 @@
   <table class="table">
   <tr>
     <td>Navn på linken:</td>
-    <td><input type="text" name="name" class="input-small"></td>
+    <td><input type="text" name="name" class="input-large"></td>
   </tr>
   <tr>
     <td>Adresse:</td>
