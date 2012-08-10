@@ -4,6 +4,7 @@ urlpatterns = patterns('admin.cms.views',
 
     # Pages
     url(r'^$', 'page.list'),
+    url(r'^side/barn/(?P<page>\d+)/$', 'page.children'),
     url(r'^side/ny/$', 'page.new'),
     url(r'^side/ny/unik/$', 'page.check_slug'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),

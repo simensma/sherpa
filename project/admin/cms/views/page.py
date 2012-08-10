@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
+from django.template import Context, loader
+from django.core.cache import cache
 
 from page.widgets import parse_widget
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
@@ -18,11 +20,21 @@ def category_list():
 
 @login_required
 def list(request):
-    versions = Version.objects.filter(variant__page__isnull=False, active=True).order_by('variant__page__title')
-    pages = Page.objects.all()
+    versions = Version.objects.filter(variant__page__isnull=False, variant__page__parent__isnull=True, active=True).order_by('variant__page__title')
+    for version in versions:
+        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus, 'site': request.site}
     return render(request, 'admin/pages/list.html', context)
+
+@login_required
+def children(request, page):
+    versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
+    for version in versions:
+        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
+    t = loader.get_template('admin/pages/result.html')
+    c = Context({'versions': versions, 'level': request.POST['level']})
+    return HttpResponse(t.render(c))
 
 @login_required
 def new(request):
