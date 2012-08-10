@@ -1,6 +1,6 @@
 from django.db import models
 
-class FocusUser(models.Model):
+class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
     member_id = models.IntegerField(db_column=u'memberID', primary_key=True)
     last_name = models.CharField(db_column=u'Lastname', max_length=255)
@@ -158,7 +158,7 @@ class FocusZipcode(models.Model):
     class Meta:
         db_table = u'PostalCode'
 
-class FocusPrice(models.Model):
+class Price(models.Model):
     association_id = models.IntegerField(primary_key=True, db_column=u'Region')
     main = models.IntegerField(null=True, db_column=u'C101', blank=True)
     student = models.IntegerField(null=True, db_column=u'C102', blank=True)

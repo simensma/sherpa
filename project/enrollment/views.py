@@ -10,7 +10,7 @@ from django.db import transaction, connections
 
 from association.models import Association
 from user.models import Zipcode, FocusCountry
-from focus.models import FocusZipcode, FocusUser, Actor, ActorAddress, FocusPrice
+from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 
 from datetime import datetime, timedelta
 import requests
@@ -300,7 +300,7 @@ def verification(request):
     # Get the prices for that association
     price = cache.get('association.price.%s' % request.session['enrollment']['association'].focus_id)
     if price == None:
-        price = FocusPrice.objects.get(association_id=request.session['enrollment']['association'].focus_id)
+        price = Price.objects.get(association_id=request.session['enrollment']['association'].focus_id)
         cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
 
@@ -559,7 +559,7 @@ def process_card(request):
         if code == 'OK':
             # Register the payment in focus
             for user in request.session['enrollment']['users']:
-                focus_user = FocusUser.objects.get(member_id=user['id'])
+                focus_user = Enrollment.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
             prepare_and_send_email(request.session['enrollment']['users'],
@@ -882,7 +882,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         memberid = cursor.fetchone()[0]
         connections['focus'].commit_unless_managed()
 
-    user = FocusUser(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
+    user = Enrollment(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
         country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
         yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zipcode,

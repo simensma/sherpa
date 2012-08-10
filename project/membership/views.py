@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.core.cache import cache
 
 from association.models import Association
-from focus.models import FocusZipcode, FocusPrice
+from focus.models import FocusZipcode, Price
 
 # Slug used for error-handling redirection
 invalid_zipcode = 'ugyldig-postnummer'
@@ -30,7 +30,7 @@ def benefits(request, association_id):
 
     price = cache.get('association.price.%s' % association.focus_id)
     if price == None:
-        price = FocusPrice.objects.get(association_id=association.focus_id)
+        price = Price.objects.get(association_id=association.focus_id)
         cache.set('association.price.%s' % association.focus_id, price, 60 * 60 * 24 * 7)
 
     context = {'association': association, 'price': price}
