@@ -41,4 +41,19 @@ $(document).ready(function() {
         }
     });
 
+    /* Rename title */
+    $("input[name='title']").focusout(function() {
+        var title = $(this).val();
+        $("span.title-status").hide();
+        $(this).after('<img class="title-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
+        $.ajax({
+            url: '/sherpa/cms/side/tittel/' + $("div.editor-header.page").attr('data-id') + '/',
+            method: 'POST',
+            data: 'title=' + encodeURIComponent(title)
+        }).always(function() {
+            $("img.title-loader").remove();
+            $("span.title-status").show();
+        });
+    });
+
 });

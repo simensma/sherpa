@@ -57,6 +57,13 @@ def check_slug(request):
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 @login_required
+def rename(request, page):
+    page = Page.objects.get(id=page)
+    page.title = request.POST['title']
+    page.save()
+    return HttpResponse()
+
+@login_required
 def delete(request, page):
     Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
