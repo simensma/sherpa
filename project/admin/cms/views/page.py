@@ -64,6 +64,22 @@ def rename(request, page):
     return HttpResponse()
 
 @login_required
+def parent(request, page):
+    page = Page.objects.get(id=page)
+    if request.POST['parent'] == 'None':
+        parent = None
+    else:
+        new_parent = Page.objects.get(id=request.POST['parent'])
+        parent = new_parent
+        while parent != None:
+            if parent.id == page.id:
+                return HttpResponse(json.dumps({'error': 'parent_in_parent'}))
+            parent = parent.parent
+    page.parent = new_parent
+    page.save()
+    return HttpResponse('{}')
+
+@login_required
 def delete(request, page):
     Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
@@ -71,6 +87,7 @@ def delete(request, page):
 @login_required
 def edit_version(request, version):
     if request.method == 'GET':
+        pages = Page.objects.all().order_by('title')
         version = Version.objects.get(id=version)
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
@@ -84,7 +101,7 @@ def edit_version(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows, 'version': version, 'categories':category_list()}
+        context = {'rows': rows, 'version': version, 'categories':category_list(), 'pages': pages}
         return render(request, 'admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)

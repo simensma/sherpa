@@ -34,6 +34,18 @@
               </td>
             </tr>
             <tr>
+              <td colspan="2">
+                Ligger under:
+                <select name="parent">
+                  <option value="None">Ingen</option>
+                  {% for page in pages %}
+                    <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+                  {% endfor %}
+                </select>
+                <span class="parent-status"><i class="icon-ok"></i></span>
+              </td>
+            </tr>
+            <tr>
               <td>
                 <h1 class="publish sherpa">Siden er
                   {% if version.variant.page.published %}

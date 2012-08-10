@@ -56,4 +56,28 @@ $(document).ready(function() {
         });
     });
 
+    /* Change parent */
+    $("select[name='parent']").change(function() {
+        var parent = $(this).find("option:selected").val();
+        $("span.parent-status").hide();
+        $(this).after('<img class="parent-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
+        $.ajax({
+            url: '/sherpa/cms/side/foreldre/' + $("div.editor-header.page").attr('data-id') + '/',
+            method: 'POST',
+            data: 'parent=' + encodeURIComponent(parent)
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.error == 'parent_in_parent') {
+                alert('Du kan ikke velge den siden, fordi den allerede er en underside av denne siden.');
+                $("select[name='parent']").val($("select[name='parent'] option.default").val());
+            } else {
+                $("select[name='parent'] option.default").removeClass('default');
+                $("select[name='parent'] option:selected").addClass('default');
+            }
+        }).always(function() {
+            $("img.parent-loader").remove();
+            $("span.parent-status").show();
+        });
+    });
+
 });
