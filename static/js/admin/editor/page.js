@@ -48,7 +48,6 @@ $(document).ready(function() {
         $(this).after('<img class="title-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
         $.ajax({
             url: '/sherpa/cms/side/tittel/' + $("div.editor-header.page").attr('data-id') + '/',
-            method: 'POST',
             data: 'title=' + encodeURIComponent(title)
         }).always(function() {
             $("img.title-loader").remove();
@@ -63,7 +62,6 @@ $(document).ready(function() {
         $(this).after('<img class="parent-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
         $.ajax({
             url: '/sherpa/cms/side/foreldre/' + $("div.editor-header.page").attr('data-id') + '/',
-            method: 'POST',
             data: 'parent=' + encodeURIComponent(parent)
         }).done(function(result) {
             result = JSON.parse(result);

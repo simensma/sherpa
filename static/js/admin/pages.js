@@ -129,7 +129,6 @@ $(document).ready(function() {
             $(this).parents("tr").after(loader);
             $.ajax({
                 url: '/sherpa/cms/side/barn/' + id + '/',
-                method: 'POST',
                 data: 'level='+ encodeURIComponent(level)
             }).done(function(result) {
                 $("table.pages tr.loader").remove();
