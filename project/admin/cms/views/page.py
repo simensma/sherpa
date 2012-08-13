@@ -67,7 +67,7 @@ def rename(request, page):
 def parent(request, page):
     page = Page.objects.get(id=page)
     if request.POST['parent'] == 'None':
-        parent = None
+        new_parent = None
     else:
         new_parent = Page.objects.get(id=request.POST['parent'])
         parent = new_parent
