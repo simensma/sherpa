@@ -21,4 +21,7 @@ urlpatterns = patterns('admin',
 
     # Advertisement
     url(r'^annonser/', include('admin.ads.urls')),
+
+    # Caching
+    url(r'^cache/', include('admin.cache.urls')),
 )

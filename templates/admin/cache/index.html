@@ -1,0 +1,50 @@
+{% extends "admin/layout.html" %}
+{% block title %}Caching &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.cache.views.index %}">Caching</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/cache.js"></script>
+{% endblock %}
+{% block body %}
+
+{# For AJAX-requests #}
+{% csrf_token %}
+
+<div class="row">
+  <div class="span12">
+    <p>
+      I Sherpa benytter vi <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste, men dette medfører at når du for eksempel lager en ny artikkel så blir den synlig på forsiden først etter noen timer.
+    </p>
+    <p>
+      Her kan du som er utålmodig <strong>slette cachen</strong>, som gjør at ting blir synlige med en gang.<br>
+      <strong>Slett med måte!</strong> Overdreven bruk av funksjonaliteten her kan gjøre sidene trege å laste.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <h2>Forside-cachen:</h2>
+    <p>
+      Cacher alt innholdet på forsiden (inkludert lista over nye artikler).
+    </p>
+
+    <p><button class="frontpage btn btn-inverse btn-large"><i class="icon-remove icon-white"></i> Slett forside-cachen</button></p>
+
+    <h2>Artikler:</h2>
+    <p>
+      Cacher innholdet for én enkelt artikkelvisning.
+    </p>
+
+    <p>
+      <button class="article btn btn-inverse btn-large"><i class="icon-remove icon-white"></i> Slett en artikkel-cache</button>
+      <select name="article">
+        <option value="None">Velg en artikkel...</option>
+        {% for version in versions %}
+          <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
+        {% endfor %}
+      </select>
+    </p>
+  </div>
+</div>
+
+{% endblock %}
