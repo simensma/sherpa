@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    /* New article dialog */
+    $("select[name='article']").select2();
 
     $("button.frontpage").click(function() {
         deleteCache(this, 'frontpage');
