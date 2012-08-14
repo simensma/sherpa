@@ -202,7 +202,8 @@ div.widget.promo div.wrapper.tur-for-alle {
   div.widget.promo div.right {
     float: none;
     width: auto;
-    padding: auto;
+    padding: 10px;
+    margin-left: 6px;
   }
 
   div.widget.promo div.right h1 {
