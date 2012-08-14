@@ -46,6 +46,25 @@ div#membership-box div.wrapper div#search-box input[type='submit'] {
   margin-bottom: 10px;
 }
 
+@media (max-width: 767px) {
+  div#membership-box {
+    background-image: none;
+    width: auto;
+    height: auto;
+  }
+
+  div#membership-box div.wrapper {
+    padding-top: 0;
+  }
+
+  div#membership-box div.wrapper div#search-box {
+    margin: 0;
+    width: auto;
+    border: 1px solid rgb(158, 158, 158);
+    text-align: center;
+  }
+}
+
 /* Benefits */
 
 div.benefits-large {
