@@ -19,12 +19,28 @@ header div.search form.form-search {
 
 header div.login {
   margin-top: 6px;
+  margin-bottom: 9px;
   text-align: right;
 }
 
 header div.login a {
   color: rgb(30, 30, 30);
-  margin-left: 15px;
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+@media (max-width: 979px) {
+  header div.menu-container, header div.breadcrumb-container {
+    float: left !important;
+  }
+
+  header div.login-container, header div.language-container {
+    float: right !important;
+  }
+
+  header div.login a {
+    display: block;
+  }
 }
 
 header div.border {
@@ -139,7 +155,7 @@ footer div.sponsors img.onecall {
   margin-right: 20px !important;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 979px) {
   footer div.sponsors-underline {
     display: none;
   }

@@ -128,7 +128,6 @@ nav#menus ul {
 }
 
 nav#menus li {
-  display: inline;
   list-style: none;
   margin-right: 15px;
   font-family: "DTL Nobel" !important;
@@ -143,10 +142,19 @@ nav#menus li a {
 nav#menus li.active a {
   font-weight: bold;
   padding-bottom: 8px;
-  border-bottom: 3px solid;
   /* Set position relative, without offset, to apply z-index */
   position: relative;
   z-index: 5;
+}
+
+@media (min-width: 980px) {
+  nav#menus li {
+    display: inline;
+  }
+
+  nav#menus li.active a {
+    border-bottom: 3px solid;
+  }
 }
 
 /* Articles */

@@ -1,31 +1,31 @@
 /* Enrollment */
 
 form#registration.border, form#household div.border, div.verification.border {
-    border: 1px solid rgb(221, 221, 221);
-    padding: 14px 20px;
-    margin-bottom: 20px;
+  border: 1px solid rgb(221, 221, 221);
+  padding: 14px 20px;
+  margin-bottom: 20px;
 }
 
 form#registration label, form#household label {
-    font-size: 110%;
-    font-family: "DTL Nobel" !important;
+  font-size: 110%;
+  font-family: "DTL Nobel" !important;
 }
 
 form#registration .control-group:not(.error,.warning) label, form#household .control-group:not(.error,.warning) label {
-    color: black;
+  color: black;
 }
 
 form#registration label.gender {
-    width: 60px;
-    float: left;
-    margin-bottom: 15px;
+  width: 60px;
+  float: left;
+  margin-bottom: 15px;
 }
 
 /* Negate defaults and JQuery-UI design */
 
 div.dialog.conditions h1 {
-    border-bottom: none;
-    font-size: 26px;
+  border-bottom: none;
+  font-size: 26px;
 }
 
 div.dialog.conditions li, div.dialog.conditions p {
@@ -35,184 +35,214 @@ div.dialog.conditions li, div.dialog.conditions p {
 }
 
 div.dialog.conditions p a.btn-danger {
-    color: white;
+  color: white;
 }
 
 form#household select {
-    height: 34px;
+  height: 34px;
 }
 
 form#household select option[disabled] {
-    background-color: rgb(215, 215, 215);
+  background-color: rgb(215, 215, 215);
 }
 
 form#household button.search {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 div.existing-result p {
-    font-size: 120%;
+  font-size: 120%;
 }
 
 div.existing-result p span.result {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 div.existing-result p span.result.success {
-    color: rgb(60, 180, 60);
+  color: rgb(60, 180, 60);
 }
 
 div.existing-result p span.result.error {
-    color: rgb(180, 60, 60);
+  color: rgb(180, 60, 60);
 }
 
 form#registration input[type='text'], form#household input[type='text'], form#household select {
-    color: black;
+  color: black;
 }
 
 form#registration input[type='text'], form#household input[type='text'] {
-    font-size: 120%;
-    padding: 8px;
-    height: auto !important;
+  font-size: 120%;
+  padding: 8px;
+  height: auto !important;
 }
 
 form#registration input.dob, form#household input.dob {
-    margin-right: 6px;
+  margin-right: 6px;
 }
 
 form#registration button, form#household button {
-    margin-top: 3px;
-    margin-bottom: 3px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 table.memberlist {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 table.memberlist td {
-    background-color: white;
-    font-family: "DTL Nobel";
-    font-size: 20px;
-    padding: 10px;
+  background-color: white;
+  font-family: "DTL Nobel";
+  font-size: 20px;
+  padding: 10px;
 }
 
 table.memberlist td:hover {
-    background-color: rgb(215, 215, 215);
-    color: rgb(0, 0, 0);
+  background-color: rgb(215, 215, 215);
+  color: rgb(0, 0, 0);
 }
 
 table.memberlist span.remove {
-    float: right;
+  float: right;
 }
 
 div.members label {
-    font-family: "DTL Nobel" !important;
-    font-size: 16px;
-    margin-bottom: 20px;
+  font-family: "DTL Nobel" !important;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
 table.main-member tr.main {
-    background-color: rgb(235, 235, 235);
-    font-weight: bold;
+  background-color: rgb(235, 235, 235);
+  font-weight: bold;
 }
 
 table.prices {
-    margin-top: 25px;
-    margin-bottom: 0 !important;
+  margin-top: 25px;
+  margin-bottom: 0 !important;
 }
 
 table.prices tbody td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 table.prices tbody td.choose-main {
-    text-align: center;
+  text-align: center;
 }
 
 table.prices span.main {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 table.prices tfoot tr {
-    border-top: 2px solid rgb(105, 105, 105);
+  border-top: 2px solid rgb(105, 105, 105);
 }
 
 table.prices tfoot tr th {
-    font-size: 120%;
+  font-size: 120%;
 }
 
 p.address {
-    border: 1px solid #dddddd;
-    padding: 12px;
+  border: 1px solid #dddddd;
+  padding: 12px;
 }
 
+/* Progress bar */
+
 table.registration-progress {
-    margin: 0 0 25px 0;
-    width: 100%;
+  margin: 0 0 25px 0;
+  width: 100%;
 }
 
 table.registration-progress td.step:first-of-type {
-    border-left: 3px solid rgb(255, 255, 255);
+  border-left: 3px solid rgb(255, 255, 255);
 }
 
 table.registration-progress td.step {
-    /* Line-height is 24px so set vertical padding to max 48 (height of arrow-image) - line-height */
-    background-color: #dcddde;
-    padding: 12px 30px 12px 15px;
-    border-right: 3px solid rgb(255, 255, 255);
+  /* Line-height is 24px so set vertical padding to max 48 (height of arrow-image) - line-height */
+  background-color: #dcddde;
+  padding: 12px 30px 12px 15px;
+  border-right: 3px solid rgb(255, 255, 255);
 }
 
 table.registration-progress td.step.current {
-    color: white;
-    background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
-    border-right: none !important;
+  color: white;
+  background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
+  border-right: none !important;
 }
 
 table.registration-progress td.step.final {
-    color: white;
-    background: #d82a20 top right no-repeat;
+  color: white;
+  background: #d82a20 top right no-repeat;
+}
+
+div.registration-progress-small {
+  display: none;
+}
+
+/* Progress bar for small screens */
+
+@media (max-width: 767px) {
+  table.registration-progress {
+    display: none;
+  }
+
+  div.registration-progress-small {
+    display: block;
+    padding: 6px;
+    border: 1px solid rgb(152, 152, 152);
+    margin-bottom: 18px;
+  }
+
+  div.registration-progress-small p {
+    font-family: "DTL Nobel" !important;
+    margin-bottom: 0;
+  }
+
+  div.registration-progress-small p i {
+    margin: 3px 3px 0 3px;
+  }
 }
 
 span.asterisk {
-    font-size: 120%;
-    font-weight: bold;
+  font-size: 120%;
+  font-weight: bold;
 }
 
 span.asterisk.red {
-    color: red;
+  color: red;
 }
 
 div.notice-alert {
-    padding: 10px;
-    border: 1px solid rgb(95, 95, 95);
-    margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid rgb(95, 95, 95);
+  margin-bottom: 20px;
 }
 
 .result-subheader {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
 p.receipt-success {
-    color: green;
+  color: green;
 }
 
 p.receipt-error {
-    color: red;
+  color: red;
 }
 
 /* Verification */
 
 p.association-info {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 /* Result */
 
 p.sms {
-    margin-top: 15px;
-    margin-bottom: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 table td.sum {
-    font-weight: bold;
+  font-weight: bold;
 }
