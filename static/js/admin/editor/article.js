@@ -1,6 +1,28 @@
 /* Specific article-editing scripts */
 
 $(document).ready(function() {
+
+    $("select[name='authors']").select2();
+
+    $("button.save-authors").click(function() {
+        $(this).attr('disabled', true);
+        var authors = [];
+        var selected = $("select[name='authors'] > option:selected");
+        if(selected.length == 0) {
+            alert("Du må velge minst én forfatter!");
+            return;
+        }
+        selected.each(function() {
+            authors = authors.concat([$(this).val()]);
+        });
+        $.ajax({
+            url: '/sherpa/artikler/forfattere/' + $("div.editor-header.article").attr('data-id') + '/',
+            data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
+        }).always(function() {
+            $("button.save-authors").removeAttr('disabled');
+        });
+    });
+
     $("article div.title").focusout(function() {
         $("a.header-title").text($(this).text());
     });

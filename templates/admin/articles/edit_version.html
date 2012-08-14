@@ -15,11 +15,13 @@
   <script src="{{ STATIC_URL }}js/admin/editor/article.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
+  <script src="{{ STATIC_URL }}lib/select2/select2.js"></script>
 {% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/main.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/image.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/select2/select2.css" media="screen">
 {% endblock %}
 
 {% block body %}
@@ -75,6 +77,21 @@
       <br>
       <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button><button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
       <input type="text" class="input-large" name="article-datetime-field" value="{{ version.variant.article.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt..."><br>
+
+      <div class="author">
+        <p>
+          Forfattere:
+          <select name="authors" multiple="multiple">
+            {% for profile in profiles %}
+              <option value="{{ profile.id }}"{% if profile in version.variant.article.publishers.all %} selected="selected"{% endif %}>{{ profile.user.get_full_name }}</option>
+            {% endfor %}
+          </select>
+        </p>
+        <p>
+          <button class="save-authors btn btn-success"><i class="icon-share-alt"></i> Lagre forfattere</button>
+        </p>
+      </div>
+
       <div style="clear: both;"></div>
     </div>
   </div>

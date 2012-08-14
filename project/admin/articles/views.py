@@ -11,6 +11,7 @@ import json
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
+from user.models import Profile
 
 import urllib
 
@@ -87,7 +88,8 @@ def delete(request, article):
 @login_required
 def edit_version(request, version):
     rows, version = parse_version_content(version)
-    context = {'rows': rows, 'version': version}
+    profiles = Profile.objects.all().order_by('user__first_name')
+    context = {'rows': rows, 'version': version, 'profiles': profiles}
     return render(request, 'admin/articles/edit_version.html', context)
 
 def preview(request, version):
@@ -113,6 +115,14 @@ def parse_version_content(version):
             column.contents = contents
         row.columns = columns
     return rows, version
+
+@login_required
+def update_publishers(request, article):
+    article = Article.objects.get(id=article)
+    publisher_list = json.loads(request.POST['authors'])
+    publishers = Profile.objects.filter(id__in=publisher_list)
+    article.publishers = publishers
+    return HttpResponse()
 
 def create_template(template, version, title):
     if template == '0':
