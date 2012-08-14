@@ -15,6 +15,10 @@ $(document).ready(function() {
         deleteCache(this, 'article', id);
     });
 
+    $("button.main-menu").click(function() {
+        deleteCache(this, 'main-menu');
+    });
+
     function deleteCache(button, key, article) {
         $(button).attr('disabled', true);
         $.ajax({
