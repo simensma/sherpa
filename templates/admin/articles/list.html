@@ -23,7 +23,7 @@
 <tr>
   <th>Artikkel</th>
   <th>Publisert</th>
-  <th>Opprettet av</th>
+  <th>Forfattere</th>
 </tr>
 </thead>
 <tbody>
@@ -58,7 +58,12 @@
       Nei
     {% endif %}
   </td>
-  <td>{{ version.variant.article.publisher.user.get_full_name }}</td>
+  <td>
+    {% for publisher in version.variant.article.publishers.all %}
+      {{ publisher.user.get_full_name }}
+      {% if not forloop.last %}<br>{% endif %}
+    {% endfor %}
+  </td>
 </tr>
 {% endfor %}
 </tbody>

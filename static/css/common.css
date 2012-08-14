@@ -234,6 +234,11 @@ div.byline p a.email {
   font-size: 14px;
 }
 
+div.byline div.multiple-authors {
+  float: left;
+  margin-right: 20px;
+}
+
 /* Article preview */
 
 div.article-preview img, img.article-thumbnail {
