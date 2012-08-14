@@ -21,3 +21,26 @@
     </td>
   </tr>
 </table>
+
+<div class="registration-progress-small">
+  <p>
+    {% if step == 1 %}<strong>{% endif %}
+      {% if step > 1 %}<a href="{% url enrollment.views.registration %}">{% endif %}
+        Personopplysninger
+      {% if step > 1 %}</a>{% endif %}
+    {% if step == 1 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 2 %}<strong>{% endif %}
+      {% if step > 2 %}<a href="{% url enrollment.views.household %}">{% endif %}
+        Adresse
+      {% if step > 2 %}</a>{% endif %}
+    {% if step == 2 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 3 %}<strong>{% endif %}
+      {% if step > 3 %}<a href="{% url enrollment.views.verification %}">{% endif %}
+        Bekreftelse
+      {% if step > 3 %}</a>{% endif %}
+    {% if step == 3 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 4 %}<strong>{% endif %}
+        Betaling
+    {% if step == 4 %}</strong>{% endif %}
+  </p>
+</div>
