@@ -64,7 +64,6 @@ def publish(request, article):
     #date format is this one (dd.mm.yyyy hh:mm)
     try:
         date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-        print date_object
     except:
         #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
         date_object = None
