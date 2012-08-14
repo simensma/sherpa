@@ -186,6 +186,26 @@ div.widget.promo div.wrapper.tur-for-alle {
   background-color: rgb(38, 53, 26);
 }
 
+/* Promo - small-screen layout */
+
+@media (max-width: 767px) {
+  div.widget.promo img.background-image {
+    display: none;
+  }
+
+  div.widget.promo div.menu {
+    position: static;
+    background-color: white;
+    padding-bottom: 20px;
+  }
+
+  div.widget.promo div.right {
+    float: none;
+    width: auto;
+    padding: auto;
+  }
+}
+
 /* Quote */
 
 div.widget.quote blockquote {
