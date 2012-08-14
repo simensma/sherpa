@@ -24,8 +24,9 @@ def list(request):
 
 @login_required
 def new(request):
-    article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None, publisher=request.user.get_profile())
+    article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
     article.save()
+    article.publishers.add(request.user.get_profile())
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, publisher=request.user.get_profile())
     variant.save()
     version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
@@ -70,7 +71,7 @@ def publish(request, article):
 
     article = Article.objects.get(id=article)
     article.published = json.loads(status)["status"]
-    article.publisher = request.user.get_profile()
+    article.publishers.add(request.user.get_profile())
     if date_object == None:
         article.pub_date = datetime.now()
     else:
