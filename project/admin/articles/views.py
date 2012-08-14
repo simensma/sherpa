@@ -60,14 +60,14 @@ def image_hide(request, article):
 def publish(request, article):
     datetime_string = urllib.unquote_plus(request.POST["datetime"])
     status =  urllib.unquote_plus(request.POST["status"])
-    
+
     #date format is this one (dd.mm.yyyy hh:mm)
     try:
         date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
     except:
         #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
         date_object = None
-    
+
     article = Article.objects.get(id=article)
     article.published = json.loads(status)["status"]
     article.publisher = request.user.get_profile()

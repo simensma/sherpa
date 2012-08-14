@@ -20,7 +20,6 @@ $(document).ready(function() {
 
     /* Publish/unpublish */
     function publishUnpublish(){
-        
         try{
             var datetime = $("input[name='article-datetime-field']").datetimepicker('getDate');
             var now = new Date();

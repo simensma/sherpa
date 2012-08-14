@@ -60,7 +60,7 @@ def fast_upload(request):
         parsed_image = parse_image(file)
     except(IOError, KeyError):
         return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
-    
+
     #store stuff on s3 and in db
     stored_image = store_image(parsed_image, user_album, request.user)
 

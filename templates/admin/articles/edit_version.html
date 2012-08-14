@@ -34,7 +34,7 @@
         <input type="radio" name="thumbnail" value="none"{% if version.hide_thumbnail %} checked{% endif %}> Ikke vis minibilde<br>
         <input type="radio" name="thumbnail" value="default"{% if not version.hide_thumbnail and not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
         <input type="radio" name="thumbnail" value="new"{% if not version.hide_thumbnail and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
-        
+
         <div style="width:200px; overflow:hidden;">
         <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ STATIC_URL }}img/placeholder.png{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
         </div>
