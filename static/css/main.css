@@ -30,11 +30,11 @@ header div.login a {
 }
 
 @media (max-width: 979px) {
-  header div.menu-container {
+  header div.menu-container, header div.breadcrumb-container {
     float: left !important;
   }
 
-  header div.login-container {
+  header div.login-container, header div.language-container {
     float: right !important;
   }
 
