@@ -155,7 +155,7 @@ footer div.sponsors img.onecall {
   margin-right: 20px !important;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 979px) {
   footer div.sponsors-underline {
     display: none;
   }
