@@ -30,4 +30,6 @@ def delete(request):
         cache.delete('content.version.%s' % id)
     elif request.POST['key'] == 'article':
         cache.delete('articles.%s' % request.POST['article'])
+    elif request.POST['key'] == 'main-menu':
+        cache.delete('main.menu')
     return HttpResponse()

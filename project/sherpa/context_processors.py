@@ -1,5 +1,6 @@
 from django.core.urlresolvers import resolve
 from django.conf import settings
+from django.core.cache import cache
 
 from page.models import Menu
 
@@ -9,7 +10,10 @@ def menus(request):
     if request.is_ajax():
         return {}
     else:
-        menus = Menu.objects.all().order_by('order')
+        menus = cache.get('main.menu')
+        if menus == None:
+            menus = Menu.objects.all().order_by('order')
+            cache.set('main.menu', menus, 60 * 60 * 24)
         for menu in menus:
             url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
             # Add final slash if missing
