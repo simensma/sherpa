@@ -204,6 +204,11 @@ div.widget.promo div.wrapper.tur-for-alle {
     width: auto;
     padding: auto;
   }
+
+  div.widget.promo div.right h1 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
 }
 
 /* Quote */
