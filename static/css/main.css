@@ -29,6 +29,20 @@ header div.login a {
   margin-right: 7px;
 }
 
+@media (max-width: 979px) {
+  header div.menu-container {
+    float: left !important;
+  }
+
+  header div.login-container {
+    float: right !important;
+  }
+
+  header div.login a {
+    display: block;
+  }
+}
+
 header div.border {
   clear: both;
   position: absolute;

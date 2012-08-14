@@ -50,7 +50,7 @@
   </div>
 
   <div class="row">
-    <div class="span9">
+    <div class="span9 menu-container">
       <nav id="menus">
         <ul>
           {% for menu in menus %}
@@ -61,7 +61,7 @@
         </ul>
       </nav>
     </div>
-    <div class="span3">
+    <div class="span3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
           <a href="{% url admin.views.index %}">Sherpa</a>
