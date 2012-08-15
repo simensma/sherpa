@@ -28,6 +28,12 @@
   </div>
 {% endfor %}
 
-<p class="more">
-  <a href="http://blogg.turistforeningen.no/">Gå til bloggen</a>
-</p>
+{% if widget.entries|length > 0 %}
+  <p class="more">
+    <a href="http://blogg.turistforeningen.no/">Gå til bloggen</a>
+  </p>
+{% else %}
+  <p class="more">
+    Vi fikk av tekniske årsaker dessverre ikke kontakt med bloggen og kan ikke vise innleggene her. Du kan prøve å <a href="http://blogg.turistforeningen.no/">åpne bloggen</a> selv.
+  </p>
+{% endif %}

@@ -39,32 +39,36 @@ def parse_widget(widget):
                 feed_url += 'tema/' + widget['category'].lower()
             feed_url += '/feed/'
 
-            r = requests.get(feed_url)
-            root = etree.fromstring(r.content)
+            try:
+                r = requests.get(feed_url)
+                channel = etree.fromstring(r.content).find('channel')
+            except requests.ConnectionError:
+                channel = None
+
             entries = []
-
             entries_matched = 0;
-            for item in root.find('channel').findall('item'):
+            if channel != None:
+                for item in channel.findall('item'):
 
-                item_categories = []
-                for item_category in item.findall('category'):
-                    item_categories.append(item_category.text)
+                    item_categories = []
+                    for item_category in item.findall('category'):
+                        item_categories.append(item_category.text)
 
-                if (widget['category'] in item_categories or widget['category'] == 'Alle'):
-                    entries_matched += 1;
+                    if (widget['category'] in item_categories or widget['category'] == 'Alle'):
+                        entries_matched += 1;
 
-                    content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
-                    image = None
-                    m = re.search('<img.*?src="(.*?)" ', content)
-                    if m != None:
-                        image = m.group(1)
-                    entries.append({
-                        'title': item.find('title').text,
-                        'link': item.find('link').text,
-                        'content': content,
-                        'image': image})
-                if entries_matched >= int(widget['count']):
-                    break
+                        content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
+                        image = None
+                        m = re.search('<img.*?src="(.*?)" ', content)
+                        if m != None:
+                            image = m.group(1)
+                        entries.append({
+                            'title': item.find('title').text,
+                            'link': item.find('link').text,
+                            'content': content,
+                            'image': image})
+                    if entries_matched >= int(widget['count']):
+                        break
             data = {'entries':entries}
             cache.set('widgets.blog' + widget['category'], data, 60 * 10)
     elif widget['widget'] == "embed":
