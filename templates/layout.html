@@ -85,12 +85,12 @@
             {% for page in page_hierarchy %}
               /
               {% if forloop.last %}<em>{% endif %}
-                <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
+                <a href="/{{ page.url }}/">{{ page.title }}</a>
               {% if forloop.last %}</em>{% endif %}
             {% endfor %}
           {% elif version.variant.page %}
             {% if version.variant.page.slug != '' %}
-              / <em><a href="">{{ version.variant.page.title }}</a></em>
+              / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
             {% endif %}
           {% elif version.variant.article %}
             / <a href="{% url articles.views.index %}">Artikler</a>

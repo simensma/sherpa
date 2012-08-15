@@ -68,7 +68,23 @@ def parse_content(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows, 'version': version}
+        # If parents, generate page hierarchy for breadcrumb path
+        page_hierarchy = []
+        if version.variant.page.parent != None:
+            page_hierarchy.append({
+                'title': version.variant.page.title,
+                'url': version.variant.page.slug
+                })
+            parent = version.variant.page.parent
+            while parent != None:
+                page_hierarchy.append({
+                    'title': parent.title,
+                    'url': parent.slug
+                    })
+                parent = parent.parent
+            page_hierarchy.reverse()
+
+        context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
     # Used temporary for static promo content
