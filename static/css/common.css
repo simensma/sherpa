@@ -262,9 +262,3 @@ div.article-preview div.lede {
 div.article-preview div.lede a {
   color: rgb(51, 51, 51);
 }
-
-/* Select2 container appears to have no min-width for some reason */
-
-div.select2-container {
-  min-width: 300px;
-}

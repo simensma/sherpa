@@ -2,7 +2,9 @@
 
 $(document).ready(function() {
 
-    $("select[name='authors']").select2();
+    $("select[name='authors']").select2({
+        width: '350px'
+    });
 
     $("button.save-authors").click(function() {
         $(this).attr('disabled', true);
