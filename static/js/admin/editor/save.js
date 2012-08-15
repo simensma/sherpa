@@ -112,6 +112,8 @@ $(document).ready(function() {
         $("div.editor-header div.save button.save").attr('disabled', true);
         $("div.editor-header div.save span.save-text").html("<i class=\"icon-time\"></i> Lagrer, vennligst vent...");
         $("div.no-save-warning").hide();
+
+        // Save content
         $.ajaxQueue({
             url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
             data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
@@ -129,6 +131,25 @@ $(document).ready(function() {
             updateSaveCount();
             $("div.editor-header div.save button.save").removeAttr('disabled');
         });
+
+        // Save authors for articles
+        if($("div.editor-header.article").length > 0) {
+            var authors = [];
+            var selected = $("select[name='authors'] > option:selected");
+            if(selected.length == 0) {
+                alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
+                return;
+            }
+            selected.each(function() {
+                authors = authors.concat([$(this).val()]);
+            });
+            $.ajaxQueue({
+                url: '/sherpa/artikler/forfattere/' + $("div.editor-header.article").attr('data-id') + '/',
+                data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
+            }).always(function() {
+                $("button.save-authors").removeAttr('disabled');
+            });
+        }
     }
 
 });
