@@ -261,3 +261,15 @@ td.article-preview {
 .ui-menu {
   border: 1px solid rgb(95, 95, 95);
 }
+
+td.published-future {
+  color: rgb(235, 145, 0);
+}
+
+td.published-past {
+  color: green;
+}
+
+td.unpublished {
+  color: red;
+}
