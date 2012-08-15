@@ -132,7 +132,7 @@ $(document).ready(function() {
                 $("div.existing-result span.result").addClass('success');
             }
         }).fail(function(result) {
-            $(document.body).html(result.responseText);
+            // Todo
         }).always(function() {
             button.removeAttr('disabled');
             $("form#household img.existing.ajaxloader").hide();

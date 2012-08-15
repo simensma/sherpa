@@ -32,7 +32,7 @@ $(document).ready(function() {
                 button.remove();
             }
         }).fail(function(result) {
-            $(document.body).html(result.responseText);
+            // Todo
         });
     });
 

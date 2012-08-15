@@ -609,7 +609,6 @@ $(document).ready(function() {
         }).fail(function(result) {
             // Todo
             disableOverlay();
-            $(document.body).html(result.responseText);
         }).always(function(result) {
             enableToolbar();
         });

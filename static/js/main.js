@@ -40,7 +40,6 @@ $(document).ready(function() {
             $("p.info").text("En teknisk feil oppstod! Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.");
             button.removeAttr('disabled');
             button.text(button.attr('data-original-text'));
-            $(document.body).html(r.responseText);
         });
     });
 

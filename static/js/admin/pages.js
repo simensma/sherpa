@@ -48,7 +48,7 @@ $(document).ready(function() {
                 $("div.page-dialog span.invalid").show();
             }
         }).fail(function(result) {
-            $(document.body).html(result.responseText);
+            // Todo
         }).always(function() {
             $("div.page-dialog img.loader").hide();
         });

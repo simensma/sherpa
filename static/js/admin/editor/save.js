@@ -122,7 +122,6 @@ $(document).ready(function() {
             }
         }).fail(function(result) {
             // Todo
-            $(document.body).html(result.responseText);
         }).always(function(result) {
             updateSaveCount();
             $("div.editor-header button.save").removeAttr('disabled');

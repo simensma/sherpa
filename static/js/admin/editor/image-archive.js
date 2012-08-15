@@ -59,7 +59,7 @@ function search(phrase) {
         updateContents(result.parents, result.albums, result.images,
             '<strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-(');
     }).fail(function(result) {
-        $(document.body).html(result.responseText);
+        // Todo
     }).always(function(result) {
         ajaxLoader.remove();
     });
@@ -75,7 +75,7 @@ function showFolder(album) {
         updateContents(result.parents, result.albums, result.images,
             '<strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.');
     }).fail(function(result) {
-        $(document.body).html(result.responseText);
+        // Todo
     }).always(function(result) {
         ajaxLoader.remove();
     });
