@@ -72,7 +72,6 @@ def publish(request, article):
 
     article = Article.objects.get(id=article)
     article.published = json.loads(status)["status"]
-    article.publishers.add(request.user.get_profile())
     if date_object == None:
         article.pub_date = datetime.now()
     else:
