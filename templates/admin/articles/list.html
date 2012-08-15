@@ -22,7 +22,7 @@
 <thead>
 <tr>
   <th>Artikkel</th>
-  <th>Publisert</th>
+  <th>Publisering</th>
   <th>Forfattere</th>
 </tr>
 </thead>
@@ -47,16 +47,21 @@
         </a>
       </div>
   </td>
-  <td>
-    {% if version.variant.article.published %}
-      {% if version.variant.article.pub_date|dategtnow %}
-        Publiseres {{ version.variant.article.pub_date }}
-      {% else %}
-        Ja &mdash; {{ version.variant.article.pub_date }}
-      {% endif %}
+  {% if version.variant.article.published %}
+    {% if version.variant.article.pub_date|dategtnow %}
+      <td class="published-future">
+        {{ version.variant.article.pub_date }}
+      </td>
     {% else %}
-      Nei
+      <td class="published-past">
+        {{ version.variant.article.pub_date }}
+      </td>
     {% endif %}
+  {% else %}
+    <td class="unpublished">
+      Ikke publisert
+    </td>
+  {% endif %}
   </td>
   <td>
     {% for publisher in version.variant.article.publishers.all %}

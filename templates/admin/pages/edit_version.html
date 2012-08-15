@@ -26,49 +26,48 @@
   <div class="span12">
     <div class="well editor-header page" data-id="{{ version.variant.page.id }}">
       <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
-        <div class="save">
-          <table>
-            <tr>
-              <td colspan="2">
-                Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}"> <span class="title-status"><i class="icon-ok"></i></span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                Ligger under:
-                <select name="parent">
-                  <option value="None">Ingen</option>
-                  {% for page in pages %}
-                    <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
-                  {% endfor %}
-                </select>
-                <span class="parent-status"><i class="icon-ok"></i></span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h1 class="publish sherpa">Siden er
-                  {% if version.variant.page.published %}
-                    <span class="true">publisert</span>.
-                  {% else %}
-                    <span class="false">ikke publisert</span>.
-                  {% endif %}
-                </h1>
-              </td>
-              <td>
-                <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
-                <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="save-text"><i class="icon-ok"></i> Siden er nylig lagret.</span></td>
-              <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
-            </tr>
-          </table>
-        </div>
-        <a class="btn btn-danger delete-page" href="{% url admin.cms.views.page.delete version.variant.page.id %}">
-          <i class="icon-warning-sign"></i> Slett siden for godt
-        </a>
+        <table>
+          <tr>
+            <td colspan="2">
+              Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}"> <span class="title-status"><i class="icon-ok"></i></span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              Ligger under:
+              <select name="parent">
+                <option value="None">Ingen</option>
+                {% for page in pages %}
+                  <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+                {% endfor %}
+              </select>
+              <span class="parent-status"><i class="icon-ok"></i></span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h1 class="publish sherpa">Siden er
+                {% if version.variant.page.published %}
+                  <span class="true">publisert</span>.
+                {% else %}
+                  <span class="false">ikke publisert</span>.
+                {% endif %}
+              </h1>
+            </td>
+            <td>
+              <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
+              <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
+            </td>
+          </tr>
+          <tr>
+            <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
+            <td>
+              <a class="btn btn-danger delete-page" href="{% url admin.cms.views.page.delete version.variant.page.id %}">
+                <i class="icon-warning-sign"></i> Slett siden for godt
+              </a>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <div style="clear: both;"></div>

@@ -135,7 +135,7 @@ $(document).ready(function() {
             currentPhotographer.text(photographer);
             hidePictureText(content);
 
-            $("div.editor-header div.save button.save").click();
+            $("div.editor-header button.save").click();
         }, function() {
             removeContent(content);
         });
