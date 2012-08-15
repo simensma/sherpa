@@ -42,41 +42,20 @@
         </div>
       </div>
 
-      <div class="status" data-published="{% if version.variant.article.published %}true{% else %}{% endif %}">
-        <div class="save">
-          <table>
-            <tr>
-              <td>
-                <h1 class="sherpa publish">Artikkelen 
-                  {% if version.variant.article.published %}
-                    {% if version.variant.article.pub_date|dategtnow %}
-                      <span>blir publisert <br> {{ version.variant.article.pub_date|date:"d.m.Y H:i" }}</span>
-                    {% else %}
-                      <span>er <span class="true">publisert</span>.</span>
-                    {% endif %}
-                  {% else %}
-                    <span>er <span class="false">ikke publisert</span>.</span>
-                  {% endif %}
-                </h1>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="save-text"><i class="icon-ok"></i> Artikkelen er nylig lagret.</span></td>
-              <td><button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td><button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button></td>
-            </tr>
-          </table>
-        </div>
+      <div class="publish">
+        <p>
+          <input type="checkbox" name="publish"{% if version.variant.article.published %} checked="checked"{% endif %}> Publiseres
+          <input type="text" class="input-large" name="article-datetime-field" value="{{ version.variant.article.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt...">
+        </p>
+      </div>
+
+      <div class="status">
+        <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
+        <button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
         <a class="btn btn-danger delete-article" href="{% url admin.articles.views.delete version.variant.article.id %}">
           <i class="icon-warning-sign"></i> Slett artikkelen for godt
         </a>
       </div>
-      <br>
-      <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button><button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
-      <input type="text" class="input-large" name="article-datetime-field" value="{{ version.variant.article.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt..."><br>
 
       <div class="author">
         <p>

@@ -246,25 +246,8 @@ div.editor-header.article div.preview-image {
   float: right;
 }
 
-div.editor-header.article div.published {
-  border: 1px solid rgb(95, 95, 95);
-  padding: 20px;
-  text-align: center;
-  width: 200px;
-}
-
-div.editor-header.article div.published.true {
-  background-color: rgb(90, 203, 90);
-}
-
-div.editor-header.article div.published.false {
-  color: rgb(255, 255, 255);
-  background-color: rgb(220, 90, 90);
-}
-
-div.editor-header.article div.published p {
-  font-size: 200%;
-  margin-bottom: 20px;
+div.editor-header.article div.publish, div.editor-header.article div.status {
+  margin-bottom: 10px;
 }
 
 /* Article preview in listing */

@@ -3,7 +3,7 @@
 $(document).ready(function() {
 
     $("select[name='authors']").select2({
-        width: '350px'
+        width: '400px'
     });
 
     $("article div.title").focusout(function() {
@@ -22,71 +22,6 @@ $(document).ready(function() {
             interval:false
         });
     });
-
-    /* Publish/unpublish */
-    function publishUnpublish(){
-        try{
-            var datetime = $("input[name='article-datetime-field']").datetimepicker('getDate');
-            var now = new Date();
-        }catch(e){
-            var datetime = 0;
-            var now = 0;
-        }
-
-        $("div.status h1.publish").empty();
-
-        if($("div.status").attr("data-published").length > 0) {
-            $("div.article button.publish").show();
-            $("div.article button.unpublish").show();
-            $("input[name='article-datetime-field']").show();
-            if(datetime > now){
-                $("div.status h1.publish").append("Artikkelen blir publisert <br>" + $("input[name='article-datetime-field']").val());
-            }else{
-                $("div.status h1.publish").append("Artikkelen er <span class='true'>publisert</span>");
-                $("input[name='article-datetime-field']").val("")
-            }
-        } else {
-            $("div.article button.publish").show();
-            $("div.article button.unpublish").hide();
-            $("input[name='article-datetime-field']").show();
-            $("input[name='article-datetime-field']").val("")
-            $("div.status h1.publish").append("Artikkelen er <span class='false'>ikke publisert</span>");
-        }
-    }
-    publishUnpublish();
-
-    $("div button.publish").click(function() {
-        if(!confirm("Er du sikker på at du vil publisere denne artikkelen?")) {
-            return;
-        }
-        setPublished(true, function() {
-            $("div.status").attr("data-published", "true");
-            publishUnpublish();
-        });
-    });
-
-    $("div button.unpublish").click(function() {
-        if(!confirm("Er du HELT sikker på at du vil trekke tilbake denne artikkelen? Den vil forsvinne fra nyhetsutlistingen, og ikke dukke opp som søkeresultat når en søker. Du bør ikke avpublisere en publisert artikkel med mindre du er HELT sikker.")) {
-            return;
-        }
-        setPublished(false, function() {
-            $("div.status").attr("data-published", "");
-            publishUnpublish();
-        });
-    });
-
-    function setPublished(status, done) {
-        $("div.status button.publish, div.status button.unpublish").attr('disabled', true);
-        $.ajax({
-            url: '/sherpa/artikler/publiser/' + $("div.editor-header").attr('data-id') + '/',
-            data: {
-                datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
-                status : encodeURIComponent(JSON.stringify({'status': status}))
-            }
-        }).done(done).always(function() {
-            $("div.status button.publish, div.status button.unpublish").removeAttr('disabled');
-        });
-    }
 
     /* Change thumbnail-image */
     if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
