@@ -1,0 +1,22 @@
+/* Enrollment for printing receipt pages */
+
+header, div.container.social-icons, footer {
+  display: none;
+}
+
+p.sms {
+  display: none;
+}
+
+h1, h2, h3 {
+  font-family: "DTL Nobel";
+}
+
+p {
+  font-family: georgia, times, serif;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
