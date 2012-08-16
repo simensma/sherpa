@@ -15,8 +15,6 @@ BLOG_URL = "http://blogg.turistforeningen.no/"
 def parse_widget(widget):
     if widget['widget'] == "quote":
         data = {'quote': widget['quote'], 'author': widget['author']}
-    elif widget['widget'] == "promo":
-        data = {}
     elif widget['widget'] == 'carousel':
         # NO! BAD HAVARD, dont use hax, create an id(but not now)
         data = {'id':random.randint(0,10000), 'images':widget['images']}
@@ -73,6 +71,8 @@ def parse_widget(widget):
             cache.set('widgets.blog' + widget['category'], data, 60 * 10)
     elif widget['widget'] == "embed":
         data = {'code': widget['code']}
+    elif widget['widget'] == "fact":
+        data = {'content': widget['content']}
 
     data.update({
         'json': json.dumps(widget),

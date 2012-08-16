@@ -602,6 +602,8 @@ $(document).ready(function() {
             }
             if(type == 'widget') {
                 disableIframes(wrapper);
+                widget = JSON.parse(result.json).widget;
+                wrapper.addClass(widget);
             }
             // Disable the overlay _before_ calling the provided 'done' function
             disableOverlay();

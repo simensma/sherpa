@@ -11,7 +11,6 @@ import json
 
 @login_required
 def add(request):
-
     if request.is_ajax():
         column = Column.objects.get(id=request.POST['column'])
         for content in Content.objects.filter(column=column, order__gte=request.POST['order']):

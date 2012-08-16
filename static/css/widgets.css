@@ -254,3 +254,9 @@ div.widget.articles div.preview a:hover, div.widget.blog div.preview a:hover {
 div.widget.articles p.more, div.widget.blog p.more {
   margin-top: -15px;
 }
+
+/* Well */
+
+div.widget.fact *, div.dialog.widget-edit div.content * {
+  font-family: "DTL Nobel" !important;
+}
