@@ -1,0 +1,49 @@
+{% extends "admin/layout.html" %}
+{% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → <a href="">Slett artikkel</a>{% endblock %}
+{% block extra_js %}
+  {# Just include all the crap; admin/editor/article.js depends on a lot of it #}
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
+  <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-dialog.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-archive.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-fast-upload.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/widgets.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/article.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
+  <script src="{{ STATIC_URL }}lib/select2/select2.js"></script>
+{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>
+      Slett artikkel?
+    </h1>
+    <p>
+      Du er i ferd med å slette artikkelen "<a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>" <strong>for godt</strong>, er du sikker på at det er det du vil?
+    </p>
+    <div class="alert alert-error final-confirm hide" style="text-align: center">
+      <strong>
+        Du kan ikke angre dette.
+      </strong>
+      <p>
+        <a class="btn btn-danger" href="{% url admin.articles.views.delete version.variant.article.id %}"><i class="icon-warning-sign"></i> Jeg forstår, slett den likevel!</a>
+      </p>
+    </div>
+    <p style="text-align: center">
+      <button class="btn btn-large btn-danger confirm-delete"><i class="icon-warning-sign"></i> Ja, slett artikkelen for evig og alltid</button>
+    </p>
+    <p style="text-align: center">
+      <a class="btn btn-large btn-success" href="{% url admin.articles.views.edit_version version.id %}"><i class="icon-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}
+

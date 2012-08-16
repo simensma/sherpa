@@ -80,6 +80,13 @@ def publish(request, article):
     return HttpResponse()
 
 @login_required
+def confirm_delete(request, article):
+    version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
+    version.load_preview()
+    context = {'version': version}
+    return render(request, 'admin/articles/confirm-delete.html', context)
+
+@login_required
 def delete(request, article):
     Article.objects.get(id=article).delete()
     return HttpResponseRedirect(reverse('admin.articles.views.list'))

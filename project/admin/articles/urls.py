@@ -12,4 +12,5 @@ urlpatterns = patterns('admin.articles.views',
     url(ur'^forhåndsvisning/(?P<version>\d+)/$', 'preview'),
     url(r'^publiser/(?P<article>\d+)/$', 'publish'),
     url(r'^slett/(?P<article>\d+)/$', 'delete'),
+    url(r'^slett/sikker/(?P<article>\d+)/$', 'confirm_delete'),
 )

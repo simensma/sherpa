@@ -83,9 +83,14 @@ $(document).ready(function() {
 
     /* Delete article */
     $("a.delete-article").click(function(e) {
-        if(!confirm("Er du HELT sikker på at du vil slette denne artikkelen, for alltid?\n\nHvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.\n\nDette kan du ikke angre!")) {
+        if(!confirm("Er du sikker på at du vil slette denne artikkelen for alltid?\n\nHvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.")) {
             e.preventDefault();
         }
+    });
+
+    $("button.confirm-delete").click(function() {
+        $(this).hide();
+        $("div.final-confirm").show();
     });
 
     /* Mark empty text elements */
