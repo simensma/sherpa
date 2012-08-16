@@ -211,6 +211,12 @@ function validateContent(widget) {
             widget: "embed",
             code: code
         });
+    } else if(widget.attr('data-widget') == 'fact') {
+        var content = widget.find("div.content").html();
+        return JSON.stringify({
+            widget: "fact",
+            content: content
+        });
     }
 }
 
@@ -236,6 +242,8 @@ function editWidget() {
         $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
     }else if(widget.widget == 'carousel') {
         listImages();
+    } else if(widget.widget == 'fact') {
+        $("div.dialog.widget-edit[data-widget='fact'] div.content").html(widget.content);
     }
 }
 

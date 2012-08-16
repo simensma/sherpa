@@ -71,6 +71,8 @@ def parse_widget(widget):
             cache.set('widgets.blog' + widget['category'], data, 60 * 10)
     elif widget['widget'] == "embed":
         data = {'code': widget['code']}
+    elif widget['widget'] == "fact":
+        data = {'content': widget['content']}
 
     data.update({
         'json': json.dumps(widget),
