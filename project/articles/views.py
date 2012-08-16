@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.core.cache import cache
 
 from articles.models import Article
@@ -23,9 +23,12 @@ def show(request, article, text):
     context = cache.get('articles.%s' % article)
     if context == None:
         # Assume no segmentation for now
-        article = Article.objects.get(id=article)
-        variant = Variant.objects.get(article=article, segment=None)
-        version = Version.objects.get(variant=variant, active=True)
+        try:
+            article = Article.objects.get(id=article)
+            variant = Variant.objects.get(article=article, segment=None)
+            version = Version.objects.get(variant=variant, active=True)
+        except (Article.DoesNotExist, Variant.DoesNotExist, Version.DoesNotExist):
+            raise Http404
         version.load_preview()
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
