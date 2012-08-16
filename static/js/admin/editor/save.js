@@ -9,9 +9,10 @@ $(document).ready(function() {
 
     var lastSaveCount = 0;
     var updateSaveCountID;
+    var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        $("div.editor-header button.save").html('<i class="icon-heart"></i> Lagre nå (' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ')');
+        $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ')');
 
         if(lastSaveCount == NO_SAVE_WARNING) {
             $("div.no-save-warning").show();
@@ -94,19 +95,24 @@ $(document).ready(function() {
 
     $("div.editor-header button.save").click(save);
     $("div.editor-header button.preview").click(function() {
-        $(this).html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
-        $(this).attr('disabled', true);
+        var button = $(this);
+        button.html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
+        button.attr('disabled', true);
         var url = $(this).attr('data-href');
         save(function() {
             window.location = url;
+        }, function() {
+            button.html('<i class="icon-search"></i> Forhåndsvisning');
+            button.removeAttr('disabled');
         });
     });
 
     window.save = save;
-    function save(callback) {
+    function save(done, fail) {
         clearInterval(updateSaveCountID);
-        $("div.editor-header button.save").attr('disabled', true);
-        $("div.editor-header button.save").html('<i class="icon-heart"></i> Lagrer...');
+        var saveButton = $("div.editor-header button.save");
+        saveButton.attr('disabled', true);
+        saveButton.html('<i class="icon-heart"></i> Lagrer...');
         $("div.no-save-warning").hide();
 
         // Save content
@@ -116,15 +122,24 @@ $(document).ready(function() {
                   "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
         }).done(function(result) {
-            lastSaveCount = 0;
-            if(typeof(callback) == 'function') {
-                callback();
+            statusIcon = '<i class="icon-heart"></i>';
+            saveButton.removeClass('btn-danger').addClass('btn-success');
+            if(typeof(done) == 'function') {
+                done();
             }
         }).fail(function(result) {
-            // Todo
+            statusIcon = '<i class="icon-warning-sign"></i>';
+            alert("Whoops!\n\nVi klarte ikke å lagre innholdet. Er du sikker på at du har nettilgang?\n" +
+                "Du kan prøve igjen til det går.\n\n" +
+                "Hvis du lukker siden, vil du miste alle endringene siden sist du lagret.");
+            saveButton.removeClass('btn-success').addClass('btn-danger');
+            if(typeof(fail) == 'function') {
+                fail();
+            }
         }).always(function(result) {
+            lastSaveCount = 0;
             updateSaveCount();
-            $("div.editor-header button.save").removeAttr('disabled');
+            saveButton.removeAttr('disabled');
         });
 
         // Article-specific saving
