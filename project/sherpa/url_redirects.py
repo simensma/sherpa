@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^album/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/album/' % settings.OLD_SITE}),
     url(r'^files/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
     url(r'^share/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/share/' % settings.OLD_SITE}),
+    url(r'^turforslag/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://ut.no/tur/'}),
 
     # Old dynamic content that we want directly redirected
     url(r'^activity.php$', 'page.views.redirect', kwargs={'url': 'http://%s/activity.php' % settings.OLD_SITE}),
