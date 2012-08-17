@@ -59,30 +59,6 @@ INSTALLED_APPS = (
     'membership',
 )
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True
-        },
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': 'error.log'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
-}
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
