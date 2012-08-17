@@ -5,7 +5,7 @@
 from sherpa.local_settings import *
 
 ROOT_URLCONF = 'sherpa.urls'
-AUTH_PROFILE_MODULE='user.Profile'
+AUTH_PROFILE_MODULE = 'user.Profile'
 LOGIN_URL = '/minside/logg-inn/'
 
 AWS_ADS_PREFIX = 'ads/'
