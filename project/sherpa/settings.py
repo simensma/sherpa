@@ -2,6 +2,10 @@
 # Django settings for Sherpa.
 # See https://docs.djangoproject.com/en/1.4/ref/settings/
 
+# Add apps directory to sys.path
+import sys
+sys.path.insert(1, "%s/apps" % sys.path[0][:sys.path[0].rfind('/')])
+
 from sherpa.local_settings import *
 
 ROOT_URLCONF = 'sherpa.urls'
