@@ -1,9 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → Forhåndsvisning{% endblock %}
-{% block extra_js %}
-  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap-tab.js"></script>
-{% endblock %}
 
 {% block body %}
 

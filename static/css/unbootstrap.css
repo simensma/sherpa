@@ -1,0 +1,56 @@
+/* This file contains *general* changes to bootstrap styles that don't quite suit us,
+ * but that we don't want to modify directly in bootstrap.
+ *
+ * Note: Some specific elements may have bootstrap overrides declared in their respective files.
+ */
+
+/* Don't set margin-top to headers globally */
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+/* Negate border-radius for wells */
+div.well {
+  border-radius: none !important;
+}
+
+/* Override alert-boxes */
+
+div.alert {
+  font-family: "DTL Nobel";
+}
+
+div.alert-info {
+  border-color: rgb(180, 180, 180) !important;
+  background-color: rgb(220, 220, 220) !important;
+  color: rgb(51, 51, 51) !important;
+}
+
+div.alert-error {
+  color: black !important;
+  background-color: rgb(243, 192, 188) !important;
+}
+
+/* Override red button */
+
+.btn-danger {
+  background-color: rgb(216, 45, 32) !important;
+  background-image: none !important;
+}
+
+.btn-danger:hover {
+  background-color: rgb(246, 72, 62) !important;
+}
+
+/* Override radio input */
+
+input[type='radio'], input[type='checkbox'] {
+  border: none;
+}
+
+/* Enlarge popover title */
+
+.popover-title {
+  font-size: 18px;
+}
