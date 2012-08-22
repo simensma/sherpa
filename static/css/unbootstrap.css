@@ -4,6 +4,12 @@
  * Note: Some specific elements may have bootstrap overrides declared in their respective files.
  */
 
+/* Don't set margin-top to headers globally */
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
 /* Negate border-radius for wells */
 div.well {
   border-radius: none !important;
@@ -41,4 +47,10 @@ div.alert-error {
 
 input[type='radio'], input[type='checkbox'] {
   border: none;
+}
+
+/* Enlarge popover title */
+
+.popover-title {
+  font-size: 18px;
 }

@@ -74,11 +74,11 @@
           <thead>
             <tr>
               {% if multiple_main and not existing %}
-                <th data-popover data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_student }} år.">Hoved-<br>medlem</th>
+                <th data-popover data-trigger="hover" data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_student }} år.">Hoved-<br>medlem</th>
               {% endif %}
               <th>Personopplysninger</th>
               <th>Medlemstype</th>
-              <th data-popover data-title="Priser kan variere" data-content="Dette er prisene i din medlemsforening. Prisene kan variere mellom foreningene.">Pris</th>
+              <th data-popover data-trigger="hover" data-title="Priser kan variere" data-content="Dette er prisene i din medlemsforening. Prisene kan variere mellom foreningene.">Pris</th>
             </tr>
           </thead>
           <tbody>
