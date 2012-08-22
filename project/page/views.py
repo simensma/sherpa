@@ -209,6 +209,11 @@ def redirect(request, url, slug="", params={}, permanent=False):
     if permanent: return HttpResponsePermanentRedirect(uri)
     else:         return HttpResponseRedirect(uri)
 
+def redirect_index(request):
+    if request.GET.get('fo_id', '') == '311':
+        return HttpResponseRedirect(reverse('membership.views.benefits'))
+    raise Http404
+
 def page_not_found(request, template_name='404.html'):
     # Use a custom page_not_found view to add GET parameters
     param_str = request.GET.urlencode()
