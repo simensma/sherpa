@@ -68,7 +68,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "sherpa.context_processors.menus",
     "sherpa.context_processors.old_site",
-    "sherpa.context_processors.first_visit"
 )
 
 MIDDLEWARE_CLASSES = (
