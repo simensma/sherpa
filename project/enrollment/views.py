@@ -46,7 +46,7 @@ EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
 
 # Hardcoded ages
-AGE_SENIOR = 68
+AGE_SENIOR = 67
 AGE_MAIN = 27
 AGE_STUDENT = 19
 AGE_SCHOOL = 13
