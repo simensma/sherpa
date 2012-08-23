@@ -22,12 +22,14 @@ $(document).ready(function() {
     });
 
     $("form#registration input").focus(function() {
-        $(this).parents("div.control-group").removeClass('error warning');
+        $(this).parents("div.control-group").removeClass('error warning success');
     });
 
     $("form#registration input[name='name']").focusout(function() {
         if(!$(this).val().match(/.+\s.+/)) {
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
     });
 
@@ -35,9 +37,13 @@ $(document).ready(function() {
     $("form#registration input[name='phone']").focusout(function() {
         if($(this).val() != "" && ($(this).val().length < 8 || $(this).val().match(/[a-z]/i))) {
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
         if(phone_required && $(this).val() == '') {
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
     });
 
@@ -46,9 +52,13 @@ $(document).ready(function() {
         if($(this).val() != "" && !$(this).val().match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/)) {
             // Email provided, but invalid
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
         if(email_required && $(this).val() == "") {
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
     });
 
@@ -78,11 +88,15 @@ function validateDatepicker() {
         $("form#registration div.control-group.dob").addClass('error');
     } else if(Number(dob.substring(6)) < 1900) {
         $("form#registration div.control-group.dob").addClass('error');
+    } else {
+        $("form#registration div.control-group.dob").addClass('success');
     }
 }
 
 function validateGender() {
     if($("form#registration input[name='gender']:checked").length == 0) {
         $("form#registration div.control-group.gender").addClass('error');
+    } else {
+        $("form#registration div.control-group.gender").addClass('success');
     }
 }

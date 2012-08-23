@@ -76,7 +76,7 @@
         {% endfor %}
         </table>
         <label class="checkbox">
-          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" class="dialog-button" data-dialog=".dialog.conditions">betingelsene</a>
+          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" data-toggle="modal" data-target="#heisann">betingelsene</button>
         </label>
         <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right icon-white"></i></a></p>
       </div>
@@ -125,13 +125,15 @@
   </div>
 </div>
 
-{# Conditions dialog #}
-<div class="dialog conditions" data-width="90%">
-  <h1>Betingelser for medlemskap i Den Norske Turistforening</h1>
+{# Conditions modal #}
+<div class="modal conditions hide" id="heisann">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">X</button>
+    <h1>Betingelser for medlemskap i Den Norske Turistforening</h1>
+  </div>
+  <div class="modal-body">
   <ul>
-    <li>Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret og
-  gjelder fra 1. januar til 31. desember. Etter 1. oktober kan man kjøpe
-  medlemskap for påfølgende år. </li>
+    <li>Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret og gjelder fra 1. januar til 31. desember. Etter 1. oktober kan man kjøpe medlemskap for påfølgende år. </li>
     <li>Medlemskapet er personlig.</li>
     <li>Det er ingen angrerett på betalt medlemsskap.</li>
     <li>Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%) gis rett til honnørmedlemskap. Student/Ungdomsmedlemskap gjelder kun ungdom i alder 19 - 26 år.</li>
@@ -144,7 +146,9 @@
     Med forbehold om endringer i løpet av medlemsåret.
   </p>
 
-  <p><a href="javascript:undefined" class="btn btn-danger btn-large close-dialog"><i class="icon-remove"></i> Lukk vindu</a></p>
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
-
 {% endblock %}

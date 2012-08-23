@@ -16,14 +16,14 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 if(result.location != undefined) {
                     $("form#household input[name='city']").val(result.location);
-                    $("form#household div.control-group.zipcode").removeClass('error');
+                    $("form#household div.control-group.zipcode").removeClass('error').addClass('success');
                 } else if(result.error == "does_not_exist") {
                     $("form#household input[name='city']").val("Ukjent postnummer");
-                    $("form#household div.control-group.zipcode").addClass('error');
+                    $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
                 }
             }).fail(function(result) {
                 $("form#household input[name='city']").val("Teknisk feil");
-                $("form#household div.control-group.zipcode").addClass('error');
+                $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
             }).always(function(result) {
                 $("form#household img.zip.ajaxloader").hide();
             });
@@ -57,24 +57,42 @@ $(document).ready(function() {
     }
 
     $("form#household input").focus(function() {
-        $(this).parents("div.control-group").removeClass('error warning');
+        $(this).parents("div.control-group").removeClass('error warning success');
     });
 
     $("form#household input[name='address1']").focusout(function() {
         if($(this).val() == "") {
             $(this).parents("div.control-group").addClass('error');
+        } else {
+            $(this).parents("div.control-group").addClass('success');
         }
+    });
+
+    $("form#household input[name='address2'], form#household input[name='address3']").focusout(function() {
+        $(this).parents("div.control-group").addClass('success');
     });
 
     $("form#household input[name='zipcode']").focusout(function() {
         if($("form#household select[name='country'] option:selected").val() == 'NO') {
             if(!$(this).val().match(/\d{4}/)) {
-                $(this).parents("div.control-group").addClass('error');
+                $(this).parents("div.control-group").removeClass('success').addClass('error');
+            } else {
+                $(this).parents("div.control-group").removeClass('error').addClass('success');
             }
         } else {
-            if($(this).val() == '') {
-                $(this).parents("div.control-group").addClass('error');
+            if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='city']").val() == '') {
+                $(this).parents("div.control-group").removeClass('success').addClass('error');
+            } else {
+                $(this).parents("div.control-group").removeClass('error').addClass('success');
             }
+        }
+    });
+
+    $("form#household input[name='city']").focusout(function() {
+        if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='zipcode']").val() == '') {
+            $(this).parents("div.control-group").removeClass('success').addClass('error');
+        } else {
+            $(this).parents("div.control-group").removeClass('error').addClass('success');
         }
     });
 
@@ -99,8 +117,7 @@ $(document).ready(function() {
             country: $("form#household select[name='country'] option:selected").val()
         }
         $("div.existing-result span.result").hide();
-        $("div.existing-result span.result").removeClass('success');
-        $("div.existing-result span.result").removeClass('error');
+        $("div.existing-result span.result").removeClass('success error');
         $.ajax({
             url: '/innmelding/eksisterende/',
             data: 'data=' + encodeURIComponent(JSON.stringify(data))

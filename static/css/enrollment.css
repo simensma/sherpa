@@ -21,21 +21,28 @@ form#registration label.gender {
   margin-bottom: 15px;
 }
 
+/* Override bootstrap 'success' colors */
+
+.control-group.success > label {
+  color: rgb(29, 235, 32);
+}
+
+.control-group.success > input, .control-group.success > input:focus {
+  border-color: rgb(29, 235, 32);
+}
+
 /* Negate defaults and JQuery-UI design */
 
-div.dialog.conditions h1 {
+div.modal.conditions h1 {
   border-bottom: none;
-  font-size: 26px;
+  font-size: 22px;
+  margin-right: 25px;
+  margin-bottom: 0;
 }
 
-div.dialog.conditions li, div.dialog.conditions p {
+div.modal.conditions li, div.modal.conditions p {
   font-family: georgia, times, serif !important;
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-}
-
-div.dialog.conditions p a.btn-danger {
-  color: white;
+  font-size: 14px !important;
 }
 
 form#household select {
@@ -119,6 +126,7 @@ table.main-member tr.main {
 table.prices {
   margin-top: 25px;
   margin-bottom: 0 !important;
+  font-family: "DTL Nobel" !important;
 }
 
 table.prices tbody td {
@@ -234,6 +242,12 @@ p.receipt-error {
 
 p.association-info {
   margin-bottom: 30px;
+}
+
+/* Payment */
+
+form#payment {
+  font-family: "DTL Nobel" !important;
 }
 
 /* Result */

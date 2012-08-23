@@ -12,13 +12,23 @@
 {% block body %}
 
 {% if invalid_zipcode or unregistered_zipcode %}
-  <div class="row">
-    <div class="offset2 span8">
-      <div class="alert alert-danger">
-        <a class="close">x</a>
-        <strong>Dette vet vi ikke hvor er.</strong><br>
-        Vi kjenner dessverre ikke igjen postnummer <strong>{{ invalid_zipcode }}{{ unregistered_zipcode }}</strong>. Sjekk at du har skrevet riktig eller ta kontakt med DNTs medlemsservice.
-      </div>
+  <script>
+    $(document).ready(function() {
+      $("div.invalid-zipcode").modal();
+    });
+  </script>
+  <div class="modal invalid-zipcode hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Dette vet vi ikke hvor er.</h3>
+    </div>
+    <div class="modal-body">
+        <p>
+          Vi kjenner dessverre ikke igjen postnummer <strong>{{ invalid_zipcode }}{{ unregistered_zipcode }}</strong>. Sjekk at du har skrevet riktig eller ta kontakt med DNTs medlemsservice.
+        </p>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
     </div>
   </div>
 {% endif %}
