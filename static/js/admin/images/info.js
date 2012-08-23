@@ -32,7 +32,7 @@ $(document).ready(function() {
             $(this).val("");
         }
     }
-    
+
     // Enable autocomplete, parse tags on focus out, and when user presses space
     // and the last character is a space
     $("div.image-details input[name='tags']").autocomplete(autocompleteobject).keydown(keydown).keyup(keyup).focusout(focusout);
