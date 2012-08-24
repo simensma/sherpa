@@ -1,8 +1,37 @@
 $(document).ready(function() {
 
+    var tagger = new Tagger($("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags']"), function(tag) {
+        // New tag
+        var tag = $('<div class="tag">' + tag + ' <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a></div>');
+        var a = tag.find('a');
+        a.hover(function() { $(this).children("img").attr('src', '/static/img/so/close-hover.png'); },
+                function() { $(this).children("img").attr('src', '/static/img/so/close-default.png'); });
+        a.click(function() {
+            tagger.removeTag($(this).parent().text().trim());
+            $(this).parent().remove();
+        });
+        $("div#tags").append(tag);
+    }, function(tag) {
+        // Existing tag
+        $("div#tags div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
+    });
+
     $("div#dialog-image-fast-upload form").submit(function(e) {
         $("div#dialog-image-fast-upload div.uploading").show();
-        serializeTags();
+        var tags = JSON.stringify(tagger.tags);
+        $("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags-serialized']").val(tags);
         $("div#dialog-image-fast-upload input[type='submit']").attr('disabled', 'disabled');
         $("div#dialog-image-fast-upload input[type='reset']").attr('disabled', 'disabled');
     });
@@ -16,7 +45,6 @@ $(document).ready(function() {
 var uploadCompleteCallback;
 var uploadCancelled = false;
 
-//the tag logic is located in admin/images/info.js
 function uploadComplete(status, url){
     if(!uploadCancelled){
         if(status === "no_files"){

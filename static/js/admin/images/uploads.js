@@ -3,6 +3,34 @@ var uploadReady = false;
 
 $(document).ready(function() {
 
+    var tagger = new Tagger($("div.image-details input[name='tags']"), function(tag) {
+        // New tag
+        var tag = $('<div class="tag">' + tag + ' <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a></div>');
+        var a = tag.find('a');
+        a.hover(function() { $(this).children("img").attr('src', '/static/img/so/close-hover.png'); },
+                function() { $(this).children("img").attr('src', '/static/img/so/close-default.png'); });
+        a.click(function() {
+            tagger.removeTag($(this).parent().text().trim());
+            $(this).parent().remove();
+        });
+        $("div#tags").append(tag);
+    }, function(tag) {
+        // Existing tag
+        $("div#tags div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
+    });
+
     $("div.uploading").hide();
     $("div.image-details").hide();
     $("div.image-details p.waiting").hide();
@@ -18,7 +46,7 @@ $(document).ready(function() {
 
     $("div.image-details form").submit(function(e) {
         if(uploadReady && userReady) {
-            serializeTags();
+            $("div.image-details input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
         } else {
             e.preventDefault();
         }
