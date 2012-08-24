@@ -6,15 +6,8 @@ var Tagger = function(el, newTag, existingTag) {
     this.tags = [];
     this.autocomplete = false;
 
-    this.el.keydown(function(e) {
-        // Add tags when user presses enter
-        if(e.which == 13) {
-            e.preventDefault();
-            self.parseTags();
-            self.el.val("");
-        }
-    }).keyup(function(e) {
-        // Add tags on keyup (space and paste)
+    this.el.keyup(function(e) {
+        // Add tags whenever the cursor isn't on the last word
         var val = self.el.val();
         if(val.length > 1 && val[val.length-1] == ' ') {
             self.parseTags();
@@ -26,15 +19,16 @@ var Tagger = function(el, newTag, existingTag) {
             self.parseTags();
             self.el.val("");
         }
-    }).autocomplete({
-        source: "/sherpa/bildearkiv/tag/filter/",
-        open: function() { this.autocomplete = true; },
-        close: function() { this.autocomplete = false; },
-        select: function(event, ui) {
-            event.preventDefault();
-            self.el.val("");
-            tags.push(ui.item.value);
-        }
+    }).typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/tag/filter/',
+                data: 'term=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        },
     });
 }
 
