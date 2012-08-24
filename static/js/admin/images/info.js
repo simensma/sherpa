@@ -72,16 +72,12 @@ function addTags(tags) {
         if(!cont) { continue; }
 
         // Now create the tag
-        var el = $(document.createElement("div"));
-        var a = $(document.createElement("a"));
-        var img = $(document.createElement("img"));
-        img.attr('src', '/static/img/so/close-default.png');
+        var tag = $('<div class="tag">' + tags[i] + ' <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a></div>');
+        var a = tag.find('a');
         a.hover(function() { $(this).children("img").attr('src', '/static/img/so/close-hover.png'); },
                 function() { $(this).children("img").attr('src', '/static/img/so/close-default.png'); });
         a.click(function() { $(this).parent().remove(); });
-        a.append(img);
-        el.addClass('tag').text(tags[i]).append(a);
-        $("div#tags").append(el);
+        $("div#tags").append(tag);
     }
 }
 
