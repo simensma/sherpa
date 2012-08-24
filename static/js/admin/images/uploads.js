@@ -1,5 +1,3 @@
-var tags; // will be overridden by template
-
 $(document).ready(function() {
 
     $("div.uploading").hide();
