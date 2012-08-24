@@ -273,3 +273,9 @@ td.published-past {
 td.unpublished {
   color: red;
 }
+
+/* Ensure typeahead stays on top */
+
+ul.typeahead {
+  z-index: 20000;
+}
