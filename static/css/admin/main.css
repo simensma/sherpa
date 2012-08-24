@@ -155,7 +155,7 @@ div#image-uploader label {
   font-weight: bold;
 }
 
-div#tags div.tag {
+div.tag-box div.tag {
   float: left;
   color: #3e6d8e;
   background: #e0eaf1;
@@ -165,7 +165,7 @@ div#tags div.tag {
   padding: 3px 4px;
 }
 
-div#tags div.tag a {
+div.tag-box div.tag a {
   cursor: pointer;
   width: 12px;
   height: 12px;

@@ -13,10 +13,10 @@ $(document).ready(function() {
             tagger.removeTag($(this).parent().text().trim());
             $(this).parent().remove();
         });
-        $("div#tags").append(tag);
+        $("div.tag-box").append(tag);
     }, function(tag) {
         // Existing tag
-        $("div#tags div.tag").each(function() {
+        $("div.tag-box div.tag").each(function() {
             if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
                 var item = $(this);
                 var c = item.css('color');

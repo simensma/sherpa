@@ -10,10 +10,10 @@ $(document).ready(function() {
             tagger.removeTag($(this).parent().text().trim());
             $(this).parent().remove();
         });
-        $("div#tags").append(tag);
+        $("div.tag-box").append(tag);
     }, function(tag) {
         // Existing tag
-        $("div#tags div.tag").each(function() {
+        $("div.tag-box div.tag").each(function() {
             if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
                 var item = $(this);
                 var c = item.css('color');
@@ -80,7 +80,7 @@ function openImageUpload(callback){
 function resetImageUpload(){
     $("div#dialog-image-fast-upload input[type='reset']").click();
     $("div#dialog-image-fast-upload input[name='tags-serialized']").val("");
-    $("div#dialog-image-fast-upload div#tags").empty();
+    $("div#dialog-image-fast-upload div.tag-box").empty();
 
     $("div#dialog-image-fast-upload div.uploading").hide();
     $("div#dialog-image-fast-upload div.upload-failed").hide();
