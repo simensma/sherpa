@@ -40,8 +40,6 @@ $(document).ready(function() {
 });
 
 var autocomplete = false;
-var userReady = false;
-var uploadReady = false;
 
 /* Attaches the given tag names to the DOM */
 function addTags(tags) {

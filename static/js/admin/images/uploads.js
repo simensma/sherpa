@@ -1,3 +1,6 @@
+var userReady = false;
+var uploadReady = false;
+
 $(document).ready(function() {
 
     $("div.uploading").hide();
