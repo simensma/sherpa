@@ -1,7 +1,22 @@
 <div class="dialog widget-edit" data-widget="articles" data-title="Artikkel-liste-widget" data-width="auto">
   <p>
+    <label>Endre tittel:</label>
+    <input type="text" name="title" class="input-large" value="Siste nyheter"><br>
+
     <label>Antall nyheter:</label>
     <input type="text" name="count" class="input-small"><br>
+
+    <label><input type="checkbox" name="set-tag-link"> Link til nøkkelord:</label>
+    <input type="text" name="tag-link" class="input-large" disabled><br>
+
+    <label><input type="checkbox" name="enable-tags"> Vis kun artikler med følgende nøkkelord:</label>
+    <input type="text" name="tags" class="input-large" disabled><br>
+
+    <div class="tag-box">
+    </div>
+
+    <div style="clear: both;"></div>
+
     <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
     <button class="btn btn-danger remove"><i class="icon-warning-sign"></i> Slett widget</button>
   </p>

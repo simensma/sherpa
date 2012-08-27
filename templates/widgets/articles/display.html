@@ -1,4 +1,4 @@
-<h1>Siste nyheter</h1>
+<h1>{{ widget.title }}</h1>
 
 {% for version in widget.versions %}
   <h3>
@@ -23,5 +23,9 @@
 {% endfor %}
 
 <p class="more">
-  <a href="{% url articles.views.index %}">Se eldre nyheter</a>
+  {% if widget.tag_link %}
+    <a href="{% url articles.views.index %}?tag={{ widget.tag_link }}">Se flere nyheter om {{ widget.tag_link }}</a>
+  {% else %}
+    <a href="{% url articles.views.index %}">Se eldre nyheter</a>
+  {% endif %}
 </p>
