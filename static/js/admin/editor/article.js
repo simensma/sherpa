@@ -28,7 +28,7 @@ $(document).ready(function() {
     // Create the tagger object, make it globally accessible (save.js will use this)
     window.tagger = new Tagger($("div.editor-header div.tags input[name='tags']"), function(tag) {
         // New tag added
-        var tag = $('<div class="tag">' + tag + ' <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a></div>');
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
         $("div.tag-box").append(tag);
     }, function(tag) {
         // Existing tag

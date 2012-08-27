@@ -79,7 +79,8 @@
               <div class="tag-box">
                 {% for tag in version.variant.article.tags.all %}
                   <div class="tag">
-                    {{ tag.name }} <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                    <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                    {{ tag.name }}
                   </div>
                 {% endfor %}
               </div>

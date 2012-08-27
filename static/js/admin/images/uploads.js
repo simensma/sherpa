@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     var tagger = new Tagger($("div.image-details input[name='tags']"), function(tag) {
         // New tag
-        var tag = $('<div class="tag">' + tag + ' <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a></div>');
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
         $("div.tag-box").append(tag);
     }, function(tag) {
         // Existing tag
