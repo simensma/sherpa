@@ -8,7 +8,13 @@
 <div id="article-list">
   <div class="row">
     <div class="span12">
-      <h1>Artikler</h1>
+      <h1>Artikler{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
+
+      {% if tag %}
+        <p>
+          Viser artikler relatert til "<em>{{ tag }}</em>". <a href="{% url articles.views.index %}">Vis alle artikler</a>.
+        </p>
+      {% endif %}
 
       {% for version in versions %}
         <div class="item">

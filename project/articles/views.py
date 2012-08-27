@@ -9,14 +9,22 @@ import datetime
 
 import json
 
+TAG_SEARCH_LENGTH = 3
+
 def index(request):
     versions = Version.objects.filter(
         variant__article__isnull=False, variant__segment__isnull=True,
         variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
-        ).order_by('-variant__article__pub_date')[:20]
+        ).order_by('-variant__article__pub_date')
+
+    tags = request.GET.getlist('tag')
+    if 'tag' in request.GET and len(request.GET['tag']) >= TAG_SEARCH_LENGTH:
+        versions = versions.filter(tags__name__icontains=request.GET['tag'])
+
+    versions = versions[:20]
     for version in versions:
         version.load_preview()
-    context = {'versions': versions}
+    context = {'versions': versions, 'tag': request.GET.get('tag', '')}
     return render(request, "page/articles-list.html", context)
 
 def show(request, article, text):
