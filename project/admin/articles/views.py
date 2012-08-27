@@ -132,8 +132,8 @@ def update_publishers(request, article):
     return HttpResponse()
 
 @login_required
-def update_tags(request, article):
-    article = Article.objects.get(id=article)
+def update_tags(request, version):
+    version = Version.objects.get(id=version)
     tag_objects = []
     for tag in json.loads(request.POST['tags']):
         try:
@@ -142,7 +142,7 @@ def update_tags(request, article):
             tag_obj = Tag(name=tag)
             tag_obj.save()
         tag_objects.append(tag_obj)
-    article.tags = tag_objects
+    version.tags = tag_objects
     return HttpResponse()
 
 def create_template(template, version, title):
