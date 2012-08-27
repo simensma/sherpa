@@ -73,9 +73,11 @@
           <tr>
             <td style="vertical-align: top">
               Nøkkelord:
+              <input type="text" name="tags">
             </td>
+          </tr>
+          <tr>
             <td>
-              <input type="text" name="tags"><br>
               <div class="tag-box">
                 {% for tag in version.variant.article.tags.all %}
                   <div class="tag">
@@ -85,6 +87,7 @@
                 {% endfor %}
               </div>
             </td>
+          </tr>
         </table>
       </div>
 
