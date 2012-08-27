@@ -61,7 +61,7 @@ $(document).ready(function() {
     $(".delete-dialog button").click(function() {
         $(".delete-dialog").dialog('close');
     });
-    $(".delete-dialog button.perform-delete").click(function() {
+    $(".delete-dialog form").submit(function() {
         var albums = [];
         var images = [];
         $("#archive-gallery li.album.selected").each(function() {
@@ -70,8 +70,8 @@ $(document).ready(function() {
         $("#archive-gallery li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
-        $(this).siblings("input[name='albums']").val(JSON.stringify(albums));
-        $(this).siblings("input[name='images']").val(JSON.stringify(images));
+        $(this).find("input[name='albums']").val(JSON.stringify(albums));
+        $(this).find("input[name='images']").val(JSON.stringify(images));
     });
 
 });
