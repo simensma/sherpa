@@ -10,7 +10,7 @@ $(document).ready(function() {
             interval:false
         });
     });
-    
+
     // Save any widget
     $("div.dialog.widget-edit button.save").click(function() {
         var content = validateContent($(this).parents("div.dialog.widget-edit"));
@@ -51,7 +51,7 @@ $(document).ready(function() {
                 currentIndex++;
             }
         }else{
-            currentIndex++; 
+            currentIndex++;
         }
         displayCurrentImage();
     });
@@ -269,7 +269,7 @@ function displayCurrentImage(){
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
-    
+
     if(imageList[currentIndex].url.trim().length < 1){
         var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
