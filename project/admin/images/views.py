@@ -152,7 +152,7 @@ def update_images(request):
 
 @login_required
 def filter_tags(request):
-    tag_objects = Tag.objects.filter(name__istartswith=request.POST['term'])
+    tag_objects = Tag.objects.filter(name__icontains=request.POST['term'])
     tags = []
     for tag in tag_objects:
         tags.append(tag.name)

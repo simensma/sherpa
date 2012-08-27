@@ -4,6 +4,7 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
@@ -65,6 +66,29 @@
             {% endfor %}
           </select>
         </p>
+      </div>
+
+      <div class="tags">
+        <table>
+          <tr>
+            <td style="vertical-align: top">
+              Nøkkelord:
+              <input type="text" name="tags">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tag-box">
+                {% for tag in version.tags.all %}
+                  <div class="tag">
+                    <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                    {{ tag.name }}
+                  </div>
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <div style="clear: both;"></div>
