@@ -6,6 +6,16 @@ var Tagger = function(el, newTag, existingTag) {
     this.tags = [];
     this.autocomplete = false;
 
+    this.el.on('change', function(e) {
+        // Sorry, this is kind of ugly. 'change' is fired by both jquery and bootstrap.
+        // To discriminate, we know that jquerys event won't have the 'which' property
+        // (even though it is undefined).
+        if(!e.hasOwnProperty('which')) {
+            self.parseTags();
+            self.el.val("");
+        }
+    });
+
     this.el.keyup(function(e) {
         // Add tags whenever the cursor isn't on the last word
         var val = self.el.val();
@@ -14,8 +24,14 @@ var Tagger = function(el, newTag, existingTag) {
             self.el.val("");
         }
     }).focusout(function(e) {
-        // Add tags when losing focus, but not if autocomplete is active
-        if(!this.autocomplete) {
+        // Add tags when losing focus, but not if typeahead is active
+        var typeahead = false;
+        $("ul.typeahead").each(function() {
+            if($(this).css('display') != 'none') {
+                typeahead = true;
+            }
+        });
+        if(!typeahead) {
             self.parseTags();
             self.el.val("");
         }
@@ -28,7 +44,7 @@ var Tagger = function(el, newTag, existingTag) {
             }).done(function(result) {
                 process(JSON.parse(result));
             });
-        },
+        }
     });
 }
 
