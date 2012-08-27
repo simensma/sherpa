@@ -65,6 +65,7 @@ class Version(models.Model):
     version = models.IntegerField()
     publisher = models.ForeignKey('user.Profile')
     active = models.BooleanField()
+    tags = models.ManyToManyField('admin.Tag', related_name='versions')
     title = None
     lede = None
     thumbnail = None
