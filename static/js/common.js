@@ -26,6 +26,10 @@ $(document).ready(function() {
             // Don't add to anchors with more than text nodes as children
             return $(this);
         }
+        if($(this).parents("article[data-id]").length > 0) {
+            // Don't add to anchors when editing article
+            return $(this);
+        }
         if($(this).attr('href') === undefined || $(this).attr('href') === false) {
             return $(this);
         }
