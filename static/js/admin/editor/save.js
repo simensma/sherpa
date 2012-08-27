@@ -28,7 +28,7 @@ $(document).ready(function() {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
             };
-            rows = rows.concat([row]);
+            rows.push(row);
         });
         return rows;
     }
@@ -40,7 +40,7 @@ $(document).ready(function() {
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
             };
-            columns = columns.concat([column]);
+            columns.push(column);
         });
         return columns;
     }
@@ -58,7 +58,7 @@ $(document).ready(function() {
                 order: $(this).prevAll().length,
                 content: html
             };
-            contents = contents.concat([content]);
+            contents.push(content);
         });
         $("article div.image").each(function() {
             var anchor;
@@ -83,7 +83,7 @@ $(document).ready(function() {
                 order: $(this).prevAll().length,
                 content: JSON.stringify(image)
             };
-            contents = contents.concat([content]);
+            contents.push(content);
         });
         return contents;
     }
@@ -146,7 +146,7 @@ $(document).ready(function() {
                 return;
             }
             selected.each(function() {
-                authors = authors.concat([$(this).val()]);
+                authors.push($(this).val());
             });
             $.ajaxQueue({
                 url: '/sherpa/artikler/forfattere/' + $("div.editor-header.article").attr('data-id') + '/',

@@ -87,7 +87,7 @@ function orderListByAge() {
     var jrows = $("table.prices tr[data-index]");
     main.detach();
     jrows.each(function() {
-        rows = rows.concat([$(this)]);
+        rows.push($(this));
     }).detach();
     rows.sort(function(a, b) {
         return a.attr('data-age') - b.attr('data-age');

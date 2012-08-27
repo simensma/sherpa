@@ -8,7 +8,7 @@ $(document).ready(function() {
     $(".album-details form").submit(function() {
         var albums = [];
         $("#archive-gallery li.album.selected").each(function() {
-            albums = albums.concat([$(this).attr('data-id')]);
+            albums.push($(this).attr('data-id'));
         });
         $(this).children("input[name='albums']").val(JSON.stringify(albums));
     });
@@ -16,7 +16,7 @@ $(document).ready(function() {
     $(".image-details form").submit(function() {
         var images = [];
         $("#archive-gallery li.image.selected").each(function() {
-            images = images.concat([$(this).attr('data-id')]);
+            images.push($(this).attr('data-id'));
         });
         $(this).children("input[name='ids']").val(JSON.stringify(images));
         serializeTags();
@@ -65,10 +65,10 @@ $(document).ready(function() {
         var albums = [];
         var images = [];
         $("#archive-gallery li.album.selected").each(function() {
-            albums = albums.concat([$(this).attr('data-id')]);
+            albums.push($(this).attr('data-id'));
         });
         $("#archive-gallery li.image.selected").each(function() {
-            images = images.concat([$(this).attr('data-id')]);
+            images.push($(this).attr('data-id'));
         });
         $(this).siblings("input[name='albums']").val(JSON.stringify(albums));
         $(this).siblings("input[name='images']").val(JSON.stringify(images));

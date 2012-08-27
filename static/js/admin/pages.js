@@ -196,10 +196,10 @@ $(document).ready(function() {
             var i = 0;
             var items = [];
             $("nav#menus a.edit").each(function() {
-                items = items.concat([{
+                items.push({
                     "id": $(this).attr('data-id'),
                     "order": i
-                }]);
+                });
                 i++;
             });
             $.ajax({
