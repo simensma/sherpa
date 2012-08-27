@@ -18,10 +18,18 @@ var Tagger = function(el, newTag, existingTag) {
 
     this.el.keyup(function(e) {
         // Add tags whenever the cursor isn't on the last word
-        var val = self.el.val();
-        if(val.length > 1 && val[val.length-1] == ' ') {
-            self.parseTags();
-            self.el.val("");
+        var typeahead = false;
+        $("ul.typeahead").each(function() {
+            if($(this).css('display') != 'none') {
+                typeahead = true;
+            }
+        });
+        if(!typeahead) {
+            var val = self.el.val();
+            if(val.length > 1 && val[val.length-1] == ' ' || e.which == 13) { // Key: Enter
+                self.parseTags();
+                self.el.val("");
+            }
         }
     }).focusout(function(e) {
         // Add tags when losing focus, but not if typeahead is active
