@@ -165,13 +165,9 @@ $(document).ready(function() {
             });
 
             // Save tags
-            var tags = [];
-            $("div.editor-header div.tags div.tag").each(function() {
-                tags.push($(this).text().trim());
-            });
             $.ajaxQueue({
                 url: '/sherpa/artikler/nokkelord/' + $("article").attr('data-id') + '/',
-                data: 'tags=' + encodeURIComponent(JSON.stringify(tags))
+                data: 'tags=' + encodeURIComponent(JSON.stringify(tagger.tags))
             });
         }
     }
