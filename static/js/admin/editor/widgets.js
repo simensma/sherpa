@@ -2,6 +2,8 @@
 /* Editing widgets */
 $(document).ready(function() {
 
+    /* Carousel */
+
     $("div.dialog.widget-edit[data-widget='carousel'] div#ratio-radio").append(getRatioRadioButtons());
 
     //carousel, stop spinning
@@ -10,7 +12,7 @@ $(document).ready(function() {
             interval:false
         });
     });
-    
+
     // Save any widget
     $("div.dialog.widget-edit button.save").click(function() {
         var content = validateContent($(this).parents("div.dialog.widget-edit"));
@@ -51,7 +53,7 @@ $(document).ready(function() {
                 currentIndex++;
             }
         }else{
-            currentIndex++; 
+            currentIndex++;
         }
         displayCurrentImage();
     });
@@ -110,6 +112,74 @@ $(document).ready(function() {
         imageList[currentIndex].ratio = $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']:checked").val();
         setCarouselRatio(true);
     });
+
+    /* Articles */
+
+    // Enable/disable
+    var articles = $("div.dialog.widget-edit[data-widget='articles']");
+    articles.find("input[name='tag-link']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/tag/filter/',
+                data: 'term=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
+    articles.find("input[name='set-tag-link']").change(function() {
+        if($(this).is(':checked')) {
+            articles.find("input[name='tag-link']").removeAttr('disabled');
+        } else {
+            articles.find("input[name='tag-link']").attr('disabled', true).val("");
+        }
+    });
+
+    articles.find("input[name='enable-tags']").change(function() {
+        if($(this).is(':checked')) {
+            articles.find("input[name='tags']").removeAttr('disabled');
+        } else {
+            articles.find("input[name='tags']").attr('disabled', true).val("");
+            articles.find("div.tag-box").empty();
+        }
+    });
+
+    // Create the tagger object, make it globally accessible
+    window.article_widget_tagger = new Tagger(articles.find("input[name='tags']"), function(tag) {
+        // New tag added
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        articles.find("div.tag-box").append(tag);
+    }, function(tag) {
+        // Existing tag
+        articles.find("div.tag-box div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
+    });
+
+    // Add events to the tag remover button
+    $(document).on('mouseover', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
+        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
+    });
+    $(document).on('mouseout', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
+        $(this).children("img").attr('src', '/static/img/so/close-default.png');
+    });
+    $(document).on('click', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
+        article_widget_tagger.removeTag($(this).parent().text().trim());
+        $(this).parent().remove();
+    });
+
+
 });
 
 function saveWidget(content){
@@ -181,8 +251,22 @@ function validateContent(widget) {
             alert("Du må vise minst én artikkel!");
             return false;
         }
+        var title = widget.find("input[name='title']").val();
+        if(widget.find("input[name='set-tag-link']").is(':checked')) {
+            var tag_link = widget.find("input[name='tag-link']").val();
+        } else {
+            var tag_link = null;
+        }
+        if(widget.find("input[name='enable-tags']:checked").length > 0) {
+            var tags = article_widget_tagger.tags;
+        } else {
+            var tags = [];
+        }
         return JSON.stringify({
             widget: "articles",
+            title: title,
+            tag_link: tag_link,
+            tags: tags,
             count: count
         });
     } else if(widget.attr('data-widget') == 'blog') {
@@ -234,7 +318,27 @@ function editWidget() {
         $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
         $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
     } else if(widget.widget == 'articles') {
-        $("div.dialog.widget-edit[data-widget='articles'] input[name='count']").val(widget.count);
+        var articles = $("div.dialog.widget-edit[data-widget='articles']");
+        articles.find("input[name='title']").val(widget.title);
+        articles.find("input[name='count']").val(widget.count);
+        if(widget.tag_link == null) {
+            articles.find("input[name='set-tag-link'").removeAttr('checked');
+            articles.find("input[name='tag-link']").attr('disabled', true).val("");
+        }
+        article_widget_tagger.tags = widget.tags;
+        var box = articles.find("div.tag-box");
+        box.empty();
+        for(var i=0; i<widget.tags.length; i++) {
+            var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + widget.tags[i] + '</div>');
+            box.append(tag);
+        }
+        if(widget.tags.length > 0) {
+            articles.find("input[name='enable-tags']").attr('checked', true);
+            articles.find("input[name='tags']").removeAttr('disabled');
+        } else {
+            articles.find("input[name='enable-tags']").removeAttr('checked');
+            articles.find("input[name='tags']").attr('disabled', true);
+        }
     } else if(widget.widget == 'blog') {
         $("div.dialog.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
         $("div.dialog.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
@@ -269,7 +373,7 @@ function displayCurrentImage(){
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
     $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
-    
+
     if(imageList[currentIndex].url.trim().length < 1){
         var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
         $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);

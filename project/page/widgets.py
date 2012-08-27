@@ -22,10 +22,15 @@ def parse_widget(widget):
         versions = Version.objects.filter(
             variant__article__isnull=False, variant__segment__isnull=True,
             variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
-            ).order_by('-variant__article__pub_date')[:widget['count']]
+            ).order_by('-variant__article__pub_date')
+
+        for tag in widget['tags']:
+            versions = versions.filter(tags__name__icontains=tag)
+
+        versions = versions[:widget['count']]
         for version in versions:
             version.load_preview()
-        data = {'versions': versions}
+        data = {'title': widget['title'], 'tag_link': widget['tag_link'], 'versions': versions}
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
         data = cache.get('widgets.blog' + widget['category'])
