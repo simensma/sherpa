@@ -12,6 +12,7 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 from user.models import Profile
+from admin.models import Tag
 
 import urllib
 
@@ -128,6 +129,20 @@ def update_publishers(request, article):
     publisher_list = json.loads(request.POST['authors'])
     publishers = Profile.objects.filter(id__in=publisher_list)
     article.publishers = publishers
+    return HttpResponse()
+
+@login_required
+def update_tags(request, article):
+    article = Article.objects.get(id=article)
+    tag_objects = []
+    for tag in json.loads(request.POST['tags']):
+        try:
+            tag_obj = Tag.objects.get(name__iexact=tag)
+        except Tag.DoesNotExist:
+            tag_obj = Tag(name=tag)
+            tag_obj.save()
+        tag_objects.append(tag_obj)
+    article.tags = tag_objects
     return HttpResponse()
 
 def create_template(template, version, title):
