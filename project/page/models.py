@@ -64,6 +64,7 @@ class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     publisher = models.ForeignKey('user.Profile')
+    publishers = models.ManyToManyField('user.Profile', related_name='versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('admin.Tag', related_name='versions')
     title = None
