@@ -49,7 +49,6 @@ class Variant(models.Model):
     priority = models.IntegerField()
     # probability
     owner = models.ForeignKey('user.Profile', related_name='+')
-    publisher = models.ForeignKey('user.Profile')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better
@@ -65,7 +64,6 @@ class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     owner = models.ForeignKey('user.Profile', related_name='+')
-    publisher = models.ForeignKey('user.Profile')
     publishers = models.ManyToManyField('user.Profile', related_name='versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('admin.Tag', related_name='versions')
