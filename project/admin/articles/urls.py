@@ -8,7 +8,7 @@ urlpatterns = patterns('admin.articles.views',
     url(r'^bilde/(?P<article>\d+)/slett/$', 'image_delete'),
     url(r'^bilde/(?P<article>\d+)/skjul/$', 'image_hide'),
     url(r'^editor/(?P<version>\d+)/$', 'edit_version'),
-    url(r'^forfattere/(?P<article>\d+)/$', 'update_publishers'),
+    url(r'^forfattere/(?P<version>\d+)/$', 'update_publishers'),
     # Wanted to use 'ø' here, but ajax in IE8 didn't work with that ;_;
     url(r'^nokkelord/(?P<version>\d+)/$', 'update_tags'),
     url(ur'^forhåndsvisning/(?P<version>\d+)/$', 'preview'),

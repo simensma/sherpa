@@ -64,7 +64,7 @@
   {% endif %}
   </td>
   <td>
-    {% for publisher in version.variant.article.publishers.all %}
+    {% for publisher in version.publishers.all %}
       {{ publisher.user.get_full_name }}
       {% if not forloop.last %}<br>{% endif %}
     {% endfor %}

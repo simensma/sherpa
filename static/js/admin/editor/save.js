@@ -149,7 +149,7 @@ $(document).ready(function() {
                 authors.push($(this).val());
             });
             $.ajaxQueue({
-                url: '/sherpa/artikler/forfattere/' + $("div.editor-header.article").attr('data-id') + '/',
+                url: '/sherpa/artikler/forfattere/' + $("article").attr('data-id') + '/',
                 data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
             }).always(function() {
                 $("button.save-authors").removeAttr('disabled');
