@@ -87,36 +87,36 @@
 
     <form id="registration" class="border" action="{% url enrollment.views.registration %}" method="post">
       {% csrf_token %}
-      {% if user.index >= 0 %}
-        <input type="hidden" name="user" value="{{ user.index }}">
+      {% if person.index >= 0 %}
+        <input type="hidden" name="user" value="{{ person.index }}">
       {% endif %}
       <div class="control-group name">
         <label>Fullt navn <span class="asterisk red">*</span></label>
-        <input type="text" class="input-large" name="name" value="{{ user.name }}">
+        <input type="text" class="input-large" name="name" value="{{ person.name }}">
       </div>
       <div class="control-group dob">
         <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
-        <input type="text" class="input-medium dob" name="dob" value="{{ user.dob|date:"d.m.Y" }}">
+        <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
       </div>
       <div class="control-group gender">
         <label> Kjønn <span class="asterisk red">*</span></label>
         <label class="radio gender">
-          <input type="radio" name="gender" value="f"{% if user.gender == 'f' %} checked{% endif %}> Kvinne
+          <input type="radio" name="gender" value="f"{% if person.gender == 'f' %} checked{% endif %}> Kvinne
         </label>
         <label class="radio gender">
-          <input type="radio" name="gender" value="m"{% if user.gender == 'm' %} checked{% endif %}> Mann
+          <input type="radio" name="gender" value="m"{% if person.gender == 'm' %} checked{% endif %}> Mann
         </label>
       </div>
       <div style="clear: both;"></div>
       <div class="control-group phone">
         <label> Mobiltelefon {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-        <input type="text" class="input-medium" name="phone" value="{{ user.phone }}">
+        <input type="text" class="input-medium" name="phone" value="{{ person.phone }}">
       </div>
       <div class="control-group email">
         <label> E-post {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-        <input type="text" class="input-large" name="email" value="{{ user.email }}">
+        <input type="text" class="input-large" name="email" value="{{ person.email }}">
       </div>
-      <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if user.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
+      <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if person.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
     </form>
   </div>
 

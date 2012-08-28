@@ -123,7 +123,7 @@ def registration(request, user):
     if not errors and request.POST.has_key('forward'):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
-    context = {'users': request.session['enrollment']['users'], 'user': user,
+    context = {'users': request.session['enrollment']['users'], 'person': user,
         'errors': errors, 'contact_missing': contact_missing,
         'conditions': request.session['enrollment'].get('conditions', ''),
         'too_many_underage': request.GET.has_key(too_many_underage)}
