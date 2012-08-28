@@ -10,7 +10,6 @@ class Article(models.Model):
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
-    publishers = models.ManyToManyField('user.Profile', related_name='articles')
 
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):
