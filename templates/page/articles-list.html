@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}Artikler{% endblock %}
-{% block breadcrumb_title %}Artikler{% endblock %}
+{% block title %}Nyheter{% endblock %}
+{% block breadcrumb_title %}Nyheter{% endblock %}
 
 {% block body %}
 
 <div id="article-list">
   <div class="row">
     <div class="span12">
-      <h1>Artikler{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
+      <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
 
       {% if tag %}
         <p>

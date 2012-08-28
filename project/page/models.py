@@ -178,7 +178,7 @@ def delete_ad(sender, **kwargs):
 
 class AdPlacement(models.Model):
     PLACEMENTS = (('core_frontpage', 'Forsiden'),
-        ('articles', 'Artikler'),
+        ('articles', 'Nyheter'),
         ('core_joint_trip', 'Fellesturer'),
         ('core_cabins', 'Hytter og ruter'),
         ('core_children', 'Barn'),

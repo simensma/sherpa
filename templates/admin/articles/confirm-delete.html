@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
-{% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a> → <a href="">Slett artikkel</a>{% endblock %}
+{% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a> → <a href="">Slett artikkel</a>{% endblock %}
 {% block extra_js %}
   {# Just include all the crap; admin/editor/article.js depends on a lot of it #}
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>

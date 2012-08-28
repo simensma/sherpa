@@ -77,7 +77,7 @@ $(document).ready(function() {
             var image = $(this);
             $("div.editor-header img.article-thumbnail").hide();
             $.ajax({
-                url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/skjul/',
+                url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-id') + '/skjul/',
                 type: 'POST'
             });
         }
@@ -93,7 +93,7 @@ $(document).ready(function() {
             var image = $(this);
             $("div.editor-header img.article-thumbnail").hide();
             $.ajax({
-                url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/slett/',
+                url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-id') + '/slett/',
                 type: 'POST'
             });
         }
@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     function saveImage() {
         $.ajax({
-            url: '/sherpa/artikler/bilde/' + $("div.editor-header").attr('data-id') + '/',
+            url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-id') + '/',
             data: 'thumbnail=' + encodeURIComponent($("div.editor-header img.article-thumbnail").attr('src'))
         });
     }

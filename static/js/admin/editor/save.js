@@ -149,7 +149,7 @@ $(document).ready(function() {
                 authors.push($(this).val());
             });
             $.ajaxQueue({
-                url: '/sherpa/artikler/forfattere/' + $("article").attr('data-id') + '/',
+                url: '/sherpa/nyheter/forfattere/' + $("article").attr('data-id') + '/',
                 data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
             }).always(function() {
                 $("button.save-authors").removeAttr('disabled');
@@ -157,7 +157,7 @@ $(document).ready(function() {
 
             // Publish-state
             $.ajaxQueue({
-                url: '/sherpa/artikler/publiser/' + $("div.editor-header").attr('data-id') + '/',
+                url: '/sherpa/nyheter/publiser/' + $("div.editor-header").attr('data-id') + '/',
                 data: {
                     datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
                     status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
@@ -166,7 +166,7 @@ $(document).ready(function() {
 
             // Save tags
             $.ajaxQueue({
-                url: '/sherpa/artikler/nokkelord/' + $("article").attr('data-id') + '/',
+                url: '/sherpa/nyheter/nokkelord/' + $("article").attr('data-id') + '/',
                 data: 'tags=' + encodeURIComponent(JSON.stringify(tagger.tags))
             });
         }

@@ -3,6 +3,9 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
 urlpatterns = patterns('',
+    # Newly changed URLs: /artikler/ -> /nyheter/ - redirect temporarily
+    url(r'^artikler/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': '/nyheter/', 'permanent': True}),
+
     # Keep old admin-ui for now (difference is /admin/ vs /sherpa/)
     url(r'^admin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/admin/' % settings.OLD_SITE}),
 
