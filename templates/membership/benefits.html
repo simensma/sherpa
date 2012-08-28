@@ -260,6 +260,12 @@
         {% endif %}
       </em>
     </p>
+
+    <p>
+      <strong>Merk:</strong>
+      Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember {{ now|date:"Y" }}.
+    </p>
+
   </div>
   <div class="span4 membership">
     <a href="{% url enrollment.views.index %}" class="btn btn-danger membership">Bli medlem!</a><br>

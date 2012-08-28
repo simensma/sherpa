@@ -8,6 +8,8 @@ from django.core.cache import cache
 from association.models import Association
 from focus.models import FocusZipcode, Price
 
+from datetime import datetime
+
 # Slug used for error-handling redirection
 invalid_zipcode = 'ugyldig-postnummer'
 unregistered_zipcode = 'uregistrert-postnummer'
@@ -33,7 +35,7 @@ def benefits(request, association_id):
         price = Price.objects.get(association_id=association.focus_id)
         cache.set('association.price.%s' % association.focus_id, price, 60 * 60 * 24 * 7)
 
-    context = {'association': association, 'price': price}
+    context = {'association': association, 'price': price, 'now': datetime.now()}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
