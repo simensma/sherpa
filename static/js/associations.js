@@ -13,12 +13,24 @@ $(document).ready(function() {
     }
 
     setActive();
-    performSearch();
+    var defaultCategory = $("input[type='radio'][name='category']:checked").val();
+    var defaultCounty = $("input[type='radio'][name='county']:checked").val();
+    performSearch(defaultCategory, defaultCounty);
+
     $("input[type='radio']").change(setActive);
-    $("input[type='radio']").change(performSearch);
-    function performSearch() {
+    $("input[type='radio']").change(function() {
         var category = $("input[type='radio'][name='category']:checked").val();
         var county = $("input[type='radio'][name='county']:checked").val();
+        performSearch(category, county);
+    });
+
+    $("select[name='category'], select[name='county']").change(function() {
+        var category = $("select[name='category'] option:selected").val();
+        var county = $("select[name='county'] option:selected").val();
+        performSearch(category, county);
+    });
+
+    function performSearch(category, county) {
         $("table#results").children().remove();
         if(category == 'all' && county == 'all') {
             $("div.all").show();

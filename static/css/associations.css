@@ -63,3 +63,23 @@ table#results div.map iframe {
   width: 100%;
   height: 400px;
 }
+
+/* Adjustments for small screens */
+
+div#searchbox-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  div#searchbox {
+    display: none;
+  }
+
+  div#searchbox-mobile {
+    display: block;
+  }
+
+  a.logo-url, div.logo {
+    display: none;
+  }
+}
