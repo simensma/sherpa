@@ -1,22 +1,30 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
+
+    depends_on = (
+        ("page", "0006_auto"),
+    )
 
     def forwards(self, orm):
-        
-        # Deleting field 'Article.publisher'
-        db.delete_column('articles_article', 'publisher_id')
-
+        for article in orm.Article.objects.all():
+            try:
+                version = orm['page.Version'].objects.get(variant__article=article, variant__segment=None, active=True)
+                version.publishers = article.publishers.all()
+            except orm['page.Version'].DoesNotExist:
+                pass
 
     def backwards(self, orm):
-        
-        # Adding field 'Article.publisher'
-        db.add_column('articles_article', 'publisher', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['user.Profile']), keep_default=False)
-
+        for article in orm.Article.objects.all():
+            try:
+                version = orm['page.Version'].objects.get(variant__article=article, variant__segment=None, active=True)
+                article.publishers = version.publishers.all()
+            except orm['page.Version'].DoesNotExist:
+                pass
 
     models = {
         'admin.tag': {
@@ -55,7 +63,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 14, 15, 42, 45, 110451)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 28, 9, 22, 39, 597507)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -63,7 +71,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 14, 15, 42, 45, 110185)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 28, 9, 22, 39, 597356)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -170,4 +178,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['articles']
+    complete_apps = ['page', 'articles']
