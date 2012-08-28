@@ -8,7 +8,7 @@ urlpatterns = patterns('admin',
     url(r'^cms/', include('admin.cms.urls')),
 
     # Articles
-    url(r'^artikler/', include('admin.articles.urls')),
+    url(r'^nyheter/', include('admin.articles.urls')),
 
     # Analytics
     url(r'^analyse/', include('admin.analytics.urls')),

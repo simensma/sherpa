@@ -245,10 +245,10 @@ function validateContent(widget) {
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
         if(isNaN(Number(count))) {
-            alert("Du må angi et tall for antall artikler som skal vises!");
+            alert("Du må angi et tall for antall nyheter som skal vises!");
             return false;
         } else if(count < 1) {
-            alert("Du må vise minst én artikkel!");
+            alert("Du må vise minst én nyhet!");
             return false;
         }
         var title = widget.find("input[name='title']").val();

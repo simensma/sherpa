@@ -85,7 +85,7 @@
               / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
             {% endif %}
           {% elif version.variant.article %}
-            / <a href="{% url articles.views.index %}">Artikler</a>
+            / <a href="{% url articles.views.index %}">Nyheter</a>
             / <em><a href="">{{ version.title.content|striptags }}</a></em>
           {% else %}
             {# Fall back to the static title #}
