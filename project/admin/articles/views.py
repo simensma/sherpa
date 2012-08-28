@@ -28,9 +28,9 @@ def list(request):
 def new(request):
     article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
     article.save()
-    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, publisher=request.user.get_profile())
+    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
+    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True)
     version.save()
     version.publishers.add(request.user.get_profile())
     create_template(request.POST['template'], version, request.POST['title'])
