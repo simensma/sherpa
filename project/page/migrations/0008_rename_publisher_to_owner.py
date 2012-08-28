@@ -1,22 +1,28 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        
-        # Deleting field 'Article.publisher'
-        db.delete_column('articles_article', 'publisher_id')
+        for var in orm.Variant.objects.all():
+            var.owner = var.publisher
+            var.save()
 
+        for ver in orm.Version.objects.all():
+            ver.owner = ver.publisher
+            ver.save()
 
     def backwards(self, orm):
-        
-        # Adding field 'Article.publisher'
-        db.add_column('articles_article', 'publisher', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['user.Profile']), keep_default=False)
+        for var in orm.Variant.objects.all():
+            var.publisher = var.owner
+            var.save()
 
+        for ver in orm.Version.objects.all():
+            ver.publisher = ver.owner
+            ver.save()
 
     models = {
         'admin.tag': {
@@ -55,7 +61,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 14, 15, 42, 45, 110451)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 28, 9, 53, 4, 471542)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -63,7 +69,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 14, 15, 42, 45, 110185)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 28, 9, 53, 4, 471381)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -145,6 +151,7 @@ class Migration(SchemaMigration):
             'article': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['articles.Article']", 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': "orm['user.Profile']"}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Page']", 'null': 'True'}),
             'priority': ('django.db.models.fields.IntegerField', [], {}),
             'publisher': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
@@ -154,7 +161,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Version'},
             'active': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'publisher': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['user.Profile']"}),
+            'publisher': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': "orm['user.Profile']"}),
             'publishers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'versions'", 'symmetrical': 'False', 'to': "orm['user.Profile']"}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'versions'", 'symmetrical': 'False', 'to': "orm['admin.Tag']"}),
             'variant': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['page.Variant']"}),
@@ -170,4 +178,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['articles']
+    complete_apps = ['page']

@@ -3,8 +3,8 @@
 <div class="row">
   <div class="span12">
     <div class="byline">
-      {% if version.variant.article.publishers.all|length == 1 %}
-        {% with publisher=version.variant.article.publishers.all.0 %}
+      {% if version.publishers.all|length == 1 %}
+        {% with publisher=version.publishers.all.0 %}
           <a href="mailto:{{ publisher.user.email }}">
             <img src="{% gravatar publisher.user.email %}">
           </a>
@@ -15,7 +15,7 @@
         {% endwith %}
       {% else %}
         <p>Skrevet {{ version.variant.article.pub_date|date:"j. F Y" }} av:</p>
-        {% for publisher in version.variant.article.publishers.all %}
+        {% for publisher in version.publishers.all %}
           <div class="multiple-authors">
             <a href="mailto:{{ publisher.user.email }}">
               <img src="{% gravatar publisher.user.email %}">

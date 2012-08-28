@@ -48,7 +48,7 @@ class Variant(models.Model):
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
-    publisher = models.ForeignKey('user.Profile')
+    owner = models.ForeignKey('user.Profile', related_name='+')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better
@@ -63,7 +63,8 @@ def delete_page_variant(sender, **kwargs):
 class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
-    publisher = models.ForeignKey('user.Profile')
+    owner = models.ForeignKey('user.Profile', related_name='+')
+    publishers = models.ManyToManyField('user.Profile', related_name='versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('admin.Tag', related_name='versions')
     title = None

@@ -28,11 +28,11 @@ def list(request):
 def new(request):
     article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
     article.save()
-    article.publishers.add(request.user.get_profile())
-    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, publisher=request.user.get_profile())
+    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, publisher=request.user.get_profile(), active=True)
+    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True)
     version.save()
+    version.publishers.add(request.user.get_profile())
     create_template(request.POST['template'], version, request.POST['title'])
     return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
 
@@ -124,11 +124,11 @@ def parse_version_content(version):
     return rows, version
 
 @login_required
-def update_publishers(request, article):
-    article = Article.objects.get(id=article)
+def update_publishers(request, version):
+    version = Version.objects.get(id=version)
     publisher_list = json.loads(request.POST['authors'])
     publishers = Profile.objects.filter(id__in=publisher_list)
-    article.publishers = publishers
+    version.publishers = publishers
     return HttpResponse()
 
 @login_required
