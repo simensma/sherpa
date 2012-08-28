@@ -26,7 +26,7 @@
         <td class="categories">
           {% for category in categories %}
             <label class="radio">
-              <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}{% if category.db == 'Foreninger' and chosen_category == '' %} checked{% endif %}>
+              <input type="radio" name="category" value="{{ category.db }}"{% if category.chosen %} checked{% endif %}>
               {{ category.name }}
             </label>
           {% endfor %}
@@ -55,7 +55,7 @@
   <p>Velg type:</p>
   <select name="category">
   {% for category in categories %}
-    <option value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} selected{% endif %}{% if category.db == 'Foreninger' and chosen_category == '' %} selected{% endif %}>{{ category.name }}</option>
+    <option value="{{ category.db }}"{% if category.chosen %} selected{% endif %}>{{ category.name }}</option>
   {% endfor %}
   </select>
 
