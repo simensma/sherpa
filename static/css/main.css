@@ -120,9 +120,16 @@ header p.display-menu a:hover, header p.display-search a:hover {
   text-decoration: none;
 }
 
+header p.display-menu a b.caret {
+  margin-left: 2px;
+}
+
+header p.display-search a b.caret {
+  margin-right: 2px;
+}
+
 header p.display-menu a b.caret, header p.display-search a b.caret {
   margin-top: 12px;
-  margin-left: 2px;
   border-top-color: rgb(30, 30, 30);
   border-bottom-color: rgb(30, 30, 30);
 }
