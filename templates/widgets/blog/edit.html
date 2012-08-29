@@ -5,7 +5,7 @@
 
     <label>Kategori:</label>
     <select name="category" class="input-small">
-      {% for category in categories %}
+      {% for category in widget_data.blog.categories %}
         <option value="{{category}}">{{category}}</option>
       {% endfor %}
     </select><br>

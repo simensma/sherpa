@@ -101,7 +101,10 @@ def edit_version(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        context = {'rows': rows, 'version': version, 'categories':category_list(), 'pages': pages}
+        widget_data = {
+            'blog': {'categories': category_list()}
+        }
+        context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages}
         return render(request, 'admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)
