@@ -13,10 +13,7 @@ from page.widgets import parse_widget
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 import json
-
-#return the list of categories to use in the blogwidget, can and should be replaced with wordpress jsonapi
-def category_list():
-    return ['Alle', 'Barn', 'Dugnad', 'Folkehelse', 'Naturforvaltning', 'Skole', 'Ungdom']
+import requests
 
 @login_required
 def list(request):
@@ -102,7 +99,7 @@ def edit_version(request, version):
                 column.contents = contents
             row.columns = columns
         widget_data = {
-            'blog': {'categories': category_list()}
+            'blog': {'categories': blog_category_list()}
         }
         context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages}
         return render(request, 'admin/pages/edit_version.html', context)
@@ -233,3 +230,15 @@ def create_template(template, version):
         for i in range(len(contents_lower)):
             content = Content(column=column, content=contents_lower[i]['content'], type=contents_lower[i]['type'], order=i)
             content.save()
+
+# Return the list of categories available in the blogwidget
+def blog_category_list():
+    r = requests.get("http://%s/%s" % (settings.BLOG_URL, settings.BLOG_CATEGORY_API))
+    response = json.loads(r.text)
+    categories = ['Alle']
+    for category in response['categories']:
+        if category['id'] == 1:
+            # Uncategorized
+            continue
+        categories.append(category['title'])
+    return categories
