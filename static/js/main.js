@@ -64,6 +64,14 @@ $(document).ready(function() {
         var icon = $(this).find("i");
         var clazz = icon.get(0).className;
         icon.addClass(icon.attr('data-toggle')).removeClass(clazz).attr('data-toggle', clazz);
+
+        if($("div.widget.promo").length > 0) {
+            $("div.widget.promo div.menu").toggle('slow');
+            var icon = $(this).find("i");
+            var clazz = icon.get(0).className;
+            icon.addClass(icon.attr('data-toggle')).removeClass(clazz).attr('data-toggle', clazz);
+        }
     });
+
 
 });
