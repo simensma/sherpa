@@ -89,6 +89,31 @@ nav#menus {
   font-family: "DTL Nobel";
 }
 
+p.display-menu {
+  display: none;
+}
+
+p.display-menu a {
+  font-family: "DTL Nobel" !important;
+  font-size: 16px !important;
+  color: rgb(30, 30, 30);
+}
+
+p.display-menu a i {
+  margin-top: 4px;
+}
+
+p.display-menu a:hover {
+  color: rgb(180, 180, 180);
+  background-color: rgb(250, 250, 250);
+  text-decoration: none;
+}
+
+p.display-menu a:hover i {
+   opacity: 0.4;
+   filter: alpha(opacity=40);
+}
+
 nav#menus ul {
   /* Override bootstrap */
   margin-left: 0 !important;
@@ -114,6 +139,16 @@ nav#menus li.active a {
   /* Set position relative, without offset, to apply z-index */
   position: relative;
   z-index: 5;
+}
+
+@media (max-width: 767px) {
+  p.display-menu {
+    display: block;
+  }
+
+  nav#menus, div.login {
+    display: none;
+  }
 }
 
 @media (max-width: 979px) {

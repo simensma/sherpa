@@ -58,4 +58,12 @@ $(document).ready(function() {
         }
     });
 
+    /* Display/hide main menu for small screens */
+    $("p.display-menu a").click(function() {
+        $("nav#menus, div.login").toggle('slow');
+        var icon = $(this).find("i");
+        var clazz = icon.get(0).className;
+        icon.addClass(icon.attr('data-toggle')).removeClass(clazz).attr('data-toggle', clazz);
+    });
+
 });
