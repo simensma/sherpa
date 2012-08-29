@@ -91,6 +91,7 @@ header ul.dropdown-menu {
 /* Small-screen menu control */
 
 header div.mobile-control {
+  display: none;
   margin-top: 20px;
   margin-bottom: 10px;
 }
@@ -153,7 +154,7 @@ header form.search-mobile button[type='submit'] {
 }
 
 @media (max-width: 767px) {
-  header p.display-menu, header p.display-search {
+  header div.mobile-control, header p.display-menu, header p.display-search {
     display: block;
   }
 
