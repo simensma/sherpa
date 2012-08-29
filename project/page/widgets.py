@@ -38,8 +38,8 @@ def parse_widget(widget):
             feed_url = "http://%s/" % settings.BLOG_URL;
 
             if widget['category'] != 'Alle':
-                feed_url += 'tema/' + widget['category'].lower()
-            feed_url += '/feed/'
+                feed_url += 'tema/' + widget['category'].lower() + '/'
+            feed_url += 'feed/'
 
             try:
                 r = requests.get(feed_url)
