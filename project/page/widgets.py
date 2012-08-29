@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.conf import settings
 
 from lxml import etree
 import requests
@@ -8,8 +9,6 @@ import random
 import datetime
 
 from page.models import Version
-
-BLOG_URL = "http://blogg.turistforeningen.no/"
 
 # Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(widget):
@@ -36,7 +35,7 @@ def parse_widget(widget):
         data = cache.get('widgets.blog' + widget['category'])
         if data == None:
 
-            feed_url = BLOG_URL;
+            feed_url = "http://%s/" % settings.BLOG_URL;
 
             if widget['category'] != 'Alle':
                 feed_url += 'tema/' + widget['category'].lower()

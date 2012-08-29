@@ -13,6 +13,7 @@ AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
+BLOG_URL = 'blogg.turistforeningen.no'
 
 # NETS URLs used for payment
 NETS_REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
