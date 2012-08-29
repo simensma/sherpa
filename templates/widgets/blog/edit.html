@@ -4,13 +4,13 @@
     <input type="text" name="count" class="input-small"><br>
 
     <label>Kategori:</label>
-    	<select name="category" class="input-small">
-    		{% for category in categories %}
-    			<option value="{{category}}">{{category}}</option>
-    		{% endfor %}
-        </select><br>
+    <select name="category" class="input-small">
+      {% for category in categories %}
+        <option value="{{category}}">{{category}}</option>
+      {% endfor %}
+    </select><br>
 
-        <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
-        <button class="btn btn-danger remove"><i class="icon-warning-sign"></i> Slett widget</button>
-    </p>
+    <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
+    <button class="btn btn-danger remove"><i class="icon-warning-sign"></i> Slett widget</button>
+  </p>
 </div>
