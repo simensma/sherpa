@@ -21,8 +21,14 @@ categories = [
 
 def index(request):
     counties = County.objects.exclude(sherpa_id=None).order_by('code')
+
+    for category in categories:
+        if request.GET.get('kategori', '') == '' and category['db'] == 'Foreninger':
+            category['chosen'] = True
+        elif request.GET.get('kategori', '').lower() == category['db'].lower():
+            category['chosen'] = True
+
     context = {'categories': categories, 'counties': counties,
-        'chosen_category': request.GET.get('kategori', ''),
         'chosen_county': request.GET.get('fylke', '')
     }
     return render(request, 'associations/list.html', context)

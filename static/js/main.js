@@ -58,4 +58,31 @@ $(document).ready(function() {
         }
     });
 
+    /* Display/hide main menu for small screens */
+    new MobileMenu(
+        $("header div.mobile-control"),
+        $("header nav#menus"),
+        $("div.widget.promo div.menu"),
+        $("header form.search-mobile"));
 });
+
+var MobileMenu = function(control, mainMenu, widgetMenu, search) {
+    var self = this;
+    this.menuButton = control.find("p.display-menu a");
+    this.mainMenu = mainMenu;
+    this.widgetMenu = widgetMenu;
+    this.search = search;
+    this.searchButton = control.find("p.display-search a");
+
+    this.menuButton.click(function() {
+        self.mainMenu.toggle('slow');
+        self.widgetMenu.toggle('slow');
+        self.search.hide('slow');
+    });
+
+    this.searchButton.click(function() {
+        self.mainMenu.hide('slow');
+        self.widgetMenu.hide('slow');
+        self.search.toggle('slow');
+    });
+}

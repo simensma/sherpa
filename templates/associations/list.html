@@ -26,7 +26,7 @@
         <td class="categories">
           {% for category in categories %}
             <label class="radio">
-              <input type="radio" name="category" value="{{ category.db }}"{% if chosen_category|lower == category.name|lower or chosen_category|lower == category.db|lower %} checked{% endif %}{% if category.db == 'Foreninger' and chosen_category == '' %} checked{% endif %}>
+              <input type="radio" name="category" value="{{ category.db }}"{% if category.chosen %} checked{% endif %}>
               {{ category.name }}
             </label>
           {% endfor %}
@@ -50,6 +50,24 @@
     </table>
   </div>
 </div>
+
+<div id="searchbox-mobile">
+  <p>Velg type:</p>
+  <select name="category">
+  {% for category in categories %}
+    <option value="{{ category.db }}"{% if category.chosen %} selected{% endif %}>{{ category.name }}</option>
+  {% endfor %}
+  </select>
+
+  <p>Velg fylke:</p>
+  <select name="county">
+    <option value="all">Hele landet</option>
+  {% for county in counties %}
+    <option value="{{ county.sherpa_id }}"{% if chosen_county|lower == county.name|lower %} selected{% endif %}>{{ county.name }}</option>
+  {% endfor %}
+  </select>
+</div>
+
 
 <div class="loading">
   <h2>Laster, vennligst vent...</h2>

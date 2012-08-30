@@ -42,6 +42,31 @@
   </div>
 
   <div class="row">
+    <div class="span12 mobile-control">
+      <p class="display-menu">
+        <a href="javascript:undefined">
+          Meny <b class="caret"></b>
+        </a>
+      </p>
+      <p class="display-search">
+        <a href="javascript:undefined">
+          <b class="caret"></b> Søk
+        </a>
+      </p>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12">
+      <form action="{% url page.views.search %}" method="get" class="search-mobile form-search">
+        <input type="text" name="q" value="{{ search_query }}">
+        <button type="submit" class="btn">Søk</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="span9 menu-container">
       <nav id="menus">
         <ul>

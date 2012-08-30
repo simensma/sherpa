@@ -11,9 +11,9 @@ $(document).ready(function() {
 
     //carousel, stop spinning
     $('.carousel').each(function(){
-    	$(this).carousel({
-    		interval:false
-    	});
+        $(this).carousel({
+            interval:false
+        });
     });
 
 });
