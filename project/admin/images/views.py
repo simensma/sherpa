@@ -16,11 +16,6 @@ from hashlib import sha1
 import json
 from datetime import datetime
 
-# Pixel sizes we'll want to generate thumbnail images for
-# Note: A couple of places (the template, Image model etc.) has hardcoded
-# these thumb sizes.
-THUMB_SIZES = [1880, 940, 500, 150]
-
 # Require this many characters for an image search (this is duplicated client-side)
 MIN_QUERY_LENGTH = 3
 
@@ -295,7 +290,7 @@ def parse_image(file):
             exif[TAGS.get(tag, tag)] = value
     thumbs = []
     ext = file.name.split(".")[-1].lower()
-    for size in THUMB_SIZES:
+    for size in settings.THUMB_SIZES:
         fp = StringIO()
         img_copy = img.copy()
         img_copy.thumbnail([size, size], pil.ANTIALIAS)

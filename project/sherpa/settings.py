@@ -26,6 +26,10 @@ USER_PASSWORD_LENGTH = 6
 RESTORE_PASSWORD_KEY_LENGTH = 40
 RESTORE_PASSWORD_VALIDITY = 12 # Hours
 
+# Pixel sizes for thumbnail images generated from uploaded images.
+# Duplicated client-side in js/admin/editor/image-utils.js
+THUMB_SIZES = [1880, 940, 500, 150]
+
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
     ('Håvard Eidheim', 'eidheim@live.no'),
