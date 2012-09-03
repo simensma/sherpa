@@ -89,7 +89,7 @@ def parse_content(request, version):
 
     # Used temporary for static promo content
     if request.path == '/':
-        context['promo'] = 'widgets/promo/static/komdegut.html'
+        context['promo'] = 'widgets/promo/static/ut.html'
         context['ad'] = AdPlacement.get_active_ad('core_frontpage')
     elif request.path == '/fellesturer/':
         context['promo'] = 'widgets/promo/static/fellesturer.html'
@@ -118,9 +118,6 @@ def parse_content(request, version):
     elif request.path == '/tur-for-alle/':
         context['promo'] = 'widgets/promo/static/tur-for-alle.html'
         context['ad'] = AdPlacement.get_active_ad('core_accessibility')
-    elif request.path == '/utno/':
-        context['promo'] = 'widgets/promo/static/ut.html'
-        context['ad'] = AdPlacement.get_active_ad('core_utno')
     return render(request, "page/page.html", context)
 
 @csrf_exempt

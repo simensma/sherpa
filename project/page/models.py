@@ -186,8 +186,7 @@ class AdPlacement(models.Model):
         ('core_senior', 'Senior'),
         ('core_school', 'Skole'),
         ('core_education', 'Kurs og utdanning'),
-        ('core_accessibility', 'Tur for alle'),
-        ('core_utno', 'UT.no'))
+        ('core_accessibility', 'Tur for alle'))
 
     ad = models.ForeignKey('page.Ad')
     start_date = models.DateField()
