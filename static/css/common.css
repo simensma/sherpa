@@ -116,6 +116,22 @@ nav#menus li.active a {
   z-index: 5;
 }
 
+@media (max-width: 767px) {
+  header div.menu-container {
+    float: none !important;
+  }
+
+  nav#menus li:first-of-type {
+    border-top: none;
+  }
+
+  nav#menus li {
+    font-size: 16px !important;
+    padding: 5px 10px 5px 10px;
+    border-top: 1px solid rgb(210, 210, 210);
+  }
+}
+
 @media (max-width: 979px) {
   nav#menus li {
     display: block;
