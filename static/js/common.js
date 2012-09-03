@@ -71,3 +71,8 @@ $(document).on('keypress', 'body', function(e) {
         $(".modal").modal('hide');
     }
 });
+
+// Simple framebusting; mainly for facebook
+if(top != self) {
+    top.location.replace(document.location);
+}
