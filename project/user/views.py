@@ -113,7 +113,7 @@ def merge_visitor(session, profile):
 def send_restore_password_email(request):
     try:
         user = User.objects.get(email=request.POST['email'])
-    except User.DoesNotExist:
+    except (User.DoesNotExist, KeyError):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
     profile = user.get_profile()
     key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
