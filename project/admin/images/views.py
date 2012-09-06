@@ -61,7 +61,7 @@ def fast_upload(request):
 
     #add info to image
     image = Image.objects.get(id=stored_image['id'])
-    tags = tags = json.loads(request.POST['tags-serialized'])
+    tags = json.loads(request.POST['tags-serialized'])
     add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
 
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
