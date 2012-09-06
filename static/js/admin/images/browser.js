@@ -19,7 +19,7 @@ $(document).ready(function() {
             images.push($(this).attr('data-id'));
         });
         $(this).children("input[name='ids']").val(JSON.stringify(images));
-        serializeTags();
+        $(this).find("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
     });
 
     $("button.context-button").attr('disabled', true);
@@ -72,6 +72,28 @@ $(document).ready(function() {
         });
         $(this).find("input[name='albums']").val(JSON.stringify(albums));
         $(this).find("input[name='images']").val(JSON.stringify(images));
+    });
+
+    // Enable tagging
+    var tagger = new Tagger($("div.image-details input[name='tags']"), function(tag) {
+        // New tag
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        $("div.tag-box").append(tag);
+    }, function(tag) {
+        // Existing tag
+        $("div.tag-box div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
     });
 
 });
