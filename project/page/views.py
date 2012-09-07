@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
@@ -86,7 +87,7 @@ def parse_content(request, version):
 
     # Used temporary for static promo content
     promos = [
-        {'name': 'UT.no', 'url': '/', 'template': 'ut', 'ad': 'core_frontpage'},
+        {'name': 'Høst', 'url': '/', 'template': 'høst', 'ad': 'core_frontpage'},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'ad': 'core_joint_trip'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'ad': 'core_cabins'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'ad': 'core_children'},
@@ -95,7 +96,8 @@ def parse_content(request, version):
         {'name': 'Senior', 'url': '/senior/', 'template': 'senior', 'ad': 'core_senior'},
         {'name': 'Skole', 'url': '/skole/', 'template': 'skole', 'ad': 'core_school'},
         {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'ad': 'core_education'},
-        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'ad': 'core_accessibility'}
+        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'ad': 'core_accessibility'},
+        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut', 'ad': 'core_utno'},
         ]
 
     for promo in promos:
