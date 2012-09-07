@@ -355,6 +355,7 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
+    request.session.modified = True
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
     return render(request, 'enrollment/payment.html', context)
 
