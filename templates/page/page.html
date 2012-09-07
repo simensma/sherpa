@@ -4,6 +4,13 @@
 
 {% block body %}
 
+{# Temporary hardcoded promo-box #}
+{% if promo %}
+<div class="widget promo">
+  {% include promo %}
+</div>
+{% endif %}
+
 {% include 'page/display-content.html' %}
 
 {% if ad %}
