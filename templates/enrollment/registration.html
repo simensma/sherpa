@@ -76,7 +76,7 @@
         {% endfor %}
         </table>
         <label class="checkbox">
-          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" data-toggle="modal" data-target="#heisann">betingelsene</button>
+          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" data-toggle="modal" data-target="#heisann">betingelsene</a>
         </label>
         <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right icon-white"></i></a></p>
       </div>
