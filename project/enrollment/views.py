@@ -175,11 +175,11 @@ def household(request):
         if request.POST.has_key('existing'):
             request.session['enrollment']['existing'] = request.POST['existing']
 
+        request.session.modified = True
         if validate_location(request.session['enrollment']['location']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
-        request.session.modified = True
 
     main = False
     for user in request.session['enrollment']['users']:
