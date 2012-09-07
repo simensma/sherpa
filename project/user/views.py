@@ -14,7 +14,6 @@ import json
 import md5
 import re
 
-from analytics.models import Visitor, Request
 from user.models import Profile
 
 update_success = 'oppdatert'
@@ -73,7 +72,6 @@ def login(request):
     elif request.method == 'POST':
         user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
-            merge_visitor(request.session, user.get_profile())
             log_user_in(request, user)
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
@@ -83,32 +81,6 @@ def login(request):
 def logout(request):
     log_user_out(request)
     return HttpResponseRedirect(reverse('page.views.page'))
-
-def merge_visitor(session, profile):
-    visitor = Visitor.objects.get(id=session['visitor'])
-    if visitor.profile == profile:
-        # The user already has connected this visitor to the correct profile
-        # This might happen if the user logs in twice, somehow.
-        return
-    if visitor.profile != None:
-        # Whoa! The user has connected this visitor to a _different_ profile!
-        # Could this ever happen? We should probably log this and analyze
-        # what happened, if it occurs.
-        return
-    if Visitor.objects.filter(profile=profile).exists():
-        # The user's profile already has a Visitor, so merge all the
-        # requests over and delete the 'extra' visitor
-        requests = Request.objects.filter(visitor=visitor)
-        for request in requests:
-            request.visitor = profile.visitor
-            request.save()
-        visitor.delete()
-        session['visitor'] = profile.visitor.id
-    else:
-        # The user's profile didn't have an existing Visitor, so just
-        # apply this one to the profile
-        visitor.profile = profile
-        visitor.save()
 
 def send_restore_password_email(request):
     try:

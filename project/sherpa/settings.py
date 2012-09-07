@@ -86,6 +86,5 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sherpa.middleware.RedirectTrailingDot',
-    'sherpa.middleware.Analytics',
     'sherpa.middleware.Sites',
 )
