@@ -13,7 +13,6 @@ import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article
-from analytics.models import Visitor, Pageview
 from page.widgets import parse_widget
 
 variant_key = 'var'
@@ -34,7 +33,6 @@ def page(request, slug):
             # No variant requested, and no variant matched. The default, simple view for a page.
             default_variant = Variant.objects.get(page=page, segment__isnull=True)
             version = Version.objects.get(variant=default_variant, active=True)
-            save_pageview(request, default_variant, version, None, None)
             return parse_content(request, version)
         else:
             # No variant requested, but the page has variants and a special one matched.
@@ -50,7 +48,6 @@ def page(request, slug):
             matched_segment = None
         else:
             matched_segment = matched_variant.segment
-        save_pageview(request, requested_variant, version, requested_variant.segment, matched_segment)
         return parse_content(request, version)
 
 def parse_content(request, version):
@@ -184,15 +181,10 @@ def ad(request, ad):
     ad.save()
     return HttpResponseRedirect(ad.ad.destination)
 
-def save_pageview(request, variant, version, requested_segment, matched_segment):
-    pageview = Pageview(request=request.session['request'], variant=variant,
-        active_version=version, requested_segment=requested_segment, matched_segment=matched_segment)
-
 def match_user(request, page):
     variants = Variant.objects.filter(page=page, segment__isnull=False).order_by('priority')
-    visitor = Visitor.objects.get(id=request.session['visitor'])
     for variant in variants:
-        if variant.segment.match(request, visitor):
+        if variant.segment.match(request):
             return variant
     return None
 
