@@ -1,0 +1,11 @@
+<div class="menu">
+  <ul>
+    {% for promo in promos %}
+      {% if request.path == promo.url %}
+        <li class="active">{{ promo.name }}</li>
+      {% else %}
+        <li><a href="{{ promo.url }}">{{ promo.name }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
