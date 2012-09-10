@@ -59,6 +59,7 @@ def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def registration(request, user):
+    request.session.modified = True
     if request.session.has_key('enrollment'):
         if request.session['enrollment']['state'] == 'payment':
             # Payment has been initiated but the user goes back to the registration page - why?
@@ -130,6 +131,7 @@ def registration(request, user):
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
+    request.session.modified = True
     if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
@@ -143,6 +145,7 @@ def remove(request, user):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def household(request):
+    request.session.modified = True
     val = validate(request.session, require_location=False, require_existing=False)
     if val is not None:
         return val
@@ -175,7 +178,6 @@ def household(request):
         if request.POST.has_key('existing'):
             request.session['enrollment']['existing'] = request.POST['existing']
 
-        request.session.modified = True
         if validate_location(request.session['enrollment']['location']):
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
@@ -238,6 +240,7 @@ def existing(request):
     }))
 
 def verification(request):
+    request.session.modified = True
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
@@ -340,6 +343,7 @@ def verification(request):
     return render(request, 'enrollment/verification.html', context)
 
 def payment_method(request):
+    request.session.modified = True
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
@@ -355,11 +359,11 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
-    request.session.modified = True
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
     return render(request, 'enrollment/payment.html', context)
 
 def payment(request):
+    request.session.modified = True
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
@@ -504,13 +508,13 @@ def payment(request):
 
     # Sweet, almost done, now just send the user to complete the transaction
     request.session['enrollment']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
-    request.session.modified = True
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
         settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
     ))
 
 def process_invoice(request):
+    request.session.modified = True
     if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
@@ -533,6 +537,7 @@ def process_invoice(request):
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def process_card(request):
+    request.session.modified = True
     if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
@@ -575,6 +580,7 @@ def process_card(request):
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def result(request):
+    request.session.modified = True
     if not request.session.has_key('enrollment'):
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
@@ -677,7 +683,6 @@ def updateIndices(session):
     for user in session['enrollment']['users']:
         user['index'] = i
         i += 1
-    session.modified = True
 
 def validate(session, require_location, require_existing):
     if not session.has_key('enrollment'):
