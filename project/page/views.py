@@ -170,10 +170,13 @@ def search(request):
     return render(request, 'page/search.html', context)
 
 def ad(request, ad):
-    ad = AdPlacement.objects.get(id=ad)
-    ad.clicks += 1
-    ad.save()
-    return HttpResponseRedirect(ad.ad.destination)
+    try:
+        ad = AdPlacement.objects.get(id=ad)
+        ad.clicks += 1
+        ad.save()
+        return HttpResponseRedirect(ad.ad.destination)
+    except AdPlacement.DoesNotExist:
+        raise Http404
 
 def match_user(request, page):
     variants = Variant.objects.filter(page=page, segment__isnull=False).order_by('priority')
