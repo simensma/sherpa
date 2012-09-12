@@ -77,6 +77,13 @@ def parent(request, page):
     return HttpResponse('{}')
 
 @login_required
+def display_ads(request, version):
+    version = Version.objects.get(id=version)
+    version.ad = json.loads(request.POST['ads'])
+    version.save()
+    return HttpResponse()
+
+@login_required
 def delete(request, page):
     Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))

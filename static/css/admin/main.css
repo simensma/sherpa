@@ -212,7 +212,7 @@ div.page-dialog div.template:hover, div.article-dialog div.template:hover {
   background-color: rgb(70, 70, 70);
 }
 
-/* Article editing */
+/* Page/Article header editing */
 
 div.editor-header {
   background-color: rgb(240, 240, 240) !important;
@@ -230,6 +230,10 @@ div.editor-header div.status h1.publish span.true {
 
 div.editor-header div.status h1.publish span.false {
   color: red;
+}
+
+div.editor-header.page div.display-ads {
+  margin-top: 15px;
 }
 
 div.editor-header.article img.article-thumbnail {
