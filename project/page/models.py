@@ -188,10 +188,14 @@ class AdPlacement(models.Model):
     def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()
     def is_new(self): return self.start_date > date.today()
 
-    def state(self):
+    def time_state(self):
         if self.is_old(): return 'old'
         elif self.is_current(): return 'current'
         elif self.is_new(): return 'new'
+
+    def view_state(self):
+        if self.views < self.view_limit: return 'active'
+        else: return 'inactive'
 
     @staticmethod
     def get_active_ad():

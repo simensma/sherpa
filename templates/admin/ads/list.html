@@ -33,7 +33,7 @@
           <th>Status</th>
         </tr>
         {% for placement in time_placements %}
-          <tr class="placement dialog-button {{ placement.state }}"
+          <tr class="placement dialog-button {{ placement.time_state }}"
             data-dialog=".placement-dialog.time"
             data-id="{{ placement.id }}"
             data-ad="{{ placement.ad.id }}"
@@ -51,6 +51,11 @@
             </td>
           </tr>
         {% endfor %}
+        <tr>
+          <td colspan="6">
+            <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul gamle visninger</a>
+          </td>
+        </tr>
       </table>
     {% endif %}
 
@@ -63,9 +68,10 @@
           <th>Maks visninger</th>
           <th>Visninger</th>
           <th>Klikk</th>
+          <th>Status</th>
         </tr>
         {% for placement in view_placements %}
-          <tr class="placement dialog-button {{ placement.state }}"
+          <tr class="placement dialog-button {{ placement.view_state }}"
             data-dialog=".placement-dialog.view"
             data-id="{{ placement.id }}"
             data-ad="{{ placement.ad.id }}"
@@ -74,8 +80,16 @@
             <td>{{ placement.view_limit }}</td>
             <td>{{ placement.views }}</td>
             <td>{{ placement.clicks }}</td>
+            <td>
+              {% if placement.view_state == 'active' %}Aktiv{% else %}Inaktiv{% endif %}
+            </td>
           </tr>
         {% endfor %}
+        <tr>
+          <td colspan="6">
+            <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul inaktive visninger</a>
+          </td>
+        </tr>
       </table>
     {% endif %}
 

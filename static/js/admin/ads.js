@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+    $("table.placements tr.inactive, table.placements tr.old").hide();
+    $("a.toggle-old-placements").click(function() {
+        $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
+    });
+
     function updateCheck() {
         if($("form.placement tr.time input[name='adplacement_type']:checked").length > 0) {
             $("form.placement tr.time input[name='start_date'], form.placement tr.time input[name='end_date']").removeAttr('disabled');
