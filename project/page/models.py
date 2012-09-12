@@ -1,7 +1,7 @@
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Q, F
 from django.conf import settings
 from lib import S3
 
@@ -66,6 +66,7 @@ class Version(models.Model):
     publishers = models.ManyToManyField('user.Profile', related_name='versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('admin.Tag', related_name='versions')
+    ads = models.BooleanField()
     title = None
     lede = None
     thumbnail = None
@@ -176,23 +177,10 @@ def delete_ad(sender, **kwargs):
     kwargs['instance'].delete_fallback_file()
 
 class AdPlacement(models.Model):
-    PLACEMENTS = (('core_frontpage', 'Forsiden'),
-        ('articles', 'Nyheter'),
-        ('core_joint_trip', 'Fellesturer'),
-        ('core_cabins', 'Hytter og ruter'),
-        ('core_children', 'Barn'),
-        ('core_youth', 'Ungdom'),
-        ('core_mountainsports', 'Fjellsport'),
-        ('core_senior', 'Senior'),
-        ('core_school', 'Skole'),
-        ('core_education', 'Kurs og utdanning'),
-        ('core_accessibility', 'Tur for alle'),
-        ('core_utno', 'UT.no'))
-
     ad = models.ForeignKey('page.Ad')
-    start_date = models.DateField()
-    end_date = models.DateField()
-    placement = models.CharField(max_length=100, choices=PLACEMENTS)
+    view_limit = models.IntegerField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
@@ -200,15 +188,20 @@ class AdPlacement(models.Model):
     def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()
     def is_new(self): return self.start_date > date.today()
 
-    def state(self):
+    def time_state(self):
         if self.is_old(): return 'old'
         elif self.is_current(): return 'current'
         elif self.is_new(): return 'new'
 
+    def view_state(self):
+        if self.views < self.view_limit: return 'active'
+        else: return 'inactive'
+
     @staticmethod
-    def get_active_ad(page):
-        ads = AdPlacement.objects.filter(start_date__lte=date.today(),
-            end_date__gte=date.today(), placement=page)
+    def get_active_ad():
+        ads = AdPlacement.objects.filter(
+            Q(start_date__lte=date.today(), end_date__gte=date.today(), view_limit__isnull=True) |
+            Q(views__lt=F('view_limit'), start_date__isnull=True))
 
         if len(ads) == 0:
             return None

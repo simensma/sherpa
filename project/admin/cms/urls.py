@@ -9,6 +9,7 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^side/ny/unik/$', 'page.check_slug'),
     url(r'^side/tittel/(?P<page>\d+)/$', 'page.rename'),
     url(r'^side/foreldre/(?P<page>\d+)/$', 'page.parent'),
+    url(r'^side/annonser/(?P<version>\d+)/$', 'page.display_ads'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
     url(r'^editor/(?P<version>\d+)/$', 'page.edit_version'),
 

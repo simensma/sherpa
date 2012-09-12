@@ -136,6 +136,16 @@ $(document).ready(function() {
             saveButton.removeAttr('disabled');
         });
 
+        // Page-specific saving
+        if($("div.editor-header.page").length > 0) {
+            // Save whether or not to display ads
+            var value = $("div.editor-header.page input[name='display-ads']:checked").length > 0;
+            $.ajaxQueue({
+                url: '/sherpa/cms/side/annonser/' + $("article").attr('data-id') + '/',
+                data: 'ads=' + encodeURIComponent(JSON.stringify(value))
+            });
+        }
+
         // Article-specific saving
         if($("div.editor-header.article").length > 0) {
             // Save authors

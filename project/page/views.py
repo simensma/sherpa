@@ -85,25 +85,27 @@ def parse_content(request, version):
         context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
+    # Include ads if specified for this page
+    context['ad'] = AdPlacement.get_active_ad() if context['version'].ads else None
+
     # Used temporary for static promo content
     promos = [
-        {'name': 'Høst', 'url': '/', 'template': 'høst', 'ad': 'core_frontpage'},
-        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'ad': 'core_joint_trip'},
-        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'ad': 'core_cabins'},
-        {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'ad': 'core_children'},
-        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung', 'ad': 'core_youth'},
-        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport', 'ad': 'core_mountainsports'},
-        {'name': 'Senior', 'url': '/senior/', 'template': 'senior', 'ad': 'core_senior'},
-        {'name': 'Skole', 'url': '/skole/', 'template': 'skole', 'ad': 'core_school'},
-        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'ad': 'core_education'},
-        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'ad': 'core_accessibility'},
-        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut', 'ad': 'core_utno'},
+        {'name': 'Høst', 'url': '/', 'template': 'høst'},
+        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
+        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
+        {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
+        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung'},
+        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport'},
+        {'name': 'Senior', 'url': '/senior/', 'template': 'senior'},
+        {'name': 'Skole', 'url': '/skole/', 'template': 'skole'},
+        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs'},
+        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle'},
+        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut'},
         ]
 
     for promo in promos:
         if request.path == promo['url']:
             context['promo'] = "widgets/promo/static/%s.html" % promo['template']
-            context['ad'] = AdPlacement.get_active_ad(promo['ad'])
 
     context['request'] = request
     context['promos'] = promos

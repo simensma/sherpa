@@ -6,11 +6,11 @@ form#upload table td, form.placement table td {
   padding: 5px;
 }
 
-table.placements tr.old td {
+table.placements.time tr.old td, table.placements.view tr.inactive td {
   color: rgb(120, 120, 120);
 }
 
-table.placements tr.current td {
+table.placements.time tr.current td, table.placements.view tr.active td {
   color: rgb(27, 205, 11);
 }
 
@@ -18,10 +18,4 @@ table.placements tr.placement:hover td, table.ads td.ad:hover {
   cursor: pointer;
   color: rgb(0, 0, 255);
   text-decoration: underline;
-}
-
-ul.pages a {
-  font-size: 14px;
-  color: rgb(0, 136, 204); /* Duplicated from bootstrap */
-  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Duplicated from bootstrap */
 }

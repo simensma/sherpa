@@ -1,5 +1,24 @@
 $(document).ready(function() {
 
+    $("table.placements tr.inactive, table.placements tr.old").hide();
+    $("a.toggle-old-placements").click(function() {
+        $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
+    });
+
+    function updateCheck() {
+        if($("form.placement tr.time input[name='adplacement_type']:checked").length > 0) {
+            $("form.placement tr.time input[name='start_date'], form.placement tr.time input[name='end_date']").removeAttr('disabled');
+            $("form.placement tr.view input[name='view_limit']").val('').attr('disabled', true);
+        } else if($("form.placement tr.view input[name='adplacement_type']:checked").length > 0) {
+            $("form.placement tr.time input[name='start_date'], form.placement tr.time input[name='end_date']").val('').attr('disabled', true);
+            $("form.placement tr.view input[name='view_limit']").removeAttr('disabled');
+        }
+    }
+
+    $("form.placement input[name='adplacement_type']").click(updateCheck);
+    $("form.placement tr.time input[name='adplacement_type']").click();
+    updateCheck();
+
     $("form.placement input.date").each(function() {
         $(this).datepicker({
             changeMonth: true,
@@ -21,13 +40,19 @@ $(document).ready(function() {
         });
     });
 
-    $("table.placements tr.placement").click(function() {
-        var form = $("div.placement-dialog form");
+    $("table.placements.time tr.placement").click(function() {
+        var form = $("div.placement-dialog.time form");
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
-        form.find("select[name='placement'] option[value='" + $(this).attr('data-placement') + "']").prop('selected', true);
         form.find("input[name='start_date']").val($(this).attr('data-start-date'));
         form.find("input[name='end_date']").val($(this).attr('data-end-date'));
+    });
+
+    $("table.placements.view tr.placement").click(function() {
+        var form = $("div.placement-dialog.view form");
+        form.find("input[name='id']").val($(this).attr('data-id'));
+        form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
+        form.find("input[name='view_limit']").val($(this).attr('data-view-limit'));
     });
 
     $("table.ads td.ad").click(function() {
