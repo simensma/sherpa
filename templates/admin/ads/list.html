@@ -13,14 +13,6 @@
 
 <div class="row">
   <div class="span12">
-    <ul class="nav nav-pills pages">
-      {% for page in pages %}
-      <li{% if forloop.first %} class="active"{% endif %}>
-        <a href="#{{ page.page.0 }}" data-toggle="pill">{{ page.page.1 }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-
     {% if invalid_date %}
       <div class="alert alert-error">
         <a class="close">x</a>
@@ -35,71 +27,61 @@
       </div>
     {% endif %}
 
-    <div class="tab-content">
-      {% for page in pages %}
-        <div id="{{ page.page.0 }}" class="tab-pane fade{% if forloop.first %} in active{% endif %}">
-          {% if page.placements|length == 0 %}
-            <p>Ingen annonser er lagt ut på denne siden.</p>
-          {% else %}
-            <table class="table placements">
-              <tr>
-                <th>Annonse</th>
-                <th>Fra og med</th>
-                <th>Til og med</th>
-                <th>Visninger</th>
-                <th>Klikk</th>
-                <th>Status</th>
-              </tr>
-              {% for placement in page.placements %}
-                <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-placement="{{ placement.placement }}" data-start-date="{{ placement.start_date|date:"d.m.Y" }}" data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
-                  <td>{{ placement.ad.name }}</td>
-                  <td>{{ placement.start_date|date:"j. F Y" }}</td>
-                  <td>{{ placement.end_date|date:"j. F Y" }}</td>
-                  <td>{{ placement.views }}</td>
-                  <td>{{ placement.clicks }}</td>
-                  <td>
-                    {% if placement.is_old %}Utgått{% endif %}
-                    {% if placement.is_current %}Aktiv{% endif %}
-                    {% if placement.is_new %}På vent{% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </table>
-          {% endif %}
-
-          <form class="placement" method="post" action="{% url admin.ads.views.create_placement %}">
-            {% csrf_token %}
-            <input type="hidden" name="placement" value="{{ page.page.0 }}">
-            <table>
-              <tr>
-                <td>Annonse</td>
-                <td>
-                  <select name="ad">
-                    {% for ad in ads %}
-                      <option value="{{ ad.id }}">{{ ad.name }}</option>
-                    {% endfor %}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Start/stopp visning:</td>
-                <td>
-                  <input type="text" name="start_date" class="input-medium date">
-                  <input type="text" name="end_date" class="input-medium date">
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td><button type="submit" class="btn">Legg til visning under "{{ page.page.1 }}"</button></td>
-              </tr>
-            </table>
-          </form>
-        </div>
-
-        {% for placement in page.placements %}
+    {% if placements|length == 0 %}
+      <p>Ingen annonser er lagt ut.</p>
+    {% else %}
+      <table class="table placements">
+        <tr>
+          <th>Annonse</th>
+          <th>Fra og med</th>
+          <th>Til og med</th>
+          <th>Visninger</th>
+          <th>Klikk</th>
+          <th>Status</th>
+        </tr>
+        {% for placement in placements %}
+          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-start-date="{{ placement.start_date|date:"d.m.Y" }}" data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
+            <td>{{ placement.ad.name }}</td>
+            <td>{{ placement.start_date|date:"j. F Y" }}</td>
+            <td>{{ placement.end_date|date:"j. F Y" }}</td>
+            <td>{{ placement.views }}</td>
+            <td>{{ placement.clicks }}</td>
+            <td>
+              {% if placement.is_old %}Utgått{% endif %}
+              {% if placement.is_current %}Aktiv{% endif %}
+              {% if placement.is_new %}På vent{% endif %}
+            </td>
+          </tr>
         {% endfor %}
-      {% endfor %}
-    </div>
+      </table>
+    {% endif %}
+
+    <form class="placement" method="post" action="{% url admin.ads.views.create_placement %}">
+      {% csrf_token %}
+      <table>
+        <tr>
+          <td>Annonse</td>
+          <td>
+            <select name="ad">
+              {% for ad in ads %}
+                <option value="{{ ad.id }}">{{ ad.name }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Start/stopp visning:</td>
+          <td>
+            <input type="text" name="start_date" class="input-medium date">
+            <input type="text" name="end_date" class="input-medium date">
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><button type="submit" class="btn">Legg til visning</button></td>
+        </tr>
+      </table>
+    </form>
 
     <h2>Last opp ny annonse</h2>
     <form id="upload" method="post" action="{% url admin.ads.views.create_ad %}" enctype="multipart/form-data">
@@ -172,16 +154,6 @@
           <select name="ad">
             {% for ad in ads %}
               <option value="{{ ad.id }}">{{ ad.name }}</option>
-            {% endfor %}
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td>Side</td>
-        <td>
-          <select name="placement">
-            {% for page in pages %}
-              <option value="{{ page.page.0 }}">{{ page.page.1 }}</option>
             {% endfor %}
           </select>
         </td>

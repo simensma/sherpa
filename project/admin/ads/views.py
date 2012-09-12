@@ -18,11 +18,8 @@ added = 'annonse-lagt-til'
 @login_required
 def list(request):
     ads = Ad.objects.all().order_by('name')
-    pages = []
-    for page in AdPlacement.PLACEMENTS:
-        placements = AdPlacement.objects.filter(placement=page[0]).order_by('start_date', 'end_date')
-        pages.append({'page': page, 'placements': placements})
-    context = {'ads': ads, 'pages': pages,
+    placements = AdPlacement.objects.all().order_by('start_date', 'end_date')
+    context = {'ads': ads, 'placements': placements,
         'invalid_date': request.GET.has_key(invalid_date),
         'added': request.GET.has_key(added)}
     return render(request, 'admin/ads/list.html', context)
@@ -72,8 +69,7 @@ def create_placement(request):
         ad = Ad.objects.get(id=request.POST['ad'])
         start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
         end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
-        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date,
-            placement=request.POST['placement'])
+        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date)
         ap.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
@@ -86,7 +82,6 @@ def update_placement(request):
         placement.ad = Ad.objects.get(id=request.POST['ad'])
         placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
         placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
-        placement.placement = request.POST['placement']
         placement.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))

@@ -19,9 +19,3 @@ table.placements tr.placement:hover td, table.ads td.ad:hover {
   color: rgb(0, 0, 255);
   text-decoration: underline;
 }
-
-ul.pages a {
-  font-size: 14px;
-  color: rgb(0, 136, 204); /* Duplicated from bootstrap */
-  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Duplicated from bootstrap */
-}

@@ -177,23 +177,9 @@ def delete_ad(sender, **kwargs):
     kwargs['instance'].delete_fallback_file()
 
 class AdPlacement(models.Model):
-    PLACEMENTS = (('core_frontpage', 'Forsiden'),
-        ('articles', 'Nyheter'),
-        ('core_joint_trip', 'Fellesturer'),
-        ('core_cabins', 'Hytter og ruter'),
-        ('core_children', 'Barn'),
-        ('core_youth', 'Ungdom'),
-        ('core_mountainsports', 'Fjellsport'),
-        ('core_senior', 'Senior'),
-        ('core_school', 'Skole'),
-        ('core_education', 'Kurs og utdanning'),
-        ('core_accessibility', 'Tur for alle'),
-        ('core_utno', 'UT.no'))
-
     ad = models.ForeignKey('page.Ad')
     start_date = models.DateField()
     end_date = models.DateField()
-    placement = models.CharField(max_length=100, choices=PLACEMENTS)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
@@ -207,9 +193,8 @@ class AdPlacement(models.Model):
         elif self.is_new(): return 'new'
 
     @staticmethod
-    def get_active_ad(page):
-        ads = AdPlacement.objects.filter(start_date__lte=date.today(),
-            end_date__gte=date.today(), placement=page)
+    def get_active_ad():
+        ads = AdPlacement.objects.filter(start_date__lte=date.today(), end_date__gte=date.today())
 
         if len(ads) == 0:
             return None
