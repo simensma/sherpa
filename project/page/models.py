@@ -1,7 +1,7 @@
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Q, F
 from django.conf import settings
 from lib import S3
 
@@ -178,8 +178,9 @@ def delete_ad(sender, **kwargs):
 
 class AdPlacement(models.Model):
     ad = models.ForeignKey('page.Ad')
-    start_date = models.DateField()
-    end_date = models.DateField()
+    view_limit = models.IntegerField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
 
@@ -194,7 +195,9 @@ class AdPlacement(models.Model):
 
     @staticmethod
     def get_active_ad():
-        ads = AdPlacement.objects.filter(start_date__lte=date.today(), end_date__gte=date.today())
+        ads = AdPlacement.objects.filter(
+            Q(start_date__lte=date.today(), end_date__gte=date.today(), view_limit__isnull=True) |
+            Q(views__lt=F('view_limit'), start_date__isnull=True))
 
         if len(ads) == 0:
             return None

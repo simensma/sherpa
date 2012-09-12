@@ -27,10 +27,10 @@
       </div>
     {% endif %}
 
-    {% if placements|length == 0 %}
-      <p>Ingen annonser er lagt ut.</p>
+    {% if time_placements|length == 0 %}
+      <p>Ingen tidsbaserte annonser er lagt ut.</p>
     {% else %}
-      <table class="table placements">
+      <table class="table placements time">
         <tr>
           <th>Annonse</th>
           <th>Fra og med</th>
@@ -39,8 +39,8 @@
           <th>Klikk</th>
           <th>Status</th>
         </tr>
-        {% for placement in placements %}
-          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-start-date="{{ placement.start_date|date:"d.m.Y" }}" data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
+        {% for placement in time_placements %}
+          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog.time" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-start-date="{{ placement.start_date|date:"d.m.Y" }}" data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
             <td>{{ placement.ad.name }}</td>
             <td>{{ placement.start_date|date:"j. F Y" }}</td>
             <td>{{ placement.end_date|date:"j. F Y" }}</td>
@@ -56,11 +56,32 @@
       </table>
     {% endif %}
 
+    {% if view_placements|length == 0 %}
+      <p>Ingen visningsbaserte annonser er lagt ut.</p>
+    {% else %}
+      <table class="table placements view">
+        <tr>
+          <th>Annonse</th>
+          <th>Maks visninger</th>
+          <th>Visninger</th>
+          <th>Klikk</th>
+        </tr>
+        {% for placement in view_placements %}
+          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog.view" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-view-limit="{{ placement.view_limit }}">
+            <td>{{ placement.ad.name }}</td>
+            <td>{{ placement.view_limit }}</td>
+            <td>{{ placement.views }}</td>
+            <td>{{ placement.clicks }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
     <form class="placement" method="post" action="{% url admin.ads.views.create_placement %}">
       {% csrf_token %}
       <table>
         <tr>
-          <td>Annonse</td>
+          <td colspan="2">Annonse</td>
           <td>
             <select name="ad">
               {% for ad in ads %}
@@ -69,16 +90,24 @@
             </select>
           </td>
         </tr>
-        <tr>
+        <tr class="time">
+          <td><input type="radio" name="adplacement_type" value="time"></td>
           <td>Start/stopp visning:</td>
           <td>
             <input type="text" name="start_date" class="input-medium date">
             <input type="text" name="end_date" class="input-medium date">
           </td>
         </tr>
+        <tr class="view">
+          <td><input type="radio" name="adplacement_type" value="views"></td>
+          <td>Antall visninger:</td>
+          <td>
+            <input type="text" name="view_limit">
+          </td>
+        </tr>
         <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Legg til visning</button></td>
+          <td colspan="2"></td>
+          <td><button type="submit" class="btn">Legg til annonsevisning</button></td>
         </tr>
       </table>
     </form>
@@ -143,7 +172,7 @@
 </div>
 
 {# Dialogs #}
-<div class="dialog placement-dialog" data-title="Annonsevisning" data-width="auto">
+<div class="dialog placement-dialog time" data-title="Annonsevisning" data-width="auto">
   <form class="placement" method="post" action="{% url admin.ads.views.update_placement %}">
     {% csrf_token %}
     <input type="hidden" name="id" value="">
@@ -163,6 +192,35 @@
         <td>
           <input type="text" name="start_date" class="input-medium date">
           <input type="text" name="end_date" class="input-medium date">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type="submit" class="btn">Oppdater visning</button></td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+<div class="dialog placement-dialog view" data-title="Annonsevisning" data-width="auto">
+  <form class="placement" method="post" action="{% url admin.ads.views.update_placement %}">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="">
+    <table>
+      <tr>
+        <td>Annonse</td>
+        <td>
+          <select name="ad">
+            {% for ad in ads %}
+              <option value="{{ ad.id }}">{{ ad.name }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Antall visninger:</td>
+        <td>
+          <input type="text" name="view_limit" class="input-medium">
         </td>
       </tr>
       <tr>

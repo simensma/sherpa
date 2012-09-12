@@ -18,8 +18,9 @@ added = 'annonse-lagt-til'
 @login_required
 def list(request):
     ads = Ad.objects.all().order_by('name')
-    placements = AdPlacement.objects.all().order_by('start_date', 'end_date')
-    context = {'ads': ads, 'placements': placements,
+    time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
+    view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
+    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
         'invalid_date': request.GET.has_key(invalid_date),
         'added': request.GET.has_key(added)}
     return render(request, 'admin/ads/list.html', context)
@@ -67,9 +68,15 @@ def update_ad(request):
 def create_placement(request):
     try:
         ad = Ad.objects.get(id=request.POST['ad'])
-        start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
-        end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
-        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date)
+        if request.POST['adplacement_type'] == 'time':
+            start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
+            end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
+            view_limit = None
+        else:
+            start_date = None
+            end_date = None
+            view_limit = request.POST['view_limit']
+        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date, view_limit=view_limit)
         ap.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
@@ -80,8 +87,11 @@ def update_placement(request):
     try:
         placement = AdPlacement.objects.get(id=request.POST['id'])
         placement.ad = Ad.objects.get(id=request.POST['ad'])
-        placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
-        placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
+        if placement.start_date != None:
+            placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
+            placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
+        else:
+            placement.view_limit = request.POST['view_limit']
         placement.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
