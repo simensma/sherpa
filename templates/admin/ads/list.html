@@ -33,7 +33,12 @@
           <th>Status</th>
         </tr>
         {% for placement in time_placements %}
-          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog.time" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-start-date="{{ placement.start_date|date:"d.m.Y" }}" data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
+          <tr class="placement dialog-button {{ placement.state }}"
+            data-dialog=".placement-dialog.time"
+            data-id="{{ placement.id }}"
+            data-ad="{{ placement.ad.id }}"
+            data-start-date="{{ placement.start_date|date:"d.m.Y" }}"
+            data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
             <td>{{ placement.ad.name }}</td>
             <td>{{ placement.start_date|date:"j. F Y" }}</td>
             <td>{{ placement.end_date|date:"j. F Y" }}</td>
@@ -60,7 +65,11 @@
           <th>Klikk</th>
         </tr>
         {% for placement in view_placements %}
-          <tr class="placement dialog-button {{ placement.state }}" data-dialog=".placement-dialog.view" data-id="{{ placement.id }}" data-ad="{{ placement.ad.id }}" data-view-limit="{{ placement.view_limit }}">
+          <tr class="placement dialog-button {{ placement.state }}"
+            data-dialog=".placement-dialog.view"
+            data-id="{{ placement.id }}"
+            data-ad="{{ placement.ad.id }}"
+            data-view-limit="{{ placement.view_limit }}">
             <td>{{ placement.ad.name }}</td>
             <td>{{ placement.view_limit }}</td>
             <td>{{ placement.views }}</td>
@@ -147,7 +156,14 @@
       </tr>
       {% for ad in ads %}
         <tr>
-          <td class="ad dialog-button" data-dialog=".ad-dialog" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">{{ ad.name }}</td>
+          <td class="ad dialog-button"
+            data-dialog=".ad-dialog"
+            data-id="{{ ad.id }}"
+            data-name="{{ ad.name }}"
+            data-destination="{{ ad.destination }}"
+            data-width="{{ ad.width|default_if_none:"" }}"
+            data-height="{{ ad.height|default_if_none:"" }}">
+            {{ ad.name }}</td>
           <td><a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a></td>
           <td>
             <a href="{{ ad.url }}">{{ ad.extension }}</a>
