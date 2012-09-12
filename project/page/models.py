@@ -66,6 +66,7 @@ class Version(models.Model):
     publishers = models.ManyToManyField('user.Profile', related_name='versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('admin.Tag', related_name='versions')
+    ads = models.BooleanField()
     title = None
     lede = None
     thumbnail = None

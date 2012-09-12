@@ -30,7 +30,7 @@ def new(request):
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True)
+    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True, ads=False)
     version.save()
     version.publishers.add(request.user.get_profile())
     create_template(request.POST['template'], version, request.POST['title'])

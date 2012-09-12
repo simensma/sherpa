@@ -42,7 +42,7 @@ def new(request):
     page.save()
     variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True)
+    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True, ads=True)
     version.save()
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
