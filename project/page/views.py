@@ -82,11 +82,11 @@ def parse_content(request, version):
                 parent = parent.parent
             page_hierarchy.reverse()
 
-        # Include ads if specified for this page
-        ad = AdPlacement.get_active_ad() if version.ads else None
-
-        context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy, 'ad': ad}
+        context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
+
+    # Include ads if specified for this page
+    context['ad'] = AdPlacement.get_active_ad() if context['version'].ads else None
 
     # Used temporary for static promo content
     promos = [
