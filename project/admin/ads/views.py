@@ -13,7 +13,6 @@ from lib import S3
 from page.models import Ad, AdPlacement
 
 invalid_date = 'ugyldig-datoformat'
-added = 'annonse-lagt-til'
 
 @login_required
 def list(request):
@@ -21,8 +20,7 @@ def list(request):
     time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
-        'invalid_date': request.GET.has_key(invalid_date),
-        'added': request.GET.has_key(added)}
+        'invalid_date': request.GET.has_key(invalid_date)}
     return render(request, 'admin/ads/list.html', context)
 
 @login_required
@@ -80,7 +78,7 @@ def create_placement(request):
         ap.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
-    return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))
+    return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 @login_required
 def update_placement(request):
@@ -95,7 +93,7 @@ def update_placement(request):
         placement.save()
     except ValueError:
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
-    return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), added))
+    return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):
     # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
