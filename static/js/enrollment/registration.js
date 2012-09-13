@@ -21,44 +21,30 @@ $(document).ready(function() {
         onClose: validateDatepicker
     });
 
+    // Clear input validation-status upon focus
     $("form#registration input").focus(function() {
         $(this).parents("div.control-group").removeClass('error warning success');
     });
 
-    $("form#registration input[name='name']").focusout(function() {
-        if(!$(this).val().match(/.+\s.+/)) {
-            $(this).parents("div.control-group").addClass('error');
-        } else {
-            $(this).parents("div.control-group").addClass('success');
-        }
-    });
+    window.validator = new Validator();
 
-    $("form#registration input[name='phone']").focusout(function() {
-        if($(this).val() != "" && ($(this).val().length < 8 || $(this).val().match(/[a-z]/i))) {
-            $(this).parents("div.control-group").addClass('error');
+    // Generic validation-complete function for most of the controls
+    function markInput(el, valid) {
+        if(valid) {
+            el.parents("div.control-group").addClass('success');
         } else {
-            $(this).parents("div.control-group").addClass('success');
+            el.parents("div.control-group").addClass('error');
         }
-        if(phone_required && $(this).val() == '') {
-            $(this).parents("div.control-group").addClass('error');
-        } else {
-            $(this).parents("div.control-group").addClass('success');
-        }
-    });
+    }
 
-    $("form#registration input[name='email']").focusout(function() {
-        if($(this).val() != "" && !$(this).val().match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/)) {
-            // Email provided, but invalid
-            $(this).parents("div.control-group").addClass('error');
-        } else {
-            $(this).parents("div.control-group").addClass('success');
-        }
-        if(email_required && $(this).val() == "") {
-            $(this).parents("div.control-group").addClass('error');
-        } else {
-            $(this).parents("div.control-group").addClass('success');
-        }
-    });
+    validator.addValidation('full_name', $("form#registration input[name='name']"), markInput, true);
+    validator.addValidation('phone', $("form#registration input[name='phone']"), markInput, phone_required);
+    validator.addValidation('email', $("form#registration input[name='email']"), markInput, email_required);
+
+    function validateDatepicker() {
+        // Datepicker calls this on close
+        markInput($(this), validator.validate('date', $("form#registration input[name='dob']").val(), true, {'min_year': 1900}));
+    }
 
     $("a.step2").click(function(e) {
         // Check that conditions checkbox is checked
@@ -79,17 +65,6 @@ $(document).ready(function() {
     });
 
 });
-
-function validateDatepicker() {
-    var dob = $("form#registration input[name='dob']").val();
-    if(!dob.match(/\d\d\.\d\d\.\d\d\d\d/)) {
-        $("form#registration div.control-group.dob").addClass('error');
-    } else if(Number(dob.substring(6)) < 1900) {
-        $("form#registration div.control-group.dob").addClass('error');
-    } else {
-        $("form#registration div.control-group.dob").addClass('success');
-    }
-}
 
 function validateGender() {
     if($("form#registration input[name='gender']:checked").length == 0) {
