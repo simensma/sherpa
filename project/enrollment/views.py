@@ -672,12 +672,6 @@ def prepare_and_send_email(users, association, location, payment_method, price_s
         # and got this message: (554, 'Message rejected: Address blacklisted.')
         pass
 
-def zipcode(request, zipcode):
-    try:
-        return HttpResponse(json.dumps({'location': Zipcode.objects.get(zipcode=zipcode).location}))
-    except Zipcode.DoesNotExist:
-        return HttpResponse(json.dumps({'error': 'does_not_exist'}))
-
 def updateIndices(session):
     i = 0
     for user in session['enrollment']['users']:

@@ -10,7 +10,7 @@ $(document).ready(function() {
         if($(this).val().match(/^\d{4}$/)) {
             $("form#household img.zip.ajaxloader").show();
             $.ajax({
-                url: '/innmelding/stedsnavn/' + encodeURIComponent($(this).val()) + '/',
+                url: '/postnummer/' + encodeURIComponent($(this).val()) + '/',
                 type: 'POST'
             }).done(function(result) {
                 result = JSON.parse(result);

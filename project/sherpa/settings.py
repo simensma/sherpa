@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south', # Database migrations
     'focus', # Only db-models from Focus
+    'core',
     'page',
     'admin',
     'analytics',

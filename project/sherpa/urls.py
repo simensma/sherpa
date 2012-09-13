@@ -5,6 +5,9 @@ handler404 = 'page.views.page_not_found'
 handler500 = 'page.views.server_error'
 
 urlpatterns = patterns('',
+    # Core urls
+    url(r'^', include('core.urls')),
+
     # Sherpa admin interface
     url(r'^sherpa/', include('admin.urls')),
 
