@@ -53,5 +53,5 @@ def show(request, article, text):
             row.columns = columns
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
-    context['ad'] = AdPlacement.get_active_ad()
+    context['advertisement'] = AdPlacement.get_active_ad()
     return render(request, "page/article.html", context)
