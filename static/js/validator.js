@@ -1,0 +1,59 @@
+var Validator = function() {
+    this.validations = [];
+    this.methods = {
+        'full_name': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.match(/.+\s.+/) != null;
+        },
+        'phone': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.length >= 8 && !input.match(/[a-z]/i);
+        },
+        'email': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/) != null;
+        },
+        'date': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            var res;
+            res = input.match(/\d\d\.\d\d\.\d\d\d\d/) != null;
+            if(opts.hasOwnProperty('min_year')) {
+                if(Number(input.substring(6)) < opts['min_year']) {
+                    res = false;
+                }
+            }
+            return res;
+        }
+    };
+}
+
+Validator.prototype.addValidation = function(method, el, complete, req, opts) {
+    var self = this;
+    self.validations.push({
+        'method': method,
+        'el': el,
+        'req': req,
+        'opts': opts
+    });
+    el.focusout(function() {
+        complete(el, self.validate(method, el.val(), req, opts));
+    });
+}
+
+Validator.prototype.validate = function(method, input, req, opts) {
+    if(!this.methods.hasOwnProperty(method)) {
+        throw new Error("Tried to validate with unknown validation method: " + method);
+    }
+    return this.methods[method](input, req, opts);
+}
+
+Validator.prototype.validateEverything = function() {
+    var self = this;
+    var ret = true;
+    self.validations.forEach(function(val) {
+        if(!self.validate(val.method, val.el.val(), val.req, val.opts)) {
+            ret = false;
+        }
+    });
+    return ret;
+}
