@@ -26,7 +26,7 @@ $(document).ready(function() {
         $(this).parents("div.control-group").removeClass('error warning success');
     });
 
-    window.validator = new Validator();
+    var validator = new Validator();
 
     // Generic validation-complete function for most of the controls
     function markInput(el, valid) {
