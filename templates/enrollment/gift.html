@@ -76,4 +76,75 @@
   </div>
 </div>
 
+<form id="gift" method="post" action="{# url enrollment.views_gift.send #}">
+  {% csrf_token %}
+  <div class="row">
+    <div class="span6">
+
+      <div class="border">
+        <h3>Dine opplysninger</h3>
+        <div class="control-group giver_name">
+          <label>Fullt navn <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_name">
+        </div>
+        <div class="control-group giver_address">
+          <label> Adresse <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_address">
+        </div>
+        <div class="control-group giver_zipcode">
+          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+          <input type="text" class="input-small" name="giver_zipcode" maxlength="10">
+          <input type="text" class="input-medium" name="giver_zity" disabled>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+        </div>
+        <div class="control-group giver_memberno">
+          <label>Medlemsnummer</label>
+          <input type="text" class="input-large" name="giver_memberno">
+        </div>
+        <div class="control-group giver_phone">
+          <label> Mobiltelefon</label>
+          <input type="text" class="input-medium" name="giver_phone">
+        </div>
+        <div class="control-group giver_email">
+          <label> E-post</label>
+          <input type="text" class="input-large" name="giver_email">
+        </div>
+      </div>
+
+    </div>
+    <div class="span6">
+      <div class="border">
+        <h3>Mottaker av gavemedlemskapet</h3>
+        <p class="type-display">
+          Medlemstype:
+          <span class="normal hide">Vanlig medlemskap</span>
+          <span class="baptism hide">Dåpsgave (kr. 900)</span>
+          <span class="jubilee hide">Jubileum (kr. 5500)</span>
+          <span class="life hide">Livsvarig medlemskap (kr. 13750)</span>
+        </p>
+
+        <div class="control-group giver_name">
+          <label>Fullt navn <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_name">
+        </div>
+        <div class="control-group giver_address">
+          <label> Adresse <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_address">
+        </div>
+        <div class="control-group dob">
+          <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
+          <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
+        </div>
+        <div class="control-group giver_zipcode">
+          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+          <input type="text" class="input-small" name="giver_zipcode" maxlength="10">
+          <input type="text" class="input-medium" name="giver_zity" disabled>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
 {% endblock %}
