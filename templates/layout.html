@@ -140,6 +140,10 @@
 
 {% block body %}{% endblock %}
 
+{% if advertisement %}
+  {% include 'ad.html' %}
+{% endif %}
+
 </div>
 
 <div class="container social-icons">

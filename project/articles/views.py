@@ -24,7 +24,8 @@ def index(request):
     versions = versions[:20]
     for version in versions:
         version.load_preview()
-    context = {'versions': versions, 'tag': request.GET.get('tag', '')}
+    context = {'versions': versions, 'tag': request.GET.get('tag', ''),
+        'advertisement': AdPlacement.get_active_ad()}
     return render(request, "page/articles-list.html", context)
 
 def show(request, article, text):

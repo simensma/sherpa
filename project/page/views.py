@@ -86,7 +86,7 @@ def parse_content(request, version):
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
     # Include ads if specified for this page
-    context['ad'] = AdPlacement.get_active_ad() if context['version'].ads else None
+    context['advertisement'] = AdPlacement.get_active_ad() if context['version'].ads else None
 
     # Used temporary for static promo content
     promos = [
