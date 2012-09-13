@@ -33,7 +33,6 @@ $(document).ready(function() {
         }
     });
 
-    window.phone_required = false;
     $("form#registration input[name='phone']").focusout(function() {
         if($(this).val() != "" && ($(this).val().length < 8 || $(this).val().match(/[a-z]/i))) {
             $(this).parents("div.control-group").addClass('error');
@@ -47,7 +46,6 @@ $(document).ready(function() {
         }
     });
 
-    window.email_required = false;
     $("form#registration input[name='email']").focusout(function() {
         if($(this).val() != "" && !$(this).val().match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/)) {
             // Email provided, but invalid

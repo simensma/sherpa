@@ -1,5 +1,11 @@
 {% extends 'enrollment/index.html' %}
 {% block extra_js %}
+  <script>
+    $(document).ready(function() {
+      window.phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+      window.email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+    });
+  </script>
   <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
 {% endblock %}
@@ -20,14 +26,6 @@
   });
 </script>
 {% endif %}
-
-<script>
-  $(document).ready(function() {
-    phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
-    email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
-  });
-</script>
-
 
 <div class="row">
   <div class="span8">
