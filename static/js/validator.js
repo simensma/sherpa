@@ -50,10 +50,13 @@ Validator.prototype.validate = function(method, input, req, opts) {
 Validator.prototype.validateEverything = function() {
     var self = this;
     var ret = true;
-    self.validations.forEach(function(val) {
-        if(!self.validate(val.method, val.el.val(), val.req, val.opts)) {
+    for(var i=0; i<self.validations.length; i++) {
+        if(!self.validate(self.validations[i].method,
+                          self.validations[i].el.val(),
+                          self.validations[i].req,
+                          self.validations[i].opts)) {
             ret = false;
         }
-    });
+    }
     return ret;
 }
