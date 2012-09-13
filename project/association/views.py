@@ -11,16 +11,18 @@ from user.models import *
 import json
 
 # Define categories and their order here. This is duplicated in the Sherpa DB.
-categories = [
-    {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
-    {'name': 'Barnas Turlag', 'db': 'Barn'},
-    {'name': 'DNT ung', 'db': 'Ungdom'},
-    {'name': 'DNT fjellsport', 'db': 'Fjellsport'},
-    {'name': 'DNT senior', 'db': 'Senior'},
-    {'name': 'Andre turgrupper', 'db': 'Annen'}]
+def get_categories():
+    return [
+        {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
+        {'name': 'Barnas Turlag', 'db': 'Barn'},
+        {'name': 'DNT ung', 'db': 'Ungdom'},
+        {'name': 'DNT fjellsport', 'db': 'Fjellsport'},
+        {'name': 'DNT senior', 'db': 'Senior'},
+        {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
     counties = County.objects.exclude(sherpa_id=None).order_by('code')
+    categories = get_categories()
 
     for category in categories:
         if request.GET.get('kategori', '') == '' and category['db'] == 'Foreninger':
@@ -39,7 +41,7 @@ def filter(request):
     result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result == None:
         exists = False
-        for category in categories:
+        for category in get_categories():
             if request.POST['category'].title() == category['db']:
                 exists = True
                 break
