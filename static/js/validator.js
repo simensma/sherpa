@@ -29,7 +29,7 @@ var Validator = function() {
             if(!req && input == '') { return true; }
             var res;
             res = input.match(/^\d\d\.\d\d\.\d\d\d\d$/) != null;
-            if(opts.hasOwnProperty('min_year')) {
+            if(opts != undefined && opts.hasOwnProperty('min_year')) {
                 if(Number(input.substring(6)) < opts['min_year']) {
                     res = false;
                 }
