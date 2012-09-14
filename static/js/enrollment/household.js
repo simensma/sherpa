@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     $("form#household img.ajaxloader").hide();
     $("form#household input[name='zipcode']").keyup(searchZip);
+    $("form#household select[name='country']").chosen();
     if($("form#household select[name='country'] option:selected").val() == 'NO') {
         $("form#household input[name='zipcode']").keyup();
     }

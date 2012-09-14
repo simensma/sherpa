@@ -47,6 +47,7 @@ div.modal.conditions li, div.modal.conditions p {
 
 form#household select {
   height: 34px;
+  width: 300px;
 }
 
 form#household select option[disabled] {
