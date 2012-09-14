@@ -21,6 +21,10 @@ var Validator = function() {
             if(!req && input == '') { return true; }
             return input.match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/) != null;
         },
+        'memberno': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.match(/\d+/) != null;
+        },
         'date': function(input, req, opts) {
             if(!req && input == '') { return true; }
             var res;
