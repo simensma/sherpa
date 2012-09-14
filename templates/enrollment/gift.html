@@ -2,11 +2,14 @@
 {% block title %}Gavemedlemskap{% endblock %}
 {% block breadcrumb_title %}Gavemedlemskap{% endblock %}
 {% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
 {% endblock %}
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
   <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
 {% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -123,22 +126,22 @@
           <span class="life hide">Livsvarig medlemskap (kr. 13750)</span>
         </p>
 
-        <div class="control-group giver_name">
+        <div class="control-group receiver_name">
           <label>Fullt navn <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_name">
+          <input type="text" class="input-large" name="receiver_name">
         </div>
-        <div class="control-group giver_address">
+        <div class="control-group receiver_address">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_address">
+          <input type="text" class="input-large" name="receiver_address">
         </div>
         <div class="control-group dob">
           <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
-          <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
+          <input type="text" class="input-medium dob" name="receiver_dob">
         </div>
-        <div class="control-group giver_zipcode">
+        <div class="control-group receiver_zipcode">
           <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="giver_zipcode" maxlength="10">
-          <input type="text" class="input-medium city" name="giver_city" disabled>
+          <input type="text" class="input-small zipcode" name="receiver_zipcode" maxlength="10">
+          <input type="text" class="input-medium city" name="receiver_city" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
 
