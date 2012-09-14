@@ -3,19 +3,19 @@ var Validator = function() {
     this.methods = {
         'full_name': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/.+\s.+/) != null;
+            return input.match(/^.+\s.+$/) != null;
         },
         'address': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/[^\s]+/) != null;
+            return input.match(/^[^\s]+$/) != null;
         },
         'zipcode': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/\d{4}/) != null;
+            return input.match(/^\d{4}$/) != null;
         },
         'phone': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.length >= 8 && !input.match(/[a-z]/i);
+            return input.length >= 8 && input.match(/[a-z]/i) == null;
         },
         'email': function(input, req, opts) {
             if(!req && input == '') { return true; }
@@ -23,12 +23,12 @@ var Validator = function() {
         },
         'memberno': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/\d+/) != null;
+            return input.match(/^\d+$/) != null;
         },
         'date': function(input, req, opts) {
             if(!req && input == '') { return true; }
             var res;
-            res = input.match(/\d\d\.\d\d\.\d\d\d\d/) != null;
+            res = input.match(/^\d\d\.\d\d\.\d\d\d\d$/) != null;
             if(opts.hasOwnProperty('min_year')) {
                 if(Number(input.substring(6)) < opts['min_year']) {
                     res = false;
