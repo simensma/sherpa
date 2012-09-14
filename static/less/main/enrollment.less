@@ -263,30 +263,13 @@ table td.sum {
 
 /* Gift */
 
+form#gift {
+  margin-top: 20px;
+}
+
 form#gift div.border {
   border: 1px solid rgb(221, 221, 221);
   padding: 14px 20px;
-}
-
-div.gift-choice h2 {
-  color: rgb(216, 45, 32);
-}
-
-div.gift-choice.active {
-  background-color: rgb(220, 220, 220) !important;
-}
-
-div.gift-choice.active h2 {
-  text-decoration: underline;
-}
-
-div.gift-choice:hover {
-  cursor: pointer;
-  background-color: rgb(240, 240, 240);
-}
-
-div.gift-choice:hover h2 {
-  text-decoration: underline;
 }
 
 p.type-display {
@@ -295,4 +278,8 @@ p.type-display {
 
 p.type-display span {
   font-weight: bold;
+}
+
+form#gift select[name='receiver_type'] {
+  width: 300px;
 }
