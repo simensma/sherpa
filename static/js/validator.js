@@ -5,6 +5,10 @@ var Validator = function() {
             if(!req && input == '') { return true; }
             return input.match(/.+\s.+/) != null;
         },
+        'address': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.match(/[^\s]+/) != null;
+        },
         'phone': function(input, req, opts) {
             if(!req && input == '') { return true; }
             return input.length >= 8 && !input.match(/[a-z]/i);
