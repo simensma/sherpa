@@ -79,7 +79,7 @@ def parent(request, page):
 @login_required
 def display_ads(request, version):
     version = Version.objects.get(id=version)
-    version.ad = json.loads(request.POST['ads'])
+    version.ads = json.loads(request.POST['ads'])
     version.save()
     return HttpResponse()
 
