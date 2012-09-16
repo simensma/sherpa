@@ -83,9 +83,9 @@ class Version(models.Model):
             self.thumbnail = self.variant.article.thumbnail
         else:
             try:
-                # Define "main image" as the one in the first column and row
+                # Define "main image" as the first one in the first column and row
                 content = Content.objects.filter(column__order=0, column__row__order=0,
-                    column__row__version=self, type='image')[0]
+                    column__row__version=self, type='image').order_by('order')[0]
                 self.thumbnail = json.loads(content.content)['src']
             except IndexError:
                 # There are no images in this article
