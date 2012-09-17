@@ -90,7 +90,7 @@ $(document).ready(function() {
     // Add more receivers
     $("form#gift button.new-receiver").click(function(e) {
         e.preventDefault();
-        var list = $("div.receiver-container div.receiver-box");
+        var list = $("form#gift div.receiver-box");
         var clone = list.first().clone();
         clone.addClass('hide');
         list.last().after(clone);
