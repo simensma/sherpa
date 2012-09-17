@@ -1,3 +1,5 @@
+window.datePickerCount = 1;
+
 $(document).ready(function() {
     $("select.skel[name='receiver_type']").clone().show().appendTo($("form#gift div.receiver_type")).chosen({disable_search: true});
 
@@ -68,25 +70,12 @@ $(document).ready(function() {
         validator.addValidation('phone', box.find("input[name='receiver_phone']"), markInput, false);
         validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
 
-        box.find("input[name='receiver_dob']").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            firstDay: 1,
-            yearRange: "1900:c",
-            dateFormat: 'dd.mm.yy',
-            dayNames: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-            dayNamesShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-            dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-            monthNames: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August',
-              'September', 'Oktober', 'November', 'Desember'],
-            monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',
-              'Nov', 'Des'],
-            defaultDate: '-15y',
-            showOn: 'both',
-            buttonImage: '/static/img/calendar.png',
-            buttonImageOnly: true,
-            buttonText: 'Velg dato...',
-            onClose: validateDatepicker
+        var forms = {};
+        forms[box.find("input[name='receiver_dob']").attr('id')]= "%d.%m.%Y";
+        datePickerController.createDatePicker({
+            formElements: forms,
+            statusFormat:"%d. %F %Y",
+            noTodayButton:true
         });
     }
 
@@ -100,6 +89,8 @@ $(document).ready(function() {
         e.preventDefault();
         var list = $("div.receiver-container div.receiver-box");
         var clone = list.first().clone();
+        clone.addClass('hide');
+        list.last().after(clone);
         var type = clone.find("div.receiver_type").empty();
         var select = $("select.skel[name='receiver_type']").clone().removeClass('skel').show().appendTo(type);
         var button = $('<button class="btn btn-danger remove-receiver"><i class="icon-remove"></i> Ta bort denne mottakeren</button>');
@@ -112,9 +103,12 @@ $(document).ready(function() {
             $(this).parents("div.control-group").removeClass('error warning success');
         });
         clone.find("input").val("");
+        var dp = clone.find("input[name='receiver_dob']");
+        dp.siblings("a").remove();
+        var count = window.datePickerCount + 1;
+        window.datePickerCount = count;
+        dp.removeAttr('id').attr('id', 'datepicker-' + count);
         addReceiverValidations(clone);
-        clone.addClass('hide');
-        list.last().after(clone);
         select.chosen({disable_search: true});
         clone.slideDown();
     });

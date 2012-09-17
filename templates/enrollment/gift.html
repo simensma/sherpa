@@ -3,10 +3,13 @@
 {% block breadcrumb_title %}Gavemedlemskap{% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/datePicker/css/datepicker.min.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
 {% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/datePicker/js/lang/no.js"></script>
+  <script src="{{ STATIC_URL }}lib/datePicker/js/datepicker.min.js"></script>
   <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
 {% endblock %}
 
@@ -123,7 +126,7 @@
         </div>
         <div class="control-group dob">
           <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
-          <input type="text" class="input-medium dob" name="receiver_dob">
+          <input type="text" class="input-medium dob" id="datepicker-1" name="receiver_dob">
         </div>
         <div class="control-group receiver_address">
           <label> Adresse <span class="asterisk red">*</span></label>
