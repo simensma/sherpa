@@ -81,7 +81,6 @@
   {% csrf_token %}
   <div class="row">
     <div class="span6">
-
       <div class="border">
         <h3>Dine opplysninger</h3>
         <div class="control-group giver_name">
@@ -113,16 +112,10 @@
       </div>
 
     </div>
-    <div class="span6">
-      <div class="border">
+    <div class="span6 receiver-container">
+      <div class="receiver-box border">
         <h3>Mottaker av gavemedlemskapet</h3>
         <div class="control-group receiver_type">
-          <select name="receiver_type" data-placeholder="Velg type medlemskap...">
-            <option value="normal">Vanlig medlemskap</option>
-            <option value="baptism">Dåpsgave (kr. 900)</option>
-            <option value="jubilee">Jubileum (kr. 5500)</option>
-            <option value="life">Livsvarig medlemskap (kr. 13750)</option>
-          </select>
         </div>
         <div class="control-group receiver_name">
           <label>Fullt navn <span class="asterisk red">*</span></label>
@@ -142,10 +135,17 @@
           <input type="text" class="input-medium city" name="receiver_city" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
-
       </div>
+      <button class="btn btn-large btn-success new-receiver"><i class="icon-user"></i> Legg til flere mottakere</button>
     </div>
   </div>
 </form>
+
+<select name="receiver_type" data-placeholder="Velg type medlemskap..." class="skel hide">
+  <option value="normal">Vanlig medlemskap</option>
+  <option value="baptism">Dåpsgave (kr. 900)</option>
+  <option value="jubilee">Jubileum (kr. 5500)</option>
+  <option value="life">Livsvarig medlemskap (kr. 13750)</option>
+</select>
 
 {% endblock %}
