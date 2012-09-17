@@ -122,4 +122,24 @@ $(document).ready(function() {
         clone.slideDown();
     });
 
+    $("form#gift button[type='submit']").click(function(e) {
+        var receivers = [];
+        $("form#gift div.receiver-box").each(function() {
+            var receiver = {
+                type: $(this).find("select[name='receiver_type'] option:selected").val(),
+                name: $(this).find("input[name='receiver_name']").val(),
+                dob: $(this).find("select[name='receiver_dob_dd'] option:selected").val() + "." +
+                     $(this).find("select[name='receiver_dob_mm'] option:selected").val() + "." +
+                    $(this).find("select[name='receiver_dob_yyyy'] option:selected").val(),
+                address: $(this).find("input[name='receiver_address']").val(),
+                zipcode: $(this).find("input[name='receiver_zipcode']").val()
+            };
+            receivers.push(receiver);
+        });
+        $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
+        if(!confirm("Sikker?")) {
+            e.preventDefault();
+        }
+    });
+
 });

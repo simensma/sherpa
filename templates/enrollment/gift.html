@@ -80,8 +80,9 @@
   </div>
 </div>
 
-<form id="gift" method="post" action="{# url enrollment.views_gift.send #}">
+<form id="gift" method="post" action="{% url enrollment.views_gift.send %}">
   {% csrf_token %}
+  <input type="hidden" name="receivers" value="">
   <div class="row">
     <div class="span6">
       <div class="border">
@@ -113,7 +114,6 @@
           <input type="text" class="input-large" name="giver_email">
         </div>
       </div>
-
     </div>
     <div class="span6">
       <div class="receiver-box border">
@@ -154,7 +154,10 @@
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
       </div>
-      <button class="btn btn-large btn-success new-receiver"><i class="icon-user"></i> Legg til flere mottakere</button>
+      <p class="buttons">
+        <button class="btn btn-large new-receiver"><i class="icon-user"></i> Legg til flere mottakere</button>
+        <button class="btn btn-large btn-success" type="submit"><i class="icon-ok"></i> Send bestilling</button>
+      </p>
     </div>
   </div>
 </form>
