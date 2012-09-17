@@ -71,11 +71,14 @@ $(document).ready(function() {
         validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
 
         var forms = {};
-        forms[box.find("input[name='receiver_dob']").attr('id')]= "%d.%m.%Y";
+        forms[box.find("select.dob.dd").attr('id')]= "%d";
+        forms[box.find("select.dob.mm").attr('id')]= "%n";
+        forms[box.find("select.dob.yyyy").attr('id')]= "%Y";
         datePickerController.createDatePicker({
             formElements: forms,
             statusFormat:"%d. %F %Y",
-            noTodayButton:true
+            noTodayButton:true,
+            positioned: box.find("span.dob-placement").attr('id')
         });
     }
 
@@ -103,11 +106,17 @@ $(document).ready(function() {
             $(this).parents("div.control-group").removeClass('error warning success');
         });
         clone.find("input").val("");
-        var dp = clone.find("input[name='receiver_dob']");
-        dp.siblings("a").remove();
-        var count = window.datePickerCount + 1;
-        window.datePickerCount = count;
-        dp.removeAttr('id').attr('id', 'datepicker-' + count);
+        window.datePickerCount += 1;
+        var dd = clone.find("select.dob.dd");
+        var mm = clone.find("select.dob.mm");
+        var yyyy = clone.find("select.dob.yyyy");
+        var placement = clone.find("span.dob-placement");
+        placement.empty();
+        dd.removeAttr('id').attr('id', 'dp-dd-' + window.datePickerCount);
+        mm.removeAttr('id').attr('id', 'dp-mm-' + window.datePickerCount);
+        yyyy.removeAttr('id').attr('id', 'dp-yyyy-' + window.datePickerCount);
+        placement.removeAttr('id').attr('id', 'dob-placement-' + window.datePickerCount);
+        dd.siblings("a").remove();
         addReceiverValidations(clone);
         select.chosen({disable_search: true});
         clone.slideDown();

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+from datetime import datetime
 from smtplib import SMTPDataError
 
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
@@ -15,6 +16,24 @@ AGE_STUDENT = 19
 AGE_SCHOOL = 13
 
 def index(request):
-    context = {}
+    months = zip(range(1, 13), [
+        'Januar',
+        'Februar',
+        'Mars',
+        'April',
+        'Mai',
+        'Juni',
+        'Juli',
+        'August',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    ])
+    context = {
+        'days': range(1, 32),
+        'months': months,
+        'years': reversed(range(1900, datetime.now().year + 1)),
+    }
     return render(request, 'enrollment/gift.html', context)
 
