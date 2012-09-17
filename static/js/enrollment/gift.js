@@ -137,9 +137,6 @@ $(document).ready(function() {
             receivers.push(receiver);
         });
         $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
-        if(!confirm("Sikker?")) {
-            e.preventDefault();
-        }
     });
 
 });

@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+{% block title %}Gavemedlemskap{% endblock %}
+{% block breadcrumb_title %}Gavemedlemskap{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Bekreft gavemedlemskapbestilling</h1>
+
+    <div class="row-fluid">
+      <div class="span3">
+        <h2>Giver:</h2>
+        <table class="table">
+          <tr>
+            <th>Navn:</th>
+            <td>{{ giver.name }}</td>
+          </tr>
+          <tr>
+            <th>Adresse:</th>
+            <td>
+              {{ giver.address }}<br>
+              {{ giver.zipcode }} {{ giver.location }}
+            </td>
+          </tr>
+          <tr>
+            <th>Medlemsnr:</th>
+            <td>{{ giver.memberno }}</td>
+          </tr>
+          <tr>
+            <th>Mobiltlf:</th>
+            <td>{{ giver.phone }}</td>
+          </tr>
+          <tr>
+            <th>E-post:</th>
+            <td>{{ giver.email }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="span9">
+        <h2>
+          {% if receivers|length > 1 %}
+            Mottakere:
+          {% else %}
+            Mottaker:
+          {% endif %}
+        </h2>
+        <table class="table">
+          <tr>
+            <th>Type:</th>
+            {% for receiver in receivers %}
+              <td>{{ receiver.type }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Navn:</th>
+            {% for receiver in receivers %}
+              <td>{{ receiver.name }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Fødselsdato:</th>
+            {% for receiver in receivers %}
+              <td>{{ receiver.dob|date:"j. F Y" }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Adresse:</th>
+            {% for receiver in receivers %}
+              <td>
+                {{ receiver.address }}<br>
+                {{ receiver.zipcode }} {{ receiver.location }}
+              </td>
+            {% endfor %}
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

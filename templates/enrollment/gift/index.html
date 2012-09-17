@@ -80,7 +80,7 @@
   </div>
 </div>
 
-<form id="gift" method="post" action="{% url enrollment.views_gift.send %}">
+<form id="gift" method="post" action="{% url enrollment.views_gift.validate %}">
   {% csrf_token %}
   <input type="hidden" name="receivers" value="">
   <div class="row">
@@ -156,17 +156,17 @@
       </div>
       <p class="buttons">
         <button class="btn btn-large new-receiver"><i class="icon-user"></i> Legg til flere mottakere</button>
-        <button class="btn btn-large btn-success" type="submit"><i class="icon-ok"></i> Send bestilling</button>
+        <button class="btn btn-large btn-success" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
+        <em>(Bestillingen blir ikke sendt ennå)</em>
       </p>
     </div>
   </div>
 </form>
 
 <select name="receiver_type" data-placeholder="Velg type medlemskap..." class="skel hide">
-  <option value="normal">Vanlig medlemskap</option>
-  <option value="baptism">Dåpsgave (kr. 900)</option>
-  <option value="jubilee">Jubileum (kr. 5500)</option>
-  <option value="life">Livsvarig medlemskap (kr. 13750)</option>
+  {% for type in types %}
+    <option value="{{ forloop.counter0 }}">{{ type }}</option>
+  {% endfor %}
 </select>
 
 {% endblock %}
