@@ -26,42 +26,50 @@ membership_types = [
   'Livsvarig medlemskap (kr. 13750)',
 ]
 
-class Invalid(Exception):
-    pass
-
 class Giver():
     def __init__(self, name, address, zipcode, memberno, phone, email):
+        self.name = name
+        self.address = address
+        self.zipcode = zipcode
         try:
-            self.name = name
-            self.address = address
-            self.zipcode = zipcode
             self.location = Zipcode.objects.get(zipcode=zipcode).location
-            self.memberno = memberno
-            self.phone = phone
-            self.email = email
-
-            if not validator.name(name):
-                raise Invalid('Invalid name')
-
-            if not validator.address(address):
-                raise Invalid('Invalid address')
-
-            if not validator.zipcode(zipcode):
-                raise Invalid('Invalid zipcode')
-
-            if not validator.memberno(memberno):
-                raise Invalid('Invalid memberno')
-
-            if not validator.phone(phone):
-                raise Invalid('Invalid phone')
-
-            if not validator.email(email):
-                raise Invalid('Invalid email')
-
         except Zipcode.DoesNotExist:
-            raise Invalid('Invalid zipcode')
+            self.location = None
+        self.memberno = memberno
+        self.phone = phone
+        self.email = email
+
+    def validate(self):
+        if not validator.name(self.name):
+            return False
+
+        if not validator.address(self.address):
+            return False
+
+        if not validator.zipcode(self.zipcode):
+            return False
+
+        if self.location == None:
+            return False
+
+        if not validator.memberno(self.memberno):
+            return False
+
+        if not validator.phone(self.phone):
+            return False
+
+        if not validator.email(self.email):
+            return False
+
+        if not Zipcode.objects.filter(zipcode=self.zipcode).exists():
+            return False
+
+        return True
 
 def index(request):
+    if not request.session.has_key('gift_membership'):
+        request.session['gift_membership'] = {}
+
     context = {}
     months = zip(range(1, 13), [
         'Januar',
@@ -78,9 +86,9 @@ def index(request):
         'Desember'
     ])
 
-    if request.session.has_key('gift_membership.invalid_input'):
-        del request.session['gift_membership.invalid_input']
-        context['invalid_input'] = True
+    if request.session['gift_membership'].has_key('giver'):
+        if not request.session['gift_membership']['giver'].validate():
+            context['invalid_input'] = True
 
     context.update({
         'days': range(1, 32),
@@ -91,27 +99,32 @@ def index(request):
     return render(request, 'enrollment/gift/index.html', context)
 
 def validate(request):
-    try:
-        giver = Giver(
-            request.POST['giver_name'],
-            request.POST['giver_address'],
-            request.POST['giver_zipcode'],
-            request.POST['giver_memberno'],
-            request.POST['giver_phone'],
-            request.POST['giver_email'])
-    except Invalid:
-        request.session['gift_membership.invalid_input'] = True
-        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+    if not request.session.has_key('gift_membership'):
+        return HttpResponseRedirect(reverse('enrollment.views.index'))
+
+    giver = Giver(
+        request.POST['giver_name'],
+        request.POST['giver_address'],
+        request.POST['giver_zipcode'],
+        request.POST['giver_memberno'],
+        request.POST['giver_phone'],
+        request.POST['giver_email'])
+
     receivers = json.loads(request.POST['receivers'])
     for receiver in receivers:
         receiver['type'] = membership_types[int(receiver['type'])]
 
-    # Todo: Validations
+    # Todo: Receiver validations
 
     request.session['gift_membership'] = {'giver': giver, 'receivers': receivers}
+    if not giver.validate():
+        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
 def confirm(request):
+    if not request.session.has_key('gift_membership'):
+        return HttpResponseRedirect(reverse('enrollment.views.index'))
+
     context = {
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers']
