@@ -7,6 +7,7 @@ from django.core.cache import cache
 
 from association.models import Association
 from focus.models import FocusZipcode, Price
+from enrollment.models import State
 
 from datetime import datetime
 
@@ -35,7 +36,8 @@ def benefits(request, association_id):
         price = Price.objects.get(association_id=association.focus_id)
         cache.set('association.price.%s' % association.focus_id, price, 60 * 60 * 24 * 7)
 
-    context = {'association': association, 'price': price, 'now': datetime.now()}
+    context = {'association': association, 'price': price, 'now': datetime.now(),
+        'enrollment_active': State.objects.all()[0].active}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
