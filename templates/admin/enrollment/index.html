@@ -1,0 +1,20 @@
+{% extends "admin/layout.html" %}
+{% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.enrollment.views.index %}">Innmelding</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/enrollment.js"></script>
+{% endblock %}
+{% block body %}
+
+{# For AJAX-requests #}
+{% csrf_token %}
+
+<div class="row">
+  <div class="span12">
+    <p>
+      Her kan du aktivere/deaktivere innmeldingsskjemaet.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

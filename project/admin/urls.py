@@ -24,4 +24,7 @@ urlpatterns = patterns('admin',
 
     # Caching
     url(r'^cache/', include('admin.cache.urls')),
+
+    # Enrollment
+    url(r'^innmelding/', include('admin.enrollment.urls')),
 )
