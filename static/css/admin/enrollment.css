@@ -1,0 +1,19 @@
+.status {
+  font-weight: normal;
+}
+
+.status.active {
+  color: rgb(0, 180, 0);
+}
+
+.status.inactive {
+  color: rgb(216, 45, 32);
+}
+
+div.cont {
+  text-align: center;
+}
+
+button {
+  font-size: 20px !important;
+}

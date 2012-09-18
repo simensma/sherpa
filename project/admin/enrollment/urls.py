@@ -3,4 +3,5 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.enrollment.views',
     url(r'^$', 'index'),
+    url(r'^aktiver/$', 'activate'),
 )

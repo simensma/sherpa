@@ -2,7 +2,11 @@
 {% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.enrollment.views.index %}">Innmelding</a>{% endblock %}
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
   <script src="{{ STATIC_URL }}js/admin/enrollment.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/enrollment.css" media="screen">
 {% endblock %}
 {% block body %}
 
@@ -10,9 +14,19 @@
 {% csrf_token %}
 
 <div class="row">
-  <div class="span12">
-    <p>
-      Her kan du aktivere/deaktivere innmeldingsskjemaet.
+  <div class="span6 cont">
+    <div class="active{% if not enrollment_activated %} hide{% endif %}">
+      <h2 class="status active">Innmeldingsskjemaet er aktivert.</h2>
+      <button class="btn btn-large btn-danger deactivate">Deaktiver innmeldingsskjemaet</button>
+    </div>
+
+    <div class="inactive{% if enrollment_activated %} hide{% endif %}">
+      <h2 class="status inactive">Innmeldingsskjemaet er deaktivert!</h2>
+      <button class="btn btn-large btn-success activate">Aktiver innmeldingsskjemaet</button>
+    </div>
+
+    <p class="ajaxloader hide">
+      <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
     </p>
   </div>
 </div>
