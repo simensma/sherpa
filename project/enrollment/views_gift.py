@@ -95,6 +95,7 @@ def index(request):
         'months': months,
         'years': reversed(range(1900, datetime.now().year + 1)),
         'types': membership_types,
+        'giver': request.session['gift_membership'].get('giver', None),
     })
     return render(request, 'enrollment/gift/index.html', context)
 

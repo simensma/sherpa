@@ -92,29 +92,29 @@
         <h3>Dine opplysninger</h3>
         <div class="control-group giver_name">
           <label>Fullt navn <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_name">
+          <input type="text" class="input-large" name="giver_name" value="{{ giver.name }}">
         </div>
         <div class="control-group giver_address">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_address">
+          <input type="text" class="input-large" name="giver_address" value="{{ giver.address }}">
         </div>
         <div class="control-group giver_zipcode">
           <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="giver_zipcode" maxlength="10">
-          <input type="text" class="input-medium location" name="giver_location" disabled>
+          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{{ giver.zipcode }}" maxlength="10">
+          <input type="text" class="input-medium location" name="giver_location" value="{{ giver.location }}" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
         <div class="control-group giver_memberno">
           <label>Medlemsnummer</label>
-          <input type="text" class="input-large" name="giver_memberno">
+          <input type="text" class="input-large" name="giver_memberno" value="{{ giver.memberno }}">
         </div>
         <div class="control-group giver_phone">
           <label> Mobiltelefon</label>
-          <input type="text" class="input-medium" name="giver_phone">
+          <input type="text" class="input-medium" name="giver_phone" value="{{ giver.phone }}">
         </div>
         <div class="control-group giver_email">
           <label> E-post</label>
-          <input type="text" class="input-large" name="giver_email">
+          <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
         </div>
       </div>
     </div>
