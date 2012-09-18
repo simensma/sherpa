@@ -70,9 +70,9 @@ $(document).ready(function() {
         validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
 
         var forms = {};
-        forms[box.find("select.dob.dd").attr('id')]= "%d";
-        forms[box.find("select.dob.mm").attr('id')]= "%n";
-        forms[box.find("select.dob.yyyy").attr('id')]= "%Y";
+        forms[box.find("select[name='receiver_dob_dd']").attr('id')]= "%d";
+        forms[box.find("select[name='receiver_dob_mm']").attr('id')]= "%n";
+        forms[box.find("select[name='receiver_dob_yyyy']").attr('id')]= "%Y";
         datePickerController.createDatePicker({
             formElements: forms,
             statusFormat:"%d. %F %Y",
@@ -87,9 +87,9 @@ $(document).ready(function() {
         $("form#gift div.receivers").append(clone);
         clone.find("select[name='receiver_type']").chosen({disable_search: true})
         window.datePickerCount += 1;
-        clone.find("select.dob.dd").attr('id', 'dp-dd-' + window.datePickerCount);
-        clone.find("select.dob.mm").attr('id', 'dp-mm-' + window.datePickerCount);
-        clone.find("select.dob.yyyy").attr('id', 'dp-yyyy-' + window.datePickerCount);
+        clone.find("select[name='receiver_dob_dd']").attr('id', 'dp-dd-' + window.datePickerCount);
+        clone.find("select[name='receiver_dob_mm']").attr('id', 'dp-mm-' + window.datePickerCount);
+        clone.find("select[name='receiver_dob_yyyy']").attr('id', 'dp-yyyy-' + window.datePickerCount);
         clone.find("span.dob-placement").attr('id', 'dob-placement-' + window.datePickerCount);
         addReceiverValidations(clone);
         clone.slideDown();
