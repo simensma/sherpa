@@ -12,20 +12,20 @@ $(document).ready(function() {
             }).done(function(result) {
                 result = JSON.parse(result);
                 if(result.location != undefined) {
-                    self.siblings("input.city").val(result.location);
+                    self.siblings("input.location").val(result.location);
                     self.parents("div.control-group").removeClass('error').addClass('success');
                 } else if(result.error == "does_not_exist") {
-                    self.siblings("input.city").val("Ukjent postnummer");
+                    self.siblings("input.location").val("Ukjent postnummer");
                     self.parents("div.control-group").removeClass('success').addClass('error');
                 }
             }).fail(function(result) {
-                self.siblings("input.city").val("Teknisk feil");
+                self.siblings("input.location").val("Teknisk feil");
                 self.parents("div.control-group.zipcode").removeClass('success').addClass('error');
             }).always(function(result) {
                 self.siblings("img.ajaxloader").hide();
             });
         } else {
-            self.siblings("input.city").val("");
+            self.siblings("input.location").val("");
             self.parents("div.control-group").removeClass('error warning success');
         }
     });
