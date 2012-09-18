@@ -1,24 +1,55 @@
 $(document).ready(function() {
-    function activate(state) {
-        $("p.ajaxloader").show();
+    function activateState(state) {
+        $("p.ajaxloader.state").show();
         $.ajaxQueue({
-            url: '/sherpa/innmelding/aktiver/',
-            data: 'active=' + encodeURIComponent(state)
+            url: '/sherpa/innmelding/aktiver/innmelding/',
+            data: 'active=' + encodeURIComponent(JSON.stringify(state))
         }).done(function() {
-            $("div.active").toggle();
-            $("div.inactive").toggle();
+            $("div.active.state").toggle();
+            $("div.inactive.state").toggle();
         }).fail(function() {
             alert("Asynkron kommunikasjon med serveren feilet! Er du sikker på at du har nettilgang?\n\nI så fall, prøv igjen litt senere.");
         }).always(function() {
-            $("p.ajaxloader").hide();
+            $("p.ajaxloader.state").hide();
         });
     }
 
-    $("button.activate").click(function() {
-        activate(true);
+    function activateCard(state) {
+        $("p.ajaxloader.card").show();
+        $.ajaxQueue({
+            url: '/sherpa/innmelding/aktiver/kort/',
+            data: 'card=' + encodeURIComponent(JSON.stringify(state))
+        }).done(function() {
+            $("div.active.card").toggle();
+            $("div.inactive.card").toggle();
+        }).fail(function() {
+            alert("Asynkron kommunikasjon med serveren feilet! Er du sikker på at du har nettilgang?\n\nI så fall, prøv igjen litt senere.");
+        }).always(function() {
+            $("p.ajaxloader.card").hide();
+        });
+    }
+
+    $("button.activate-state").click(function() {
+        if(confirm("Er du sikker på at du vil reaktivere innmeldingsskjemaet?")) {
+            activateState(true);
+        }
     });
 
-    $("button.deactivate").click(function() {
-        activate(false);
+    $("button.deactivate-state").click(function() {
+        if(confirm("Er du helt sikker på at du vil deaktivere innmeldingsskjemaet?")) {
+            activateState(false);
+        }
+    });
+
+    $("button.activate-card").click(function() {
+        if(confirm("Er du sikker på at du vil reaktivere kortbetaling?")) {
+            activateCard(true);
+        }
+    });
+
+    $("button.deactivate-card").click(function() {
+        if(confirm("Er du helt sikker på at du vil deaktivere kortbetaling?")) {
+            activateCard(false);
+        }
     });
 });

@@ -10,13 +10,22 @@ from enrollment.models import State
 
 @login_required
 def index(request):
-    context = {'enrollment_activated': State.objects.all()[0].active}
+    context = {'state': State.objects.all()[0]}
     return render(request, 'admin/enrollment/index.html', context)
 
 @login_required
-def activate(request):
+def activate_state(request):
     if request.is_ajax():
         s = State.objects.all()[0]
         s.active = json.loads(request.POST['active'])
+        s.save()
+        return HttpResponse()
+
+@login_required
+def activate_card(request):
+    if request.is_ajax():
+        s = State.objects.all()[0]
+        card = json.loads(request.POST['card'])
+        s.card = card
         s.save()
         return HttpResponse()
