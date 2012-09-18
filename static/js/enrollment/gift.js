@@ -81,11 +81,6 @@ $(document).ready(function() {
         });
     }
 
-    function validateDatepicker() {
-        // Datepicker calls this on close
-        markInput($(this), validator.validate('date', $("form#gift input[name='receiver_dob']").val(), true));
-    }
-
     function addReceiver() {
         var clone = $("div.receiver-box-skeleton").clone();
         clone.removeClass('receiver-box-skeleton').addClass('receiver-box');
