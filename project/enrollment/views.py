@@ -12,6 +12,7 @@ from core import validator
 from association.models import Association
 from user.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
+from enrollment.models import State
 
 from datetime import datetime, timedelta
 import requests
@@ -360,7 +361,8 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
-    context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method)}
+    context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method),
+        'card_available': State.objects.all()[0].card}
     return render(request, 'enrollment/payment.html', context)
 
 def payment(request):
@@ -368,6 +370,10 @@ def payment(request):
     val = validate(request.session, require_location=True, require_existing=True)
     if val is not None:
         return val
+
+    # If for some reason the user managed to POST 'card' as payment_method
+    if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
 
     if request.session['enrollment']['state'] == 'registration':
         # All right, enter payment state

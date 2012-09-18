@@ -21,13 +21,26 @@
       </div>
     {% endif %}
 
+    {% if not card_available %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
+        Her bør det stå noe lurt som ikke gjør medlemmene sinna.
+      </div>
+    {% endif %}
+
     <form id="payment" action="{% url enrollment.views.payment %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="main-member" value="">
       <h2> Velg betalingsmåte:</h2>
       <div class="control-group">
-        <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD<br>
-        <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
+        {% if card_available %}
+          <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD<br>
+          <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
+        {% else %}
+          <input type="radio" name="payment_method" value="card" disabled> VISA / MASTERCARD<br>
+          <input type="radio" name="payment_method" value="invoice" checked> Få tilsendt faktura
+        {% endif %}
       </div>
 
       <div class="alert alert-info invoice-info">
@@ -36,7 +49,11 @@
 
       <p>
         <a class="btn btn-large" href="{% url enrollment.views.verification %}"><i class="icon-arrow-left"></i> Tilbake</a>
-        <button type="submit" class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
+        {% if card_available %}
+          <button type="submit" class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
+        {% else %}
+          <button type="submit" class="btn btn-danger btn-large payment">Send bestilling <i class="icon-ok"></i></button>
+        {% endif %}
       </p>
     </form>
 
