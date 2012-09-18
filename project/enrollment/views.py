@@ -8,6 +8,7 @@ from django.template import Context, loader
 from django.core.cache import cache
 from django.db import transaction, connections
 
+from core import validator
 from association.models import Association
 from user.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
@@ -696,7 +697,7 @@ def validate(session, require_location, require_existing):
 
 def validate_user(user):
     # Name or address is empty
-    if len(re.findall('.+\s.+', user['name'])) == 0:
+    if not validator.name(user['name']):
         return False
 
     # Gender is not set
@@ -704,11 +705,11 @@ def validate_user(user):
         return False
 
     # Check phone number only if supplied
-    if len(user['phone']) > 0 and not validate_phone(user['phone']):
+    if not validator.phone(user['phone'], req=False):
         return False
 
     # Email is non-empty (empty is allowed) and doesn't match an email
-    if user['email'] != '' and not validate_email(user['email']):
+    if not validator.email(user['email'], req=False):
         return False
 
     # Date of birth is not valid format (%d.%m.%Y)
@@ -765,17 +766,9 @@ def validate_location(location):
 # Check that at least one member has valid phone and email
 def validate_user_contact(users):
     for user in users:
-        if validate_phone(user['phone']) and validate_email(user['email']):
+        if validator.phone(user['phone']) and validator.email(user['email']):
             return True
     return False
-
-def validate_phone(phone):
-    # Allow >8 chars in case it's formatted with whitespace
-    return len(phone) >= 8 and len(re.findall('[a-z]', phone, re.I)) == 0
-
-def validate_email(email):
-    # Email matches anything@anything.anything, without whitespace
-    return len(re.findall('^[^\s]+@[^\s]+\.[^\s]+$', email)) > 0
 
 def validate_existing(id, zipcode, country):
     try:
