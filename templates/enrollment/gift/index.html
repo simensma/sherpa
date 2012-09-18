@@ -118,44 +118,9 @@
         </div>
       </div>
     </div>
+
     <div class="span6">
-      <div class="receiver-box border">
-        <h3>Mottaker av gavemedlemskapet</h3>
-        <div class="control-group receiver_type">
-        </div>
-        <div class="control-group receiver_name">
-          <label>Fullt navn <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="receiver_name">
-        </div>
-        <div class="control-group dob">
-          <label>Fødselsdato <span class="asterisk red">*</span></label>
-          <select id="dob-dd-1" name="receiver_dob_dd" class="dob dd">
-            {% for day in days %}
-              <option value="{{ day }}">{{ day }}</option>
-            {% endfor %}
-          </select>
-          <select id="dob-mm-1" name="receiver_dob_mm" class="dob mm">
-            {% for month in months %}
-              <option value="{{ month.0 }}">{{ month.1 }}</option>
-            {% endfor %}
-          </select>
-          <select id="dob-yyyy-1" name="receiver_dob_yyyy" class="dob yyyy">
-            {% for year in years %}
-              <option value="{{ year }}">{{ year }}</option>
-            {% endfor %}
-          </select>
-          <span id="dob-placement-1" class="dob-placement"></span>
-        </div>
-        <div class="control-group receiver_address">
-          <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="receiver_address">
-        </div>
-        <div class="control-group receiver_zipcode">
-          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="receiver_zipcode" maxlength="10">
-          <input type="text" class="input-medium city" name="receiver_city" disabled>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
-        </div>
+      <div class="receivers">
       </div>
       <p class="buttons">
         <button class="btn btn-large new-receiver"><i class="icon-user"></i> Legg til en ny mottaker</button>
@@ -166,10 +131,49 @@
   </div>
 </form>
 
-<select name="receiver_type" data-placeholder="Velg type medlemskap..." class="skel hide">
-  {% for type in types %}
-    <option value="{{ forloop.counter0 }}">{{ type }}</option>
-  {% endfor %}
-</select>
+<div class="receiver-box-skeleton border hide">
+  <h3>Mottaker av gavemedlemskapet</h3>
+  <div class="control-group receiver_type">
+    <select name="receiver_type" data-placeholder="Velg type medlemskap...">
+      {% for type in types %}
+        <option value="{{ forloop.counter0 }}">{{ type }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="control-group receiver_name">
+    <label>Fullt navn <span class="asterisk red">*</span></label>
+    <input type="text" class="input-large" name="receiver_name">
+  </div>
+  <div class="control-group dob">
+    <label>Fødselsdato <span class="asterisk red">*</span></label>
+    <select name="receiver_dob_dd" class="dob dd">
+      {% for day in days %}
+        <option value="{{ day }}">{{ day }}</option>
+      {% endfor %}
+    </select>
+    <select name="receiver_dob_mm" class="dob mm">
+      {% for month in months %}
+        <option value="{{ month.0 }}">{{ month.1 }}</option>
+      {% endfor %}
+    </select>
+    <select name="receiver_dob_yyyy" class="dob yyyy">
+      {% for year in years %}
+        <option value="{{ year }}">{{ year }}</option>
+      {% endfor %}
+    </select>
+    <span class="dob-placement"></span>
+  </div>
+  <div class="control-group receiver_address">
+    <label> Adresse <span class="asterisk red">*</span></label>
+    <input type="text" class="input-large" name="receiver_address">
+  </div>
+  <div class="control-group receiver_zipcode">
+    <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+    <input type="text" class="input-small zipcode" name="receiver_zipcode" maxlength="10">
+    <input type="text" class="input-medium city" name="receiver_city" disabled>
+    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+  </div>
+  <button class="btn btn-danger remove-receiver"><i class="icon-remove"></i> Ta bort denne mottakeren</button>
+</div>
 
 {% endblock %}

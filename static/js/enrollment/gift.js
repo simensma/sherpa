@@ -1,7 +1,6 @@
 window.datePickerCount = 1;
 
 $(document).ready(function() {
-    $("select.skel[name='receiver_type']").clone().show().appendTo($("form#gift div.receiver_type")).chosen({disable_search: true});
 
     $(document).on('keyup', 'form#gift input.zipcode', function() {
         var self = $(this);
@@ -87,40 +86,32 @@ $(document).ready(function() {
         markInput($(this), validator.validate('date', $("form#gift input[name='receiver_dob']").val(), true));
     }
 
+    function addReceiver() {
+        var clone = $("div.receiver-box-skeleton").clone();
+        clone.removeClass('receiver-box-skeleton').addClass('receiver-box');
+        $("form#gift div.receivers").append(clone);
+        clone.find("select[name='receiver_type']").chosen({disable_search: true})
+        window.datePickerCount += 1;
+        clone.find("select.dob.dd").attr('id', 'dp-dd-' + window.datePickerCount);
+        clone.find("select.dob.mm").attr('id', 'dp-mm-' + window.datePickerCount);
+        clone.find("select.dob.yyyy").attr('id', 'dp-yyyy-' + window.datePickerCount);
+        clone.find("span.dob-placement").attr('id', 'dob-placement-' + window.datePickerCount);
+        addReceiverValidations(clone);
+        clone.slideDown();
+    }
+
     // Add more receivers
     $("form#gift button.new-receiver").click(function(e) {
         e.preventDefault();
-        var list = $("form#gift div.receiver-box");
-        var clone = list.first().clone();
-        clone.addClass('hide');
-        list.last().after(clone);
-        var type = clone.find("div.receiver_type").empty();
-        var select = $("select.skel[name='receiver_type']").clone().removeClass('skel').show().appendTo(type);
-        var button = $('<button class="btn btn-danger remove-receiver"><i class="icon-remove"></i> Ta bort denne mottakeren</button>');
-        button.click(function(e) {
-            e.preventDefault();
-            $(this).parents('div.receiver-box').slideUp(function() { $(this).remove(); });
-        });
-        clone.append(button);
-        clone.find("div.control-group").removeClass('error warning success').focus(function() {
-            $(this).parents("div.control-group").removeClass('error warning success');
-        });
-        clone.find("input").val("");
-        window.datePickerCount += 1;
-        var dd = clone.find("select.dob.dd");
-        var mm = clone.find("select.dob.mm");
-        var yyyy = clone.find("select.dob.yyyy");
-        var placement = clone.find("span.dob-placement");
-        placement.empty();
-        dd.removeAttr('id').attr('id', 'dp-dd-' + window.datePickerCount);
-        mm.removeAttr('id').attr('id', 'dp-mm-' + window.datePickerCount);
-        yyyy.removeAttr('id').attr('id', 'dp-yyyy-' + window.datePickerCount);
-        placement.removeAttr('id').attr('id', 'dob-placement-' + window.datePickerCount);
-        dd.siblings("a").remove();
-        addReceiverValidations(clone);
-        select.chosen({disable_search: true});
-        clone.slideDown();
+        addReceiver();
     });
+
+    // Remove a receiver
+    $(document).on('click', 'form#gift button.remove-receiver', function(e) {
+        e.preventDefault();
+        $(this).parents('div.receiver-box').slideUp(function() { $(this).remove(); });
+    });
+
 
     $("form#gift button[type='submit']").click(function(e) {
         var receivers = [];
@@ -139,4 +130,5 @@ $(document).ready(function() {
         $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
     });
 
+    addReceiver();
 });
