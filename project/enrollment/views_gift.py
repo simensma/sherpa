@@ -7,6 +7,7 @@ from datetime import datetime
 from smtplib import SMTPDataError
 import json
 
+from core import validator
 from user.models import Zipcode
 
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
@@ -24,6 +25,41 @@ membership_types = [
   'Jubileum (kr. 5500)',
   'Livsvarig medlemskap (kr. 13750)',
 ]
+
+class Invalid(Exception):
+    pass
+
+class Giver():
+    def __init__(self, name, address, zipcode, memberno, phone, email):
+        try:
+            self.name = name
+            self.address = address
+            self.zipcode = zipcode
+            self.location = Zipcode.objects.get(zipcode=zipcode).location
+            self.memberno = memberno
+            self.phone = phone
+            self.email = email
+
+            if not validator.name(name):
+                raise Invalid('Invalid name')
+
+            if not validator.address(address):
+                raise Invalid('Invalid address')
+
+            if not validator.zipcode(zipcode):
+                raise Invalid('Invalid zipcode')
+
+            if not validator.memberno(memberno):
+                raise Invalid('Invalid memberno')
+
+            if not validator.phone(phone):
+                raise Invalid('Invalid phone')
+
+            if not validator.email(email):
+                raise Invalid('Invalid email')
+
+        except Zipcode.DoesNotExist:
+            raise Invalid('Invalid zipcode')
 
 def index(request):
     months = zip(range(1, 13), [
@@ -49,15 +85,17 @@ def index(request):
     return render(request, 'enrollment/gift/index.html', context)
 
 def validate(request):
-    giver = {
-        'name': request.POST['giver_name'],
-        'address': request.POST['giver_address'],
-        'zipcode': request.POST['giver_zipcode'],
-        'location': Zipcode.objects.get(zipcode=request.POST['giver_zipcode']).location,
-        'memberno': request.POST['giver_memberno'],
-        'phone': request.POST['giver_phone'],
-        'email': request.POST['giver_email'],
-    }
+    try:
+        giver = Giver(
+            request.POST['giver_name'],
+            request.POST['giver_address'],
+            request.POST['giver_zipcode'],
+            request.POST['giver_memberno'],
+            request.POST['giver_phone'],
+            request.POST['giver_email'])
+    except Invalid:
+        request.session['gift_membership.invalid_input'] = True
+        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
     receivers = json.loads(request.POST['receivers'])
     for receiver in receivers:
         receiver['type'] = membership_types[int(receiver['type'])]
