@@ -1,4 +1,5 @@
 from django import http
+from django.shortcuts import render
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
@@ -45,6 +46,14 @@ class RedirectTrailingDot():
 class Sites():
     def process_request(self, request):
         request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+
+class DeactivatedEnrollment():
+    def process_request(self, request):
+        from enrollment.models import State
+        # The enrollment slug is duplicated and hardcoded here :(
+        # However, it's not really likely to change often since it's an important URL.
+        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
+            return render(request, 'enrollment/unavailable.html')
 
 class CommonMiddlewareMonkeypatched(object):
     """

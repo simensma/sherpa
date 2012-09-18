@@ -12,7 +12,6 @@ from core import validator
 from association.models import Association
 from user.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
-from enrollment.models import State
 
 from datetime import datetime, timedelta
 import requests
@@ -61,9 +60,6 @@ def index(request):
     return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
 def registration(request, user):
-    if not State.objects.all()[0].active:
-        return render(request, 'enrollment/unavailable.html')
-
     request.session.modified = True
     if request.session.has_key('enrollment'):
         if request.session['enrollment']['state'] == 'payment':
