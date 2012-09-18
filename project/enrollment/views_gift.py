@@ -62,6 +62,7 @@ class Giver():
             raise Invalid('Invalid zipcode')
 
 def index(request):
+    context = {}
     months = zip(range(1, 13), [
         'Januar',
         'Februar',
@@ -76,12 +77,17 @@ def index(request):
         'November',
         'Desember'
     ])
-    context = {
+
+    if request.session.has_key('gift_membership.invalid_input'):
+        del request.session['gift_membership.invalid_input']
+        context['invalid_input'] = True
+
+    context.update({
         'days': range(1, 32),
         'months': months,
         'years': reversed(range(1900, datetime.now().year + 1)),
         'types': membership_types,
-    }
+    })
     return render(request, 'enrollment/gift/index.html', context)
 
 def validate(request):
