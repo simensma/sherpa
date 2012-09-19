@@ -34,7 +34,7 @@ class Giver():
         try:
             self.location = Zipcode.objects.get(zipcode=zipcode).location
         except Zipcode.DoesNotExist:
-            self.location = None
+            self.location = ''
         self.memberno = memberno
         self.phone = phone
         self.email = email
@@ -49,7 +49,7 @@ class Giver():
         if not validator.zipcode(self.zipcode):
             return False
 
-        if self.location == None:
+        if self.location == '':
             return False
 
         if not validator.memberno(self.memberno):
