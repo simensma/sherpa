@@ -64,8 +64,6 @@ $(document).ready(function() {
     validator.addValidation('phone', $("form#gift input[name='giver_phone']"), markInput, false);
     validator.addValidation('email', $("form#gift input[name='giver_email']"), markInput, false);
 
-    addReceiverValidations($("form#gift div.receiver-box"));
-
     function addReceiverValidations(box) {
         validator.addValidation('full_name', box.find("input[name='receiver_name']"), markInput, true);
         validator.addValidation('address', box.find("input[name='receiver_address']"), markInput, true);
