@@ -84,7 +84,7 @@ class Receiver():
         self.email = email
 
     def validate(self):
-        if type < 0 or type >= len(membership_types):
+        if self.type < 0 or self.type >= len(membership_types):
             return False
 
         if not validator.name(self.name):
