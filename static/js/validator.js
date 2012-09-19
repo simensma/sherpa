@@ -44,6 +44,7 @@ Validator.prototype.addValidation = function(method, el, complete, req, opts) {
     self.validations.push({
         'method': method,
         'el': el,
+        'complete': complete,
         'req': req,
         'opts': opts
     });
@@ -59,16 +60,13 @@ Validator.prototype.validate = function(method, input, req, opts) {
     return this.methods[method](input, req, opts);
 }
 
-Validator.prototype.validateEverything = function() {
+Validator.prototype.runValidations = function() {
     var self = this;
-    var ret = true;
     for(var i=0; i<self.validations.length; i++) {
-        if(!self.validate(self.validations[i].method,
-                          self.validations[i].el.val(),
-                          self.validations[i].req,
-                          self.validations[i].opts)) {
-            ret = false;
-        }
+        self.validations[i].complete(self.validations[i].el, self.validate(
+            self.validations[i].method,
+            self.validations[i].el.val(),
+            self.validations[i].req,
+            self.validations[i].opts));
     }
-    return ret;
 }
