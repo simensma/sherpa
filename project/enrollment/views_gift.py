@@ -52,13 +52,13 @@ class Giver():
         if self.location == '':
             return False
 
-        if not validator.memberno(self.memberno):
+        if not validator.memberno(self.memberno, req=False):
             return False
 
-        if not validator.phone(self.phone):
+        if not validator.phone(self.phone, req=False):
             return False
 
-        if not validator.email(self.email):
+        if not validator.email(self.email, req=False):
             return False
 
         if not Zipcode.objects.filter(zipcode=self.zipcode).exists():
