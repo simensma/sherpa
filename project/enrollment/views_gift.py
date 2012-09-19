@@ -66,6 +66,53 @@ class Giver():
 
         return True
 
+class Receiver():
+    def __init__(self, type, name, dob, address, zipcode, phone, email):
+        self.type = type
+        self.name = name
+        try:
+            self.dob = datetime.strptime(dob, "%d.%m.%Y")
+        except ValueError:
+            self.dob = None
+        self.address = address
+        self.zipcode = zipcode
+        try:
+            self.location = Zipcode.objects.get(zipcode=zipcode).location
+        except Zipcode.DoesNotExist:
+            self.location = ''
+        self.phone = phone
+        self.email = email
+
+    def validate(self):
+        if type < 0 or type >= len(membership_types):
+            return False
+
+        if not validator.name(self.name):
+            return False
+
+        if not isinstance(self.dob, datetime):
+            return False
+
+        if not validator.address(self.address):
+            return False
+
+        if not validator.zipcode(self.zipcode):
+            return False
+
+        if self.location == '':
+            return False
+
+        if not validator.phone(self.phone, req=False):
+            return False
+
+        if not validator.email(self.email, req=False):
+            return False
+
+        if not Zipcode.objects.filter(zipcode=self.zipcode).exists():
+            return False
+
+        return True
+
 def index(request):
     context = {'types': membership_types}
     return render(request, 'enrollment/gift/index.html', context)
@@ -116,15 +163,25 @@ def validate(request):
         request.POST['giver_phone'],
         request.POST['giver_email'])
 
-    receivers = json.loads(request.POST['receivers'])
-    for receiver in receivers:
-        receiver['type'] = membership_types[int(receiver['type'])]
-
-    # Todo: Receiver validations
+    receivers = []
+    for r in json.loads(request.POST['receivers']):
+        receivers.append(Receiver(
+            r['type'],
+            r['name'],
+            r['dob'],
+            r['address'],
+            r['zipcode'],
+            r['phone'],
+            r['email']
+            ))
 
     request.session['gift_membership'] = {'giver': giver, 'receivers': receivers}
     if not giver.validate():
         return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+    for receiver in receivers:
+        if not receiver.validate():
+            return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
 def confirm(request):
