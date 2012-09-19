@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^foreninger/', include('association.urls')),
 
     # Enrollment
+    # Note: This slug-prefix is duplicated in the DeactivatedEnrollment middleware
     url(r'^innmelding/', include('enrollment.urls')),
 
     # Membership

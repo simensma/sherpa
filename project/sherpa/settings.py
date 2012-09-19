@@ -88,4 +88,5 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'sherpa.middleware.RedirectTrailingDot',
     'sherpa.middleware.Sites',
+    'sherpa.middleware.DeactivatedEnrollment',
 )
