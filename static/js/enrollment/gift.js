@@ -122,7 +122,9 @@ $(document).ready(function() {
                      $(this).find("select[name='receiver_dob_mm'] option:selected").val() + "." +
                     $(this).find("select[name='receiver_dob_yyyy'] option:selected").val(),
                 address: $(this).find("input[name='receiver_address']").val(),
-                zipcode: $(this).find("input[name='receiver_zipcode']").val()
+                zipcode: $(this).find("input[name='receiver_zipcode']").val(),
+                phone: $(this).find("input[name='receiver_phone']").val(),
+                email: $(this).find("input[name='receiver_email']").val()
             };
             receivers.push(receiver);
         });
