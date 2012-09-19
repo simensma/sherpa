@@ -2,6 +2,10 @@ window.datePickerCount = 1;
 
 $(document).ready(function() {
 
+    $("form#gift-entry button[type='submit']").click(function() {
+        $("form#gift-entry input[name='type']").val($(this).attr('data-type'));
+    });
+
     $(document).on('keyup', 'form#gift input.zipcode', function() {
         var self = $(this);
         if(self.val().match(/^\d{4}$/)) {

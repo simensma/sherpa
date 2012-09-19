@@ -67,6 +67,10 @@ class Giver():
         return True
 
 def index(request):
+    context = {'types': membership_types}
+    return render(request, 'enrollment/gift/index.html', context)
+
+def form(request):
     if not request.session.has_key('gift_membership'):
         request.session['gift_membership'] = {}
 
@@ -96,12 +100,13 @@ def index(request):
         'years': reversed(range(1900, datetime.now().year + 1)),
         'types': membership_types,
         'giver': request.session['gift_membership'].get('giver', None),
+        'chosen_type': int(request.POST.get('type', -1)),
     })
-    return render(request, 'enrollment/gift/index.html', context)
+    return render(request, 'enrollment/gift/form.html', context)
 
 def validate(request):
     if not request.session.has_key('gift_membership'):
-        return HttpResponseRedirect(reverse('enrollment.views.index'))
+        return HttpResponseRedirect(reverse('enrollment.views.form'))
 
     giver = Giver(
         request.POST['giver_name'],
@@ -119,12 +124,12 @@ def validate(request):
 
     request.session['gift_membership'] = {'giver': giver, 'receivers': receivers}
     if not giver.validate():
-        return HttpResponseRedirect("%s#skjema" % reverse('enrollment.views_gift.index'))
+        return HttpResponseRedirect("%s#skjema" % reverse('enrollment.views_gift.form'))
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
 def confirm(request):
     if not request.session.has_key('gift_membership'):
-        return HttpResponseRedirect(reverse('enrollment.views.index'))
+        return HttpResponseRedirect(reverse('enrollment.views.form'))
 
     context = {
         'giver': request.session['gift_membership']['giver'],

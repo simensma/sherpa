@@ -32,43 +32,47 @@
 
     <hr>
 
-    <div class="row-fluid">
-      <div class="span6">
-        <h2>Vanlig medlemskap</h2>
-        <p>
-          Ett kalenderår.<br>
-          <em>Pris: <a href="{% url membership.views.index %}">Se gjeldende kontingentsatser</a></em>
-        </p>
+    <form id="gift-entry" method="post" action="{% url enrollment.views_gift.form %}">
+      {% csrf_token %}
+      <input type="hidden" name="type" value="">
+      <div class="row-fluid">
+        <div class="span6">
+          <h2>Vanlig medlemskap</h2>
+          <p>
+            Ett kalenderår.<br>
+            <em>Pris: <a href="{% url membership.views.index %}">Se gjeldende kontingentsatser</a></em>
+          </p>
+          <p><button type="submit" class="btn btn-danger" data-type="0">Bestill</button></p>
+        </div>
+        <div class="span6">
+          <h2>Dåpsgave</h2>
+          <p>
+            Medlemskap i Barnas Turlag fra 0-12 år.<br>
+            <em>Pris: 900,-</em>
+          </p>
+          <p><button type="submit" class="btn btn-danger" data-type="1">Bestill</button></p>
+        </div>
       </div>
-      <div class="span6">
-        <h2>Dåpsgave</h2>
-        <p>
-          Medlemskap i Barnas Turlag fra 0-12 år.<br>
-          <em>Pris: 900,-</em>
-        </p>
+      <div class="row-fluid" style="margin-top: 20px">
+        <div class="span6">
+          <h2>Jubileum</h2>
+          <p>
+            Hovedmedlemskap i 10 år.<br>
+            <em>Pris: 5500,-</em>
+          </p>
+          <p><button type="submit" class="btn btn-danger" data-type="2">Bestill</button></p>
+        </div>
+        <div class="span6">
+          <h2>Livsvarig medlemskap</h2>
+          <p>
+            Hovedmedlemskap x 25.<br>
+            <em>Pris: 13750,-</em>
+          </p>
+          <p><button type="submit" class="btn btn-danger" data-type="3">Bestill</button></p>
+        </div>
       </div>
     </div>
-    <div class="row-fluid" style="margin-top: 20px">
-      <div class="span6">
-        <h2>Jubileum</h2>
-        <p>
-          Hovedmedlemskap i 10 år.<br>
-          <em>Pris: 5500,-</em>
-        </p>
-      </div>
-      <div class="span6">
-        <h2>Livsvarig medlemskap</h2>
-        <p>
-          Hovedmedlemskap x 25.<br>
-          <em>Pris: 13750,-</em>
-        </p>
-      </div>
-    </div>
-
-    <hr>
-
-    <h3 id="skjema">Benytt følgende skjema for bestilling:</h3>
-  </div>
+  </form>
 
   <div class="span3">
     <div class="well">
@@ -81,99 +85,6 @@
       </p>
     </div>
   </div>
-</div>
-
-<form id="gift" method="post" action="{% url enrollment.views_gift.validate %}">
-  {% csrf_token %}
-  <input type="hidden" name="receivers" value="">
-  <div class="row">
-    <div class="span6">
-      <div class="border">
-        <h3>Dine opplysninger</h3>
-        <div class="control-group giver_name">
-          <label>Fullt navn <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_name" value="{{ giver.name }}">
-        </div>
-        <div class="control-group giver_address">
-          <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_address" value="{{ giver.address }}">
-        </div>
-        <div class="control-group giver_zipcode">
-          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{{ giver.zipcode }}" maxlength="10">
-          <input type="text" class="input-medium location" name="giver_location" value="{{ giver.location }}" disabled>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
-        </div>
-        <div class="control-group giver_memberno">
-          <label>Medlemsnummer</label>
-          <input type="text" class="input-large" name="giver_memberno" value="{{ giver.memberno }}">
-        </div>
-        <div class="control-group giver_phone">
-          <label> Mobiltelefon</label>
-          <input type="text" class="input-medium" name="giver_phone" value="{{ giver.phone }}">
-        </div>
-        <div class="control-group giver_email">
-          <label> E-post</label>
-          <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
-        </div>
-      </div>
-    </div>
-
-    <div class="span6">
-      <div class="receivers">
-      </div>
-      <p class="buttons">
-        <button class="btn btn-large new-receiver"><i class="icon-user"></i> Legg til en ny mottaker</button>
-        <button class="btn btn-large btn-success" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
-        <em>(Bestillingen blir ikke sendt ennå)</em>
-      </p>
-    </div>
-  </div>
-</form>
-
-<div class="receiver-box-skeleton border hide">
-  <h3>Mottaker av gavemedlemskapet</h3>
-  <div class="control-group receiver_type">
-    <select name="receiver_type" data-placeholder="Velg type medlemskap...">
-      {% for type in types %}
-        <option value="{{ forloop.counter0 }}">{{ type }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="control-group receiver_name">
-    <label>Fullt navn <span class="asterisk red">*</span></label>
-    <input type="text" class="input-large" name="receiver_name">
-  </div>
-  <div class="control-group dob">
-    <label>Fødselsdato <span class="asterisk red">*</span></label>
-    <select name="receiver_dob_dd">
-      {% for day in days %}
-        <option value="{{ day }}">{{ day }}</option>
-      {% endfor %}
-    </select>
-    <select name="receiver_dob_mm">
-      {% for month in months %}
-        <option value="{{ month.0 }}">{{ month.1 }}</option>
-      {% endfor %}
-    </select>
-    <select name="receiver_dob_yyyy">
-      {% for year in years %}
-        <option value="{{ year }}">{{ year }}</option>
-      {% endfor %}
-    </select>
-    <span class="dob-placement"></span>
-  </div>
-  <div class="control-group receiver_address">
-    <label> Adresse <span class="asterisk red">*</span></label>
-    <input type="text" class="input-large" name="receiver_address">
-  </div>
-  <div class="control-group receiver_zipcode">
-    <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-    <input type="text" class="input-small zipcode" name="receiver_zipcode" maxlength="10">
-    <input type="text" class="input-medium location" name="receiver_location" disabled>
-    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
-  </div>
-  <button class="btn btn-danger remove-receiver"><i class="icon-remove"></i> Ta bort denne mottakeren</button>
 </div>
 
 {% endblock %}
