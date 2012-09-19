@@ -39,7 +39,7 @@ $(document).ready(function() {
         $(this).parents("div.control-group").removeClass('error warning success');
     });
 
-    var validator = new Validator();
+    window.validator = new Validator();
 
     // Generic validation-complete function for most of the controls
     function markInput(el, valid) {
@@ -95,6 +95,7 @@ $(document).ready(function() {
         clone.find("span.dob-placement").attr('id', 'dob-placement-' + window.datePickerCount);
         addReceiverValidations(clone);
         clone.slideDown();
+        return clone;
     }
 
     // Add more receivers
@@ -129,5 +130,29 @@ $(document).ready(function() {
         $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
     });
 
-    addReceiver();
+    if(session_receivers.length == 0) {
+        addReceiver();
+    } else {
+        for(var i=0; i<session_receivers.length; i++) {
+            var div = addReceiver();
+
+            // Pre-insert form data
+            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type + "']").attr('selected', true);
+            div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
+            div.find("input[name='receiver_name']").val(session_receivers[i].name);
+            div.find("select[name='receiver_dob_dd'] option[value='" + Number(session_receivers[i].dob_dd) + "']").attr('selected', true);
+            div.find("select[name='receiver_dob_dd']").trigger("liszt:updated"); // Update chosen
+            div.find("select[name='receiver_dob_mm'] option[value='" + Number(session_receivers[i].dob_mm) + "']").attr('selected', true);
+            div.find("select[name='receiver_dob_mm']").trigger("liszt:updated"); // Update chosen
+            div.find("select[name='receiver_dob_yyyy'] option[value='" + Number(session_receivers[i].dob_yyyy) + "']").attr('selected', true);
+            div.find("select[name='receiver_dob_yyyy']").trigger("liszt:updated"); // Update chosen
+            div.find("input[name='receiver_address']").val(session_receivers[i].address);
+            div.find("input[name='receiver_zipcode']").val(session_receivers[i].zipcode);
+            div.find("input[name='receiver_location']").val(session_receivers[i].location);
+            div.find("input[name='receiver_phone']").val(session_receivers[i].phone);
+            div.find("input[name='receiver_email']").val(session_receivers[i].email);
+        }
+    }
+
+    $(document).trigger('validator_ready');
 });

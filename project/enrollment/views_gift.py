@@ -141,12 +141,18 @@ def form(request):
         if not request.session['gift_membership']['giver'].validate():
             context['invalid_input'] = True
 
+    if request.session['gift_membership'].has_key('receivers'):
+        for receiver in request.session['gift_membership']['receivers']:
+            if not receiver.validate():
+                context['invalid_input'] = True
+
     context.update({
         'days': range(1, 32),
         'months': months,
         'years': reversed(range(1900, datetime.now().year + 1)),
         'types': membership_types,
         'giver': request.session['gift_membership'].get('giver', None),
+        'receivers': request.session['gift_membership'].get('receivers', []),
         'chosen_type': int(request.POST.get('type', -1)),
     })
     return render(request, 'enrollment/gift/form.html', context)

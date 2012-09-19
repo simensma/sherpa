@@ -7,12 +7,33 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}css/enrollment.css" media="screen">
 {% endblock %}
 {% block extra_js %}
+  <script>
+    window.session_receivers = [
+{% for receiver in receivers %}{
+  'type': '{{ receiver.type }}',
+  'name': '{{ receiver.name }}',
+  'dob_dd': '{{ receiver.dob|date:"d" }}',
+  'dob_mm': '{{ receiver.dob|date:"m" }}',
+  'dob_yyyy': '{{ receiver.dob|date:"Y" }}',
+  'address': '{{ receiver.address }}',
+  'zipcode': '{{ receiver.zipcode }}',
+  'location': '{{ receiver.location }}',
+  'phone': '{{ receiver.phone }}',
+  'email': '{{ receiver.email }}'
+}
+{% if not forloop.last %},{% endif %}{% endfor %}
+    ];
+  </script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
   <script src="{{ STATIC_URL }}lib/datePicker/js/lang/no.js"></script>
   <script src="{{ STATIC_URL }}lib/datePicker/js/datepicker.min.js"></script>
   <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
   {% if invalid_input %}
-    {# Todo #}
+    <script>
+      $(document).on('validator_ready', function() {
+        window.validator.runValidations();
+      });
+    </script>
   {% endif %}
 {% endblock %}
 
