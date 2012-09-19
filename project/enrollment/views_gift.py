@@ -124,7 +124,7 @@ def validate(request):
 
     request.session['gift_membership'] = {'giver': giver, 'receivers': receivers}
     if not giver.validate():
-        return HttpResponseRedirect("%s#skjema" % reverse('enrollment.views_gift.form'))
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
 def confirm(request):
