@@ -256,6 +256,10 @@ div.editor-header.article div.publish, div.editor-header.article div.status {
   margin-bottom: 10px;
 }
 
+div.editor-header.article select[name='authors'] {
+  width: 400px;
+}
+
 /* Article preview in listing */
 
 td.article-preview {

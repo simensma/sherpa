@@ -2,9 +2,7 @@
 
 $(document).ready(function() {
 
-    $("select[name='authors']").select2({
-        width: '400px'
-    });
+    $("select[name='authors']").chosen();
 
     $("article div.title").focusout(function() {
         $("a.header-title").text($(this).text());
