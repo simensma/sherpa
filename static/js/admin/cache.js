@@ -1,8 +1,6 @@
 $(document).ready(function() {
 
-    $("select[name='article']").select2({
-        width: '400px'
-    });
+    $("select[name='article']").chosen();
 
     $("button.frontpage").click(function() {
         deleteCache(this, 'frontpage');
