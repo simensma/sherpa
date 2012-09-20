@@ -6,6 +6,9 @@ urlpatterns = patterns('',
     # Newly changed URLs: /artikler/ -> /nyheter/ - redirect temporarily
     url(r'^artikler/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': '/nyheter/', 'permanent': True}),
 
+    # More or less permanent local redirects (keep this list short!)
+    url(r'^gullgjest/', 'page.views.redirect', kwargs={'url': '/hyttesamler/', 'permanent': True}),
+
     # Keep old admin-ui for now (difference is /admin/ vs /sherpa/)
     url(r'^admin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/admin/' % settings.OLD_SITE}),
 

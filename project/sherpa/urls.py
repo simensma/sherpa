@@ -32,7 +32,7 @@ urlpatterns = patterns('',
     # Ads
     url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),
 
-    # Redirect known paths to the old site
+    # All kinds of redirects
     url(r'^', include('sherpa.url_redirects')),
 
     # Not a known view, treat it as a page
