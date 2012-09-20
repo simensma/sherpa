@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Q
 
-from admin.models import Image, Tag, Album
+from core.models import Tag
+from admin.models import Image, Album
 from lib import S3
 
 from PIL.ExifTags import TAGS

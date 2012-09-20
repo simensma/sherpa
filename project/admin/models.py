@@ -18,7 +18,7 @@ class Image(models.Model):
     uploader = models.ForeignKey('user.Profile')
     width = models.IntegerField()
     height = models.IntegerField()
-    tags = models.ManyToManyField('admin.Tag', related_name='images')
+    tags = models.ManyToManyField('core.Tag', related_name='images')
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
@@ -28,9 +28,6 @@ def delete_image_post(sender, **kwargs):
     conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
     for size in settings.THUMB_SIZES:
         conn.delete(settings.AWS_BUCKET, "%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
-
-class Tag(models.Model):
-    name = models.CharField(max_length=200)
 
 class Album(models.Model):
     name = models.CharField(max_length=200)
