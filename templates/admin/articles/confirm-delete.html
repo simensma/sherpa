@@ -2,20 +2,7 @@
 {% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a> → <a href="">Slett artikkel</a>{% endblock %}
 {% block extra_js %}
-  {# Just include all the crap; admin/editor/article.js depends on a lot of it #}
-  <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
-  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/image-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/image-archive.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/image-fast-upload.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/widgets.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/article.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
-  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/article-delete.js"></script>
 {% endblock %}
 {% block body %}
 

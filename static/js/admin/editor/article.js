@@ -129,11 +129,6 @@ $(document).ready(function() {
         }
     });
 
-    $("button.confirm-delete").click(function() {
-        $(this).hide();
-        $("div.final-confirm").show();
-    });
-
     /* Mark empty text elements */
     $(document).on('focusout', 'div.editable', markEmptyContent);
     $("div.editable").each(markEmptyContent);
