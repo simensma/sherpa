@@ -147,14 +147,6 @@ def update_images(request):
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
 @login_required
-def filter_tags(request):
-    tag_objects = Tag.objects.filter(name__icontains=request.POST['term'])
-    tags = []
-    for tag in tag_objects:
-        tags.append(tag.name)
-    return HttpResponse(json.dumps(tags))
-
-@login_required
 def upload_image(request, album):
     if request.method == 'GET':
         current_album = Album.objects.get(id=album)

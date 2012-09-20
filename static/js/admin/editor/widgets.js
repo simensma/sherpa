@@ -121,8 +121,8 @@ $(document).ready(function() {
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
-                url: '/sherpa/bildearkiv/tag/filter/',
-                data: 'term=' + encodeURIComponent(query)
+                url: '/tags/filter/',
+                data: 'name=' + encodeURIComponent(query)
             }).done(function(result) {
                 process(JSON.parse(result));
             });
