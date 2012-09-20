@@ -263,8 +263,6 @@ urlpatterns = patterns('',
     url(r'^hyttefoto/$', 'page.views.redirect', kwargs={'url': 'http://www.turistforeningen.no/form2.php', 'params': {'form': 'hyttebilder'}}),
     url(r'^era2012/$', 'page.views.redirect', kwargs={'url': 'http://www.turistforeningen.no/english/form2.php', 'params': {'form': 'era12'}}),
     url(r'^gullnokkel/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '9786'}}),
-    url(r'^gullgjest/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '9786'}}),
-    url(r'^hyttesamler/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '9786'}}),
     url(r'^kitekurs/$', 'page.views.redirect', kwargs={'url': 'http://%s/activity.php' % settings.OLD_SITE, 'params': {'ac_cat': 'kiting', 'fo_id': '9893'}}),
     url(r'^preikestolenfjellstue/$', 'page.views.redirect', kwargs={'url': 'http://www.preikestolenfjellstue.no'}),
 )
