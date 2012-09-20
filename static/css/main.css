@@ -410,3 +410,9 @@ div.ad p.ad-label {
   font-size: 12px;
   margin-bottom: 0px;
 }
+
+div.ad img.viewcounter {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+}

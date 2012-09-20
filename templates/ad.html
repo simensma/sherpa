@@ -22,5 +22,8 @@
           <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
         </a>
       {% endif %}
+      {% if advertisement.ad.viewcounter %}
+        <img class="viewcounter" src="{{ advertisement.ad.viewcounter }}" alt="Annonseteller">
+      {% endif %}
   </div>
 </div>

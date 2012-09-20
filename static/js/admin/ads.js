@@ -60,6 +60,7 @@ $(document).ready(function() {
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("input[name='name']").val($(this).attr('data-name'));
         form.find("input[name='destination']").val($(this).attr('data-destination'));
+        form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
         form.find("input[name='width']").val($(this).attr('data-width'));
         form.find("input[name='height']").val($(this).attr('data-height'));
     });
