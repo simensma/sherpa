@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Q
 
-from admin.models import Image, Tag, Album
+from core.models import Tag
+from admin.models import Image, Album
 from lib import S3
 
 from PIL.ExifTags import TAGS
@@ -144,14 +145,6 @@ def update_images(request):
         tags = json.loads(request.POST['tags-serialized'])
         add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
     return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
-
-@login_required
-def filter_tags(request):
-    tag_objects = Tag.objects.filter(name__icontains=request.POST['term'])
-    tags = []
-    for tag in tag_objects:
-        tags.append(tag.name)
-    return HttpResponse(json.dumps(tags))
 
 @login_required
 def upload_image(request, album):

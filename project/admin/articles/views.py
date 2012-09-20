@@ -12,7 +12,7 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 from user.models import Profile
-from admin.models import Tag
+from core.models import Tag
 
 import urllib
 
