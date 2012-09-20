@@ -148,6 +148,7 @@ class Ad(models.Model):
     content_type = models.CharField(max_length=200)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
+    viewcounter = models.CharField(max_length=2048)
     fallback_extension = models.CharField(max_length=4, null=True)
     fallback_sha1_hash = models.CharField(max_length=40, null=True)
     fallback_content_type = models.CharField(max_length=200, null=True)

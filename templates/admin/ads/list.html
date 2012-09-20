@@ -134,11 +134,11 @@
       <table>
         <tr>
           <td>Navn</td>
-          <td><input type="text" name="name"></td>
+          <td><input type="text" name="name" class="input-xlarge"></td>
         </tr>
         <tr>
           <td>Lenker til (URL):</td>
-          <td><input type="text" name="destination" value="http://"></td>
+          <td><input type="text" name="destination" value="http://" class="input-xxlarge"></td>
         </tr>
         <tr>
           <td>Fil</td>
@@ -146,7 +146,11 @@
         </tr>
         <tr>
           <td>Bilde-fallback for flash</td>
-          <td><input type="file" name="ad_fallback"></td>
+          <td><input type="file" name="ad_fallback" class="input-xlarge"></td>
+        </tr>
+        <tr>
+          <td>Visningsteller-bilde (valgfritt):</td>
+          <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
         </tr>
         <tr>
           <td>Bredde x Høyde (kun hvis Flash)</td>
@@ -175,6 +179,7 @@
             data-id="{{ ad.id }}"
             data-name="{{ ad.name }}"
             data-destination="{{ ad.destination }}"
+            data-viewcounter="{{ ad.viewcounter }}"
             data-width="{{ ad.width|default_if_none:"" }}"
             data-height="{{ ad.height|default_if_none:"" }}">
             {{ ad.name }}</td>
@@ -265,7 +270,7 @@
       </tr>
       <tr>
         <td>Lenker til (URL):</td>
-        <td><input type="text" name="destination" class="input-xlarge"></td>
+        <td><input type="text" name="destination" class="input-xxlarge"></td>
       </tr>
       <tr>
         <td>Ny fil</td>
@@ -274,6 +279,10 @@
       <tr>
         <td>Ny fallback</td>
         <td><input type="file" name="ad_fallback"></td>
+      </tr>
+      <tr>
+        <td>Visningsteller-bilde</td>
+        <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
       </tr>
       <tr>
         <td>Bredde x Høyde (kun hvis Flash)</td>

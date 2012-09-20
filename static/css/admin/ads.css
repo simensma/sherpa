@@ -1,5 +1,5 @@
 form#upload table {
-  width: 600px;
+  width: 100%;
 }
 
 form#upload table td, form.placement table td {

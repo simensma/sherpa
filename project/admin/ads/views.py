@@ -40,9 +40,10 @@ def create_ad(request):
     height = None if request.POST['height'] == '' else request.POST['height'].strip()
 
     ad = Ad(name=request.POST['name'].strip(), extension=extension,
-        destination=request.POST['destination'].strip(), sha1_hash=hash,
-        width=width, height=height, content_type=content_type, fallback_extension=fallback_extension,
-        fallback_sha1_hash=fallback_hash, fallback_content_type=fallback_content_type)
+        destination=request.POST['destination'].strip(), viewcounter=request.POST['viewcounter'].strip(),
+        sha1_hash=hash, width=width, height=height, content_type=content_type,
+        fallback_extension=fallback_extension, fallback_sha1_hash=fallback_hash,
+        fallback_content_type=fallback_content_type)
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
@@ -51,6 +52,7 @@ def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
     ad.name = request.POST['name']
     ad.destination = request.POST['destination']
+    ad.viewcounter = request.POST['viewcounter']
     if ad.width != None: ad.width = request.POST['width']
     if ad.height != None: ad.height = request.POST['height']
     if request.FILES.has_key('ad'):
