@@ -42,7 +42,3 @@ class Album(models.Model):
 def delete_album(sender, **kwargs):
     Album.objects.filter(parent=kwargs['instance']).delete()
     Image.objects.filter(album=kwargs['instance']).delete()
-
-class Keyword(models.Model):
-    image = models.ForeignKey('admin.Image')
-    name = models.CharField(max_length=200)
