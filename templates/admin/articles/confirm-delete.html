@@ -14,6 +14,9 @@
     <p>
       Du er i ferd med å slette artikkelen "<a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>" <strong>for godt</strong>, er du sikker på at det er det du vil?
     </p>
+    <p>
+      Hvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.
+    </p>
     <div class="alert alert-error final-confirm hide" style="text-align: center">
       <strong>
         Du kan ikke angre dette.
