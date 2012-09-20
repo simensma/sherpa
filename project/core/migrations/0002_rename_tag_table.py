@@ -6,6 +6,11 @@ from django.db import models, connection, transaction
 
 class Migration(DataMigration):
 
+    depends_on = (
+        ("admin", "0003_auto__del_tag"),
+        ("page", "0015_auto__add_field_ad_viewcounter"),
+    )
+
     def forwards(self, orm):
         cursor = connection.cursor()
         cursor.execute("ALTER TABLE admin_tag RENAME TO core_tag")
