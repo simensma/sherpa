@@ -15,10 +15,10 @@ $(document).ready(function() {
     var tagger = new Tagger($("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags']"), function(tag) {
         // New tag
         var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
-        $("div.tag-box").append(tag);
+        $("div.dialog#dialog-image-fast-upload div.tag-box").append(tag);
     }, function(tag) {
         // Existing tag
-        $("div.tag-box div.tag").each(function() {
+        $("div.dialog#dialog-image-fast-upload div.tag-box div.tag").each(function() {
             if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
                 var item = $(this);
                 var c = item.css('color');

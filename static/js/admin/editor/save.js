@@ -177,7 +177,7 @@ $(document).ready(function() {
             // Save tags
             $.ajaxQueue({
                 url: '/sherpa/nyheter/nokkelord/' + $("article").attr('data-id') + '/',
-                data: 'tags=' + encodeURIComponent(JSON.stringify(tagger.tags))
+                data: 'tags=' + encodeURIComponent(JSON.stringify(article_tagger.tags))
             });
         }
     }

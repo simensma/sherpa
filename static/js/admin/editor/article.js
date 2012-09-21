@@ -24,7 +24,7 @@ $(document).ready(function() {
     /* Tags */
 
     // Create the tagger object, make it globally accessible (save.js will use this)
-    window.tagger = new Tagger($("div.editor-header div.tags input[name='tags']"), function(tag) {
+    window.article_tagger = new Tagger($("div.editor-header div.tags input[name='tags']"), function(tag) {
         // New tag added
         var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
         $("div.tag-box").append(tag);
@@ -50,7 +50,7 @@ $(document).ready(function() {
     $("div.editor-header div.tags div.tag").each(function() {
         tags.push($(this).text().trim());
     });
-    tagger.tags = tags;
+    article_tagger.tags = tags;
 
     // Add events to the tag remover button
     $(document).on('mouseover', 'div.editor-header div.tags div.tag-box div.tag a', function() {
@@ -60,7 +60,7 @@ $(document).ready(function() {
         $(this).children("img").attr('src', '/static/img/so/close-default.png');
     });
     $(document).on('click', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        tagger.removeTag($(this).parent().text().trim());
+        article_tagger.removeTag($(this).parent().text().trim());
         $(this).parent().remove();
     });
 
