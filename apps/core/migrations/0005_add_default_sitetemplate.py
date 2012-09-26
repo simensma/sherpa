@@ -10,10 +10,10 @@ from core.models import *
 class Migration(DataMigration):
 
     def forwards(self, orm):
+        template = SiteTemplate(name='main')
+        template.save()
         try:
             site = Site.objects.get(domain='www.turistforeningen.no')
-            template = SiteTemplate(name='main')
-            template.save()
             details = SiteDetails(site=site, template=template)
             details.save()
         except Site.DoesNotExist:
