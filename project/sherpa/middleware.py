@@ -49,7 +49,7 @@ class Sites():
     def process_request(self, request):
         try:
             request.site = Site.objects.get(domain=request.get_host().split(":")[0])
-            request.urlconf = "sherpa.urls_%s" % request.site.sitedetails.template.name
+            request.urlconf = "sherpa.urls_%s" % request.site.details.template.name
         except Site.DoesNotExist:
             # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
             raise Http404

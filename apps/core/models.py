@@ -9,7 +9,7 @@ class Search(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 class SiteDetails(models.Model):
-    site = models.OneToOneField(Site)
+    site = models.OneToOneField(Site, related_name='details')
     template = models.ForeignKey('core.SiteTemplate')
 
 class SiteTemplate(models.Model):
