@@ -83,6 +83,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'sherpa.middleware.Sites',
     'sherpa.middleware.DecodeQueryString',
     # Use a monkeypatch for Djangos CommonMiddleware. See middleware.py for more info
     'sherpa.middleware.CommonMiddlewareMonkeypatched',
@@ -91,6 +92,5 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sherpa.middleware.RedirectTrailingDot',
-    'sherpa.middleware.Sites',
     'sherpa.middleware.DeactivatedEnrollment',
 )
