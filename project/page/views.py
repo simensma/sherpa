@@ -14,6 +14,7 @@ import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article
+from core.models import Search
 from page.widgets import parse_widget
 
 variant_key = 'var'
@@ -121,6 +122,10 @@ def search(request):
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
         return render(request, 'page/search.html', context)
+
+    # Record the search
+    search = Search(query=request.GET['q'])
+    search.save()
 
     # Save IDs in these to avoid duplicating search results
     article_hits = []
