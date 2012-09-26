@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),
 
     # All kinds of redirects
-    url(r'^', include('sherpa.url_redirects')),
+    url(r'^', include('sherpa.urls_redirects')),
 
     # Not a known view, treat it as a page
     url(r'^$', 'page.views.page', kwargs={'slug': ""}),

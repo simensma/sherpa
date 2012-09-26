@@ -2,7 +2,7 @@ from django import http
 from django.shortcuts import render
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.http import HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.core.mail import mail_managers
 from django.utils.http import urlquote
 from django.core import urlresolvers
@@ -11,6 +11,8 @@ from django.utils.log import getLogger
 from datetime import datetime
 import hashlib
 import re
+
+from core.models import SiteDetails, SiteTemplate
 
 logger = getLogger('django.request')
 
@@ -45,7 +47,12 @@ class RedirectTrailingDot():
 
 class Sites():
     def process_request(self, request):
-        request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+        try:
+            request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+            request.urlconf = "sherpa.urls_%s" % request.site.sitedetails.template.name
+        except Site.DoesNotExist:
+            # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
+            raise Http404
 
 class DeactivatedEnrollment():
     def process_request(self, request):
