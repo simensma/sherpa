@@ -21,7 +21,7 @@ def list(request):
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.objects.all().order_by('order')
-    context = {'versions': versions, 'menus': menus, 'site': request.site}
+    context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/pages/list.html', context)
 
 @login_required

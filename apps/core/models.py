@@ -11,6 +11,7 @@ class Search(models.Model):
 class SiteDetails(models.Model):
     site = models.OneToOneField(Site, related_name='details')
     template = models.ForeignKey('core.SiteTemplate')
+    prefix = models.CharField(max_length=200)
 
 class SiteTemplate(models.Model):
     name = models.CharField(max_length=100)

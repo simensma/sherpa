@@ -24,5 +24,8 @@ def menus(request):
                 break
         return {'menus': menus}
 
+def current_site(request):
+    return {'site': request.site}
+
 def old_site(request):
     return {'old_site': settings.OLD_SITE}

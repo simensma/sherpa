@@ -22,6 +22,9 @@ from django.db.models.loading import cache as model_cache
 if not model_cache.loaded:
     model_cache.get_models()
 
+from django import template
+template.add_to_builtins('core.templatetags.url')
+
 class DecodeQueryString(object):
     def process_request(self, request):
         # Some browsers (guess which), and also the Bing bot, don't follow the spec, and send
