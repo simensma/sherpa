@@ -69,13 +69,25 @@
 </div>
 
 
-<div class="loading">
-  <h2>Laster, vennligst vent...</h2>
-  <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-</div>
+<div class="row">
+  <div class="span6">
+    <div class="loading">
+      <h2>Laster, vennligst vent...</h2>
+      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+    </div>
 
-<div class="count">
-  Viser <span class="count"></span> foreninger/grupper
+    <div class="count">
+      Viser <span class="count"></span> foreninger/grupper
+    </div>
+  </div>
+  <div class="span6">
+    <select name="full-list" data-placeholder="Vet du hva du leter etter?">
+      <option value=""></option>
+      {% for association in full_list %}
+        <option value="{{ association.url }}">{{ association.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
 </div>
 
 <div class="all">

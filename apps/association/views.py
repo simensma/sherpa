@@ -30,8 +30,22 @@ def index(request):
         elif request.GET.get('kategori', '').lower() == category['db'].lower():
             category['chosen'] = True
 
+    full_list = cache.get('associations.full_list')
+    if full_list == None:
+        full_list = Association.objects.all().order_by('name')
+        for association in full_list:
+            parent = association
+            while association.url == '':
+                try:
+                    parent = Association.objects.get(id=parent.parent)
+                    association.url = parent.url
+                except Association.DoesNotExist:
+                    association.url = 'ukjent'
+        cache.set('associations.full_list', full_list, 60 * 60 * 24)
+
     context = {'categories': categories, 'counties': counties,
-        'chosen_county': request.GET.get('fylke', '')
+        'chosen_county': request.GET.get('fylke', ''),
+        'full_list': full_list,
     }
     return render(request, 'associations/list.html', context)
 

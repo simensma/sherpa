@@ -64,6 +64,10 @@ table#results div.map iframe {
   height: 400px;
 }
 
+select[name='full-list'] {
+  width: 100%;
+}
+
 /* Adjustments for small screens */
 
 div#searchbox-mobile {
