@@ -42,7 +42,7 @@ $(document).ready(function() {
         $("div.count").hide();
         $("div.no-results").hide();
         $("div.syntaxerror").hide();
-        $.ajax({
+        $.ajaxQueue({
             url: '/foreninger/filtrer/',
             data: 'category=' + encodeURIComponent(category) +
                   '&county=' + encodeURIComponent(county)
