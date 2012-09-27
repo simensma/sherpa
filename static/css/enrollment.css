@@ -247,7 +247,7 @@ p.association-info {
 
 /* Payment */
 
-form#payment {
+form#payment, form#payment label {
   font-family: "DTL Nobel" !important;
 }
 

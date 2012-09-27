@@ -37,11 +37,19 @@
       <h2> Velg betalingsmåte:</h2>
       <div class="control-group">
         {% if card_available %}
-          <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD<br>
-          <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
+          <label class="radio">
+            <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
+          </label>
         {% else %}
-          <input type="radio" name="payment_method" value="card" disabled> VISA / MASTERCARD<br>
-          <input type="radio" name="payment_method" value="invoice" checked> Få tilsendt faktura
+          <label class="radio">
+            <input type="radio" name="payment_method" value="card" disabled> VISA / MASTERCARD
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="invoice" checked> Få tilsendt faktura
+          </label>
         {% endif %}
       </div>
 
