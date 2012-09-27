@@ -32,7 +32,15 @@ def index(request):
 
     full_list = cache.get('associations.full_list')
     if full_list == None:
-        full_list = Association.objects.all().order_by('name')
+        full_list = Association.objects.filter(
+                Q(type="|Hovedforening") |
+                Q(type="|Underforening") |
+                Q(type="|Barn") |
+                Q(type="|Ungdom") |
+                Q(type="|Fjellsport") |
+                Q(type="|Senior") |
+                Q(type="|Annen")
+            ).order_by('name')
         for association in full_list:
             parent = association
             while association.url == '':
