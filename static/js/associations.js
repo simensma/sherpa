@@ -4,6 +4,18 @@ $(document).ready(function() {
     $("div.count").hide();
     $("div.no-results").hide();
 
+    $("select[name='full-list']").chosen().change(function() {
+        var url = $(this).find("option:selected").val();
+        if(url == 'ukjent') {
+            alert('Beklager, denne foreningen/dette turlaget har ingen hjemmeside vi kan sende deg videre til.');
+        } else {
+            if(!url.match(/^https?:\/\//)) {
+                url = "http://" + url;
+            }
+            window.location = url;
+        }
+    });
+
     // Mark the initially checked labels
     function setActive() {
         $("label.active").removeClass('active');
