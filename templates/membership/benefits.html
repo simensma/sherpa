@@ -280,6 +280,10 @@
     {% if enrollment_active %}
       <a href="{% url enrollment.views.index %}" class="btn btn-danger membership">Bli medlem!</a><br>
       <a href="http://{{ old_site }}/form2.php?form=gavemedlemskap">Gi bort medlemskap!</a>
+      <div class="alert alert-error" style="text-align: left; margin-top: 20px">
+        <strong>Forsinket utsendelse av medlemskort</strong><br>
+        Vi avslutter medlemsåret og kan dessverre ikke sende ut medlemskort før i slutten av oktober. Hvis du trenger medlemskortet umiddelbart, kan du kjøpe medlemskap i utsalgsstedene til våre foreninger rundt omkring i landet. <a href="{% url association.views.index %}">Finn din nærmeste forening</a>
+      </div>
     {% endif %}
   </div>
 </div>
