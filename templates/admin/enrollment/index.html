@@ -2,7 +2,6 @@
 {% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.enrollment.views.index %}">Innmelding</a>{% endblock %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
   <script src="{{ STATIC_URL }}js/admin/enrollment.js"></script>
 {% endblock %}
 {% block extra_css %}
