@@ -9,6 +9,9 @@ $(document).ready(function() {
         if(url == 'ukjent') {
             alert('Beklager, denne foreningen/dette turlaget har ingen hjemmeside vi kan sende deg videre til.');
         } else {
+            if(!url.match(/^https?:\/\//)) {
+                url = "http://" + url;
+            }
             window.location = url;
         }
     });
