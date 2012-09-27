@@ -49,6 +49,8 @@ $(document).ready(function() {
         }).fail(function(result) {
             $("div.syntaxerror").show();
         }).done(function(result) {
+            // Remove results again just to ensure it's clean
+            $("table#results").children().remove();
             try {
                 result = JSON.parse(result);
                 for(var i=0; i<result.length; i++) {
