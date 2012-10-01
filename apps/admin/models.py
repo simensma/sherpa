@@ -2,7 +2,8 @@ from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
-from lib import S3
+
+import simples3
 
 class Image(models.Model):
     key = models.CharField(max_length=8)
@@ -23,11 +24,12 @@ class Image(models.Model):
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
-    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
 
-    conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
+    s3.delete("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
     for size in settings.THUMB_SIZES:
-        conn.delete(settings.AWS_BUCKET, "%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
+        s3.delete("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
 
 class Album(models.Model):
     name = models.CharField(max_length=200)

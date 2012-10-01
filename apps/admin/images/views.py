@@ -8,7 +8,6 @@ from django.db.models import Q
 
 from core.models import Tag
 from admin.models import Image, Album
-from lib import S3
 
 from PIL.ExifTags import TAGS
 import random, Image as pil
@@ -16,6 +15,7 @@ from cStringIO import StringIO
 from hashlib import sha1
 import json
 from datetime import datetime
+import simples3
 
 # Require this many characters for an image search (this is duplicated client-side)
 MIN_QUERY_LENGTH = 3
@@ -235,18 +235,13 @@ def generate_random_image_key():
 def store_image(image, album, user):
     url = 'http://' + settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image['key'] + '.' + image['ext']
 
-    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    conn.put(settings.AWS_BUCKET, "%s%s.%s" %
-        (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
-        S3.S3Object(image['data']),
-        {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
-    )
+    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+    s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
+        image['data'], acl='public-read', mimetype=image['content_type'])
     for thumb in image['thumbs']:
-        conn.put(settings.AWS_BUCKET, "%s%s-%s.%s" %
-            (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
-            S3.S3Object(thumb['data']),
-            {'x-amz-acl': 'public-read', 'Content-Type': image['content_type']}
-        )
+        s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
+            thumb['data'], acl='public-read', mimetype=image['content_type'])
     image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
       description='', album=album, photographer='', credits='', licence='',
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
@@ -261,9 +256,8 @@ def parse_image(file):
         # were to close in on the amount of available keys.
         key = generate_random_image_key()
 
-    # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
-    # file into memory instead of streaming it to AWS. This might need to be
-    # optimized at some point.
+    # Consider streaming the file instead of reading everything into memory first.
+    # See simples3/htstream.py
     data = file.read()
 
     img = pil.open(StringIO(data))

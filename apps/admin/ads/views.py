@@ -8,7 +8,7 @@ from django.conf import settings
 from datetime import datetime
 import json
 import hashlib
-from lib import S3
+import simples3
 
 from page.models import Ad, AdPlacement
 
@@ -98,9 +98,8 @@ def update_placement(request):
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):
-    # Whoa! This S3-lib doesn't support streaming, so we'll have to read the whole
-    # file into memory instead of streaming it to AWS. This might need to be
-    # optimized at some point.
+    # Consider streaming the file instead of reading everything into memory first.
+    # See simples3/htstream.py
     data = file.read()
 
     # Calculate the sha1-hash and file extension
@@ -110,10 +109,9 @@ def upload(file):
     extension = file.name.split(".")[-1].lower()
 
     # Upload to AWS
-    conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    conn.put(settings.AWS_BUCKET, "%s%s.%s"
-        % (settings.AWS_ADS_PREFIX, hash, extension), S3.S3Object(data),
-        {'x-amz-acl': 'public-read', 'Content-Type': file.content_type}
-    )
+    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+    s3.put("%s%s.%s" % (settings.AWS_ADS_PREFIX, hash, extension),
+        data, acl='public-read', mimetype=file.content_type)
 
     return (hash, extension, file.content_type)

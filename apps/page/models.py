@@ -3,12 +3,12 @@ from django.dispatch import receiver
 from django.db import models
 from django.db.models import Min, Q, F
 from django.conf import settings
-from lib import S3
 
 from datetime import date
 import random
 import json
 import re
+import simples3
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)
@@ -162,14 +162,16 @@ class Ad(models.Model):
     def delete_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(sha1_hash=self.sha1_hash).exists():
-            conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
+            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
     def delete_fallback_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(fallback_sha1_hash=self.fallback_sha1_hash).exists():
-            conn = S3.AWSAuthConnection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            conn.delete(settings.AWS_BUCKET, "%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
+            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
 # Upon ad delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
