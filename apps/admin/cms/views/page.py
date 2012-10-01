@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
-from django.template import Context, loader
+from django.template import RequestContext, loader
 from django.core.cache import cache
 
 from page.widgets import parse_widget
@@ -30,7 +30,7 @@ def children(request, page):
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     t = loader.get_template('admin/pages/result.html')
-    c = Context({'versions': versions, 'level': request.POST['level']})
+    c = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(t.render(c))
 
 @login_required
