@@ -338,11 +338,15 @@ div#search-results div.search-result {
   margin-bottom: 20px;
 }
 
-div#search-results div.search-result h2 {
+div#search-results div.search-result h3 {
   margin-bottom: 0;
 }
 
-div#search-results h2 span.published {
+div#search-results div.search-result img.thumbnail {
+  float: right;
+}
+
+div#search-results span.published {
   color: rgb(120, 120, 120);
   font-size: 16px;
   font-weight: normal;
