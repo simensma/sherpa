@@ -25,7 +25,7 @@ def searches(request):
             most_searched.append({'query': query, 'count': count})
 
         most_searched = sorted(most_searched, key=lambda search: -search['count'])
-        cache.set('analytics.searches.most_searched', most_searched, 60 * 60)
+        cache.set('analytics.searches.most_searched', most_searched, 60 * 60 * 24)
 
     latest_searches = Search.objects.all().order_by('-date')[:50]
 
