@@ -144,7 +144,7 @@ def search(request):
         # Active version, default segment, published article
         active=True,
         variant__segment=None,
-        variant__article__published=True
+        variant__article__published=True, variant__article__pub_date__lt=datetime.now()
         ).distinct().order_by('-variant__article__pub_date')
 
     for version in article_versions:
