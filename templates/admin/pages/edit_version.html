@@ -2,6 +2,7 @@
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.cms.views.page.list %}">Websider</a> → <a href="{% url admin.cms.views.page.edit_version version.id %}">{{ version.variant.page.title }}</a>{% endblock %}
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
@@ -15,6 +16,7 @@
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
 {% endblock %}
 {% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/main.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/header.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin/editor/image.css" media="screen">
@@ -41,16 +43,11 @@
           <span class="parent-status"><i class="icon-ok"></i></span>
         </div>
 
-        <div class="published">
-          <h1 class="publish sherpa">Siden er
-            {% if version.variant.page.published %}
-              <span class="true">publisert</span>.
-            {% else %}
-              <span class="false">ikke publisert</span>.
-            {% endif %}
-          </h1>
-          <button class="btn btn-success publish"><i class="icon-ok"></i> Publisér</button>
-          <button class="btn btn-danger unpublish"><i class="icon-remove"></i> Avpublisér</button>
+        <div class="publish">
+          <p>
+            <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+            <input type="text" class="input-large" name="page-datetime-field" value="{{ version.variant.page.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt...">
+          </p>
         </div>
 
         <div class="save">

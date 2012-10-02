@@ -12,8 +12,10 @@ from django.core.cache import cache
 from page.widgets import parse_widget
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
+from datetime import datetime
 import json
 import requests
+import urllib
 
 @login_required
 def list(request):
@@ -75,6 +77,27 @@ def parent(request, page):
     page.parent = new_parent
     page.save()
     return HttpResponse('{}')
+
+@login_required
+def publish(request, page):
+    datetime_string = urllib.unquote_plus(request.POST["datetime"])
+    status = urllib.unquote_plus(request.POST["status"])
+
+    #date format is this one (dd.mm.yyyy hh:mm)
+    try:
+        date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
+    except:
+        #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
+        date_object = None
+
+    page = Page.objects.get(id=page)
+    page.published = json.loads(status)["status"]
+    if date_object == None:
+        page.pub_date = datetime.now()
+    else:
+        page.pub_date = date_object
+    page.save()
+    return HttpResponse()
 
 @login_required
 def display_ads(request, version):

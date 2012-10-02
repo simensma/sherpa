@@ -1,38 +1,11 @@
 $(document).ready(function() {
 
-    /* Publish/unpublish */
-
-    if($("div.editor-header.page div.status[data-published]").length == 0) {
-        $("div.editor-header.page div.status button.unpublish").hide();
-    } else {
-        $("div.editor-header.page div.status button.publish").hide();
-    }
-
-    $("div.editor-header.page div.status button.publish").click(function() {
-        if(!confirm("Er du sikker på at du vil publisere denne siden?")) {
-            return;
-        }
-        setPublished(true, function() {
-            $("div.editor-header.page div.status h1.publish span.false").removeClass('false').addClass('true').text('publisert');
-            $("div.editor-header.page div.status button.publish").hide();
-            $("div.editor-header.page div.status button.unpublish").show();
-        });
+    /* Publishing-time datetimepicker */
+    $("div.editor-header.page div.publish input[name='page-datetime-field']").datetimepicker({
+        dateFormat: "dd.mm.yy",
+        seperator: " ",
+        timeFormat: "hh:mm"
     });
-
-    $("div.editor-header.page div.status button.unpublish").click(function() {
-        if(!confirm("Er du HELT sikker på at du vil trekke tilbake denne siden? Den vil forsvinne fra nyhetsutlistingen, og ikke dukke opp som søkeresultat når en søker.")) {
-            return;
-        }
-        setPublished(false, function() {
-            $("div.editor-header.page div.status h1.publish span.true").removeClass('true').addClass('false').text('ikke publisert');
-            $("div.editor-header.page div.status button.publish").show();
-            $("div.editor-header.page div.status button.unpublish").hide();
-        });
-    });
-
-    function setPublished(status, done) {
-        alert("Todo.");
-    }
 
     /* Delete page */
     $("div.editor-header.page a.delete-page").click(function(e) {

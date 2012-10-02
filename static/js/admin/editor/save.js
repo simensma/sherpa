@@ -144,6 +144,15 @@ $(document).ready(function() {
                 url: '/sherpa/cms/side/annonser/' + $("article").attr('data-id') + '/',
                 data: 'ads=' + encodeURIComponent(JSON.stringify(value))
             });
+
+            // Publish-state
+            $.ajaxQueue({
+                url: '/sherpa/cms/side/publiser/' + $("div.editor-header").attr('data-id') + '/',
+                data: {
+                    datetime : encodeURIComponent($("input[name='page-datetime-field']").val()),
+                    status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
+                }
+            });
         }
 
         // Article-specific saving

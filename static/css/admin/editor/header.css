@@ -10,14 +10,6 @@ div.editor-header h1 {
   font-weight: normal;
 }
 
-div.editor-header div.status h1.publish span.true {
-  color: green;
-}
-
-div.editor-header div.status h1.publish span.false {
-  color: red;
-}
-
 div.editor-header.page div.display-ads {
   margin-top: 15px;
 }
