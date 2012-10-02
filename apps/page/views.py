@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from string import split
+from datetime import datetime
 import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
@@ -132,10 +133,10 @@ def search(request):
         Q(variant__version__row__column__content__content__icontains=request.GET['q']) |
         Q(title__icontains=request.GET['q']),
 
-        # Default segment, active version
-        # Todo: Exclude unpublished pages
+        # Default segment, active version, published page
         variant__segment=None,
-        variant__version__active=True).distinct()
+        variant__version__active=True,
+        published=True, pub_date__lt=datetime.now()).distinct()
 
     article_versions = Version.objects.filter(
         # Match content
