@@ -26,7 +26,7 @@
 
 <div class="row">
   <div class="span12">
-    <div class="well editor-header page" data-id="{{ version.variant.page.id }}">
+    <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
       <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
         <div class="title">
           Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}"> <span class="title-status"><i class="icon-ok"></i></span>

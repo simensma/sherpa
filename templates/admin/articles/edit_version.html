@@ -28,7 +28,7 @@
 
 <div class="row">
   <div class="span12">
-    <div class="well editor-header article" data-id="{{ version.variant.article.id }}">
+    <div class="well editor-header article" data-article-id="{{ version.variant.article.id }}" data-version-id="{{ version.id }}">
       <div class="preview-image">
         <h1 class="sherpa">Minibilde til forhåndsvisninger:</h1>
         <input type="radio" name="thumbnail" value="none"{% if version.hide_thumbnail %} checked{% endif %}> Ikke vis minibilde<br>

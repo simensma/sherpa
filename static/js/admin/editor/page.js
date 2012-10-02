@@ -21,7 +21,7 @@ $(document).ready(function() {
         $(this).after('<img class="title-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
         debugger;
         $.ajax({
-            url: '/sherpa/cms/side/tittel/' + $("div.editor-header.page").attr('data-id') + '/',
+            url: '/sherpa/cms/side/tittel/' + $("div.editor-header").attr('data-page-id') + '/',
             data: 'title=' + encodeURIComponent(title)
         }).always(function() {
             $("div.editor-header.page img.title-loader").remove();
@@ -35,7 +35,7 @@ $(document).ready(function() {
         $("div.editor-header.page span.parent-status").hide();
         $(this).after('<img class="parent-loader" src="/static/img/ajax-loader-small.gif" alt="Laster...">');
         $.ajax({
-            url: '/sherpa/cms/side/foreldre/' + $("div.editor-header.page").attr('data-id') + '/',
+            url: '/sherpa/cms/side/foreldre/' + $("div.editor-header").attr('data-page-id') + '/',
             data: 'parent=' + encodeURIComponent(parent)
         }).done(function(result) {
             result = JSON.parse(result);

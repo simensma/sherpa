@@ -111,7 +111,7 @@ $(document).ready(function() {
 
         // Save content
         $.ajaxQueue({
-            url: '/sherpa/cms/editor/' + $("article").attr('data-id') + '/',
+            url: '/sherpa/cms/editor/' + $("div.editor-header").attr('data-version-id') + '/',
             data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
                   "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
@@ -141,13 +141,13 @@ $(document).ready(function() {
             // Save whether or not to display ads
             var value = $("div.editor-header.page input[name='display-ads']:checked").length > 0;
             $.ajaxQueue({
-                url: '/sherpa/cms/side/annonser/' + $("article").attr('data-id') + '/',
+                url: '/sherpa/cms/side/annonser/' + $("div.editor-header").attr('data-version-id') + '/',
                 data: 'ads=' + encodeURIComponent(JSON.stringify(value))
             });
 
             // Publish-state
             $.ajaxQueue({
-                url: '/sherpa/cms/side/publiser/' + $("div.editor-header").attr('data-id') + '/',
+                url: '/sherpa/cms/side/publiser/' + $("div.editor-header").attr('data-page-id') + '/',
                 data: {
                     datetime : encodeURIComponent($("input[name='page-datetime-field']").val()),
                     status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
@@ -168,7 +168,7 @@ $(document).ready(function() {
                 authors.push($(this).val());
             });
             $.ajaxQueue({
-                url: '/sherpa/nyheter/forfattere/' + $("article").attr('data-id') + '/',
+                url: '/sherpa/nyheter/forfattere/' + $("div.editor-header").attr('data-version-id') + '/',
                 data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
             }).always(function() {
                 $("button.save-authors").removeAttr('disabled');
@@ -176,7 +176,7 @@ $(document).ready(function() {
 
             // Publish-state
             $.ajaxQueue({
-                url: '/sherpa/nyheter/publiser/' + $("div.editor-header").attr('data-id') + '/',
+                url: '/sherpa/nyheter/publiser/' + $("div.editor-header").attr('data-article-id') + '/',
                 data: {
                     datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
                     status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
@@ -185,7 +185,7 @@ $(document).ready(function() {
 
             // Save tags
             $.ajaxQueue({
-                url: '/sherpa/nyheter/nokkelord/' + $("article").attr('data-id') + '/',
+                url: '/sherpa/nyheter/nokkelord/' + $("div.editor-header").attr('data-version-id') + '/',
                 data: 'tags=' + encodeURIComponent(JSON.stringify(article_tagger.tags))
             });
         }
