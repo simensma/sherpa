@@ -348,7 +348,7 @@ $(document).ready(function() {
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajaxQueue({
             url: '/sherpa/cms/kolonner/ny/',
-            data: "version=" + encodeURIComponent($("article").attr("data-id")) +
+            data: "version=" + encodeURIComponent($("div.editor-header").attr("data-version-id")) +
                   "&order=" + encodeURIComponent(order) +
                   "&columns=" + encodeURIComponent(JSON.stringify(columns))
         }).done(function(result) {

@@ -1,7 +1,7 @@
 {# Used for AJAX requests. #}
 {% csrf_token %}
 
-<article data-id="{{ version.id }}">
+<article>
 
 {% for row in rows %}
 <div class="row-fluid" data-id="{{ row.id }}">

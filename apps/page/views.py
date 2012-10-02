@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from string import split
+from datetime import datetime
 import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
@@ -127,51 +128,30 @@ def search(request):
     search = Search(query=request.GET['q'])
     search.save()
 
-    # Save IDs in these to avoid duplicating search results
-    article_hits = []
-    page_hits = []
+    pages = Page.objects.filter(
+        # Match page title or content
+        Q(variant__version__row__column__content__content__icontains=request.GET['q']) |
+        Q(title__icontains=request.GET['q']),
 
-    hits = []
-    pages = Page.objects.filter(title__icontains=request.GET['q'])
-    contents = Content.objects.filter(
-        Q(type='html') | Q(type='title') | Q(type='lede'),
-        column__row__version__active=True,
-        column__row__version__variant__segment=None,
-        content__icontains=request.GET['q'])
-    for page in pages:
-        if page.id in page_hits:
-            continue
-        page_hits.append(page.id)
-        if page.slug == '': url = 'http://%s/' % (request.site)
-        else:               url = 'http://%s/%s/' % (request.site, page.slug)
-        hits.append({
-            'title': page.title,
-            'url': url})
+        # Default segment, active version, published page
+        variant__segment=None,
+        variant__version__active=True,
+        published=True, pub_date__lt=datetime.now()).distinct()
 
-    for content in contents:
-        version = content.column.row.version
-        if version.variant.article != None:
-            if version.variant.article.id in article_hits:
-                continue
-            article_hits.append(version.variant.article.id)
-            version.load_preview()
-            hits.append({
-                'title': striptags(version.title.content),
-                'url': 'http://%s%s' % (request.site, reverse('articles.views.show', args=[version.variant.article.id, slugify(striptags(version.title.content))])),
-                'pub_date': version.variant.article.pub_date
-                })
-        elif version.variant.page != None:
-            if version.variant.page.id in page_hits:
-                continue
-            page_hits.append(version.variant.page.id)
-            page = version.variant.page
-            if page.slug == '': url = 'http://%s/' % (request.site)
-            else:               url = 'http://%s/%s/' % (request.site, page.slug)
-            hits.append({
-                'title': page.title,
-                'url': url})
+    article_versions = Version.objects.filter(
+        # Match content
+        variant__version__row__column__content__content__icontains=request.GET['q'],
 
-    context = {'search_query': request.GET['q'], 'hits': hits}
+        # Active version, default segment, published article
+        active=True,
+        variant__segment=None,
+        variant__article__published=True, variant__article__pub_date__lt=datetime.now()
+        ).distinct().order_by('-variant__article__pub_date')
+
+    for version in article_versions:
+        version.load_preview()
+
+    context = {'search_query': request.GET['q'], 'article_versions': article_versions, 'pages': pages}
     return render(request, 'page/search.html', context)
 
 def ad(request, ad):

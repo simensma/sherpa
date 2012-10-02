@@ -26,7 +26,7 @@ $(document).ready(function() {
             // Don't add to anchors with more than text nodes as children
             return $(this);
         }
-        if($(this).parents("article[data-id]").length > 0) {
+        if($(this).parents("article").length > 0 && $("div.editor-header").length > 0) {
             // Don't add to anchors when editing article
             return $(this);
         }

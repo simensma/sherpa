@@ -1,0 +1,41 @@
+/* Page/Article header editing */
+
+div.editor-header {
+  background-color: rgb(240, 240, 240) !important;
+  color: rgb(65, 65, 65) !important;
+}
+
+div.editor-header h1 {
+  font-size: 160%;
+  font-weight: normal;
+}
+
+div.editor-header.page div.display-ads {
+  margin-top: 15px;
+}
+
+/* Article */
+
+div.editor-header.article img.article-thumbnail {
+  background-color: rgb(0, 0, 0);
+  min-width: 20px;
+  min-height: 20px;
+}
+
+div.editor-header.article img.article-thumbnail:hover {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: alias;
+}
+
+div.editor-header.article div.preview-image {
+  float: right;
+}
+
+div.editor-header.article div.publish, div.editor-header.article div.status {
+  margin-bottom: 10px;
+}
+
+div.editor-header.article select[name='authors'] {
+  width: 400px;
+}
