@@ -13,7 +13,7 @@ def address(address, req=True):
 def zipcode(zipcode, req=True):
     if not req and zipcode == '':
         return True
-    return len(re.findall('\d{4}', zipcode)) > 0
+    return len(re.findall('^\d{4}$', zipcode)) > 0
 
 def phone(phone, req=True):
     if not req and phone == '':

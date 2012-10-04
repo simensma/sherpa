@@ -75,7 +75,7 @@ $(document).ready(function() {
 
     $("form#household input[name='zipcode']").focusout(function() {
         if($("form#household select[name='country'] option:selected").val() == 'NO') {
-            if(!$(this).val().match(/\d{4}/)) {
+            if(!$(this).val().match(/^\d{4}$/)) {
                 $(this).parents("div.control-group").removeClass('success').addClass('error');
             } else {
                 $(this).parents("div.control-group").removeClass('error').addClass('success');
