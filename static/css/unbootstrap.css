@@ -17,8 +17,8 @@ div.well {
 
 /* Override alert-boxes */
 
-div.alert {
-  font-family: "DTL Nobel";
+div.alert, div.alert * {
+  font-family: "DTL Nobel" !important;
 }
 
 div.alert-info {
