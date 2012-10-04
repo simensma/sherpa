@@ -30,7 +30,7 @@
         {% endif %}
       </p>
     {% endif %}
-    {% if parents|length > 0 %}
+    {% if parents and parents|length > 0 %}
       <p>
         <br>
         <em>Tilknyttet <a href="{{ parents.0.url }}">{{ parents.0.name }}</a>.</em>

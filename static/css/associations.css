@@ -32,6 +32,10 @@ div.count {
   font-style: italic;
 }
 
+table#results.visits {
+  margin-top: 30px;
+}
+
 table#results div.logo {
   float: right;
   color: white;

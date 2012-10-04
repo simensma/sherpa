@@ -57,6 +57,11 @@ def index(request):
     }
     return render(request, 'associations/list.html', context)
 
+def visit(request):
+    associations = Association.objects.filter(type="|Hovedforening").exclude(visit_address='').order_by('name')
+    context = {'associations': associations}
+    return render(request, 'associations/visit.html', context)
+
 def filter(request):
     if not request.POST.has_key('category') or not request.POST.has_key('county'):
         return HttpResponseRedirect(reverse('association.views.index'))
