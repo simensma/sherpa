@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="span12">
+    <div class="wrapper ut">
+      {% include 'widgets/promo/static/menu.html' %}
+
+      <div class="right">
+        <h1>Ikke medlem?</h1>
+
+        <p>
+          <strong>
+            Meld deg inn for 2013 nå og få resten av 2012 med på kjøpet!
+          </strong>
+        </p>
+
+        <p>
+          Som medlem støtter du driften av våre hytter og merkingen av 20.000 km turstier. I tillegg får du en rekke medlemsfordeler*, som du kan benytte deg av umiddelbart.
+        </p>
+
+        <p>
+          <strong>NB!</strong> Vi kan dessverre ikke sende ut medlemskort før i slutten av oktober. Trenger du medlemskortet umiddelbart, kan du kjøpe medlemskap på <a class="white-link" href="{% url association.views.visit %}">utsalgsstedene til våre foreninger</a>.
+        </p>
+
+        <p>
+          <a style="margin-top: 10px; margin-bottom: 10px" class="btn btn-large" href="{% url membership.views.index %}">Sjekk dine medlemsfordeler</a>
+        </p>
+
+        <p>
+          <em>
+            * Nye medlemmer vil ikke motta Fjell og Vidde og årbok før neste år.
+          </em>
+        </p>
+
+      </div>
+      <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/medlemskap.png" alt="Medlemskap i DNT">
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</div>

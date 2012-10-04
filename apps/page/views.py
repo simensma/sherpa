@@ -92,7 +92,7 @@ def parse_content(request, version):
 
     # Used temporary for static promo content
     promos = [
-        {'name': 'Høst', 'url': '/', 'template': 'høst'},
+        {'name': 'Bli medlem', 'url': '/', 'template': 'medlemskap'},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
