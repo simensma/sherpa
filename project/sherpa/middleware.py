@@ -53,6 +53,7 @@ class Sites():
         try:
             request.site = Site.objects.get(domain=request.get_host().split(":")[0])
             request.urlconf = "sherpa.urls_%s" % request.site.details.template.name
+            urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
             # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
             raise Http404
