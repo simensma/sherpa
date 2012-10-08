@@ -13,9 +13,11 @@
           swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
         </script>
         <div id="ad">
-          <a href="{% url page.views.ad advertisement.id %}">
-            <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
-          </a>
+          {% if advertisement.ad.has_fallback %}
+            <a href="{% url page.views.ad advertisement.id %}">
+              <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
+            </a>
+          {% endif %}
         </div>
       {% else %}
         <a href="{% url page.views.ad advertisement.id %}">

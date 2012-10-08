@@ -156,6 +156,9 @@ class Ad(models.Model):
     def url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
+    def has_fallback(self):
+        return self.fallback_sha1_hash != None and self.fallback_extension != None
+
     def fallback_url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
 
