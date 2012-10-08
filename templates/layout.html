@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
   <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
+  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+  {% block extra_css %}{% endblock %}
+
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
@@ -19,13 +28,6 @@
   <script src="{{ STATIC_URL }}js/ga.js"></script>
   <script src="{{ STATIC_URL }}js/validator.js"></script>
   {% block extra_js %}{% endblock %}
-  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
-  {% block extra_css %}{% endblock %}
 </head>
 <body>
 
