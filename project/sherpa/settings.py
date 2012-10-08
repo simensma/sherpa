@@ -83,6 +83,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'sherpa.middleware.RedirectTrailingDot',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'sherpa.middleware.Sites',
     'sherpa.middleware.DecodeQueryString',
@@ -92,6 +93,5 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'sherpa.middleware.RedirectTrailingDot',
     'sherpa.middleware.DeactivatedEnrollment',
 )
