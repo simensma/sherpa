@@ -1,8 +1,4 @@
 /**
- * Common stylesheet for the main site and cms
- */
-
-/**
  * Fonts and general styles
  */
 
@@ -87,33 +83,33 @@ a:hover {
 nav#menus {
   margin-top: 6px;
   font-family: "DTL Nobel";
-}
 
-nav#menus ul {
-  /* Override bootstrap */
-  margin-left: 0 !important;
-}
+  ul {
+    /* Override bootstrap */
+    margin-left: 0 !important;
+  }
 
-nav#menus li {
-  display: inline;
-  list-style: none;
-  margin-right: 15px;
-  font-family: "DTL Nobel" !important;
-  font-size: 14px !important;
-  line-height: 18px;
-}
+  li {
+    display: inline;
+    list-style: none;
+    margin-right: 15px;
+    font-family: "DTL Nobel" !important;
+    font-size: 14px !important;
+    line-height: 18px;
 
-nav#menus li a {
-  color: rgb(30, 30, 30);
-}
+    a {
+      color: rgb(30, 30, 30);
+    }
+  }
 
-nav#menus li.active a {
-  font-weight: bold;
-  padding-bottom: 8px;
-  border-bottom: 3px solid;
-  /* Set position relative, without offset, to apply z-index */
-  position: relative;
-  z-index: 5;
+  li.active a {
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 3px solid;
+    /* Set position relative, without offset, to apply z-index */
+    position: relative;
+    z-index: 5;
+  }
 }
 
 @media (max-width: 767px) {
@@ -121,24 +117,28 @@ nav#menus li.active a {
     float: none !important;
   }
 
-  nav#menus li:first-of-type {
-    border-top: none;
-  }
+  nav#menus {
+    li:first-of-type {
+      border-top: none;
+    }
 
-  nav#menus li {
-    font-size: 16px !important;
-    padding: 5px 10px 5px 10px;
-    border-top: 1px solid rgb(210, 210, 210);
+    li {
+      font-size: 16px !important;
+      padding: 5px 10px 5px 10px;
+      border-top: 1px solid rgb(210, 210, 210);
+    }
   }
 }
 
 @media (max-width: 979px) {
-  nav#menus li {
-    display: block;
-  }
+  nav#menus {
+    li {
+      display: block;
+    }
 
-  nav#menus li.active a {
-    border-bottom: none;
+    li.active a {
+      border-bottom: none;
+    }
   }
 }
 

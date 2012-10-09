@@ -2,25 +2,27 @@
  * Stylesheet for page/article editing
  */
 
-article .insertable {
-  cursor: pointer;
-  font-weight: bold;
-  background-color: rgb(65, 65, 65) !important;
-  color: rgb(195, 195, 195) !important;
-}
+article {
+  .insertable {
+    cursor: pointer;
+    font-weight: bold;
+    background-color: rgb(65, 65, 65) !important;
+    color: rgb(195, 195, 195) !important;
+  }
 
-article .insertable, article .empty:not(.editable) {
-  text-align: center;
-  color: rgb(125, 125, 125);
-  font-size: 180%;
-  font-style: italic;
-  line-height: 1;
-}
+  .insertable, .empty:not(.editable) {
+    text-align: center;
+    color: rgb(125, 125, 125);
+    font-size: 180%;
+    font-style: italic;
+    line-height: 1;
+  }
 
-article .hover-remove {
-  cursor: pointer;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
+  .hover-remove {
+    cursor: pointer;
+    opacity: 0.2;
+    filter: alpha(opacity=20);
+  }
 }
 
 .ui-widget-overlay {
@@ -47,59 +49,61 @@ div.overlay-loader {
   }
 }
 
-article div.widget.static {
-  cursor: not-allowed;
-}
+article {
+  div.widget.static {
+    cursor: not-allowed;
+  }
 
-article div.image img {
-  display: block;
-  background-color: rgb(0, 0, 0);
-  min-width: 20px;
-  min-height: 20px;
-}
+  div.image img {
+    display: block;
+    background-color: rgb(0, 0, 0);
+    min-width: 20px;
+    min-height: 20px;
+  }
 
-article div.image:hover, article div.widget:not(.static):hover {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-  cursor: alias;
-}
+  div.image:hover, div.widget:not(.static):hover {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: alias;
+  }
 
-article div[data-placeholder] {
-  font-style: italic;
-}
+  div[data-placeholder] {
+    font-style: italic;
+  }
 
-article div[data-placeholder]:hover {
-  cursor: text;
-}
+  div[data-placeholder]:hover {
+    cursor: text;
+  }
 
-article div[contenteditable='true'].selected {
-  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
-  border: 1px solid rgb(65, 65, 65);
-  background-color: rgb(215, 215, 215);
-}
+  div[contenteditable='true'].selected {
+    margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+    border: 1px solid rgb(65, 65, 65);
+    background-color: rgb(215, 215, 215);
+  }
 
-article div[contenteditable='true']:hover:not(.selected) {
-  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
-  border: 1px solid rgb(120, 120, 120);
-  background-color: rgb(235, 235, 235);
-}
+  div[contenteditable='true']:hover:not(.selected) {
+    margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+    border: 1px solid rgb(120, 120, 120);
+    background-color: rgb(235, 235, 235);
+  }
 
-article div.html.empty, article div.lede.empty {
-  margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
-  border: 1px solid rgb(255, 95, 95);
-  background-color: rgb(255, 220, 220);
-}
+  div.html.empty, div.lede.empty {
+    margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+    border: 1px solid rgb(255, 95, 95);
+    background-color: rgb(255, 220, 220);
+  }
 
-article .moveable {
-  cursor: move;
-}
+  .moveable {
+    cursor: move;
+  }
 
-article .moveable.horizontal {
-  background: url("/static/img/arrow-left.png") left center no-repeat, url("/static/img/arrow-right.png") right center no-repeat rgb(238, 238, 238);
-}
+  .moveable.horizontal {
+    background: url("/static/img/arrow-left.png") left center no-repeat, url("/static/img/arrow-right.png") right center no-repeat rgb(238, 238, 238);
+  }
 
-article .moveable.vertical {
-  background: url("/static/img/arrow-up.png") center top no-repeat, url("/static/img/arrow-down.png") center bottom no-repeat rgb(238, 238, 238);
+  .moveable.vertical {
+    background: url("/static/img/arrow-up.png") center top no-repeat, url("/static/img/arrow-down.png") center bottom no-repeat rgb(238, 238, 238);
+  }
 }
 
 
@@ -113,33 +117,35 @@ article .moveable.vertical {
   border: 1px solid rgb(221, 221, 221);
   background-color: rgb(245, 245, 245) !important;
   border: 1px solid rgb(221, 221, 221);
+
+  a.button {
+    display: block;
+    float: left;
+    cursor: pointer;
+    width: 27px;
+    height: 27px;
+  }
+
+  a.button:hover {
+    text-decoration: none;
+  }
+
+  input[name='url'] {
+    width: 350px;
+  }
 }
 
-#toolbar a.button {
-  display: block;
-  float: left;
-  cursor: pointer;
-  width: 27px;
-  height: 27px;
-}
+#dialog-columns {
+  h1 {
+    font-size: 140%;
+    text-align: center;
+  }
 
-#toolbar a.button:hover {
-  text-decoration: none;
-}
-
-#toolbar input[name='url'] {
-  width: 350px;
-}
-
-#dialog-columns h1 {
-  font-size: 140%;
-  text-align: center;
-}
-
-#dialog-columns img:hover {
-  cursor: pointer;
-  opacity: 0.4;
-  filter: alpha(opacity=40);
+  img:hover {
+    cursor: pointer;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+  }
 }
 
 #dialog-add-widget div.widget-thumbnail {
@@ -150,16 +156,16 @@ article .moveable.vertical {
   border: 1px solid rgb(0, 0, 0);
   min-height: 250px;
   text-align: center;
-}
 
-#dialog-add-widget div.widget-thumbnail img {
-  display: block;
-  margin-bottom: 10px;
-}
+  img {
+    display: block;
+    margin-bottom: 10px;
+  }
 
-#dialog-add-widget div.widget-thumbnail p {
-  font-size: 160%;
-  font-weight: bold;
+  p {
+    font-size: 160%;
+    font-weight: bold;
+  }
 }
 
 div.alert p.delete-content-warning {

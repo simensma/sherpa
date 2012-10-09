@@ -1,28 +1,30 @@
 div#searchbox {
   margin-bottom: 40px;
-}
 
-div#searchbox th {
-  text-align: left;
-}
+  th {
+    text-align: left;
 
-div#searchbox th h2 {
-  font-size: 20px;
-}
+    h2 {
+      font-size: 20px;
+    }
+  }
 
-div#searchbox td label {
-  font-family: "DTL Nobel" !important;
-  font-size: 16px;
-  color: rgb(100, 100, 100);
-}
+  td {
+    label {
+      font-family: "DTL Nobel" !important;
+      font-size: 16px;
+      color: rgb(100, 100, 100);
+    }
 
-div#searchbox td label.active {
-  color: @profile-red;
-}
+    label.active {
+      color: @profile-red;
+    }
 
-div#searchbox td label:hover {
-  cursor: pointer;
-  text-decoration: underline;
+    label:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
 }
 
 div.count {
@@ -36,36 +38,38 @@ table#results.visits {
   margin-top: 30px;
 }
 
-table#results div.logo {
-  float: right;
-  color: white;
-  font-family: "DTL Nobel" !important;
-  font-size: 18px;
-  margin-left: 14px;
-  margin-right: 10px;
-  background: @profile-red url('/static/img/header-logo-part.png') top right no-repeat;
-  padding-top: 18px;
-  padding-right: 74px; /* 59 (img width) + 15 */
-  padding-left: 15px;
-  height: 38px; /* 56 (img height) - padding-top */
-}
+table#results {
+  div.logo {
+    float: right;
+    color: white;
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+    margin-left: 14px;
+    margin-right: 10px;
+    background: @profile-red url('/static/img/header-logo-part.png') top right no-repeat;
+    padding-top: 18px;
+    padding-right: 74px; /* 59 (img width) + 15 */
+    padding-left: 15px;
+    height: 38px; /* 56 (img height) - padding-top */
+  }
 
-table#results h2 {
-  font-size: 20px;
-  margin-top: 15px;
-  margin-bottom: 8px;
-}
+  h2 {
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+  }
 
-table#results p {
-  font-size: 14px;
-  line-height: 1;
-  margin: 10px 0;
-  color: rgb(80, 80, 80);
-}
+  p {
+    font-size: 14px;
+    line-height: 1;
+    margin: 10px 0;
+    color: rgb(80, 80, 80);
+  }
 
-table#results div.map iframe {
-  width: 100%;
-  height: 400px;
+  div.map iframe {
+    width: 100%;
+    height: 400px;
+  }
 }
 
 select[name='full-list'] {
