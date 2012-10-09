@@ -1,33 +1,41 @@
 /* Change image-dialog */
 
-div#dialog-change-image h2 {
-  font-size: 120%;
+div#dialog-change-image {
+  h2 {
+    font-size: 120%;
+  }
+
+  button.button-aligned {
+    margin-bottom: 10px;
+  }
 }
 
-div#dialog-change-image button.button-aligned {
-  margin-bottom: 10px;
-}
+div#dialog-image-archive-chooser {
+  div#imagearchive {
+    div#contentlist {
+      div.album {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
 
-div#dialog-image-archive-chooser div#imagearchive div#contentlist div.album {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
+      img.album {
+        float: left;
+        width: 25px;
+      }
+    }
 
-div#dialog-image-archive-chooser div#imagearchive div#contentlist img.album {
-  float: left;
-  width: 25px;
-}
-
-div#dialog-image-archive-chooser div#imagearchive ul#images li {
-  display: block;
-  width: 200px;
-  border: 1px solid #888;
-  margin: 1%;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  float: left;
-  text-align: center;
-  cursor: pointer;
+    ul#images li {
+      display: block;
+      width: 200px;
+      border: 1px solid #888;
+      margin: 1%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      float: left;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
 }
 
 div#dialog-change-image div.empty-url {

@@ -41,7 +41,7 @@
     <form id="household" action="{% url enrollment.views.household %}" method="post">
       {% csrf_token %}
 
-      <div class="border">
+      <div class="form-border">
         <h2 style="margin-bottom: 15px;">Hvor bor {% if users|length > 1 %}dere{% else %}du{% endif %}?</h2>
         <div class="control-group country">
           <label> Land <span class="asterisk red">*</span></label>

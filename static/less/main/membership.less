@@ -5,45 +5,45 @@ div#membership-box {
   width: 940px;
   height: 474px;
   margin-bottom: 40px;
-}
 
-div#membership-box div.wrapper {
-  padding-top: 100px;
-}
+  div.wrapper {
+    padding-top: 100px;
 
-div#membership-box div.wrapper div#search-box {
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  width: 470px;
-  padding: 20px;
-}
+    div#search-box {
+      background-color: white;
+      margin-left: auto;
+      margin-right: auto;
+      width: 470px;
+      padding: 20px;
 
-div#membership-box div.wrapper div#search-box h2, div#membership-box div.wrapper div#search-box p.search {
-  text-align: center;
-}
+      h2, p.search {
+        text-align: center;
+      }
 
-div#membership-box div.wrapper div#search-box h2 {
-  font-size: 22px;
-}
+      h2 {
+        font-size: 22px;
+      }
 
-div#membership-box div.wrapper div#search-box p.intro {
-  font-family: "DTL Nobel" !important;
-  font-size: 18px;
-  line-height: 1.5em;
-}
+      p.intro {
+        font-family: "DTL Nobel" !important;
+        font-size: 18px;
+        line-height: 1.5em;
+      }
 
-div#membership-box div.wrapper div#search-box p.search {
-  margin-top: 12px;
-}
+      p.search {
+        margin-top: 12px;
+      }
 
-div#membership-box div.wrapper div#search-box input[type='text'] {
-  height: 30px;
-}
+      input[type='text'] {
+        height: 30px;
+      }
 
-div#membership-box div.wrapper div#search-box input[type='submit'] {
-  height: 40px;
-  margin-bottom: 10px;
+      input[type='submit'] {
+        height: 40px;
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
 
 @media (max-width: 767px) {
@@ -51,17 +51,17 @@ div#membership-box div.wrapper div#search-box input[type='submit'] {
     background-image: none;
     width: auto;
     height: auto;
-  }
 
-  div#membership-box div.wrapper {
-    padding-top: 0;
-  }
+    div.wrapper {
+      padding-top: 0;
 
-  div#membership-box div.wrapper div#search-box {
-    margin: 0;
-    width: auto;
-    border: 1px solid rgb(158, 158, 158);
-    text-align: center;
+      div#search-box {
+        margin: 0;
+        width: auto;
+        border: 1px solid rgb(158, 158, 158);
+        text-align: center;
+      }
+    }
   }
 }
 
@@ -71,15 +71,15 @@ div.benefits-large {
   margin-top: 20px;
   width: 300px;
   height: 210px;
-}
 
-div.benefits-large div.text {
-  font-family: "DTL Nobel" !important;
-  background-color: white;
-  position: absolute;
-  padding: 5px;
-  font-size: 18px;
-  font-weight: bold;
+  div.text {
+    font-family: "DTL Nobel" !important;
+    background-color: white;
+    position: absolute;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
 
 div.benefits-large:hover div.text {
@@ -101,26 +101,28 @@ div.benefits-large.cabins {
 
 div.membership {
   text-align: center;
+
+  a.membership {
+    font-size: 30px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 80%;
+    height: 40px;
+    margin-bottom: 10px;
+  }
 }
 
-div.membership a.membership {
-  font-size: 30px !important;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  width: 80%;
-  height: 40px;
-  margin-bottom: 10px;
-}
+div#benefits {
+  h2 {
+    font-family: "DTL Nobel" !important;
+    font-size: 20px;
+    border-bottom: 1px solid rgb(220, 220, 220);
+    padding-bottom: 5px;
+  }
 
-div#benefits h2 {
-  font-family: "DTL Nobel" !important;
-  font-size: 20px;
-  border-bottom: 1px solid rgb(220, 220, 220);
-  padding-bottom: 5px;
-}
-
-div#benefits div.row {
-  margin-top: 30px;
+  div.row {
+    margin-top: 30px;
+  }
 }
 
 div.benefits-toggle {
@@ -133,70 +135,78 @@ div.benefits-toggle {
 
 div.benefits-toggle-buttons {
   background: url('/static/img/membership/border-grey.png') top left repeat-x;
-}
 
-div.benefits-toggle-buttons div.show-button, div.benefits-toggle-buttons div.hide-button {
-  /* Size according to the background-image */
-  width: 42px;
-  height: 22px;
-  margin-left: auto;
-  margin-right: auto;
-  background-position: 50% 100%;
-  background-repeat: no-repeat;
+  div.show-button, div.hide-button {
+    /* Size according to the background-image */
+    width: 42px;
+    height: 22px;
+    margin-left: auto;
+    margin-right: auto;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+  }
 }
 
 div.benefits-toggle:hover {
   cursor: pointer;
+
+  a {
+    color: rgb(255, 0, 21);
+    text-decoration: underline;
+  }
 }
 
-div.benefits-toggle:hover a {
-  color: rgb(255, 0, 21);
-  text-decoration: underline;
+div.benefits-toggle-buttons {
+  div.show-button {
+    background-image: url('/static/img/membership/show.png');
+  }
+
+  div.hide-button {
+    background-image: url('/static/img/membership/hide.png');
+  }
 }
 
-div.benefits-toggle-buttons div.show-button {
-  background-image: url('/static/img/membership/show.png');
+div#benefits {
+  dl {
+    dt {
+      font-family: "DTL Nobel" !important;
+      color: @profile-red;
+      font-weight: normal;
+      padding-left: 20px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      line-height: 1.5;
+      background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+    }
+
+    dt:hover {
+      background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    dd {
+      margin-bottom: 20px;
+      padding: 13px;
+      background-color: rgb(242, 242, 242);
+    }
+  }
 }
 
-div.benefits-toggle-buttons div.hide-button {
-  background-image: url('/static/img/membership/hide.png');
-}
+table.prices {
+  td {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
 
-div#benefits dl dt {
-  font-family: "DTL Nobel" !important;
-  color: @profile-red;
-  font-weight: normal;
-  padding-left: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  line-height: 1.5;
-  background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
-}
+  td[data-popover] {
+    padding-left: 20px;
+    background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+  }
 
-div#benefits dl dt:hover {
-  background-image: url('/static/img/icons/netlife/icon-info-hover.png');
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-div#benefits dl dd {
-  margin-bottom: 20px;
-  padding: 13px;
-  background-color: rgb(242, 242, 242);
-}
-
-table.prices td {
-  padding-top: 13px;
-  padding-bottom: 13px;
-}
-
-table.prices td[data-popover] {
-  padding-left: 20px;
-  background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
-}
-
-table.prices td[data-popover]:hover {
-  background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+  td[data-popover]:hover {
+    background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+  }
 }
 
 div.association-data {
@@ -212,77 +222,81 @@ iframe.map {
 
 table#service-boxes {
   width: 100%;
+
+  td {
+    border: 1px solid rgb(212, 212, 212);
+    padding: 20px 20px 20px 65px;
+
+    a {
+      color: rgb(51, 51, 51);
+    }
+  }
+
+  td:hover {
+    cursor: pointer;
+    background-color: @profile-red !important;
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  }
+
+  td.renewal {
+    background: url('/static/img/icons/netlife/human.png') center left 10px no-repeat;
+  }
+
+  td.renewal:hover {
+    background: url('/static/img/icons/netlife/human-hover.png') center left 10px no-repeat;
+  }
+
+  td.order-key {
+    background: url('/static/img/icons/netlife/key.png') center left 10px no-repeat;
+  }
+
+  td.order-key:hover {
+    background: url('/static/img/icons/netlife/key-hover.png') center left 10px no-repeat;
+  }
+
+  td.address {
+    background: url('/static/img/icons/netlife/mail.png') center left 10px no-repeat;
+  }
+
+  td.address:hover {
+    background: url('/static/img/icons/netlife/mail-hover.png') center left 10px no-repeat;
+  }
+
+  td.forgot-id {
+    background: url('/static/img/icons/netlife/membercard.png') center left 10px no-repeat;
+  }
+
+  td.forgot-id:hover {
+    background: url('/static/img/icons/netlife/membercard-hover.png') center left 10px no-repeat;
+  }
 }
 
-table#service-boxes td {
-  border: 1px solid rgb(212, 212, 212);
-  padding: 20px 20px 20px 65px;
-}
+div#faq {
+  dl {
+    dt {
+      color: @profile-red;
+      font-weight: normal;
+      padding-left: 40px;
+      line-height: 1.5;
+      background: url('/static/img/icons/netlife/question.png') center left 10px no-repeat;
+    }
 
-table#service-boxes td a {
-  color: rgb(51, 51, 51);
-}
+    dt:hover {
+      text-decoration: underline;
+      background: url('/static/img/icons/netlife/question-hover.png') center left 10px no-repeat;
+      cursor: pointer;
+    }
 
-table#service-boxes td:hover {
-  cursor: pointer;
-  background-color: @profile-red !important;
-}
-
-table#service-boxes td:hover a {
-  color: white;
-  text-decoration: underline;
-}
-
-table#service-boxes td.renewal {
-  background: url('/static/img/icons/netlife/human.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.renewal:hover {
-  background: url('/static/img/icons/netlife/human-hover.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.order-key {
-  background: url('/static/img/icons/netlife/key.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.order-key:hover {
-  background: url('/static/img/icons/netlife/key-hover.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.address {
-  background: url('/static/img/icons/netlife/mail.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.address:hover {
-  background: url('/static/img/icons/netlife/mail-hover.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.forgot-id {
-  background: url('/static/img/icons/netlife/membercard.png') center left 10px no-repeat;
-}
-
-table#service-boxes td.forgot-id:hover {
-  background: url('/static/img/icons/netlife/membercard-hover.png') center left 10px no-repeat;
-}
-
-div#faq dl dt {
-  color: @profile-red;
-  font-weight: normal;
-  padding-left: 40px;
-  line-height: 1.5;
-  background: url('/static/img/icons/netlife/question.png') center left 10px no-repeat;
-}
-
-div#faq dl dt:hover {
-  text-decoration: underline;
-  background: url('/static/img/icons/netlife/question-hover.png') center left 10px no-repeat;
-  cursor: pointer;
-}
-
-div#faq dl dd {
-  margin: 10px 0 20px 40px;
-  padding: 13px;
-  background-color: rgb(242, 242, 242);
+    dd {
+      margin: 10px 0 20px 40px;
+      padding: 13px;
+      background-color: rgb(242, 242, 242);
+    }
+  }
 }
 
 form.zipcode_search_small button {

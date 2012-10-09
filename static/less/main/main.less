@@ -7,155 +7,161 @@
 header {
   font-size: 14px !important;
   font-family: "DTL Nobel";
-}
 
-header div.search {
-  text-align: right;
-}
+  div.search {
+    text-align: right;
 
-header div.search form.form-search {
-  margin-top: 20px;
-}
+    form.form-search {
+      margin-top: 20px;
+    }
+  }
 
-header div.login {
-  margin-top: 6px;
-  margin-bottom: 9px;
-  text-align: right;
-}
+  div.login {
+    margin-top: 6px;
+    margin-bottom: 9px;
+    text-align: right;
 
-header div.login a {
-  color: rgb(30, 30, 30);
-  margin-left: 7px;
-  margin-right: 7px;
+    a {
+      color: rgb(30, 30, 30);
+      margin-left: 7px;
+      margin-right: 7px;
+    }
+  }
 }
 
 @media (max-width: 979px) {
-  header div.border, header div.breadcrumb-container, header div.language-container {
+  header {
+    div.border, div.breadcrumb-container, div.language-container {
+      display: none;
+    }
+
+    div.menu-container {
+      float: left !important;
+    }
+
+    div.login-container {
+      float: right !important;
+    }
+
+    div.login a {
+      display: block;
+    }
+  }
+}
+
+header {
+  div.border {
+    clear: both;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    margin-top: -3px;
+    border-top: 1px solid rgb(229, 229, 229);
+  }
+
+  div.menu-breadcrumb {
+    margin-top: 5px;
+  }
+
+  div.menu-breadcrumb, div.menu-breadcrumb a {
+    color: rgb(121, 121, 121);
+  }
+
+  div.menu-breadcrumb em {
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  ul.language-bar {
+    float: right;
+  }
+
+  ul.language-bar li {
+    font-family: "DTL Nobel" !important;
+    font-size: 14px !important;
+    line-height: 18px;
+  }
+
+  ul.language-bar li.dropdown a {
+    color: rgb(30, 30, 30);
+  }
+
+  ul.dropdown-menu {
+    position: absolute;
+    left: -65px;
+  }
+
+  /* Small-screen menu control */
+
+  div.mobile-control {
+    display: none;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  p.display-menu {
+    float: left;
+  }
+
+  p.display-search {
+    float: right;
+  }
+
+  p.display-menu, p.display-search {
     display: none;
   }
 
-  header div.menu-container {
-    float: left !important;
+  p.display-menu a, p.display-search a {
+    font-family: "DTL Nobel" !important;
+    font-size: 20px !important;
+    color: rgb(30, 30, 30);
+    text-transform: uppercase;
   }
 
-  header div.login-container {
-    float: right !important;
+  p.display-menu a:hover, p.display-search a:hover {
+    color: rgb(180, 180, 180);
+    background-color: rgb(250, 250, 250);
+    text-decoration: none;
   }
 
-  header div.login a {
-    display: block;
+  p.display-menu a b.caret {
+    margin-left: 2px;
   }
-}
 
-header div.border {
-  clear: both;
-  position: absolute;
-  width: 100%;
-  left: 0;
-  margin-top: -3px;
-  border-top: 1px solid rgb(229, 229, 229);
-}
+  p.display-search a b.caret {
+    margin-right: 2px;
+  }
 
-header div.menu-breadcrumb {
-  margin-top: 5px;
-}
+  p.display-menu a b.caret, p.display-search a b.caret {
+    margin-top: 12px;
+    border-top-color: rgb(30, 30, 30);
+    border-bottom-color: rgb(30, 30, 30);
+  }
 
-header div.menu-breadcrumb, header div.menu-breadcrumb a {
-  color: rgb(121, 121, 121);
-}
+  p.display-menu a:hover b.caret, p.display-search a:hover b.caret {
+    border-top-color: rgb(180, 180, 180);
+    border-bottom-color: rgb(180, 180, 180);
+  }
 
-header div.menu-breadcrumb em {
-  font-style: normal;
-  font-weight: bold;
-}
+  form.search-mobile {
+    display: none;
 
-header ul.language-bar {
-  float: right;
-}
+    input[type='text'] {
+      width: 65%;
+      margin: 0 1% 0 1%;
+    }
 
-header ul.language-bar li {
-  font-family: "DTL Nobel" !important;
-  font-size: 14px !important;
-  line-height: 18px;
-}
-
-header ul.language-bar li.dropdown a {
-  color: rgb(30, 30, 30);
-}
-
-header ul.dropdown-menu {
-  position: absolute;
-  left: -65px;
-}
-
-/* Small-screen menu control */
-
-header div.mobile-control {
-  display: none;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-header p.display-menu {
-  float: left;
-}
-
-header p.display-search {
-  float: right;
-}
-
-header p.display-menu, header p.display-search {
-  display: none;
-}
-
-header p.display-menu a, header p.display-search a {
-  font-family: "DTL Nobel" !important;
-  font-size: 20px !important;
-  color: rgb(30, 30, 30);
-  text-transform: uppercase;
-}
-
-header p.display-menu a:hover, header p.display-search a:hover {
-  color: rgb(180, 180, 180);
-  background-color: rgb(250, 250, 250);
-  text-decoration: none;
-}
-
-header p.display-menu a b.caret {
-  margin-left: 2px;
-}
-
-header p.display-search a b.caret {
-  margin-right: 2px;
-}
-
-header p.display-menu a b.caret, header p.display-search a b.caret {
-  margin-top: 12px;
-  border-top-color: rgb(30, 30, 30);
-  border-bottom-color: rgb(30, 30, 30);
-}
-
-header p.display-menu a:hover b.caret, header p.display-search a:hover b.caret {
-  border-top-color: rgb(180, 180, 180);
-  border-bottom-color: rgb(180, 180, 180);
-}
-
-header form.search-mobile {
-  display: none;
-}
-
-header form.search-mobile input[type='text'] {
-  width: 65%;
-  margin: 0 1% 0 1%;
-}
-
-header form.search-mobile button[type='submit'] {
-  margin: 0 1% 0 1%;
+    button[type='submit'] {
+      margin: 0 1% 0 1%;
+    }
+  }
 }
 
 @media (max-width: 767px) {
-  header div.mobile-control, header p.display-menu, header p.display-search {
-    display: block;
+  header {
+    div.mobile-control, p.display-menu, p.display-search {
+      display: block;
+    }
   }
 
   nav#menus, div.login {
@@ -167,26 +173,26 @@ header form.search-mobile button[type='submit'] {
 
 div.social-icons {
   margin-top: 40px;
-}
 
-div.social-icons h1 {
-  text-transform: none;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 1;
-  margin-bottom: 0;
-  border-bottom: none;
-  text-transform: uppercase;
-}
+  h1 {
+    text-transform: none;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1;
+    margin-bottom: 0;
+    border-bottom: none;
+    text-transform: uppercase;
+  }
 
-div.social-icons a {
-  color: rgb(118, 118, 118);
-  font-family: "DTL Nobel";
-}
+  a {
+    color: rgb(118, 118, 118);
+    font-family: "DTL Nobel";
+  }
 
-div.social-icons img.social {
-  float: left;
-  margin-right: 10px;
+  img.social {
+    float: left;
+    margin-right: 10px;
+  }
 }
 
 /* Footer */
@@ -197,15 +203,73 @@ footer {
   margin-top: 20px;
   padding-bottom: 100px;
   padding-top: 20px;
+
+  div.services {
+    h2 {
+      font-size: 18px;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+
+    a {
+      line-height: 1.5;
+      color: black;
+    }
+
+    a:hover {
+      color: @profile-red;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-left: auto;
+    }
+  }
+
+  div.sponsors {
+    text-align: center;
+    margin-top: 40px;
+
+    img {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    img.onecall {
+      margin-right: 20px !important;
+    }
+  }
+
+  div.sponsors-underline {
+    div {
+      float: left;
+      font-family: "DTL Nobel" !important;
+      font-size: 14px;
+      color: rgb(145, 145, 145);
+      border-top: 2px solid rgb(195, 195, 195);
+      margin-top: 15px;
+      margin-left: 8px;
+      margin-right: 8px;
+      padding-top: 5px;
+    }
+
+    div.main {
+      width: 162px;
+    }
+
+    div.tour {
+      width: 511px;
+    }
+
+    div.other {
+      width: 216px;
+    }
+  }
 }
 
 @media (max-width: 767px) {
   div.search {
     display: none;
-  }
-
-  div.mobile-search {
-
   }
 
   div.social-icons div.span3 {
@@ -218,45 +282,11 @@ footer {
     margin-right: -20px;
     padding-left: 20px;
     padding-right: 20px;
+
+    div.services div.span3 {
+      margin-bottom: 30px;
+    }
   }
-
-  footer div.services div.span3 {
-    margin-bottom: 30px;
-  }
-}
-
-footer div.services h2 {
-  font-size: 18px;
-  font-weight: normal;
-  text-transform: uppercase;
-}
-
-footer div.services a {
-  line-height: 1.5;
-  color: black;
-}
-
-footer div.services a:hover {
-  color: @profile-red;
-}
-
-footer div.services ul {
-  list-style-type: none;
-  margin-left: auto;
-}
-
-footer div.sponsors {
-  text-align: center;
-  margin-top: 40px;
-}
-
-footer div.sponsors img {
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-footer div.sponsors img.onecall {
-  margin-right: 20px !important;
 }
 
 @media (max-width: 979px) {
@@ -265,91 +295,69 @@ footer div.sponsors img.onecall {
   }
 }
 
-footer div.sponsors-underline div {
-  float: left;
-  font-family: "DTL Nobel" !important;
-  font-size: 14px;
-  color: rgb(145, 145, 145);
-  border-top: 2px solid rgb(195, 195, 195);
-  margin-top: 15px;
-  margin-left: 8px;
-  margin-right: 8px;
-  padding-top: 5px;
-}
-
-footer div.sponsors-underline div.main {
-  width: 162px;
-}
-
-footer div.sponsors-underline div.tour {
-  width: 511px;
-}
-
-footer div.sponsors-underline div.other {
-  width: 216px;
-}
-
 /* Search box, preliminary for associations */
 
 div#searchbox {
   width: 940px;
   height: 467px;
   background-image: url('/static/img/promo/sykkel.jpg');
-}
 
-div#searchbox div#content {
-  position: relative;
-  margin-left: 10px;
-  top: 100px;
-  width: 760px;
-  height: 270px;
-}
+  div#content {
+    position: relative;
+    margin-left: 10px;
+    top: 100px;
+    width: 760px;
+    height: 270px;
+  }
 
-div#searchbox table {
-  width: 100%;
-}
+  table {
+    width: 100%;
+  }
 
-div#searchbox td.categories {
-  width: 250px;
-  vertical-align: top;
-}
+  td.categories {
+    width: 250px;
+    vertical-align: top;
 
-div#searchbox td.categories p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
+    p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
 
-div#searchbox td.counties {
-  vertical-align: top;
-}
+  td.counties {
+    vertical-align: top;
+  }
 
-div#searchbox div.county {
-  float: left;
-  width: 33%;
+  div.county {
+    float: left;
+    width: 33%;
+  }
 }
 
 /* Search-results */
 
-div#search-results p.hits {
-  color: rgb(100, 100, 100);
-}
+div#search-results {
+  p.hits {
+    color: rgb(100, 100, 100);
+  }
 
-div#search-results div.search-result {
-  margin-bottom: 20px;
-}
+  div.search-result {
+    margin-bottom: 20px;
 
-div#search-results div.search-result h3 {
-  margin-bottom: 0;
-}
+    h3 {
+      margin-bottom: 0;
+    }
 
-div#search-results div.search-result img.thumbnail {
-  float: right;
-}
+    img.thumbnail {
+      float: right;
+    }
+  }
 
-div#search-results span.published {
-  color: rgb(120, 120, 120);
-  font-size: 16px;
-  font-weight: normal;
+  span.published {
+    color: rgb(120, 120, 120);
+    font-size: 16px;
+    font-weight: normal;
+  }
 }
 
 /* Login page */
@@ -358,16 +366,18 @@ div#login button.login {
   width: 150px;
 }
 
-div#forgot-password button.restore-password {
-  margin-bottom: 10px;
-}
+div#forgot-password {
+  button.restore-password {
+    margin-bottom: 10px;
+  }
 
-div#forgot-password p.info.success {
-  color: rgb(45, 140, 32);
-}
+  p.info.success {
+    color: rgb(45, 140, 32);
+  }
 
-div#forgot-password p.info.failure {
-  color: @profile-red;
+  p.info.failure {
+    color: @profile-red;
+  }
 }
 
 div#restore-password table td.info {
@@ -376,30 +386,32 @@ div#restore-password table td.info {
 
 /* Article listing */
 
-div#article-list h2 {
-  margin-bottom: 0;
-}
+div#article-list {
+  h2 {
+    margin-bottom: 0;
+  }
 
-div#article-list p.date {
-  color: rgb(120, 120, 120);
-  font-size: 14px;
-}
+  p.date {
+    color: rgb(120, 120, 120);
+    font-size: 14px;
+  }
 
-div#article-list img {
-  float: left;
-  margin-right: 15px;
-}
+  img {
+    float: left;
+    margin-right: 15px;
+  }
 
-div#article-list div.preview-lede a {
-  color: rgb(51, 51, 51);
-}
+  div.preview-lede a {
+    color: rgb(51, 51, 51);
+  }
 
-div#article-list h3 {
-  margin-top: 40px;
-}
+  h3 {
+    margin-top: 40px;
+  }
 
-div#article-list div.item {
-  margin-bottom: 40px;
+  div.item {
+    margin-bottom: 40px;
+  }
 }
 
 /* Ads */
@@ -407,16 +419,16 @@ div#article-list div.item {
 div.ad {
   margin-top: 40px;
   margin-bottom: 40px;
-}
 
-div.ad p.ad-label {
-  font-family: "DTL Nobel" !important;
-  font-size: 12px;
-  margin-bottom: 0px;
-}
+  p.ad-label {
+    font-family: "DTL Nobel" !important;
+    font-size: 12px;
+    margin-bottom: 0px;
+  }
 
-div.ad img.viewcounter {
-  width: 1px;
-  height: 1px;
-  position: absolute;
+  img.viewcounter {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+  }
 }

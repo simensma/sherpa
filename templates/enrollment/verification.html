@@ -63,7 +63,7 @@
     </div>
 
     <form id="verification" action="{% url enrollment.views.payment_method %}" method="post">
-      <div class="verification border">
+      <div class="form-border">
         {% csrf_token %}
         <input type="hidden" name="main-member" value="">
         <h2>Registrerte opplysninger</h2>
