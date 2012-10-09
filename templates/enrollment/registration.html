@@ -82,7 +82,7 @@
       <br>
     {% endif %}
 
-    <form id="registration" class="border" action="{% url enrollment.views.registration %}" method="post">
+    <form id="registration" class="form-border" action="{% url enrollment.views.registration %}" method="post">
       {% csrf_token %}
       {% if person.index >= 0 %}
         <input type="hidden" name="user" value="{{ person.index }}">
