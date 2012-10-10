@@ -225,7 +225,7 @@
 
 <div class="row">
   <div class="span8">
-    <h2>Priser 2012</h2>
+    <h2>Priser</h2>
     <table class="table prices">
       <tr>
         <td data-popover data-trigger="hover" data-placement="top" data-title="Hovedmedlem" data-content="Er du over 26 år blir du hovedmedlem. Hovedmedlemmer har alle medlemsfordeler."> Hovedmedlem</td>
@@ -257,24 +257,21 @@
       </tr>
     </table>
 
-    <div class="alert alert-error">
-      <strong>Merk:</strong><br>
+    <div class="price-notice-box">
+      <p>
+        <strong>Merk:</strong>
+      </p>
       <ul>
-        <li>
-            {% if association %}
-              Prisene gjelder for medlemskap i {{ association.name }}. Andre medlemsforeninger kan ha andre priser.
-            {% else %}
-              Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.
-            {% endif %}
-        </li>
-
-        <li>
-          Fra 1. oktober 2012 gjelder medlemskapet resten av dette året, samt hele 2013.
-        </li>
-
-        <li>
-          Prisene over gjelder for 2012. Ved innmelding etter 1. oktober blir neste års medlemskapspriser gjeldende, og disse vil være noe høyere. Prisene vil bli oppdatert i løpet av kort tid.
-        </li>
+        {% if association %}
+          <li>Prisene gjelder for medlemskap i {{ association.name }}. Andre medlemsforeninger kan ha andre priser.</li>
+        {% else %}
+          <li>Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.</li>
+        {% endif %}
+        {% if now.month >= new_membership_year.month %}
+          <li>Fra 1. {{ new_membership_year|date:"F" }} {{ now|date:"Y" }} gjelder medlemskapet resten av dette året, samt hele {{ now|date:"Y"|add:1 }}.</li>
+        {% else %}
+          <li>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember {{ now|date:"Y" }}.</li>
+        {% endif %}
       </ul>
     </div>
 
