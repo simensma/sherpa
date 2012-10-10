@@ -5,9 +5,8 @@
 {% block body %}
 <div class="row image-search">
   <div class="span12">
-    <form action="{% url admin.images.views.search %}" method="post">
-      {% csrf_token %}
-      <input type="text" class="input-xlarge" name="search" placeholder="Finn album eller bilde..." value="{{ search_query }}">
+    <form action="{% url admin.images.views.search %}" method="get">
+      <input type="text" class="input-xlarge" name="q" placeholder="Finn album eller bilde..." value="{{ search_query }}">
       <button type="submit" class="btn input-button-align"><i class="icon-search"></i> Søk i bildearkivet</button>
     </form>
   </div>

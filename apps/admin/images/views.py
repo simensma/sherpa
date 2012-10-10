@@ -181,14 +181,14 @@ def content_json(request, album):
     return HttpResponse(json.dumps(objects))
 
 def search(request):
-    if len(request.POST.get('search', '')) < settings.IMAGE_SEARCH_LENGTH:
+    if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context = {
             'too_short_query': True,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         }
         return render(request, 'admin/images/search.html', context)
     images = []
-    for word in request.POST['search'].split(' '):
+    for word in request.GET['q'].split(' '):
         images.extend(Image.objects.filter(
             Q(description__icontains=word) |
             Q(album__name__icontains=word) |
@@ -200,13 +200,13 @@ def search(request):
             Q(uploader__user__last_name__icontains=word) |
             Q(uploader__user__email__icontains=word) |
             Q(tags__name__icontains=word)).distinct().values())
-    for word in request.POST['search'].split(' '):
+    for word in request.GET['q'].split(' '):
         albums = Album.objects.filter(name__icontains=word).distinct().values()
     context = {
         'albums': albums,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'search_query': request.POST['search']}
+        'search_query': request.GET['q']}
     return render(request, 'admin/images/search.html', context)
 
 def search_json(request):
