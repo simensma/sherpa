@@ -46,7 +46,7 @@ EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
 # Hardcoded ages
 AGE_SENIOR = 67
 AGE_MAIN = 27
-AGE_STUDENT = 19
+AGE_YOUTH = 19
 AGE_SCHOOL = 13
 
 # Registration states: 'registration' -> 'payment' -> 'complete'
@@ -187,7 +187,7 @@ def household(request):
 
     main = False
     for user in request.session['enrollment']['users']:
-        if user['age'] >= AGE_STUDENT:
+        if user['age'] >= AGE_YOUTH:
             main = True
             break
 
@@ -233,7 +233,7 @@ def existing(request):
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
     age = datetime.now().year - actor.birth_date.year
-    if age < AGE_STUDENT:
+    if age < AGE_YOUTH:
         return HttpResponse(json.dumps({'error': 'actor.too_young', 'age': age}))
 
     return HttpResponse(json.dumps({
@@ -314,18 +314,18 @@ def verification(request):
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
 
     keycount = 0
-    student_or_older_count = 0
+    youth_or_older_count = 0
     main = None
     for user in request.session['enrollment']['users']:
-        if main == None or (user['age'] < main['age'] and user['age'] >= AGE_STUDENT):
+        if main == None or (user['age'] < main['age'] and user['age'] >= AGE_YOUTH):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
-        if user['age'] >= AGE_STUDENT:
-            student_or_older_count += 1
+        if user['age'] >= AGE_YOUTH:
+            youth_or_older_count += 1
         if user.has_key('key'):
             keycount += 1
     keyprice = keycount * KEY_PRICE
-    multiple_main = student_or_older_count > 1
+    multiple_main = youth_or_older_count > 1
     updateIndices(request.session)
     context = {'users': request.session['enrollment']['users'],
         'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
@@ -335,7 +335,7 @@ def verification(request):
         'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
         'main': main, 'year': year, 'next_year': next_year,
         'price': request.session['enrollment']['price'],
-        'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_student': AGE_STUDENT,
+        'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_youth': AGE_YOUTH,
         'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
         'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
         'no_main_member': request.GET.has_key(no_main_member_key),
@@ -408,7 +408,7 @@ def payment(request):
         for user in request.session['enrollment']['users']:
             if user['index'] == int(request.session['enrollment']['main_member']):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
-                if user['age'] < AGE_STUDENT:
+                if user['age'] < AGE_YOUTH:
                     return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
                 user['household'] = False
                 user['yearbook'] = True
@@ -420,13 +420,13 @@ def payment(request):
             # The specified main-member index doesn't exist
             return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
     else:
-        # In this case, one or more members below student age are registered,
+        # In this case, one or more members below youth age are registered,
         # so no main/household status applies.
         for user in request.session['enrollment']['users']:
             user['household'] = False
             user['yearbook'] = False
-            # Verify that all members are below student age
-            if user['age'] >= AGE_STUDENT:
+            # Verify that all members are below youth age
+            if user['age'] >= AGE_YOUTH:
                 return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
 
     # Ok. We need the memberID of the main user, so add that user and generate its ID
@@ -479,7 +479,7 @@ def payment(request):
     else:
         found = False
         for user in request.session['enrollment']['users']:
-            if user['age'] >= AGE_STUDENT:
+            if user['age'] >= AGE_YOUTH:
                 order_number = 'I_%s' % user['id']
                 first_name = user['name'].split(' ')[0]
                 last_name = user['name'].split(' ')[1:]
@@ -782,7 +782,7 @@ def validate_existing(id, zipcode, country):
     except (Actor.DoesNotExist, ValueError):
         return False
 
-    if datetime.now().year - actor.birth_date.year < AGE_STUDENT:
+    if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
         return False
 
     if country == 'NO':
@@ -800,7 +800,7 @@ def validate_youth_count(users):
         return True
     at_least_one_main_member = False
     for user in users:
-        if user['age'] >= AGE_STUDENT:
+        if user['age'] >= AGE_YOUTH:
             at_least_one_main_member = True
             break
     return at_least_one_main_member
@@ -814,15 +814,15 @@ def price_of(age, household, price):
 def price_of_age(age, price):
     if age >= AGE_SENIOR:    return price.senior
     elif age >= AGE_MAIN:    return price.main
-    elif age >= AGE_STUDENT: return price.student
+    elif age >= AGE_YOUTH:   return price.youth
     elif age >= AGE_SCHOOL:  return price.school
     else:                    return price.child
 
 def type_of(age, household):
-    if household and age >= AGE_STUDENT: return 'Husstandsmedlem'
+    if household and age >= AGE_YOUTH:   return 'Husstandsmedlem'
     elif age >= AGE_SENIOR:              return 'Honnørmedlem'
     elif age >= AGE_MAIN:                return 'Hovedmedlem'
-    elif age >= AGE_STUDENT:             return 'Student/ungdomsmedlem'
+    elif age >= AGE_YOUTH:               return 'Ungdomsmedlem'
     elif age >= AGE_SCHOOL:              return 'Skoleungdomsmedlem'
     else:                                return 'Barnemedlem'
 
@@ -894,11 +894,11 @@ def focus_payment_method_code(method):
     elif method == 'invoice': return 1
 
 def focus_type_of(age, household):
-    if household and age >= AGE_STUDENT:
+    if household and age >= AGE_YOUTH:
                              return 107
     elif age >= AGE_SENIOR:  return 103
     elif age >= AGE_MAIN:    return 101
-    elif age >= AGE_STUDENT: return 102
+    elif age >= AGE_YOUTH:   return 102
     elif age >= AGE_SCHOOL:  return 106
     else:                    return 105
     # 104 = Lifelong member
@@ -908,7 +908,7 @@ def focus_type_of(age, household):
 def focus_receive_yearbook(age, linked_to):
     if linked_to != '':
         return False
-    elif age >= AGE_STUDENT:
+    elif age >= AGE_YOUTH:
         return True
     else:
         return False
