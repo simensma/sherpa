@@ -49,7 +49,7 @@ function hideContent() {
 function search(phrase) {
     var ajaxLoader = hideContent();
     $.ajax({
-        url: '/sherpa/bildearkiv/søk/',
+        url: '/sherpa/bildearkiv/søk/json/',
         data: "query=" + encodeURIComponent(phrase)
     }).done(function(result) {
         result = JSON.parse(result);
