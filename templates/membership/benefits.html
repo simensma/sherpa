@@ -31,7 +31,7 @@
       Egen DNT-nøkkel
     </div>
   </div>
-  <div class="span4 benefits-large magazine" data-popover data-trigger="hover" data-title="Fjell og Vidde" data-content="Fjell og Vidde er landets største friluftsmagasin, og kommer ut 6 ganger i året. Medlemmer (hoved-, student/ungdom- og honnør) får bladet gratis tilsendt i posten.">
+  <div class="span4 benefits-large magazine" data-popover data-trigger="hover" data-title="Fjell og Vidde" data-content="Fjell og Vidde er landets største friluftsmagasin, og kommer ut 6 ganger i året. Medlemmer (hoved-, ungdom- og honnør) får bladet gratis tilsendt i posten.">
     <div class="text">
       Fjell og Vidde
     </div>
@@ -225,15 +225,24 @@
 
 <div class="row">
   <div class="span8">
-    <h2>Priser</h2>
+    <h2>
+      Priser
+      {# Note: This won't be applicable unless the prices are actually updated in Focus. #}
+      {# So in practice, this probably *should* stay static and be manually updated. Sigh. #}
+      {% if now.month >= new_membership_year.month %}
+        {{ now|date:"Y"|add:1 }}
+      {% else %}
+        {{ now|date:"Y" }}
+      {% endif %}
+    </h2>
     <table class="table prices">
       <tr>
         <td data-popover data-trigger="hover" data-placement="top" data-title="Hovedmedlem" data-content="Er du over 26 år blir du hovedmedlem. Hovedmedlemmer har alle medlemsfordeler."> Hovedmedlem</td>
         <td>{{ price.main }},-</td>
       </tr>
       <tr>
-        <td data-popover data-trigger="hover" data-placement="top" data-title="Student/ungdom" data-content="Studenter/ungdommer mellom 19 og 26 år blir medlemmer i DNT ung. Er du i denne medlemskategorien får du både Fjell og Vidde og ungdomsmagasinet UT."> Student/ungdom (19-26 år)</td>
-        <td>{{ price.student }},-</td>
+        <td data-popover data-trigger="hover" data-placement="top" data-title="Ungdom" data-content="Ungdommer mellom 19 og 26 år blir medlemmer i DNT ung. Er du i denne medlemskategorien får du både Fjell og Vidde og ungdomsmagasinet UT."> Ungdom (19-26 år)</td>
+        <td>{{ price.youth }},-</td>
       </tr>
       <tr>
         <td data-popover data-trigger="hover" data-placement="top" data-title="Skoleungdom" data-content="Skoleungdom mellom 13 og 18 år blir medlem i DNT ung. Skoleungdom får ungdomsmagasinet UT, men ikke Fjell og Vidde."> Skoleungdom (13-18 år)</td>
@@ -248,7 +257,7 @@
         <td>{{ price.senior }},-</td>
       </tr>
       <tr>
-        <td data-popover data-trigger="hover" data-placement="top" data-title="Husstandsmedlem" data-content="For å få rett til husstandsmedlemskap <strong>må</strong> du bo sammen med enten et hoved-, student- honnør- eller livsvarig medlem. Hvis du melder inn flere i familien (på samme adresse) blir husstandsmedlemskap satt automatisk. Du kan også knytte deg til et <strong>eksisterende</strong> medlem på samme adresse for å få rett til husstandsmedlemskap."> Husstandsmedlem</td>
+        <td data-popover data-trigger="hover" data-placement="top" data-title="Husstandsmedlem" data-content="For å få rett til husstandsmedlemskap <strong>må</strong> du bo sammen med enten et hoved-, ungdom- honnør- eller livsvarig medlem. Hvis du melder inn flere i familien (på samme adresse) blir husstandsmedlemskap satt automatisk. Du kan også knytte deg til et <strong>eksisterende</strong> medlem på samme adresse for å få rett til husstandsmedlemskap."> Husstandsmedlem</td>
         <td>{{ price.household }},-</td>
       </tr>
       <tr>

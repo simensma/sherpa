@@ -161,7 +161,7 @@ class FocusZipcode(models.Model):
 class Price(models.Model):
     association_id = models.IntegerField(primary_key=True, db_column=u'Region')
     main = models.IntegerField(null=True, db_column=u'C101', blank=True)
-    student = models.IntegerField(null=True, db_column=u'C102', blank=True)
+    youth = models.IntegerField(null=True, db_column=u'C102', blank=True)
     senior = models.IntegerField(null=True, db_column=u'C103', blank=True)
     lifelong = models.IntegerField(null=True, db_column=u'C104', blank=True)
     child = models.IntegerField(null=True, db_column=u'C105', blank=True)
