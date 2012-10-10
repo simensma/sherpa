@@ -122,10 +122,14 @@ def registration(request, user):
     if not errors and request.POST.has_key('forward'):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
+    now = datetime.now()
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+
     context = {'users': request.session['enrollment']['users'], 'person': user,
         'errors': errors, 'contact_missing': contact_missing,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'too_many_underage': request.GET.has_key(too_many_underage)}
+        'too_many_underage': request.GET.has_key(too_many_underage),
+        'new_membership_year': new_membership_year}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):

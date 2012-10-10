@@ -267,7 +267,11 @@
         {% else %}
           <li>Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.</li>
         {% endif %}
-          <li>Fra 1. oktober 2012 gjelder medlemskapet resten av dette året, samt hele 2013.</li>
+        {% if now.month >= new_membership_year.month %}
+          <li>Fra 1. {{ new_membership_year|date:"F" }} {{ now|date:"Y" }} gjelder medlemskapet resten av dette året, samt hele {{ now|date:"Y"|add:1 }}.</li>
+        {% else %}
+          <li>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember {{ now|date:"Y" }}.</li>
+        {% endif %}
       </ul>
     </div>
 

@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.core.cache import cache
+from django.conf import settings
 
 from association.models import Association
 from focus.models import FocusZipcode, Price
@@ -36,8 +37,11 @@ def benefits(request, association_id):
         price = Price.objects.get(association_id=association.focus_id)
         cache.set('association.price.%s' % association.focus_id, price, 60 * 60 * 24 * 7)
 
-    context = {'association': association, 'price': price, 'now': datetime.now(),
-        'enrollment_active': State.objects.all()[0].active}
+    now = datetime.now()
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+
+    context = {'association': association, 'price': price, 'now': now,
+        'enrollment_active': State.objects.all()[0].active, 'new_membership_year': new_membership_year}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
