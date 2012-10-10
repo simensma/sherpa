@@ -131,7 +131,8 @@ def edit_version(request, version):
         widget_data = {
             'blog': {'categories': blog_category_list()}
         }
-        context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages}
+        context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages,
+            'image_search_length': settings.IMAGE_SEARCH_LENGTH}
         return render(request, 'admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)

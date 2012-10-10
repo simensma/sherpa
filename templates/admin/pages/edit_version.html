@@ -19,6 +19,12 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.css" media="screen">
 {% endblock %}
 
+{% block js_globals %}
+  <script>
+    var IMAGE_SEARCH_LENGTH = {{ image_search_length }};
+  </script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">

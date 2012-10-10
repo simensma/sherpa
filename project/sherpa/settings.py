@@ -38,7 +38,7 @@ MEMBERSHIP_YEAR_START = 10
 # Duplicated client-side in js/admin/editor/image-utils.js
 THUMB_SIZES = [1880, 940, 500, 150]
 
-# Require this many characters for an image search (this is duplicated client-side)
+# Require this many characters for an image search
 IMAGE_SEARCH_LENGTH = 3
 
 MANAGERS = ADMINS = (
