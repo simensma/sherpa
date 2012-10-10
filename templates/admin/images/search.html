@@ -1,0 +1,65 @@
+{% extends "admin/images/layout.html" %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/browser.js"></script>
+{% endblock %}
+
+{% block imagebody %}
+
+{% if too_short_query %}
+  <div class="alert alert-info">
+    Vennligst bruk minst {{ image_search_length }} søketegn, ellers vil du få mange flere treff enn du egentlig vil ha.
+  </div>
+{% elif albums|length == 0 and images|length == 0 %}
+  <div class="alert alert-info">
+    Det finnes dessverre ingen album eller bilder som inneholder noe med <strong>{{ search_query }}</strong>.
+  </div>
+{% else %}
+
+  <p>Søk på <strong>{{ search_query }}</strong> gav treff på {{ images|length }} bilder og {{ albums|length }} album.
+
+  {# The 8px accounts for opera which seems to add that margin to disabled buttons. Without, there's a bug in the background-display of the album/image boxes. #}
+  <div class="row" style="margin-bottom: 8px;">
+    <div class="offset3 span6">
+      <table class="action-buttons">
+      <tr>
+        <td><button class="btn btn-warning context-button details-button"><i class="icon-pencil"></i> Endre detaljer</button></td>
+        <td><button class="btn btn-danger context-button delete-button dialog-button" data-dialog=".delete-dialog"><i class="icon-remove"></i> Slett bilder</button></td>
+      </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="archive-gallery">
+    <ul>
+    {% for album in albums %}
+      <li class="album" data-id="{{ album.id }}">
+        <button class="btn mark"><i class="icon-tags"></i> Merk album</button>
+        <a class="image" href="{% url admin.images.views.list_albums album.id %}">
+          <img src="{{ STATIC_URL }}img/icons/imagearchive/folder.png" alt="Album: {{ album.name }}">
+        </a>
+        <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
+      </li>
+    {% endfor %}
+    {% for image in images %}
+      <li class="image" data-id="{{ image.id }}">
+        <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>
+        <a class="image" href="{% url admin.images.views.image_details image.id %}">
+          <img src="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="{{ image.description }}">
+        </a>
+        {{ image.width }} x {{ image.height }}<br>
+        {% if not image.photographer %}
+          Ingen fotograf oppgitt
+        {% else %}
+          Fotograf: {{ image.photographer }}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div style="clear: both;"></div>
+
+  {% include 'admin/images/dialogs.html' %}
+{% endif %}
+
+{% endblock %}
