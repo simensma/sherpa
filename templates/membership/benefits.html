@@ -225,7 +225,16 @@
 
 <div class="row">
   <div class="span8">
-    <h2>Priser</h2>
+    <h2>
+      Priser
+      {# Note: This won't be applicable unless the prices are actually updated in Focus. #}
+      {# So in practice, this probably *should* stay static and be manually updated. Sigh. #}
+      {% if now.month >= new_membership_year.month %}
+        {{ now|date:"Y"|add:1 }}
+      {% else %}
+        {{ now|date:"Y" }}
+      {% endif %}
+    </h2>
     <table class="table prices">
       <tr>
         <td data-popover data-trigger="hover" data-placement="top" data-title="Hovedmedlem" data-content="Er du over 26 år blir du hovedmedlem. Hovedmedlemmer har alle medlemsfordeler."> Hovedmedlem</td>
