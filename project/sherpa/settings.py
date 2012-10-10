@@ -30,6 +30,10 @@ USER_PASSWORD_LENGTH = 6
 RESTORE_PASSWORD_KEY_LENGTH = 40
 RESTORE_PASSWORD_VALIDITY = 12 # Hours
 
+# From the start of this month, memberships are for the remaining year AND next year
+# (1 = January, 12 = December)
+MEMBERSHIP_YEAR_START = 10
+
 # Pixel sizes for thumbnail images generated from uploaded images.
 # Duplicated client-side in js/admin/editor/image-utils.js
 THUMB_SIZES = [1880, 940, 500, 150]

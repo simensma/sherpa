@@ -22,10 +22,6 @@ from lxml import etree
 from urllib import quote_plus
 from smtplib import SMTPDataError
 
-# From the start of this month, memberships are for the remaining year AND next year
-# (1 = January, 12 = December)
-MONTH_THRESHOLD = 10
-
 # Number of days the temporary membership proof is valid
 TEMPORARY_PROOF_VALIDITY = 14
 
@@ -311,7 +307,7 @@ def verification(request):
 
     now = datetime.now()
     year = now.year
-    next_year = now.month >= MONTH_THRESHOLD
+    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
 
     keycount = 0
     student_or_older_count = 0
@@ -468,7 +464,7 @@ def payment(request):
     # Paying with card, move on.
     now = datetime.now()
     year = now.year
-    next_year = now.month >= MONTH_THRESHOLD
+    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
 
     # Infer order details based on (poor) conventions.
     if main != None:
@@ -634,7 +630,7 @@ def sms(request):
     # Render the SMS template
     now = datetime.now()
     year = now.year
-    next_year = now.month >= MONTH_THRESHOLD
+    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
     t = loader.get_template('enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
         'users': request.session['enrollment']['users']})
