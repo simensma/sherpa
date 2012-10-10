@@ -9,6 +9,10 @@
   <script src="{{ STATIC_URL }}js/admin/images/browser.js"></script>
 {% endblock %}
 
+{% block imagenavigation %}
+{% include 'admin/images/navigation.html' with current='albums' %}
+{% endblock %}
+
 {% block imagebody %}
 
 {% include 'admin/images/breadcrumb.html' %}

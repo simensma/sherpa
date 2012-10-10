@@ -3,6 +3,8 @@
 {% block header %}<a href="{% url admin.images.views.list_albums %}">Bildearkiv</a>{% endblock %}
 
 {% block body %}
+{% block imagenavigation %}{% endblock %}
+
 <div class="row image-search">
   <div class="span12">
     <form action="{% url admin.images.views.search %}" method="get">
