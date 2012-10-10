@@ -41,9 +41,11 @@ $(document).ready(function() {
     validator.addValidation('phone', $("form#registration input[name='phone']"), markInput, phone_required);
     validator.addValidation('email', $("form#registration input[name='email']"), markInput, email_required);
 
+    window.validateDatepicker = validateDatepicker;
     function validateDatepicker() {
         // Datepicker calls this on close
-        markInput($(this), validator.validate('date', $("form#registration input[name='dob']").val(), true, {'min_year': 1900}));
+        var dob = $("form#registration input[name='dob']");
+        markInput(dob, validator.validate('date', dob.val(), true, {'min_year': 1900}));
     }
 
     $("a.step2").click(function(e) {
