@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block imagebody %}
+
+{% include 'admin/images/breadcrumb.html' %}
+
 {% if not albums and not images %}
 <div class="alert alert-info">Dette albumet er tomt.</div>
 {% endif %}
