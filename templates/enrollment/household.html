@@ -3,21 +3,23 @@
   <script src="{{ STATIC_URL }}js/enrollment/household.js"></script>
 {% endblock %}
 
+{% block js_globals %}
+  <script>
+    var existing = {% if existing %}true{% else %}false{% endif %};
+    var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
+  </script>
+
+  {% if errors %}
+    <script>
+      // Trigger form validations
+      $(document).ready(function() {
+        $("form#household input").focusout();
+      });
+    </script>
+  {% endif %}
+{% endblock %}
+
 {% block enrollment %}
-
-<script>
-  var existing = {% if existing %}true{% else %}false{% endif %};
-  var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
-</script>
-
-{% if errors %}
-<script>
-  // Trigger form validations
-  $(document).ready(function() {
-    $("form#household input").focusout();
-  });
-</script>
-{% endif %}
 
 <div class="row">
   <div class="span8">

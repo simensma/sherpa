@@ -18,6 +18,8 @@
 
   {% block extra_css %}{% endblock %}
 
+  {# Set rendered JS globals before anything else #}
+  {% block js_globals %}{% endblock %}
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>

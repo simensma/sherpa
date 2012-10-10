@@ -6,11 +6,13 @@
   <script src="{{ STATIC_URL }}js/admin/users.js"></script>
 {% endblock %}
 
-{% block body %}
+{% block js_globals %}
+  <script>
+    var password_length = {{ password_length }};
+  </script>
+{% endblock %}
 
-<script>
-  var password_length = {{ password_length }};
-</script>
+{% block body %}
 
 <div class="row">
   <div class="span6">

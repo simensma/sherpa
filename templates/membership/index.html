@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/membership.js"></script>
+  {% if invalid_zipcode or unregistered_zipcode %}
+    <script>
+      $(document).ready(function() {
+        $("div.invalid-zipcode").modal();
+      });
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block title %}Medlemskap{% endblock %}
@@ -9,11 +16,6 @@
 {% block body %}
 
 {% if invalid_zipcode or unregistered_zipcode %}
-  <script>
-    $(document).ready(function() {
-      $("div.invalid-zipcode").modal();
-    });
-  </script>
   <div class="modal invalid-zipcode hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>

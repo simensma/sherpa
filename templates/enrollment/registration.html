@@ -1,11 +1,5 @@
 {% extends 'enrollment/index.html' %}
 {% block extra_js %}
-  <script>
-    $(document).ready(function() {
-      window.phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
-      window.email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
-    });
-  </script>
   <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
 {% endblock %}
@@ -13,18 +7,14 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
 {% endblock %}
 
-{% block enrollment %}
+{% block js_globals %}
+  <script>
+    window.phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+    window.email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+  </script>
+{% endblock %}
 
-{% if errors %}
-<script>
-  // Trigger form validations
-  $(document).ready(function() {
-    $("form#registration input").focusout();
-    validateDatepicker();
-    validateGender();
-  });
-</script>
-{% endif %}
+{% block enrollment %}
 
 <div class="row">
   <div class="span8">
@@ -39,6 +29,14 @@
       </div>
     {% endif %}
     {% if errors %}
+      <script>
+        // Trigger form validations
+        $(document).ready(function() {
+          $("form#registration input").focusout();
+          validateDatepicker();
+          validateGender();
+        });
+      </script>
       <div class="alert alert-error">
         <a class="close">x</a><strong>Vi klarte ikke å lagre opplysningene.</strong><br>
         Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt.
