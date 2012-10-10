@@ -96,7 +96,8 @@ def delete(request, article):
 def edit_version(request, version):
     rows, version = parse_version_content(version)
     profiles = Profile.objects.all().order_by('user__first_name')
-    context = {'rows': rows, 'version': version, 'profiles': profiles}
+    context = {'rows': rows, 'version': version, 'profiles': profiles,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/articles/edit_version.html', context)
 
 def preview(request, version):

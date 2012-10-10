@@ -5,12 +5,14 @@
   <script src="{{ STATIC_URL }}js/user.js"></script>
 {% endblock %}
 
-{% block body %}
+{% block js_globals %}
+  <script>
+    var password_length = {{ password_length }};
+    var phone_max_length = {{ phone_max_length }};
+  </script>
+{% endblock %}
 
-<script>
-  var password_length = {{ password_length }};
-  var phone_max_length = {{ phone_max_length }};
-</script>
+{% block body %}
 
 <h1>Min side - brukeropplysninger</h1>
 

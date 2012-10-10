@@ -6,7 +6,6 @@
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-archive.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-fast-upload.js"></script>
@@ -17,6 +16,12 @@
 {% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.css" media="screen">
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    var IMAGE_SEARCH_LENGTH = {{ image_search_length }};
+  </script>
 {% endblock %}
 
 {% block body %}

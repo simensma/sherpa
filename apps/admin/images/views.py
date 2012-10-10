@@ -17,9 +17,6 @@ import json
 from datetime import datetime
 import simples3
 
-# Require this many characters for an image search (this is duplicated client-side)
-MIN_QUERY_LENGTH = 3
-
 SPEED_UPLOAD_ALBUM_NAME = "Brukeralbum"
 
 def createUserAlbum(user):
@@ -185,7 +182,7 @@ def content_json(request, album):
 
 def search_json(request):
     images = []
-    if len(request.POST['query']) >= MIN_QUERY_LENGTH:
+    if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
         for word in request.POST['query'].split(' '):
             images += Image.objects.filter(
                 Q(description__icontains=word) |

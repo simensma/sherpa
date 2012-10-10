@@ -1,6 +1,3 @@
-// Require this many characters for an image search (this is duplicated server-side)
-var MIN_QUERY_LENGTH = 3;
-
 var bcList;
 var bcRoot = $('<li><a href="javascript:undefined">Bildearkiv</a></li>');
 
@@ -26,7 +23,7 @@ $(document).ready(function() {
     });
     function doSearch() {
         var query = $("div#dialog-image-archive-chooser input[name='search']").val();
-        if(query.length < MIN_QUERY_LENGTH) {
+        if(query.length < IMAGE_SEARCH_LENGTH) {
             $("div#dialog-image-archive-chooser div.too-few-chars").show();
         } else {
             search(query);
