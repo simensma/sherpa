@@ -129,7 +129,7 @@ def registration(request, user):
         'errors': errors, 'contact_missing': contact_missing,
         'conditions': request.session['enrollment'].get('conditions', ''),
         'too_many_underage': request.GET.has_key(too_many_underage),
-        'new_membership_year': new_membership_year}
+        'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
@@ -196,6 +196,9 @@ def household(request):
     countries_other_scandinavian = countries.filter(scandinavian=True).exclude(code='NO')
     countries_other = countries.filter(scandinavian=False)
 
+    now = datetime.now()
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+
     updateIndices(request.session)
     context = {'users': request.session['enrollment']['users'],
         'location': request.session['enrollment'].get('location', ''),
@@ -205,7 +208,8 @@ def household(request):
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'countries_other_scandinavian': countries_other_scandinavian,
-        'countries_other': countries_other, 'errors': errors}
+        'countries_other': countries_other, 'errors': errors,
+        'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/household.html', context)
 
 def existing(request):
@@ -312,6 +316,7 @@ def verification(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
     keycount = 0
     youth_or_older_count = 0
@@ -341,7 +346,8 @@ def verification(request):
         'no_main_member': request.GET.has_key(no_main_member_key),
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
-        'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE}
+        'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
+        'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/verification.html', context)
 
 def payment_method(request):
@@ -361,8 +367,12 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
+    now = datetime.now()
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+
     context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method),
-        'card_available': State.objects.all()[0].card}
+        'card_available': State.objects.all()[0].card,
+        'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/payment.html', context)
 
 def payment(request):
@@ -609,12 +619,16 @@ def result(request):
         if user['email'] != '':
             emails.append(user['email'])
 
+    now = datetime.now()
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+
     skip_header = request.session['enrollment']['result'] == 'invoice' or request.session['enrollment']['result'] == 'success'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': request.session['enrollment']['users'], 'skip_header': skip_header,
         'association': request.session['enrollment']['association'], 'proof_validity_end': proof_validity_end,
         'emails': emails, 'location': request.session['enrollment']['location'],
-        'price_sum': request.session['enrollment']['price_sum']}
+        'price_sum': request.session['enrollment']['price_sum'],
+        'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):

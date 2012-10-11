@@ -6,7 +6,14 @@
 {% if not skip_header %}
 <div class="row">
   <div class="span12">
-    <h1>Bli medlem</h1>
+    <h1>
+      Bli medlem
+      {% if now.month >= new_membership_year.month %}
+        {{ now|date:"Y"|add:1 }}
+      {% else %}
+        {{ now|date:"Y" }}
+      {% endif %}
+    </h1>
   </div>
 </div>
 {% endif %}
