@@ -2,11 +2,9 @@ $(document).ready(function() {
 
     var actionButtons = $("div.imagearchive-action-buttons");
 
-    // New image-button
     actionButtons.find("button.upload").click(function() {
         window.location = $(this).attr('data-href');
     });
-
     actionButtons.find("button.albums.details").click(function() {
         $(".album-details.dialog").dialog('open');
     });
