@@ -7,9 +7,8 @@ $(document).ready(function() {
         window.location = $(this).attr('data-href');
     });
 
-    var dialog;
-    $("button.details").click(function() {
-        dialog.dialog('open');
+    actionButtons.find("button.albums.details").click(function() {
+        $(".album-details.dialog").dialog('open');
     });
 
     $(".album-details form").submit(function() {
@@ -32,7 +31,6 @@ $(document).ready(function() {
             $("div.delete-dialog p").hide().filter(".albums").show();
             actionButtons.find("button.details.albums").show();
             actionButtons.find("button.delete").removeAttr('disabled').html('<i class="icon-remove"></i> Slett album');
-            dialog = $(".album-details.dialog");
         } else if(images) {
             $("div.delete-dialog p").hide().filter(".images").show();
             actionButtons.find("button.details.images").show();
