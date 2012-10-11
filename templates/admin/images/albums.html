@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block imagebody %}
+
+{% include 'admin/images/breadcrumb.html' %}
+
 {% if not albums and not images %}
 <div class="alert alert-info">Dette albumet er tomt.</div>
 {% endif %}
@@ -58,54 +61,5 @@
 </div>
 <div style="clear: both;"></div>
 
-<div class="dialog delete-dialog" data-title="Slett album/bilder" data-width="500">
-  <p></p>
-  <form action="{% if current_album %}{% url admin.images.views.delete_items current_album.id %}{% else %}{% url admin.images.views.delete_items %}{% endif %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="albums">
-    <input type="hidden" name="images">
-    <button type="submit" class="btn btn-danger perform-delete"><i class="icon-warning-sign"></i> Ja, jeg vil virkelig slette slette dem for godt.</button>
-  </form>
-  <button class="btn btn-success cancel-delete"><i class="icon-heart"></i> Nei, jeg vil ikke slette noe likevel.</button>
-</div>
-
-<div class="dialog album-dialog" data-title="Legg til album" data-width="auto">
-  <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
-    {% csrf_token %}
-    <p>Navn på nytt album: <input type="text" name="name"></p>
-    <p><input type="submit" value="Legg til album"></p>
-  </form>
-</div>
-
-
-<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="400px">
-  <form action="{% url admin.images.views.update_images %}" method="post">
-    {% csrf_token %}
-    <label>Beskrivelse av bildene:</label>
-    <textarea name="description" class="span4" rows="3"></textarea>
-    <label>Fotograf:</label>
-    <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
-    <label>Kreditering:</label>
-    <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
-    <label>Bruksrett:</label>
-    <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
-    <label>Nøkkelord</label>
-    <input type="text" class="input-xlarge" name="tags">
-    <input type="hidden" name="tags-serialized">
-    <div class="tag-box"></div>
-    <div style="clear: both;"></div>
-    <input type="submit" class="btn" value="Lagre bildedata">
-    <input type="hidden" name="ids">
-    <p><strong>Merk:</strong> Vi sletter ikke gamle felt. Så hvis du for eksempel kun endrer beskrivelse (og ikke fotograf), så bevarer vi den gamle fotografen som allerede er oppgitt.</p>
-  </form>
-</div>
-
-<div class="dialog album-details" data-title="Oppdater albuminformasjon" data-width="auto">
-  <form action="{% url admin.images.views.update_album %}" method="post">
-    {% csrf_token %}
-    <p>Nytt navn: <input type="text" name="name"></p>
-    <input type="hidden" name="albums">
-    <p><input type="submit" value="Oppdater album"></p>
-  </form>
-</div>
+{% include 'admin/images/dialogs.html' %}
 {% endblock %}
