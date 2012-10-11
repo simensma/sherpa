@@ -17,29 +17,6 @@
   </form>
 </div>
 
-
-<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="400px">
-  <form action="{% url admin.images.views.update_images %}" method="post">
-    {% csrf_token %}
-    <label>Beskrivelse av bildene:</label>
-    <textarea name="description" class="span4" rows="3"></textarea>
-    <label>Fotograf:</label>
-    <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
-    <label>Kreditering:</label>
-    <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
-    <label>Bruksrett:</label>
-    <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
-    <label>Nøkkelord</label>
-    <input type="text" class="input-xlarge" name="tags">
-    <input type="hidden" name="tags-serialized">
-    <div class="tag-box"></div>
-    <div style="clear: both;"></div>
-    <input type="submit" class="btn" value="Lagre bildedata">
-    <input type="hidden" name="ids">
-    <p><strong>Merk:</strong> Vi sletter ikke gamle felt. Så hvis du for eksempel kun endrer beskrivelse (og ikke fotograf), så bevarer vi den gamle fotografen som allerede er oppgitt.</p>
-  </form>
-</div>
-
 <div class="dialog album-details" data-title="Oppdater albuminformasjon" data-width="auto">
   <form action="{% url admin.images.views.update_album %}" method="post">
     {% csrf_token %}
