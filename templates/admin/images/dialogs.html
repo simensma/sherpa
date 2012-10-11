@@ -1,5 +1,13 @@
 <div class="dialog delete-dialog" data-title="Slett album/bilder" data-width="500">
-  <p></p>
+  <p class="both hide">
+    Er du helt sikker på at du vil slette alle albumene og bildene du har merket, for godt? Alle underalbum og bilder i merkede album vil også bli slettet for godt.
+  </p>
+  <p class="albums hide">
+    Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.
+  </p>
+  <p class="images hide">
+    Er du helt sikker på at du vil slette alle bildene du har merket, for godt?
+  </p>
   <form action="{% if current_album %}{% url admin.images.views.delete_items current_album.id %}{% else %}{% url admin.images.views.delete_items %}{% endif %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="albums">
