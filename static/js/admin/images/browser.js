@@ -18,23 +18,23 @@ $(document).ready(function() {
         var albums = $("#archive-gallery li.album.selected").length > 0;
         var images = $("#archive-gallery li.image.selected").length > 0;
         if(albums && images) {
-            $("table.action-buttons button.delete-button").removeAttr('disabled');
-            $("table.action-buttons button.details-button").attr('disabled', true);
+            $("div.imagearchive-action-buttons button.delete-button").removeAttr('disabled');
+            $("div.imagearchive-action-buttons button.details-button").attr('disabled', true);
             $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene og bildene du har merket, for godt? Alle underalbum og bilder i merkede album vil også bli slettet for godt.');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album og bilder');
+            $("div.imagearchive-action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album og bilder');
         } else if(albums) {
-            $("table.action-buttons button.context-button").removeAttr('disabled');
+            $("div.imagearchive-action-buttons button.context-button").removeAttr('disabled');
             $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.');
-            $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre albumdetaljer');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album');
+            $("div.imagearchive-action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre albumdetaljer');
+            $("div.imagearchive-action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album');
             dialog = $(".album-details.dialog");
         } else if(images) {
-            $("table.action-buttons button.context-button").removeAttr('disabled');
+            $("div.imagearchive-action-buttons button.context-button").removeAttr('disabled');
             $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle bildene du har merket, for godt?');
-            $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre bildedetaljer');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett bilder');
+            $("div.imagearchive-action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre bildedetaljer');
+            $("div.imagearchive-action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett bilder');
         } else {
-            $("table.action-buttons button.context-button").attr('disabled', true);
+            $("div.imagearchive-action-buttons button.context-button").attr('disabled', true);
         }
     }
 
