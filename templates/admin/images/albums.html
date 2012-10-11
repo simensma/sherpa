@@ -14,11 +14,9 @@
 
 <div class="row imagearchive-action-buttons">
   <div class="span3">
-    <form style="margin: 0;" action="{% if current_album %}{% url admin.images.views.upload_image current_album.id %}{% endif %}" method="get">
-      <button type="submit" class="btn btn-large btn-success"{% if not current_album %} disabled{% endif %}>
-        <i class="icon-picture"></i> Last opp nytt bilde
-      </button>
-    </form>
+    <button class="btn btn-large btn-success upload" {% if current_album %}data-href="{% url admin.images.views.upload_image current_album.id %}"{% else %}disabled{% endif %}>
+      <i class="icon-picture"></i> Last opp nytt bilde
+    </button>
   </div>
   <div class="span3">
     <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog">

@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+    // New image-button
+    $("div.imagearchive-action-buttons button.upload").click(function() {
+        window.location = $(this).attr('data-href');
+    });
+
     var dialog;
     $("button.details").click(function() {
         dialog.dialog('open');
