@@ -1,5 +1,13 @@
 <div class="dialog delete-dialog" data-title="Slett album/bilder" data-width="500">
-  <p></p>
+  <p class="both hide">
+    Er du helt sikker på at du vil slette alle albumene og bildene du har merket, for godt? Alle underalbum og bilder i merkede album vil også bli slettet for godt.
+  </p>
+  <p class="albums hide">
+    Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.
+  </p>
+  <p class="images hide">
+    Er du helt sikker på at du vil slette alle bildene du har merket, for godt?
+  </p>
   <form action="{% if current_album %}{% url admin.images.views.delete_items current_album.id %}{% else %}{% url admin.images.views.delete_items %}{% endif %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="albums">
@@ -14,29 +22,6 @@
     {% csrf_token %}
     <p>Navn på nytt album: <input type="text" name="name"></p>
     <p><input type="submit" value="Legg til album"></p>
-  </form>
-</div>
-
-
-<div class="dialog image-details" data-title="Oppdater bildeinformasjon" data-width="400px">
-  <form action="{% url admin.images.views.update_images %}" method="post">
-    {% csrf_token %}
-    <label>Beskrivelse av bildene:</label>
-    <textarea name="description" class="span4" rows="3"></textarea>
-    <label>Fotograf:</label>
-    <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
-    <label>Kreditering:</label>
-    <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
-    <label>Bruksrett:</label>
-    <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
-    <label>Nøkkelord</label>
-    <input type="text" class="input-xlarge" name="tags">
-    <input type="hidden" name="tags-serialized">
-    <div class="tag-box"></div>
-    <div style="clear: both;"></div>
-    <input type="submit" class="btn" value="Lagre bildedata">
-    <input type="hidden" name="ids">
-    <p><strong>Merk:</strong> Vi sletter ikke gamle felt. Så hvis du for eksempel kun endrer beskrivelse (og ikke fotograf), så bevarer vi den gamle fotografen som allerede er oppgitt.</p>
   </form>
 </div>
 

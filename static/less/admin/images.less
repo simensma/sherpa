@@ -8,11 +8,11 @@ div.image-search {
   }
 }
 
-table.action-buttons {
-  margin-left: auto;
-  margin-right: auto;
+div.imagearchive-action-buttons {
+  margin-bottom: 20px;
 
-  table.action-buttons button {
+  button {
+    text-align: center;
     width: 100%;
   }
 }
@@ -50,18 +50,24 @@ div#archive-gallery {
 }
 
 
-div#image-display table.metadata {
-  float: right;
-  width: auto;
-  margin-top: 20px;
+div#image-display {
 
-  th {
-    text-align: right;
-    vertical-align: top;
+  p.edit-link {
+    text-align: center;
   }
 
-  td {
-    text-align: left;
+  table.metadata {
+    float: right;
+    width: auto;
+
+    th {
+      text-align: right;
+      vertical-align: top;
+    }
+
+    td {
+      text-align: left;
+    }
   }
 }
 
@@ -99,4 +105,9 @@ div.tag-box div.tag {
     height: 12px;
     margin-left: 4px;
   }
+}
+
+table.multiple-metadata td.field-name {
+  font-family: "DTL Nobel" !important;
+  font-size: 20px !important;
 }

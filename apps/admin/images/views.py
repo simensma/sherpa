@@ -77,9 +77,14 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
-    context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images,
-               'aws_bucket': settings.AWS_BUCKET}
+    context = {
+        'album': album,
+        'albums': albums,
+        'albumpath': parents,
+        'current_album': current_album,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.path}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -92,8 +97,14 @@ def image_details(request, image):
     except Exception:
         taken = None
     tags = image.tags.all()
-    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags,
-        'aws_bucket': settings.AWS_BUCKET}
+    context = {
+        'image': image,
+        'albumpath': parents,
+        'exif': exif,
+        'taken': taken,
+        'tags': tags,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.path}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
@@ -137,11 +148,62 @@ def update_album(request):
 
 @login_required
 def update_images(request):
-    images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
-    for image in images:
-        tags = json.loads(request.POST['tags-serialized'])
-        add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
+    if request.method == 'GET':
+        ids = json.loads(request.GET['bilder'])
+        context = {
+            'aws_bucket': settings.AWS_BUCKET,
+            'ids': json.dumps(ids),
+            'origin': request.GET.get('origin', '')}
+        if len(ids) == 1:
+            context.update({'image': Image.objects.get(id=ids[0])})
+            return render(request, 'admin/images/image_details_single.html', context)
+        elif len(ids) > 1:
+            images = Image.objects.filter(id__in=ids)
+            context.update({'images': images})
+            return render(request, 'admin/images/image_details_multiple.html', context)
+        else:
+            # No images to edit, not sure why, just redirect them to origin or home.
+            # Should maybe log an error here in case this was our fault.
+            if request.GET.has_key('origin') and request.GET['origin'] != '':
+                return HttpResponseRedirect(origin)
+            else:
+                return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+    elif request.method == 'POST':
+        images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
+        if len(images) == 1:
+            image = images[0]
+            image.description = request.POST['description']
+            image.photographer = request.POST['photographer']
+            image.credits = request.POST['credits']
+            image.licence = request.POST['licence']
+            image.save()
+            image.tags.clear()
+            for tag_name in json.loads(request.POST['tags-serialized']):
+                try:
+                    tag = Tag.objects.get(name__iexact=tag_name)
+                except(Tag.DoesNotExist):
+                    tag = Tag(name=tag_name)
+                tag.save()
+                tag.images.add(image)
+        elif len(images) > 1:
+            fields = json.loads(request.POST['fields'])
+            for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
+                if fields['description']: image.description = request.POST['description']
+                if fields['photographer']: image.photographer = request.POST['photographer']
+                if fields['credits']: image.credits = request.POST['credits']
+                if fields['licence']: image.licence = request.POST['licence']
+                image.save()
+                for tag_name in json.loads(request.POST['tags-serialized']):
+                    try:
+                        tag = Tag.objects.get(name__iexact=tag_name)
+                    except(Tag.DoesNotExist):
+                        tag = Tag(name=tag_name)
+                    tag.save()
+                    tag.images.add(image)
+        if request.POST['origin'] != '':
+            return HttpResponseRedirect(request.POST['origin'])
+        else:
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
 def upload_image(request, album):
@@ -181,11 +243,12 @@ def content_json(request, album):
     return HttpResponse(json.dumps(objects))
 
 def search(request):
+    context = {'origin': request.get_full_path()}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
-        context = {
+        context.update({
             'too_short_query': True,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH,
-        }
+        })
         return render(request, 'admin/images/search.html', context)
     images = []
     for word in request.GET['q'].split(' '):
@@ -202,11 +265,11 @@ def search(request):
             Q(tags__name__icontains=word)).distinct().values())
     for word in request.GET['q'].split(' '):
         albums = Album.objects.filter(name__icontains=word).distinct().values()
-    context = {
+    context.update({
         'albums': albums,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'search_query': request.GET['q']}
+        'search_query': request.GET['q']})
     return render(request, 'admin/images/search.html', context)
 
 def search_json(request):

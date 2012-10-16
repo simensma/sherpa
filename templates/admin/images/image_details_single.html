@@ -1,0 +1,83 @@
+{% extends "admin/images/layout.html" %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/edit_image.js"></script>
+{% endblock %}
+
+{% block imagebody %}
+
+<div class="row">
+  <div class="span6">
+
+    <form class="update-image form-horizontal" action="{% url admin.images.views.update_images %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="ids" value="{{ ids }}">
+      <input type="hidden" name="origin" value="{{ origin }}">
+      <div class="control-group">
+        <label class="control-label" for="image-description">Beskrivelse:</label>
+        <div class="controls">
+          <textarea name="description" rows="3" class="input-xlarge" id="image-description">{{ image.description }}</textarea>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Fotograf:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn...">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Kreditering:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="credits" value="{{ image.credits }}" placeholder="Navn på person, forening e.l...">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Bruksrett:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov...">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Nøkkelord:</label>
+        <div class="controls">
+          <input type="hidden" name="tags-serialized">
+          <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px">
+          <div class="tag-box">
+            {% for tag in image.tags.all %}
+              <div class="tag">
+                <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                {{ tag.name }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre endringer</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="span6">
+    <p>
+      <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">
+        <img src="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
+      </a>
+    </p>
+    <div class="alert alert-error">
+      <strong>Lisensiering</strong><br>
+      Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
+    </div>
+  </div>
+</div>
+
+{% endblock %}
