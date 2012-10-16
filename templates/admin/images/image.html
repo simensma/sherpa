@@ -39,16 +39,12 @@
       <td>{{ image.uploaded }} av {{ image.uploader.user.get_full_name }}</td>
     </tr>
     <tr>
-      <th>Original:</th>
-      <td><a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">Åpne ({{ image.width }} x {{ image.height }})</a></td>
-    </tr>
-    <tr>
-      <th>Mellomstor:</th>
-      <td><a href="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}">Åpne (500px)</a></td>
-    </tr>
-    <tr>
-      <th>Liten:</th>
-      <td><a href="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">Åpne (150px)</a></td>
+      <th>Åpne:</th>
+      <td>
+        <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">{{ image.width }}x{{ image.height }}</a>,
+        <a href="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}">500px</a>,
+        <a href="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">150px</a>
+      </td>
     </tr>
     <tr>
       <th>EXIF-data:</th>
