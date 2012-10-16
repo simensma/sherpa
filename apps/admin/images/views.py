@@ -344,11 +344,19 @@ def store_image(image, album, user):
     for thumb in image['thumbs']:
         s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
             thumb['data'], acl='public-read', mimetype=image['content_type'])
+    tags = image['tags']
     image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
       description='', album=album, photographer='', credits='', licence='',
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
       height=image['height'])
     image.save()
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
     return {'url':url, 'id':image.id};
 
 def parse_image(file):
@@ -377,6 +385,12 @@ def parse_image(file):
                 # TODO: Should log a warning with the tag string here.
                 continue
             exif[TAGS.get(tag, tag)] = value
+
+    # Parse XMP-keywords
+    from core import xmp
+    xmp_dict = xmp.parse_xmp(data)
+    keywords = xmp.keywords(xmp_dict) if xmp_dict != None else []
+
     thumbs = []
     ext = file.name.split(".")[-1].lower()
     for size in settings.THUMB_SIZES:
@@ -389,4 +403,5 @@ def parse_image(file):
 
     return {'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
       'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)}
+      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif),
+      'tags': keywords}
