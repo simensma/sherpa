@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     url(r'^nor-way.php$', 'page.views.redirect', kwargs={'url': 'http://%s/nor-way.php' % settings.OLD_SITE}),
     url(r'^hytteadmin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/hytteadmin/' % settings.OLD_SITE}),
     url(r'^gmap.php$', 'page.views.redirect', kwargs={'url': 'http://%s/gmap.php' % settings.OLD_SITE}),
+    url(r'^balsfjord/$', 'page.views.redirect', kwargs={'url': 'http://troms.turistforeningen.no/index.php?fo_id=10333'}),
 
     # Old XML feeds
     url(r'^xml_activity_ut2.php$', 'page.views.redirect', kwargs={'url': 'http://%s/xml_activity_ut2.php' % settings.OLD_SITE}),
