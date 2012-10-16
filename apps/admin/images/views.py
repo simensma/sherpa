@@ -77,9 +77,14 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
-    context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images,
-               'aws_bucket': settings.AWS_BUCKET}
+    context = {
+        'album': album,
+        'albums': albums,
+        'albumpath': parents,
+        'current_album': current_album,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.path}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -92,8 +97,14 @@ def image_details(request, image):
     except Exception:
         taken = None
     tags = image.tags.all()
-    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags,
-        'aws_bucket': settings.AWS_BUCKET}
+    context = {
+        'image': image,
+        'albumpath': parents,
+        'exif': exif,
+        'taken': taken,
+        'tags': tags,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.path}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
@@ -141,7 +152,8 @@ def update_images(request):
         ids = json.loads(request.GET['bilder'])
         context = {
             'aws_bucket': settings.AWS_BUCKET,
-            'ids': json.dumps(ids)}
+            'ids': json.dumps(ids),
+            'origin': request.GET.get('origin', '')}
         if len(ids) == 1:
             context.update({'image': Image.objects.get(id=ids[0])})
             return render(request, 'admin/images/image_details_single.html', context)
@@ -168,7 +180,10 @@ def update_images(request):
                     tag = Tag(name=tag_name)
                 tag.save()
                 tag.images.add(image)
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
+        if request.POST['origin'] != '':
+            return HttpResponseRedirect(request.POST['origin'])
+        else:
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
 def upload_image(request, album):

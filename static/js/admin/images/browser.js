@@ -13,7 +13,7 @@ $(document).ready(function() {
         $("#archive-gallery li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
-        window.location = '/sherpa/bildearkiv/bilde/oppdater/?bilder=' + encodeURIComponent(JSON.stringify(images));
+        window.location = '/sherpa/bildearkiv/bilde/oppdater/?bilder=' + encodeURIComponent(JSON.stringify(images)) + '&origin=' + origin;
     });
 
     $(".album-details form").submit(function() {

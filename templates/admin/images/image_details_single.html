@@ -13,6 +13,7 @@
     <form class="update-image form-horizontal" action="{% url admin.images.views.update_images %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="ids" value="{{ ids }}">
+      <input type="hidden" name="origin" value="{{ origin }}">
       <div class="control-group">
         <label class="control-label" for="image-description">Beskrivelse:</label>
         <div class="controls">
