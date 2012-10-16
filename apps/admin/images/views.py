@@ -162,7 +162,12 @@ def update_images(request):
             context.update({'images': images})
             return render(request, 'admin/images/image_details_multiple.html', context)
         else:
-            pass # TODO
+            # No images to edit, not sure why, just redirect them to origin or home.
+            # Should maybe log an error here in case this was our fault.
+            if request.GET.has_key('origin') and request.GET['origin'] != '':
+                return HttpResponseRedirect(origin)
+            else:
+                return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
         images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
         if len(images) == 1:
@@ -180,6 +185,21 @@ def update_images(request):
                     tag = Tag(name=tag_name)
                 tag.save()
                 tag.images.add(image)
+        elif len(images) > 1:
+            fields = json.loads(request.POST['fields'])
+            for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
+                if fields['description']: image.description = request.POST['description']
+                if fields['photographer']: image.photographer = request.POST['photographer']
+                if fields['credits']: image.credits = request.POST['credits']
+                if fields['licence']: image.licence = request.POST['licence']
+                image.save()
+                for tag_name in json.loads(request.POST['tags-serialized']):
+                    try:
+                        tag = Tag.objects.get(name__iexact=tag_name)
+                    except(Tag.DoesNotExist):
+                        tag = Tag(name=tag_name)
+                    tag.save()
+                    tag.images.add(image)
         if request.POST['origin'] != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:
