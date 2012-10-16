@@ -190,7 +190,8 @@ def update_images(request):
             image.credits = request.POST['credits']
             image.licence = request.POST['licence']
             image.save()
-            image.tags.clear()
+            if not request.POST.get('keep-tags', '') == 'true':
+                image.tags.clear()
             for tag_name in json.loads(request.POST['tags-serialized']):
                 try:
                     tag = Tag.objects.get(name__iexact=tag_name)
