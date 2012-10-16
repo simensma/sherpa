@@ -36,6 +36,14 @@
       <th>Liten:</th>
       <td><a href="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">Åpne (150px)</a></td>
     </tr>
+    {% if image.credits %}
+      <tr>
+        <th>Kreditering:</th>
+        <td>
+          {{ image.credits }}
+        </td>
+      </tr>
+    {% endif %}
     <tr>
       <th>Bruksrett:</th>
       <td>
