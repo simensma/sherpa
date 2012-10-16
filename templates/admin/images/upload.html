@@ -63,6 +63,7 @@
       <p class="waiting">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
       <input type="hidden" name="ids">
       <input type="hidden" name="keep-tags" value="true">
+      <input type="hidden" name="origin" value="{% url admin.images.views.list_albums current_album.id %}">
     </form>
   </div>
 </div>
