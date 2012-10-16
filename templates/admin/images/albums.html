@@ -13,10 +13,6 @@
 
 {% include 'admin/images/breadcrumb.html' %}
 
-{% if not albums and not images %}
-<div class="alert alert-info">Dette albumet er tomt.</div>
-{% endif %}
-
 <div class="row imagearchive-action-buttons">
   <div class="span3">
     <button class="btn btn-large btn-success upload" {% if current_album %}data-href="{% url admin.images.views.upload_image current_album.id %}"{% else %}disabled{% endif %}>
@@ -45,6 +41,10 @@
     </button>
   </div>
 </div>
+
+{% if not albums and not images %}
+  <div class="alert alert-info">Dette albumet er tomt.</div>
+{% endif %}
 
 <div id="archive-gallery">
   <ul>

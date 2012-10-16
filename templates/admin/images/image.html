@@ -32,11 +32,14 @@
     </tr>
     <tr>
       <th>Tatt:</th>
-      <td>{{ taken|default:"Fant ikke dato i EXIF-data" }}</td>
+      <td>{{ taken|date:"j. F Y"|default:"Fant ikke dato i EXIF-data" }}</td>
     </tr>
     <tr>
       <th>Lastet opp:</th>
-      <td>{{ image.uploaded }} av {{ image.uploader.user.get_full_name }}</td>
+      <td>
+        {{ image.uploader.user.get_full_name }}<br>
+        {{ image.uploaded|date:"j. F Y" }}
+      </td>
     </tr>
     <tr>
       <th>Åpne:</th>

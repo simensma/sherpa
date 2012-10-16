@@ -97,7 +97,7 @@ def list_albums(request, album):
         'current_album': current_album,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.path}
+        'origin': request.get_full_path()}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -117,7 +117,7 @@ def image_details(request, image):
         'taken': taken,
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.path}
+        'origin': request.get_full_path()}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
@@ -190,7 +190,8 @@ def update_images(request):
             image.credits = request.POST['credits']
             image.licence = request.POST['licence']
             image.save()
-            image.tags.clear()
+            if not request.POST.get('keep-tags', '') == 'true':
+                image.tags.clear()
             for tag_name in json.loads(request.POST['tags-serialized']):
                 try:
                     tag = Tag.objects.get(name__iexact=tag_name)
@@ -213,7 +214,7 @@ def update_images(request):
                         tag = Tag(name=tag_name)
                     tag.save()
                     tag.images.add(image)
-        if request.POST['origin'] != '':
+        if request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
@@ -344,11 +345,19 @@ def store_image(image, album, user):
     for thumb in image['thumbs']:
         s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
             thumb['data'], acl='public-read', mimetype=image['content_type'])
+    tags = image['tags']
     image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
       description='', album=album, photographer='', credits='', licence='',
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
       height=image['height'])
     image.save()
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
     return {'url':url, 'id':image.id};
 
 def parse_image(file):
@@ -377,6 +386,12 @@ def parse_image(file):
                 # TODO: Should log a warning with the tag string here.
                 continue
             exif[TAGS.get(tag, tag)] = value
+
+    # Parse XMP-keywords
+    from core import xmp
+    xmp_dict = xmp.parse_xmp(data)
+    keywords = xmp.keywords(xmp_dict) if xmp_dict != None else []
+
     thumbs = []
     ext = file.name.split(".")[-1].lower()
     for size in settings.THUMB_SIZES:
@@ -389,4 +404,5 @@ def parse_image(file):
 
     return {'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
       'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)}
+      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif),
+      'tags': keywords}
