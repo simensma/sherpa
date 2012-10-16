@@ -97,7 +97,7 @@ def list_albums(request, album):
         'current_album': current_album,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.path}
+        'origin': request.get_full_path()}
     return render(request, 'admin/images/albums.html', context)
 
 @login_required
@@ -117,7 +117,7 @@ def image_details(request, image):
         'taken': taken,
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.path}
+        'origin': request.get_full_path()}
     return render(request, 'admin/images/image.html', context)
 
 @login_required
