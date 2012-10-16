@@ -13,11 +13,7 @@
     <tr>
       <th>Fotograf:</th>
       <td>
-        {% if image.photographer %}
-          {{ image.photographer }}
-        {% else %}
-          (Ingen fotograf oppgitt)
-        {% endif %}
+        {{ image.photographer|default:"(Ingen fotograf oppgitt)" }}
       </td>
     </tr>
     <tr>
@@ -43,11 +39,7 @@
     <tr>
       <th>Bruksrett:</th>
       <td>
-        {% if image.license %}
-          {{ image.licence }}
-        {% else %}
-          Standard DNT bruksrett.
-        {% endif %}
+        {{ image.licence|default:"Standard DNT bruksrett." }}
       </td>
     </tr>
     <tr>
@@ -85,13 +77,11 @@
   <div class="span3">
     <h3>Nøkkelord:</h3>
     <div class="tag-box">
-      {% if not tags %}
+      {% for tag in tags %}
+        <div class="tag">{{ tag.name }}</div>
+      {% empty %}
         <p>{{ image.uploader.user.first_name }} la ikke inn noen nøkkelord for bildet.</p>
-      {% else %}
-        {% for tag in tags %}
-          <div class="tag">{{ tag.name }}</div>
-        {% endfor %}
-      {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
