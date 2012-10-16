@@ -60,7 +60,20 @@ def fast_upload(request):
     #add info to image
     image = Image.objects.get(id=stored_image['id'])
     tags = json.loads(request.POST['tags-serialized'])
-    add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
+
+    if request.POST['description'] != "":  image.description = request.POST['description']
+    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
+    if request.POST['credits'] != "":      image.credits = request.POST['credits']
+    if request.POST['licence'] != "":      image.licence = request.POST['licence']
+    image.save()
+
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
 
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
@@ -377,24 +390,3 @@ def parse_image(file):
     return {'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
       'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
       'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)}
-
-def add_info_to_image(image, description, photographer, credits, licence, tags):
-    if description != "":
-        image.description = description
-    if photographer != "":
-        image.photographer = photographer
-    if credits != "":
-        image.credits = credits
-    if licence != "":
-        image.licence = licence
-
-    image.save()
-    # Note: Intentionally not removing old tags upon update.
-    for tagName in tags:
-        tag = None
-        try:
-            tag = Tag.objects.get(name__iexact=tagName)
-        except(Tag.DoesNotExist):
-            tag = Tag(name=tagName)
-        tag.save()
-        tag.images.add(image)
