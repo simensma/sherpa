@@ -213,7 +213,7 @@ def update_images(request):
                         tag = Tag(name=tag_name)
                     tag.save()
                     tag.images.add(image)
-        if request.POST['origin'] != '':
+        if request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
