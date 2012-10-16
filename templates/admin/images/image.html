@@ -16,6 +16,20 @@
         {{ image.photographer|default:"(Ingen fotograf oppgitt)" }}
       </td>
     </tr>
+    {% if image.credits %}
+      <tr>
+        <th>Kreditering:</th>
+        <td>
+          {{ image.credits }}
+        </td>
+      </tr>
+    {% endif %}
+    <tr>
+      <th>Bruksrett:</th>
+      <td>
+        {{ image.licence|default:"Standard DNT bruksrett." }}
+      </td>
+    </tr>
     <tr>
       <th>Tatt:</th>
       <td>{{ taken|default:"Fant ikke dato i EXIF-data" }}</td>
@@ -35,20 +49,6 @@
     <tr>
       <th>Liten:</th>
       <td><a href="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">Åpne (150px)</a></td>
-    </tr>
-    {% if image.credits %}
-      <tr>
-        <th>Kreditering:</th>
-        <td>
-          {{ image.credits }}
-        </td>
-      </tr>
-    {% endif %}
-    <tr>
-      <th>Bruksrett:</th>
-      <td>
-        {{ image.licence|default:"Standard DNT bruksrett." }}
-      </td>
     </tr>
     <tr>
       <th>EXIF-data:</th>
