@@ -137,11 +137,23 @@ def update_album(request):
 
 @login_required
 def update_images(request):
-    images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
-    for image in images:
-        tags = json.loads(request.POST['tags-serialized'])
-        add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
+    if request.method == 'GET':
+        ids = json.loads(request.GET['bilder'])
+        if len(ids) == 1:
+            context = {'image': Image.objects.get(id=ids[0])}
+            return render(request, 'admin/images/image_details_single.html', context)
+        elif len(ids) > 1:
+            images = Image.objects.filter(id__in=ids)
+            context = {'images': images}
+            return render(request, 'admin/images/image_details_multiple.html', context)
+        else:
+            pass # TODO
+    elif request.method == 'POST':
+        images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
+        for image in images:
+            tags = json.loads(request.POST['tags-serialized'])
+            add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
 
 @login_required
 def upload_image(request, album):

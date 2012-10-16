@@ -8,6 +8,13 @@ $(document).ready(function() {
     actionButtons.find("button.albums.details").click(function() {
         $(".album-details.dialog").dialog('open');
     });
+    actionButtons.find("button.images.details").click(function() {
+        var images = [];
+        $("#archive-gallery li.image.selected").each(function() {
+            images.push($(this).attr('data-id'));
+        });
+        window.location = '/sherpa/bildearkiv/bilde/oppdater/?bilder=' + encodeURIComponent(JSON.stringify(images));
+    });
 
     $(".album-details form").submit(function() {
         var albums = [];
