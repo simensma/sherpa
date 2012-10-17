@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.template import Context, loader
+from django.template import RequestContext, loader
 
 from page.models import Column, Content
 from page.widgets import parse_widget
@@ -24,7 +24,7 @@ def add(request):
         else:
             widget = parse_widget(json.loads(content.content))
             t = loader.get_template(widget['template'])
-            c = Context({'widget': widget})
+            c = RequestContext(request, {'widget': widget})
             result = t.render(c)
         return HttpResponse(json.dumps({'id': content.id, 'content': result, 'json': content.content}))
 
@@ -46,6 +46,6 @@ def update_widget(request, widget):
     widget.save()
     widget = parse_widget(json.loads(widget.content))
     t = loader.get_template(widget['template'])
-    c = Context({'widget': widget})
+    c = RequestContext(request, {'widget': widget})
     result = t.render(c)
     return HttpResponse(json.dumps({'content': result, 'json': request.POST['content']}))
