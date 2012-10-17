@@ -14,12 +14,9 @@
       {% csrf_token %}
       <input type="hidden" name="ids" value="{{ ids }}">
       <input type="hidden" name="origin" value="{{ origin }}">
-      <div class="control-group">
-        <label class="control-label" for="image-description">Beskrivelse:</label>
-        <div class="controls">
-          <textarea name="description" rows="3" class="input-xlarge" id="image-description">{{ image.description }}</textarea>
-        </div>
-      </div>
+
+      <label class="image-description" for="image-description">Beskrivelse:</label>
+      <textarea name="description" rows="4" id="image-description">{{ image.description }}</textarea>
 
       <div class="control-group">
         <label class="control-label" for="image-photographer">Fotograf:</label>
