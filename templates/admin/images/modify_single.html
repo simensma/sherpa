@@ -22,31 +22,31 @@
       </div>
 
       <div class="control-group">
-        <label class="control-label">Fotograf:</label>
+        <label class="control-label" for="image-photographer">Fotograf:</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn...">
+          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer">
         </div>
       </div>
 
       <div class="control-group">
-        <label class="control-label">Kreditering:</label>
+        <label class="control-label" for="image-credits">Kreditering:</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="credits" value="{{ image.credits }}" placeholder="Navn på person, forening e.l...">
+          <input type="text" class="input-xlarge" name="credits" value="{{ image.credits }}" placeholder="Navn på person, forening e.l..." id="image-credits">
         </div>
       </div>
 
       <div class="control-group">
-        <label class="control-label">Bruksrett:</label>
+        <label class="control-label" for="image-licence">Bruksrett:</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov...">
+          <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov..." id="image-licence">
         </div>
       </div>
 
       <div class="control-group">
-        <label class="control-label">Nøkkelord:</label>
+        <label class="control-label" for="image-tags">Nøkkelord:</label>
         <div class="controls">
           <input type="hidden" name="tags-serialized">
-          <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px">
+          <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
           <div class="tag-box">
             {% for tag in image.tags.all %}
               <div class="tag">
