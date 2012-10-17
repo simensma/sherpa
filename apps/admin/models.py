@@ -10,7 +10,7 @@ class Image(models.Model):
     extension = models.CharField(max_length=4)
     hash = models.CharField(max_length=40)
     description = models.TextField()
-    album = models.ForeignKey('admin.Album')
+    album = models.ForeignKey('admin.Album', null=True)
     photographer = models.CharField(max_length=200)
     credits = models.CharField(max_length=200)
     licence = models.CharField(max_length=200)
