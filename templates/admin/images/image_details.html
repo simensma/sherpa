@@ -43,7 +43,9 @@
     <tr>
       <th>Lastet opp:</th>
       <td>
-        {{ image.uploader.user.get_full_name }}<br>
+        <a href="{% url admin.images.views.user_images image.uploader.user.get_profile.id %}">
+          {{ image.uploader.user.get_full_name }}
+        </a><br>
         {{ image.uploaded|date:"j. F Y" }}
       </td>
     </tr>
