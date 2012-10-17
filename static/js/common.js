@@ -42,6 +42,11 @@ $(document).ready(function() {
     /* Enable any popovers */
     $("*[data-popover]").popover();
 
+    /* Tags have data-href for links. Should maybe use 'a' instead, and fix the DOM everywhere
+       tags are used, but this works for now */
+    $("div.tag-box div.tag[data-href]").click(function() {
+        window.location = $(this).attr('data-href');
+    });
 
 });
 
