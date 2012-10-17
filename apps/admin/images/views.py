@@ -98,7 +98,7 @@ def list_albums(request, album):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path()}
-    return render(request, 'admin/images/albums.html', context)
+    return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
 def image_details(request, image):
@@ -118,7 +118,7 @@ def image_details(request, image):
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path()}
-    return render(request, 'admin/images/image.html', context)
+    return render(request, 'admin/images/image_details.html', context)
 
 @login_required
 def delete_items(request, album):
@@ -169,11 +169,11 @@ def update_images(request):
             'origin': request.GET.get('origin', '')}
         if len(ids) == 1:
             context.update({'image': Image.objects.get(id=ids[0])})
-            return render(request, 'admin/images/image_details_single.html', context)
+            return render(request, 'admin/images/modify_single.html', context)
         elif len(ids) > 1:
             images = Image.objects.filter(id__in=ids)
             context.update({'images': images})
-            return render(request, 'admin/images/image_details_multiple.html', context)
+            return render(request, 'admin/images/modify_multiple.html', context)
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
             # Should maybe log an error here in case this was our fault.
