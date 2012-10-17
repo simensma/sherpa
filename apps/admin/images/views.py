@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from core.models import Tag
 from admin.models import Image, Album
+from user.models import Profile
 
 from PIL.ExifTags import TAGS
 import random, Image as pil
@@ -76,6 +77,17 @@ def fast_upload(request):
         tag.images.add(image)
 
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+
+@login_required
+def user_images(request, profile):
+    profile = Profile.objects.get(id=profile)
+    images = Image.objects.filter(uploader=profile)
+    context = {
+        'active_profile': profile,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.get_full_path()}
+    return render(request, 'admin/images/user_images.html', context)
 
 @login_required
 def list_albums(request, album):

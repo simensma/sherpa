@@ -2,7 +2,7 @@
   <div class="span4">
     <div class="item{% if current == 'personal' %} current{% endif %}">
       <p>
-        {% if current != 'personal' %}<a href="">{% else %}<span class="disabled-link">{% endif %}
+        {% if current != 'personal' %}<a href="{% url admin.images.views.user_images user.id %}">{% else %}<span class="disabled-link">{% endif %}
         Mine bilder
         {% if current != 'personal' %}</a>{% else %}</span>{% endif %}
       </p>

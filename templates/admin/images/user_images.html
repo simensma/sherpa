@@ -1,0 +1,87 @@
+{% extends "admin/images/layout.html" %}
+{% block js_globals %}
+  <script>
+    var origin = '{{ origin }}';
+  </script>
+{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/browser.js"></script>
+{% endblock %}
+
+{% block imagenavigation %}
+  {% if active_profile == user.get_profile %}
+    {% include 'admin/images/navigation.html' with current='personal' %}
+  {% else %}
+    {% include 'admin/images/navigation.html' with current='albums' %}
+  {% endif %}
+{% endblock %}
+
+{% block imagebody %}
+
+<div class="row imagearchive-action-buttons">
+  <div class="span3">
+    <button class="btn btn-large btn-success upload" {% if current_album %}data-href="{% url admin.images.views.upload_image current_album.id %}"{% else %}disabled{% endif %}>
+      <i class="icon-picture"></i> Last opp nytt bilde
+    </button>
+  </div>
+  <div class="span3">
+    <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog" disabled>
+      <i class="icon-folder-open"></i> Opprett nytt album
+    </button>
+  </div>
+  <div class="span3">
+    <button class="btn btn-large btn-warning albums details hide">
+      <i class="icon-pencil"></i> Endre albumdetaljer
+    </button>
+    <button class="btn btn-large btn-warning images details hide">
+      <i class="icon-pencil"></i> Endre bildedetaljer
+    </button>
+    <button class="btn btn-large btn-warning dummy details" disabled>
+      <i class="icon-pencil"></i> Endre detaljer
+    </button>
+  </div>
+  <div class="span3">
+    <button class="btn btn-large btn-danger delete dialog-button" data-dialog=".delete-dialog" disabled>
+      <i class="icon-remove"></i> Slett bilder
+    </button>
+  </div>
+</div>
+
+{% if active_profile != user.get_profile %}
+  <h2 style="text-align: center;">{{ active_profile.user.get_full_name }}s bilder</h2>
+{% endif %}
+
+{% if not images %}
+  <div class="alert alert-info">
+    {% if active_profile == user.get_profile %}
+      Du
+    {% else %}
+      {{ active_profile.user.get_full_name }}
+    {% endif %}
+    har ikke lastet opp noen bilder.
+  </div>
+{% endif %}
+
+<div id="archive-gallery">
+  <ul>
+  {% for image in images %}
+    <li class="image" data-id="{{ image.id }}">
+      <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>
+      <a class="image" href="{% url admin.images.views.image_details image.id %}">
+        <img src="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="{{ image.description }}">
+      </a>
+      {{ image.width }} x {{ image.height }}<br>
+      {% if not image.photographer %}
+        Ingen fotograf oppgitt
+      {% else %}
+        Fotograf: {{ image.photographer }}
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+<div style="clear: both;"></div>
+
+{% include 'admin/images/dialogs.html' %}
+{% endblock %}
