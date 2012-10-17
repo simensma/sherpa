@@ -93,7 +93,7 @@ def send_restore_password_email(request):
     profile.password_restore_date = datetime.now()
     profile.save()
     t = loader.get_template('user/restore-password-email.html')
-    c = RequestContext(request, {'user': user})
+    c = RequestContext(request, {'found_user': user})
     user.email_user("Gjenopprettelse av passord", t.render(c))
     return HttpResponse(json.dumps({'status': 'success'}))
 
