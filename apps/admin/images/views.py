@@ -272,9 +272,6 @@ def search(request):
             Q(photographer__icontains=word) |
             Q(credits__icontains=word) |
             Q(licence__icontains=word) |
-            Q(uploader__user__first_name__icontains=word) |
-            Q(uploader__user__last_name__icontains=word) |
-            Q(uploader__user__email__icontains=word) |
             Q(tags__name__icontains=word)).distinct().values())
     for word in request.GET['q'].split(' '):
         albums = Album.objects.filter(name__icontains=word).distinct().values()
