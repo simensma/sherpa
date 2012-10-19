@@ -2,7 +2,7 @@
  * Saving the document
  */
 
-var AUTOSAVE_FREQUENCY = 60; // Autosave every <this> seconds
+var NO_SAVE_WARNING = 60 * 5;
 
 $(document).ready(function() {
 
@@ -11,11 +11,10 @@ $(document).ready(function() {
     var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ')');
+        $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + lastSaveCount + ')');
 
-        if(lastSaveCount >= AUTOSAVE_FREQUENCY) {
-            $("div.editor-header button.save").click();
-            return;
+        if(lastSaveCount == NO_SAVE_WARNING) {
+            $("div.no-save-warning").show();
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }
@@ -108,6 +107,7 @@ $(document).ready(function() {
         var saveButton = $("div.editor-header button.save");
         saveButton.attr('disabled', true);
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
+        $("div.no-save-warning").hide();
 
         // Save content
         $.ajaxQueue({
@@ -116,6 +116,7 @@ $(document).ready(function() {
                   "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
         }).done(function(result) {
+            lastSaveCount = 0;
             statusIcon = '<i class="icon-heart"></i>';
             saveButton.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
@@ -131,7 +132,6 @@ $(document).ready(function() {
                 fail();
             }
         }).always(function(result) {
-            lastSaveCount = 0;
             updateSaveCount();
             saveButton.removeAttr('disabled');
         });
