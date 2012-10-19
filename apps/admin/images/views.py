@@ -18,36 +18,12 @@ import json
 from datetime import datetime
 import simples3
 
-SPEED_UPLOAD_ALBUM_NAME = "Brukeralbum"
-
-def createUserAlbum(user):
-    #create user album if it dosent exist
-    user_name = user.first_name + " " + user.last_name
-
-    #get or create useruploads album
-    try:
-        user_root = Album.objects.get(name=SPEED_UPLOAD_ALBUM_NAME, parent=None)
-    except ObjectDoesNotExist:
-        user_root = Album(name=SPEED_UPLOAD_ALBUM_NAME)
-        user_root.save()
-
-    #get or create user album in useruploads album
-    #if two users share name, they share album, this could be changed by using email
-    try:
-        user_album = Album.objects.get(name=user_name, parent=user_root)
-    except ObjectDoesNotExist:
-        user_album = Album(name=user_name, parent=user_root)
-        user_album.save()
-    return user_album;
-
 @login_required
 def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
 
 @login_required
 def fast_upload(request):
-    user_album = createUserAlbum(request.user)
-
     try:
         file = request.FILES['file']
     except KeyError:
@@ -60,7 +36,7 @@ def fast_upload(request):
         return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
 
     #store stuff on s3 and in db
-    stored_image = store_image(parsed_image, user_album, request.user)
+    stored_image = store_image(parsed_image, None, request.user)
 
     #add info to image
     image = Image.objects.get(id=stored_image['id'])
@@ -95,9 +71,6 @@ def user_images(request, profile):
 
 @login_required
 def list_albums(request, album):
-    #create user album if it dosent exist
-    createUserAlbum(request.user)
-
     albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
     images = None
@@ -150,15 +123,8 @@ def delete_items(request, album):
 
 @login_required
 def add_album(request, parent):
-    albumname = request.POST['name']
-    if parent is not None:
-        parent = Album.objects.get(id=parent)
-    elif albumname == SPEED_UPLOAD_ALBUM_NAME:
-        #ensure unique name if the name is the same as user-uploads
-        res = Album.objects.filter(name=request.POST['name'], parent=None)
-        albumname = albumname + str(len(res)+1)
-
-    album = Album(name=albumname, parent=parent)
+    parent = None if parent == None else Album.objects.get(id=parent)
+    album = Album(name=request.POST['name'], parent=parent)
     album.save()
     if parent is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
