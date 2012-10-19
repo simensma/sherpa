@@ -15,7 +15,7 @@
 
 <div class="row imagearchive-action-buttons">
   <div class="span3">
-    <button class="btn btn-large btn-success upload" {% if not current_album %}disabled{% endif %}>
+    <button class="btn btn-large btn-success upload"{% if not current_album %} disabled data-tooltip="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
       <i class="icon-picture"></i> Last opp nytt bilde
     </button>
   </div>
@@ -31,12 +31,12 @@
     <button class="btn btn-large btn-warning images details hide">
       <i class="icon-pencil"></i> Endre bildedetaljer
     </button>
-    <button class="btn btn-large btn-warning dummy details" disabled>
+    <button class="btn btn-large btn-warning dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
       <i class="icon-pencil"></i> Endre detaljer
     </button>
   </div>
   <div class="span3">
-    <button class="btn btn-large btn-danger delete dialog-button" data-dialog=".delete-dialog" disabled>
+    <button class="btn btn-large btn-danger delete dialog-button" data-dialog=".delete-dialog" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
       <i class="icon-remove"></i> Slett bilder
     </button>
   </div>
