@@ -19,7 +19,11 @@
     <tr>
       <th>Fotograf:</th>
       <td>
-        {{ image.photographer|default:"(Ingen fotograf oppgitt)" }}
+        {% if image.photographer %}
+          <a href="{% url admin.images.views.search %}?q={{ image.photographer }}">{{ image.photographer }}</a>
+        {% else %}
+          (Ingen fotograf oppgitt)
+        {% endif %}
       </td>
     </tr>
     {% if image.credits %}
