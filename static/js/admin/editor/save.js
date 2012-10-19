@@ -3,6 +3,7 @@
  */
 
 var AUTOSAVE_FREQUENCY = 60; // Autosave every <this> seconds
+var NO_SAVE_WARNING = 60 * 5; // Should never happen when this is larger than autosave frequency
 
 $(document).ready(function() {
 
@@ -12,6 +13,10 @@ $(document).ready(function() {
     function updateSaveCount() {
         lastSaveCount += 1;
         $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + (AUTOSAVE_FREQUENCY - lastSaveCount) + ')');
+
+        if(lastSaveCount == NO_SAVE_WARNING) {
+            $("div.no-save-warning").show();
+        }
 
         if(lastSaveCount >= AUTOSAVE_FREQUENCY) {
             $("div.editor-header button.save").click();
@@ -108,6 +113,7 @@ $(document).ready(function() {
         var saveButton = $("div.editor-header button.save");
         saveButton.attr('disabled', true);
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
+        $("div.no-save-warning").hide();
 
         // Save content
         $.ajaxQueue({

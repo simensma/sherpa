@@ -8,6 +8,7 @@ $(document).ready(function() {
     rangy.init();
     window.selection;
     var insertable;
+    $("div.no-save-warning").hide();
     setEmpties();
     enableEditing();
     disableIframes($("article div.widget"));
