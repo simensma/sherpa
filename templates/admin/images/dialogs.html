@@ -12,6 +12,7 @@
     {% csrf_token %}
     <input type="hidden" name="albums">
     <input type="hidden" name="images">
+    <input type="hidden" name="origin" value="{{ origin }}">
     <button type="submit" class="btn btn-danger perform-delete"><i class="icon-warning-sign"></i> Ja, jeg vil virkelig slette slette dem for godt.</button>
   </form>
   <button class="btn btn-success cancel-delete"><i class="icon-heart"></i> Nei, jeg vil ikke slette noe likevel.</button>

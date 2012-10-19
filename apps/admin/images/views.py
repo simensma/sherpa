@@ -140,7 +140,9 @@ def image_details(request, image):
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
-    if album is None:
+    if request.POST['origin'] != '':
+        return HttpResponseRedirect(request.POST['origin'])
+    elif album is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
         album = Album.objects.get(id=album)
