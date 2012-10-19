@@ -2,7 +2,8 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.images.views',
-    url(r'^$', 'list_albums', {'album': None}),
+    url(r'^$', 'index'),
+    url(r'^album/$', 'list_albums', {'album': None}),
     url(r'^album/(?P<album>\d+)/$', 'list_albums'),
     url(r'^album/nytt/$', 'add_album', {'parent': None}),
     url(r'^album/nytt/(?P<parent>\d+)/$', 'add_album'),

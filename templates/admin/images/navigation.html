@@ -21,7 +21,7 @@
   <div class="span4">
     <div class="item{% if current == 'albums' %} current{% endif %}">
       <p>
-        {% if current != 'albums' %}<a href="">{% else %}<span class="disabled-link">{% endif %}
+        {% if current != 'albums' %}<a href="{% url admin.images.views.list_albums %}">{% else %}<span class="disabled-link">{% endif %}
         Delte bilder
         {% if current != 'albums' %}</a>{% else %}</span>{% endif %}
       </p>

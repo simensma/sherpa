@@ -41,6 +41,10 @@ def createUserAlbum(user):
     return user_album;
 
 @login_required
+def index(request):
+    return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
+
+@login_required
 def fast_upload(request):
     user_album = createUserAlbum(request.user)
 
