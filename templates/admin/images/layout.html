@@ -2,6 +2,10 @@
 {% block title %}Bildearkiv &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.images.views.index %}">Bildearkiv</a>{% endblock %}
 
+{% block extra_js %}
+  <script src="/static/js/admin/images/layout.js"></script>
+{% endblock %}
+
 {% block body %}
 {% block imagenavigation %}{% endblock %}
 
