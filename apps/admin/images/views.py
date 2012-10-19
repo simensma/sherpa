@@ -30,7 +30,8 @@ def user_images(request, profile):
         'active_profile': profile,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.get_full_path()}
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name')}
     return render(request, 'admin/images/user_images.html', context)
 
 @login_required
@@ -50,7 +51,8 @@ def list_albums(request, album):
         'current_album': current_album,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.get_full_path()}
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name')}
     return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
@@ -70,7 +72,8 @@ def image_details(request, image):
         'taken': taken,
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
-        'origin': request.get_full_path()}
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name')}
     return render(request, 'admin/images/image_details.html', context)
 
 @login_required

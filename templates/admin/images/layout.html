@@ -9,12 +9,25 @@
 {% block body %}
 {% block imagenavigation %}{% endblock %}
 
-<div class="row image-search">
-  <div class="span12">
+<div class="row image-navigation">
+  <div class="span4">
     <form action="{% url admin.images.views.search %}" method="get">
-      <input type="text" class="input-xlarge" name="q" placeholder="Finn album eller bilde..." value="{{ search_query }}">
-      <button type="submit" class="btn input-button-align"><i class="icon-search"></i> Søk i bildearkivet</button>
+      <input type="text" name="q" placeholder="Søk etter bilder..." value="{{ search_query }}">
+      <button type="submit" class="btn input-button-align"><i class="icon-search"></i></button>
     </form>
+  </div>
+  <div class="span4">
+    <select name="association-images" data-placeholder="Andre foreningers bilder...">
+      <option></option>
+    </select>
+  </div>
+  <div class="span4">
+    <select name="user-images" data-placeholder="Andre brukeres bilder...">
+      <option></option>
+      {% for profile in all_users %}
+        <option value="{{ profile.id }}" data-href="{% url admin.images.views.user_images '0' %}">{{ profile.user.get_full_name }}</option>
+      {% endfor %}
+    </select>
   </div>
 </div>
 

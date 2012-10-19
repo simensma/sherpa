@@ -15,7 +15,7 @@
   {% if active_profile == user.get_profile %}
     {% include 'admin/images/navigation.html' with current='personal' %}
   {% else %}
-    {% include 'admin/images/navigation.html' with current='albums' %}
+    {% include 'admin/images/navigation.html' with current='' %}
   {% endif %}
 {% endblock %}
 
