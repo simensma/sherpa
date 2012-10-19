@@ -25,7 +25,17 @@
   <p>Søk på <strong>{{ search_query }}</strong> gav treff på {{ images|length }} bilder og {{ albums|length }} album.
 
   <div class="row imagearchive-action-buttons">
-    <div class="offset3 span3">
+    <div class="span3">
+      <button class="btn btn-large btn-success" disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;.">
+        <i class="icon-picture"></i> Last opp nytt bilde
+      </button>
+    </div>
+    <div class="span3">
+      <button class="btn btn-large btn-success" disabled data-tooltip="Du kan ikke opprette album her.">
+        <i class="icon-folder-open"></i> Opprett nytt album
+      </button>
+    </div>
+    <div class="span3">
       <button class="btn btn-large btn-warning albums details hide">
         <i class="icon-pencil"></i> Endre albumdetaljer
       </button>
