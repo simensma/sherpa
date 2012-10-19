@@ -7,7 +7,37 @@
 {% endblock %}
 
 {% block body %}
-{% block imagenavigation %}{% endblock %}
+
+<div class="row image-archive-navigation">
+  <div class="span4">
+    <div class="item{% if current_navigation == 'personal' %} current{% endif %}">
+      <p>
+        {% if current_navigation != 'personal' %}<a href="{% url admin.images.views.user_images user.id %}">{% else %}<span class="disabled-link">{% endif %}
+        Mine bilder
+        {% if current_navigation != 'personal' %}</a>{% else %}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="item{% if current_navigation == 'associations' %} current{% endif %}">
+      <p>
+        {% if current_navigation != 'associations' %}<a href="">{% else %}<span class="disabled-link">{% endif %}
+        {# Todo: Echo the currently active association #}
+        Foreningsbilder
+        {% if current_navigation != 'associations' %}</a>{% else %}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="item{% if current_navigation == 'albums' %} current{% endif %}">
+      <p>
+        {% if current_navigation != 'albums' %}<a href="{% url admin.images.views.list_albums %}">{% else %}<span class="disabled-link">{% endif %}
+        Alle bilder
+        {% if current_navigation != 'albums' %}</a>{% else %}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+</div>
 
 <div class="row image-navigation">
   <div class="span4">

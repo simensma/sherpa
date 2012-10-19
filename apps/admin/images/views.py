@@ -26,12 +26,18 @@ def index(request):
 def user_images(request, profile):
     profile = Profile.objects.get(id=profile)
     images = Image.objects.filter(uploader=profile)
+    if profile == request.user.get_profile():
+        current_navigation = 'personal'
+    else:
+        current_navigation = ''
+
     context = {
         'active_profile': profile,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name')}
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': current_navigation}
     return render(request, 'admin/images/user_images.html', context)
 
 @login_required
@@ -52,7 +58,8 @@ def list_albums(request, album):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name')}
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': 'albums'}
     return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
@@ -73,7 +80,8 @@ def image_details(request, image):
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name')}
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': 'albums'}
     return render(request, 'admin/images/image_details.html', context)
 
 @login_required

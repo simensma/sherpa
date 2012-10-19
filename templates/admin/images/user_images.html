@@ -11,14 +11,6 @@
   <script src="{{ STATIC_URL }}js/admin/images/uploader.js"></script>
 {% endblock %}
 
-{% block imagenavigation %}
-  {% if active_profile == user.get_profile %}
-    {% include 'admin/images/navigation.html' with current='personal' %}
-  {% else %}
-    {% include 'admin/images/navigation.html' with current='' %}
-  {% endif %}
-{% endblock %}
-
 {% block imagebody %}
 
 <div class="row imagearchive-action-buttons">
