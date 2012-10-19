@@ -21,6 +21,7 @@ $(document).ready(function() {
             doSearch();
         }
     });
+
     function doSearch() {
         var query = $("div#dialog-image-archive-chooser input[name='search']").val();
         if(query.length < IMAGE_SEARCH_LENGTH) {
@@ -29,6 +30,18 @@ $(document).ready(function() {
             search(query);
         }
     }
+
+    $("div.image-details input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
 });
 
 function chooseImagefromArchive(callback){

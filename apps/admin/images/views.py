@@ -293,6 +293,14 @@ def search_json(request):
     objects = parse_objects([], [], images)
     return HttpResponse(json.dumps(objects))
 
+@login_required
+def photographer(request):
+    images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
+    photographers = []
+    for image in images:
+        photographers.append(image.photographer)
+    return HttpResponse(json.dumps(photographers))
+
 def parse_objects(parents, albums, images):
     objects = {'parents': [], 'albums': [], 'images': []}
     for parent in parents:

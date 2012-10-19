@@ -59,4 +59,16 @@ $(document).ready(function() {
         $("input[name='fields']").val(JSON.stringify(fields));
     });
 
+    $("form.update-images input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
+
 });

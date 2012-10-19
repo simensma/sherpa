@@ -46,6 +46,18 @@ $(document).ready(function() {
         $("div.image-details").show();
     });
 
+    $("div.image-details form input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
+
     $("div.image-details form").submit(function(e) {
         if(uploadReady && userReady) {
             $("div.image-details input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
@@ -62,7 +74,6 @@ $(document).ready(function() {
             $("div.image-details p.waiting").show();
         }
     });
-
 });
 
 function uploadComplete(result, ids) {

@@ -46,4 +46,16 @@ $(document).ready(function() {
         $("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
     });
 
+    $("form.update-image input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
+
 });
