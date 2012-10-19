@@ -119,7 +119,7 @@ def list_albums(request, album):
 @login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
-    parents = list_parents(image.album)
+    parents = [] if image.album == None else list_parents(image.album)
     exif = json.loads(image.exif)
     try:
         taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
