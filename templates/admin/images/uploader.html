@@ -20,7 +20,7 @@
 
     <form class="image-uploader" action="{% url admin.images.views.upload_image %}" method="post" enctype="multipart/form-data" target="iframe">
       {% csrf_token %}
-      <input type="hidden" name="album" value="{{ current_album.id|default:"None" }}">
+      <input type="hidden" name="album" value="{{ current_album.id }}">
       <h1 class="sherpa">Last opp nye bilder</h1>
       <input type="file" name="files" multiple><br>
       <input class="btn" type="submit" value="Last opp valgte bilder">
@@ -49,7 +49,7 @@
         <p class="waiting">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
         <input type="hidden" name="ids">
         <input type="hidden" name="keep-tags" value="true">
-        <input type="hidden" name="origin" value="{% url admin.images.views.list_albums current_album.id %}">
+        <input type="hidden" name="origin" value="{{ origin }}">
       </form>
     </div>
   </div>
