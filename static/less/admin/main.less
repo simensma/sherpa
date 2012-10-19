@@ -36,29 +36,49 @@ header {
   }
 }
 
-nav#dashboard > h1 {
-  padding-top: 20px;
-  clear: both;
-}
-
-nav#dashboard > ul {
-  list-style-type: none;
-}
-
-nav#dashboard > ul > li {
-  display: block;
-  float: left;
-  width: 250px;
-  height: 195px;
+.dashboard-padding {
   border: 1px solid rgb(170, 170, 170);
-  margin: 1%;
-  text-align: center;
-  font-size: 160%;
+  padding: 20px;
 }
 
-nav#dashboard img {
-  padding-top: 10px;
-  margin-bottom: 10px;
+nav.dashboard {
+  ul {
+    list-style-type: none;
+  }
+
+  ul > li {
+    display: block;
+    margin-top: 20px;
+    .dashboard-padding
+  }
+
+  img.icon {
+    float: left;
+    margin-right: 20px;
+  }
+
+  h2 {
+    font-weight: normal;
+  }
+}
+
+div.sherpa-news {
+  .dashboard-padding;
+  margin-top: 20px;
+
+  h1 {
+    margin-top: 0;
+  }
+
+  h2 {
+    margin-bottom: 5px;
+  }
+
+  p.byline {
+    font-family: "DTL Nobel" !important;
+    font-size: 14px;
+    color: rgb(90, 90, 90);
+  }
 }
 
 h2.skinny {
