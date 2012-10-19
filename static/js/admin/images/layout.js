@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $("div.image-navigation select").chosen();
+    $("div.image-archive-quicksearch select").chosen();
 
     $("select[name='user-images']").change(function() {
         var selected = $(this).find("option:selected");
