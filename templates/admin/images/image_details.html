@@ -1,5 +1,10 @@
 {% extends "admin/images/layout.html" %}
 
+{% block extra_js %}
+  {{ block.super }}
+  <script src="/static/js/admin/images/image_details.js"></script>
+{% endblock %}
+
 {% block imagebody %}
 
 {% include 'admin/images/breadcrumb.html' %}
