@@ -23,42 +23,6 @@ def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
 
 @login_required
-def fast_upload(request):
-    try:
-        file = request.FILES['file']
-    except KeyError:
-        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
-
-    #parse file
-    try:
-        parsed_image = parse_image(file)
-    except(IOError, KeyError):
-        return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
-
-    #store stuff on s3 and in db
-    stored_image = store_image(parsed_image, None, request.user)
-
-    #add info to image
-    image = Image.objects.get(id=stored_image['id'])
-    tags = json.loads(request.POST['tags-serialized'])
-
-    if request.POST['description'] != "":  image.description = request.POST['description']
-    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
-    if request.POST['credits'] != "":      image.credits = request.POST['credits']
-    if request.POST['licence'] != "":      image.licence = request.POST['licence']
-    image.save()
-
-    for tagName in tags:
-        try:
-            tag = Tag.objects.get(name__iexact=tagName)
-        except(Tag.DoesNotExist):
-            tag = Tag(name=tagName)
-        tag.save()
-        tag.images.add(image)
-
-    return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
-
-@login_required
 def user_images(request, profile):
     profile = Profile.objects.get(id=profile)
     images = Image.objects.filter(uploader=profile)
@@ -223,6 +187,42 @@ def upload_image(request):
         stored_image = store_image(image, album, request.user)
         ids.append(stored_image['id'])
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+
+@login_required
+def fast_upload(request):
+    try:
+        file = request.FILES['file']
+    except KeyError:
+        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+
+    #parse file
+    try:
+        parsed_image = parse_image(file)
+    except(IOError, KeyError):
+        return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+
+    #store stuff on s3 and in db
+    stored_image = store_image(parsed_image, None, request.user)
+
+    #add info to image
+    image = Image.objects.get(id=stored_image['id'])
+    tags = json.loads(request.POST['tags-serialized'])
+
+    if request.POST['description'] != "":  image.description = request.POST['description']
+    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
+    if request.POST['credits'] != "":      image.credits = request.POST['credits']
+    if request.POST['licence'] != "":      image.licence = request.POST['licence']
+    image.save()
+
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
+
+    return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
 def content_json(request, album):
     if album is not None:
