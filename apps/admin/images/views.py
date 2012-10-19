@@ -235,6 +235,7 @@ def fast_upload(request):
 
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
+@login_required
 def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -245,6 +246,7 @@ def content_json(request, album):
         objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     return HttpResponse(json.dumps(objects))
 
+@login_required
 def search(request):
     context = {'origin': request.get_full_path()}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
@@ -271,6 +273,7 @@ def search(request):
         'search_query': request.GET['q']})
     return render(request, 'admin/images/search.html', context)
 
+@login_required
 def search_json(request):
     images = []
     if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
