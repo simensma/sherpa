@@ -236,31 +236,25 @@ def update_images(request):
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
-def upload_image(request, album):
-    if request.method == 'GET':
-        current_album = Album.objects.get(id=album)
-        parents = list_parents(current_album)
-        context = {'current_album': current_album, 'albumpath': parents}
-        return render(request, 'admin/images/upload.html', context)
-    elif request.method == 'POST':
-        if len(request.FILES.getlist('files')) == 0:
-            return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+def upload_image(request):
+    if len(request.FILES.getlist('files')) == 0:
+        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
 
-        #parsing
-        parsed_images = []
-        for file in request.FILES.getlist('files'):
-            try:
-                parsed_images.append(parse_image(file))
-            except(IOError, KeyError):
-                return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+    #parsing
+    parsed_images = []
+    for file in request.FILES.getlist('files'):
+        try:
+            parsed_images.append(parse_image(file))
+        except(IOError, KeyError):
+            return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
 
-        #storing
-        ids = []
-        album = Album.objects.get(id=album)
-        for image in parsed_images:
-            stored_image = store_image(image, album, request.user)
-            ids.append(stored_image['id'])
-        return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+    #storing
+    ids = []
+    album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
+    for image in parsed_images:
+        stored_image = store_image(image, album, request.user)
+        ids.append(stored_image['id'])
+    return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
 
 def content_json(request, album):
     if album is not None:

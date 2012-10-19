@@ -3,6 +3,10 @@ var uploadReady = false;
 
 $(document).ready(function() {
 
+    $("div.imagearchive-action-buttons button.upload").click(function() {
+        $("div.uploader").toggle('slow');
+    });
+
     var close_tag = 'div.image-details div.tag-box div.tag a';
     $(document).on('mouseover', close_tag, function() {
         $(this).children("img").attr('src', '/static/img/so/close-hover.png');
@@ -34,13 +38,6 @@ $(document).ready(function() {
                 }, 1000);
             }
         });
-    });
-
-    $("div.uploading").hide();
-    $("div.image-details").hide();
-    $("div.image-details p.waiting").hide();
-    $("div.messages").children().each(function() {
-        $(this).hide();
     });
 
     $("form.image-uploader input[type='submit']").click(function() {
@@ -87,4 +84,3 @@ function uploadComplete(result, ids) {
         $("form.image-uploader").show();
     }
 }
-

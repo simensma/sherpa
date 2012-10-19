@@ -1,0 +1,63 @@
+<div class="row uploader hide">
+  <div class="span6">
+
+    <div class="messages">
+      <div class="uploading hide">
+        <p>Laster opp...<br>
+          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster opp, vennligst vent...">
+        </p>
+      </div>
+      <div class="alert alert-info upload-complete hide">
+        Bildene har blitt lastet opp!<a class="close">x</a>
+      </div>
+      <div class="alert alert-error upload-failed hide">
+        Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
+      </div>
+      <div class="alert alert-error upload-no-files hide">
+        Du må jo velge noen bilder å laste opp!<a class="close">x</a>
+      </div>
+    </div>
+
+    <form class="image-uploader" action="{% url admin.images.views.upload_image %}" method="post" enctype="multipart/form-data" target="iframe">
+      {% csrf_token %}
+      <input type="hidden" name="album" value="{{ current_album.id|default:"None" }}">
+      <h1 class="sherpa">Last opp nye bilder</h1>
+      <input type="file" name="files" multiple><br>
+      <input class="btn" type="submit" value="Last opp valgte bilder">
+      <iframe name="iframe" class="hide"></iframe>
+    </form>
+
+    <div class="image-details hide">
+      <h2>Bildeinformasjon</h2>
+      <form action="{% url admin.images.views.update_images %}" method="post" class="well">
+        {% csrf_token %}
+        <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem:</em></p>
+        <label>Beskrivelse av bildene:</label>
+        <textarea name="description" class="span4" rows="3"></textarea>
+        <label>Fotograf:</label>
+        <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
+        <label>Kreditering:</label>
+        <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
+        <label>Bruksrett:</label>
+        <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
+        <label>Nøkkelord</label>
+        <input type="text" class="input-xlarge" name="tags">
+        <input type="hidden" name="tags-serialized">
+        <div class="tag-box"></div>
+        <div style="clear: both;"></div>
+        <input type="submit" class="btn" value="Lagre bildedata">
+        <p class="waiting">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
+        <input type="hidden" name="ids">
+        <input type="hidden" name="keep-tags" value="true">
+        <input type="hidden" name="origin" value="{% url admin.images.views.list_albums current_album.id %}">
+      </form>
+    </div>
+  </div>
+
+  <div class="span6">
+    <div class="alert alert-error">
+      <strong>Lisensiering</strong><br>
+      Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
+    </div>
+  </div>
+</div>

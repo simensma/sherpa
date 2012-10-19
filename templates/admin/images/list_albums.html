@@ -7,6 +7,7 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/browser.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/uploader.js"></script>
 {% endblock %}
 
 {% block imagenavigation %}
@@ -19,7 +20,7 @@
 
 <div class="row imagearchive-action-buttons">
   <div class="span3">
-    <button class="btn btn-large btn-success upload" {% if current_album %}data-href="{% url admin.images.views.upload_image current_album.id %}"{% else %}disabled{% endif %}>
+    <button class="btn btn-large btn-success upload" {% if not current_album %}disabled{% endif %}>
       <i class="icon-picture"></i> Last opp nytt bilde
     </button>
   </div>
@@ -45,6 +46,10 @@
     </button>
   </div>
 </div>
+
+{% if current_album %}
+  {% include 'admin/images/uploader.html' %}
+{% endif %}
 
 {% if not albums and not images %}
   <div class="alert alert-info">Dette albumet er tomt.</div>

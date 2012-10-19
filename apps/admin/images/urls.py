@@ -12,7 +12,7 @@ urlpatterns = patterns('admin.images.views',
     url(r'^bruker/(?P<profile>\d+)/$', 'user_images'),
 
     url(r'^bilde/(?P<image>\d+)/$', 'image_details'),
-    url(r'^bilde/nytt/(?P<album>\d+)/$', 'upload_image'),
+    url(r'^bilde/nytt/$', 'upload_image'),
     url(r'^bilde/oppdater/$', 'update_images'),
 
     url(r'^slett/(?P<album>\d+)/$', 'delete_items'),
