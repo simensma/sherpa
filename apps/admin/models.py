@@ -34,7 +34,6 @@ def delete_image_post(sender, **kwargs):
 class Album(models.Model):
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
-    # Todo: Author, or some other sort of affiliation?
 
 # Upon album delete, delete all child albums and connected images
 @receiver(post_delete, sender=Album, dispatch_uid="admin.models")
