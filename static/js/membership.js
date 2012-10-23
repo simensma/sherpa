@@ -25,4 +25,10 @@ $(document).ready(function() {
         $("div.benefits-toggle-buttons div.show-button").toggle();
     });
 
+    $("div.benefits-large").hover(function() {
+        $(this).find('.hover-content').fadeIn(200);
+    }, function() {
+        $(this).find('.hover-content').fadeOut(200);
+    });
+
 });
