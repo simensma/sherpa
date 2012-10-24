@@ -12,4 +12,10 @@ $(document).ready(function() {
             exif = true;
         }
     });
+
+    $("form.delete-image").submit(function(e) {
+        if(!confirm("Er du sikker på at du vil slette dette bildet for godt?\n\nDu kan ikke angre denne avgjørelsen.")) {
+            e.preventDefault();
+        }
+    });
 });

@@ -71,8 +71,18 @@
     </tr>
     </table>
 
-    {# This URL is kind of ugly, but it's just a URLencoded JSON-list of one image id #}
-    <p class="edit-link"><a class="btn btn-warning" href="{% url admin.images.views.update_images %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a></p>
+    <p class="edit-button">
+      {# This URL is kind of ugly, but it's just a URLencoded JSON-list of one image id #}
+      <a class="btn btn-warning" href="{% url admin.images.views.update_images %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a>
+    </p>
+    <form method="post" action="{% url admin.images.views.delete_items %}" class="delete-image">
+      {% csrf_token %}
+      <input type="hidden" name="albums" value="[]">
+      <input type="hidden" name="images" value="[{{ image.id }}]">
+      <p class="edit-button">
+        <button type="submit" class="btn btn-danger edit-link"><i class="icon-warning-sign"></i> Slett bildet</button>
+      </p>
+    </form>
   </div>
 
   <div class="span6">
