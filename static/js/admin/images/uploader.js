@@ -94,7 +94,8 @@ $(document).ready(function() {
         var album_name = $("div.album-picker div.albumpath").attr('data-current-album-name');
         var album_id = $("div.album-picker div.albumpath").attr('data-current-album');
         $("form.upload-image-details input[name='album']").val(album_id);
-        $("form.upload-image-details a[data-albumpicker-id]").attr('data-albumpicker-id', album_id).text(album_name);
+        $("form.upload-image-details p.chosen-album span.display-name").text(album_name);
+        $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', album_id);
         $("div.album-picker").dialog('close');
     });
 
