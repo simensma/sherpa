@@ -77,6 +77,7 @@
     </p>
     <form method="post" action="{% url admin.images.views.delete_items %}" class="delete-image">
       {% csrf_token %}
+      <input type="hidden" name="origin" value="{% if image.album.id %}{% url admin.images.views.list_albums image.album.id %}{% else %}{% url admin.images.views.list_albums %}{% endif %}">
       <input type="hidden" name="albums" value="[]">
       <input type="hidden" name="images" value="[{{ image.id }}]">
       <p class="edit-button">
