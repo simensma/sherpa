@@ -88,7 +88,7 @@ def image_details(request, image):
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
-    if request.POST['origin'] != '':
+    if request.POST.get('origin', '') != '':
         return HttpResponseRedirect(request.POST['origin'])
     elif album is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
@@ -136,7 +136,7 @@ def update_images(request):
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
             # Should maybe log an error here in case this was our fault.
-            if request.GET.has_key('origin') and request.GET['origin'] != '':
+            if request.GET.get('origin', '') != '':
                 return HttpResponseRedirect(origin)
             else:
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
