@@ -42,6 +42,7 @@ $(document).ready(function() {
 
     $("form.image-uploader input[type='submit']").click(function() {
         $("form.image-uploader").hide();
+        $("div.licencing").hide();
         $("div.uploading").show();
         $("div.image-details").show();
     });
@@ -66,7 +67,7 @@ $(document).ready(function() {
         }
     });
 
-    $("div.image-details input[type='submit']").click(function(e) {
+    $("div.image-details button[type='submit']").click(function(e) {
         userReady = true;
         if(!uploadReady) {
             e.preventDefault();
