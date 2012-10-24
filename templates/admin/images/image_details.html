@@ -9,12 +9,6 @@
 
 <div id="image-display" class="row">
   <div class="span6 metadata">
-    {% if not image.description %}
-      <p style="text-align: center;">{{ image.uploader.user.first_name }} la ikke inn noen beskrivelse for bildet.</p>
-    {% else %}
-      <p class="image-description form-border">{{ image.description|linebreaksbr }}</p>
-    {% endif %}
-
     <table class="table metadata">
     <tr>
       <th>Fotograf:</th>
@@ -87,6 +81,12 @@
         <img src="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
       </a>
     </p>
+
+    {% if not image.description %}
+      <p style="text-align: center;">{{ image.uploader.user.first_name }} la ikke inn noen beskrivelse for bildet.</p>
+    {% else %}
+      <p class="image-description form-border">{{ image.description|linebreaksbr }}</p>
+    {% endif %}
 
     <h3>Nøkkelord:</h3>
     <div class="tag-box">
