@@ -35,6 +35,9 @@ class Album(models.Model):
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
 
+    def __unicode__(self):
+        return self.name
+
 # Upon album delete, delete all child albums and connected images
 @receiver(post_delete, sender=Album, dispatch_uid="admin.models")
 def delete_album(sender, **kwargs):
