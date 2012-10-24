@@ -174,10 +174,10 @@ def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
         objects = parse_objects(list_parents(current_album),
-            Album.objects.filter(parent=album),
+            Album.objects.filter(parent=album).order_by('name'),
             Image.objects.filter(album=album))
     else:
-        objects = parse_objects([], Album.objects.filter(parent=None), [])
+        objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     return HttpResponse(json.dumps(objects))
 
 def search_json(request):
