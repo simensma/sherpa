@@ -45,7 +45,7 @@
       <td>{{ taken|date:"j. F Y"|default:"Fant ikke dato i EXIF-data" }}</td>
     </tr>
     <tr>
-      <th>Lastet opp:</th>
+      <th>Lastet opp av:</th>
       <td>
         <a href="{% url admin.images.views.user_images image.uploader.user.get_profile.id %}">
           {{ image.uploader.user.get_full_name }}
