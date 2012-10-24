@@ -1,3 +1,5 @@
+ {% load albumpath %}
+
 <div class="row uploader hide">
   <div class="span6">
 
@@ -91,6 +93,16 @@
         </div>
 
         <div class="control-group">
+          <label class="control-label" for="image-album">Album:</label>
+          <div class="controls">
+            <input type="hidden" name="album" value="{{ current_album.id }}">
+            <p class="chosen-album">
+              <a href="javascript:undefined" class="dialog-button" data-dialog=".album-picker" data-albumpicker-id="{{ current_album.id }}">{{ current_album.name }}</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre bildeinformasjon</button>
             <p class="waiting hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
@@ -98,5 +110,43 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<div class="dialog album-picker" data-title="Velg album..." data-width="80%">
+  <div class="row image-archive-navigation">
+    <div class="span6">
+      <div class="item">
+        {# Todo, when associations are created #}
+        <p>
+          <a href="javascript:undefined" class="associations">Foreningsbilder</a>
+        </p>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="item current">
+        <p>
+          <a href="javascript:undefined" class="albums">Alle bilder</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="albumpath" data-current-album="" data-current-album-name="">
+    <a href="javascript:undefined" data-albumpicker-id="">Bildearkiv</a>
+    <span class="path">
+    </span>
+    <button class="btn pick"><i class="icon-ok"></i> Velg dette albumet</button>
+  </div>
+
+  <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+  <div class="dummy-child hide">
+    <img src="/static/img/icons/imagearchive/folder.png" alt="Album">
+    <a href="javascript:undefined" data-albumpicker-id=""></a>
+  </div>
+  <div class="children">
   </div>
 </div>

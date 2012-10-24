@@ -20,6 +20,8 @@ urlpatterns = patterns('admin.images.views',
 
     url(r'^innhold/$', 'content_json', {'album': None}),
     url(r'^innhold/(?P<album>\d+)/$', 'content_json'),
+    url(r'^innhold/album/$', 'album_content_json', {'album': None}),
+    url(r'^innhold/album/(?P<album>\d+)/$', 'album_content_json'),
     url(ur'^søk/$', 'search'),
     url(ur'^søk/json/$', 'search_json'),
     url(r'^fotograf/$', 'photographer'),

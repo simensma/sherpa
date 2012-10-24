@@ -251,6 +251,17 @@ def content_json(request, album):
     return HttpResponse(json.dumps(objects))
 
 @login_required
+def album_content_json(request, album):
+    if album is not None:
+        current_album = Album.objects.get(id=album)
+        albums = Album.objects.filter(parent=album).order_by('name')
+        path = list_parents_values(current_album)
+    else:
+        albums = Album.objects.filter(parent=None).order_by('name')
+        path = []
+    return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
+
+@login_required
 def search(request):
     context = {'origin': request.get_full_path()}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
@@ -324,6 +335,14 @@ def list_parents(album):
     while(album.parent != None):
         album = Album.objects.get(id=album.parent.id)
         parents.insert(0, album)
+    return parents
+
+def list_parents_values(album):
+    parents = []
+    parents.append({'id': album.id, 'name': album.name})
+    while(album.parent != None):
+        album = Album.objects.get(id=album.parent.id)
+        parents.insert(0, {'id': album.id, 'name': album.name})
     return parents
 
 def generate_random_image_key():
