@@ -24,22 +24,22 @@ $(document).ready(function() {
     function toggleMultiedit() {
         var albums = $("#archive-gallery li.album.selected").length > 0;
         var images = $("#archive-gallery li.image.selected").length > 0;
-        actionButtons.find("button.details").hide();
+        actionButtons.find("button.details, button.delete").hide();
         if(albums && images) {
             actionButtons.find("button.details.dummy").show();
+            actionButtons.find("button.delete.both").show();
             $("div.delete-dialog p").hide().filter(".both").show();
-            actionButtons.find("button.delete").removeAttr('disabled').html('<i class="icon-remove"></i> Slett album og bilder');
         } else if(albums) {
-            $("div.delete-dialog p").hide().filter(".albums").show();
             actionButtons.find("button.details.albums").show();
-            actionButtons.find("button.delete").removeAttr('disabled').html('<i class="icon-remove"></i> Slett album');
+            actionButtons.find("button.delete.albums").show();
+            $("div.delete-dialog p").hide().filter(".albums").show();
         } else if(images) {
-            $("div.delete-dialog p").hide().filter(".images").show();
             actionButtons.find("button.details.images").show();
-            actionButtons.find("button.delete").removeAttr('disabled').html('<i class="icon-remove"></i> Slett bilder');
+            actionButtons.find("button.delete.images").show();
+            $("div.delete-dialog p").hide().filter(".images").show();
         } else {
-            actionButtons.find("button.delete").attr('disabled', true);
             actionButtons.find("button.details.dummy").show();
+            actionButtons.find("button.delete.dummy").show();
         }
     }
 

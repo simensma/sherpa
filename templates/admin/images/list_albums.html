@@ -36,7 +36,16 @@
     </button>
   </div>
   <div class="span3">
-    <button class="btn btn-large btn-danger delete dialog-button" data-dialog=".delete-dialog" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
+    <button class="btn btn-large btn-danger delete albums dialog-button hide" data-dialog=".delete-dialog">
+      <i class="icon-remove"></i> Slett album
+    </button>
+    <button class="btn btn-large btn-danger delete images dialog-button hide" data-dialog=".delete-dialog">
+      <i class="icon-remove"></i> Slett bilder
+    </button>
+    <button class="btn btn-large btn-danger delete both dialog-button hide" data-dialog=".delete-dialog">
+      <i class="icon-remove"></i> Slett album og bilder
+    </button>
+    <button class="btn btn-large btn-danger delete dummy dialog-button" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
       <i class="icon-remove"></i> Slett bilder
     </button>
   </div>
