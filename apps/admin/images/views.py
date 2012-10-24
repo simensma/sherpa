@@ -180,24 +180,28 @@ def update_images(request):
 
 @login_required
 def upload_image(request):
-    if len(request.FILES.getlist('files')) == 0:
-        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+    try:
+        if len(request.FILES.getlist('files')) == 0:
+            return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
 
-    #parsing
-    parsed_images = []
-    for file in request.FILES.getlist('files'):
-        try:
-            parsed_images.append(parse_image(file))
-        except(IOError, KeyError):
-            return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+        #parsing
+        parsed_images = []
+        for file in request.FILES.getlist('files'):
+            try:
+                parsed_images.append(parse_image(file))
+            except(IOError, KeyError):
+                return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
 
-    #storing
-    ids = []
-    album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
-    for image in parsed_images:
-        stored_image = store_image(image, album, request.user)
-        ids.append(stored_image['id'])
-    return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+        #storing
+        ids = []
+        album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
+        for image in parsed_images:
+            stored_image = store_image(image, album, request.user)
+            ids.append(stored_image['id'])
+        return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+    except Exception:
+        # TODO: This REALLY needs to be logged.
+        return render(request, 'admin/images/iframe.html', {'result': 'unknown_exception'})
 
 @login_required
 def fast_upload(request):

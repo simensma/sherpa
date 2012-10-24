@@ -93,5 +93,9 @@ function uploadComplete(result, ids) {
         $("div.upload-no-files").show()
         $("div.image-details").hide();
         $("form.image-uploader").show();
+    } else if(result == 'unknown_exception') {
+        $("div.upload-unknown-exception").show()
+        $("div.image-details").hide();
+        $("form.image-uploader").show();
     }
 }
