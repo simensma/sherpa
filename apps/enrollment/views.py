@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.db import transaction, connections
 
 from core import validator
-from association.models import Association
+from sherpa2.models import Association
 from user.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from enrollment.models import State

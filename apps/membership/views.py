@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.core.cache import cache
 from django.conf import settings
 
-from association.models import Association
+from sherpa2.models import Association
 from focus.models import FocusZipcode, Price
 from enrollment.models import State
 
