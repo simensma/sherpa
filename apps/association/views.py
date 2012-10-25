@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from association.models import Association
+from sherpa2.models import Association
 from user.models import *
 
 import json
