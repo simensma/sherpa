@@ -41,7 +41,7 @@ $(document).ready(function() {
     });
 
     /* Changing destination album */
-    var picker = new AlbumPicker(function(album) {
+    var picker = new AlbumPicker(false, function(album) {
         // Album picked
         $("form.upload-image-details input[name='album']").val(album.id);
         $("form.upload-image-details p.chosen-album span.display-name").text(album.name);

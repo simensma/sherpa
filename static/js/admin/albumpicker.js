@@ -1,7 +1,8 @@
 /* Changing destination album */
 
-var AlbumPicker = function(picked) {
+var AlbumPicker = function(allow_root, picked) {
     var that = this;
+    this.allow_root = allow_root;
     this.picker = $("div.dialog.album-picker");
     this.picked = picked;
     this.current = {};
@@ -46,16 +47,21 @@ AlbumPicker.prototype.cd = function(album_id) {
         result = JSON.parse(result);
 
         // Set current to that one
-        var name;
-        if(result.path.length > 0) {
-            name = result.path[result.path.length-1].name;
+        if(!that.allow_root && result.path.length == 0) {
+            that.picker.find("button.pick").attr('disabled', true);
         } else {
-            name = "Bildearkiv";
+            that.picker.find("button.pick").removeAttr('disabled');
+            var name;
+            if(result.path.length > 0) {
+                name = result.path[result.path.length-1].name;
+            } else {
+                name = "Bildearkiv";
+            }
+            that.current = {
+                id: album_id,
+                name: name
+            };
         }
-        that.current = {
-            id: album_id,
-            name: name
-        };
 
         // Re-enter path
         for(var i=0; i<result.path.length; i++) {
