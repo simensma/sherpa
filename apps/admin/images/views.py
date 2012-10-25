@@ -143,19 +143,27 @@ def update_images(request):
             else:
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
-        images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
-        if len(images) == 1:
-            image = images[0]
-            image.description = request.POST['description']
-            image.photographer = request.POST['photographer']
-            image.credits = request.POST['credits']
-            image.licence = request.POST['licence']
+        # Figure out which fields should be updated
+        if request.POST.has_key('fields'):
+            fields = json.loads(request.POST['fields'])
+            all_fields = False
+        else:
+            all_fields = True
+
+        for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
+            if all_fields or fields['description']: image.description = request.POST['description']
+            if all_fields or fields['photographer']: image.photographer = request.POST['photographer']
+            if all_fields or fields['credits']: image.credits = request.POST['credits']
+            if all_fields or fields['licence']: image.licence = request.POST['licence']
+
             # Temporary if; key should always exist (need to update all forms that post to this view)
             if request.POST.has_key('album'):
                 # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                 image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
             image.save()
-            if not request.POST.get('keep-tags', '') == 'true':
+
+            # Save new tags, remove existing tags if specified
+            if request.POST.get('replace-tags', '') == 'true':
                 image.tags.clear()
             for tag_name in json.loads(request.POST['tags-serialized']):
                 try:
@@ -164,25 +172,7 @@ def update_images(request):
                     tag = Tag(name=tag_name)
                 tag.save()
                 tag.images.add(image)
-        elif len(images) > 1:
-            fields = json.loads(request.POST['fields'])
-            for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
-                if fields['description']: image.description = request.POST['description']
-                if fields['photographer']: image.photographer = request.POST['photographer']
-                if fields['credits']: image.credits = request.POST['credits']
-                if fields['licence']: image.licence = request.POST['licence']
-                # Temporary if; key should always exist (need to update all forms that post to this view)
-                if request.POST.has_key('album'):
-                    # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
-                    image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
-                image.save()
-                for tag_name in json.loads(request.POST['tags-serialized']):
-                    try:
-                        tag = Tag.objects.get(name__iexact=tag_name)
-                    except(Tag.DoesNotExist):
-                        tag = Tag(name=tag_name)
-                    tag.save()
-                    tag.images.add(image)
+
         if request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:

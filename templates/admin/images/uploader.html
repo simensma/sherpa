@@ -49,7 +49,6 @@
       <form class="upload-image-details form-horizontal" method="post" action="{% url admin.images.views.update_images %}">
         {% csrf_token %}
         <input type="hidden" name="ids">
-        <input type="hidden" name="keep-tags" value="true">
         <input type="hidden" name="origin" value="{{ origin }}">
 
         <label class="image-description" for="image-description">Beskrivelse:</label>
