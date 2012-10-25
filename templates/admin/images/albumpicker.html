@@ -1,0 +1,37 @@
+<div class="dialog album-picker" data-title="Velg album..." data-width="80%">
+  <div class="row image-archive-navigation">
+    <div class="span6">
+      <div class="item">
+        {# Todo, when associations are created #}
+        <p>
+          <a href="javascript:undefined" class="associations">Foreningsbilder</a>
+        </p>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="item current">
+        <p>
+          <a href="javascript:undefined" class="albums">Alle bilder</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="albumpath">
+    <a href="javascript:undefined" data-albumpicker-id="">Bildearkiv</a>
+    <span class="path">
+    </span>
+    <button class="btn pick"><i class="icon-ok"></i> Velg dette albumet</button>
+  </div>
+
+  <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+  <div class="dummy-child hide">
+    <img src="/static/img/icons/imagearchive/folder.png" alt="Album">
+    <a href="javascript:undefined" data-albumpicker-id=""></a>
+  </div>
+  <div class="children">
+  </div>
+</div>
