@@ -17,9 +17,6 @@ urlpatterns = patterns('',
     url(r'^minside/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/minside/' % settings.OLD_SITE}),
     url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
 
-    # Old URLs that are still in use somewhere, even though the old site would link correctly
-    url(r'^index.php$', 'page.views.redirect_index'),
-
     # Old static content
     url(r'^img/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/img/' % settings.OLD_SITE}),
     url(r'^images/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/images/' % settings.OLD_SITE}),
@@ -38,6 +35,12 @@ urlpatterns = patterns('',
     url(r'^hytteadmin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/hytteadmin/' % settings.OLD_SITE}),
     url(r'^gmap.php$', 'page.views.redirect', kwargs={'url': 'http://%s/gmap.php' % settings.OLD_SITE}),
     url(r'^balsfjord/$', 'page.views.redirect', kwargs={'url': 'http://troms.turistforeningen.no/index.php?fo_id=10333'}),
+
+    # Old URLs that are still in use somewhere, even though the old site would link correctly
+    url(r'^index.php$', 'page.views.redirect_index'),
+
+    # Old dynamic content - special case for cabins; redirect to UT
+    url(r'^cabin.php$', 'page.views.redirect_cabin'),
 
     # Old XML feeds
     url(r'^xml_activity_ut2.php$', 'page.views.redirect', kwargs={'url': 'http://%s/xml_activity_ut2.php' % settings.OLD_SITE}),

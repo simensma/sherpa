@@ -17,6 +17,7 @@ from page.models import AdPlacement, Page, Variant, Version, Row, Column, Conten
 from articles.models import Article
 from core.models import Search
 from page.widgets import parse_widget
+from sherpa2.models import Cabin as Sherpa2Cabin
 
 variant_key = 'var'
 
@@ -179,6 +180,15 @@ def redirect(request, url, slug="", params={}, permanent=False):
     uri = "%s%s%s" % (url, slug, param_str)
     if permanent: return HttpResponsePermanentRedirect(uri)
     else:         return HttpResponseRedirect(uri)
+
+def redirect_cabin(request):
+    try:
+        cabin = Sherpa2Cabin.objects.get(id=request.GET['ca_id'])
+        if cabin.url_ut == None or cabin.url_ut == '':
+            raise Sherpa2Cabin.DoesNotExist
+        return HttpResponsePermanentRedirect(cabin.url_ut)
+    except Sherpa2Cabin.DoesNotExist:
+        return redirect(request, url='http://%s%s' % (settings.OLD_SITE, request.path))
 
 def redirect_index(request):
     if request.GET.get('fo_id', '') == '311':
