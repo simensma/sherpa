@@ -41,14 +41,23 @@ $(document).ready(function() {
     });
 
     /* Changing destination album */
-    var picker = new AlbumPicker(false, function(album) {
+    var picker = new AlbumPicker(false, true, function(album) {
         // Album picked
-        $("form.upload-image-details input[name='album']").val(album.id);
-        $("form.upload-image-details p.chosen-album span.display-name").text(album.name);
-        $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', album.id);
+        if(album === null) {
+            $("form.upload-image-details input[name='album']").val("");
+            $("form.upload-image-details p.chosen-album span.display-name").text("(Legges ikke i album)");
+            $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', "");
+        } else {
+            $("form.upload-image-details input[name='album']").val(album.id);
+            $("form.upload-image-details p.chosen-album span.display-name").text(album.name);
+            $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', album.id);
+        }
     });
     $("a.albumpicker-trigger").click(function() {
-        picker.cd($(this).attr('data-albumpicker-id'));
+        var id = $(this).attr('data-albumpicker-id');
+        if(id != "") {
+            picker.cd(id);
+        }
     });
 
     $("form.image-uploader input[type='submit']").click(function() {

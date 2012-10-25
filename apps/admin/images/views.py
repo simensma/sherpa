@@ -158,7 +158,7 @@ def update_images(request):
 
             # Temporary if; key should always exist (need to update all forms that post to this view)
             if request.POST.has_key('album'):
-                # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
+                # If empty, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                 image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
             image.save()
 
@@ -174,7 +174,7 @@ def update_images(request):
                 tag.images.add(image)
 
         # Temporary 'get': album key should always exist (need to update all forms that post to this view)
-        if request.POST.get('album', None) != None:
+        if request.POST.get('album', '') != '':
             return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[request.POST['album']]))
         elif request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])

@@ -1,11 +1,16 @@
 /* Changing destination album */
 
-var AlbumPicker = function(allow_root, picked) {
+var AlbumPicker = function(allow_root, allow_deselect, picked) {
     var that = this;
     this.allow_root = allow_root;
+    this.allow_deselect = allow_deselect;
     this.picker = $("div.dialog.album-picker");
     this.picked = picked;
     this.current = {};
+
+    if(this.allow_deselect) {
+        this.picker.find("button.deselect").show();
+    }
 
     this.picker.on('click', "a[data-albumpicker-id]", function() {
         that.cd($(this).attr('data-albumpicker-id'));
@@ -13,6 +18,11 @@ var AlbumPicker = function(allow_root, picked) {
 
     this.picker.find("button.pick").click(function() {
         that.picked(that.current);
+        that.picker.dialog('close');
+    });
+
+    this.picker.find("button.deselect").click(function() {
+        that.picked(null);
         that.picker.dialog('close');
     });
 
