@@ -173,7 +173,10 @@ def update_images(request):
                 tag.save()
                 tag.images.add(image)
 
-        if request.POST.get('origin', '') != '':
+        # Temporary 'get': album key should always exist (need to update all forms that post to this view)
+        if request.POST.get('album', None) != None:
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[request.POST['album']]))
+        elif request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
