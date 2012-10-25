@@ -183,6 +183,8 @@ def redirect(request, url, slug="", params={}, permanent=False):
 
 def redirect_cabin(request):
     try:
+        if not request.GET.has_key('ca_id'):
+            raise Sherpa2Cabin.DoesNotExist
         cabin = Sherpa2Cabin.objects.get(id=request.GET['ca_id'])
         if cabin.url_ut == None or cabin.url_ut == '':
             raise Sherpa2Cabin.DoesNotExist
