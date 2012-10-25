@@ -39,16 +39,6 @@
   </div>
 </div>
 
-{% if albumpath %}
-  <ul class="breadcrumb">
-    <li><a href="{% url admin.images.views.list_albums %}">Alle bilder</a></li>
-    {% for album in albumpath %}
-      <span class="divider">→</span>
-      <li><a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a></li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
 <div class="row image-archive-quicksearch">
   <div class="span4">
     <form action="{% url admin.images.views.search %}" method="get">
@@ -70,6 +60,16 @@
     </select>
   </div>
 </div>
+
+{% if albumpath %}
+  <ul class="breadcrumb">
+    <li><a href="{% url admin.images.views.list_albums %}">Alle bilder</a></li>
+    {% for album in albumpath %}
+      <span class="divider">→</span>
+      <li><a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
 
 {% block imagebody %}{% endblock %}
 {% endblock %}
