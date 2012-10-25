@@ -150,6 +150,7 @@ def update_images(request):
             image.photographer = request.POST['photographer']
             image.credits = request.POST['credits']
             image.licence = request.POST['licence']
+            # Temporary if; key should always exist (need to update all forms that post to this view)
             if request.POST.has_key('album'):
                 # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                 image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
@@ -170,6 +171,7 @@ def update_images(request):
                 if fields['photographer']: image.photographer = request.POST['photographer']
                 if fields['credits']: image.credits = request.POST['credits']
                 if fields['licence']: image.licence = request.POST['licence']
+                # Temporary if; key should always exist (need to update all forms that post to this view)
                 if request.POST.has_key('album'):
                     # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                     image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
