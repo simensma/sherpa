@@ -14,6 +14,17 @@ var AlbumPicker = function(picked) {
         that.picked(that.current);
         that.picker.dialog('close');
     });
+
+    // Not using a form, so simulate submit upon enter keypress
+    this.picker.find("input[name='search']").keyup(function(e) {
+        if(e.which == 13) {
+            that.picker.find("button.search").click();
+        }
+    });
+
+    this.picker.find("button.search").click(function() {
+        that.search();
+    });
 }
 
 AlbumPicker.prototype.cd = function(album_id) {
@@ -61,6 +72,55 @@ AlbumPicker.prototype.cd = function(album_id) {
         }
         if(result.albums.length == 0) {
             children.append('<p>Ingen underalbum i dette albumet. Klikk "Velg dette albumet" over hvis du vil velge dette albumet.</p>');
+        }
+    }).fail(function(result) {
+        // Todo
+    }).always(function(result) {
+        ajaxloader.hide();
+    });
+}
+
+AlbumPicker.prototype.search = function() {
+    var that = this;
+    var ajaxloader = that.picker.find("img.ajaxloader");
+    var children = that.picker.find("div.children");
+    children.empty();
+    ajaxloader.show();
+    var query = that.picker.find("input[name='search']").val();
+    if(typeof image_search_length === 'undefined') {
+        // A default in case it's missing, but please use the settings variable via js_globals
+        image_search_length = 3;
+    }
+    if(query.length < image_search_length) {
+        children.append('<p>Vennligst bruk minst ' + image_search_length + ' søketegn, ellers vil du få alt for mange treff.</p>');
+        ajaxloader.hide();
+    }
+
+    $.ajaxQueue({
+        url: '/sherpa/bildearkiv/innhold/album/søk/',
+        data: 'query=' + encodeURIComponent(query)
+    }).done(function(result) {
+        result = JSON.parse(result);
+
+        // Apply album children
+        for(var i=0; i<result.items.length; i++) {
+            var clone = $("div.dummy-child").clone();
+            clone.removeClass('dummy-child').addClass('child');
+            var a = clone.find("a").clone();
+            clone.find("a").remove();
+            for(var j=0; j<result.items[i].length; j++) {
+                a.text(result.items[i][j].name).attr('data-albumpicker-id', result.items[i][j].id);
+                clone.append(a);
+                if(j < result.items[i].length - 1) {
+                    clone.append(" / ")
+                }
+                a = a.clone();
+            }
+            children.append(clone);
+            clone.show();
+        }
+        if(result.items.length == 0) {
+            children.append('<p>Fant ingen album som inneholdt "' + query + '".</p>');
         }
     }).fail(function(result) {
         // Todo

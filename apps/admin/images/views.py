@@ -37,7 +37,8 @@ def user_images(request, profile):
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
-        'current_navigation': current_navigation}
+        'current_navigation': current_navigation,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/user_images.html', context)
 
 @login_required
@@ -59,7 +60,8 @@ def list_albums(request, album):
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
-        'current_navigation': 'albums'}
+        'current_navigation': 'albums',
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
@@ -266,6 +268,17 @@ def album_content_json(request, album):
         albums = Album.objects.filter(parent=None).order_by('name')
         path = []
     return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
+
+@login_required
+def album_search_json(request):
+    if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
+        return HttpResponse('[]')
+
+    albums = Album.objects.filter(name__icontains=request.POST['query']).order_by('name')
+    items = []
+    for album in albums:
+        items.append(list_parents_values(album))
+    return HttpResponse(json.dumps({'items': items}))
 
 @login_required
 def search(request):
