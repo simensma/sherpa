@@ -62,13 +62,16 @@
 </div>
 
 {% if albumpath %}
-  <ul class="breadcrumb">
-    <li><a href="{% url admin.images.views.list_albums %}">Alle bilder</a></li>
-    {% for album in albumpath %}
-      <span class="divider">→</span>
-      <li><a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a></li>
-    {% endfor %}
-  </ul>
+  <div class="row">
+    <div class="span12">
+      <div class="albumpath">
+        <a href="{% url admin.images.views.list_albums %}">Alle bilder</a>
+        {% for album in albumpath %}
+          / <a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {% endif %}
 
 {% block imagebody %}{% endblock %}
