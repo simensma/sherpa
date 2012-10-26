@@ -91,7 +91,8 @@
       <a class="image" href="{% url admin.images.views.list_albums album.id %}">
         <img src="{{ STATIC_URL }}img/icons/imagearchive/folder.png" alt="Album: {{ album.name }}">
       </a>
-      <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
+      <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a><br>
+      ({{ album.children.count }} album, {{ album.image_set.count }} bilde{% if album.image_set.count != 1 %}r{% endif %})
     </li>
   {% endfor %}
   {% for image in images %}

@@ -38,6 +38,9 @@ class Album(models.Model):
     def __unicode__(self):
         return self.name
 
+    def children(self):
+        return Album.objects.filter(parent=self)
+
 # Upon album delete, delete all child albums and connected images
 @receiver(post_delete, sender=Album, dispatch_uid="admin.models")
 def delete_album(sender, **kwargs):

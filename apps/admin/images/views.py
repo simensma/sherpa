@@ -325,7 +325,7 @@ def search(request):
             Q(licence__icontains=word) |
             Q(tags__name__icontains=word)).distinct().values())
     for word in request.GET['q'].split(' '):
-        albums = Album.objects.filter(name__icontains=word).distinct().values()
+        albums = Album.objects.filter(name__icontains=word).distinct()
     context.update({
         'albums': albums,
         'images': images,
