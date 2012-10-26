@@ -146,3 +146,47 @@ nav#menus {
   font-family: "DTL Nobel" !important;
   font-size: 16px !important;
 }
+
+/* Tags */
+
+div.tag-box {
+
+  div.tag {
+    float: left;
+    color: #3e6d8e;
+    background: #e0eaf1;
+    border-bottom: 1px solid #3e6d8e;
+    border-right: 1px solid #7f9fb6;
+    margin: 2px 3px 10px 3px;
+    padding: 3px 4px;
+
+    a {
+      /* This will look ugly in IE7 (100% width), but ignore that as the functionality is
+       * still there and people should upgrade anyway. */
+      cursor: pointer;
+      float: right;
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+    }
+  }
+
+  div.tag[data-href]:hover {
+    cursor: pointer;
+    color: #e0eaf1;
+    background-color: #3e6d8e;
+  }
+}
+
+/* Albumpaths (the bootstrap breadcrumb isn't that nice :) */
+
+div.albumpath {
+  padding: 12px 10px;
+  margin-bottom: 20px;
+  border: 1px solid rgb(150, 150, 150);
+  font-family: "DTL Nobel" !important;
+
+  a {
+    color: @profile-red; /* This just counters the jqueryui dialog and should be removed at some point */
+  }
+}

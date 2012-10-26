@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from core.models import Tag
 from admin.models import Image, Album
+from user.models import Profile
 
 from PIL.ExifTags import TAGS
 import random, Image as pil
@@ -17,58 +18,31 @@ import json
 from datetime import datetime
 import simples3
 
-SPEED_UPLOAD_ALBUM_NAME = "Brukeralbum"
-
-def createUserAlbum(user):
-    #create user album if it dosent exist
-    user_name = user.first_name + " " + user.last_name
-
-    #get or create useruploads album
-    try:
-        user_root = Album.objects.get(name=SPEED_UPLOAD_ALBUM_NAME, parent=None)
-    except ObjectDoesNotExist:
-        user_root = Album(name=SPEED_UPLOAD_ALBUM_NAME)
-        user_root.save()
-
-    #get or create user album in useruploads album
-    #if two users share name, they share album, this could be changed by using email
-    try:
-        user_album = Album.objects.get(name=user_name, parent=user_root)
-    except ObjectDoesNotExist:
-        user_album = Album(name=user_name, parent=user_root)
-        user_album.save()
-    return user_album;
+@login_required
+def index(request):
+    return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
 
 @login_required
-def fast_upload(request):
-    user_album = createUserAlbum(request.user)
+def user_images(request, profile):
+    profile = Profile.objects.get(id=profile)
+    images = Image.objects.filter(uploader=profile)
+    if profile == request.user.get_profile():
+        current_navigation = 'personal'
+    else:
+        current_navigation = ''
 
-    try:
-        file = request.FILES['file']
-    except KeyError:
-        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
-
-    #parse file
-    try:
-        parsed_image = parse_image(file)
-    except(IOError, KeyError):
-        return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
-
-    #store stuff on s3 and in db
-    stored_image = store_image(parsed_image, user_album, request.user)
-
-    #add info to image
-    image = Image.objects.get(id=stored_image['id'])
-    tags = json.loads(request.POST['tags-serialized'])
-    add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
-
-    return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+    context = {
+        'active_profile': profile,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': current_navigation,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+    return render(request, 'admin/images/user_images.html', context)
 
 @login_required
 def list_albums(request, album):
-    #create user album if it dosent exist
-    createUserAlbum(request.user)
-
     albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
     images = None
@@ -77,30 +51,79 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
-    context = {'album': album, 'albums': albums, 'albumpath': parents,
-               'current_album': current_album, 'images': images,
-               'aws_bucket': settings.AWS_BUCKET}
-    return render(request, 'admin/images/albums.html', context)
+    context = {
+        'album': album,
+        'albums': albums,
+        'albumpath': parents,
+        'current_album': current_album,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': 'albums',
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+    return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
-    parents = list_parents(image.album)
+    parents = [] if image.album == None else list_parents(image.album)
     exif = json.loads(image.exif)
     try:
         taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
     except Exception:
         taken = None
     tags = image.tags.all()
-    context = {'image': image, 'albumpath': parents, 'exif': exif, 'taken': taken, 'tags': tags,
-        'aws_bucket': settings.AWS_BUCKET}
-    return render(request, 'admin/images/image.html', context)
+    context = {
+        'image': image,
+        'albumpath': parents,
+        'exif': exif,
+        'taken': taken,
+        'tags': tags,
+        'aws_bucket': settings.AWS_BUCKET,
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'current_navigation': 'albums'}
+    return render(request, 'admin/images/image_details.html', context)
+
+@login_required
+def move_items(request):
+    destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
+    for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
+        def parent_in_parent(destination, child):
+            while destination != None:
+                if destination == child:
+                    return True
+                destination = destination.parent
+            return False
+
+        if parent_in_parent(destination_album, album):
+            # Tried to set an album as a child of its own children, ignore
+            # Giving feedback here is slightly complicated so I'll skip it for now; the user shouldn't be this silly anyway.
+            # But feedback at some point would be nice, consider looking at this
+            continue
+
+        album.parent = destination_album
+        album.save()
+
+    for image in Image.objects.filter(id__in=json.loads(request.POST['images'])):
+        image.album = destination_album
+        image.save()
+
+    if destination_album != None:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[destination_album.id]))
+    elif request.POST.get('origin', '') != '':
+        return HttpResponseRedirect(request.POST['origin'])
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
-    if album is None:
+    if request.POST.get('origin', '') != '':
+        return HttpResponseRedirect(request.POST['origin'])
+    elif album is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     else:
         album = Album.objects.get(id=album)
@@ -108,15 +131,8 @@ def delete_items(request, album):
 
 @login_required
 def add_album(request, parent):
-    albumname = request.POST['name']
-    if parent is not None:
-        parent = Album.objects.get(id=parent)
-    elif albumname == SPEED_UPLOAD_ALBUM_NAME:
-        #ensure unique name if the name is the same as user-uploads
-        res = Album.objects.filter(name=request.POST['name'], parent=None)
-        albumname = albumname + str(len(res)+1)
-
-    album = Album(name=albumname, parent=parent)
+    parent = None if parent == None else Album.objects.get(id=parent)
+    album = Album(name=request.POST['name'], parent=parent)
     album.save()
     if parent is None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
@@ -137,20 +153,68 @@ def update_album(request):
 
 @login_required
 def update_images(request):
-    images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
-    for image in images:
-        tags = json.loads(request.POST['tags-serialized'])
-        add_info_to_image(image, request.POST['description'], request.POST['photographer'], request.POST['credits'], request.POST['licence'], tags)
-    return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[images[0].album.id]))
+    if request.method == 'GET':
+        ids = json.loads(request.GET['bilder'])
+        context = {
+            'aws_bucket': settings.AWS_BUCKET,
+            'ids': json.dumps(ids),
+            'origin': request.GET.get('origin', '')}
+        if len(ids) == 1:
+            context.update({'image': Image.objects.get(id=ids[0])})
+            return render(request, 'admin/images/modify_single.html', context)
+        elif len(ids) > 1:
+            images = Image.objects.filter(id__in=ids)
+            context.update({'images': images})
+            return render(request, 'admin/images/modify_multiple.html', context)
+        else:
+            # No images to edit, not sure why, just redirect them to origin or home.
+            # Should maybe log an error here in case this was our fault.
+            if request.GET.get('origin', '') != '':
+                return HttpResponseRedirect(origin)
+            else:
+                return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+    elif request.method == 'POST':
+        # Figure out which fields should be updated
+        if request.POST.has_key('fields'):
+            fields = json.loads(request.POST['fields'])
+            all_fields = False
+        else:
+            all_fields = True
+
+        for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
+            if all_fields or fields['description']: image.description = request.POST['description']
+            if all_fields or fields['photographer']: image.photographer = request.POST['photographer']
+            if all_fields or fields['credits']: image.credits = request.POST['credits']
+            if all_fields or fields['licence']: image.licence = request.POST['licence']
+
+            # Temporary if; key should always exist (need to update all forms that post to this view)
+            if request.POST.has_key('album'):
+                # If empty, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
+                image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
+            image.save()
+
+            # Save new tags, remove existing tags if specified
+            if request.POST.get('replace-tags', '') == 'true':
+                image.tags.clear()
+            for tag_name in json.loads(request.POST['tags-serialized']):
+                try:
+                    tag = Tag.objects.get(name__iexact=tag_name)
+                except(Tag.DoesNotExist):
+                    tag = Tag(name=tag_name)
+                tag.save()
+                tag.images.add(image)
+
+        # Temporary 'get': album key should always exist (need to update all forms that post to this view)
+        if request.POST.get('album', '') != '':
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[request.POST['album']]))
+        elif request.POST.get('origin', '') != '':
+            return HttpResponseRedirect(request.POST['origin'])
+        else:
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
-def upload_image(request, album):
-    if request.method == 'GET':
-        current_album = Album.objects.get(id=album)
-        parents = list_parents(current_album)
-        context = {'current_album': current_album, 'albumpath': parents}
-        return render(request, 'admin/images/upload.html', context)
-    elif request.method == 'POST':
+def upload_image(request):
+    try:
         if len(request.FILES.getlist('files')) == 0:
             return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
 
@@ -164,12 +228,52 @@ def upload_image(request, album):
 
         #storing
         ids = []
-        album = Album.objects.get(id=album)
+        album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
         for image in parsed_images:
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+    except Exception:
+        # TODO: This REALLY needs to be logged.
+        return render(request, 'admin/images/iframe.html', {'result': 'unknown_exception'})
 
+@login_required
+def fast_upload(request):
+    try:
+        file = request.FILES['file']
+    except KeyError:
+        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+
+    #parse file
+    try:
+        parsed_image = parse_image(file)
+    except(IOError, KeyError):
+        return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+
+    #store stuff on s3 and in db
+    stored_image = store_image(parsed_image, None, request.user)
+
+    #add info to image
+    image = Image.objects.get(id=stored_image['id'])
+    tags = json.loads(request.POST['tags-serialized'])
+
+    if request.POST['description'] != "":  image.description = request.POST['description']
+    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
+    if request.POST['credits'] != "":      image.credits = request.POST['credits']
+    if request.POST['licence'] != "":      image.licence = request.POST['licence']
+    image.save()
+
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
+
+    return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+
+@login_required
 def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -180,6 +284,56 @@ def content_json(request, album):
         objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     return HttpResponse(json.dumps(objects))
 
+@login_required
+def album_content_json(request, album):
+    if album is not None:
+        current_album = Album.objects.get(id=album)
+        albums = Album.objects.filter(parent=album).order_by('name')
+        path = list_parents_values(current_album)
+    else:
+        albums = Album.objects.filter(parent=None).order_by('name')
+        path = []
+    return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
+
+@login_required
+def album_search_json(request):
+    if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
+        return HttpResponse('[]')
+
+    albums = Album.objects.filter(name__icontains=request.POST['query']).order_by('name')
+    items = []
+    for album in albums:
+        items.append(list_parents_values(album))
+    return HttpResponse(json.dumps({'items': items}))
+
+@login_required
+def search(request):
+    context = {'origin': request.get_full_path()}
+    if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
+        context.update({
+            'too_short_query': True,
+            'image_search_length': settings.IMAGE_SEARCH_LENGTH,
+        })
+        return render(request, 'admin/images/search.html', context)
+    images = []
+    for word in request.GET['q'].split(' '):
+        images.extend(Image.objects.filter(
+            Q(description__icontains=word) |
+            Q(album__name__icontains=word) |
+            Q(photographer__icontains=word) |
+            Q(credits__icontains=word) |
+            Q(licence__icontains=word) |
+            Q(tags__name__icontains=word)).distinct().values())
+    for word in request.GET['q'].split(' '):
+        albums = Album.objects.filter(name__icontains=word).distinct()
+    context.update({
+        'albums': albums,
+        'images': images,
+        'aws_bucket': settings.AWS_BUCKET,
+        'search_query': request.GET['q']})
+    return render(request, 'admin/images/search.html', context)
+
+@login_required
 def search_json(request):
     images = []
     if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
@@ -198,6 +352,14 @@ def search_json(request):
         )
     objects = parse_objects([], [], images)
     return HttpResponse(json.dumps(objects))
+
+@login_required
+def photographer(request):
+    images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
+    photographers = []
+    for image in images:
+        photographers.append(image.photographer)
+    return HttpResponse(json.dumps(photographers))
 
 def parse_objects(parents, albums, images):
     objects = {'parents': [], 'albums': [], 'images': []}
@@ -220,6 +382,14 @@ def list_parents(album):
         parents.insert(0, album)
     return parents
 
+def list_parents_values(album):
+    parents = []
+    parents.append({'id': album.id, 'name': album.name})
+    while(album.parent != None):
+        album = Album.objects.get(id=album.parent.id)
+        parents.insert(0, {'id': album.id, 'name': album.name})
+    return parents
+
 def generate_random_image_key():
     def random_alphanumeric():
         # These "magic" numbers generate one of [a-zA-Z0-9] based on the ascii table.
@@ -239,11 +409,19 @@ def store_image(image, album, user):
     for thumb in image['thumbs']:
         s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
             thumb['data'], acl='public-read', mimetype=image['content_type'])
+    tags = image['tags']
     image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
       description='', album=album, photographer='', credits='', licence='',
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
       height=image['height'])
     image.save()
+    for tagName in tags:
+        try:
+            tag = Tag.objects.get(name__iexact=tagName)
+        except(Tag.DoesNotExist):
+            tag = Tag(name=tagName)
+        tag.save()
+        tag.images.add(image)
     return {'url':url, 'id':image.id};
 
 def parse_image(file):
@@ -272,6 +450,12 @@ def parse_image(file):
                 # TODO: Should log a warning with the tag string here.
                 continue
             exif[TAGS.get(tag, tag)] = value
+
+    # Parse XMP-keywords
+    from core import xmp
+    xmp_dict = xmp.parse_xmp(data)
+    keywords = xmp.keywords(xmp_dict) if xmp_dict != None else []
+
     thumbs = []
     ext = file.name.split(".")[-1].lower()
     for size in settings.THUMB_SIZES:
@@ -284,25 +468,5 @@ def parse_image(file):
 
     return {'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
       'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif)}
-
-def add_info_to_image(image, description, photographer, credits, licence, tags):
-    if description != "":
-        image.description = description
-    if photographer != "":
-        image.photographer = photographer
-    if credits != "":
-        image.credits = credits
-    if licence != "":
-        image.licence = licence
-
-    image.save()
-    # Note: Intentionally not removing old tags upon update.
-    for tagName in tags:
-        tag = None
-        try:
-            tag = Tag.objects.get(name__iexact=tagName)
-        except(Tag.DoesNotExist):
-            tag = Tag(name=tagName)
-        tag.save()
-        tag.images.add(image)
+      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif),
+      'tags': keywords}

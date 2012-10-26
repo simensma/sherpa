@@ -10,7 +10,7 @@ class Image(models.Model):
     extension = models.CharField(max_length=4)
     hash = models.CharField(max_length=40)
     description = models.TextField()
-    album = models.ForeignKey('admin.Album')
+    album = models.ForeignKey('admin.Album', null=True)
     photographer = models.CharField(max_length=200)
     credits = models.CharField(max_length=200)
     licence = models.CharField(max_length=200)
@@ -34,7 +34,12 @@ def delete_image_post(sender, **kwargs):
 class Album(models.Model):
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
-    # Todo: Author, or some other sort of affiliation?
+
+    def __unicode__(self):
+        return self.name
+
+    def children(self):
+        return Album.objects.filter(parent=self)
 
 # Upon album delete, delete all child albums and connected images
 @receiver(post_delete, sender=Album, dispatch_uid="admin.models")

@@ -41,6 +41,18 @@ $(document).ready(function() {
         $("div#dialog-image-fast-upload input[type='reset']").attr('disabled', 'disabled');
     });
 
+    $("div#dialog-image-fast-upload form input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
+    });
+
     $("div#dialog-image-fast-upload button.cancel-upload").click(function(e) {
         uploadCancelled = false
         $("div#dialog-image-fast-upload").dialog("close");

@@ -1,8 +1,32 @@
 $(document).ready(function() {
 
-    var dialog;
-    $("button.details-button").click(function() {
-        dialog.dialog('open');
+    var actionButtons = $("div.imagearchive-action-buttons");
+
+    actionButtons.find("button.albums.details").click(function() {
+        $(".album-details.dialog").dialog('open');
+    });
+    actionButtons.find("button.images.details").click(function() {
+        var images = [];
+        $("#archive-gallery li.image.selected").each(function() {
+            images.push($(this).attr('data-id'));
+        });
+        window.location = '/sherpa/bildearkiv/bilde/oppdater/?bilder=' + encodeURIComponent(JSON.stringify(images)) + '&origin=' + origin;
+    });
+    actionButtons.find("button.move").click(function() {
+        var album_id = $(this).parent().attr('data-album-id');
+        var selected = getSelectedItems();
+        AlbumPicker.open({
+            album_id: album_id,
+            allow_root: selected.images.length == 0,
+            allow_deselect: selected.albums.length == 0,
+            picked: function(album) {
+                var form = $("form.move-items");
+                form.find("input[name='albums']").val(JSON.stringify(selected.albums));
+                form.find("input[name='images']").val(JSON.stringify(selected.images));
+                form.find("input[name='destination_album']").val(album.id);
+                form.submit();
+            }
+        });
     });
 
     $(".album-details form").submit(function() {
@@ -13,38 +37,29 @@ $(document).ready(function() {
         $(this).children("input[name='albums']").val(JSON.stringify(albums));
     });
 
-    $(".image-details form").submit(function() {
-        var images = [];
-        $("#archive-gallery li.image.selected").each(function() {
-            images.push($(this).attr('data-id'));
-        });
-        $(this).children("input[name='ids']").val(JSON.stringify(images));
-        $(this).find("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
-    });
-
-    $("button.context-button").attr('disabled', true);
     function toggleMultiedit() {
         var albums = $("#archive-gallery li.album.selected").length > 0;
         var images = $("#archive-gallery li.image.selected").length > 0;
+        actionButtons.find("button.details, button.move, button.delete").hide();
         if(albums && images) {
-            $("table.action-buttons button.delete-button").removeAttr('disabled');
-            $("table.action-buttons button.details-button").attr('disabled', true);
-            $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene og bildene du har merket, for godt? Alle underalbum og bilder i merkede album vil også bli slettet for godt.');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album og bilder');
+            actionButtons.find("button.details.dummy").show();
+            actionButtons.find("button.move.both").show();
+            actionButtons.find("button.delete.both").show();
+            $("div.delete-dialog p").hide().filter(".both").show();
         } else if(albums) {
-            $("table.action-buttons button.context-button").removeAttr('disabled');
-            $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle albumene du har merket, for godt? Alle underalbum og bilder i albumet vil også bli slettet for godt.');
-            $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre albumdetaljer');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett album');
-            dialog = $(".album-details.dialog");
+            actionButtons.find("button.details.albums").show();
+            actionButtons.find("button.move.albums").show();
+            actionButtons.find("button.delete.albums").show();
+            $("div.delete-dialog p").hide().filter(".albums").show();
         } else if(images) {
-            $("table.action-buttons button.context-button").removeAttr('disabled');
-            $("div.delete-dialog p").text('Er du helt sikker på at du vil slette alle bildene du har merket, for godt?');
-            $("table.action-buttons button.details-button").html('<i class="icon-pencil"></i> Endre bildedetaljer');
-            $("table.action-buttons button.delete-button").html('<i class="icon-remove"></i> Slett bilder');
-            dialog = $(".image-details.dialog");
+            actionButtons.find("button.details.images").show();
+            actionButtons.find("button.move.images").show();
+            actionButtons.find("button.delete.images").show();
+            $("div.delete-dialog p").hide().filter(".images").show();
         } else {
-            $("table.action-buttons button.context-button").attr('disabled', true);
+            actionButtons.find("button.details.dummy").show();
+            actionButtons.find("button.move.dummy").show();
+            actionButtons.find("button.delete.dummy").show();
         }
     }
 
@@ -62,6 +77,12 @@ $(document).ready(function() {
         $(".delete-dialog").dialog('close');
     });
     $(".delete-dialog form").submit(function() {
+        var selected = getSelectedItems();
+        $(this).find("input[name='albums']").val(JSON.stringify(selected.albums));
+        $(this).find("input[name='images']").val(JSON.stringify(selected.images));
+    });
+
+    function getSelectedItems() {
         var albums = [];
         var images = [];
         $("#archive-gallery li.album.selected").each(function() {
@@ -70,30 +91,10 @@ $(document).ready(function() {
         $("#archive-gallery li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
-        $(this).find("input[name='albums']").val(JSON.stringify(albums));
-        $(this).find("input[name='images']").val(JSON.stringify(images));
-    });
-
-    // Enable tagging
-    var tagger = new Tagger($("div.image-details input[name='tags']"), function(tag) {
-        // New tag
-        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
-        $("div.tag-box").append(tag);
-    }, function(tag) {
-        // Existing tag
-        $("div.tag-box div.tag").each(function() {
-            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
-                var item = $(this);
-                var c = item.css('color');
-                var bg = item.css('background-color');
-                item.css('color', 'white');
-                item.css('background-color', 'red');
-                setTimeout(function() {
-                    item.css('color', c);
-                    item.css('background-color', bg);
-                }, 1000);
-            }
-        });
-    });
+        return {
+            albums: albums,
+            images: images
+        };
+    }
 
 });

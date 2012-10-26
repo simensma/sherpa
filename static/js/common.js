@@ -42,6 +42,21 @@ $(document).ready(function() {
     /* Enable any popovers */
     $("*[data-popover]").popover();
 
+    /* Enable any tooltips */
+    $("*[data-tooltip]").hover(function(e) {
+        var tooltip = $('<div class="btn btn-primary custom-tooltip">' + $(this).attr('data-tooltip') + '</div>');
+        tooltip.css('top', e.pageY + 'px');
+        tooltip.css('left', e.pageX + 'px');
+        $(document.body).append(tooltip);
+    }, function() {
+        $("div.custom-tooltip").remove();
+    });
+
+    /* Tags have data-href for links. Should maybe use 'a' instead, and fix the DOM everywhere
+       tags are used, but this works for now */
+    $("div.tag-box div.tag[data-href]").click(function() {
+        window.location = $(this).attr('data-href');
+    });
 
 });
 
