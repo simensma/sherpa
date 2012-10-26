@@ -14,6 +14,7 @@
       {% csrf_token %}
       <input type="hidden" name="ids" value="{{ ids }}">
       <input type="hidden" name="origin" value="{{ origin }}">
+      <input type="hidden" name="replace-tags" value="true">
 
       <label class="image-description" for="image-description">Beskrivelse:</label>
       <textarea name="description" rows="4" id="image-description">{{ image.description }}</textarea>

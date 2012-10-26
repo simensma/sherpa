@@ -37,7 +37,8 @@ def user_images(request, profile):
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
-        'current_navigation': current_navigation}
+        'current_navigation': current_navigation,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/user_images.html', context)
 
 @login_required
@@ -59,7 +60,8 @@ def list_albums(request, album):
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
-        'current_navigation': 'albums'}
+        'current_navigation': 'albums',
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/list_albums.html', context)
 
 @login_required
@@ -83,6 +85,37 @@ def image_details(request, image):
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': 'albums'}
     return render(request, 'admin/images/image_details.html', context)
+
+@login_required
+def move_items(request):
+    destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
+    for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
+        def parent_in_parent(destination, child):
+            while destination != None:
+                if destination == child:
+                    return True
+                destination = destination.parent
+            return False
+
+        if parent_in_parent(destination_album, album):
+            # Tried to set an album as a child of its own children, ignore
+            # Giving feedback here is slightly complicated so I'll skip it for now; the user shouldn't be this silly anyway.
+            # But feedback at some point would be nice, consider looking at this
+            continue
+
+        album.parent = destination_album
+        album.save()
+
+    for image in Image.objects.filter(id__in=json.loads(request.POST['images'])):
+        image.album = destination_album
+        image.save()
+
+    if destination_album != None:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[destination_album.id]))
+    elif request.POST.get('origin', '') != '':
+        return HttpResponseRedirect(request.POST['origin'])
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
 @login_required
 def delete_items(request, album):
@@ -141,18 +174,27 @@ def update_images(request):
             else:
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
-        images = Image.objects.filter(id__in=json.loads(request.POST['ids']))
-        if len(images) == 1:
-            image = images[0]
-            image.description = request.POST['description']
-            image.photographer = request.POST['photographer']
-            image.credits = request.POST['credits']
-            image.licence = request.POST['licence']
+        # Figure out which fields should be updated
+        if request.POST.has_key('fields'):
+            fields = json.loads(request.POST['fields'])
+            all_fields = False
+        else:
+            all_fields = True
+
+        for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
+            if all_fields or fields['description']: image.description = request.POST['description']
+            if all_fields or fields['photographer']: image.photographer = request.POST['photographer']
+            if all_fields or fields['credits']: image.credits = request.POST['credits']
+            if all_fields or fields['licence']: image.licence = request.POST['licence']
+
+            # Temporary if; key should always exist (need to update all forms that post to this view)
             if request.POST.has_key('album'):
-                # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
+                # If empty, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                 image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
             image.save()
-            if not request.POST.get('keep-tags', '') == 'true':
+
+            # Save new tags, remove existing tags if specified
+            if request.POST.get('replace-tags', '') == 'true':
                 image.tags.clear()
             for tag_name in json.loads(request.POST['tags-serialized']):
                 try:
@@ -161,25 +203,11 @@ def update_images(request):
                     tag = Tag(name=tag_name)
                 tag.save()
                 tag.images.add(image)
-        elif len(images) > 1:
-            fields = json.loads(request.POST['fields'])
-            for image in Image.objects.filter(id__in=json.loads(request.POST['ids'])):
-                if fields['description']: image.description = request.POST['description']
-                if fields['photographer']: image.photographer = request.POST['photographer']
-                if fields['credits']: image.credits = request.POST['credits']
-                if fields['licence']: image.licence = request.POST['licence']
-                if request.POST.has_key('album'):
-                    # If None, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
-                    image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
-                image.save()
-                for tag_name in json.loads(request.POST['tags-serialized']):
-                    try:
-                        tag = Tag.objects.get(name__iexact=tag_name)
-                    except(Tag.DoesNotExist):
-                        tag = Tag(name=tag_name)
-                    tag.save()
-                    tag.images.add(image)
-        if request.POST.get('origin', '') != '':
+
+        # Temporary 'get': album key should always exist (need to update all forms that post to this view)
+        if request.POST.get('album', '') != '':
+            return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[request.POST['album']]))
+        elif request.POST.get('origin', '') != '':
             return HttpResponseRedirect(request.POST['origin'])
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
@@ -266,6 +294,17 @@ def album_content_json(request, album):
         albums = Album.objects.filter(parent=None).order_by('name')
         path = []
     return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
+
+@login_required
+def album_search_json(request):
+    if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
+        return HttpResponse('[]')
+
+    albums = Album.objects.filter(name__icontains=request.POST['query']).order_by('name')
+    items = []
+    for album in albums:
+        items.append(list_parents_values(album))
+    return HttpResponse(json.dumps({'items': items}))
 
 @login_required
 def search(request):
