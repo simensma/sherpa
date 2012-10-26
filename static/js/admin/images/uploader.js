@@ -47,15 +47,13 @@ $(document).ready(function() {
             allow_root: false,
             allow_deselect: true,
             picked: function(album) {
-                if(album == '') {
-                    $("form.upload-image-details input[name='album']").val("");
-                    $("form.upload-image-details p.chosen-album span.display-name").text("(Legges ikke i album)");
-                    $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', "");
-                } else {
-                    $("form.upload-image-details input[name='album']").val(album.id);
-                    $("form.upload-image-details p.chosen-album span.display-name").text(album.name);
-                    $("form.upload-image-details p.chosen-album a").attr('data-albumpicker-id', album.id);
+                if(album.name == '') {
+                    album.name = "(Legges ikke i album)";
                 }
+                var form = $("form.upload-image-details");
+                form.find("input[name='album']").val(album.id);
+                form.find("p.chosen-album span.display-name").text(album.name);
+                form.find("p.chosen-album a").attr('data-albumpicker-id', album.id);
             }
         });
     });

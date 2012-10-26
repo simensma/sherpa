@@ -20,8 +20,11 @@ $(document).ready(function() {
         });
 
         picker.find("button.deselect").click(function() {
-            picker.dialog('close');
-            picked('');
+            current = {
+                id: '',
+                name: ''
+            };
+            picker.find("button.pick").click();
         });
 
         picker.find("button.cancel").click(function() {
