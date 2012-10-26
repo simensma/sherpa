@@ -3,6 +3,7 @@
 {% block extra_js %}
   {{ block.super }}
   <script src="/static/js/admin/images/image_details.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/albumpicker.js"></script>
 {% endblock %}
 
 {% block imagebody %}
@@ -75,6 +76,15 @@
       {# This URL is kind of ugly, but it's just a URLencoded JSON-list of one image id #}
       <a class="btn btn-warning" href="{% url admin.images.views.update_images %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a>
     </p>
+    <form class="move-image hide" method="post" action="{% url admin.images.views.move_items %}">
+      {% csrf_token %}
+      <input type="hidden" name="images" value="[&quot;{{ image.id }}&quot;]">
+      <input type="hidden" name="albums" value="[]">
+      <input type="hidden" name="destination_album">
+    </form>
+    <p class="edit-button">
+      <button class="btn btn-warning move-image" data-album-id="{{ image.album.id }}"><i class="icon-share-alt"></i> Flytt bildet til album</button>
+    </p>
     <form method="post" action="{% url admin.images.views.delete_items %}" class="delete-image">
       {% csrf_token %}
       <input type="hidden" name="origin" value="{% if image.album.id %}{% url admin.images.views.list_albums image.album.id %}{% else %}{% url admin.images.views.list_albums %}{% endif %}">
@@ -110,4 +120,6 @@
   </div>
 </div>
 <div style="clear: both;"></div>
+
+{% include 'admin/images/albumpicker.html' %}
 {% endblock %}
