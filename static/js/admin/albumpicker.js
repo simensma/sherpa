@@ -15,13 +15,13 @@ $(document).ready(function() {
         });
 
         picker.find("button.pick").click(function() {
-            picked(current);
             picker.dialog('close');
+            picked(current);
         });
 
         picker.find("button.deselect").click(function() {
-            picked('');
             picker.dialog('close');
+            picked('');
         });
 
         AlbumPicker.open = function(options) {
