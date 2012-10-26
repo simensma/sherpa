@@ -21,7 +21,7 @@
   <div class="span4">
     <div class="item{% if current_navigation == 'associations' %} current{% endif %}">
       <p>
-        {% if current_navigation != 'associations' %}<a href="">{% else %}<span class="disabled-link">{% endif %}
+        {% if current_navigation != 'associations' %}<a href="javascript:undefined" data-tooltip="Bilder tilknyttet foreninger er ikke klare før foreningsbasen blir importert til nye Sherpa.">{% else %}<span class="disabled-link">{% endif %}
         {# Todo: Echo the currently active association #}
         Foreningsbilder
         {% if current_navigation != 'associations' %}</a>{% else %}</span>{% endif %}
