@@ -18,12 +18,12 @@
 <div class="row imagearchive-action-buttons">
   <div class="span3">
     <p>
-      <button class="btn btn-large btn-success upload"{% if not current_album %} disabled data-tooltip="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
+      <button class="btn btn-large btn-success upload"{% if active_profile != user.get_profile %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
         <i class="icon-picture"></i> Last opp nytt bilde
       </button>
     </p>
     <p>
-      <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog">
+      <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog" disabled data-tooltip="Du kan ikke opprette album her.">
         <i class="icon-folder-open"></i> Opprett nytt album
       </button>
     </p>
@@ -75,25 +75,25 @@
   </div>
 </div>
 
-{% if current_album %}
+{% if active_profile != user.get_profile %}
+  <h2 style="text-align: center;">{{ active_profile.user.get_full_name }}s bilder</h2>
+{% else %}
   {% include 'admin/images/uploader.html' %}
 {% endif %}
 
-{% if not albums and not images %}
-  <div class="alert alert-info">Dette albumet er tomt.</div>
+{% if not images %}
+  <div class="alert alert-info">
+    {% if active_profile == user.get_profile %}
+      Du
+    {% else %}
+      {{ active_profile.user.get_full_name }}
+    {% endif %}
+    har ikke lastet opp noen bilder.
+  </div>
 {% endif %}
 
 <div id="archive-gallery">
   <ul>
-  {% for album in albums %}
-    <li class="album" data-id="{{ album.id }}">
-      <button class="btn mark"><i class="icon-tags"></i> Merk album</button>
-      <a class="image" href="{% url admin.images.views.list_albums album.id %}">
-        <img src="{{ STATIC_URL }}img/icons/imagearchive/folder.png" alt="Album: {{ album.name }}">
-      </a>
-      <a class="text" href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
-    </li>
-  {% endfor %}
   {% for image in images %}
     <li class="image" data-id="{{ image.id }}">
       <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>

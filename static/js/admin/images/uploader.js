@@ -3,6 +3,10 @@ var uploadReady = false;
 
 $(document).ready(function() {
 
+    $("div.imagearchive-action-buttons button.upload").click(function() {
+        $("div.uploader").toggle('slow');
+    });
+
     var close_tag = 'div.image-details div.tag-box div.tag a';
     $(document).on('mouseover', close_tag, function() {
         $(this).children("img").attr('src', '/static/img/so/close-hover.png');
@@ -36,17 +40,41 @@ $(document).ready(function() {
         });
     });
 
-    $("div.uploading").hide();
-    $("div.image-details").hide();
-    $("div.image-details p.waiting").hide();
-    $("div.messages").children().each(function() {
-        $(this).hide();
+    /* Changing destination album */
+    $("a.albumpicker-trigger").click(function() {
+        AlbumPicker.open({
+            album_id: $(this).attr('data-albumpicker-id'),
+            allow_root: false,
+            allow_deselect: true,
+            picked: function(album) {
+                if(album.name == '') {
+                    album.name = "(Legges ikke i album)";
+                }
+                var form = $("form.upload-image-details");
+                form.find("input[name='album']").val(album.id);
+                form.find("p.chosen-album span.display-name").text(album.name);
+                form.find("p.chosen-album a").attr('data-albumpicker-id', album.id);
+            }
+        });
     });
 
     $("form.image-uploader input[type='submit']").click(function() {
         $("form.image-uploader").hide();
+        $("div.licencing").hide();
         $("div.uploading").show();
         $("div.image-details").show();
+    });
+
+    $("div.image-details form input[name='photographer']").typeahead({
+        minLength: 3,
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: '/sherpa/bildearkiv/fotograf/',
+                data: 'name=' + encodeURIComponent(query)
+            }).done(function(result) {
+                process(JSON.parse(result));
+            });
+        }
     });
 
     $("div.image-details form").submit(function(e) {
@@ -57,7 +85,7 @@ $(document).ready(function() {
         }
     });
 
-    $("div.image-details input[type='submit']").click(function(e) {
+    $("div.image-details button[type='submit']").click(function(e) {
         userReady = true;
         if(!uploadReady) {
             e.preventDefault();
@@ -65,7 +93,6 @@ $(document).ready(function() {
             $("div.image-details p.waiting").show();
         }
     });
-
 });
 
 function uploadComplete(result, ids) {
@@ -85,6 +112,9 @@ function uploadComplete(result, ids) {
         $("div.upload-no-files").show()
         $("div.image-details").hide();
         $("form.image-uploader").show();
+    } else if(result == 'unknown_exception') {
+        $("div.upload-unknown-exception").show()
+        $("div.image-details").hide();
+        $("form.image-uploader").show();
     }
 }
-

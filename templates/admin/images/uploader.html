@@ -1,0 +1,113 @@
+{% load albumpath %}
+
+<div class="row uploader hide">
+  <div class="span6">
+
+    <div class="alert alert-error upload-failed hide">
+      Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
+    </div>
+    <div class="alert alert-error upload-no-files hide">
+      Du må jo velge noen bilder å laste opp!<a class="close">x</a>
+    </div>
+    <div class="alert alert-error upload-unknown-exception hide">
+      <a class="close">x</a>
+      Det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
+    </div>
+
+    <form class="image-uploader" action="{% url admin.images.views.upload_image %}" method="post" enctype="multipart/form-data" target="iframe">
+      {% csrf_token %}
+      <input type="hidden" name="album" value="{{ current_album.id }}">
+      <h1 class="sherpa">Last opp nye bilder</h1>
+      <input type="file" name="files" multiple><br>
+      <input class="btn" type="submit" value="Last opp valgte bilder">
+      <iframe name="iframe" class="hide"></iframe>
+    </form>
+
+    <div class="uploading hide">
+      <h2>Laster opp...</h2>
+      <p>
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster opp, vennligst vent...">
+      </p>
+      <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem i skjemaet til høyre.</em></p>
+    </div>
+
+    <div class="alert alert-info upload-complete hide">
+      <a class="close">x</a>
+      Bildene har blitt lastet opp! Fyll ut skjemaet til høyre, og klikk "Lagre bildeinformasjon".
+    </div>
+  </div>
+
+  <div class="span6">
+    <div class="alert alert-error licencing">
+      <strong>Lisensiering</strong><br>
+      Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
+    </div>
+
+    <div class="image-details hide">
+      <h2>Fyll inn bildeinformasjon</h2>
+
+      <form class="upload-image-details form-horizontal" method="post" action="{% url admin.images.views.update_images %}">
+        {% csrf_token %}
+        <input type="hidden" name="ids">
+        <input type="hidden" name="origin" value="{{ origin }}">
+
+        <label class="image-description" for="image-description">Beskrivelse:</label>
+        <textarea name="description" rows="4" id="image-description"></textarea>
+
+        <div class="control-group">
+          <label class="control-label" for="image-photographer">Fotograf:</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." id="image-photographer">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="image-credits">Kreditering:</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..." id="image-credits">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="image-licence">Bruksrett:</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..." id="image-licence">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="image-tags">Nøkkelord:</label>
+          <div class="controls">
+            <input type="hidden" name="tags-serialized">
+            <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
+            <div class="tag-box">
+              {% for tag in image.tags.all %}
+                <div class="tag">
+                  <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                  {{ tag.name }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="image-album">Album:</label>
+          <div class="controls">
+            <input type="hidden" name="album" value="{{ current_album.id }}">
+            <p class="chosen-album">
+              <span class="display-name">{{ current_album.name }}</span> (<a href="javascript:undefined" class="albumpicker-trigger" data-albumpicker-id="{{ current_album.id }}">endre</a>)
+            </p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre bildeinformasjon</button>
+            <p class="waiting hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
