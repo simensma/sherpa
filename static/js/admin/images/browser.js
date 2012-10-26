@@ -57,6 +57,12 @@ $(document).ready(function() {
         $(".delete-dialog").dialog('close');
     });
     $(".delete-dialog form").submit(function() {
+        var selected = getSelectedItems();
+        $(this).find("input[name='albums']").val(JSON.stringify(selected.albums));
+        $(this).find("input[name='images']").val(JSON.stringify(selected.images));
+    });
+
+    function getSelectedItems() {
         var albums = [];
         var images = [];
         $("#archive-gallery li.album.selected").each(function() {
@@ -65,8 +71,10 @@ $(document).ready(function() {
         $("#archive-gallery li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
-        $(this).find("input[name='albums']").val(JSON.stringify(albums));
-        $(this).find("input[name='images']").val(JSON.stringify(images));
-    });
+        return {
+            albums: albums,
+            images: images
+        };
+    }
 
 });
