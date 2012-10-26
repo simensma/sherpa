@@ -87,6 +87,37 @@ def image_details(request, image):
     return render(request, 'admin/images/image_details.html', context)
 
 @login_required
+def move_items(request):
+    destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
+    for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
+        def parent_in_parent(destination, child):
+            while destination != None:
+                if destination == child:
+                    return True
+                destination = destination.parent
+            return False
+
+        if parent_in_parent(destination_album, album):
+            # Tried to set an album as a child of its own children, ignore
+            # Giving feedback here is slightly complicated so I'll skip it for now; the user shouldn't be this silly anyway.
+            # But feedback at some point would be nice, consider looking at this
+            continue
+
+        album.parent = destination_album
+        album.save()
+
+    for image in Image.objects.filter(id__in=json.loads(request.POST['images'])):
+        image.album = destination_album
+        image.save()
+
+    if destination_album != None:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[destination_album.id]))
+    elif request.POST.get('origin', '') != '':
+        return HttpResponseRedirect(request.POST['origin'])
+    else:
+        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+
+@login_required
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()

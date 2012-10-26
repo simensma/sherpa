@@ -17,14 +17,16 @@
 
 <div class="row imagearchive-action-buttons">
   <div class="span3">
-    <button class="btn btn-large btn-success upload"{% if not current_album %} disabled data-tooltip="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
-      <i class="icon-picture"></i> Last opp nytt bilde
-    </button>
-  </div>
-  <div class="span3">
-    <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog">
-      <i class="icon-folder-open"></i> Opprett nytt album
-    </button>
+    <p>
+      <button class="btn btn-large btn-success upload"{% if not current_album %} disabled data-tooltip="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
+        <i class="icon-picture"></i> Last opp nytt bilde
+      </button>
+    </p>
+    <p>
+      <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog">
+        <i class="icon-folder-open"></i> Opprett nytt album
+      </button>
+    </p>
   </div>
   <div class="span3">
     <button class="btn btn-large btn-warning albums details hide">
@@ -36,6 +38,26 @@
     <button class="btn btn-large btn-warning dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
       <i class="icon-pencil"></i> Endre detaljer
     </button>
+  </div>
+  <div class="span3" data-album-id="{{ current_album.id }}">
+    <button class="btn btn-large btn-warning albums move hide">
+      <i class="icon-share-alt"></i> Flytt album
+    </button>
+    <button class="btn btn-large btn-warning images move hide">
+      <i class="icon-share-alt"></i> Flytt bilder
+    </button>
+    <button class="btn btn-large btn-warning both move hide">
+      <i class="icon-share-alt"></i> Flytt album/bilder
+    </button>
+    <button class="btn btn-large btn-warning dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
+      <i class="icon-share-alt"></i> Flytt album/bilder
+    </button>
+    <form class="move-items hide" method="post" action="{% url admin.images.views.move_items %}">
+      {% csrf_token %}
+      <input type="hidden" name="images">
+      <input type="hidden" name="albums">
+      <input type="hidden" name="destination_album">
+    </form>
   </div>
   <div class="span3">
     <button class="btn btn-large btn-danger delete albums dialog-button hide" data-dialog=".delete-dialog">
@@ -91,4 +113,5 @@
 <div style="clear: both;"></div>
 
 {% include 'admin/images/dialogs.html' %}
+{% include 'admin/images/albumpicker.html' %}
 {% endblock %}

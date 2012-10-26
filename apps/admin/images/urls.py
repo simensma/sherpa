@@ -17,6 +17,7 @@ urlpatterns = patterns('admin.images.views',
 
     url(r'^slett/(?P<album>\d+)/$', 'delete_items'),
     url(r'^slett/$', 'delete_items', {'album': None}),
+    url(r'^flytt/$', 'move_items'),
 
     url(r'^innhold/$', 'content_json', {'album': None}),
     url(r'^innhold/(?P<album>\d+)/$', 'content_json'),
