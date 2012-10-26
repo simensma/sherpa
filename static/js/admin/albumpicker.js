@@ -24,6 +24,10 @@ $(document).ready(function() {
             picked('');
         });
 
+        picker.find("button.cancel").click(function() {
+            picker.dialog('close');
+        });
+
         AlbumPicker.open = function(options) {
             setAlbum(options.album_id);
             allow_root = options.allow_root;
