@@ -308,7 +308,9 @@ def album_search_json(request):
 
 @login_required
 def search(request):
-    context = {'origin': request.get_full_path()}
+    context = {
+        'origin': request.get_full_path(),
+        'all_users': Profile.objects.all().order_by('user__first_name')}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({
             'too_short_query': True,
