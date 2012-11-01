@@ -4,10 +4,6 @@ $(document).ready(function() {
 
     $("select[name='authors']").chosen();
 
-    $("article div.title").focusout(function() {
-        $("a.header-title").text($(this).text());
-    });
-
     $("input[name='article-datetime-field']").datetimepicker({
         dateFormat: "dd.mm.yy",
         seperator: " ",
