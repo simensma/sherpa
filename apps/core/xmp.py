@@ -1,5 +1,8 @@
 def keywords(xmp):
-    return xmp['dc']['subject']
+    if xmp.has_key('dc'):
+        if xmp['dc'].has_key('subject'):
+            return xmp['dc']['subject']
+    return []
 
 def parse_xmp(data):
     xmp_string = find_xmp_string(data)
