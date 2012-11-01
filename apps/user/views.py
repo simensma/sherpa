@@ -17,7 +17,6 @@ import re
 from user.models import Profile
 
 update_success = 'oppdatert'
-PHONE_MAX_LENGTH = 20 # Magic number copied from user.models.Profile.phone.max_length
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -29,8 +28,7 @@ def home_new(request):
 @login_required
 def account(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH,
-        'update_success': update_success in request.GET,
-        'phone_max_length': PHONE_MAX_LENGTH}
+        'phone_max_length': Profile.PHONE_MAX_LENGTH}
     if request.method == 'POST':
         try:
             if len(request.POST['name']) == 0:
@@ -39,7 +37,7 @@ def account(request):
                 raise ValueError("Invalid email address")
             if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
-            if len(request.POST['phone']) > PHONE_MAX_LENGTH:
+            if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
                 context['phone_too_long'] = True
                 return render(request, 'user/account.html', context)
             split = request.POST['name'].split(' ')
