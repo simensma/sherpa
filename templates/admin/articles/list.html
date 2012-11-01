@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
-{% block title %}Artikler &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.articles.views.list %}">Artikler</a>{% endblock %}
+{% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
 {% endblock %}
