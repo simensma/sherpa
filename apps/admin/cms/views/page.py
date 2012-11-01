@@ -39,7 +39,7 @@ def children(request, page):
 def new(request):
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
-        raise Exception
+        raise Exception("Slug is not unique (error handling TBD)")
     page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False, publisher=request.user.get_profile())
     page.save()
     variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, owner=request.user.get_profile())
