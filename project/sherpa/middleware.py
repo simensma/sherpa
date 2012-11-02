@@ -25,20 +25,6 @@ if not model_cache.loaded:
 from django import template
 template.add_to_builtins('core.templatetags.url')
 
-class DecodeQueryString(object):
-    def process_request(self, request):
-        # Some browsers (guess which), and also the Bing bot, don't follow the spec, and send
-        # non-ascii query string characters, without using percent-encoding.
-        # Guess the encoding, trying ascii first, and re-encode with default charset
-        for encoding in ['ascii', 'utf-8', 'iso-8859-1', 'windows-1252']:
-            try:
-                request.META['QUERY_STRING'] = request.META['QUERY_STRING'].decode(encoding).encode(settings.DEFAULT_CHARSET)
-                return
-            except UnicodeDecodeError:
-                pass
-        # Unable to decode the query string. Just leave it as it is, and if any later usage
-        # of it leads to a decoding error, let it happen and be logged for further inspection.
-
 class RedirectTrailingDot():
     def process_request(self, request):
         # If hostname contains a trailing dot, strip it with redirect
@@ -58,13 +44,20 @@ class Sites():
             # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
             raise Http404
 
-class DeactivatedEnrollment():
+class DecodeQueryString(object):
     def process_request(self, request):
-        from enrollment.models import State
-        # The enrollment slug is duplicated and hardcoded here :(
-        # However, it's not really likely to change often since it's an important URL.
-        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
-            return render(request, 'enrollment/unavailable.html')
+        # Some browsers (guess which), and also the Bing bot, don't follow the spec, and send
+        # non-ascii query string characters, without using percent-encoding.
+        # Guess the encoding, trying ascii first, and re-encode with default charset
+        for encoding in ['ascii', 'utf-8', 'iso-8859-1', 'windows-1252']:
+            try:
+                request.META['QUERY_STRING'] = request.META['QUERY_STRING'].decode(encoding).encode(settings.DEFAULT_CHARSET)
+                return
+            except UnicodeDecodeError:
+                pass
+        # Unable to decode the query string. Just leave it as it is, and if any later usage
+        # of it leads to a decoding error, let it happen and be logged for further inspection.
+
 
 class CommonMiddlewareMonkeypatched(object):
     """
@@ -199,3 +192,12 @@ def _is_internal_request(domain, referer):
     """
     # Different subdomains are treated as different domains.
     return referer is not None and re.match("^https?://%s/" % re.escape(domain), referer)
+
+
+class DeactivatedEnrollment():
+    def process_request(self, request):
+        from enrollment.models import State
+        # The enrollment slug is duplicated and hardcoded here :(
+        # However, it's not really likely to change often since it's an important URL.
+        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
+            return render(request, 'enrollment/unavailable.html')
