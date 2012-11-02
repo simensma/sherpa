@@ -14,3 +14,8 @@ class Profile(models.Model):
     # It will also be connected with:
     # - Djangos Group model
     # - Djangos permission system.
+
+    class Meta:
+        permissions = [
+            ("sherpa", "Has general access to Sherpa"),
+        ]
