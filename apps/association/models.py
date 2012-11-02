@@ -33,4 +33,3 @@ class Association(models.Model):
     organization_no = models.CharField(max_length=255, default='')
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
-    # Todo: Relate to personal contacts (users) also

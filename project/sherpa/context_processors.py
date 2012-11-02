@@ -1,6 +1,7 @@
 from django.core.urlresolvers import resolve
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 
 from page.models import Menu
 from association.models import Association
@@ -31,9 +32,14 @@ def current_site(request):
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
 
-def admin_associations(request):
+def admin_user_associations(request):
     if request.path.startswith('/sherpa'):
-        # Todo: Limit to user-available associations
-        associations = Association.objects.all().order_by('name')
-        return {'user_associations': associations}
+        user_associations = request.user.get_profile().associations.all().order_by('name')
+        association_collection = {
+            'central': user_associations.filter(type='sentral'),
+            'associations': user_associations.filter(type='forening'),
+            'small_associations': user_associations.filter(type='turlag'),
+            'hike_groups': user_associations.filter(type='turgruppe'),
+        }
+        return {'user_associations': association_collection}
     return {}
