@@ -4,9 +4,11 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.core.mail import mail_managers
+from django.core.exceptions import PermissionDenied
 from django.utils.http import urlquote
 from django.core import urlresolvers
 from django.utils.log import getLogger
+from django.core.urlresolvers import resolve
 
 from datetime import datetime
 import hashlib
@@ -43,6 +45,10 @@ class Sites():
         except Site.DoesNotExist:
             # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
             raise Http404
+
+class CurrentApp(object):
+    def process_request(self, request):
+        request.current_app = resolve(request.path).app_name
 
 class DecodeQueryString(object):
     def process_request(self, request):
@@ -193,6 +199,11 @@ def _is_internal_request(domain, referer):
     # Different subdomains are treated as different domains.
     return referer is not None and re.match("^https?://%s/" % re.escape(domain), referer)
 
+
+class CheckSherpaPermissions(object):
+    def process_request(self, request):
+        if request.current_app == 'admin' and not request.user.has_perm('user.sherpa'):
+            raise PermissionDenied
 
 class DeactivatedEnrollment():
     def process_request(self, request):

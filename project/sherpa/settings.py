@@ -8,7 +8,7 @@ sys.path.insert(1, "%s/apps" % sys.path[0][:sys.path[0].rfind('/')])
 
 from sherpa.local_settings import *
 
-ROOT_URLCONF = '' # Unused, but required
+ROOT_URLCONF = 'sherpa.urls_main' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
 AUTH_PROFILE_MODULE = 'user.Profile'
 LOGIN_URL = '/minside/logg-inn/'
 
@@ -97,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'sherpa.middleware.RedirectTrailingDot',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'sherpa.middleware.Sites',
+    'sherpa.middleware.CurrentApp',
     'sherpa.middleware.DecodeQueryString',
     # Use a monkeypatch for Djangos CommonMiddleware. See middleware.py for more info
     'sherpa.middleware.CommonMiddlewareMonkeypatched',
@@ -104,5 +105,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'sherpa.middleware.CheckSherpaPermissions',
     'sherpa.middleware.DeactivatedEnrollment',
 )

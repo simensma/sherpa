@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^', include('core.urls')),
 
     # Sherpa admin interface
-    url(r'^sherpa/', include('admin.urls')),
+    url(r'^sherpa/', include('admin.urls', app_name='admin')),
 
     # Articles
     url(r'^nyheter/', include('articles.urls')),
