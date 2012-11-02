@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
+from association.models import Association
 
 import re
 
@@ -29,3 +30,10 @@ def current_site(request):
 
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
+
+def admin_associations(request):
+    if request.path.startswith('/sherpa'):
+        # Todo: Limit to user-available associations
+        associations = Association.objects.all().order_by('name')
+        return {'user_associations': associations}
+    return {}

@@ -3,7 +3,11 @@ $(document).ready(function() {
     /* When creating a page, slugify the title as URL */
     $("#add-page-dialog input[name='title']").keyup(function() {
         $("#add-page-dialog input[name='slug']").val(slugify($(this).val()));
-    })
+    });
+
+    $("header select[name='user_association']").chosen().change(function() {
+        alert("sup");
+    });
 });
 
 function slugify(string) {

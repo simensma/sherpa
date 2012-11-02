@@ -90,6 +90,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.menus",
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
+    "sherpa.context_processors.admin_associations",
 )
 
 MIDDLEWARE_CLASSES = (

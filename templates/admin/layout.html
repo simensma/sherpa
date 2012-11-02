@@ -49,15 +49,21 @@
       <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening" title="Tilbake til Sherpa-forsiden">
     </a>
   </div>
-  <div class="span8 line">
+  <div class="span6">
     <h1 class="sherpa">
       {% block header %}<a href="{% url admin.views.index%}">Sherpa</a>{% endblock %}
     </h1>
   </div>
-  <div class="span2 line right">
-    <a href="/">Forsiden</a><br>
-    <a href="{% url user.views.home_new %}">Min side</a><br>
-    <a href="{% url user.views.logout %}">Logg ut</a>
+  <div class="span4 right">
+    <p class="userline">
+      <a href="{% url user.views.home_new %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url user.views.logout %}">Logg ut</a>)</span>
+    </p>
+    <select name="user_association" data-placeholder="Velg en forening...">
+      <option value=""></option>
+      {% for association in user_associations %}
+        <option value="{{ association.id }}">{{ association.name }}</option>
+      {% endfor %}
+    </select>
   </div>
 </header>
 
