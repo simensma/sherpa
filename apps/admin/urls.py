@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('admin',
-    url(r'^$', 'views.index'),
+urlpatterns = patterns('admin.views',
+    url(r'^$', 'index'),
     url(r'^cms/', include('admin.cms.urls')),
     url(r'^nyheter/', include('admin.articles.urls')),
     url(r'^analyse/', include('admin.analytics.urls')),
