@@ -41,5 +41,7 @@ def admin_user_associations(request):
             'small_associations': user_associations.filter(type='turlag'),
             'hike_groups': user_associations.filter(type='turgruppe'),
         }
-        return {'user_associations': association_collection}
+        return {
+            'user_associations': association_collection,
+            'active_association': request.session.get('active_association', '')}
     return {}

@@ -63,28 +63,36 @@
       {% if user_associations.central|length > 0 %}
         <optgroup label="Sentralt/nasjonalt">
           {% for association in user_associations.central %}
-            <option value="{{ association.id }}">{{ association.name }}</option>
+            <option value="{{ association.id }}" data-href="{% url admin.views.set_active_association association.id %}" {% if active_association == association %} selected{% endif %}>
+              {{ association.name }}
+            </option>
           {% endfor %}
         </optgroup>
       {% endif %}
       {% if user_associations.associations|length > 0 %}
         <optgroup label="Medlemsforeninger">
           {% for association in user_associations.associations %}
-            <option value="{{ association.id }}">{{ association.name }}</option>
+            <option value="{{ association.id }}" data-href="{% url admin.views.set_active_association association.id %}" {% if active_association == association %} selected{% endif %}>
+              {{ association.name }}
+            </option>
           {% endfor %}
         </optgroup>
       {% endif %}
       {% if user_associations.small_associations|length > 0 %}
         <optgroup label="Lokale turlag">
         {% for association in user_associations.small_associations %}
-            <option value="{{ association.id }}">{{ association.name }}</option>
+            <option value="{{ association.id }}" data-href="{% url admin.views.set_active_association association.id %}" {% if active_association == association %} selected{% endif %}>
+              {{ association.name }}
+            </option>
           {% endfor %}
         </optgroup>
       {% endif %}
       {% if user_associations.hike_groups|length > 0 %}
         <optgroup label="Turgrupper">
         {% for association in user_associations.hike_groups %}
-            <option value="{{ association.id }}">{{ association.name }}</option>
+            <option value="{{ association.id }}" data-href="{% url admin.views.set_active_association association.id %}" {% if active_association == association %} selected{% endif %}>
+              {{ association.name }}
+            </option>
           {% endfor %}
         </optgroup>
       {% endif %}
