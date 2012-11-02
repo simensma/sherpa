@@ -16,7 +16,7 @@ class Association(models.Model):
         (u'senior', u'DNT Senior')]
 
     name = models.CharField(max_length=255)
-    parent = models.ForeignKey('association.Association', null=True)
+    parent = models.ForeignKey('association.Association', null=True, related_name='children')
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
     group_type = models.CharField(max_length=255, choices=GROUP_TYPES, default='')
