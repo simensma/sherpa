@@ -66,14 +66,17 @@
           </p>
           <div style="clear: both;"></div>
         </li>
-        <li>
-          <a href="{% url admin.enrollment.views.index %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/enrollment.jpg">
-          </a>
-          <h2><a href="{% url admin.enrollment.views.index %}">Innmelding</a></h2>
-          <p>Her kan medlemsservice deaktivere kortinnbetaling, eller hele innmeldingsskjemaet, ved behov.</p>
-          <div style="clear: both;"></div>
-        </li>
+        {% if active_association.id == 56 %}
+          {# Applies only to DNT Central #}
+          <li>
+            <a href="{% url admin.enrollment.views.index %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/enrollment.jpg">
+            </a>
+            <h2><a href="{% url admin.enrollment.views.index %}">Innmelding</a></h2>
+            <p>Her kan medlemsservice deaktivere kortinnbetaling, eller hele innmeldingsskjemaet, ved behov.</p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
       </ul>
 
       <h2 style="margin-top: 40px;">Gamle Sherpa</h2>
