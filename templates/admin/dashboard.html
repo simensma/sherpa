@@ -4,6 +4,14 @@
 
 <div class="row">
   <div class="span8">
+    {% if not active_association %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong>Du har ikke valgt aktiv forening!</strong><br>
+        Velg en av foreningene du er medlem av i lista oppe til høyre, under navnet ditt.
+      </div>
+    {% endif %}
+
     <nav class="dashboard">
       <ul>
         <li>
