@@ -55,12 +55,12 @@ def index(request):
         'chosen_county': request.GET.get('fylke', ''),
         'full_list': full_list,
     }
-    return render(request, 'associations/list.html', context)
+    return render(request, 'main/associations/list.html', context)
 
 def visit(request):
     associations = Association.objects.filter(type="|Hovedforening").exclude(visit_address='').order_by('name')
     context = {'associations': associations}
-    return render(request, 'associations/visit.html', context)
+    return render(request, 'main/associations/visit.html', context)
 
 def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
@@ -114,7 +114,7 @@ def filter(request):
                         break
 
             # Render the association result
-            t = loader.get_template('associations/result.html')
+            t = loader.get_template('main/associations/result.html')
             r = RequestContext(request, {'association': association, 'parents': parents})
             result.append(t.render(r))
         cache.set('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)

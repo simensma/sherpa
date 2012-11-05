@@ -22,13 +22,13 @@ def list(request):
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.objects.all().order_by('order')
     context = {'versions': versions, 'menus': menus}
-    return render(request, 'admin/pages/list.html', context)
+    return render(request, 'main/admin/pages/list.html', context)
 
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
-    t = loader.get_template('admin/pages/result.html')
+    t = loader.get_template('main/admin/pages/result.html')
     c = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(t.render(c))
 
@@ -122,7 +122,7 @@ def edit_version(request, version):
         }
         context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-        return render(request, 'admin/pages/edit_version.html', context)
+        return render(request, 'main/admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)
         for row in json.loads(request.POST['rows']):

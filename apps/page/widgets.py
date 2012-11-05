@@ -80,6 +80,6 @@ def parse_widget(widget):
 
     data.update({
         'json': json.dumps(widget),
-        'template': 'widgets/%s/display.html' % widget['widget'],
+        'template': 'main/widgets/%s/display.html' % widget['widget'],
         'widget': widget['widget']})
     return data

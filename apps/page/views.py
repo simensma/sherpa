@@ -108,22 +108,22 @@ def parse_content(request, version):
 
     for promo in promos:
         if request.path == promo['url']:
-            context['promo'] = 'widgets/promo/static/%s.html' % promo['template']
+            context['promo'] = 'main/widgets/promo/static/%s.html' % promo['template']
 
     context['request'] = request
     context['promos'] = promos
-    return render(request, 'page/page.html', context)
+    return render(request, 'main/page/page.html', context)
 
 @csrf_exempt
 def search(request):
     # Very simple search for now
     if not 'q' in request.GET:
-        return render(request, 'page/search.html')
+        return render(request, 'main/page/search.html')
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
         context = {'search_query': request.GET['q'],
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
-        return render(request, 'page/search.html', context)
+        return render(request, 'main/page/search.html', context)
 
     # Record the search
     search = Search(query=request.GET['q'])
@@ -159,12 +159,12 @@ def search(request):
         version.load_preview()
 
     context = {
-    'search_query': request.GET['q'],
-    'article_versions': article_versions,
-    'pages': pages,
-    'old_articles': old_articles,
-    'article_count': len(article_versions) + len(old_articles)}
-    return render(request, 'page/search.html', context)
+        'search_query': request.GET['q'],
+        'article_versions': article_versions,
+        'pages': pages,
+        'old_articles': old_articles,
+        'article_count': len(article_versions) + len(old_articles)}
+    return render(request, 'main/page/search.html', context)
 
 def ad(request, ad):
     try:
@@ -208,7 +208,7 @@ def redirect_index(request):
         return HttpResponseRedirect(reverse('membership.views.benefits'))
     raise Http404
 
-def page_not_found(request, template_name='404.html'):
+def page_not_found(request, template_name='main/404.html'):
     # Use a custom page_not_found view to add GET parameters
     param_str = request.GET.urlencode()
     if param_str != '':
@@ -222,7 +222,7 @@ def page_not_found(request, template_name='404.html'):
     c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
 
-def server_error(request, template_name='500.html'):
+def server_error(request, template_name='main/500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))

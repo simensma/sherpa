@@ -20,7 +20,7 @@ def list(request):
     for version in versions:
         version.load_preview()
     context = {'versions': versions}
-    return render(request, 'admin/articles/list.html', context)
+    return render(request, 'main/admin/articles/list.html', context)
 
 def new(request):
     article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
@@ -77,7 +77,7 @@ def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     version.load_preview()
     context = {'version': version}
-    return render(request, 'admin/articles/confirm-delete.html', context)
+    return render(request, 'main/admin/articles/confirm-delete.html', context)
 
 def delete(request, article):
     Article.objects.get(id=article).delete()
@@ -88,14 +88,14 @@ def edit_version(request, version):
     profiles = Profile.objects.all().order_by('user__first_name')
     context = {'rows': rows, 'version': version, 'profiles': profiles,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-    return render(request, 'admin/articles/edit_version.html', context)
+    return render(request, 'main/admin/articles/edit_version.html', context)
 
 def preview(request, version):
     rows, version = parse_version_content(version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {'rows': rows, 'version': version}
-    return render(request, 'admin/articles/preview.html', context)
+    return render(request, 'main/admin/articles/preview.html', context)
 
 def parse_version_content(version):
     version = Version.objects.get(id=version)

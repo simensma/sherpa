@@ -16,12 +16,12 @@ created_user = 'opprettet_bruker'
 def index(request):
     users = User.objects.all().order_by('first_name')
     context = {'users': users, 'created_user': created_user in request.GET}
-    return render(request, 'admin/users/index.html', context)
+    return render(request, 'main/admin/users/index.html', context)
 
 def new(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
     if request.method == 'GET':
-        return render(request, 'admin/users/new.html', context)
+        return render(request, 'main/admin/users/new.html', context)
     elif request.method == 'POST':
         try:
             if len(request.POST['name']) == 0:
@@ -42,7 +42,7 @@ def new(request):
             return HttpResponseRedirect("%s?%s" % (reverse('admin.users.views.index'), created_user))
         except ValueError:
             context['value_error'] = True
-            return render(request, 'admin/users/new.html', context)
+            return render(request, 'main/admin/users/new.html', context)
         except IntegrityError:
             context['integrity_error'] = True
-            return render(request, 'admin/users/new.html', context)
+            return render(request, 'main/admin/users/new.html', context)

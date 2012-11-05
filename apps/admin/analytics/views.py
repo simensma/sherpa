@@ -6,7 +6,7 @@ from django.core.cache import cache
 from core.models import Search
 
 def index(request):
-    return render(request, 'admin/analytics/index.html')
+    return render(request, 'main/admin/analytics/index.html')
 
 def searches(request):
     most_searched = cache.get('analytics.searches.most_searched')
@@ -27,4 +27,4 @@ def searches(request):
     latest_searches = Search.objects.all().order_by('-date')[:50]
 
     context = {'most_searched': most_searched, 'latest_searches': latest_searches}
-    return render(request, 'admin/analytics/searches.html', context)
+    return render(request, 'main/admin/analytics/searches.html', context)

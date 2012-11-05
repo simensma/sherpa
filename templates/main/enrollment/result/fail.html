@@ -1,0 +1,32 @@
+{% extends 'main/enrollment/result/index.html' %}
+
+{% block result %}
+
+<div class="row">
+  <div id="result" class="span8">
+
+    {% include 'main/enrollment/progress.html' with step=4 %}
+
+    <h2>
+      <img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_196_circle_exclamation_mark.png" alt="!"> Beklager, betaling feilet
+    </h2>
+
+    <p>
+     Betalingen ble ikke godkjent i vår betalingsløsning. Dette kan skyldes problemer hos din bank eller at det ikke er dekning på konto.
+    </p>
+
+    <p>
+      <strong>Medlemskapet blir ikke registrert før betalingen er godkjent.</strong>
+    </p>
+
+    <p>
+      <a href="{% url enrollment.views.verification %}">Gå tilbake</a> for å forsøke på nytt eller ta kontakt med banken din.
+    </p>
+  </div>
+
+  <div class="span4">
+    {% include 'main/enrollment/memberservice.html' %}
+  </div>
+</div>
+
+{% endblock %}

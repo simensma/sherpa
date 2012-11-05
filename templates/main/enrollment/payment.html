@@ -1,0 +1,74 @@
+{% extends 'main/enrollment/index.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/payment.js"></script>
+{% endblock %}
+
+{% block enrollment %}
+
+<div class="row">
+  <div class="span8">
+
+    {% include 'main/enrollment/progress.html' with step=4 %}
+
+    {% if invalid_payment_method %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
+        Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+      </div>
+    {% endif %}
+
+    {% if not card_available %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
+        Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av oktober.<br><br>
+
+        Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
+      </div>
+    {% endif %}
+
+    <form id="payment" action="{% url enrollment.views.payment %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="main-member" value="">
+      <h2> Velg betalingsmåte:</h2>
+      <div class="control-group">
+        {% if card_available %}
+          <label class="radio">
+            <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
+          </label>
+        {% else %}
+          <label class="radio">
+            <input type="radio" name="payment_method" value="card" disabled> VISA / MASTERCARD
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="invoice" checked> Få tilsendt faktura
+          </label>
+        {% endif %}
+      </div>
+
+      <div class="alert alert-info invoice-info">
+        <strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet gyldig før betalingen er registrert i vårt system.
+      </div>
+
+      <p>
+        <a class="btn btn-large" href="{% url enrollment.views.verification %}"><i class="icon-arrow-left"></i> Tilbake</a>
+        {% if card_available %}
+          <button type="submit" class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
+        {% else %}
+          <button type="submit" class="btn btn-danger btn-large payment">Send bestilling <i class="icon-ok"></i></button>
+        {% endif %}
+      </p>
+    </form>
+
+  </div>
+
+  <div class="span4">
+    {% include 'main/enrollment/memberservice.html' %}
+  </div>
+</div>
+
+{% endblock %}

@@ -9,7 +9,7 @@ from enrollment.models import State
 
 def index(request):
     context = {'state': State.objects.all()[0]}
-    return render(request, 'admin/enrollment/index.html', context)
+    return render(request, 'main/admin/enrollment/index.html', context)
 
 def activate_state(request):
     if request.is_ajax():

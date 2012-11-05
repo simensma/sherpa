@@ -28,7 +28,7 @@ def index(request):
     context = {
         'article_versions': article_versions,
         'page_versions': page_versions}
-    return render(request, 'admin/cache/index.html', context)
+    return render(request, 'main/admin/cache/index.html', context)
 
 def delete(request):
     if not request.is_ajax():

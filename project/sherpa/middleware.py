@@ -216,4 +216,4 @@ class DeactivatedEnrollment():
         # The enrollment slug is duplicated and hardcoded here :(
         # However, it's not really likely to change often since it's an important URL.
         if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
-            return render(request, 'enrollment/unavailable.html')
+            return render(request, 'main/enrollment/unavailable.html')

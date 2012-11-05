@@ -19,7 +19,7 @@ def list(request):
     view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
         'invalid_date': invalid_date in request.GET}
-    return render(request, 'admin/ads/list.html', context)
+    return render(request, 'main/admin/ads/list.html', context)
 
 def create_ad(request):
     if not 'ad' in request.FILES:

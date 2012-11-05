@@ -1,0 +1,39 @@
+{% extends 'main/admin/layout.html' %}
+{% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
+
+{% block body %}
+
+{% if created_user %}
+<div class="row">
+  <div class="offset3 span6">
+    <div class="alert alert-success">
+      <a class="close">x</a>
+      <strong>Den nye brukeren har blitt opprettet.</strong>
+    </div>
+  </div>
+</div>
+{% endif %}
+<div class="row">
+  <div class="span12">
+    <p style="text-align: center;">
+      <a class="btn btn-large" href="{% url admin.users.views.new %}"><i class="icon-plus"></i> Opprett ny bruker</a>
+    </p>
+    <table class="table">
+      <tr>
+        <th>Navn</th>
+        <th>Epost</th>
+        <th>Telefon</th>
+      </tr>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.get_full_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.get_profile.phone }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -131,7 +131,7 @@ def registration(request, user):
         'conditions': request.session['enrollment'].get('conditions', ''),
         'too_many_underage': too_many_underage in request.GET,
         'now': now, 'new_membership_year': new_membership_year}
-    return render(request, 'enrollment/registration.html', context)
+    return render(request, 'main/enrollment/registration.html', context)
 
 def remove(request, user):
     request.session.modified = True
@@ -230,7 +230,7 @@ def household(request):
         'countries_other_scandinavian': countries_other_scandinavian,
         'countries_other': countries_other, 'errors': errors,
         'now': now, 'new_membership_year': new_membership_year}
-    return render(request, 'enrollment/household.html', context)
+    return render(request, 'main/enrollment/household.html', context)
 
 def existing(request):
     if not request.is_ajax():
@@ -376,7 +376,7 @@ def verification(request):
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'now': now, 'new_membership_year': new_membership_year}
-    return render(request, 'enrollment/verification.html', context)
+    return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
     request.session.modified = True
@@ -401,7 +401,7 @@ def payment_method(request):
     context = {'invalid_payment_method': invalid_payment_method in request.GET,
         'card_available': State.objects.all()[0].card,
         'now': now, 'new_membership_year': new_membership_year}
-    return render(request, 'enrollment/payment.html', context)
+    return render(request, 'main/enrollment/payment.html', context)
 
 def payment(request):
     request.session.modified = True
@@ -533,7 +533,7 @@ def payment(request):
             last_name = request.session['enrollment']['users'][0]['name'].split(' ')[1:]
             email = request.session['enrollment']['users'][0]['email']
 
-    t = loader.get_template('enrollment/payment-terminal.html')
+    t = loader.get_template('main/enrollment/payment-terminal.html')
     c = Context({'year': year, 'next_year': next_year})
     desc = t.render(c)
 
@@ -657,7 +657,7 @@ def result(request):
         'emails': emails, 'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
         'now': now, 'new_membership_year': new_membership_year}
-    return render(request, 'enrollment/result/%s.html' % request.session['enrollment']['result'], context)
+    return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
     if not request.is_ajax():
@@ -677,7 +677,7 @@ def sms(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    t = loader.get_template('enrollment/result/sms.html')
+    t = loader.get_template('main/enrollment/result/sms.html')
     c = Context({'year': year, 'next_year': next_year,
         'users': request.session['enrollment']['users']})
     sms_message = t.render(c).encode('utf-8')
@@ -708,7 +708,7 @@ def prepare_and_send_email(users, association, location, payment_method, price_s
         template = 'email-%s-multiple.html' % payment_method
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    t = loader.get_template('enrollment/result/%s' % template)
+    t = loader.get_template('main/enrollment/result/%s' % template)
     c = Context({'users': users, 'association': association, 'location': location,
         'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
     message = t.render(c)

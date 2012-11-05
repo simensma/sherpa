@@ -1,0 +1,10 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}{{ version.title.content|striptags }}{% endblock %}
+
+{% block body %}
+
+{% include 'main/page/display-content.html' %}
+{% include 'main/page/article-byline.html' %}
+
+{% endblock %}
