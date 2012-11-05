@@ -109,7 +109,7 @@ def filter(request):
                     if parent.post_address != '':
                         association.post_address = parent.post_address
                         association.visit_address = parent.visit_address
-                        association.zip = parent.zip
+                        association.zipcode = parent.zipcode
                         association.ziparea = parent.ziparea
                         break
 
