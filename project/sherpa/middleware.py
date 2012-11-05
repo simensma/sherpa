@@ -1,6 +1,5 @@
 from django import http
 from django.shortcuts import render
-from django.contrib.sites.models import Site
 from django.conf import settings
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.core.mail import mail_managers
@@ -14,7 +13,7 @@ from datetime import datetime
 import hashlib
 import re
 
-from core.models import SiteDetails, SiteTemplate
+from core.models import Site, SiteTemplate
 
 logger = getLogger('django.request')
 
@@ -40,7 +39,7 @@ class Sites():
     def process_request(self, request):
         try:
             request.site = Site.objects.get(domain=request.get_host().split(":")[0])
-            request.urlconf = "sherpa.urls_%s" % request.site.details.template.name
+            request.urlconf = "sherpa.urls_%s" % request.site.template.name
             urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
             # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
