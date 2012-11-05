@@ -6,7 +6,7 @@ from django.template import RequestContext, loader
 from django.core.cache import cache
 
 from sherpa2.models import Association
-from user.models import *
+from core.models import County, Zipcode
 
 import json
 
