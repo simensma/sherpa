@@ -109,7 +109,7 @@
                   {% if users|length == 1 and not existing %}
                     {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
                       {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                      {{ location.zipcode }} {{ location.city }}<br>
+                      {{ location.zipcode }} {{ location.area }}<br>
                     {% else %}
                       {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
                       {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
@@ -133,7 +133,7 @@
                 <strong>Deres adresse:</strong><br>
                   {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
                     {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                    {{ location.zipcode }} {{ location.city }}<br>
+                    {{ location.zipcode }} {{ location.area }}<br>
                   {% else %}
                     {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
                     {% if location.address2 %}{{ location.address2 }}<br>{% endif %}

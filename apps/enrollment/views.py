@@ -170,7 +170,7 @@ def household(request):
         location['address2'] = polite_title(request.POST['address2'])
         location['address3'] = polite_title(request.POST['address3'])
         location['zipcode'] = request.POST['zipcode']
-        location['city'] = request.POST.get('city', '')
+        location['area'] = request.POST.get('area', '')
         request.session['enrollment']['location'] = location
         request.session['enrollment']['yearbook'] = location['country'] != 'NO' and request.POST.has_key('yearbook')
         request.session['enrollment']['attempted_yearbook'] = False
@@ -273,7 +273,7 @@ def verification(request):
             # Don't change the user-provided address.
             # The user might potentially provide a different address than the existing
             # member, which isn't allowed, but this is preferable to trying to parse the
-            # existing address into zipcode, city etc.
+            # existing address into zipcode, area etc.
             # In order to enforce the same address, the address logic for DK and SE in
             # add_focus_user would have to be rewritten.
             pass
@@ -287,8 +287,8 @@ def verification(request):
     if request.session['enrollment'].has_key('association'):
         del request.session['enrollment']['association']
     if request.session['enrollment']['location']['country'] == 'NO':
-        # Get the city name for this zipcode
-        request.session['enrollment']['location']['city'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).location
+        # Get the area name for this zipcode
+        request.session['enrollment']['location']['area'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).area
 
         # Figure out which association this member belongs to
         association = cache.get('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'])
@@ -771,8 +771,8 @@ def validate_location(location):
             return False
 
     if location['country'] == 'SE' or location['country'] == 'DK':
-        # No city provided
-        if location['city'].strip() == '':
+        # No area provided
+        if location['area'].strip() == '':
             return False
 
     if location['country'] == 'NO':
@@ -876,17 +876,17 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         adr2 = ''
         adr3 = ''
         zipcode = location['zipcode']
-        city = location['city']
+        area = location['area']
     elif location['country'] == 'DK' or location['country'] == 'SE':
         adr2 = ''
-        adr3 = "%s-%s %s" % (location['country'], location['zipcode'], location['city'])
+        adr3 = "%s-%s %s" % (location['country'], location['zipcode'], location['area'])
         zipcode = '0000'
-        city = ''
+        area = ''
     else:
         adr2 = location['address2']
         adr3 = location['address3']
         zipcode = '0000'
-        city = ''
+        area = ''
 
     # Fetch and increment memberid with stored procedure
     with transaction.commit_manually():
@@ -899,7 +899,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
         country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
         yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zipcode,
-        poststed=city, language=language, totalprice=price)
+        poststed=area, language=language, totalprice=price)
     user.save()
     return memberid
 

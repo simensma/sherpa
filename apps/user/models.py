@@ -15,7 +15,7 @@ class Profile(models.Model):
 
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
-    location = models.CharField(max_length=100)
+    area = models.CharField(max_length=255)
     city_code = models.CharField(max_length=4)
     city = models.CharField(max_length=100)
 
