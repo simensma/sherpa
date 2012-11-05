@@ -3,16 +3,21 @@
 {% block breadcrumb_title %}Min side{% endblock %}
 
 {% block body %}
-<h1>Min side</h1>
 
-<p>Velkommen {{ user.first_name }}!</p>
 
-<p>
-  Siden du har konto i <strong>nye</strong> Sherpa, er du nå kommet til den nye Min side. Disse sidene er ikke klare ennå, men når de blir det, vil de være felles for både medlemmer og Sherpa-brukere.
-</p>
+<div class="row">
+  <div class="span9">
 
-<p>
-  Du kan gå til <a href="https://{{ old_site }}/minside/">dagens min side</a>, endre <a href="{% url user.views.account %}">brukeropplysningene dine</a>, eller gå til <a href="{% url admin.views.index %}">Sherpa</a>.
-</p>
+    <h2>Min side — {{ user.get_full_name }}</h2>
+
+    <p>
+      Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
+    </p>
+  </div>
+
+  <div class="span3">
+    {% include 'user/navigation.html' with active='home' %}
+  </div>
+</div>
 
 {% endblock %}
