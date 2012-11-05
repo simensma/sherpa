@@ -18,6 +18,10 @@ import json
 from datetime import datetime
 import simples3
 
+# Note: A lot of views includes 'origin', used for redirects after posting (e.g. when moving images)
+# because we want to redirect to the page where the action was taken.
+# Consider using a session variable instead, including hidden form field is kind of inconvenient
+
 @login_required
 def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
