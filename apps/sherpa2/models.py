@@ -15,7 +15,7 @@ class Association(models.Model):
     legal_url = models.CharField(db_column='gr_legal_url', max_length=255, blank=True)
     post_address = models.CharField(db_column='gr_adress1', max_length=255, blank=True)
     visit_address = models.CharField(db_column='gr_adress2', max_length=255, blank=True)
-    zip = models.CharField(db_column='gr_zip', max_length=12, blank=True)
+    zipcode = models.CharField(db_column='gr_zip', max_length=12, blank=True)
     ziparea = models.CharField(db_column='gr_ziparea', max_length=50, blank=True)
     country = models.CharField(db_column='gr_country', max_length=50, blank=True)
     orgnr = models.CharField(db_column='gr_orgnr', max_length=20, blank=True)

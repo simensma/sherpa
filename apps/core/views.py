@@ -2,8 +2,7 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from django.core import serializers
 
-from core.models import Tag
-from user.models import Zipcode
+from core.models import Tag, Zipcode
 from focus.models import FocusZipcode
 
 import json

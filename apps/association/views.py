@@ -6,7 +6,7 @@ from django.template import RequestContext, loader
 from django.core.cache import cache
 
 from sherpa2.models import Association
-from user.models import *
+from core.models import County, Zipcode
 
 import json
 
@@ -63,7 +63,7 @@ def visit(request):
     return render(request, 'associations/visit.html', context)
 
 def filter(request):
-    if not request.POST.has_key('category') or not request.POST.has_key('county'):
+    if not 'category' in request.POST or not 'county' in request.POST:
         return HttpResponseRedirect(reverse('association.views.index'))
     result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result == None:
@@ -109,7 +109,7 @@ def filter(request):
                     if parent.post_address != '':
                         association.post_address = parent.post_address
                         association.visit_address = parent.visit_address
-                        association.zip = parent.zip
+                        association.zipcode = parent.zipcode
                         association.ziparea = parent.ziparea
                         break
 

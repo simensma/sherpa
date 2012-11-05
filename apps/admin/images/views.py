@@ -18,6 +18,10 @@ import json
 from datetime import datetime
 import simples3
 
+# Note: A lot of views includes 'origin', used for redirects after posting (e.g. when moving images)
+# because we want to redirect to the page where the action was taken.
+# Consider using a session variable instead, including hidden form field is kind of inconvenient
+
 @login_required
 def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
@@ -175,7 +179,7 @@ def update_images(request):
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
         # Figure out which fields should be updated
-        if request.POST.has_key('fields'):
+        if 'fields' in request.POST:
             fields = json.loads(request.POST['fields'])
             all_fields = False
         else:
@@ -188,7 +192,7 @@ def update_images(request):
             if all_fields or fields['licence']: image.licence = request.POST['licence']
 
             # Temporary if; key should always exist (need to update all forms that post to this view)
-            if request.POST.has_key('album'):
+            if 'album' in request.POST:
                 # If empty, the user picked the root album, but it will be a ghost image (found only when searching or under user-images)
                 image.album = Album.objects.get(id=request.POST['album']) if request.POST['album'] != '' else None
             image.save()

@@ -15,21 +15,21 @@ $(document).ready(function() {
                 type: 'POST'
             }).done(function(result) {
                 result = JSON.parse(result);
-                if(result.location != undefined) {
-                    $("form#household input[name='city']").val(result.location);
+                if(result.area != undefined) {
+                    $("form#household input[name='area']").val(result.area);
                     $("form#household div.control-group.zipcode").removeClass('error').addClass('success');
                 } else if(result.error == "does_not_exist") {
-                    $("form#household input[name='city']").val("Ukjent postnummer");
+                    $("form#household input[name='area']").val("Ukjent postnummer");
                     $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
                 }
             }).fail(function(result) {
-                $("form#household input[name='city']").val("Teknisk feil");
+                $("form#household input[name='area']").val("Teknisk feil");
                 $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
             }).always(function(result) {
                 $("form#household img.zip.ajaxloader").hide();
             });
         } else {
-            $("form#household input[name='city']").val("");
+            $("form#household input[name='area']").val("");
         }
     }
 
@@ -41,14 +41,14 @@ $(document).ready(function() {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").hide();
-            $("form#household input[name='city']").attr('disabled', true);
+            $("form#household input[name='area']").attr('disabled', true);
             $("form#household input[name='zipcode']").keyup(searchZip);
             $("form#household input[name='zipcode']").keyup();
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").show();
-            $("form#household input[name='city']").removeAttr('disabled');
+            $("form#household input[name='area']").removeAttr('disabled');
             $("form#household input[name='zipcode']").off('keyup');
         } else {
             $("form#household div.world").show();
@@ -81,7 +81,7 @@ $(document).ready(function() {
                 $(this).parents("div.control-group").removeClass('error').addClass('success');
             }
         } else {
-            if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='city']").val() == '') {
+            if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='area']").val() == '') {
                 $(this).parents("div.control-group").removeClass('success').addClass('error');
             } else {
                 $(this).parents("div.control-group").removeClass('error').addClass('success');
@@ -89,7 +89,7 @@ $(document).ready(function() {
         }
     });
 
-    $("form#household input[name='city']").focusout(function() {
+    $("form#household input[name='area']").focusout(function() {
         if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='zipcode']").val() == '') {
             $(this).parents("div.control-group").removeClass('success').addClass('error');
         } else {
