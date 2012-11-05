@@ -45,7 +45,7 @@ def benefits(request, association_id):
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
-    if not request.POST.has_key('zipcode'):
+    if not 'zipcode' in request.POST:
         return HttpResponseRedirect(reverse('membership.views.index'))
     association = cache.get('zipcode.association.%s' % request.POST['zipcode'])
     if association == None:

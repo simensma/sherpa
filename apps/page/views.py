@@ -117,7 +117,7 @@ def parse_content(request, version):
 @csrf_exempt
 def search(request):
     # Very simple search for now
-    if not request.GET.has_key('q'):
+    if not 'q' in request.GET:
         return render(request, 'page/search.html')
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
         context = {'search_query': request.GET['q'],
@@ -183,7 +183,7 @@ def redirect(request, url, slug="", params={}, permanent=False):
 
 def redirect_cabin(request):
     try:
-        if not request.GET.has_key('ca_id'):
+        if not 'ca_id' in request.GET:
             raise Sherpa2Cabin.DoesNotExist
         cabin = Sherpa2Cabin.objects.get(id=request.GET['ca_id'])
         if cabin.url_ut == None or cabin.url_ut == '':

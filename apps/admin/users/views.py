@@ -17,7 +17,7 @@ created_user = 'opprettet_bruker'
 @login_required
 def index(request):
     users = User.objects.all().order_by('first_name')
-    context = {'users': users, 'created_user': request.GET.has_key(created_user)}
+    context = {'users': users, 'created_user': created_user in request.GET}
     return render(request, 'admin/users/index.html', context)
 
 @login_required

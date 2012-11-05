@@ -20,12 +20,12 @@ def list(request):
     time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
-        'invalid_date': request.GET.has_key(invalid_date)}
+        'invalid_date': invalid_date in request.GET}
     return render(request, 'admin/ads/list.html', context)
 
 @login_required
 def create_ad(request):
-    if not request.FILES.has_key('ad'):
+    if not 'ad' in request.FILES:
         # TODO error handling
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
@@ -34,7 +34,7 @@ def create_ad(request):
     fallback_extension = None
     fallback_content_type = None
 
-    if request.FILES.has_key('ad_fallback'):
+    if 'ad_fallback' in request.FILES:
         fallback_hash, fallback_extension, fallback_content_type = upload(request.FILES['ad_fallback'])
     width = None if request.POST['width'] == '' else request.POST['width'].strip()
     height = None if request.POST['height'] == '' else request.POST['height'].strip()
@@ -55,10 +55,10 @@ def update_ad(request):
     ad.viewcounter = request.POST['viewcounter']
     if ad.width != None: ad.width = request.POST['width']
     if ad.height != None: ad.height = request.POST['height']
-    if request.FILES.has_key('ad'):
+    if 'ad' in request.FILES:
         ad.delete_file()
         ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
-    if request.FILES.has_key('ad_fallback'):
+    if 'ad_fallback' in request.FILES:
         ad.delete_fallback_file()
         ad.fallback_sha1_hash, ad.fallback_extension, ad.fallback_content_type = upload(request.FILES['ad_fallback'])
     ad.save()

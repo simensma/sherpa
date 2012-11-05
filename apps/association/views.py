@@ -63,7 +63,7 @@ def visit(request):
     return render(request, 'associations/visit.html', context)
 
 def filter(request):
-    if not request.POST.has_key('category') or not request.POST.has_key('county'):
+    if not 'category' in request.POST or not 'county' in request.POST:
         return HttpResponseRedirect(reverse('association.views.index'))
     result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result == None:

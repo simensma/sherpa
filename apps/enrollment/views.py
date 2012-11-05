@@ -58,7 +58,7 @@ def index(request):
 
 def registration(request, user):
     request.session.modified = True
-    if request.session.has_key('enrollment'):
+    if 'enrollment' in request.session:
         if request.session['enrollment']['state'] == 'payment':
             # Payment has been initiated but the user goes back to the registration page - why?
             # Maybe it failed, and they want to retry registration?
@@ -70,9 +70,9 @@ def registration(request, user):
             del request.session['enrollment']
 
     # Check if this is a first-time registration (or start-over if the previous one was deleted)
-    if not request.session.has_key('enrollment'):
+    if not 'enrollment' in request.session:
         request.session['enrollment'] = {'users': [], 'state': 'registration'}
-    elif not request.session['enrollment'].has_key('state'):
+    elif not 'state' in request.session['enrollment']:
         # Temporary if-branch:
         # Since the 'state' key was recently added to the session dict,
         # add it for old users who revisit this page.
@@ -104,22 +104,22 @@ def registration(request, user):
 
         if not validate_user(request.POST):
             errors = True
-            if request.POST.has_key('user'):
+            if 'user' in request.POST:
                 index = int(request.POST['user'])
                 user = new_user
                 user['index'] = index
             else:
                 user = new_user
         else:
-            if request.POST.has_key('user'):
+            if 'user' in request.POST:
                 request.session['enrollment']['users'][int(request.POST['user'])] = new_user
             else:
                 request.session['enrollment']['users'].append(new_user)
 
-    contact_missing = request.GET.has_key(contact_missing_key)
+    contact_missing = contact_missing_key in request.GET
     updateIndices(request.session)
 
-    if not errors and request.POST.has_key('forward'):
+    if not errors and 'forward' in request.POST:
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
     now = datetime.now()
@@ -128,13 +128,13 @@ def registration(request, user):
     context = {'users': request.session['enrollment']['users'], 'person': user,
         'errors': errors, 'contact_missing': contact_missing,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'too_many_underage': request.GET.has_key(too_many_underage),
+        'too_many_underage': too_many_underage in request.GET,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/registration.html', context)
 
 def remove(request, user):
     request.session.modified = True
-    if not request.session.has_key('enrollment'):
+    if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     # If the index is too high, ignore it and redirect the user back.
@@ -162,7 +162,7 @@ def household(request):
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
 
     request.session['enrollment']['conditions'] = True
-    errors = request.GET.has_key(invalid_location)
+    errors = invalid_location in request.GET
     if request.method == 'POST':
         location = {}
         location['country'] = request.POST['country']
@@ -172,12 +172,12 @@ def household(request):
         location['zipcode'] = request.POST['zipcode']
         location['area'] = request.POST.get('area', '')
         request.session['enrollment']['location'] = location
-        request.session['enrollment']['yearbook'] = location['country'] != 'NO' and request.POST.has_key('yearbook')
+        request.session['enrollment']['yearbook'] = location['country'] != 'NO' and 'yearbook' in request.POST
         request.session['enrollment']['attempted_yearbook'] = False
         if request.session['enrollment']['yearbook'] and request.POST['existing'] != '':
             request.session['enrollment']['yearbook'] = False
             request.session['enrollment']['attempted_yearbook'] = True
-        if request.POST.has_key('existing'):
+        if 'existing' in request.POST:
             request.session['enrollment']['existing'] = request.POST['existing']
 
         if validate_location(request.session['enrollment']['location']):
@@ -203,7 +203,7 @@ def household(request):
     context = {'users': request.session['enrollment']['users'],
         'location': request.session['enrollment'].get('location', ''),
         'existing': request.session['enrollment'].get('existing', ''),
-        'invalid_existing': request.GET.has_key(invalid_existing),
+        'invalid_existing': invalid_existing in request.GET,
         'countries_norway': countries_norway, 'main': main,
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
@@ -284,7 +284,7 @@ def verification(request):
             request.session['enrollment']['location']['address2'] = address.a2
             request.session['enrollment']['location']['address3'] = address.a3
 
-    if request.session['enrollment'].has_key('association'):
+    if 'association' in request.session['enrollment']:
         del request.session['enrollment']['association']
     if request.session['enrollment']['location']['country'] == 'NO':
         # Get the area name for this zipcode
@@ -327,7 +327,7 @@ def verification(request):
             main = user
         if user['age'] >= AGE_YOUTH:
             youth_or_older_count += 1
-        if user.has_key('key'):
+        if 'key' in user:
             keycount += 1
     keyprice = keycount * KEY_PRICE
     multiple_main = youth_or_older_count > 1
@@ -341,9 +341,9 @@ def verification(request):
         'main': main, 'year': year, 'next_year': next_year,
         'price': request.session['enrollment']['price'],
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_youth': AGE_YOUTH,
-        'age_school': AGE_SCHOOL, 'invalid_main_member': request.GET.has_key(invalid_main_member_key),
-        'nonexistent_main_member': request.GET.has_key(nonexistent_main_member_key),
-        'no_main_member': request.GET.has_key(no_main_member_key),
+        'age_school': AGE_SCHOOL, 'invalid_main_member': invalid_main_member_key in request.GET,
+        'nonexistent_main_member': nonexistent_main_member_key in request.GET,
+        'no_main_member': no_main_member_key in request.GET,
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
@@ -370,7 +370,7 @@ def payment_method(request):
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
-    context = {'invalid_payment_method': request.GET.has_key(invalid_payment_method),
+    context = {'invalid_payment_method': invalid_payment_method in request.GET,
         'card_available': State.objects.all()[0].card,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'enrollment/payment.html', context)
@@ -464,7 +464,7 @@ def payment(request):
         user['price'] = price_of(user['age'], user['household'], request.session['enrollment']['price'])
         user['type'] = type_of(user['age'], user['household'])
         request.session['enrollment']['price_sum'] += user['price']
-        if user.has_key('key'):
+        if 'key' in user:
             request.session['enrollment']['price_sum'] += KEY_PRICE
 
     # Pay for yearbook if foreign
@@ -532,7 +532,7 @@ def payment(request):
 
 def process_invoice(request):
     request.session.modified = True
-    if not request.session.has_key('enrollment'):
+    if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     if request.session['enrollment']['state'] == 'registration':
@@ -555,7 +555,7 @@ def process_invoice(request):
 
 def process_card(request):
     request.session.modified = True
-    if not request.session.has_key('enrollment'):
+    if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     if request.session['enrollment']['state'] == 'registration':
@@ -598,7 +598,7 @@ def process_card(request):
 
 def result(request):
     request.session.modified = True
-    if not request.session.has_key('enrollment'):
+    if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
     if request.session['enrollment']['state'] == 'registration':
@@ -641,7 +641,7 @@ def sms(request):
         return HttpResponse(json.dumps({'error': 'enrollment_uncompleted'}))
     if request.session['enrollment']['location']['country'] != 'NO':
         return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if request.session['enrollment']['users'][index].has_key('sms_sent'):
+    if 'sms_sent' in request.session['enrollment']['users'][index]:
         return HttpResponse(json.dumps({'error': 'already_sent'}))
     number = request.session['enrollment']['users'][index]['phone']
 
@@ -700,7 +700,7 @@ def updateIndices(session):
         i += 1
 
 def validate(session, require_location, require_existing):
-    if not session.has_key('enrollment'):
+    if not 'enrollment' in session:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if len(session['enrollment']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
@@ -709,7 +709,7 @@ def validate(session, require_location, require_existing):
     if not validate_user_contact(session['enrollment']['users']):
         return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
     if require_location:
-        if not session['enrollment'].has_key('location') or not validate_location(session['enrollment']['location']):
+        if not 'location' in session['enrollment'] or not validate_location(session['enrollment']['location']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     if require_existing:
         if session['enrollment']['existing'] != '' and not validate_existing(session['enrollment']['existing'], session['enrollment']['location']['zipcode'], session['enrollment']['location']['country']):

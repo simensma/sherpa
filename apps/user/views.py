@@ -29,7 +29,7 @@ def home_new(request):
 @login_required
 def account(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH,
-        'update_success': request.GET.has_key(update_success),
+        'update_success': update_success in request.GET,
         'phone_max_length': PHONE_MAX_LENGTH}
     if request.method == 'POST':
         try:

@@ -1,6 +1,6 @@
 def keywords(xmp):
-    if xmp.has_key('dc'):
-        if xmp['dc'].has_key('subject'):
+    if 'dc' in xmp:
+        if 'subject' in xmp['dc']:
             return xmp['dc']['subject']
     return []
 
