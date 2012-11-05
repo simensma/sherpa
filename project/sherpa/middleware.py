@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.http import urlquote
 from django.core import urlresolvers
 from django.utils.log import getLogger
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 
 from datetime import datetime
 import hashlib
@@ -48,7 +48,10 @@ class Sites():
 
 class CurrentApp(object):
     def process_request(self, request):
-        request.current_app = resolve(request.path).app_name
+        try:
+            request.current_app = resolve(request.path).app_name
+        except Resolver404:
+            request.current_app = ''
 
 class DecodeQueryString(object):
     def process_request(self, request):
