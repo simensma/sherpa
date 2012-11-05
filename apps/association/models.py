@@ -20,6 +20,7 @@ class Association(models.Model):
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
     group_type = models.CharField(max_length=255, choices=GROUP_TYPES, default='')
+    site = models.OneToOneField('core.Site', null=True)
 
     # Address
     post_address = models.CharField(max_length=255, default='')
