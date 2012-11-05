@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from datetime import datetime
@@ -16,7 +15,6 @@ from core.models import Tag
 
 import urllib
 
-@login_required
 def list(request):
     versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True).order_by('-variant__article__created')
     for version in versions:
@@ -24,7 +22,6 @@ def list(request):
     context = {'versions': versions}
     return render(request, 'admin/articles/list.html', context)
 
-@login_required
 def new(request):
     article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
     article.save()
@@ -36,7 +33,6 @@ def new(request):
     create_template(request.POST['template'], version, request.POST['title'])
     return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
 
-@login_required
 def image(request, article):
     article = Article.objects.get(id=article)
     article.thumbnail = request.POST['thumbnail']
@@ -44,7 +40,6 @@ def image(request, article):
     article.save()
     return HttpResponse()
 
-@login_required
 def image_delete(request, article):
     article = Article.objects.get(id=article)
     article.thumbnail = None
@@ -52,14 +47,12 @@ def image_delete(request, article):
     article.save()
     return HttpResponse()
 
-@login_required
 def image_hide(request, article):
     article = Article.objects.get(id=article)
     article.hide_thumbnail = True
     article.save()
     return HttpResponse()
 
-@login_required
 def publish(request, article):
     datetime_string = urllib.unquote_plus(request.POST["datetime"])
     status =  urllib.unquote_plus(request.POST["status"])
@@ -80,19 +73,16 @@ def publish(request, article):
     article.save()
     return HttpResponse()
 
-@login_required
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     version.load_preview()
     context = {'version': version}
     return render(request, 'admin/articles/confirm-delete.html', context)
 
-@login_required
 def delete(request, article):
     Article.objects.get(id=article).delete()
     return HttpResponseRedirect(reverse('admin.articles.views.list'))
 
-@login_required
 def edit_version(request, version):
     rows, version = parse_version_content(version)
     profiles = Profile.objects.all().order_by('user__first_name')
@@ -124,7 +114,6 @@ def parse_version_content(version):
         row.columns = columns
     return rows, version
 
-@login_required
 def update_publishers(request, version):
     version = Version.objects.get(id=version)
     publisher_list = json.loads(request.POST['authors'])
@@ -132,7 +121,6 @@ def update_publishers(request, version):
     version.publishers = publishers
     return HttpResponse()
 
-@login_required
 def update_tags(request, version):
     version = Version.objects.get(id=version)
     tag_objects = []

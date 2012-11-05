@@ -1,7 +1,7 @@
 from django import http
 from django.shortcuts import render
 from django.conf import settings
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.core.mail import mail_managers
 from django.core.exceptions import PermissionDenied
 from django.utils.http import urlquote
@@ -204,8 +204,11 @@ def _is_internal_request(domain, referer):
 
 class CheckSherpaPermissions(object):
     def process_request(self, request):
-        if request.current_app == 'admin' and not request.user.has_perm('user.sherpa'):
-            raise PermissionDenied
+        if request.current_app == 'admin':
+            if not request.user.is_authenticated():
+                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+            if not request.user.has_perm('user.sherpa'):
+                raise PermissionDenied
 
 class DeactivatedEnrollment():
     def process_request(self, request):

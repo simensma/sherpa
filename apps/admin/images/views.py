@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Q
 
@@ -23,11 +22,9 @@ logger = logging.getLogger('sherpa')
 # because we want to redirect to the page where the action was taken.
 # Consider using a session variable instead, including hidden form field is kind of inconvenient
 
-@login_required
 def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
 
-@login_required
 def user_images(request, profile):
     profile = Profile.objects.get(id=profile)
     images = Image.objects.filter(uploader=profile)
@@ -46,7 +43,6 @@ def user_images(request, profile):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/user_images.html', context)
 
-@login_required
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
@@ -69,7 +65,6 @@ def list_albums(request, album):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'admin/images/list_albums.html', context)
 
-@login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = [] if image.album is None else list_parents(image.album)
@@ -91,7 +86,6 @@ def image_details(request, image):
         'current_navigation': 'albums'}
     return render(request, 'admin/images/image_details.html', context)
 
-@login_required
 def move_items(request):
     destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
     for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
@@ -122,7 +116,6 @@ def move_items(request):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
-@login_required
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
@@ -134,7 +127,6 @@ def delete_items(request, album):
         album = Album.objects.get(id=album)
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
-@login_required
 def add_album(request, parent):
     parent = None if parent is None else Album.objects.get(id=parent)
     album = Album(name=request.POST['name'], parent=parent)
@@ -144,7 +136,6 @@ def add_album(request, parent):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
-@login_required
 def update_album(request):
     albums = Album.objects.filter(id__in=json.loads(request.POST['albums']))
     for album in albums:
@@ -156,7 +147,6 @@ def update_album(request):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
-@login_required
 def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
@@ -217,7 +207,6 @@ def update_images(request):
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
-@login_required
 def upload_image(request):
     try:
         if len(request.FILES.getlist('files')) == 0:
@@ -245,7 +234,6 @@ def upload_image(request):
         )
         return render(request, 'admin/images/iframe.html', {'result': 'unknown_exception'})
 
-@login_required
 def fast_upload(request):
     try:
         file = request.FILES['file']
@@ -281,7 +269,6 @@ def fast_upload(request):
 
     return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
-@login_required
 def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -292,7 +279,6 @@ def content_json(request, album):
         objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     return HttpResponse(json.dumps(objects))
 
-@login_required
 def album_content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -303,7 +289,6 @@ def album_content_json(request, album):
         path = []
     return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
 
-@login_required
 def album_search_json(request):
     if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
         return HttpResponse('[]')
@@ -314,7 +299,6 @@ def album_search_json(request):
         items.append(list_parents_values(album))
     return HttpResponse(json.dumps({'items': items}))
 
-@login_required
 def search(request):
     context = {
         'origin': request.get_full_path(),
@@ -343,7 +327,6 @@ def search(request):
         'search_query': request.GET['q']})
     return render(request, 'admin/images/search.html', context)
 
-@login_required
 def search_json(request):
     images = []
     if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
@@ -363,7 +346,6 @@ def search_json(request):
     objects = parse_objects([], [], images)
     return HttpResponse(json.dumps(objects))
 
-@login_required
 def photographer(request):
     images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
     photographers = []

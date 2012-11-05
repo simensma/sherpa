@@ -1,16 +1,13 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 
 from core.models import Search
 
-@login_required
 def index(request):
     return render(request, 'admin/analytics/index.html')
 
-@login_required
 def searches(request):
     most_searched = cache.get('analytics.searches.most_searched')
     if most_searched is None:

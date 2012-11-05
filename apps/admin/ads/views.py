@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from datetime import datetime
@@ -14,7 +13,6 @@ from page.models import Ad, AdPlacement
 
 invalid_date = 'ugyldig-datoformat'
 
-@login_required
 def list(request):
     ads = Ad.objects.all().order_by('name')
     time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
@@ -23,7 +21,6 @@ def list(request):
         'invalid_date': invalid_date in request.GET}
     return render(request, 'admin/ads/list.html', context)
 
-@login_required
 def create_ad(request):
     if not 'ad' in request.FILES:
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
@@ -46,7 +43,6 @@ def create_ad(request):
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
     ad.name = request.POST['name']
@@ -63,7 +59,6 @@ def update_ad(request):
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def create_placement(request):
     try:
         ad = Ad.objects.get(id=request.POST['ad'])
@@ -81,7 +76,6 @@ def create_placement(request):
         return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def update_placement(request):
     try:
         placement = AdPlacement.objects.get(id=request.POST['id'])

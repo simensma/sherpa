@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext, loader
@@ -17,7 +16,6 @@ import json
 import requests
 import urllib
 
-@login_required
 def list(request):
     versions = Version.objects.filter(variant__page__isnull=False, variant__page__parent__isnull=True, active=True).order_by('variant__page__title')
     for version in versions:
@@ -26,7 +24,6 @@ def list(request):
     context = {'versions': versions, 'menus': menus}
     return render(request, 'admin/pages/list.html', context)
 
-@login_required
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
     for version in versions:
@@ -35,7 +32,6 @@ def children(request, page):
     c = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(t.render(c))
 
-@login_required
 def new(request):
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
@@ -49,20 +45,17 @@ def new(request):
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
 
-@login_required
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
     page_valid = not Page.objects.filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
-@login_required
 def rename(request, page):
     page = Page.objects.get(id=page)
     page.title = request.POST['title']
     page.save()
     return HttpResponse()
 
-@login_required
 def parent(request, page):
     page = Page.objects.get(id=page)
     if request.POST['parent'] == 'None':
@@ -78,7 +71,6 @@ def parent(request, page):
     page.save()
     return HttpResponse('{}')
 
-@login_required
 def publish(request, page):
     datetime_string = urllib.unquote_plus(request.POST["datetime"])
     status = urllib.unquote_plus(request.POST["status"])
@@ -99,19 +91,16 @@ def publish(request, page):
     page.save()
     return HttpResponse()
 
-@login_required
 def display_ads(request, version):
     version = Version.objects.get(id=version)
     version.ads = json.loads(request.POST['ads'])
     version.save()
     return HttpResponse()
 
-@login_required
 def delete(request, page):
     Page.objects.get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
-@login_required
 def edit_version(request, version):
     if request.method == 'GET':
         pages = Page.objects.all().order_by('title')

@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 
 from datetime import datetime
@@ -11,7 +10,6 @@ from page.models import *
 
 from instagram.views import initial_url as instagram_initial_url
 
-@login_required
 def index(request):
     page_versions = Version.objects.filter(
         variant__page__isnull=False,
@@ -32,7 +30,6 @@ def index(request):
         'page_versions': page_versions}
     return render(request, 'admin/cache/index.html', context)
 
-@login_required
 def delete(request):
     if not request.is_ajax():
         return HttpResponseRedirect(reverse('admin.cache.views.index'))
