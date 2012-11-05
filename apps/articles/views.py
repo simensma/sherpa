@@ -28,7 +28,7 @@ def index(request):
         version.load_preview()
     context = {'versions': versions, 'tag': request.GET.get('tag', ''),
         'advertisement': AdPlacement.get_active_ad()}
-    return render(request, "page/articles-list.html", context)
+    return render(request, 'page/articles-list.html', context)
 
 # Note: This is probably not compatible with the tag search
 def more(request):
@@ -79,7 +79,7 @@ def show(request, article, text):
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
     context['advertisement'] = AdPlacement.get_active_ad()
-    return render(request, "page/article.html", context)
+    return render(request, 'page/article.html', context)
 
 def show_old(request, article, text):
     context = cache.get('old_articles.%s' % article)
@@ -94,4 +94,4 @@ def show_old(request, article, text):
         except OldArticle.DoesNotExist:
             raise Http404
     context['advertisement'] = AdPlacement.get_active_ad()
-    return render(request, "page/article_old.html", context)
+    return render(request, 'page/article_old.html', context)

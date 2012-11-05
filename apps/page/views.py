@@ -108,11 +108,11 @@ def parse_content(request, version):
 
     for promo in promos:
         if request.path == promo['url']:
-            context['promo'] = "widgets/promo/static/%s.html" % promo['template']
+            context['promo'] = 'widgets/promo/static/%s.html' % promo['template']
 
     context['request'] = request
     context['promos'] = promos
-    return render(request, "page/page.html", context)
+    return render(request, 'page/page.html', context)
 
 @csrf_exempt
 def search(request):
