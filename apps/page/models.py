@@ -18,6 +18,7 @@ class Menu(models.Model):
     order = models.IntegerField()
     # Used to mark the current active menu page
     active = None
+    site = models.ForeignKey('core.Site')
 
 @receiver(pre_delete, sender=Menu, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
@@ -33,6 +34,7 @@ class Page(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     publisher = models.ForeignKey('user.Profile')
     parent = models.ForeignKey('page.Page', null=True)
+    site = models.ForeignKey('core.Site')
 
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):
