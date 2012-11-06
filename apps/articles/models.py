@@ -11,6 +11,11 @@ class Article(models.Model):
     pub_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return Menu.objects.filter(site=site)
+
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):
     Variant.objects.filter(article=kwargs['instance']).delete()
