@@ -32,7 +32,7 @@ def delete_content(sender, **kwargs):
 
 class Page(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.CharField(max_length=50, unique=True)
+    slug = models.CharField(max_length=50)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
