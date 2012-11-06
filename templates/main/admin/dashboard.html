@@ -14,32 +14,34 @@
 
     <nav class="dashboard">
       <ul>
-        <li>
-          <a href="{% url admin.cms.views.page.list %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg">
-          </a>
-          <h2><a href="{% url admin.cms.views.page.list %}">Websider</a></h2>
-          <p>
-            Endre på hovedinnholdet på websidene.
-          </p>
-          <div style="clear: both;"></div>
-        </li>
-        <li>
-          <a href="{% url admin.articles.views.list %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg">
-          </a>
-          <h2><a href="{% url admin.articles.views.list %}">Nyheter</a></h2>
-          <p>Skriv og publiser artikler som vises under <a href="{% url articles.views.index %}">/nyheter/</a></p>
-          <div style="clear: both;"></div>
-        </li>
-        <li>
-          <a href="{% url admin.ads.views.list %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
-          </a>
-          <h2><a href="{% url admin.ads.views.list %}">Annonser</a></h2>
-          <p>Last opp og legg ut annonser. Hvilke sider annonsene vises på velges under "<a href="{% url admin.cms.views.page.list %}">Websider</a>".</p>
-          <div style="clear: both;"></div>
-        </li>
+        {% if active_association.site %}
+          <li>
+            <a href="{% url admin.cms.views.page.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg">
+            </a>
+            <h2><a href="{% url admin.cms.views.page.list %}">Websider</a></h2>
+            <p>
+              Endre på hovedinnholdet på websidene.
+            </p>
+            <div style="clear: both;"></div>
+          </li>
+          <li>
+            <a href="{% url admin.articles.views.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg">
+            </a>
+            <h2><a href="{% url admin.articles.views.list %}">Nyheter</a></h2>
+            <p>Skriv og publiser artikler som vises under <a href="{% url articles.views.index %}">/nyheter/</a></p>
+            <div style="clear: both;"></div>
+          </li>
+          <li>
+            <a href="{% url admin.ads.views.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
+            </a>
+            <h2><a href="{% url admin.ads.views.list %}">Annonser</a></h2>
+            <p>Last opp og legg ut annonser. Hvilke sider annonsene vises på velges under "<a href="{% url admin.cms.views.page.list %}">Websider</a>".</p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
         <li>
           <a href="{% url admin.images.views.index %}">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
@@ -64,16 +66,18 @@
           <p>Finn Sherpa-brukere eller opprett ny bruker i din forening (eller en underforening).</p>
           <div style="clear: both;"></div>
         </li>
-        <li>
-          <a href="{% url admin.cache.views.index %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cache.png">
-          </a>
-          <h2><a href="{% url admin.cache.views.index %}">Caching</a></h2>
-          <p>
-            Vi benytter <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste. Her kan du slette cachede sider for å se endringer kjapt.
-          </p>
-          <div style="clear: both;"></div>
-        </li>
+        {% if active_association.site %}
+          <li>
+            <a href="{% url admin.cache.views.index %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cache.png">
+            </a>
+            <h2><a href="{% url admin.cache.views.index %}">Caching</a></h2>
+            <p>
+              Vi benytter <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste. Her kan du slette cachede sider for å se endringer kjapt.
+            </p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
         {% if active_association.id == 56 %}
           {# Applies only to DNT Central #}
           <li>
