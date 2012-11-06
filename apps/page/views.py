@@ -26,7 +26,7 @@ SEARCH_CHAR_LIMIT = 3
 
 def page(request, slug):
     try:
-        page = Page.objects.get(slug=slug, published=True, pub_date__lt=datetime.now())
+        page = Page.on(request.site).get(slug=slug, published=True, pub_date__lt=datetime.now())
     except Page.DoesNotExist:
         # This is (as of this writing) the only point of entry to the 404 template.
         raise Http404
@@ -129,7 +129,7 @@ def search(request):
     search = Search(query=request.GET['q'])
     search.save()
 
-    pages = Page.objects.filter(
+    pages = Page.on(request.site).filter(
         # Match page title or content
         Q(variant__version__row__column__content__content__icontains=request.GET['q']) |
         Q(title__icontains=request.GET['q']),

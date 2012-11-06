@@ -14,7 +14,7 @@ def menus(request):
     else:
         menus = cache.get('main.menu')
         if menus is None:
-            menus = Menu.objects.all().order_by('order')
+            menus = Menu.on(request.site).all().order_by('order')
             cache.set('main.menu', menus, 60 * 60 * 24)
         for menu in menus:
             url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
