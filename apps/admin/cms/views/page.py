@@ -17,7 +17,12 @@ import requests
 import urllib
 
 def list(request):
-    versions = Version.objects.filter(variant__page__isnull=False, variant__page__parent__isnull=True, active=True).order_by('variant__page__title')
+    versions = Version.objects.filter(
+        variant__page__isnull=False,
+        variant__page__parent__isnull=True,
+        active=True,
+        variant__page__site=request.session['active_association'].site
+        ).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.on(request.session['active_association'].site).all().order_by('order')
@@ -117,7 +122,7 @@ def edit_version(request, version):
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
                     if content.type == 'widget':
-                        content.content = parse_widget(json.loads(content.content))
+                        content.content = parse_widget(request, json.loads(content.content))
                     elif content.type == 'image':
                         content.content = json.loads(content.content)
                 column.contents = contents

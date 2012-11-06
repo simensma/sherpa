@@ -15,8 +15,12 @@ NEWS_ITEMS_BULK_SIZE = 20 # Needs to be an even number!
 
 def index(request):
     versions = Version.objects.filter(
-        variant__article__isnull=False, variant__segment__isnull=True,
-        variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.now()
+        variant__article__isnull=False,
+        variant__segment__isnull=True,
+        variant__article__published=True,
+        active=True,
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.site
         ).order_by('-variant__article__pub_date')
 
     tags = request.GET.getlist('tag')
@@ -71,7 +75,7 @@ def show(request, article, text):
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
                     if content.type == 'widget':
-                        content.content = parse_widget(json.loads(content.content))
+                        content.content = parse_widget(request, json.loads(content.content))
                     elif content.type == 'image':
                         content.content = json.loads(content.content)
                 column.contents = contents

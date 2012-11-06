@@ -20,7 +20,7 @@ def add(request):
         if content.type == 'html' or content.type == 'image':
             result = content.content
         else:
-            widget = parse_widget(json.loads(content.content))
+            widget = parse_widget(request, json.loads(content.content))
             t = loader.get_template(widget['template'])
             c = RequestContext(request, {'widget': widget})
             result = t.render(c)
@@ -40,7 +40,7 @@ def update_widget(request, widget):
     widget = Content.objects.get(id=widget)
     widget.content = request.POST['content']
     widget.save()
-    widget = parse_widget(json.loads(widget.content))
+    widget = parse_widget(request, json.loads(widget.content))
     t = loader.get_template(widget['template'])
     c = RequestContext(request, {'widget': widget})
     result = t.render(c)

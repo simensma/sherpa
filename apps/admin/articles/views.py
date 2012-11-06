@@ -16,7 +16,12 @@ from core.models import Tag
 import urllib
 
 def list(request):
-    versions = Version.objects.filter(variant__article__isnull=False, variant__segment__isnull=True, active=True).order_by('-variant__article__created')
+    versions = Version.objects.filter(
+        variant__article__isnull=False,
+        variant__segment__isnull=True,
+        active=True,
+        variant__article__site=request.session['active_association'].site
+        ).order_by('-variant__article__created')
     for version in versions:
         version.load_preview()
     context = {'versions': versions}
@@ -84,20 +89,20 @@ def delete(request, article):
     return HttpResponseRedirect(reverse('admin.articles.views.list'))
 
 def edit_version(request, version):
-    rows, version = parse_version_content(version)
+    rows, version = parse_version_content(request, version)
     profiles = Profile.objects.all().order_by('user__first_name')
     context = {'rows': rows, 'version': version, 'profiles': profiles,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'main/admin/articles/edit_version.html', context)
 
 def preview(request, version):
-    rows, version = parse_version_content(version)
+    rows, version = parse_version_content(request, version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {'rows': rows, 'version': version}
     return render(request, 'main/admin/articles/preview.html', context)
 
-def parse_version_content(version):
+def parse_version_content(request, version):
     version = Version.objects.get(id=version)
     version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
@@ -107,7 +112,7 @@ def parse_version_content(version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(json.loads(content.content))
+                    content.content = parse_widget(request, json.loads(content.content))
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents

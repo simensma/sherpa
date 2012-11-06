@@ -21,10 +21,13 @@ def index(request):
         variant__segment__isnull=True,
         variant__article__published=True,
         active=True,
-        variant__article__pub_date__lt=datetime.now()
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.session['active_association'].site
         ).order_by('-variant__article__pub_date')
+
     for version in article_versions:
         version.load_preview()
+
     context = {
         'article_versions': article_versions,
         'page_versions': page_versions}
@@ -35,7 +38,12 @@ def delete(request):
         return HttpResponseRedirect(reverse('admin.cache.views.index'))
 
     if request.POST['key'] == 'frontpage':
-        id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
+        id = Version.objects.get(
+            active=True,
+            variant__segment__isnull=True,
+            variant__page__slug='',
+            variant__page__site=request.session['active_association'].site
+            ).id
         cache.delete('content.version.%s' % id)
     elif request.POST['key'] == 'page':
         cache.delete('content.version.%s' % request.POST['id'])

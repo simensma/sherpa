@@ -64,7 +64,7 @@ def parse_content(request, version):
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
                     if content.type == 'widget':
-                        content.content = parse_widget(json.loads(content.content))
+                        content.content = parse_widget(request, json.loads(content.content))
                     elif content.type == 'image':
                         content.content = json.loads(content.content)
                 column.contents = contents
@@ -146,7 +146,9 @@ def search(request):
         # Active version, default segment, published article
         active=True,
         variant__segment=None,
-        variant__article__published=True, variant__article__pub_date__lt=datetime.now()
+        variant__article__published=True,
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.site
         ).distinct().order_by('-variant__article__pub_date')
 
     old_articles = OldArticle.objects.filter(
