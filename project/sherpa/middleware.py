@@ -209,6 +209,8 @@ class CheckSherpaPermissions(object):
                 return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
             if not request.user.has_perm('user.sherpa'):
                 raise PermissionDenied
+            if not 'active_association' in request.session and not request.path.startswith('/sherpa/aktiv-forening/'): # Hardcoded path
+                return render(request, 'main/admin/set_active_association.html')
 
 class DeactivatedEnrollment():
     def process_request(self, request):

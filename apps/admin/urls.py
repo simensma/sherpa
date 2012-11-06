@@ -10,5 +10,5 @@ urlpatterns = patterns('admin.views',
     url(r'^annonser/', include('admin.ads.urls')),
     url(r'^cache/', include('admin.cache.urls')),
     url(r'^innmelding/', include('admin.enrollment.urls')),
-    url(r'^aktiv-forening/(?P<association>\d+)/', 'set_active_association'),
+    url(r'^aktiv-forening/(?P<association>\d+)/', 'set_active_association'), # Path is harcoded in middleware
 )

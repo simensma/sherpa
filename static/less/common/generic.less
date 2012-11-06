@@ -1,4 +1,16 @@
+/* Mixins and variables */
+
 @profile-red: rgb(216, 45, 32);
+
+.rounded-corners (@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+/* Generic styles */
 
 .form-border {
   padding: 14px 20px;
