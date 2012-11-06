@@ -6,7 +6,7 @@ $(document).ready(function() {
     });
 
     $("header select[name='user_association']").chosen().change(function() {
-        var a = $('<a class="option-url" href="' + $(this).find('option:selected').attr('data-href') + '">s</a>').appendTo(document.body).get(0).click();
+        var a = $('<a class="hide" href="' + $(this).find('option:selected').attr('data-href') + '">s</a>').appendTo(document.body).get(0).click();
     });
 });
 
