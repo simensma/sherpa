@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
+  <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
+  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+  {% block extra_css %}{% endblock %}
+
+  {# Set rendered JS globals before anything else #}
+  {% block js_globals %}{% endblock %}
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
+  <!--[if lte IE 9]><script src="{{ STATIC_URL }}js/placeholder-ie.js"></script><![endif]-->
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}js/trim-ie.js"></script><![endif]-->
+  <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}js/main.js"></script>
+  <script src="{{ STATIC_URL }}js/common.js"></script>
+  <script src="{{ STATIC_URL }}js/widgets.js"></script>
+  <script src="{{ STATIC_URL }}js/ga.js"></script>
+  <script src="{{ STATIC_URL }}js/validator.js"></script>
+  {% block extra_js %}{% endblock %}
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <div class="row">
+    <div class="span6">
+      <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}img/header-logo.png" alt="Den Norske Turistforening"></a>
+    </div>
+    <div class="span6 search">
+      <form action="{% url page.views.search %}" method="get" class="form-search">
+        <input type="text" name="q" value="{{ search_query }}" class="input-medium">
+        <button type="submit" class="btn">Søk</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12 mobile-control">
+      <p class="display-menu">
+        <a href="javascript:undefined">
+          Meny <b class="caret"></b>
+        </a>
+      </p>
+      <p class="display-search">
+        <a href="javascript:undefined">
+          <b class="caret"></b> Søk
+        </a>
+      </p>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12">
+      <form action="{% url page.views.search %}" method="get" class="search-mobile form-search">
+        <input type="text" name="q" value="{{ search_query }}">
+        <button type="submit" class="btn">Søk</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span9 menu-container">
+      <nav id="menus">
+        <ul>
+          {% for menu in menus %}
+          <li{% if menu.active %} class="active"{% endif %}>
+            <a href="{{ menu.url }}" class="noexternal">{{ menu.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <div class="span3 login-container">
+      <div class="login">
+        {% if user.is_authenticated %}
+          {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
+          <a href="{# Todo #}">Min side</a>
+          <a href="{# Todo #}">Logg ut</a>
+        {% else %}
+          <a href="{# Todo #}">Min side</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="border"></div>
+
+  <div class="row">
+    <div class="span10 breadcrumb-container">
+      <div class="menu-breadcrumb">
+        <a href="/">Forsiden</a>
+          {# Too much template logic, but can't see a better way to do this. #}
+          {% if page_hierarchy %}
+            {% for page in page_hierarchy %}
+              /
+              {% if forloop.last %}<em>{% endif %}
+                <a href="/{{ page.url }}/">{{ page.title }}</a>
+              {% if forloop.last %}</em>{% endif %}
+            {% endfor %}
+          {% elif version.variant.page %}
+            {% if version.variant.page.slug != '' %}
+              / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
+            {% endif %}
+          {% elif version.variant.article %}
+            / <a href="{% url articles.views.index %}">Nyheter</a>
+            / <em><a href="">{{ version.title.content|striptags }}</a></em>
+          {% else %}
+            {# Fall back to the static title #}
+            / <em><a href="">{% block breadcrumb_title %}Turistforeningen{% endblock %}</a></em>
+          {% endif %}
+      </div>
+    </div>
+
+    <div class="span2 language-container">
+      <ul class="language-bar nav nav-pills">
+        <li class="dropdown" id="menu1">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            Language
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="noexternal" href="http://www.turistforeningen.no/english">English</a></li>
+            <li><a class="noexternal" href="http://www.turistforeningen.no/deutsch">Deutsch</a></li>
+            <li><a class="noexternal" href="http://www.turistforeningen.no/francais">Française</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+{% block body %}{% endblock %}
+
+{% if advertisement %}
+  {% include 'main/ad.html' %}
+{% endif %}
+
+</div>
+
+<div class="container social-icons">
+  <div class="row">
+    <div class="span3">
+      <a href="/kontakt/">
+        <img class="social" src="{{ STATIC_URL }}img/icons/social/turistforeningen.png" alt="Kontakt oss">
+      </a>
+      <h1>
+        <a href="/kontakt/">Kontakt oss</a>
+      </h1>
+      <a href="/kontakt/">E-post eller telefon</a>
+    </div>
+    <div class="span3">
+      <a class="noexternal" href="http://www.facebook.com/turistforeningen">
+        <img class="social" src="{{ STATIC_URL }}img/icons/social/facebook.png" alt="Facebook">
+      </a>
+      <h1>
+        <a class="noexternal" href="http://www.facebook.com/turistforeningen">Facebook</a>
+      </h1>
+      <a class="noexternal" href="http://www.facebook.com/turistforeningen">Følg oss</a>
+    </div>
+    <div class="span3">
+      <a class="noexternal" href="https://twitter.com/turistforening">
+        <img class="social" src="{{ STATIC_URL }}img/icons/social/twitter.png" alt="Twitter">
+      </a>
+      <h1>
+        <a class="noexternal" href="https://twitter.com/turistforening">Twitter</a>
+      </h1>
+      <a class="noexternal" href="https://twitter.com/turistforening">Snakk med oss</a>
+    </div>
+    <div class="span3">
+      <a href="http://www.youtube.com/user/turistforeningen">
+        <img class="social" src="{{ STATIC_URL }}img/icons/social/youtube.png" alt="Youtube">
+      </a>
+      <h1>
+        <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Youtube</a>
+      </h1>
+      <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Se våre filmer</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+
+    <h2>Ny footer</h2>
+
+  </div>
+</footer>
+
+</body>
+</html>

@@ -107,23 +107,23 @@ def parse_content(request, version):
         ]
 
     for promo in promos:
-        if request.path == promo['url']:
+        if request.path == promo['url'] and request.site.domain == 'www.turistforeningen.no':
             context['promo'] = 'main/widgets/promo/static/%s.html' % promo['template']
 
     context['request'] = request
     context['promos'] = promos
-    return render(request, 'main/page/page.html', context)
+    return render(request, 'common/page/page.html', context)
 
 @csrf_exempt
 def search(request):
     # Very simple search for now
     if not 'q' in request.GET:
-        return render(request, 'main/page/search.html')
+        return render(request, 'common/page/search.html')
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
         context = {'search_query': request.GET['q'],
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
-        return render(request, 'main/page/search.html', context)
+        return render(request, 'common/page/search.html', context)
 
     # Record the search
     search = Search(query=request.GET['q'])
@@ -166,7 +166,7 @@ def search(request):
         'pages': pages,
         'old_articles': old_articles,
         'article_count': len(article_versions) + len(old_articles)}
-    return render(request, 'main/page/search.html', context)
+    return render(request, 'common/page/search.html', context)
 
 def ad(request, ad):
     try:

@@ -32,7 +32,7 @@ def index(request):
         version.load_preview()
     context = {'versions': versions, 'tag': request.GET.get('tag', ''),
         'advertisement': AdPlacement.get_active_ad()}
-    return render(request, 'main/page/articles-list.html', context)
+    return render(request, 'common/page/articles-list.html', context)
 
 # Note: This is probably not compatible with the tag search
 def more(request):
@@ -52,7 +52,7 @@ def more_old(request):
     response = []
     articles = OldArticle.objects.all().order_by('-date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for article in articles:
-        t = loader.get_template('page/article-list-old-item.html')
+        t = loader.get_template('common/page/article-list-old-item.html')
         c = RequestContext(request, {'article': article})
         response.append(t.render(c))
     return HttpResponse(json.dumps(response))
@@ -83,7 +83,7 @@ def show(request, article, text):
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
     context['advertisement'] = AdPlacement.get_active_ad()
-    return render(request, 'main/page/article.html', context)
+    return render(request, 'common/page/article.html', context)
 
 def show_old(request, article, text):
     context = cache.get('old_articles.%s' % article)
@@ -98,4 +98,4 @@ def show_old(request, article, text):
         except OldArticle.DoesNotExist:
             raise Http404
     context['advertisement'] = AdPlacement.get_active_ad()
-    return render(request, 'main/page/article_old.html', context)
+    return render(request, 'common/page/article_old.html', context)

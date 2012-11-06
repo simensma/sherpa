@@ -1,4 +1,4 @@
-{% extends 'main/layout.html' %}
+{% extends site.template.name|add:"/layout.html" %}
 
 {% block title %}{{ version.variant.page.title }}{% endblock %}
 
@@ -11,6 +11,6 @@
 </div>
 {% endif %}
 
-{% include 'main/page/display-content.html' %}
+{% include 'common/page/display-content.html' %}
 
 {% endblock %}
