@@ -11,9 +11,6 @@ class Profile(models.Model):
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users')
     # At some point, this model will be extended to contain member data, syncing with Focus.
-    # It will also be connected with:
-    # - Djangos Group model
-    # - Djangos permission system.
 
     class Meta:
         permissions = [
