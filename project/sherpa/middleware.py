@@ -205,10 +205,15 @@ def _is_internal_request(domain, referer):
 class CheckSherpaPermissions(object):
     def process_request(self, request):
         if request.current_app == 'admin':
+            # Not logged in
             if not request.user.is_authenticated():
                 return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+            # Missing sherpa-permission
             if not request.user.has_perm('user.sherpa'):
                 raise PermissionDenied
+
+            # No active association set
             if not 'active_association' in request.session and not request.path.startswith('/sherpa/aktiv-forening/'): # Hardcoded path
                 return render(request, 'main/admin/set_active_association.html')
 
