@@ -80,9 +80,12 @@
           <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater opplysningene</button>
         </div>
       </div>
-      <p>
-        <strong>Tips:</strong> Hvis du skriver artikler, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på <a href="http://en.gravatar.com/">Gravatar</a> med <strong>samme</strong> e-postadresse som du bruker her.
-      </p>
+
+      {% if perms.user.sherpa %}
+        <p>
+          <strong>Tips:</strong> Hvis du skriver artikler, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på <a href="http://en.gravatar.com/">Gravatar</a> med <strong>samme</strong> e-postadresse som du bruker her.
+        </p>
+      {% endif %}
     </form>
 
     <h2>Endre passord</h2>
