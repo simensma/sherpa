@@ -34,20 +34,29 @@ def account(request):
 
 @login_required
 def update_account(request):
-    try:
-        if not validator.name(request.POST['name']):
-            raise ValueError("No name provided")
+    errors = False
 
-        if not validator.email(request.POST['email']):
-            raise ValueError("Invalid email address")
+    if not validator.name(request.POST['name']):
+        messages.add_message(request, messages.ERROR, 'no_name_provided')
+        errors = True
 
-        if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
+    if not validator.email(request.POST['email']):
+        messages.add_message(request, messages.ERROR, 'invalid_email_address')
+        errors = True
 
-        if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
-            messages.add_message(request, messages.ERROR, 'phone_too_long')
-            return HttpResponseRedirect(reverse('user.views.account'))
+    if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+        messages.add_message(request, messages.ERROR, 'duplicate_email_address')
+        errors = True
 
+    if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+        messages.add_message(request, messages.ERROR, 'password_too_short')
+        errors = True
+
+    if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
+        messages.add_message(request, messages.ERROR, 'phone_too_long')
+        errors = True
+
+    if not errors:
         split = request.POST['name'].split(' ')
         first_name = split[0]
         last_name = ' '.join(split[1:])
@@ -62,13 +71,6 @@ def update_account(request):
         profile.phone = request.POST['phone']
         profile.save()
         messages.add_message(request, messages.INFO, 'update_success')
-        return HttpResponseRedirect(reverse('user.views.account'))
-
-    except ValueError:
-        messages.add_message(request, messages.ERROR, 'value_error')
-
-    except IntegrityError as e:
-        messages.add_message(request, messages.ERROR, 'integrity_error')
 
     return HttpResponseRedirect(reverse('user.views.account'))
 

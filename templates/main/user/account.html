@@ -30,18 +30,28 @@
             <a class="close">x</a>
             <strong>Opplysningene dine har blitt oppdatert.</strong>
           </div>
-        {% elif message.message ==  'value_error' %}
+        {% elif message.message == 'no_name_provided' %}
           <div class="alert alert-danger">
             <a class="close">x</a>
-            <strong>Vennligst fyll inn minst navn, e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
+            <strong>Vennligst fyll inn fullt navn.</strong>
           </div>
-        {% elif message.message ==  'integrity_error' %}
+        {% elif message.message == 'invalid_email_address' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn en gyldig e-post adresse.</strong>
+          </div>
+        {% elif message.message == 'password_too_short' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn et passord på minst {{ password_length }} tegn.</strong>
+          </div>
+        {% elif message.message == 'duplicate_email_address' %}
           <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>E-postadressen er allerede i bruk!</strong><br>
             Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
           </div>
-        {% elif message.message ==  'phone_too_long' %}
+        {% elif message.message == 'phone_too_long' %}
           <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>Mobiltelefonen din har vel ikke over {{ phone_max_length }} siffer?</strong>
