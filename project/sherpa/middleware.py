@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django import http
 from django.shortcuts import render
 from django.conf import settings
@@ -242,7 +243,8 @@ class CheckSherpaPermissions(object):
             if request.session['active_association'].site == None and (
                 request.path.startswith('/sherpa/cms/') or
                 request.path.startswith('/sherpa/nyheter/') or
-                request.path.startswith('/sherpa/annonser/')):
+                request.path.startswith('/sherpa/annonser/') or
+                request.path.startswith(u'/sherpa/analyse/søk/')):
                 messages.add_message(request, messages.ERROR, 'no_association_site')
                 return HttpResponseRedirect(reverse('admin.views.index'))
 

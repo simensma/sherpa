@@ -126,7 +126,7 @@ def search(request):
         return render(request, 'common/page/search.html', context)
 
     # Record the search
-    search = Search(query=request.GET['q'])
+    search = Search(query=request.GET['q'], site=request.site)
     search.save()
 
     pages = Page.on(request.site).filter(

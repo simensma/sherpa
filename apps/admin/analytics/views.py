@@ -11,7 +11,7 @@ def index(request):
 def searches(request):
     most_searched = cache.get('analytics.searches.most_searched')
     if most_searched is None:
-        searches = Search.objects.all()
+        searches = Search.on(request.session['active_association'].site).all()
         hashes = {}
 
         for search in searches:
@@ -24,7 +24,7 @@ def searches(request):
         most_searched = sorted(most_searched, key=lambda search: -search['count'])
         cache.set('analytics.searches.most_searched', most_searched, 60 * 60 * 24)
 
-    latest_searches = Search.objects.all().order_by('-date')[:50]
+    latest_searches = Search.on(request.session['active_association'].site).all().order_by('-date')[:50]
 
     context = {'most_searched': most_searched, 'latest_searches': latest_searches}
     return render(request, 'main/admin/analytics/searches.html', context)

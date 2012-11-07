@@ -7,6 +7,11 @@ class Search(models.Model):
     query = models.CharField(max_length=1024)
     date = models.DateTimeField(auto_now_add=True)
 
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return Search.objects.filter(site=site)
+
 class Site(models.Model):
     domain = models.CharField(max_length=255)
     template = models.ForeignKey('core.SiteTemplate')
