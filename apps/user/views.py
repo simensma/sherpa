@@ -16,6 +16,7 @@ import md5
 import re
 
 from user.models import Profile
+from core import validator
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -32,10 +33,10 @@ def account(request):
 
     if request.method == 'POST':
         try:
-            if len(request.POST['name']) == 0:
+            if not validator.name(request.POST['name']):
                 raise ValueError("No name provided")
 
-            if len(re.findall('.+@.+\..+', request.POST['email'])) == 0:
+            if not validator.email(request.POST['email']):
                 raise ValueError("Invalid email address")
 
             if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
