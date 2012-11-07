@@ -16,6 +16,7 @@ import hashlib
 import re
 
 from core.models import Site, SiteTemplate
+from association.models import Association
 
 logger = getLogger('django.request')
 
@@ -204,6 +205,24 @@ def _is_internal_request(domain, referer):
     return referer is not None and re.match("^https?://%s/" % re.escape(domain), referer)
 
 
+class SetActiveAssociation(object):
+    def process_request(self, request):
+        # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_association'.
+        if request.user.is_authenticated() and request.user.has_perm('user.sherpa'):
+            m = re.match(r'/sherpa/aktiv-forening/(?P<association>\d+)/', request.path)
+            if m != None:
+                # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
+                association = Association.objects.get(id=m.groupdict()['association'])
+                if not association in request.user.get_profile().associations.all():
+                    raise PermissionDenied
+
+                request.session['active_association'] = association
+                if request.META.get('HTTP_REFERER') != None:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                else:
+                    return HttpResponseRedirect(reverse('admin.views.index'))
+
+
 class CheckSherpaPermissions(object):
     def process_request(self, request):
         if request.current_app == 'admin':
@@ -216,7 +235,7 @@ class CheckSherpaPermissions(object):
                 raise PermissionDenied
 
             # No active association set
-            if not 'active_association' in request.session and not request.path.startswith('/sherpa/aktiv-forening/'): # Hardcoded path
+            if not 'active_association' in request.session:
                 return render(request, 'main/admin/set_active_association.html')
 
             # Accessing CMS-functionality, but no site set

@@ -15,7 +15,7 @@
       <h2>Sentralt/nasjonalt</h2>
       <ul class="active-association-list">
       {% for association in user_associations.central %}
-        <li><a href="{% url admin.views.set_active_association association.id %}">{{ association.name }}</a></li>
+        <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -23,7 +23,7 @@
       <h2>Medlemsforeninger</h2>
       <ul class="active-association-list">
       {% for association in user_associations.associations %}
-        <li><a href="{% url admin.views.set_active_association association.id %}">{{ association.name }}</a></li>
+        <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -31,7 +31,7 @@
       <h2>Lokale turlag</h2>
       <ul class="active-association-list">
       {% for association in user_associations.small_associations %}
-        <li><a href="{% url admin.views.set_active_association association.id %}">{{ association.name }}</a></li>
+        <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -39,7 +39,7 @@
       <h2>Turgrupper</h2>
       <ul class="active-association-list">
       {% for association in user_associations.hike_groups %}
-        <li><a href="{% url admin.views.set_active_association association.id %}">{{ association.name }}</a></li>
+        <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
