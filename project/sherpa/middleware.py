@@ -237,7 +237,7 @@ class CheckSherpaPermissions(object):
 
             # No active association set
             if not 'active_association' in request.session:
-                return render(request, 'main/admin/set_active_association.html')
+                return render(request, 'common/admin/set_active_association.html')
 
             # Accessing CMS-functionality, but no site set
             if request.session['active_association'].site == None and (

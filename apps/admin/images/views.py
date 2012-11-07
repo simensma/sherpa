@@ -41,7 +41,7 @@ def user_images(request, profile):
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': current_navigation,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-    return render(request, 'main/admin/images/user_images.html', context)
+    return render(request, 'common/admin/images/user_images.html', context)
 
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album).order_by('name')
@@ -63,7 +63,7 @@ def list_albums(request, album):
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-    return render(request, 'main/admin/images/list_albums.html', context)
+    return render(request, 'common/admin/images/list_albums.html', context)
 
 def image_details(request, image):
     image = Image.objects.get(id=image)
@@ -84,7 +84,7 @@ def image_details(request, image):
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': 'albums'}
-    return render(request, 'main/admin/images/image_details.html', context)
+    return render(request, 'common/admin/images/image_details.html', context)
 
 def move_items(request):
     destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
@@ -156,11 +156,11 @@ def update_images(request):
             'origin': request.GET.get('origin', '')}
         if len(ids) == 1:
             context.update({'image': Image.objects.get(id=ids[0])})
-            return render(request, 'main/admin/images/modify_single.html', context)
+            return render(request, 'common/admin/images/modify_single.html', context)
         elif len(ids) > 1:
             images = Image.objects.filter(id__in=ids)
             context.update({'images': images})
-            return render(request, 'main/admin/images/modify_multiple.html', context)
+            return render(request, 'common/admin/images/modify_multiple.html', context)
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
             # TODO: Should maybe log an error here in case this was our fault.
@@ -210,7 +210,7 @@ def update_images(request):
 def upload_image(request):
     try:
         if len(request.FILES.getlist('files')) == 0:
-            return render(request, 'main/admin/images/iframe.html', {'result': 'no_files'})
+            return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
         #parsing
         parsed_images = []
@@ -218,7 +218,7 @@ def upload_image(request):
             try:
                 parsed_images.append(parse_image(file))
             except(IOError, KeyError):
-                return render(request, 'main/admin/images/iframe.html', {'result': 'parse_error'})
+                return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
 
         #storing
         ids = []
@@ -226,25 +226,25 @@ def upload_image(request):
         for image in parsed_images:
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
-        return render(request, 'main/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
     except Exception as e:
         logger.error(u"Uventet exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
-        return render(request, 'main/admin/images/iframe.html', {'result': 'unknown_exception'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'unknown_exception'})
 
 def fast_upload(request):
     try:
         file = request.FILES['file']
     except KeyError:
-        return render(request, 'main/admin/images/iframe.html', {'result': 'no_files'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
     #parse file
     try:
         parsed_image = parse_image(file)
     except(IOError, KeyError):
-        return render(request, 'main/admin/images/iframe.html', {'result': 'parse_error'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
 
     #store stuff on s3 and in db
     stored_image = store_image(parsed_image, None, request.user)
@@ -267,7 +267,7 @@ def fast_upload(request):
         tag.save()
         tag.images.add(image)
 
-    return render(request, 'main/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+    return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
 def content_json(request, album):
     if album is not None:
@@ -308,7 +308,7 @@ def search(request):
             'too_short_query': True,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         })
-        return render(request, 'main/admin/images/search.html', context)
+        return render(request, 'common/admin/images/search.html', context)
     images = []
     for word in request.GET['q'].split(' '):
         images.extend(Image.objects.filter(
@@ -325,7 +325,7 @@ def search(request):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'search_query': request.GET['q']})
-    return render(request, 'main/admin/images/search.html', context)
+    return render(request, 'common/admin/images/search.html', context)
 
 def search_json(request):
     images = []

@@ -1,0 +1,104 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
+{% endblock %}
+{% block body %}
+
+{% load dategtnow %}
+
+<div class="row">
+  <div class="span12">
+    <p style="text-align: center;"><a id="add-article" class="btn btn-success btn-large dialog-button" data-dialog=".article-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny artikkel</a></p>
+  </div>
+</div>
+
+{% if not versions %}
+<div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
+{% else %}
+
+<table class="table table-striped article-listing">
+<thead>
+<tr>
+  <th>Artikkel</th>
+  <th>Publisering</th>
+  <th>Forfattere</th>
+</tr>
+</thead>
+<tbody>
+{% for version in versions %}
+<tr>
+  <td class="article-preview">
+    <div class="media">
+      <h2 class="media-heading">
+        <a href="{% url admin.articles.views.edit_version version.id %}">
+          {{ version.title.content|striptags }}
+        </a>
+      </h2>
+      {% if not version.hide_thumbnail %}
+        <a class="pull-left" href="{% url admin.articles.views.edit_version version.id %}">
+          <img class="media-object" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+        </a>
+      {% endif %}
+      <div class="media-body">
+        <p>
+          <a href="{% url admin.articles.views.edit_version version.id %}">
+            {{ version.lede.content|striptags|safe|truncatewords:40 }}
+          </a>
+        </p>
+      </div>
+    </div>
+  </td>
+  {% if version.variant.article.published %}
+    {% if version.variant.article.pub_date|dategtnow %}
+      <td class="published-future">
+        {{ version.variant.article.pub_date }}
+      </td>
+    {% else %}
+      <td class="published-past">
+        {{ version.variant.article.pub_date }}
+      </td>
+    {% endif %}
+  {% else %}
+    <td class="unpublished">
+      Ikke publisert
+    </td>
+  {% endif %}
+  </td>
+  <td>
+    {% for publisher in version.publishers.all %}
+      {{ publisher.user.get_full_name }}
+      {% if not forloop.last %}<br>{% endif %}
+    {% endfor %}
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+<div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="80%">
+  <form action="{% url admin.articles.views.new %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="template" value="0">
+    <input type="hidden" name="slug" value="">
+    <table class="table">
+    <tr>
+      <td class="big">Tittel på artikkelen:</td>
+      <td><input type="text" name="title" class="input-xxlarge"></td>
+    </tr>
+    </table>
+    <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="0">
+      <p>Én full kolonne</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="1">
+      <p>Hovedkolonne med sidebar</p>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

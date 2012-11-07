@@ -1,0 +1,23 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb_title %}Min side{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Min side — {{ user.get_full_name }}</h2>
+
+    <p>
+      Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
+    </p>
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='home' %}
+  </div>
+</div>
+
+{% endblock %}

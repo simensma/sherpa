@@ -1,0 +1,116 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Websider &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/pages.js"></script>
+{% endblock %}
+{% block body %}
+
+<h2 class="skinny">Hovedmeny</h2>
+<div class="row">
+  <div class="span12">
+    <nav id="menus">
+      <ul>
+        {% for menu in menus %}
+        <li>
+          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
+        </li>
+        {% endfor %}
+        <li class="new">
+          <a class="new" href="javascript:undefined"><i class="icon-plus"></i></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<h2 class="skinny">Websider</h2>
+
+<div class="row">
+  <div class="span12">
+    <p style="text-align: center;"><a id="add-page" class="btn btn-success btn-large dialog-button open-page-dialog" data-dialog=".page-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny webside</a></p>
+  </div>
+</div>
+
+{% if not versions %}
+<div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
+{% else %}
+<table class="table pages">
+<thead>
+<tr>
+  <th>Tittel</th>
+  <th>URL til siden</th>
+</tr>
+</thead>
+<tbody>
+  {% include 'common/admin/pages/result.html' with versions=versions level=0 %}
+</tbody>
+</table>
+{% endif %}
+
+<div class="dialog page-dialog" data-title="Opprett ny side" data-width="80%">
+  <form action="{% url admin.cms.views.page.new %}" method="post">
+  {% csrf_token %}
+    <input type="hidden" name="template" value="0">
+    <input type="hidden" name="slug" value="">
+    <table class="table">
+    <tr>
+      <td class="big">Tittel:</td>
+      <td><input type="text" name="title" class="input-xlarge"></td>
+    </tr>
+    <tr>
+      <td>Permanent URL:</td>
+      <td style="min-width: 400px">
+        http://{{ site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug icon-pencil"></i><i class="save-slug icon-ok"></i>
+        <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
+        <span class="valid">
+          <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
+          Ok!
+        </span>
+        <span class="invalid">
+          <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
+          Denne URLen er allerede i bruk!
+        </span>
+      </td>
+    </tr>
+    </table>
+    <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
+      <p>Tom</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
+      <p>Én kolonne</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
+      <p>Sidebar (hele)</p>
+    </div>
+    <div class="template">
+      <img src="{{ STATIC_URL }}img/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
+      <p>Tre kolonner</p>
+    </div>
+  </form>
+</div>
+
+
+<div class="dialog menu-dialog" data-title="Lagre menylink" data-width="auto">
+  <table class="table">
+  <tr>
+    <td>Navn på linken:</td>
+    <td><input type="text" name="name" class="input-large"></td>
+  </tr>
+  <tr>
+    <td>Adresse:</td>
+    <td><input type="text" name="url" class="input-xxlarge"></td>
+  </tr>
+  </table>
+
+  <p>
+    <button class="btn btn-success btn-large save-menu"><i class="icon-ok"></i> Lagre</button>
+    <button class="btn btn-danger btn-large delete-menu"><i class="icon-warning-sign"></i> Slett linken</button>
+  </p>
+</div>
+
+{% endblock %}

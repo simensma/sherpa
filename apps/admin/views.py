@@ -6,4 +6,4 @@ from django.core.exceptions import PermissionDenied
 from association.models import Association
 
 def index(request):
-    return render(request, 'main/admin/dashboard.html')
+    return render(request, 'common/admin/dashboard.html')
