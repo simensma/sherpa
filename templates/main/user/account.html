@@ -24,38 +24,33 @@
     </p>
 
     <div class="info-area">
-
       {% for message in messages %}
         {% if message.message == 'update_success' %}
           <div class="alert alert-success">
             <a class="close">x</a>
             <strong>Opplysningene dine har blitt oppdatert.</strong>
           </div>
+        {% elif message.message ==  'value_error' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn minst navn, e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
+          </div>
+        {% elif message.message ==  'integrity_error' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>E-postadressen er allerede i bruk!</strong><br>
+            Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
+          </div>
+        {% elif message.message ==  'phone_too_long' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Mobiltelefonen din har vel ikke over {{ phone_max_length }} siffer?</strong>
+          </div>
         {% endif %}
       {% endfor %}
-
-      {% if value_error %}
-        <div class="alert alert-danger">
-          <a class="close">x</a>
-          <strong>Vennligst fyll inn minst navn, e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
-        </div>
-      {% endif %}
-      {% if integrity_error %}
-        <div class="alert alert-danger">
-          <a class="close">x</a>
-          <strong>E-postadressen er allerede i bruk!</strong><br>
-          Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
-        </div>
-      {% endif %}
-      {% if phone_too_long %}
-        <div class="alert alert-danger">
-          <a class="close">x</a>
-          <strong>Mobiltelefonen din har vel ikke over {{ phone_max_length }} siffer?</strong>
-        </div>
-      {% endif %}
     </div>
 
-    <form action="{% url user.views.account %}" method="post" class="form-border form-horizontal">
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal">
       {% csrf_token %}
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>

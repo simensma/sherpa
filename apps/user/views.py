@@ -30,45 +30,47 @@ def account(request):
     context = {
         'password_length': settings.USER_PASSWORD_LENGTH,
         'phone_max_length': Profile.PHONE_MAX_LENGTH}
+    return render(request, 'main/user/account.html', context)
 
-    if request.method == 'POST':
-        try:
-            if not validator.name(request.POST['name']):
-                raise ValueError("No name provided")
+@login_required
+def update_account(request):
+    try:
+        if not validator.name(request.POST['name']):
+            raise ValueError("No name provided")
 
-            if not validator.email(request.POST['email']):
-                raise ValueError("Invalid email address")
+        if not validator.email(request.POST['email']):
+            raise ValueError("Invalid email address")
 
-            if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-                raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
+        if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+            raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
 
-            if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
-                context['phone_too_long'] = True
-                return render(request, 'main/user/account.html', context)
-
-            split = request.POST['name'].split(' ')
-            first_name = split[0]
-            last_name = ' '.join(split[1:])
-            request.user.username = username(request.POST['email'])
-            request.user.email = request.POST['email']
-            if len(request.POST['password']) > 0:
-                request.user.set_password(request.POST['password'])
-            request.user.first_name = first_name
-            request.user.last_name = last_name
-            request.user.save()
-            profile = request.user.get_profile()
-            profile.phone = request.POST['phone']
-            profile.save()
-            messages.add_message(request, messages.INFO, 'update_success')
+        if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
+            messages.add_message(request, messages.ERROR, 'phone_too_long')
             return HttpResponseRedirect(reverse('user.views.account'))
 
-        except ValueError:
-            context['value_error'] = True
+        split = request.POST['name'].split(' ')
+        first_name = split[0]
+        last_name = ' '.join(split[1:])
+        request.user.username = username(request.POST['email'])
+        request.user.email = request.POST['email']
+        if len(request.POST['password']) > 0:
+            request.user.set_password(request.POST['password'])
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.save()
+        profile = request.user.get_profile()
+        profile.phone = request.POST['phone']
+        profile.save()
+        messages.add_message(request, messages.INFO, 'update_success')
+        return HttpResponseRedirect(reverse('user.views.account'))
 
-        except IntegrityError as e:
-            context['integrity_error'] = True
+    except ValueError:
+        messages.add_message(request, messages.ERROR, 'value_error')
 
-    return render(request, 'main/user/account.html', context)
+    except IntegrityError as e:
+        messages.add_message(request, messages.ERROR, 'integrity_error')
+
+    return HttpResponseRedirect(reverse('user.views.account'))
 
 def login(request):
     if request.method == 'GET':
