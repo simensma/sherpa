@@ -38,7 +38,11 @@
 <header>
   <div class="row">
     <div class="span6">
-      <a href="{% url page.views.page %}"><img src="{{ STATIC_URL }}img/header-logo.png" alt="Den Norske Turistforening"></a>
+      <a href="{% url page.views.page %}">
+        <div class="association-logo left">
+          {{ site.association.name }}
+        </div>
+      </a>
     </div>
     <div class="span6 search">
       <form action="{% url page.views.search %}" method="get" class="form-search">
