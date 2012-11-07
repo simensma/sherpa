@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.cache import cache
 
-from core.models import Search
+from analytics.models import Search
 
 def index(request):
     return render(request, 'common/admin/analytics/index.html')

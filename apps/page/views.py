@@ -15,7 +15,7 @@ import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article, OldArticle
-from core.models import Search
+from analytics.models import Search
 from page.widgets import parse_widget
 from sherpa2.models import Cabin as Sherpa2Cabin
 
