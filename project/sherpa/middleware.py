@@ -8,6 +8,8 @@ from django.utils.http import urlquote
 from django.core import urlresolvers
 from django.utils.log import getLogger
 from django.core.urlresolvers import resolve, Resolver404
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from datetime import datetime
 import hashlib
@@ -216,6 +218,14 @@ class CheckSherpaPermissions(object):
             # No active association set
             if not 'active_association' in request.session and not request.path.startswith('/sherpa/aktiv-forening/'): # Hardcoded path
                 return render(request, 'main/admin/set_active_association.html')
+
+            # Accessing CMS-functionality, but no site set
+            if request.session['active_association'].site == None and (
+                request.path.startswith('/sherpa/cms/') or
+                request.path.startswith('/sherpa/nyheter/') or
+                request.path.startswith('/sherpa/annonser/')):
+                messages.add_message(request, messages.ERROR, 'no_association_site')
+                return HttpResponseRedirect(reverse('admin.views.index'))
 
 class DeactivatedEnrollment():
     def process_request(self, request):

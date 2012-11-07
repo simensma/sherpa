@@ -4,6 +4,17 @@
 
 <div class="row">
   <div class="span8">
+
+    {% for message in messages %}
+      {% if message.message == 'no_association_site' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+            <strong>Denne foreningen har ingen nettside</strong><br>
+            Du kan ikke redigere nettsider/artikler/annonser for {{ active_association.name }} fordi det finnes ingen tilknyttet nettside.
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <nav class="dashboard">
       <ul>
         {% if active_association.site %}

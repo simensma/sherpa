@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.views',
+    # Note: Many paths here are harcoded in CheckSherpaPermissions middleware
     url(r'^$', 'index'),
     url(r'^cms/', include('admin.cms.urls')),
     url(r'^nyheter/', include('admin.articles.urls')),
@@ -10,5 +11,5 @@ urlpatterns = patterns('admin.views',
     url(r'^annonser/', include('admin.ads.urls')),
     url(r'^cache/', include('admin.cache.urls')),
     url(r'^innmelding/', include('admin.enrollment.urls')),
-    url(r'^aktiv-forening/(?P<association>\d+)/', 'set_active_association'), # Path is harcoded in middleware
+    url(r'^aktiv-forening/(?P<association>\d+)/', 'set_active_association'),
 )
