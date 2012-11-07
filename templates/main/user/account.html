@@ -18,11 +18,6 @@
   <div class="span9">
 
     <h2>Brukeropplysninger</h2>
-
-    <p>
-      Her kan du endre dine brukeropplysninger. Du trenger ikke fylle ut passordet hvis du ikke vil endre det.
-    </p>
-
     <div class="info-area">
       {% for message in messages %}
         {% if message.message == 'update_success' %}
@@ -80,6 +75,19 @@
           <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.phone }}">
         </div>
       </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater opplysningene</button>
+        </div>
+      </div>
+      <p>
+        <strong>Tips:</strong> Hvis du skriver artikler, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på <a href="http://en.gravatar.com/">Gravatar</a> med <strong>samme</strong> e-postadresse som du bruker her.
+      </p>
+    </form>
+
+    <h2>Endre passord</h2>
+    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal password">
+      {% csrf_token %}
       <div class="control-group password">
         <label class="control-label" for="password">Passord</label>
         <div class="controls">
@@ -92,16 +100,12 @@
           <input type="password" class="input-large" name="password-duplicate">
         </div>
       </div>
-      <div class="control-group password-duplicate">
+      <div class="control-group">
         <div class="controls">
-          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater opplysningene</button>
+          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater passord</button>
         </div>
       </div>
     </form>
-
-    <p>
-      <strong>Tips:</strong> Hvis du skriver artikler, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på <a href="http://en.gravatar.com/">Gravatar</a> med <strong>samme</strong> e-postadresse som du bruker her.
-    </p>
   </div>
 
   <div class="span3">

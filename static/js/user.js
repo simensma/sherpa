@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     /* Ensure passwords are identical and long enough */
-    $("form").submit(function(e) {
+    $("form.password").submit(function(e) {
         if($(this).find("input[name='password']").val() != $(this).find("input[name='password-duplicate']").val()) {
             $("form div.control-group.password").addClass('error');
             $("form div.control-group.password-duplicate").addClass('error');
@@ -19,7 +19,7 @@ $(document).ready(function() {
         $(this).parents("div.control-group").removeClass('error');
     });
 
-    $("form input[type='password']").focus(function() {
+    $("form.password input[type='password']").focus(function() {
         $("form input[type='password']").parents("div.control-group").removeClass('error');
     });
 

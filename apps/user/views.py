@@ -48,10 +48,6 @@ def update_account(request):
         messages.add_message(request, messages.ERROR, 'duplicate_email_address')
         errors = True
 
-    if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-        messages.add_message(request, messages.ERROR, 'password_too_short')
-        errors = True
-
     if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
         messages.add_message(request, messages.ERROR, 'phone_too_long')
         errors = True
@@ -62,8 +58,6 @@ def update_account(request):
         last_name = ' '.join(split[1:])
         request.user.username = username(request.POST['email'])
         request.user.email = request.POST['email']
-        if len(request.POST['password']) > 0:
-            request.user.set_password(request.POST['password'])
         request.user.first_name = first_name
         request.user.last_name = last_name
         request.user.save()
@@ -72,6 +66,16 @@ def update_account(request):
         profile.save()
         messages.add_message(request, messages.INFO, 'update_success')
 
+    return HttpResponseRedirect(reverse('user.views.account'))
+
+@login_required
+def update_account_password(request):
+    if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+        messages.add_message(request, messages.ERROR, 'password_too_short')
+    else:
+        request.user.set_password(request.POST['password'])
+        request.user.save()
+        messages.add_message(request, messages.INFO, 'password_update_success')
     return HttpResponseRedirect(reverse('user.views.account'))
 
 def login(request):
