@@ -29,15 +29,9 @@ TEMPORARY_PROOF_VALIDITY = 14
 KEY_PRICE = 100
 FOREIGN_SHIPMENT_PRICE = 100
 
-# GET parameters used for error handling
-contact_missing_key = 'mangler-kontaktinfo'
-invalid_main_member_key = 'ugyldig-hovedmedlem'
-nonexistent_main_member_key = 'ikke-eksisterende-hovedmedlem'
-no_main_member_key = 'mangler-hovedmedlem'
-invalid_payment_method = 'ugyldig-betalingsmetode'
+# GET parameters used for error handling (still a few remaining)
 invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
-too_many_underage = 'for-mange-ungdomsmedlemmer'
 
 SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
@@ -117,7 +111,6 @@ def registration(request, user):
             else:
                 request.session['enrollment']['users'].append(new_user)
 
-    contact_missing = contact_missing_key in request.GET
     updateIndices(request.session)
 
     if not errors and 'forward' in request.POST:
@@ -127,9 +120,8 @@ def registration(request, user):
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
     context = {'users': request.session['enrollment']['users'], 'person': user,
-        'errors': errors, 'contact_missing': contact_missing,
+        'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'too_many_underage': too_many_underage in request.GET,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/registration.html', context)
 
@@ -149,7 +141,7 @@ def remove(request, user):
 
 def household(request):
     request.session.modified = True
-    val = validate(request.session, require_location=False, require_existing=False)
+    val = validate(request, require_location=False, require_existing=False)
     if val is not None:
         return val
 
@@ -267,7 +259,7 @@ def existing(request):
 
 def verification(request):
     request.session.modified = True
-    val = validate(request.session, require_location=True, require_existing=True)
+    val = validate(request, require_location=True, require_existing=True)
     if val is not None:
         return val
 
@@ -369,9 +361,7 @@ def verification(request):
         'main': main, 'year': year, 'next_year': next_year,
         'price': request.session['enrollment']['price'],
         'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_youth': AGE_YOUTH,
-        'age_school': AGE_SCHOOL, 'invalid_main_member': invalid_main_member_key in request.GET,
-        'nonexistent_main_member': nonexistent_main_member_key in request.GET,
-        'no_main_member': no_main_member_key in request.GET,
+        'age_school': AGE_SCHOOL,
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
@@ -380,7 +370,7 @@ def verification(request):
 
 def payment_method(request):
     request.session.modified = True
-    val = validate(request.session, require_location=True, require_existing=True)
+    val = validate(request, require_location=True, require_existing=True)
     if val is not None:
         return val
 
@@ -398,14 +388,13 @@ def payment_method(request):
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
-    context = {'invalid_payment_method': invalid_payment_method in request.GET,
-        'card_available': State.objects.all()[0].card,
+    context = {'card_available': State.objects.all()[0].card,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/payment.html', context)
 
 def payment(request):
     request.session.modified = True
-    val = validate(request.session, require_location=True, require_existing=True)
+    val = validate(request, require_location=True, require_existing=True)
     if val is not None:
         return val
 
@@ -429,7 +418,8 @@ def payment(request):
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
-        return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.payment_method'), invalid_payment_method))
+        messages.add_message(request, messages.ERROR, 'invalid_payment_method')
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
     request.session['enrollment']['payment_method'] = request.POST['payment_method']
 
     # Figure out who's a household-member, who's not, and who's the main member
@@ -447,7 +437,8 @@ def payment(request):
             if user['index'] == int(request.session['enrollment']['main_member']):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_YOUTH:
-                    return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), invalid_main_member_key))
+                    messages.add_message(request, messages.ERROR, 'invalid_main_member')
+                    return HttpResponseRedirect(reverse('enrollment.views.verification'))
                 user['household'] = False
                 user['yearbook'] = True
                 main = user
@@ -456,7 +447,8 @@ def payment(request):
                 user['yearbook'] = False
         if main is None:
             # The specified main-member index doesn't exist
-            return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
+            messages.add_message(request, messages.ERROR, 'nonexistent_main_member')
+            return HttpResponseRedirect(reverse('enrollment.views.verification'))
     else:
         # In this case, one or more members below youth age are registered,
         # so no main/household status applies.
@@ -465,7 +457,8 @@ def payment(request):
             user['yearbook'] = False
             # Verify that all members are below youth age
             if user['age'] >= AGE_YOUTH:
-                return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
+                messages.add_message(request, messages.ERROR, 'no_main_member')
+                return HttpResponseRedirect(reverse('enrollment.views.verification'))
 
     # Ok. We need the memberID of the main user, so add that user and generate its ID
     if main is not None:
@@ -727,20 +720,22 @@ def updateIndices(session):
         user['index'] = i
         i += 1
 
-def validate(session, require_location, require_existing):
-    if not 'enrollment' in session:
+def validate(request, require_location, require_existing):
+    if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if len(session['enrollment']['users']) == 0:
+    if len(request.session['enrollment']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
-    if not validate_youth_count(session['enrollment']['users']):
-        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), too_many_underage))
-    if not validate_user_contact(session['enrollment']['users']):
-        return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.registration"), contact_missing_key))
+    if not validate_youth_count(request.session['enrollment']['users']):
+        messages.add_message(request, messages.ERROR, 'too_many_underage')
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    if not validate_user_contact(request.session['enrollment']['users']):
+        messages.add_message(request, messages.ERROR, 'contact_missing')
+        return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if require_location:
-        if not 'location' in session['enrollment'] or not validate_location(session['enrollment']['location']):
+        if not 'location' in request.session['enrollment'] or not validate_location(request.session['enrollment']['location']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     if require_existing:
-        if session['enrollment']['existing'] != '' and not validate_existing(session['enrollment']['existing'], session['enrollment']['location']['zipcode'], session['enrollment']['location']['country']):
+        if request.session['enrollment']['existing'] != '' and not validate_existing(request.session['enrollment']['existing'], request.session['enrollment']['location']['zipcode'], request.session['enrollment']['location']['country']):
             return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
 
 def validate_user(user):

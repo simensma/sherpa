@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.contrib import messages
 
 from datetime import datetime
 import json
@@ -11,14 +12,11 @@ import simples3
 
 from page.models import Ad, AdPlacement
 
-invalid_date = 'ugyldig-datoformat'
-
 def list(request):
     ads = Ad.objects.all().order_by('name')
     time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
-    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
-        'invalid_date': invalid_date in request.GET}
+    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
     return render(request, 'common/admin/ads/list.html', context)
 
 def create_ad(request):
@@ -73,7 +71,7 @@ def create_placement(request):
         ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date, view_limit=view_limit)
         ap.save()
     except ValueError:
-        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+        messages.add_message(request, messages.ERROR, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def update_placement(request):
@@ -87,7 +85,7 @@ def update_placement(request):
             placement.view_limit = request.POST['view_limit']
         placement.save()
     except ValueError:
-        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+        messages.add_message(request, messages.ERROR, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):

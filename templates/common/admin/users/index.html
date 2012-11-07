@@ -4,16 +4,19 @@
 
 {% block body %}
 
-{% if created_user %}
-<div class="row">
-  <div class="offset3 span6">
-    <div class="alert alert-success">
-      <a class="close">x</a>
-      <strong>Den nye brukeren har blitt opprettet.</strong>
+{% for message in messages %}
+  {% if message.message == 'created_user' %}
+    <div class="row">
+      <div class="offset3 span6">
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Den nye brukeren har blitt opprettet.</strong>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-{% endif %}
+  {% endif %}
+{% endfor %}
+
 <div class="row">
   <div class="span12">
     <p style="text-align: center;">

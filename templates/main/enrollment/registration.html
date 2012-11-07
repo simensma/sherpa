@@ -21,13 +21,6 @@
 
     {% include 'main/enrollment/progress.html' with step=1 %}
 
-    {% if too_many_underage %}
-      <div class="notice-alert">
-        <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
-        <p>Du har registrert {{ users|length }} medlemmer, hvorav ingen er gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks 3 slike medlemmer av gangen.</p>
-        <p>Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik begrensning.</p>
-      </div>
-    {% endif %}
     {% if errors %}
       <script>
         // Trigger form validations
@@ -42,12 +35,20 @@
         Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt.
       </div>
     {% endif %}
-    {% if contact_missing %}
-      <div class="alert alert-error">
-        <a class="close">x</a><strong><i class="icon-warning-sign"></i> Kontaktinformasjon mangler.</strong><br>
-        Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post).
-      </div>
-    {% endif %}
+    {% for message in messages %}
+      {% if message.message == 'too_many_underage' %}
+        <div class="notice-alert">
+          <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
+          <p>Du har registrert {{ users|length }} medlemmer, hvorav ingen er gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks 3 slike medlemmer av gangen.</p>
+          <p>Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik begrensning.</p>
+        </div>
+      {% elif message.message == 'contact_missing' %}
+        <div class="alert alert-error">
+          <a class="close">x</a><strong><i class="icon-warning-sign"></i> Kontaktinformasjon mangler.</strong><br>
+          Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post).
+        </div>
+      {% endif %}
+    {% endfor %}
 
     {% if users %}
       <div class="well members">

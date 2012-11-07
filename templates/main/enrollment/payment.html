@@ -10,13 +10,15 @@
 
     {% include 'main/enrollment/progress.html' with step=4 %}
 
-    {% if invalid_payment_method %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
-        Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
-      </div>
-    {% endif %}
+    {% for message in messages %}
+      {% if message.message == 'invalid_payment_method' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
+          Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+        </div>
+      {% endif %}
+    {% endfor %}
 
     {% if not card_available %}
       <div class="alert alert-error">

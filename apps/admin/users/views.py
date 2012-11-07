@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.conf import settings
 from django.db.utils import IntegrityError
 
@@ -10,12 +11,9 @@ import re
 from user.models import Profile
 from user.views import username
 
-# Get parameters across views
-created_user = 'opprettet_bruker'
-
 def index(request):
     users = User.objects.all().order_by('first_name')
-    context = {'users': users, 'created_user': created_user in request.GET}
+    context = {'users': users}
     return render(request, 'common/admin/users/index.html', context)
 
 def new(request):
@@ -39,10 +37,11 @@ def new(request):
             user.save()
             profile = Profile(user=user, phone=request.POST['phone'])
             profile.save()
-            return HttpResponseRedirect("%s?%s" % (reverse('admin.users.views.index'), created_user))
+            messages.add_message(request, messages.INFO, 'created_user')
+            return HttpResponseRedirect(reverse('admin.users.views.index'))
         except ValueError:
-            context['value_error'] = True
+            messages.add_message(request, messages.ERROR, 'value_error')
             return render(request, 'common/admin/users/new.html', context)
         except IntegrityError:
-            context['integrity_error'] = True
+            messages.add_message(request, messages.ERROR, 'integrity_error')
             return render(request, 'common/admin/users/new.html', context)

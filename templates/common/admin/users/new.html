@@ -48,19 +48,20 @@
     </form>
   </div>
   <div class="span6 info-area">
-    {% if value_error %}
-      <div class="alert alert-danger">
-        <a class="close">x</a>
-        <strong>Vennligst fyll inn både navn, en gyldig e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
-      </div>
-    {% endif %}
-    {% if integrity_error %}
-      <div class="alert alert-danger">
-        <a class="close">x</a>
-        <strong>E-postadressen er allerede i bruk!</strong><br>
-        Er du sikker på at du ikke allerede har en registrert bruker? Hvis du har glemt passordet ditt, kan du opprette et nytt ved å trykke "Glemt passord"-linken på <a href="{% url user.views.login %}">login-siden</a>.</strong>
-      </div>
-    {% endif %}
+    {% for message in messages %}
+      {% if message.message == 'value_error' %}
+        <div class="alert alert-danger">
+          <a class="close">x</a>
+          <strong>Vennligst fyll inn både navn, en gyldig e-post adresse, og et passord på minst {{ password_length }} tegn.</strong>
+        </div>
+      {% elif message.message == 'integrity_error' %}
+        <div class="alert alert-danger">
+          <a class="close">x</a>
+          <strong>E-postadressen er allerede i bruk!</strong><br>
+          Er du sikker på at du ikke allerede har en registrert bruker? Hvis du har glemt passordet ditt, kan du opprette et nytt ved å trykke "Glemt passord"-linken på <a href="{% url user.views.login %}">login-siden</a>.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 </div>
 
