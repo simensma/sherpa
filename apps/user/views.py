@@ -80,6 +80,9 @@ def logout(request):
     log_user_out(request)
     return HttpResponseRedirect(reverse('page.views.page'))
 
+def register(request):
+    return render(request, 'main/user/register.html')
+
 def send_restore_password_email(request):
     try:
         user = User.objects.get(email=request.POST['email'])
