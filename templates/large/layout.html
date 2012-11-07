@@ -158,10 +158,66 @@
 
 </div>
 
-<footer>
+<footer class="local">
   <div class="container">
 
-    <h2>Ny footer</h2>
+    <div class="row">
+      <div class="span6 contact-information">
+        {# TODO - Preliminary IP-URL (to avoid local hosts-manipulation) #}
+        {# TODO - Disse logoene må gjøres transparante #}
+        <img src="http://77.40.236.233/share/img/profil/{{ site.association.id }}-logo.png" alt="{{ site.association.name }} logo" class="local-logo">
+        <h2>
+          {{ site.association.name }}
+        </h2>
+
+        <div style="clear: both;"></div>
+
+        {# TODO - hide fields for associations that don't have them #}
+        <table>
+          {% if site.association.visit_address == site.association.post_address %}
+            <tr>
+              <th>Post/besøksadresse</th>
+              <td>
+                {{ site.association.visit_address }}<br>
+                {{ site.association.zipcode.zipcode }} {{ site.association.zipcode.area }}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <th>Besøksadresse</th>
+              <td>{{ site.association.visit_address }}</td>
+            </tr>
+            <tr>
+              <th>Postadresse</th>
+              <td>
+                {{ site.association.post_address }}<br>
+                {{ site.association.zipcode.zipcode }} {{ site.association.zipcode.area }}
+              </td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Telefon:</th>
+            <td>{{ site.association.phone }}</td>
+          </tr>
+          <tr>
+            <th>E-post:</th>
+            <td><a href="mailto:{{ site.association.email }}">{{ site.association.email }}</a></td>
+          </tr>
+          <tr>
+            <th>Org. nr.:</th>
+            <td>{{ site.association.organization_no }}</td>
+          </tr>
+          <tr>
+            <th>Facebook:</th>
+            <td><a href="{{ site.association.facebook_url }}">{{ site.association.facebook_url }}</a></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="span6">
+        Her kommer faste lenker.
+      </div>
+    </div>
 
   </div>
 </footer>
