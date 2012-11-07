@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^minside/', include('user.urls')),
     url(ur'^søk/', 'page.views.search'),
     url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),
+    url(r'^nyheter/', include('articles.urls')),
 )
