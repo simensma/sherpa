@@ -51,29 +51,43 @@
       {% endif %}
     </div>
 
-    <form action="{% url user.views.account %}" method="post" class="form-border">
+    <form action="{% url user.views.account %}" method="post" class="form-border form-horizontal">
       {% csrf_token %}
       <div class="control-group name">
-        <label>Fullt navn</label>
-        <input type="text" class="input-xlarge" name="name" value="{{ user.get_full_name }}">
+        <label class="control-label" for="name">Fullt navn</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="name" value="{{ user.get_full_name }}">
+        </div>
       </div>
       <div class="control-group email">
-        <label>E-post</label>
-        <input type="text" class="input-xlarge" name="email" value="{{ user.email }}">
+        <label class="control-label" for="email">E-post</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="email" value="{{ user.email }}">
+        </div>
       </div>
       <div class="control-group phone">
-        <label>Mobiltelefon</label>
-        <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.phone }}">
+        <label class="control-label" for="phone">Mobiltelefon</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.phone }}">
+        </div>
       </div>
       <div class="control-group password">
-        <label>Passord</label>
-        <input type="password" class="input-large" name="password">
+        <label class="control-label" for="password">Passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password">
+        </div>
       </div>
       <div class="control-group password-duplicate">
-        <label>Gjenta passord</label>
-        <input type="password" class="input-large" name="password-duplicate">
+        <label class="control-label" for="password-duplicate">Gjenta passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password-duplicate">
+        </div>
       </div>
-      <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater opplysningene</button>
+      <div class="control-group password-duplicate">
+        <div class="controls">
+          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater opplysningene</button>
+        </div>
+      </div>
     </form>
 
     <p>
