@@ -27,19 +27,25 @@ def home_new(request):
 
 @login_required
 def account(request):
-    context = {'password_length': settings.USER_PASSWORD_LENGTH,
+    context = {
+        'password_length': settings.USER_PASSWORD_LENGTH,
         'phone_max_length': Profile.PHONE_MAX_LENGTH}
+
     if request.method == 'POST':
         try:
             if len(request.POST['name']) == 0:
                 raise ValueError("No name provided")
+
             if len(re.findall('.+@.+\..+', request.POST['email'])) == 0:
                 raise ValueError("Invalid email address")
+
             if len(request.POST['password']) > 0 and len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
+
             if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
                 context['phone_too_long'] = True
                 return render(request, 'main/user/account.html', context)
+
             split = request.POST['name'].split(' ')
             first_name = split[0]
             last_name = ' '.join(split[1:])
@@ -54,10 +60,13 @@ def account(request):
             profile.phone = request.POST['phone']
             profile.save()
             return HttpResponseRedirect("%s?%s" % (reverse('user.views.account'), update_success))
+
         except ValueError:
             context['value_error'] = True
+
         except IntegrityError as e:
             context['integrity_error'] = True
+
     return render(request, 'main/user/account.html', context)
 
 def login(request):
