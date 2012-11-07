@@ -246,7 +246,7 @@ class CheckSherpaPermissions(object):
                 request.path.startswith('/sherpa/annonser/') or
                 request.path.startswith(u'/sherpa/analyse/søk/')):
                 messages.add_message(request, messages.ERROR, 'no_association_site')
-                return HttpResponseRedirect(reverse('admin.views.index'))
+                return render(request, 'common/admin/no_association_site.html')
 
 class DeactivatedEnrollment():
     def process_request(self, request):
