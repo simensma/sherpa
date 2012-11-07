@@ -25,6 +25,11 @@
             <a class="close">x</a>
             <strong>Opplysningene dine har blitt oppdatert.</strong>
           </div>
+        {% elif message.message == 'password_update_success' %}
+          <div class="alert alert-success">
+            <a class="close">x</a>
+            <strong>Passordet ditt har blitt endret.</strong>
+          </div>
         {% elif message.message == 'no_name_provided' %}
           <div class="alert alert-danger">
             <a class="close">x</a>
@@ -105,7 +110,7 @@
       </div>
       <div class="control-group">
         <div class="controls">
-          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Oppdater passord</button>
+          <button type="submit" class="btn btn-large"><i class="icon-user"></i> Endre passord</button>
         </div>
       </div>
     </form>
