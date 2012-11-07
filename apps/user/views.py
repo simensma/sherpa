@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as log_user_in, logout as log_user_out
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
 from django.db.utils import IntegrityError
@@ -15,8 +16,6 @@ import md5
 import re
 
 from user.models import Profile
-
-update_success = 'oppdatert'
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -59,7 +58,8 @@ def account(request):
             profile = request.user.get_profile()
             profile.phone = request.POST['phone']
             profile.save()
-            return HttpResponseRedirect("%s?%s" % (reverse('user.views.account'), update_success))
+            messages.add_message(request, messages.INFO, 'update_success')
+            return HttpResponseRedirect(reverse('user.views.account'))
 
         except ValueError:
             context['value_error'] = True

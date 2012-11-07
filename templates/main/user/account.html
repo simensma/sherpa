@@ -24,12 +24,16 @@
     </p>
 
     <div class="info-area">
-      {% if update_success %}
-        <div class="alert alert-success">
-          <a class="close">x</a>
-          <strong>Opplysningene dine har blitt oppdatert.</strong>
-        </div>
-      {% endif %}
+
+      {% for message in messages %}
+        {% if message.message == 'update_success' %}
+          <div class="alert alert-success">
+            <a class="close">x</a>
+            <strong>Opplysningene dine har blitt oppdatert.</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+
       {% if value_error %}
         <div class="alert alert-danger">
           <a class="close">x</a>
