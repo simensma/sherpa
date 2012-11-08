@@ -1,13 +1,6 @@
 {% extends 'layout.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/membership.js"></script>
-  {% if invalid_zipcode or unregistered_zipcode %}
-    <script>
-      $(document).ready(function() {
-        $("div.invalid-zipcode").modal();
-      });
-    </script>
-  {% endif %}
 {% endblock %}
 
 {% block title %}Medlemskap{% endblock %}
@@ -15,22 +8,7 @@
 
 {% block body %}
 
-{% if invalid_zipcode or unregistered_zipcode %}
-  <div class="modal invalid-zipcode hide">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-      <h3>Dette vet vi ikke hvor er.</h3>
-    </div>
-    <div class="modal-body">
-        <p>
-          Vi kjenner dessverre ikke igjen postnummer <strong>{{ invalid_zipcode }}{{ unregistered_zipcode }}</strong>. Sjekk at du har skrevet riktig eller ta kontakt med DNTs medlemsservice.
-        </p>
-    </div>
-    <div class="modal-footer">
-      <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-    </div>
-  </div>
-{% endif %}
+{% csrf_token %}
 
 <div class="row">
   <div class="span12">
@@ -41,14 +19,11 @@
             Som medlem får du nøkkel til 480 hytter, rabatt på overnatting, turutstyr til medlemspriser, friluftsmagasinet Fjell og Vidde, tilbud om turer og kurs over hele landet, og mye mer.
           </p>
           <h2>Se dine medlemsfordeler og priser:</h2>
-          <form method="post" action="{% url membership.views.zipcode_search %}">
-            {% csrf_token %}
-            <p class="search">
-              <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
-              <input type="submit" class="btn btn-danger" value="OK"><br>
-              <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
-            </p>
-          </form>
+          <p class="search">
+            <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
+            <button class="btn btn-danger zipcode-search">OK</button><br>
+            <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+          </p>
         </div>
       </div>
     </div>
@@ -111,5 +86,7 @@
     </p>
   </div>
 </div>
+
+{% include 'membership/zipcode_search_modal.html' %}
 
 {% endblock %}

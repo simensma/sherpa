@@ -8,6 +8,8 @@
 
 {% block body %}
 
+{% csrf_token %}
+
 <div class="row">
   <div class="span12">
     <h1>Medlemsservice</h1>
@@ -127,10 +129,8 @@
     <div class="well">
       <h3>Medlemsfordeler og priser</h3>
       <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-      <form class="zipcode_search_small" method="post" action="{% url membership.views.zipcode_search %}">
-        {% csrf_token %}
-        <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn">OK</button><br>
-        <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search">OK</button><br>
+      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
       </form>
     </div>
 
@@ -149,5 +149,7 @@
     </div>
   </div>
 </div>
+
+{% include 'membership/zipcode_search_modal.html' %}
 
 {% endblock %}

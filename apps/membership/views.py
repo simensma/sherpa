@@ -1,6 +1,6 @@
 # encoding: utf-8
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.core.cache import cache
@@ -11,15 +11,10 @@ from focus.models import FocusZipcode, Price
 from enrollment.models import State
 
 from datetime import datetime
-
-# Slug used for error-handling redirection
-invalid_zipcode = 'ugyldig-postnummer'
-unregistered_zipcode = 'uregistrert-postnummer'
+import json
 
 def index(request):
-    context = {'invalid_zipcode': request.GET.get(invalid_zipcode, ''),
-        'unregistered_zipcode': request.GET.get(unregistered_zipcode, ''),}
-    return render(request, 'membership/index.html', context)
+    return render(request, 'membership/index.html')
 
 def benefits(request, association_id):
     if association_id == None:
@@ -46,7 +41,7 @@ def benefits(request, association_id):
 
 def zipcode_search(request):
     if not 'zipcode' in request.POST:
-        return HttpResponseRedirect(reverse('membership.views.index'))
+        return HttpResponse(json.dumps({'error': 'missing_zipcode'}))
     association = cache.get('zipcode.association.%s' % request.POST['zipcode'])
     if association == None:
         try:
@@ -55,12 +50,11 @@ def zipcode_search(request):
             association = Association.objects.get(focus_id=zipcode.main_association_id)
             cache.set('zipcode.association.%s' % request.POST['zipcode'], association, 60 * 60 * 24 * 7)
         except FocusZipcode.DoesNotExist:
-            return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), invalid_zipcode, request.POST['zipcode']))
+            return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
         except Association.DoesNotExist:
-            return HttpResponseRedirect("%s?%s=%s" % (reverse('membership.views.index'), unregistered_zipcode, request.POST['zipcode']))
-
+            return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
     url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
-    return HttpResponseRedirect(url)
+    return HttpResponse(json.dumps({'url': url}))
 
 def service(request):
     return render(request, 'membership/service.html')
