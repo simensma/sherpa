@@ -5,8 +5,8 @@ class Tag(models.Model):
 
 class Site(models.Model):
     domain = models.CharField(max_length=255)
-    template = models.ForeignKey('core.SiteTemplate')
     prefix = models.CharField(max_length=255)
+    template = models.ForeignKey('core.SiteTemplate')
 
 class SiteTemplate(models.Model):
     name = models.CharField(max_length=100)
