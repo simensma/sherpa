@@ -1,3 +1,41 @@
+/* Typical use of tagger */
+var TypicalTagger = function(input, tag_box) {
+    var that = this;
+
+    this.tagger = new Tagger(input, function(tag) {
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        tag_box.append(tag);
+    }, function(tag) {
+        tag_box.find("div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
+    });
+
+    $(document).on('mouseover', tag_box.selector + ' div.tag a', function() {
+        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
+    });
+    $(document).on('mouseout', tag_box.selector + ' div.tag a', function() {
+        $(this).children("img").attr('src', '/static/img/so/close-default.png');
+    });
+    $(document).on('click', tag_box.selector + ' div.tag a', function() {
+        that.tagger.removeTag($(this).parent().text().trim());
+        $(this).parent().remove();
+    });
+
+    return this.tagger;
+}
+
+/* Core functionality */
 var Tagger = function(el, newTag, existingTag) {
     var self = this;
     this.el = el;

@@ -20,26 +20,7 @@ $(document).ready(function() {
     /* Tags */
 
     // Create the tagger object, make it globally accessible (save.js will use this)
-    window.article_tagger = new Tagger($("div.editor-header div.tags input[name='tags']"), function(tag) {
-        // New tag added
-        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
-        $("div.tag-box").append(tag);
-    }, function(tag) {
-        // Existing tag
-        $("div.tag-box div.tag").each(function() {
-            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
-                var item = $(this);
-                var c = item.css('color');
-                var bg = item.css('background-color');
-                item.css('color', 'white');
-                item.css('background-color', 'red');
-                setTimeout(function() {
-                    item.css('color', c);
-                    item.css('background-color', bg);
-                }, 1000);
-            }
-        });
-    });
+    window.article_tagger = new TypicalTagger($("div.editor-header div.tags input[name='tags']"), $("div.editor-header div.tags div.tag-box"));
 
     // Collect existing tags based on the DOM and layout
     var tags = [];
@@ -47,18 +28,6 @@ $(document).ready(function() {
         tags.push($(this).text().trim());
     });
     article_tagger.tags = tags;
-
-    // Add events to the tag remover button
-    $(document).on('mouseover', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
-    });
-    $(document).on('mouseout', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-default.png');
-    });
-    $(document).on('click', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        article_tagger.removeTag($(this).parent().text().trim());
-        $(this).parent().remove();
-    });
 
     /* Change thumbnail-image */
     if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
