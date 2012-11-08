@@ -1,3 +1,26 @@
+/* Typical use of tagger */
+var TypicalTagger = function(input, tag_box) {
+    return new Tagger(input, function(tag) {
+        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        tag_box.append(tag);
+    }, function(tag) {
+        tag_box.find("div.tag").each(function() {
+            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
+                var item = $(this);
+                var c = item.css('color');
+                var bg = item.css('background-color');
+                item.css('color', 'white');
+                item.css('background-color', 'red');
+                setTimeout(function() {
+                    item.css('color', c);
+                    item.css('background-color', bg);
+                }, 1000);
+            }
+        });
+    });
+}
+
+/* Core functionality */
 var Tagger = function(el, newTag, existingTag) {
     var self = this;
     this.el = el;

@@ -8,26 +8,7 @@ $(document).ready(function() {
         $(this).parents("td").siblings("td.keep").toggle();
     });
 
-    var tagger = new Tagger($("input[name='tags']"), function(tag) {
-        // New tag added
-        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
-        $("div.tag-box").append(tag);
-    }, function(tag) {
-        // Existing tag
-        $("div.tag-box div.tag").each(function() {
-            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
-                var item = $(this);
-                var c = item.css('color');
-                var bg = item.css('background-color');
-                item.css('color', 'white');
-                item.css('background-color', 'red');
-                setTimeout(function() {
-                    item.css('color', c);
-                    item.css('background-color', bg);
-                }, 1000);
-            }
-        });
-    });
+    var tagger = new TypicalTagger($("input[name='tags']"), $("div.tag-box"));
 
     // Collect existing tags based on the DOM and layout
     var tags = [];

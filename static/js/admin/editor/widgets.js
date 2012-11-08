@@ -146,26 +146,7 @@ $(document).ready(function() {
     });
 
     // Create the tagger object, make it globally accessible
-    window.article_widget_tagger = new Tagger(articles.find("input[name='tags']"), function(tag) {
-        // New tag added
-        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
-        articles.find("div.tag-box").append(tag);
-    }, function(tag) {
-        // Existing tag
-        articles.find("div.tag-box div.tag").each(function() {
-            if($(this).text().trim().toLowerCase() == tag.toLowerCase()) {
-                var item = $(this);
-                var c = item.css('color');
-                var bg = item.css('background-color');
-                item.css('color', 'white');
-                item.css('background-color', 'red');
-                setTimeout(function() {
-                    item.css('color', c);
-                    item.css('background-color', bg);
-                }, 1000);
-            }
-        });
-    });
+    window.article_widget_tagger = new TypicalTagger(articles.find("input[name='tags']"), articles.find("div.tag-box"));
 
     // Add events to the tag remover button
     $(document).on('mouseover', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
