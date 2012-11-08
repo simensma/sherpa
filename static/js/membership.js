@@ -54,9 +54,13 @@ $(document).ready(function() {
             if(result.url !== undefined) {
                 // Create and click an anchor instead of using window.location so that the browser includes the referer
                 $('<a class="hide" href="' + result.url + '"></a>').appendTo(document.body).get(0).click();
-            } else if(result.error == 'invalid_zipcode' || result.error == 'unregistered_zipcode') {
+            } else if(result.error == 'invalid_zipcode') {
                 $("strong.zipcode").text(result.zipcode);
                 $("div.zipcode-modal").find("h3, p").hide().filter('.invalid').show();
+                $("div.zipcode-modal").modal();
+            } else if(result.error == 'unregistered_zipcode') {
+                $("strong.zipcode").text(result.zipcode);
+                $("div.zipcode-modal").find("h3, p").hide().filter('.unregistered').show();
                 $("div.zipcode-modal").modal();
             }
         }).fail(function(result) {

@@ -8,6 +8,7 @@ from django.conf import settings
 
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Price
+from core.models import Zipcode
 from enrollment.models import State
 
 from datetime import datetime
@@ -50,8 +51,14 @@ def zipcode_search(request):
             association = Association.objects.get(focus_id=zipcode.main_association_id)
             cache.set('zipcode.association.%s' % request.POST['zipcode'], association, 60 * 60 * 24 * 7)
         except FocusZipcode.DoesNotExist:
-            return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
+            # It doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
+            if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
+                # TODO - NEW, UNREGISTERED ZIPCODE - THIS SHOULD BE LOGGED!
+                return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
+            else:
+                return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
         except Association.DoesNotExist:
+            # TODO - NEW, UNREGISTERED ZIPCODE - THIS SHOULD BE LOGGED!
             return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
     url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
     return HttpResponse(json.dumps({'url': url}))

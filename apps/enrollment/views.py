@@ -7,6 +7,7 @@ from django.conf import settings
 from django.template import Context, loader
 from django.core.cache import cache
 from django.db import transaction, connections
+from django.contrib import messages
 
 from core import validator
 from core.models import Zipcode, FocusCountry
@@ -181,7 +182,12 @@ def household(request):
             request.session['enrollment']['existing'] = request.POST['existing']
 
         if validate_location(request.session['enrollment']['location']):
-            return HttpResponseRedirect(reverse('enrollment.views.verification'))
+            focus_zipcode = FocusZipcode.objects.filter(zipcode=request.session['enrollment']['location']['zipcode'])
+            if len(focus_zipcode) != 1 or not Association.objects.filter(focus_id=focus_zipcode[0].main_association_id).exists():
+                # TODO - NEW ZIPCODE - THIS SHOULD BE LOGGED!
+                messages.add_message(request, messages.ERROR, 'focus_zipcode_missing')
+            else:
+                return HttpResponseRedirect(reverse('enrollment.views.verification'))
         else:
             errors = True
 
