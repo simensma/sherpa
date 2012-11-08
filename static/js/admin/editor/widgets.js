@@ -148,19 +148,6 @@ $(document).ready(function() {
     // Create the tagger object, make it globally accessible
     window.article_widget_tagger = new TypicalTagger(articles.find("input[name='tags']"), articles.find("div.tag-box"));
 
-    // Add events to the tag remover button
-    $(document).on('mouseover', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
-        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
-    });
-    $(document).on('mouseout', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
-        $(this).children("img").attr('src', '/static/img/so/close-default.png');
-    });
-    $(document).on('click', "div.dialog.widget-edit[data-widget='articles'] div.tag-box div.tag a", function() {
-        article_widget_tagger.removeTag($(this).parent().text().trim());
-        $(this).parent().remove();
-    });
-
-
 });
 
 function saveWidget(content){

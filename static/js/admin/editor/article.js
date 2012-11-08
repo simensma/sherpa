@@ -29,18 +29,6 @@ $(document).ready(function() {
     });
     article_tagger.tags = tags;
 
-    // Add events to the tag remover button
-    $(document).on('mouseover', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
-    });
-    $(document).on('mouseout', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-default.png');
-    });
-    $(document).on('click', 'div.editor-header div.tags div.tag-box div.tag a', function() {
-        article_tagger.removeTag($(this).parent().text().trim());
-        $(this).parent().remove();
-    });
-
     /* Change thumbnail-image */
     if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
         $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {

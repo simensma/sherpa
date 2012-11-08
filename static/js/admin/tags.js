@@ -1,6 +1,8 @@
 /* Typical use of tagger */
 var TypicalTagger = function(input, tag_box) {
-    return new Tagger(input, function(tag) {
+    var that = this;
+
+    this.tagger = new Tagger(input, function(tag) {
         var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
         tag_box.append(tag);
     }, function(tag) {
@@ -18,6 +20,19 @@ var TypicalTagger = function(input, tag_box) {
             }
         });
     });
+
+    $(document).on('mouseover', tag_box.selector + ' div.tag a', function() {
+        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
+    });
+    $(document).on('mouseout', tag_box.selector + ' div.tag a', function() {
+        $(this).children("img").attr('src', '/static/img/so/close-default.png');
+    });
+    $(document).on('click', tag_box.selector + ' div.tag a', function() {
+        that.tagger.removeTag($(this).parent().text().trim());
+        $(this).parent().remove();
+    });
+
+    return this.tagger;
 }
 
 /* Core functionality */

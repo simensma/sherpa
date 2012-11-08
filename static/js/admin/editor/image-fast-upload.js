@@ -1,17 +1,5 @@
 $(document).ready(function() {
 
-    var close_tag = 'div.dialog#dialog-image-fast-upload form.image-uploader div.tag-box div.tag a';
-    $(document).on('mouseover', close_tag, function() {
-        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
-    });
-    $(document).on('mouseout', close_tag, function() {
-        $(this).children("img").attr('src', '/static/img/so/close-default.png');
-    });
-    $(document).on('click', close_tag, function() {
-        tagger.removeTag($(this).parent().text().trim());
-        $(this).parent().remove();
-    });
-
     var tagger = new TypicalTagger($("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags']"), $("div.dialog#dialog-image-fast-upload div.tag-box"));
 
     $("div#dialog-image-fast-upload form").submit(function(e) {
