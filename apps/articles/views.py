@@ -43,7 +43,7 @@ def more(request):
         ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
-        t = loader.get_template('main/page/article-list-item.html')
+        t = loader.get_template('common/page/article-list-item.html')
         c = RequestContext(request, {'version': version})
         response.append(t.render(c))
     return HttpResponse(json.dumps(response))

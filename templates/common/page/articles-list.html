@@ -25,7 +25,7 @@
             <div class="row-fluid" style="margin-bottom: 20px">
           {% endif %}
 
-            {% include 'main/page/article-list-item.html' with version=version %}
+            {% include 'common/page/article-list-item.html' with version=version %}
 
           {% if not forloop.counter0|divisibleby:"2" or forloop.last %}
             </div>
