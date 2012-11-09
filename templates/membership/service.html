@@ -129,7 +129,9 @@
     <div class="well">
       <h3>Medlemsfordeler og priser</h3>
       <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search">OK</button><br>
+      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search">OK</button>
+      <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      <br>
       <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
       </form>
     </div>
