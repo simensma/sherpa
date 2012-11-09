@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core.cache import cache
+from django.template import RequestContext, loader
 
 from articles.models import Article
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
@@ -10,6 +11,7 @@ import datetime
 import json
 
 TAG_SEARCH_LENGTH = 3
+NEWS_ITEMS_BULK_SIZE = 20 # Needs to be an even number!
 
 def index(request):
     versions = Version.objects.filter(
@@ -21,12 +23,27 @@ def index(request):
     if 'tag' in request.GET and len(request.GET['tag']) >= TAG_SEARCH_LENGTH:
         versions = versions.filter(tags__name__icontains=request.GET['tag'])
 
-    versions = versions[:20]
+    versions = versions[:NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
     context = {'versions': versions, 'tag': request.GET.get('tag', ''),
         'advertisement': AdPlacement.get_active_ad()}
     return render(request, "page/articles-list.html", context)
+
+# Note: This is probably not compatible with the tag search
+def more(request):
+    response = []
+    print(request.POST['current'])
+    versions = Version.objects.filter(
+        variant__article__isnull=False, variant__segment__isnull=True,
+        variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
+        ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
+    for version in versions:
+        version.load_preview()
+        t = loader.get_template('page/article-list-item.html')
+        c = RequestContext(request, {'version': version})
+        response.append(t.render(c))
+    return HttpResponse(json.dumps(response))
 
 def show(request, article, text):
     context = cache.get('articles.%s' % article)

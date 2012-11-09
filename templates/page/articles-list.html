@@ -2,12 +2,17 @@
 
 {% block title %}Nyheter{% endblock %}
 {% block breadcrumb_title %}Nyheter{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/article-list.js"></script>
+{% endblock %}
 
 {% block body %}
 
-<div class="article-listing">
-  <div class="row">
-    <div class="span12">
+{% csrf_token %}
+
+<div class="row">
+  <div class="span12">
+    <div class="article-listing" data-initial-count="{{ versions|length }}">
       <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
 
       {% if tag %}
@@ -21,28 +26,7 @@
           <div class="row-fluid" style="margin-bottom: 20px">
         {% endif %}
 
-          <div class="span6">
-            <div class="media">
-              <h2 class="media-heading">
-                <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-                  {{ version.title.content|striptags }}
-                </a>
-              </h2>
-              <p class="date">{{ version.variant.article.pub_date|date:"j. F Y" }}</p>
-              {% if not version.hide_thumbnail %}
-                <a class="pull-left" href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-                  <img class="media-object" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
-                </a>
-              {% endif %}
-              <div class="media-body">
-                <p>
-                  <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-                    {{ version.lede.content|striptags|safe|truncatewords:60 }}
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
+          {% include 'page/article-list-item.html' with version=version %}
 
         {% if not forloop.counter0|divisibleby:"2" or forloop.last %}
           </div>
@@ -50,11 +34,15 @@
 
       {% endfor %}
 
-      <h3>
-        Våre tidligere publiserte artikler finner du foreløpig på <a href="http://{{ old_site }}/article.php">våre gamle sider</a>.
-      </h3>
-
+      <div class="article-loader hide">
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+        Laster flere artikler, vennligst vent...
+      </div>
     </div>
+
+    <h3>
+      Våre tidligere publiserte artikler finner du foreløpig på <a href="http://{{ old_site }}/article.php">våre gamle sider</a>.
+    </h3>
   </div>
 </div>
 
