@@ -87,7 +87,7 @@
           Turutstyr og kart til medlemspris
         </dt>
         <dd>
-          Som medlem i DNT kan du kjøpe <a href="/turutstyr-og-kart/">turutstyr og kart</a> til medlemspriser gjennom DNTs lokale medlemsforeninger.
+          Som medlem i DNT kan du kjøpe turutstyr og kart til medlemspriser via vår <a href="http://www.nettbutikken.dntoslo.no/">nettbutikk</a> eller direkte gjennom utsalgsstedene til DNTs lokale medlemsforeninger.
         </dd>
         <dt>
           15% rabatt på friluftsutstyr hos Amfibi
@@ -197,12 +197,6 @@
       <h2>Andre tilbud</h2>
       <dl>
         <dt>
-          Ungdomsmagasinet UT
-        </dt>
-        <dd>
-          UT er DNT ungs medlemsblad, og kommer ut to ganger i året. Bladet et helstøpt friluftsmagasin med ungdommelig vri. Ungdomsmedlemmer får bladet gratis.
-        </dd>
-        <dt>
           Rabatt på forsikring fra Danica Pensjon
         </dt>
         <dd>
@@ -228,6 +222,29 @@
             {{ association.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ association.url }}">nettsidene til {{ association.name }}</a>.
           </dd>
         {% endif %}
+      </dl>
+    </div>
+    <div class="span6">
+      <h2>Publikasjoner</h2>
+      <dl>
+        <dt>
+          Medlemsbladet Fjell og Vidde
+        </dt>
+        <dd>
+          <a href="http://www.turistforeningen.no/fjellogvidde/">Fjell og Vidde</a> er landets største friluftsmagasin, og kommer ut seks ganger i året. Medlemmer (hoved, ungdom, og honnør) får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url user.views.home %}">Min side</a>.
+        </dd>
+        <dt>
+          Ungdomsmagasinet UT
+        </dt>
+        <dd>
+          <a href="http://www.turistforeningen.no/ut/">UT</a> er DNT ungs medlemsblad, og kommer ut to ganger i året. Bladet et helstøpt friluftsmagasin med ungdommelig vri. Ungdomsmedlemmer får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url user.views.home %}">Min side</a>.
+        </dd>
+        <dt>
+          DNTs årbok
+        </dt>
+        <dd>
+          <a href="http://www.turistforeningen.no/aarbok/">DNTs årbøker</a> har blitt utgitt i en ubrutt rekke fra foreningens stiftelse i 1868 fram til i dag. Er du medlem (hoved, ungdom og honnør) får du boka tilsendt gratis og/eller kan lese den på nett via <a href="{% url user.views.home %}">Min side</a>.
+        </dd>
       </dl>
     </div>
   </div>
