@@ -5,7 +5,7 @@
 
 {% block body %}
 
-<div id="article-list">
+<div class="article-listing">
   <div class="row">
     <div class="span12">
       <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
@@ -17,27 +17,38 @@
       {% endif %}
 
       {% for version in versions %}
-        <div class="item">
-          <h2>
-            <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-              {{ version.title.content|striptags }}
-            </a>
-          </h2>
-          <p class="date">{{ version.variant.article.pub_date|date:"j. F Y" }}</p>
-          {% if not version.hide_thumbnail %}
-            <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-              <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
-            </a>
-          {% endif %}
-          <div class="preview-lede">
-            <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
-              {{ version.lede.content|striptags|safe|truncatewords:60 }}
-            </a>
-          </div>
-          <div style="clear: both;"></div>
-        </div>
-      {% endfor %}
+        {% if forloop.counter0|divisibleby:"2" or forloop.first %}
+          <div class="row-fluid" style="margin-bottom: 20px">
+        {% endif %}
 
+          <div class="span6">
+            <div class="media">
+              <h2 class="media-heading">
+                <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+                  {{ version.title.content|striptags }}
+                </a>
+              </h2>
+              <p class="date">{{ version.variant.article.pub_date|date:"j. F Y" }}</p>
+              {% if not version.hide_thumbnail %}
+                <a class="pull-left" href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+                  <img class="media-object" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+                </a>
+              {% endif %}
+              <div class="media-body">
+                <p>
+                  <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">
+                    {{ version.lede.content|striptags|safe|truncatewords:60 }}
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        {% if not forloop.counter0|divisibleby:"2" or forloop.last %}
+          </div>
+        {% endif %}
+
+      {% endfor %}
 
       <h3>
         Våre tidligere publiserte artikler finner du foreløpig på <a href="http://{{ old_site }}/article.php">våre gamle sider</a>.
