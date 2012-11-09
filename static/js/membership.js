@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     $("div#benefits dl dd, div#faq dl dd").hide();
     $("div#benefits dl dt, div#faq dl dt").click(function() {
-        $(this).next().toggle(400);
+        $(this).next().slideToggle(400);
     });
 
     var duration = 600;
