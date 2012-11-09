@@ -73,7 +73,9 @@
           <thead>
             <tr>
               {% if multiple_main and not existing %}
-                <th data-popover data-trigger="hover" data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_youth }} år.">Hoved-<br>medlem</th>
+                <th>
+                  <div data-popover data-trigger="hover" data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_youth }} år.">Hoved-<br>medlem</div>
+                </th>
               {% endif %}
               <th>Personopplysninger</th>
               <th>Medlemstype</th>
