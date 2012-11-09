@@ -19,13 +19,13 @@ $(window).load(function() {
 
     function loadArticles() {
         loading = true;
-        loader.show();
         $.ajaxQueue({
             url: '/nyheter/flere/',
             data: 'current=' + encodeURIComponent(list.data('current'))
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.length == 0) {
+                loader.fadeOut();
                 complete = true;
                 return;
             }
@@ -42,10 +42,10 @@ $(window).load(function() {
                     first.fadeIn();
                 }
             }
+            loader.detach().appendTo(list);
         }).fail(function(result) {
             alert("fail");
         }).always(function(result) {
-            loader.fadeOut();
             setScrollPoint();
             loading = false;
         });
