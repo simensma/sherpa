@@ -19,25 +19,30 @@ def index(request):
 
 def benefits(request, association_id):
     if association_id == None:
-        # No association-attachment provided, use default prices.
-        # Temporarily use the prices of association with OUR id 2 (not focus-id) - DNT Oslo og Omegn.
-        association_id = 2
+        # No association-attachment provided, use default prices (DNT Oslo og Omegn).
+        association_focus_id = 10
+        association = None
+    else:
+        association = cache.get('association.%s' % association_id)
+        if association == None:
+            association = Association.objects.get(id=association_id)
+            cache.set('association.%s' % association_id, association, 60 * 60 * 24)
+        association_focus_id = association.focus_id
 
-    association = cache.get('association.%s' % association_id)
-    if association == None:
-        association = Association.objects.get(id=association_id)
-        cache.set('association.%s' % association_id, association, 60 * 60 * 24)
-
-    price = cache.get('association.price.%s' % association.focus_id)
+    price = cache.get('association.price.%s' % association_focus_id)
     if price == None:
-        price = Price.objects.get(association_id=association.focus_id)
-        cache.set('association.price.%s' % association.focus_id, price, 60 * 60 * 24 * 7)
+        price = Price.objects.get(association_id=association_focus_id)
+        cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
 
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
-    context = {'association': association, 'price': price, 'now': now,
-        'enrollment_active': State.objects.all()[0].active, 'new_membership_year': new_membership_year}
+    context = {
+        'association': association,
+        'price': price,
+        'now': now,
+        'enrollment_active': State.objects.all()[0].active,
+        'new_membership_year': new_membership_year}
     return render(request, 'membership/benefits.html', context)
 
 def zipcode_search(request):
