@@ -18,7 +18,7 @@
 <div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
 {% else %}
 
-<table class="table table-striped">
+<table class="table table-striped article-listing">
 <thead>
 <tr>
   <th>Artikkel</th>
@@ -30,22 +30,25 @@
 {% for version in versions %}
 <tr>
   <td class="article-preview">
-    <div class="article-preview">
-      {% if not version.hide_thumbnail %}
-        <a href="{% url admin.articles.views.edit_version version.id %}">
-          <img src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
-        </a>
-      {% endif %}
-      <h2>
+    <div class="media">
+      <h2 class="media-heading">
         <a href="{% url admin.articles.views.edit_version version.id %}">
           {{ version.title.content|striptags }}
         </a>
       </h2>
-      <div class="lede">
-        <a href="{% url admin.articles.views.edit_version version.id %}">
-          {{ version.lede.content|striptags|safe|truncatewords:40 }}
+      {% if not version.hide_thumbnail %}
+        <a class="pull-left" href="{% url admin.articles.views.edit_version version.id %}">
+          <img class="media-object" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
         </a>
+      {% endif %}
+      <div class="media-body">
+        <p>
+          <a href="{% url admin.articles.views.edit_version version.id %}">
+            {{ version.lede.content|striptags|safe|truncatewords:40 }}
+          </a>
+        </p>
       </div>
+    </div>
   </td>
   {% if version.variant.article.published %}
     {% if version.variant.article.pub_date|dategtnow %}
