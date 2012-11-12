@@ -6,9 +6,6 @@
 {% endblock %}
 {% block body %}
 
-{# For AJAX-requests #}
-{% csrf_token %}
-
 <div class="row change-enrollment-status">
   <div class="span6 cont">
     <div class="active state{% if not state.active %} hide{% endif %}">
