@@ -44,7 +44,7 @@ $(window).load(function() {
             }
             loader.detach().appendTo(list);
         }).fail(function(result) {
-            alert("fail");
+            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
             setScrollPoint();
             loading = false;
