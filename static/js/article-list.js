@@ -75,7 +75,7 @@ $(window).load(function() {
             }
             old_list.data('current', Number(old_list.data('current')) + result.length);
             for(var i=0; i<result.length; i++) {
-                var item = $('<div class="row-fluid hide"><div class="span12">' + result[i] + '</div></div>');
+                var item = $(result[i]);
                 old_list.append(item);
                 item.fadeIn();
             }

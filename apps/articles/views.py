@@ -48,7 +48,9 @@ def more_old(request):
     response = []
     articles = OldArticle.objects.all().order_by('-date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for article in articles:
-        response.append(article.lede)
+        t = loader.get_template('page/article-list-old-item.html')
+        c = RequestContext(request, {'article': article})
+        response.append(t.render(c))
     return HttpResponse(json.dumps(response))
 
 def show(request, article, text):
