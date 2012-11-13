@@ -11,6 +11,7 @@ $(window).load(function() {
 
     $(window).scroll(function() {
         if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.data('scrollpoint')) {
+            loading = true;
             loadArticles();
         }
     });
@@ -21,7 +22,6 @@ $(window).load(function() {
     }
 
     function loadArticles() {
-        loading = true;
         if(status == 'new') {
             loadNewArticles();
         } else if(status == 'old') {
