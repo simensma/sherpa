@@ -1,6 +1,6 @@
 $(window).load(function() {
     var list = $("div.article-listing");
-    var loader = list.find("div.article-loader");
+    var loader = $("div.article-loader");
     var loading = false;
     var complete = false;
     setScrollPoint();
@@ -42,7 +42,6 @@ $(window).load(function() {
                     first.fadeIn();
                 }
             }
-            loader.detach().appendTo(list);
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
