@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% load gravatar %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+
+<article class="old">
+  <div class="row">
+    <div class="span12">
+
+      <h1>{{ article.title }}</h1>
+
+      {% if age_years >= 1 %}
+        <div class="alert alert-info">
+          <a class="close">x</a>
+          <strong><i class="icon-info-sign"></i> Merk:</strong> Denne artikkelen er {{ age_years }} år gammel og enkelte opplysninger kan være utdaterte.
+        </div>
+      {% endif %}
+
+      <div class="lede">
+        {{ article.lede|safe }}
+      </div>
+
+      <div class="body">
+        {{ article.content|safe }}
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<div class="row">
+  <div class="span12">
+    <div class="byline">
+      <p>Skrevet
+        {% if article.author_name %}
+          av
+          {% if article.author_email %}<a href="mailto:{{ article.author_email }}">{% endif %}
+            {{ article.author_name }}
+          {% if article.author_email %}</a>{% endif %}
+        {% endif %}
+        den {{ article.date|date:"j. F Y" }}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

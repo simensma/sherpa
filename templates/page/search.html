@@ -14,10 +14,10 @@
 
   {% else %}
 
-    {% if pages|length > 0 or article_versions|length > 0 %}
+    {% if pages|length > 0 or article_versions|length > 0 or old_articles|length > 0 %}
 
       <p class="hits">
-        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_versions|length }} artikler.
+        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_count }} artikler.
       </p>
 
       <div class="row-fluid">
@@ -57,9 +57,21 @@
               <p>{{ version.lede.content|striptags|safe|truncatewords:15 }}</p>
               <div style="clear: both;"></div>
             </div>
-          {% empty %}
-            <p>Ingen artikler matchet søket.</p>
           {% endfor %}
+
+          {% for article in old_articles %}
+            <div class="search-result old-article">
+              <h3>
+                <a href="{% url articles.views.show_old article.id article.title|slugify %}">{{ article.title }}</a>
+              </h3>
+              <span class="published">{{ article.date|date:"j. F Y" }}</span>
+              {{ article.lede|safe }}
+            </div>
+          {% endfor %}
+
+          {% if article_count == 0 %}
+            <p>Ingen artikler matchet søket.</p>
+          {% endif %}
 
         </div>
       </div>

@@ -14,7 +14,7 @@ from datetime import datetime
 import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
-from articles.models import Article
+from articles.models import Article, OldArticle
 from core.models import Search
 from page.widgets import parse_widget
 from sherpa2.models import Cabin as Sherpa2Cabin
@@ -149,10 +149,21 @@ def search(request):
         variant__article__published=True, variant__article__pub_date__lt=datetime.now()
         ).distinct().order_by('-variant__article__pub_date')
 
+    old_articles = OldArticle.objects.filter(
+        Q(title__icontains=request.GET['q']) |
+        Q(lede__icontains=request.GET['q']) |
+        Q(content__icontains=request.GET['q'])
+        ).distinct().order_by('-date')
+
     for version in article_versions:
         version.load_preview()
 
-    context = {'search_query': request.GET['q'], 'article_versions': article_versions, 'pages': pages}
+    context = {
+    'search_query': request.GET['q'],
+    'article_versions': article_versions,
+    'pages': pages,
+    'old_articles': old_articles,
+    'article_count': len(article_versions) + len(old_articles)}
     return render(request, 'page/search.html', context)
 
 def ad(request, ad):

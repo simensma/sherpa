@@ -1,32 +1,38 @@
 $(window).load(function() {
+    var wrapper = $("div.wrapper");
     var list = $("div.article-listing");
-    var loader = list.find("div.article-loader");
+    var old_list = $("div.old-article-listing");
+    var loader = $("div.article-loader");
     var loading = false;
-    var complete = false;
-    setScrollPoint();
+    var status = 'new';
     list.data('current', list.attr('data-initial-count'));
+    old_list.data('current', 0);
 
     $(window).scroll(function() {
-        if(!loading && !complete && $(window).scrollTop() + $(window).height() > list.data('scrollpoint')) {
+        if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
+            loading = true;
             loadArticles();
         }
     });
 
-    function setScrollPoint() {
-        var scrollpoint = list.offset().top + list.height();
-        list.data('scrollpoint', scrollpoint);
+    function loadArticles() {
+        if(status == 'new') {
+            loadNewArticles();
+        } else if(status == 'old') {
+            loadOldArticles();
+        }
     }
 
-    function loadArticles() {
-        loading = true;
+    function loadNewArticles() {
         $.ajaxQueue({
             url: '/nyheter/flere/',
             data: 'current=' + encodeURIComponent(list.data('current'))
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.length == 0) {
-                loader.fadeOut();
-                complete = true;
+                old_list.fadeIn();
+                status = 'old';
+                loadOldArticles();
                 return;
             }
             list.data('current', Number(list.data('current')) + result.length);
@@ -42,11 +48,33 @@ $(window).load(function() {
                     first.fadeIn();
                 }
             }
-            loader.detach().appendTo(list);
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            setScrollPoint();
+            loading = false;
+        });
+    }
+
+    function loadOldArticles() {
+        $.ajaxQueue({
+            url: '/nyhetsarkiv/flere/',
+            data: 'current=' + encodeURIComponent(old_list.data('current'))
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.length == 0) {
+                loader.fadeOut();
+                status = 'complete';
+                return;
+            }
+            old_list.data('current', Number(old_list.data('current')) + result.length);
+            for(var i=0; i<result.length; i++) {
+                var item = $(result[i]);
+                old_list.append(item);
+                item.fadeIn();
+            }
+        }).fail(function(result) {
+            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
+        }).always(function(result) {
             loading = false;
         });
     }
