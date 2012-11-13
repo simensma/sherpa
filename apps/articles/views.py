@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.core.cache import cache
 from django.template import RequestContext, loader
 
-from articles.models import Article
+from articles.models import Article, OldArticle
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 import datetime
@@ -42,6 +42,13 @@ def more(request):
         t = loader.get_template('page/article-list-item.html')
         c = RequestContext(request, {'version': version})
         response.append(t.render(c))
+    return HttpResponse(json.dumps(response))
+
+def more_old(request):
+    response = []
+    articles = OldArticle.objects.all().order_by('-date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
+    for article in articles:
+        response.append(article.lede)
     return HttpResponse(json.dumps(response))
 
 def show(request, article, text):

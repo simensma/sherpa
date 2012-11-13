@@ -13,6 +13,7 @@ urlpatterns = patterns('',
 
     # Articles
     url(r'^nyheter/', include('articles.urls')),
+    url(r'^nyhetsarkiv/', include('articles.urls_archive')),
 
     # User authentication
     url(r'^minside/', include('user.urls')),
