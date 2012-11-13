@@ -1,6 +1,6 @@
 <div class="item">
   <h2>
-    <a href="{# url articles.views.show_old article.id article.title|slugify #}">
+    <a href="{% url articles.views.show_old article.id article.title|slugify %}">
       {{ article.title }}
     </a>
   </h2>

@@ -119,6 +119,9 @@
           {% elif version.variant.article %}
             / <a href="{% url articles.views.index %}">Nyheter</a>
             / <em><a href="">{{ version.title.content|striptags }}</a></em>
+          {% elif article %}
+            / <a href="{% url articles.views.index %}">Nyheter</a>
+            / <em><a href="">{{ article.title }}</a></em>
           {% else %}
             {# Fall back to the static title #}
             / <em><a href="">{% block breadcrumb_title %}Turistforeningen{% endblock %}</a></em>

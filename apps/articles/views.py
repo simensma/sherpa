@@ -80,3 +80,16 @@ def show(request, article, text):
         cache.set('articles.%s' % article.id, context, 60 * 10)
     context['advertisement'] = AdPlacement.get_active_ad()
     return render(request, "page/article.html", context)
+
+def show_old(request, article, text):
+    context = cache.get('old_articles.%s' % article)
+    if context == None:
+        # Assume no segmentation for now
+        try:
+            article = OldArticle.objects.get(id=article)
+        except OldArticle.DoesNotExist:
+            raise Http404
+        context = {'article': article}
+        cache.set('old_articles.%s' % article.id, context, 60 * 60 * 24 * 30)
+    context['advertisement'] = AdPlacement.get_active_ad()
+    return render(request, "page/article_old.html", context)
