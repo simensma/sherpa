@@ -33,7 +33,6 @@ def index(request):
 # Note: This is probably not compatible with the tag search
 def more(request):
     response = []
-    print(request.POST['current'])
     versions = Version.objects.filter(
         variant__article__isnull=False, variant__segment__isnull=True,
         variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
