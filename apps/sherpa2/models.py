@@ -105,3 +105,49 @@ class Cabin(models.Model):
     the_geom = models.TextField(blank=True) # This field type is a guess.
     class Meta:
         db_table = u'cabin2'
+
+class Article(models.Model):
+    id = models.IntegerField(db_column='ar_id', primary_key=True)
+    owner = models.IntegerField(db_column='ar_owner', null=True, blank=True)
+    name = models.CharField(db_column='ar_name', max_length=100, blank=True)
+    lede = models.TextField(db_column='ar_ingress', blank=True)
+    content = models.TextField(db_column='ar_content', blank=True)
+    author = models.CharField(db_column='ar_author', max_length=100, blank=True)
+    author_email = models.CharField(db_column='ar_author_email', max_length=100, blank=True)
+    date = models.CharField(db_column='ar_date', max_length=12, blank=True)
+    date_in = models.CharField(db_column='ar_date_in', max_length=12, blank=True)
+    date_out = models.CharField(db_column='ar_date_out', max_length=12, blank=True)
+    status = models.CharField(db_column='ar_status', max_length=20, blank=True)
+    orig_id = models.IntegerField(db_column='ar_orig_id', null=True, blank=True)
+    online = models.IntegerField(db_column='ar_online', null=True, blank=True)
+    rel_cabins = models.TextField(db_column='ar_rel_cabins', blank=True)
+    rel_locations = models.TextField(db_column='ar_rel_locations', blank=True)
+    priority = models.IntegerField(db_column='ar_priority', null=True, blank=True)
+    folders = models.ManyToManyField('sherpa2.Folder', related_name='articles', through='FolderArticle')
+    class Meta:
+        db_table = u'article'
+
+class Folder(models.Model):
+    id = models.IntegerField(db_column='fo_id', primary_key=True)
+    parent = models.IntegerField(db_column='fo_parent', null=True, blank=True)
+    owner = models.IntegerField(db_column='fo_owner', null=True, blank=True)
+    name = models.CharField(db_column='fo_name', max_length=100, blank=True)
+    content = models.TextField(db_column='fo_content', blank=True)
+    sequence = models.IntegerField(db_column='fo_sequence', null=True, blank=True)
+    url = models.CharField(db_column='fo_url', max_length=255, blank=True)
+    clickable = models.IntegerField(db_column='fo_clickable', null=True, blank=True)
+    in_menu = models.IntegerField(db_column='fo_in_menu', null=True, blank=True)
+    status = models.CharField(db_column='fo_status', max_length=20, blank=True)
+    path = models.CharField(db_column='fo_path', max_length=100, blank=True)
+    online = models.IntegerField(db_column='fo_online', null=True, blank=True)
+    show_rel_articles = models.IntegerField(db_column='fo_show_rel_articles')
+    cols = models.IntegerField(db_column='fo_cols', null=True, blank=True)
+    class Meta:
+        db_table = u'folder'
+
+class FolderArticle(models.Model):
+    folder = models.ForeignKey('sherpa2.Folder', db_column='fo_id')
+    article = models.ForeignKey('sherpa2.Article', db_column='ar_id')
+    status = models.CharField(db_column='fa_status', max_length=20, blank=True)
+    class Meta:
+        db_table = u'folder_article'
