@@ -14,3 +14,11 @@ class Article(models.Model):
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):
     Variant.objects.filter(article=kwargs['instance']).delete()
+
+class OldArticle(models.Model):
+    title = models.CharField(max_length=255)
+    lede = models.TextField()
+    content = models.TextField()
+    author_name = models.CharField(max_length=255)
+    author_email = models.CharField(max_length=255)
+    date = models.DateTimeField()
