@@ -5,21 +5,15 @@ $(window).load(function() {
     var loader = $("div.article-loader");
     var loading = false;
     var status = 'new';
-    setScrollPoint();
     list.data('current', list.attr('data-initial-count'));
     old_list.data('current', 0);
 
     $(window).scroll(function() {
-        if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.data('scrollpoint')) {
+        if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
             loading = true;
             loadArticles();
         }
     });
-
-    function setScrollPoint() {
-        var scrollpoint = wrapper.offset().top + wrapper.height();
-        wrapper.data('scrollpoint', scrollpoint);
-    }
 
     function loadArticles() {
         if(status == 'new') {
@@ -57,7 +51,6 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            setScrollPoint();
             loading = false;
         });
     }
@@ -82,7 +75,6 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            setScrollPoint();
             loading = false;
         });
     }
