@@ -11,6 +11,13 @@
 
       <h1>{{ article.title }}</h1>
 
+      {% if age_years >= 1 %}
+        <div class="alert alert-info">
+          <a class="close">x</a>
+          <strong><i class="icon-info-sign"></i> Merk:</strong> Denne artikkelen er {{ age_years }} år gammel og enkelte opplysninger kan være utdaterte.
+        </div>
+      {% endif %}
+
       <div class="lede">
         {{ article.lede|safe }}
       </div>
