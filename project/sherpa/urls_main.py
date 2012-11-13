@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     url(r'^', include('sherpa.urls_common_pre')),
 
     url(r'^', include('core.urls')),
-    url(r'^nyhetsarkiv/', include('articles.urls_archive')),
     url(r'^foreninger/', include('association.urls')),
 
     # Note: This slug-prefix is duplicated in the DeactivatedEnrollment middleware

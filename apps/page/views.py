@@ -151,11 +151,14 @@ def search(request):
         variant__article__site=request.site
         ).distinct().order_by('-variant__article__pub_date')
 
-    old_articles = OldArticle.objects.filter(
-        Q(title__icontains=request.GET['q']) |
-        Q(lede__icontains=request.GET['q']) |
-        Q(content__icontains=request.GET['q'])
-        ).distinct().order_by('-date')
+    if request.site.domain == 'www.turistforeningen.no':
+        old_articles = OldArticle.objects.filter(
+            Q(title__icontains=request.GET['q']) |
+            Q(lede__icontains=request.GET['q']) |
+            Q(content__icontains=request.GET['q'])
+            ).distinct().order_by('-date')
+    else:
+        old_articles = []
 
     for version in article_versions:
         version.load_preview()

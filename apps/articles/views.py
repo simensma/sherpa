@@ -38,8 +38,12 @@ def index(request):
 def more(request):
     response = []
     versions = Version.objects.filter(
-        variant__article__isnull=False, variant__segment__isnull=True,
-        variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.now()
+        variant__article__isnull=False,
+        variant__segment__isnull=True,
+        variant__article__published=True,
+        active=True,
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.site
         ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
@@ -49,6 +53,9 @@ def more(request):
     return HttpResponse(json.dumps(response))
 
 def more_old(request):
+    if request.site.domain != 'www.turistforeningen.no':
+        return HttpResponse(json.dumps('local_site'))
+
     response = []
     articles = OldArticle.objects.all().order_by('-date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for article in articles:
