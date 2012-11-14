@@ -45,11 +45,43 @@
       </table>
 
       <h3>Foreninger</h3>
-      <ul>
-        {% for association in other_user.get_profile.all_associations %}
-          <li>{{ association.name }}</li>
-        {% endfor %}
-      </ul>
+
+      {% if other_user_associations.central|length > 0 %}
+        <h4>Sentralt</h4>
+        <ul>
+          {% for association in other_user_associations.central %}
+            <li>{{ association.name }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if other_user_associations.associations|length > 0 %}
+        <h4>Foreninger</h4>
+        <ul>
+          {% for association in other_user_associations.associations %}
+            <li>{{ association.name }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if other_user_associations.small_associations|length > 0 %}
+        <h4>Turlag</h4>
+        <ul>
+          {% for association in other_user_associations.small_associations %}
+            <li>{{ association.name }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if other_user_associations.hike_groups|length > 0 %}
+        <h4>Turgrupper</h4>
+        <ul>
+          {% for association in other_user_associations.hike_groups %}
+            <li>{{ association.name }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
     {% else %}
       <p>Har ikke tilgang til Sherpa.</p>
     {% endif %}

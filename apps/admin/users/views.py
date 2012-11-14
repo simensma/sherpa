@@ -11,6 +11,7 @@ from django.template import RequestContext, loader
 
 import re
 
+from association.models import Association
 from user.models import Profile
 from user.views import username
 
@@ -48,7 +49,8 @@ def show(request, user):
     user = User.objects.get(id=user)
     context = {
         'other_user': user,
-        'other_user_perms': PermWrapper(user)}
+        'other_user_perms': PermWrapper(user),
+        'other_user_associations': Association.sort(user.get_profile().all_associations())}
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
