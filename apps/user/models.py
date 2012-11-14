@@ -18,7 +18,7 @@ class Profile(models.Model):
         if self.user.has_perm('user.sherpa_admin'):
             return Association.objects.all()
         else:
-            return self.user.associations.all()
+            return self.associations.all()
 
     class Meta:
         permissions = [
