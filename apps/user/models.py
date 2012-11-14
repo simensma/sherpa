@@ -27,6 +27,17 @@ class Profile(models.Model):
         ]
 
 class AssociationRole(models.Model):
+    ROLE_CHOICES = (
+        ('admin', 'Administrator'),
+        ('user', 'Normal bruker'),)
     profile = models.ForeignKey('user.Profile')
     association = models.ForeignKey('association.Association')
-    role = models.CharField(max_length=255, choices=(('admin', 'Administrator'), ('user', 'Normal bruker'),))
+    role = models.CharField(max_length=255, choices=ROLE_CHOICES)
+
+    @staticmethod
+    def friendly_role(role):
+        # This is very silly, must be a better way to do this!?
+        for choice in AssociationRole.ROLE_CHOICES:
+            if choice[0] == role:
+                return choice[1]
+        return ''
