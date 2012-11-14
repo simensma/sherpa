@@ -36,7 +36,7 @@ def new(request):
         profile = Profile(user=user, phone=request.POST['phone'])
         profile.save()
         messages.add_message(request, messages.INFO, 'created_user')
-        return HttpResponseRedirect(reverse('admin.users.views.index'))
+        return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
     except ValueError:
         messages.add_message(request, messages.ERROR, 'value_error')
         return HttpResponseRedirect(reverse('admin.users.views.index'))
