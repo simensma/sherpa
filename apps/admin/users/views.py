@@ -15,9 +15,7 @@ from user.models import Profile
 from user.views import username
 
 def index(request):
-    users = User.objects.all().order_by('first_name')
-    context = {'users': users}
-    return render(request, 'common/admin/users/index.html', context)
+    return render(request, 'common/admin/users/index.html')
 
 def new(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
