@@ -11,7 +11,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=PHONE_MAX_LENGTH)
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True, unique=True)
     password_restore_date = models.DateTimeField(null=True)
-    associations = models.ManyToManyField('association.Association', related_name='users')
+    associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     # At some point, this model will be extended to contain member data, syncing with Focus.
 
     def all_associations(self):
@@ -25,3 +25,8 @@ class Profile(models.Model):
             ("sherpa_admin", "Sherpa-administrator - global access"),
             ("sherpa", "Has general access to Sherpa"),
         ]
+
+class AssociationRole(models.Model):
+    profile = models.ForeignKey('user.Profile')
+    association = models.ForeignKey('association.Association')
+    role = models.CharField(max_length=255, choices=(('admin', 'Administrator'), ('user', 'Normal bruker'),))
