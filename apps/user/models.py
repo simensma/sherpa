@@ -14,5 +14,6 @@ class Profile(models.Model):
 
     class Meta:
         permissions = [
+            ("sherpa_admin", "Sherpa-administrator - global access"),
             ("sherpa", "Has general access to Sherpa"),
         ]
