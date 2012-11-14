@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth.context_processors import PermWrapper
 from django.contrib import messages
 from django.conf import settings
 from django.db.utils import IntegrityError
@@ -47,5 +48,8 @@ def new(request):
             return render(request, 'common/admin/users/new.html', context)
 
 def show(request, user):
-    context = {'other_user': User.objects.get(id=user)}
+    user = User.objects.get(id=user)
+    context = {
+        'other_user': user,
+        'other_user_perms': PermWrapper(user)}
     return render(request, 'common/admin/users/show.html', context)

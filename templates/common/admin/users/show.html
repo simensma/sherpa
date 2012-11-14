@@ -6,7 +6,51 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Bruker: {{ other_user.get_full_name }}</h2>
+    <h2>{{ other_user.get_full_name }}</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <h3>Brukerinfo</h3>
+    <table class="table">
+      <tr>
+        <th>Navn</th>
+        <td>{{ other_user.get_full_name }}</td>
+      </tr>
+      <tr>
+        <th>E-post</th>
+        <td><a href="mailto:{{ other_user.email }}">{{ other_user.email }}</a></td>
+      </tr>
+      <tr>
+        <th>Telefon</th>
+        <td>{{ other_user.get_profile.phone }}</td>
+      </tr>
+    </table>
+
+    <h3>Medlemsinformasjon</h3>
+    <p><em>Ikke tilgjengelig</em></p>
+  </div>
+
+  <div class="span6">
+    <h3>Tilganger</h3>
+    {% if not other_user_perms.user.sherpa %}
+      <p>Har ikke tilgang til Sherpa</p>
+    {% else %}
+      <table class="table">
+        <tr>
+          <th>Brukertype:</th>
+          <td>Vanlig Sherpa-bruker</td>
+        </tr>
+      </table>
+
+      <h3>Foreninger</h3>
+      <ul>
+        {% for association in user.get_profile.associations.all %}
+          <li>{{ association.name }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
 </div>
 
