@@ -37,50 +37,55 @@
     {% if other_user_perms.user.sherpa_admin %}
       <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
     {% elif other_user_perms.user.sherpa %}
-      <table class="table">
-        <tr>
-          <th>Brukertype:</th>
-          <td>Vanlig Sherpa-bruker</td>
-        </tr>
-      </table>
-
-      <h3>Foreninger</h3>
-
-      {% if other_user_associations.central|length > 0 %}
-        <h4>Sentralt</h4>
-        <ul>
+      <table class="table user-permissions">
+        {% if other_user_associations.central|length > 0 %}
+          <tr>
+            <td colspan="2" class="group">Sentralt</td>
+          </tr>
           {% for association in other_user_associations.central %}
-            <li>{{ association.name }}</li>
+            <tr>
+              <td>{{ association.name }}</td>
+              <td>Bruker</td>
+            </tr>
           {% endfor %}
-        </ul>
-      {% endif %}
+        {% endif %}
 
-      {% if other_user_associations.associations|length > 0 %}
-        <h4>Foreninger</h4>
-        <ul>
+        {% if other_user_associations.associations|length > 0 %}
+          <tr>
+            <td colspan="2" class="group">Foreninger</td>
+          </tr>
           {% for association in other_user_associations.associations %}
-            <li>{{ association.name }}</li>
+            <tr>
+              <td>{{ association.name }}</td>
+              <td>Bruker</td>
+            </tr>
           {% endfor %}
-        </ul>
-      {% endif %}
+        {% endif %}
 
-      {% if other_user_associations.small_associations|length > 0 %}
-        <h4>Turlag</h4>
-        <ul>
+        {% if other_user_associations.small_associations|length > 0 %}
+          <tr>
+            <td colspan="2" class="group">Turlag</td>
+          </tr>
           {% for association in other_user_associations.small_associations %}
-            <li>{{ association.name }}</li>
+            <tr>
+              <td>{{ association.name }}</td>
+              <td>Bruker</td>
+            </tr>
           {% endfor %}
-        </ul>
-      {% endif %}
+        {% endif %}
 
-      {% if other_user_associations.hike_groups|length > 0 %}
-        <h4>Turgrupper</h4>
-        <ul>
+        {% if other_user_associations.hike_groups|length > 0 %}
+          <tr>
+            <td colspan="2" class="group">Turgrupper</td>
+          </tr>
           {% for association in other_user_associations.hike_groups %}
-            <li>{{ association.name }}</li>
+            <tr>
+              <td>{{ association.name }}</td>
+              <td>Bruker</td>
+            </tr>
           {% endfor %}
-        </ul>
-      {% endif %}
+        {% endif %}
+      </table>
 
     {% else %}
       <p>Har ikke tilgang til Sherpa.</p>
