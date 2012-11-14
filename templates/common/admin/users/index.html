@@ -2,6 +2,10 @@
 {% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/user_search.js"></script>
+{% endblock %}
+
 {% block body %}
 
 {% for message in messages %}
@@ -16,6 +20,47 @@
     </div>
   {% endif %}
 {% endfor %}
+
+<div class="row">
+  <div class="span12">
+    <h2>Finn brukere/medlemmer</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <input type="text" name="user-search" class="input-xlarge" placeholder="Navn eller medlemsnummer">
+    <button class="btn input-button-align"><i class="icon-search"></i></button>
+  </div>
+
+  <div class="span6">
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <table class="table user-search-list">
+      <tr>
+        <th>Navn</th>
+        <th>Epost</th>
+        <th>Telefon</th>
+      </tr>
+
+      <tr class="initial">
+        <td colspan="3">Søk etter medlemmer/brukere i søkeboksen over...</td>
+      </tr>
+
+      <tr class="no-hits hide">
+        <td colspan="3">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
+      </tr>
+
+      <tr class="loader hide">
+        <td colspan="3"><img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
 
 <div class="row">
   <div class="span12">

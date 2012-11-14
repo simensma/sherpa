@@ -1,11 +1,13 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.context_processors import PermWrapper
 from django.contrib import messages
 from django.conf import settings
 from django.db.utils import IntegrityError
+from django.db.models import Q
+from django.template import RequestContext, loader
 
 import re
 
@@ -53,3 +55,13 @@ def show(request, user):
         'other_user': user,
         'other_user_perms': PermWrapper(user)}
     return render(request, 'common/admin/users/show.html', context)
+
+def search(request):
+    # Todo: Search for membernr.
+    users = User.objects.filter(
+        Q(first_name__icontains=request.POST['q']) |
+        Q(last_name__icontains=request.POST['q'])
+        ).order_by('first_name')
+    t = loader.get_template('common/admin/users/user_results.html')
+    c = RequestContext(request, {'users': users})
+    return HttpResponse(t.render(c))
