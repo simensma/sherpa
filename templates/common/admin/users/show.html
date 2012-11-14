@@ -46,7 +46,7 @@
 
       <h3>Foreninger</h3>
       <ul>
-        {% for association in user.get_profile.all_associations %}
+        {% for association in other_user.get_profile.all_associations %}
           <li>{{ association.name }}</li>
         {% endfor %}
       </ul>
