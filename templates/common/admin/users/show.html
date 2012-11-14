@@ -34,9 +34,9 @@
 
   <div class="span6">
     <h3>Tilganger</h3>
-    {% if not other_user_perms.user.sherpa %}
-      <p>Har ikke tilgang til Sherpa</p>
-    {% else %}
+    {% if other_user_perms.user.sherpa_admin %}
+      <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
+    {% elif other_user_perms.user.sherpa %}
       <table class="table">
         <tr>
           <th>Brukertype:</th>
@@ -50,6 +50,8 @@
           <li>{{ association.name }}</li>
         {% endfor %}
       </ul>
+    {% else %}
+      <p>Har ikke tilgang til Sherpa.</p>
     {% endif %}
   </div>
 </div>
