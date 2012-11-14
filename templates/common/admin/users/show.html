@@ -1,0 +1,13 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h2>Bruker: {{ other_user.get_full_name }}</h2>
+  </div>
+</div>
+
+{% endblock %}

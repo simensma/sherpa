@@ -4,5 +4,6 @@ urlpatterns = patterns('admin.users.views',
 
     url(r'^$', 'index'),
     url(r'^ny/$', 'new'),
+    url(r'^rediger/(?P<user>\d+)/$', 'show'),
 
 )

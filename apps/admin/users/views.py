@@ -45,3 +45,7 @@ def new(request):
         except IntegrityError:
             messages.add_message(request, messages.ERROR, 'integrity_error')
             return render(request, 'common/admin/users/new.html', context)
+
+def show(request, user):
+    context = {'other_user': User.objects.get(id=user)}
+    return render(request, 'common/admin/users/show.html', context)
