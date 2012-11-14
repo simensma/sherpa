@@ -34,14 +34,7 @@ def old_site(request):
 
 def admin_user_associations(request):
     if request.path.startswith('/sherpa'):
-        user_associations = request.user.get_profile().all_associations().order_by('name')
-        association_collection = {
-            'central': user_associations.filter(type='sentral'),
-            'associations': user_associations.filter(type='forening'),
-            'small_associations': user_associations.filter(type='turlag'),
-            'hike_groups': user_associations.filter(type='turgruppe'),
-        }
         return {
-            'user_associations': association_collection,
+            'user_associations': Association.sort(request.user.get_profile().all_associations()),
             'active_association': request.session.get('active_association', '')}
     return {}

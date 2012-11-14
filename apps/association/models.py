@@ -34,3 +34,13 @@ class Association(models.Model):
     organization_no = models.CharField(max_length=255, default='')
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
+
+    @staticmethod
+    def sort(associations):
+        associations = associations.order_by('name')
+        return {
+            'central': associations.filter(type='sentral'),
+            'associations': associations.filter(type='forening'),
+            'small_associations': associations.filter(type='turlag'),
+            'hike_groups': associations.filter(type='turgruppe'),
+        }
