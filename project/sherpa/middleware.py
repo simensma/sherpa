@@ -214,7 +214,7 @@ class SetActiveAssociation(object):
             if m != None:
                 # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
                 association = Association.objects.get(id=m.groupdict()['association'])
-                if not association in request.user.get_profile().associations.all():
+                if not association in request.user.get_profile().all_associations():
                     raise PermissionDenied
 
                 request.session['active_association'] = association
