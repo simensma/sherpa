@@ -20,6 +20,12 @@ $(document).ready(function() {
 
     association_select.chosen().change(function() {
         association_role.show();
+        var selected = association_select.find("option:selected");
+        if(selected.attr('data-role') == 'admin') {
+            association_role.find("div.admin").show();
+        } else if(selected.attr('data-role') == 'user') {
+            association_role.find("div.admin").hide();
+        }
     });
 
     var role;

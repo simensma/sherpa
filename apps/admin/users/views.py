@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db.utils import IntegrityError
 from django.db.models import Q
 from django.template import RequestContext, loader
+from django.core.exceptions import PermissionDenied
 
 import re
 
@@ -82,6 +83,15 @@ def add_association_permission(request):
             break
     if not role_valid:
         raise PermissionDenied
+
+    # Verify that the user performing this action has the required permissions
+    if not request.user.has_perm('user.sherpa_admin'):
+        try:
+            role = AssociationRole.objects.get(profile=request.user.get_profile(), association=association)
+            if role.role == 'user' and request.POST['role'] == 'admin':
+                raise PermissionDenied
+        except AssociationRole.DoesNotExist:
+            raise PermissionDenied
 
     try:
         role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
