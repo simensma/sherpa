@@ -15,6 +15,10 @@ class RoleNode(template.Node):
     def render(self, context):
         try:
             profile = self.profile.resolve(context)
+            # Sherpa-admins always have admin role
+            if profile.user.has_perm('user.sherpa_admin'):
+                return 'admin'
+
             association = self.association.resolve(context)
             return AssociationRole.friendly_role(AssociationRole.objects.get(profile=profile, association=association).role)
         except template.VariableDoesNotExist:
