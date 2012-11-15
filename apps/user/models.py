@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from association.models import Association
-
 class Profile(models.Model):
     PHONE_MAX_LENGTH = 20
 
@@ -15,6 +13,7 @@ class Profile(models.Model):
     # At some point, this model will be extended to contain member data, syncing with Focus.
 
     def all_associations(self):
+        from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):
             return Association.objects.all()
         else:

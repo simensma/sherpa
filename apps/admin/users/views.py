@@ -50,7 +50,7 @@ def show(request, user):
     context = {
         'other_user': user,
         'other_user_perms': PermWrapper(user),
-        'other_user_associations': Association.sort(user.get_profile().all_associations())}
+        'other_user_associations': Association.sort_and_apply_roles(user.get_profile().all_associations(), user)}
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):

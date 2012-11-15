@@ -44,3 +44,11 @@ class Association(models.Model):
             'small_associations': associations.filter(type='turlag'),
             'hike_groups': associations.filter(type='turgruppe'),
         }
+
+    @staticmethod
+    def sort_and_apply_roles(associations, user):
+        associations = Association.sort(associations)
+        for list in associations.values():
+            for association in list:
+                association.apply_role(user)
+        return associations

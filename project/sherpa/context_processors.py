@@ -35,6 +35,6 @@ def old_site(request):
 def admin_user_associations(request):
     if request.path.startswith('/sherpa'):
         return {
-            'user_associations': Association.sort(request.user.get_profile().all_associations()),
+            'user_associations': Association.sort_and_apply_roles(request.user.get_profile().all_associations(), request.user),
             'active_association': request.session.get('active_association', '')}
     return {}

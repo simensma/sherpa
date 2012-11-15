@@ -6,7 +6,7 @@
   <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
 {% endblock %}
 
-{% load associationrole %}
+{% load friendlyrole %}
 
 {% block body %}
 
@@ -51,7 +51,7 @@
           {% for association in other_user_associations.central %}
             <tr>
               <td>{{ association.name }}</td>
-              <td>{% associationrole other_user.get_profile association %}</td>
+              <td>{{ association.role|friendlyrole }}</td>
             </tr>
           {% endfor %}
         {% endif %}
@@ -63,7 +63,7 @@
           {% for association in other_user_associations.associations %}
             <tr>
               <td>{{ association.name }}</td>
-              <td>{% associationrole other_user.get_profile association %}</td>
+              <td>{{ association.role|friendlyrole }}</td>
             </tr>
           {% endfor %}
         {% endif %}
@@ -75,7 +75,7 @@
           {% for association in other_user_associations.small_associations %}
             <tr>
               <td>{{ association.name }}</td>
-              <td>{% associationrole other_user.get_profile association %}</td>
+              <td>{{ association.role|friendlyrole }}</td>
             </tr>
           {% endfor %}
         {% endif %}
@@ -87,7 +87,7 @@
           {% for association in other_user_associations.hike_groups %}
             <tr>
               <td>{{ association.name }}</td>
-              <td>{% associationrole other_user.get_profile association %}</td>
+              <td>{{ association.role|friendlyrole }}</td>
             </tr>
           {% endfor %}
         {% endif %}
