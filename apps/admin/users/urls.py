@@ -8,4 +8,6 @@ urlpatterns = patterns('admin.users.views',
     url(r'^rediger/(?P<user>\d+)/$', 'show'),
     url(ur'^søk/$', 'search'),
 
+    url(ur'^sett-sherpa-admin/(?P<user>\d+)/$', 'make_sherpa_admin'),
+
 )

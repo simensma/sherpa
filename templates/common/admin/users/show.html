@@ -107,7 +107,7 @@
             <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
             Sherpa-administratorer har tilgang til absolutt alt, og kan gjøre andre brukere til Sherpa-administratorer.
           </p>
-          <p><a href="{# url admin.views.users.make_sherpa_admin other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
+          <p><a href="{% url admin.users.views.make_sherpa_admin other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
       {% endif %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.contrib.auth.context_processors import PermWrapper
 from django.contrib import messages
 from django.conf import settings
@@ -62,3 +62,11 @@ def search(request):
     t = loader.get_template('common/admin/users/user_results.html')
     c = RequestContext(request, {'users': users})
     return HttpResponse(t.render(c))
+
+def make_sherpa_admin(request, user):
+    if not request.user.has_perm('user.sherpa_admin'):
+        raise PermissionDenied
+
+    permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
+    User.objects.get(id=user).user_permissions.add(permission)
+    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
