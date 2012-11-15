@@ -2,6 +2,10 @@
 {% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
+{% endblock %}
+
 {% load associationrole %}
 
 {% block body %}
@@ -92,6 +96,23 @@
     {% else %}
       <p>Har ikke tilgang til Sherpa.</p>
     {% endif %}
+
+    {% if not other_user_perms.user.sherpa_admin %}
+      <h3>Gi tilganger</h3>
+
+      {% if perms.user.sherpa_admin %}
+        <p><a href="javascript:undefined" class="btn btn-danger make-sherpa-admin">Gjør til Sherpa-admin</a></p>
+        <div class="alert alert-error hide make-sherpa-admin">
+          <p>
+            <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
+            Sherpa-administratorer har tilgang til absolutt alt, og kan gjøre andre brukere til Sherpa-administratorer.
+          </p>
+          <p><a href="{# url admin.views.users.make_sherpa_admin other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
+          <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+        </div>
+      {% endif %}
+    {% endif %}
+
   </div>
 </div>
 
