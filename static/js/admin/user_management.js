@@ -10,4 +10,33 @@ $(document).ready(function() {
         admin_anchor.show();
         admin_wrapper.hide();
     });
+
+    var association_permission = $("div.association-permission");
+    var association_select = association_permission.find("select[name='association-permission']");
+    var association_role = $("div.association-role");
+    var user_role_button = association_role.find("button.user");
+    var admin_role_button = association_role.find("button.admin");
+    var verifier = $("div.verify-association-permission");
+
+    association_select.chosen().change(function() {
+        association_role.show();
+    });
+
+    var role;
+    user_role_button.click(function() {  role = 'user'; verifyRole('brukertilgang'); });
+    admin_role_button.click(function() { role = 'admin'; verifyRole('administratortilgang'); });
+
+    function verifyRole(role) {
+        association_permission.hide();
+        association_role.hide();
+        verifier.show();
+        verifier.find("span.role").text(role);
+        verifier.find("span.association").text(association_select.find("option:selected").text());
+    }
+
+    verifier.find("a.cancel").click(function() {
+        association_permission.show();
+        association_role.show();
+        verifier.hide();
+    });
 });

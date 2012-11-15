@@ -111,8 +111,65 @@
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
       {% endif %}
-    {% endif %}
 
+      <div class="association-permission">
+        <select name="association-permission" data-placeholder="Gi tilgang til en forening...">
+          <option value=""></option>
+          {% if user_associations.central|length > 0 %}
+            <optgroup label="Sentralt/nasjonalt">
+              {% for association in user_associations.central %}
+                <option value="{{ association.id }}">{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+          {% if user_associations.associations|length > 0 %}
+            <optgroup label="Medlemsforeninger">
+              {% for association in user_associations.associations %}
+                <option value="{{ association.id }}">{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+          {% if user_associations.small_associations|length > 0 %}
+            <optgroup label="Lokale turlag">
+            {% for association in user_associations.small_associations %}
+                <option value="{{ association.id }}">{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+          {% if user_associations.hike_groups|length > 0 %}
+            <optgroup label="Turgrupper">
+            {% for association in user_associations.hike_groups %}
+                <option value="{{ association.id }}">{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="association-role hide row-fluid">
+        <div class="span6">
+          <p class="button"><button class="btn btn-large user"><i class="icon-user"></i> Vanlig bruker</button></p>
+          <p class="permission-description">
+            Vanlige brukere kan gjøre endringer på sin egen forening.
+          </p>
+        </div>
+
+        <div class="span6">
+          <p class="button"><button class="btn btn-large admin"><i class="icon-star"></i> Administrator</button></p>
+          <p class="permission-description">
+            Administratorer kan i tillegg gjøre endringer på foreninger/turlag som er underlagt sin forening, og opprette nye turlag/foreninger.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert alert-error verify-association-permission hide">
+        <p>
+          <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
+        </p>
+        <p><a href="javascript:undefined" class="btn btn-success"><i class="icon-ok"></i> Ja, gi tilgang</a></p>
+        <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+      </div>
+    {% endif %}
   </div>
 </div>
 
