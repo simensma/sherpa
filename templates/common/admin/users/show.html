@@ -97,7 +97,7 @@
       <p>Har ikke tilgang til Sherpa.</p>
     {% endif %}
 
-    {% if not other_user_perms.user.sherpa_admin %}
+    {% if not other_user_perms.user.sherpa_admin and not user == other_user %}
       <h3>Gi tilganger</h3>
 
       {% if perms.user.sherpa_admin %}
