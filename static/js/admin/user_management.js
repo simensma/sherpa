@@ -39,4 +39,9 @@ $(document).ready(function() {
         association_role.show();
         verifier.hide();
     });
+
+    verifier.find("form").submit(function() {
+        $(this).find("input[name='association']").val(association_select.find("option:selected").val());
+        $(this).find("input[name='role']").val(role);
+    });
 });

@@ -163,11 +163,17 @@
       </div>
 
       <div class="alert alert-error verify-association-permission hide">
-        <p>
-          <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
-        </p>
-        <p><a href="javascript:undefined" class="btn btn-success"><i class="icon-ok"></i> Ja, gi tilgang</a></p>
-        <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+        <form action="{% url admin.users.views.add_association_permission %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="user" value="{{ other_user.id }}">
+          <input type="hidden" name="association" value="">
+          <input type="hidden" name="role" value="">
+          <p>
+            <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
+          </p>
+          <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, gi tilgang</button></p>
+          <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+        </form>
       </div>
     {% endif %}
   </div>

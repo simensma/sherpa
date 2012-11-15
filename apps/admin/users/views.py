@@ -12,7 +12,7 @@ from django.template import RequestContext, loader
 import re
 
 from association.models import Association
-from user.models import Profile
+from user.models import Profile, AssociationRole
 from user.views import username
 
 def index(request):
@@ -70,3 +70,25 @@ def make_sherpa_admin(request, user):
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
     User.objects.get(id=user).user_permissions.add(permission)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
+
+def add_association_permission(request):
+    user = User.objects.get(id=request.POST['user'])
+    association = Association.objects.get(id=request.POST['association'])
+
+    role_valid = False
+    for role in AssociationRole.ROLE_CHOICES:
+        if role[0] == request.POST['role']:
+            role_valid = True
+            break
+    if not role_valid:
+        raise PermissionDenied
+
+    try:
+        role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
+        role.role = request.POST['role']
+        role.save()
+    except AssociationRole.DoesNotExist:
+        role = AssociationRole(profile=user.get_profile(), association=association, role=request.POST['role'])
+        role.save()
+
+    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
