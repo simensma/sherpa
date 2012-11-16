@@ -59,7 +59,11 @@
             {% for association in other_user_associations.central %}
               <tr>
                 <td>{{ association.name }}</td>
-                <td>{{ association.role|friendlyrole }}</td>
+                <td>
+                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association.role|friendlyrole }}
+                </td>
               </tr>
             {% endfor %}
           {% endif %}
@@ -71,7 +75,11 @@
             {% for association in other_user_associations.associations %}
               <tr>
                 <td>{{ association.name }}</td>
-                <td>{{ association.role|friendlyrole }}</td>
+                <td>
+                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association.role|friendlyrole }}
+                </td>
               </tr>
             {% endfor %}
           {% endif %}
@@ -83,7 +91,11 @@
             {% for association in other_user_associations.small_associations %}
               <tr>
                 <td>{{ association.name }}</td>
-                <td>{{ association.role|friendlyrole }}</td>
+                <td>
+                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association.role|friendlyrole }}
+                </td>
               </tr>
             {% endfor %}
           {% endif %}
@@ -95,7 +107,11 @@
             {% for association in other_user_associations.hike_groups %}
               <tr>
                 <td>{{ association.name }}</td>
-                <td>{{ association.role|friendlyrole }}</td>
+                <td>
+                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association.role|friendlyrole }}
+                </td>
               </tr>
             {% endfor %}
           {% endif %}
