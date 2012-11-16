@@ -103,7 +103,7 @@
       {% endif %}
 
     {% else %}
-      <p>Har ikke tilgang til Sherpa.</p>
+      <p>{{ other_user.get_full_name }} har ikke tilgang til Sherpa.</p>
     {% endif %}
 
     {% if user == other_user %}                   {# nothing #}
