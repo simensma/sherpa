@@ -268,7 +268,7 @@
           </select>
 
           <div class="association-permission-revoke-verify hide alert alert-error">
-            <form action="{# url admin.users.views.revoke_association_permission #}" method="post">
+            <form action="{% url admin.users.views.revoke_association_permission %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="user" value="{{ other_user.id }}">
               <input type="hidden" name="association" value="">

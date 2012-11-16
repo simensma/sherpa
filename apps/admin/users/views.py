@@ -128,3 +128,19 @@ def add_association_permission(request):
         role.save()
 
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
+
+def revoke_association_permission(request):
+    user = User.objects.get(id=request.POST['user'])
+    association = Association.objects.get(id=request.POST['association'])
+
+    # Verify that the user performing this action has the required permissions
+    if not request.user.has_perm('user.sherpa_admin'):
+        try:
+            if AssociationRole.objects.get(profile=request.user.get_profile(), association=association).role != 'admin':
+                raise PermissionDenied
+        except AssociationRole.DoesNotExist:
+            raise PermissionDenied
+
+    role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
+    role.delete()
+    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
