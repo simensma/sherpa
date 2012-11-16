@@ -28,7 +28,7 @@ class Profile(models.Model):
 class AssociationRole(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Administrator'),
-        ('user', 'Normal bruker'),)
+        ('user', 'Vanlig bruker'),)
     profile = models.ForeignKey('user.Profile')
     association = models.ForeignKey('association.Association')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
