@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("association", "0005_set_main_site"),
+    )
+
     def forwards(self, orm):
         
         # Adding model 'AssociationRole'
