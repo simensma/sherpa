@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var admin_anchor = $("a.make-sherpa-admin");
+    var admin_anchor = $("button.make-sherpa-admin");
     var admin_wrapper = $("div.make-sherpa-admin");
     admin_anchor.click(function() {
         $(this).hide();
