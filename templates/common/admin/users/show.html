@@ -147,7 +147,7 @@
             <strong>Ta bort Sherpa-tilgang!?</strong><br>
             {{ other_user.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
           </p>
-          <p><a href="{# url admin.users.views.revoke_sherpa_access other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
+          <p><a href="{% url admin.users.views.revoke_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
 
