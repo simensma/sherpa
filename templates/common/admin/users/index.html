@@ -15,19 +15,6 @@
 
 {% block body %}
 
-{% for message in messages %}
-  {% if message.message == 'created_user' %}
-    <div class="row">
-      <div class="offset3 span6">
-        <div class="alert alert-success">
-          <a class="close">x</a>
-          <strong>Den nye brukeren har blitt opprettet.</strong>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-{% endfor %}
-
 <div class="row">
   <div class="span12">
     <h2>Finn brukere/medlemmer</h2>
