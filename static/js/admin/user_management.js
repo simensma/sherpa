@@ -27,6 +27,9 @@ $(document).ready(function() {
 
     var association_permission = $("div.association-permission");
     var association_select = association_permission.find("select[name='association-permission']");
+    var association_revoke = $("div.association-permission-revoke");
+    var association_revoke_select = association_revoke.find("select[name='association-permission-revoke']");
+    var association_revoke_verify = association_revoke.find("div.association-permission-revoke-verify");
     var association_role = $("div.association-role");
     var user_role_button = association_role.find("button.user");
     var admin_role_button = association_role.find("button.admin");
@@ -40,6 +43,25 @@ $(document).ready(function() {
         } else if(selected.attr('data-role') == 'user') {
             association_role.find("div.admin").hide();
         }
+    });
+
+    association_revoke_select.chosen({
+        'allow_single_deselect': true
+    }).change(function() {
+        var selected = association_revoke_select.find("option:selected");
+        if(selected.val() == "") {
+            association_revoke_verify.hide();
+        } else {
+            association_revoke_verify.show();
+            association_revoke_verify.find("span.association").text(selected.text());
+            association_revoke_verify.find("form input[name='association']").val(selected.val());
+        }
+    });
+
+    association_revoke_verify.find("a.cancel").click(function() {
+        association_revoke_verify.hide();
+        association_revoke_select.val('');
+        association_revoke_select.trigger('liszt:updated');
     });
 
     var role;

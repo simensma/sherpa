@@ -47,10 +47,12 @@ def new(request):
 
 def show(request, user):
     user = User.objects.get(id=user)
+    revokable_associations = user.get_profile().all_associations() & request.user.get_profile().all_associations('admin')
     context = {
         'other_user': user,
         'other_user_perms': PermWrapper(user),
-        'other_user_associations': Association.sort_and_apply_roles(user.get_profile().all_associations(), user)}
+        'other_user_associations': Association.sort_and_apply_roles(user.get_profile().all_associations(), user),
+        'revokable_associations': Association.sort(revokable_associations)}
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):

@@ -143,7 +143,7 @@
     {% else %}
 
       {# Normal sherpa-user #}
-      <h3>Gi tilganger</h3>
+      <h3>Endre tilganger</h3>
 
       {% if perms.user.sherpa_admin %}
         <p class="admin-buttons">
@@ -232,6 +232,56 @@
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </form>
       </div>
+
+      {% if revokable_associations.central|length > 0 or revokable_associations.associations|length > 0 or revokable_associations.small_associations|length > 0 or revokable_associations.hike_groups|length > 0 %}
+        <div class="association-permission-revoke">
+          <select name="association-permission-revoke" data-placeholder="Ta bort tilgangen til en forening...">
+            <option value=""></option>
+            {% if revokable_associations.central|length > 0 %}
+              <optgroup label="Sentralt/nasjonalt">
+                {% for association in revokable_associations.central %}
+                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if revokable_associations.associations|length > 0 %}
+              <optgroup label="Medlemsforeninger">
+                {% for association in revokable_associations.associations %}
+                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if revokable_associations.small_associations|length > 0 %}
+              <optgroup label="Lokale turlag">
+              {% for association in revokable_associations.small_associations %}
+                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if revokable_associations.hike_groups|length > 0 %}
+              <optgroup label="Turgrupper">
+              {% for association in revokable_associations.hike_groups %}
+                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+          </select>
+
+          <div class="association-permission-revoke-verify hide alert alert-error">
+            <form action="{# url admin.users.views.revoke_association_permission #}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="user" value="{{ other_user.id }}">
+              <input type="hidden" name="association" value="">
+              <p>
+                <strong>Ta bort {{ other_user.get_full_name }}s tilgang til <span class="association"></span>?</strong>
+              </p>
+              <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort tilgangen</button></p>
+              <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+
     {% endif %}
   </div>
 </div>
