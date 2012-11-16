@@ -12,12 +12,18 @@ class Profile(models.Model):
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     # At some point, this model will be extended to contain member data, syncing with Focus.
 
-    def all_associations(self):
+    def all_associations(self, role=None):
         from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):
-            return Association.objects.all()
+            if not role or role == 'admin':
+                return Association.objects.all()
+            else:
+                return Association.objects.none()
         else:
-            return self.associations.all()
+            if role:
+                return self.associations.filter(associationrole__role=role)
+            else:
+                return self.associations.all()
 
     class Meta:
         permissions = [
