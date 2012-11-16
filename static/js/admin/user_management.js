@@ -50,4 +50,17 @@ $(document).ready(function() {
         $(this).find("input[name='association']").val(association_select.find("option:selected").val());
         $(this).find("input[name='role']").val(role);
     });
+
+    var sherpa_user_button = $("button.make-sherpa-user");
+    var sherpa_user = $("div.make-sherpa-user");
+
+    sherpa_user_button.click(function() {
+        $(this).hide();
+        sherpa_user.show();
+    });
+
+    sherpa_user.find("a.cancel").click(function() {
+        sherpa_user_button.show();
+        sherpa_user.show();
+    });
 });

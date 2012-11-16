@@ -97,7 +97,27 @@
       <p>Har ikke tilgang til Sherpa.</p>
     {% endif %}
 
-    {% if not other_user_perms.user.sherpa_admin and not user == other_user %}
+    {% if user == other_user %}                   {# nothing #}
+    {% elif other_user_perms.user.sherpa_admin %} {# nothing #}
+    {% elif not other_user_perms.user.sherpa %}
+
+      {# Hasn't got Sherpa access at all #}
+      <p><button class="btn btn-danger make-sherpa-user">Gi tilgang til Sherpa</button></p>
+      <div class="alert alert-error hide make-sherpa-user">
+        <p>
+          <strong>Gjør {{ other_user.get_full_name }} til Sherpa-bruker?</strong> Husk:<br>
+        </p>
+        <ol>
+          <li>Du må gi brukeren tilgang til minst én forening etterpå, ellers gir det ikke mening at han/henne er Sherpa-bruker.</li>
+          <li>Turledere trenger ikke nødvendigvis tilgang til Sherpa. Hvis du setter en bruker som turleder på en aktivitet, får han/henne tilgang fra Min side.</li>
+        </ol>
+        <p><a href="{# url admin.users.views.give_sherpa_access other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-bruker</a></p>
+        <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+      </div>
+
+    {% else %}
+
+      {# Normal sherpa-user #}
       <h3>Gi tilganger</h3>
 
       {% if perms.user.sherpa_admin %}
