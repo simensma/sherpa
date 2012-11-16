@@ -1,14 +1,28 @@
 $(document).ready(function() {
-    var admin_anchor = $("button.make-sherpa-admin");
+
+    var admin_buttons = $("p.admin-buttons");
+    var admin_button = admin_buttons.find("button.make-sherpa-admin");
+    var revoke_sherpa_button = admin_buttons.find("button.revoke-sherpa-access");
     var admin_wrapper = $("div.make-sherpa-admin");
-    admin_anchor.click(function() {
-        $(this).hide();
+    var admin_revoke_wrapper = $("div.revoke-sherpa-access");
+    admin_button.click(function() {
+        admin_buttons.hide();
         admin_wrapper.show();
     });
 
     admin_wrapper.find("a.cancel").click(function() {
-        admin_anchor.show();
+        admin_buttons.show();
         admin_wrapper.hide();
+    });
+
+    revoke_sherpa_button.click(function() {
+        admin_buttons.hide();
+        admin_revoke_wrapper.show();
+    })
+
+    admin_revoke_wrapper.find("a.cancel").click(function() {
+        admin_buttons.show();
+        admin_revoke_wrapper.hide();
     });
 
     var association_permission = $("div.association-permission");

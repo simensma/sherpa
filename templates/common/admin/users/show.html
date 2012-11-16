@@ -130,7 +130,10 @@
       <h3>Gi tilganger</h3>
 
       {% if perms.user.sherpa_admin %}
-        <p><button class="btn btn-danger make-sherpa-admin">Gjør til Sherpa-admin</button></p>
+        <p class="admin-buttons">
+          <button class="btn btn-danger make-sherpa-admin"><i class="icon-exclamation-sign"></i> Gjør til Sherpa-admin</button>
+          <button class="btn btn-danger revoke-sherpa-access"><i class="icon-remove"></i> Ta bort Sherpa-tilgang</button>
+        </p>
         <div class="alert alert-error hide make-sherpa-admin">
           <p>
             <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
@@ -139,6 +142,15 @@
           <p><a href="{% url admin.users.views.make_sherpa_admin other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
+        <div class="alert alert-error hide revoke-sherpa-access">
+          <p>
+            <strong>Ta bort Sherpa-tilgang!?</strong><br>
+            {{ other_user.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
+          </p>
+          <p><a href="{# url admin.users.views.revoke_sherpa_access other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
+          <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+        </div>
+
       {% endif %}
 
       <div class="association-permission">
