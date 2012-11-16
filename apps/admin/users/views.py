@@ -47,12 +47,21 @@ def new(request):
 
 def show(request, user):
     user = User.objects.get(id=user)
+
+    # Admins can assign user/admin, users can assign users
+    assignable_admin = request.user.get_profile().all_associations('admin')
+    assignable_user = request.user.get_profile().all_associations('user').exclude(associationrole__profile=user.get_profile())
+    assignable_associations = assignable_admin | assignable_user
+
+    # Only admins can revoke association relation
     revokable_associations = user.get_profile().all_associations() & request.user.get_profile().all_associations('admin')
+
     context = {
         'other_user': user,
         'other_user_perms': PermWrapper(user),
         'other_user_associations': Association.sort_and_apply_roles(user.get_profile().all_associations(), user),
-        'revokable_associations': Association.sort(revokable_associations)}
+        'revokable_associations': Association.sort(revokable_associations),
+        'assignable_associations': Association.sort_and_apply_roles(assignable_associations, request.user)}
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
