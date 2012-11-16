@@ -183,7 +183,7 @@ def household(request):
 
         if validate_location(request.session['enrollment']['location']):
             focus_zipcode = FocusZipcode.objects.filter(zipcode=request.session['enrollment']['location']['zipcode'])
-            if len(focus_zipcode) != 1 or not Association.objects.filter(focus_id=focus_zipcode[0].main_association_id).exists():
+            if request.session['enrollment']['location']['country'] == 'NO' and (len(focus_zipcode) != 1 or not Association.objects.filter(focus_id=focus_zipcode[0].main_association_id).exists()):
                 # TODO - NEW ZIPCODE - THIS SHOULD BE LOGGED!
                 messages.add_message(request, messages.ERROR, 'focus_zipcode_missing')
             else:
