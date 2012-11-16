@@ -63,6 +63,14 @@ def search(request):
     c = RequestContext(request, {'users': users})
     return HttpResponse(t.render(c))
 
+def give_sherpa_access(request, user):
+    if not request.user.has_perm('user.sherpa'):
+        raise PermissionDenied
+
+    permission = Permission.objects.get(content_type__app_label='user', codename='sherpa')
+    User.objects.get(id=user).user_permissions.add(permission)
+    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
+
 def make_sherpa_admin(request, user):
     if not request.user.has_perm('user.sherpa_admin'):
         raise PermissionDenied

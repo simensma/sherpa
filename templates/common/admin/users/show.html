@@ -43,55 +43,64 @@
     {% if other_user_perms.user.sherpa_admin %}
       <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
     {% elif other_user_perms.user.sherpa %}
-      <table class="table user-permissions">
-        {% if other_user_associations.central|length > 0 %}
-          <tr>
-            <td colspan="2" class="group">Sentralt</td>
-          </tr>
-          {% for association in other_user_associations.central %}
-            <tr>
-              <td>{{ association.name }}</td>
-              <td>{{ association.role|friendlyrole }}</td>
-            </tr>
-          {% endfor %}
-        {% endif %}
 
-        {% if other_user_associations.associations|length > 0 %}
-          <tr>
-            <td colspan="2" class="group">Foreninger</td>
-          </tr>
-          {% for association in other_user_associations.associations %}
-            <tr>
-              <td>{{ association.name }}</td>
-              <td>{{ association.role|friendlyrole }}</td>
-            </tr>
-          {% endfor %}
-        {% endif %}
+      {% if other_user_associations.central|length == 0 and other_user_associations.associations|length == 0 and other_user_associations.small_associations|length == 0 and other_user_associations.hike_groups|length == 0 %}
+        <div class="alert alert-error">
+          <strong>{{ other_user.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
+          Gi ham/henne tilgang til minst én forening, ellers gir det ikke mening at han/henne har tilgang til Sherpa.
+        </div>
+      {% else %}
 
-        {% if other_user_associations.small_associations|length > 0 %}
-          <tr>
-            <td colspan="2" class="group">Turlag</td>
-          </tr>
-          {% for association in other_user_associations.small_associations %}
+        <table class="table user-permissions">
+          {% if other_user_associations.central|length > 0 %}
             <tr>
-              <td>{{ association.name }}</td>
-              <td>{{ association.role|friendlyrole }}</td>
+              <td colspan="2" class="group">Sentralt</td>
             </tr>
-          {% endfor %}
-        {% endif %}
+            {% for association in other_user_associations.central %}
+              <tr>
+                <td>{{ association.name }}</td>
+                <td>{{ association.role|friendlyrole }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
 
-        {% if other_user_associations.hike_groups|length > 0 %}
-          <tr>
-            <td colspan="2" class="group">Turgrupper</td>
-          </tr>
-          {% for association in other_user_associations.hike_groups %}
+          {% if other_user_associations.associations|length > 0 %}
             <tr>
-              <td>{{ association.name }}</td>
-              <td>{{ association.role|friendlyrole }}</td>
+              <td colspan="2" class="group">Foreninger</td>
             </tr>
-          {% endfor %}
-        {% endif %}
-      </table>
+            {% for association in other_user_associations.associations %}
+              <tr>
+                <td>{{ association.name }}</td>
+                <td>{{ association.role|friendlyrole }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+
+          {% if other_user_associations.small_associations|length > 0 %}
+            <tr>
+              <td colspan="2" class="group">Turlag</td>
+            </tr>
+            {% for association in other_user_associations.small_associations %}
+              <tr>
+                <td>{{ association.name }}</td>
+                <td>{{ association.role|friendlyrole }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+
+          {% if other_user_associations.hike_groups|length > 0 %}
+            <tr>
+              <td colspan="2" class="group">Turgrupper</td>
+            </tr>
+            {% for association in other_user_associations.hike_groups %}
+              <tr>
+                <td>{{ association.name }}</td>
+                <td>{{ association.role|friendlyrole }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </table>
+      {% endif %}
 
     {% else %}
       <p>Har ikke tilgang til Sherpa.</p>
@@ -111,7 +120,7 @@
           <li>Du må gi brukeren tilgang til minst én forening etterpå, ellers gir det ikke mening at han/henne er Sherpa-bruker.</li>
           <li>Turledere trenger ikke nødvendigvis tilgang til Sherpa. Hvis du setter en bruker som turleder på en aktivitet, får han/henne tilgang fra Min side.</li>
         </ol>
-        <p><a href="{# url admin.users.views.give_sherpa_access other_user.id #}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-bruker</a></p>
+        <p><a href="{% url admin.users.views.give_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-bruker</a></p>
         <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
       </div>
 
