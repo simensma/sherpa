@@ -77,8 +77,6 @@ $(document).ready(function() {
         if($("form#household select[name='country'] option:selected").val() == 'NO') {
             if(!$(this).val().match(/^\d{4}$/)) {
                 $(this).parents("div.control-group").removeClass('success').addClass('error');
-            } else {
-                $(this).parents("div.control-group").removeClass('error').addClass('success');
             }
         } else {
             if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='area']").val() == '') {

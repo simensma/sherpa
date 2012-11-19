@@ -37,9 +37,9 @@ class Enrollment(models.Model):
         db_table = u'CustTurist_members'
 
 class Actor(models.Model):
-    seqno = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
     type = models.CharField(max_length=50, db_column=u'Type')
-    actno = models.IntegerField(db_column=u'ActNo')
+    memberid = models.IntegerField(db_column=u'ActNo')
     last_name = models.CharField(max_length=50, db_column=u'Nm', blank=True)
     first_name = models.CharField(max_length=50, db_column=u'FiNm', blank=True)
     birth_date = models.DateTimeField(null=True, db_column=u'BDt', blank=True)
@@ -98,8 +98,8 @@ class Actor(models.Model):
     actrel1 = models.IntegerField(db_column=u'ActRel1')
     actrel2 = models.IntegerField(db_column=u'ActRel2')
     actrel3 = models.IntegerField(db_column=u'ActRel3')
-    actrel4 = models.IntegerField(db_column=u'ActRel4')
-    actrel5 = models.IntegerField(db_column=u'ActRel5')
+    main_association_id = models.IntegerField(db_column=u'ActRel4')
+    local_association_id = models.IntegerField(db_column=u'ActRel5')
     actrel6 = models.IntegerField(null=True, db_column=u'ActRel6', blank=True)
     actrel7 = models.IntegerField(null=True, db_column=u'ActRel7', blank=True)
     actrel8 = models.IntegerField(null=True, db_column=u'ActRel8', blank=True)
@@ -123,8 +123,8 @@ class Actor(models.Model):
         db_table = u'Actor'
 
 class ActorAddress(models.Model):
-    seqno = models.AutoField(primary_key=True, db_column=u'SeqNo')
-    actseqno = models.ForeignKey(Actor, unique=True, db_column=u'ActSeqNo')
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor = models.OneToOneField(Actor, unique=True, related_name='address', db_column=u'ActSeqNo')
     actnojoin = models.IntegerField(db_column=u'ActNoJoin')
     actadtype = models.CharField(max_length=3, unique=True, db_column=u'ActAdType', blank=True)
     a1 = models.CharField(max_length=40, db_column=u'A1', blank=True)
