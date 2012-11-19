@@ -15,21 +15,21 @@ $(document).ready(function() {
                 type: 'POST'
             }).done(function(result) {
                 result = JSON.parse(result);
-                if(result.location != undefined) {
-                    self.siblings("input.location").val(result.location);
+                if(result.area != undefined) {
+                    self.siblings("input.area").val(result.area);
                     self.parents("div.control-group").removeClass('error').addClass('success');
                 } else if(result.error == "does_not_exist") {
-                    self.siblings("input.location").val("Ukjent postnummer");
+                    self.siblings("input.area").val("Ukjent postnummer");
                     self.parents("div.control-group").removeClass('success').addClass('error');
                 }
             }).fail(function(result) {
-                self.siblings("input.location").val("Teknisk feil");
+                self.siblings("input.area").val("Teknisk feil");
                 self.parents("div.control-group.zipcode").removeClass('success').addClass('error');
             }).always(function(result) {
                 self.siblings("img.ajaxloader").hide();
             });
         } else {
-            self.siblings("input.location").val("");
+            self.siblings("input.area").val("");
             self.parents("div.control-group").removeClass('error warning success');
         }
     });
@@ -148,7 +148,7 @@ $(document).ready(function() {
             div.find("select[name='receiver_dob_yyyy']").trigger("liszt:updated"); // Update chosen
             div.find("input[name='receiver_address']").val(session_receivers[i].address);
             div.find("input[name='receiver_zipcode']").val(session_receivers[i].zipcode);
-            div.find("input[name='receiver_location']").val(session_receivers[i].location);
+            div.find("input[name='receiver_area']").val(session_receivers[i].area);
             div.find("input[name='receiver_phone']").val(session_receivers[i].phone);
             div.find("input[name='receiver_email']").val(session_receivers[i].email);
         }

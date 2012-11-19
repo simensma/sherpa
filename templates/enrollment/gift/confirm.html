@@ -24,7 +24,7 @@
       <tr>
         <td>
           {{ giver.address }}<br>
-          {{ giver.zipcode }} {{ giver.location }}
+          {{ giver.zipcode }} {{ giver.area }}
         </td>
       </tr>
       {% if giver.memberno %}
@@ -71,7 +71,7 @@
         {% for receiver in receivers %}
           <td>
             {{ receiver.address }}<br>
-            {{ receiver.zipcode }} {{ receiver.location }}
+            {{ receiver.zipcode }} {{ receiver.area }}
           </td>
         {% endfor %}
       </tr>

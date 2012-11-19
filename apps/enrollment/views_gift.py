@@ -8,7 +8,7 @@ from smtplib import SMTPDataError
 import json
 
 from core import validator
-from user.models import Zipcode
+from core.models import Zipcode
 
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT = "Gavemedlemskap"
@@ -32,9 +32,9 @@ class Giver():
         self.address = address
         self.zipcode = zipcode
         try:
-            self.location = Zipcode.objects.get(zipcode=zipcode).location
+            self.area = Zipcode.objects.get(zipcode=zipcode).area
         except Zipcode.DoesNotExist:
-            self.location = ''
+            self.area = ''
         self.memberno = memberno
         self.phone = phone
         self.email = email
@@ -49,7 +49,7 @@ class Giver():
         if not validator.zipcode(self.zipcode):
             return False
 
-        if self.location == '':
+        if self.area == '':
             return False
 
         if not validator.memberno(self.memberno, req=False):
@@ -77,9 +77,9 @@ class Receiver():
         self.address = address
         self.zipcode = zipcode
         try:
-            self.location = Zipcode.objects.get(zipcode=zipcode).location
+            self.area = Zipcode.objects.get(zipcode=zipcode).area
         except Zipcode.DoesNotExist:
-            self.location = ''
+            self.area = ''
         self.phone = phone
         self.email = email
 
@@ -99,7 +99,7 @@ class Receiver():
         if not validator.zipcode(self.zipcode):
             return False
 
-        if self.location == '':
+        if self.area == '':
             return False
 
         if not validator.phone(self.phone, req=False):
