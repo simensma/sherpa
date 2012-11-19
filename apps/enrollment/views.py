@@ -289,27 +289,33 @@ def verification(request):
             request.session['enrollment']['location']['address2'] = actor.address.a2
             request.session['enrollment']['location']['address3'] = actor.address.a3
 
-    if 'association' in request.session['enrollment']:
-        del request.session['enrollment']['association']
+    # Get the area name for this zipcode
     if request.session['enrollment']['location']['country'] == 'NO':
-        # Get the area name for this zipcode
         request.session['enrollment']['location']['area'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).area
 
-        # Figure out which association this member belongs to
-        association = cache.get('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'])
+    # Figure out which association this member/these members will belong to
+    if request.session['enrollment']['existing'] != '':
+        # Use main members' association if applicable
+        focus_association_id = Actor.objects.get(memberid=request.session['enrollment']['existing']).main_association_id
+        association = cache.get('focus.association.%s' % focus_association_id)
         if association == None:
-            zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
-            association = Association.objects.get(focus_id=zipcode.main_association_id)
-            cache.set('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'], association, 60 * 60 * 24 * 7)
-        request.session['enrollment']['association'] = association
+            association = Association.objects.get(focus_id=focus_association_id)
+            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
-        # Foreign members are registered with DNT Oslo og Omegn
-        oslo_association_id = 2 # This is the current ID for that association
-        association = cache.get('association.%s' % oslo_association_id)
-        if association == None:
-            association = Association.objects.get(id=oslo_association_id)
-            cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
-        request.session['enrollment']['association'] = association
+        if request.session['enrollment']['location']['country'] == 'NO':
+            association = cache.get('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'])
+            if association == None:
+                focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
+                association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
+                cache.set('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'], association, 60 * 60 * 24 * 7)
+        else:
+            # Foreign members are registered with DNT Oslo og Omegn
+            oslo_association_id = 2 # This is the current ID for that association
+            association = cache.get('association.%s' % oslo_association_id)
+            if association == None:
+                association = Association.objects.get(id=oslo_association_id)
+                cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
+    request.session['enrollment']['association'] = association
 
     # Get the prices for that association
     price = cache.get('association.price.%s' % request.session['enrollment']['association'].focus_id)
