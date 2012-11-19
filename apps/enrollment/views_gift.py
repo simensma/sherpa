@@ -69,6 +69,7 @@ class Giver():
 class Receiver():
     def __init__(self, type, name, dob, address, zipcode, phone, email):
         self.type = int(type)
+        self.type_friendly = membership_types[self.type]
         self.name = name
         try:
             self.dob = datetime.strptime(dob, "%d.%m.%Y")
