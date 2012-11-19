@@ -227,7 +227,7 @@ def existing(request):
     if data['country'] == 'NO' and len(data['zipcode']) != 4:
         return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
     try:
-        actor = Actor.objects.get(actno=data['id'])
+        actor = Actor.objects.get(memberid=data['id'])
     except Actor.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
     except ValueError:
@@ -236,9 +236,9 @@ def existing(request):
     try:
         if data['country'] == 'NO':
             # Include zipcode for norwegian members
-            address = ActorAddress.objects.get(actseqno=actor.seqno, zipcode=data['zipcode'], country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, zipcode=data['zipcode'], country=data['country'])
         else:
-            address = ActorAddress.objects.get(actseqno=actor.seqno, country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, country=data['country'])
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
@@ -269,9 +269,9 @@ def verification(request):
     # If existing member is specified, save details and change to that address
     existing_name = ''
     if request.session['enrollment']['existing'] != '':
-        actor = Actor.objects.get(actno=request.session['enrollment']['existing'])
+        actor = Actor.objects.get(memberid=request.session['enrollment']['existing'])
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
-        address = ActorAddress.objects.get(actseqno=actor.seqno)
+        address = ActorAddress.objects.get(actor=actor.id)
         request.session['enrollment']['location']['country'] = address.country
         if address.country == 'NO':
             request.session['enrollment']['location']['address1'] = address.a1
@@ -798,7 +798,7 @@ def validate_user_contact(users):
 
 def validate_existing(id, zipcode, country):
     try:
-        actor = Actor.objects.get(actno=id)
+        actor = Actor.objects.get(memberid=id)
     except (Actor.DoesNotExist, ValueError):
         return False
 
@@ -806,10 +806,10 @@ def validate_existing(id, zipcode, country):
         return False
 
     if country == 'NO':
-        if not ActorAddress.objects.filter(actseqno=actor.seqno, zipcode=zipcode, country=country).exists():
+        if not ActorAddress.objects.filter(actor=actor.id, zipcode=zipcode, country=country).exists():
             return False
     else:
-        if not ActorAddress.objects.filter(actseqno=actor.seqno, country=country).exists():
+        if not ActorAddress.objects.filter(actor=actor.id, country=country).exists():
             return False
     return True
 
