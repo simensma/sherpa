@@ -271,11 +271,10 @@ def verification(request):
     if request.session['enrollment']['existing'] != '':
         actor = Actor.objects.get(memberid=request.session['enrollment']['existing'])
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
-        address = ActorAddress.objects.get(actor=actor.id)
-        request.session['enrollment']['location']['country'] = address.country
-        if address.country == 'NO':
-            request.session['enrollment']['location']['address1'] = address.a1
-        elif address.country == 'DK' or address.country == 'SE':
+        request.session['enrollment']['location']['country'] = actor.address.country
+        if actor.address.country == 'NO':
+            request.session['enrollment']['location']['address1'] = actor.address.a1
+        elif actor.address.country == 'DK' or actor.address.country == 'SE':
             # Don't change the user-provided address.
             # The user might potentially provide a different address than the existing
             # member, which isn't allowed, but this is preferable to trying to parse the
@@ -285,10 +284,10 @@ def verification(request):
             pass
         else:
             # Uppercase the country code as Focus doesn't use consistent casing
-            request.session['enrollment']['location']['country'] = address.country.upper()
-            request.session['enrollment']['location']['address1'] = address.a1
-            request.session['enrollment']['location']['address2'] = address.a2
-            request.session['enrollment']['location']['address3'] = address.a3
+            request.session['enrollment']['location']['country'] = actor.address.country.upper()
+            request.session['enrollment']['location']['address1'] = actor.address.a1
+            request.session['enrollment']['location']['address2'] = actor.address.a2
+            request.session['enrollment']['location']['address3'] = actor.address.a3
 
     if 'association' in request.session['enrollment']:
         del request.session['enrollment']['association']
@@ -805,12 +804,12 @@ def validate_existing(id, zipcode, country):
     if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
         return False
 
-    if country == 'NO':
-        if not ActorAddress.objects.filter(actor=actor.id, zipcode=zipcode, country=country).exists():
-            return False
-    else:
-        if not ActorAddress.objects.filter(actor=actor.id, country=country).exists():
-            return False
+    if actor.address.country != country:
+        return False
+
+    if country == 'NO' and actor.address.zipcode != zipcode:
+        return False
+
     return True
 
 def validate_youth_count(users):
