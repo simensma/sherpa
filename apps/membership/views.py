@@ -48,25 +48,36 @@ def benefits(request, association_id):
 def zipcode_search(request):
     if not 'zipcode' in request.POST:
         return HttpResponse(json.dumps({'error': 'missing_zipcode'}))
-    association = cache.get('zipcode.association.%s' % request.POST['zipcode'])
-    if association == None:
-        try:
-            zipcode = FocusZipcode.objects.get(zipcode=request.POST['zipcode'])
-            # Note: Redirecting requires performing the association lookup twice
-            association = Association.objects.get(focus_id=zipcode.main_association_id)
-            cache.set('zipcode.association.%s' % request.POST['zipcode'], association, 60 * 60 * 24 * 7)
-        except FocusZipcode.DoesNotExist:
-            # It doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
-            if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
-                # TODO - NEW, UNREGISTERED ZIPCODE - THIS SHOULD BE LOGGED!
-                return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
-            else:
-                return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
-        except Association.DoesNotExist:
+
+    try:
+        # Get focus zipcode-association ID
+        focus_association_id = cache.get('focus.zipcode_association.%s' % request.POST['zipcode'])
+        if focus_association_id == None:
+            focus_association_id = FocusZipcode.objects.get(zipcode=request.POST['zipcode']).main_association_id
+            cache.set('focus.zipcode_association.%s' % request.POST['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
+
+        # Get association based on zipcode-ID
+        association = cache.get('focus.association.%s' % focus_association_id)
+        if association == None:
+            association = Association.objects.get(focus_id=focus_association_id)
+            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+
+        # Success, redirect user
+        url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
+        return HttpResponse(json.dumps({'url': url}))
+
+    except FocusZipcode.DoesNotExist:
+        # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
+        if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
             # TODO - NEW, UNREGISTERED ZIPCODE - THIS SHOULD BE LOGGED!
             return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
-    url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
-    return HttpResponse(json.dumps({'url': url}))
+        else:
+            # This *could* be an entirely new Zipcode, or just an invalid one. Should maybe log this?
+            return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
+
+    except Association.DoesNotExist:
+        # TODO - Zipcode exists in Focus, but has no related association! THIS SHOULD BE LOGGED!
+        return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
 
 def service(request):
     return render(request, 'membership/service.html')

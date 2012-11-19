@@ -303,11 +303,14 @@ def verification(request):
             cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
         if request.session['enrollment']['location']['country'] == 'NO':
-            association = cache.get('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'])
+            focus_association_id = cache.get('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'])
+            if focus_association_id == None:
+                focus_association_id = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).main_association_id
+                cache.set('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
+            association = cache.get('focus.association.%s' % focus_association_id)
             if association == None:
-                focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
-                association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
-                cache.set('zipcode.association.%s' % request.session['enrollment']['location']['zipcode'], association, 60 * 60 * 24 * 7)
+                association = Association.objects.get(focus_id=focus_association_id)
+                cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
             oslo_association_id = 2 # This is the current ID for that association
