@@ -114,8 +114,7 @@ class Receiver():
         return True
 
 def index(request):
-    context = {'types': membership_types}
-    return render(request, 'enrollment/gift/index.html', context)
+    return render(request, 'enrollment/gift/index.html')
 
 def form(request):
     if not request.session.has_key('gift_membership'):
