@@ -124,7 +124,7 @@ class Actor(models.Model):
 
 class ActorAddress(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
-    actor = models.ForeignKey(Actor, unique=True, related_name='address', db_column=u'ActSeqNo')
+    actor = models.OneToOneField(Actor, unique=True, related_name='address', db_column=u'ActSeqNo')
     actnojoin = models.IntegerField(db_column=u'ActNoJoin')
     actadtype = models.CharField(max_length=3, unique=True, db_column=u'ActAdType', blank=True)
     a1 = models.CharField(max_length=40, db_column=u'A1', blank=True)
