@@ -14,80 +14,71 @@
 </div>
 
 <div class="row">
-  <div class="span3">
+  <div class="span4">
 
     <h2>Fra:</h2>
-    <table class="giver-receipt">
-      <tr>
-        <td>{{ giver.name }}</td>
-      </tr>
-      <tr>
-        <td>
-          {{ giver.address }}<br>
-          {{ giver.zipcode }} {{ giver.area }}
-        </td>
-      </tr>
-      {% if giver.memberno %}
+    <div class="form-border">
+      <table class="gift-giver">
         <tr>
-          <td>Medlemsnummer: {{ giver.memberno }}</td>
+          <td>{{ giver.name }}</td>
         </tr>
-      {% endif %}
-      {% if giver.phone %}
         <tr>
-          <td>{{ giver.phone }}</td>
+          <td>
+            {{ giver.address }}<br>
+            {{ giver.zipcode }} {{ giver.area }}
+          </td>
         </tr>
-      {% endif %}
-      {% if giver.email %}
-        <tr>
-          <td>{{ giver.email }}</td>
-        </tr>
-      {% endif %}
-    </table>
+        {% if giver.memberno %}
+          <tr>
+            <td>Medlemsnummer: {{ giver.memberno }}</td>
+          </tr>
+        {% endif %}
+        {% if giver.phone %}
+          <tr>
+            <td>{{ giver.phone }}</td>
+          </tr>
+        {% endif %}
+        {% if giver.email %}
+          <tr>
+            <td>{{ giver.email }}</td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
   </div>
 
-  <div class="span9">
+  <div class="span8">
     <h2>Til:</h2>
-    <table class="table">
-      <tr>
-        <th>Type:</th>
-        {% for receiver in receivers %}
-          <td>{{ receiver.type_friendly }}</td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <th>Navn:</th>
-        {% for receiver in receivers %}
-          <td>{{ receiver.name }}</td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <th>Fødselsdato:</th>
-        {% for receiver in receivers %}
-          <td>{{ receiver.dob|date:"j. F Y" }}</td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <th>Adresse:</th>
-        {% for receiver in receivers %}
-          <td>
-            {{ receiver.address }}<br>
-            {{ receiver.zipcode }} {{ receiver.area }}
-          </td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <th>Mobiltelefon:</th>
-        {% for receiver in receivers %}
-          <td>{{ receiver.phone }}</td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <th>E-post:</th>
-        {% for receiver in receivers %}
-          <td>{{ receiver.email }}</td>
-        {% endfor %}
-      </tr>
-    </table>
+
+    {% for receiver in receivers %}
+      <div class="form-border">
+        <p class="gift-receiver-type pull-right">{{ receiver.type_friendly }}</p>
+        <table class="gift-receiver">
+          <tr>
+            <td>{{ receiver.name }}</td>
+          </tr>
+          <tr>
+            <td>Født: {{ receiver.dob|date:"j. F Y" }}</td>
+          </tr>
+          <tr>
+            <td>
+              {{ receiver.address }}<br>
+              {{ receiver.zipcode }} {{ receiver.area }}
+            </td>
+          </tr>
+          {% if receiver.phone %}
+            <tr>
+              <td>Tlf: {{ receiver.phone }}</td>
+            </tr>
+          {% endif %}
+          {% if receiver.email %}
+            <tr>
+              <td>{{ receiver.email }}</td>
+            </tr>
+          {% endif %}
+        </table>
+      </div>
+    {% endfor %}
   </div>
 </div>
 
