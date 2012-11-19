@@ -20,10 +20,10 @@ AGE_STUDENT = 19
 AGE_SCHOOL = 13
 
 membership_types = [
-  'Vanlig medlemskap',
-  'Dåpsgave (kr. 900)',
-  'Jubileum (kr. 5500)',
-  'Livsvarig medlemskap (kr. 13750)',
+  {'name': 'Vanlig medlemskap', 'price': None},
+  {'name': 'Dåpsgave', 'price': 900},
+  {'name': 'Jubileum', 'price': 5500},
+  {'name': 'Livsvarig medlemskap', 'price': 13750},
 ]
 
 class Giver():
@@ -68,8 +68,8 @@ class Giver():
 
 class Receiver():
     def __init__(self, type, name, dob, address, zipcode, phone, email):
-        self.type = int(type)
-        self.type_friendly = membership_types[self.type]
+        self.type_index = int(type)
+        self.type = membership_types[self.type_index]
         self.name = name
         try:
             self.dob = datetime.strptime(dob, "%d.%m.%Y")
@@ -85,7 +85,7 @@ class Receiver():
         self.email = email
 
     def validate(self):
-        if self.type < 0 or self.type >= len(membership_types):
+        if self.type_index < 0 or self.type_index >= len(membership_types):
             return False
 
         if not validator.name(self.name):

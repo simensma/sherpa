@@ -98,7 +98,7 @@
   <div class="control-group receiver_type">
     <select name="receiver_type" data-placeholder="Velg type medlemskap...">
       {% for type in types %}
-        <option value="{{ forloop.counter0 }}"{% if forloop.counter0 == chosen_type %} selected{% endif %}>{{ type }}</option>
+        <option value="{{ forloop.counter0 }}"{% if forloop.counter0 == chosen_type %} selected{% endif %}>{{ type.name }}{% if type.price %} (kr. {{ type.price }}){% endif %}</option>
       {% endfor %}
     </select>
   </div>

@@ -20,7 +20,7 @@
     <div class="form-border">
       <table class="gift-giver">
         <tr>
-          <td>{{ giver.name }}</td>
+          <td><strong>{{ giver.name }}</strong></td>
         </tr>
         <tr>
           <td>
@@ -52,10 +52,10 @@
 
     {% for receiver in receivers %}
       <div class="form-border">
-        <p class="gift-receiver-type pull-right">{{ receiver.type_friendly }}</p>
+        <p class="gift-receiver-type pull-right">{{ receiver.type.name }} kr. {{ receiver.type.price }}</p>
         <table class="gift-receiver">
           <tr>
-            <td>{{ receiver.name }}</td>
+            <td><strong>{{ receiver.name }}</strong></td>
           </tr>
           <tr>
             <td>Født: {{ receiver.dob|date:"j. F Y" }}</td>
