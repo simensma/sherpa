@@ -42,6 +42,23 @@
         </td>
       </tr>
       <tr>
+        <th>Andre sider</th>
+        <td>
+          Alle innholdssider på {{ site.domain }}.<br>
+          <select name="page" style="width: 400px" data-placeholder="Velg en side...">
+            <option value=""></option>
+            {% for version in page_versions %}
+              <option value="{{ version.id }}">{{ version.variant.page.title }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger page"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
         <th>Bloggwidget</th>
         <td>Widgeten som viser nyeste blogginnlegg, bl.a. på forsiden.</td>
         <td>30 min</td>
@@ -56,7 +73,7 @@
           Én enkelt artikkelvisning.<br>
           <select name="article" style="width: 400px" data-placeholder="Velg en artikkel...">
             <option value=""></option>
-            {% for version in versions %}
+            {% for version in article_versions %}
               <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
             {% endfor %}
           </select>

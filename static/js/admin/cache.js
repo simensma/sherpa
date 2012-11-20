@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $("select[name='article']").chosen();
+    $("select[name='article'], select[name='page']").chosen();
 
     var table = $("table.delete-cache");
 
@@ -12,6 +12,16 @@ $(document).ready(function() {
     table.find("button.frontpage").click(function() {
         $("div.delete-success span.name").text("Forsidecachen");
         deleteCache($(this), 'frontpage');
+    });
+
+    table.find("button.page").click(function() {
+        var id = $("select[name='page']").val();
+        if(id == "" || isNaN(id)) {
+            alert("Du må velge hvilken side du vil slette cachen for!");
+            return;
+        }
+      $("div.delete-success span.name").text("Cachen for siden '" + $("select[name='page'] option:selected").text() + "'");
+        deleteCache($(this), 'page', id);
     });
 
     table.find("button.blog-widget").click(function() {
@@ -29,12 +39,12 @@ $(document).ready(function() {
         deleteCache($(this), 'article', id);
     });
 
-    function deleteCache(button, key, article) {
+    function deleteCache(button, key, id) {
         button.hide();
         button.siblings("img.loader").show();
         $.ajaxQueue({
             url: '/sherpa/cache/slett/',
-            data: 'key=' + encodeURIComponent(key) + '&article=' + encodeURIComponent(article)
+            data: 'key=' + encodeURIComponent(key) + '&id=' + encodeURIComponent(id)
         }).done(function() {
             var success = $("div.delete-success");
             if(success.is(":hidden")) {
