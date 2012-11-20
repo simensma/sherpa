@@ -14,6 +14,11 @@ $(document).ready(function() {
         deleteCache($(this), 'frontpage');
     });
 
+    table.find("button.blog-widget").click(function() {
+        $("div.delete-success span.name").text("Bloggwidget-cachen");
+        deleteCache($(this), 'blog-widget');
+    });
+
     table.find("button.article").click(function() {
         var id = $("select[name='article']").val();
         if(id == "" || isNaN(id)) {

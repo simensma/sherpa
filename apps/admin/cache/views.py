@@ -35,4 +35,9 @@ def delete(request):
         cache.delete('articles.%s' % request.POST['article'])
     elif request.POST['key'] == 'main-menu':
         cache.delete('main.menu')
+    elif request.POST['key'] == 'blog-widget':
+        cache.delete('widgets.blog.category.Alle')
+        # Chances are, this was done to show it on the frontpage, so just delete the frontpage-cache too since it's cached twice.
+        id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
+        cache.delete('content.version.%s' % id)
     return HttpResponse()
