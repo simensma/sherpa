@@ -79,19 +79,17 @@
           <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
         </div>
       </div>
-      <p>
-        {# This is kind of ugly markup, but whatever, it achieves its purpose (Float right, text below button) #}
-        <button class="btn btn-large btn-success pull-right" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
-        <div style="clear: both;"></div>
-        <em class="pull-right">(Bestillingen blir ikke sendt ennå)</em>
-      </p>
     </div>
 
     <div class="span6">
       <div class="receivers">
       </div>
+      <p class="forward-button">
+        <button class="btn btn-large btn-success" type="submit">Gå videre <i class="icon-arrow-right"></i></button><br>
+        <em>(Bestillingen blir ikke sendt ennå)</em>
+      </p>
       <p class="buttons">
-        <button class="btn btn-large new-receiver"><i class="icon-user"></i> Legg til en ny mottaker</button>
+        <button class="btn new-receiver"><i class="icon-user"></i> Legg til en ny mottaker</button>
       </p>
     </div>
   </div>

@@ -86,6 +86,9 @@ $(document).ready(function() {
         var clone = $("div.receiver-box-skeleton").clone();
         clone.removeClass('receiver-box-skeleton').addClass('receiver-box');
         $("form#gift div.receivers").append(clone);
+        var forward = $("p.forward-button");
+        forward.detach();
+        $("div.receiver-box").last().append(forward);
         clone.find("select[name='receiver_type']").chosen({disable_search: true})
         window.datePickerCount += 1;
         clone.find("select[name='receiver_dob_dd']").attr('id', 'dp-dd-' + window.datePickerCount);
@@ -106,7 +109,12 @@ $(document).ready(function() {
     // Remove a receiver
     $(document).on('click', 'form#gift button.remove-receiver', function(e) {
         e.preventDefault();
-        $(this).parents('div.receiver-box').slideUp(function() { $(this).remove(); });
+        $(this).parents('div.receiver-box').slideUp(function() {
+            var forward = $("p.forward-button");
+            forward.detach();
+            $(this).remove();
+            $("div.receiver-box").last().append(forward);
+        });
     });
 
 
