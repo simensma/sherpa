@@ -44,7 +44,12 @@
           </tr>
         {% endif %}
       </table>
+
     </div>
+    <p>
+      <a class="btn btn-large" href="{% url enrollment.views_gift.form %}"><i class="icon-arrow-left"></i> Tilbake</a>
+      <a class="btn btn-large btn-success" href="{% url enrollment.views_gift.send %}"><i class="icon-ok"></i> Send bestilling</a>
+    </p>
   </div>
 
   <div class="span8">
