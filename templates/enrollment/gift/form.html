@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/datePicker/css/datepicker.min.css" media="screen">
 {% endblock %}
-{% block extra_js %}
+{% block js_globals %}
   <script>
     window.session_receivers = [
 {% for receiver in receivers %}{
@@ -23,6 +23,8 @@
 {% if not forloop.last %},{% endif %}{% endfor %}
     ];
   </script>
+{% endblock %}
+{% block extra_js %}
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
   <script src="{{ STATIC_URL }}lib/datePicker/js/lang/no.js"></script>
   <script src="{{ STATIC_URL }}lib/datePicker/js/datepicker.min.js"></script>
@@ -31,6 +33,7 @@
     <script>
       $(document).on('validator_ready', function() {
         window.validator.runValidations();
+        $("input.zipcode").trigger('focusout'); // Zipcode inputs aren't part of the validator
       });
     </script>
   {% endif %}

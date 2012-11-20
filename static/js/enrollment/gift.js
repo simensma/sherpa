@@ -6,7 +6,7 @@ $(document).ready(function() {
         $("form#gift-entry input[name='type']").val($(this).attr('data-type'));
     });
 
-    $(document).on('keyup', 'form#gift input.zipcode', function() {
+    $(document).on('keyup focusout', 'form#gift input.zipcode', function() {
         var self = $(this);
         if(self.val().match(/^\d{4}$/)) {
             self.siblings("img.ajaxloader").show();
@@ -23,19 +23,22 @@ $(document).ready(function() {
                 }
             }).fail(function(result) {
                 self.siblings("input.area").val("Teknisk feil");
-                self.parents("div.control-group.zipcode").removeClass('success').addClass('error');
+                self.parents("div.control-group").removeClass('success').addClass('error');
             }).always(function(result) {
                 self.siblings("img.ajaxloader").hide();
             });
         } else {
+            self.parents("div.control-group").removeClass('error success');
             self.siblings("input.area").val("");
-            self.parents("div.control-group").removeClass('error warning success');
+            if(!$(this).is(":focus")) {
+                self.parents("div.control-group").addClass('error');
+            }
         }
     });
 
     // Clear input validation-status upon focus
     $(document).on('focus', "form#gift input", function() {
-        $(this).parents("div.control-group").removeClass('error warning success');
+        $(this).parents("div.control-group").removeClass('error success');
     });
 
     window.validator = new Validator();
@@ -49,16 +52,8 @@ $(document).ready(function() {
         }
     }
 
-    function markInputZipcode(el, valid) {
-        if(!valid) {
-            el.parents("div.control-group").addClass('error');
-        }
-        // Ignore if valid, let ajax mark it based on zipcode lookup
-    }
-
     validator.addValidation('full_name', $("form#gift input[name='giver_name']"), markInput, true);
     validator.addValidation('address', $("form#gift input[name='giver_address']"), markInput, true);
-    validator.addValidation('zipcode', $("form#gift input[name='giver_zipcode']"), markInputZipcode, true);
     validator.addValidation('memberno', $("form#gift input[name='giver_memberno']"), markInput, false);
     validator.addValidation('phone', $("form#gift input[name='giver_phone']"), markInput, false);
     validator.addValidation('email', $("form#gift input[name='giver_email']"), markInput, false);
@@ -66,7 +61,6 @@ $(document).ready(function() {
     function addReceiverValidations(box) {
         validator.addValidation('full_name', box.find("input[name='receiver_name']"), markInput, true);
         validator.addValidation('address', box.find("input[name='receiver_address']"), markInput, true);
-        validator.addValidation('zipcode', box.find("input[name='receiver_zipcode']"), markInputZipcode, true);
         validator.addValidation('phone', box.find("input[name='receiver_phone']"), markInput, false);
         validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
 
