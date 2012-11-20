@@ -2,6 +2,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.template import RequestContext, loader
+from django.core.mail import send_mail
 
 from datetime import datetime
 from smtplib import SMTPDataError
@@ -10,6 +12,7 @@ import json
 from core import validator
 from core.models import Zipcode
 
+EMAIL_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT = "Gavemedlemskap"
 
@@ -203,4 +206,12 @@ def confirm(request):
     return render(request, 'enrollment/gift/confirm.html', context)
 
 def send(request):
+    email_recipients = []
+    t = loader.get_template('enrollment/gift/email.html')
+    c = RequestContext(request, {
+        'giver': request.session['gift_membership']['giver'],
+        'receivers': request.session['gift_membership']['receivers']
+    })
+    message = t.render(c)
+    send_mail(EMAIL_SUBJECT, message, EMAIL_FROM, [EMAIL_RECIPIENT])
     return HttpResponse()
