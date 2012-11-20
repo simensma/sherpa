@@ -6,4 +6,6 @@ urlpatterns = patterns('enrollment.views_gift',
     url(r'^valider/$', 'validate'),
     url(r'^bekreft/$', 'confirm'),
     url(r'^send/$', 'send'),
+    url(r'^kvittering/$', 'receipt'),
+    url(r'^ny-bestilling/$', 'clear'),
 )
