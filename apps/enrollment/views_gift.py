@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
+from django.contrib import messages
 
 from datetime import datetime
 from smtplib import SMTPDataError
@@ -45,13 +46,11 @@ def form(request):
     ])
 
     if 'giver' in request.session['gift_membership']:
-        if not request.session['gift_membership']['giver'].validate():
-            context['invalid_input'] = True
+        request.session['gift_membership']['giver'].validate(request, add_messages=True)
 
     if 'receivers' in request.session['gift_membership']:
         for receiver in request.session['gift_membership']['receivers']:
-            if not receiver.validate():
-                context['invalid_input'] = True
+            receiver.validate(request, add_messages=True)
 
     context.update({
         'days': range(1, 32),
@@ -95,11 +94,11 @@ def validate(request):
         'receivers': receivers,
         'any_normal_memberships': any(r.type['code'] == 'normal' for r in receivers)}
 
-    if not giver.validate():
-        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+    form_valid = giver.validate()
     for receiver in receivers:
-        if not receiver.validate():
-            return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+        form_valid = form_valid and receiver.validate()
+    if not form_valid:
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
 
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
@@ -108,6 +107,12 @@ def confirm(request):
         return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
     if 'order_sent' in request.session['gift_membership']:
         return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+
+    form_valid = request.session['gift_membership']['giver'].validate()
+    for receiver in request.session['gift_membership']['receivers']:
+        form_valid = form_valid and receiver.validate()
+    if not form_valid:
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
 
     context = {
         'giver': request.session['gift_membership']['giver'],
