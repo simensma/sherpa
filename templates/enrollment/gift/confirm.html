@@ -52,7 +52,7 @@
 
     {% for receiver in receivers %}
       <div class="form-border">
-        <p class="gift-receiver-type pull-right">{{ receiver.type.name }} kr. {{ receiver.type.price }}</p>
+        <p class="gift-receiver-type pull-right">{{ receiver.type.name }}{% if receiver.type.price %} kr. {{ receiver.type.price }}{% endif %}</p>
         <table class="gift-receiver">
           <tr>
             <td><strong>{{ receiver.name }}</strong></td>
