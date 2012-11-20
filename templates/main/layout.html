@@ -237,7 +237,7 @@
           <li><a href="{% url membership.views.index %}">Bli medlem</a></li>
           <li><a href="{% url membership.views.service %}">Medlemsservice</a></li>
           <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
-          <li><a href="http://{{ old_site }}/form2.php?form=gavemedlemskap">Gavemedlemskap</a></li>
+          <li><a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a></li>
           <li><a href="http://{{ old_site }}/form2.php?form=verving">Verv en venn</a></li>
           <li><a href="{% url user.views.home %}">Min side</a></li>
         </ul>

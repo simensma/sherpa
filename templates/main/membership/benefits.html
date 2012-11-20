@@ -340,7 +340,7 @@
   <div class="span4 membership">
     {% if enrollment_active %}
       <a href="{% url enrollment.views.index %}" class="btn btn-danger membership">Bli medlem!</a><br>
-      <a href="http://{{ old_site }}/form2.php?form=gavemedlemskap">Gi bort medlemskap!</a>
+      <a href="{% url enrollment.views_gift.index %}">Gi bort medlemskap!</a>
     {% endif %}
   </div>
 </div>
