@@ -32,7 +32,7 @@ def parse_widget(widget):
         data = {'title': widget['title'], 'tag_link': widget['tag_link'], 'versions': versions}
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
-        data = cache.get('widgets.blog' + widget['category'])
+        data = cache.get('widgets.blog.category.' + widget['category'])
         if data == None:
 
             feed_url = "http://%s/" % settings.BLOG_URL;
@@ -72,7 +72,7 @@ def parse_widget(widget):
                     if entries_matched >= int(widget['count']):
                         break
             data = {'entries':entries}
-            cache.set('widgets.blog' + widget['category'], data, 60 * 30)
+            cache.set('widgets.blog.category.' + widget['category'], data, 60 * 30)
     elif widget['widget'] == "embed":
         data = {'code': widget['code']}
     elif widget['widget'] == "fact":
