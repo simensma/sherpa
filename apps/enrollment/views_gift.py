@@ -9,8 +9,7 @@ from datetime import datetime
 from smtplib import SMTPDataError
 import json
 
-from core import validator
-from core.models import Zipcode
+from enrollment.models import Giver, Receiver, membership_types
 
 EMAIL_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
@@ -21,101 +20,6 @@ AGE_SENIOR = 67
 AGE_MAIN = 27
 AGE_STUDENT = 19
 AGE_SCHOOL = 13
-
-membership_types = [
-  {'name': 'Vanlig medlemskap', 'price': None},
-  {'name': 'Dåpsgave', 'price': 900},
-  {'name': 'Jubileum', 'price': 5500},
-  {'name': 'Livsvarig medlemskap', 'price': 13750},
-]
-
-class Giver():
-    def __init__(self, name, address, zipcode, memberno, phone, email):
-        self.name = name
-        self.address = address
-        self.zipcode = zipcode
-        try:
-            self.area = Zipcode.objects.get(zipcode=zipcode).area
-        except Zipcode.DoesNotExist:
-            self.area = ''
-        self.memberno = memberno
-        self.phone = phone
-        self.email = email
-
-    def validate(self):
-        if not validator.name(self.name):
-            return False
-
-        if not validator.address(self.address):
-            return False
-
-        if not validator.zipcode(self.zipcode):
-            return False
-
-        if self.area == '':
-            return False
-
-        if not validator.memberno(self.memberno, req=False):
-            return False
-
-        if not validator.phone(self.phone, req=False):
-            return False
-
-        if not validator.email(self.email, req=False):
-            return False
-
-        if not Zipcode.objects.filter(zipcode=self.zipcode).exists():
-            return False
-
-        return True
-
-class Receiver():
-    def __init__(self, type, name, dob, address, zipcode, phone, email):
-        self.type_index = int(type)
-        self.type = membership_types[self.type_index]
-        self.name = name
-        try:
-            self.dob = datetime.strptime(dob, "%d.%m.%Y")
-        except ValueError:
-            self.dob = None
-        self.address = address
-        self.zipcode = zipcode
-        try:
-            self.area = Zipcode.objects.get(zipcode=zipcode).area
-        except Zipcode.DoesNotExist:
-            self.area = ''
-        self.phone = phone
-        self.email = email
-
-    def validate(self):
-        if self.type_index < 0 or self.type_index >= len(membership_types):
-            return False
-
-        if not validator.name(self.name):
-            return False
-
-        if not isinstance(self.dob, datetime):
-            return False
-
-        if not validator.address(self.address):
-            return False
-
-        if not validator.zipcode(self.zipcode):
-            return False
-
-        if self.area == '':
-            return False
-
-        if not validator.phone(self.phone, req=False):
-            return False
-
-        if not validator.email(self.email, req=False):
-            return False
-
-        if not Zipcode.objects.filter(zipcode=self.zipcode).exists():
-            return False
-
-        return True
 
 def index(request):
     if 'gift_membership' in request.session:
