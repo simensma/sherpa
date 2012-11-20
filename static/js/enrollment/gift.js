@@ -11,8 +11,7 @@ $(document).ready(function() {
         if(self.val().match(/^\d{4}$/)) {
             self.siblings("img.ajaxloader").show();
             $.ajaxQueue({
-                url: '/postnummer/' + encodeURIComponent(self.val()) + '/',
-                type: 'POST'
+                url: '/postnummer/' + encodeURIComponent(self.val()) + '/'
             }).done(function(result) {
                 result = JSON.parse(result);
                 if(result.area != undefined) {
