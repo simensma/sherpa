@@ -15,12 +15,6 @@ EMAIL_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT = "Gavemedlemskap"
 
-# Hardcoded ages
-AGE_SENIOR = 67
-AGE_MAIN = 27
-AGE_STUDENT = 19
-AGE_SCHOOL = 13
-
 def index(request):
     if 'gift_membership' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
