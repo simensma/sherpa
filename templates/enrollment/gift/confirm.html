@@ -47,6 +47,14 @@
       <a class="btn btn-large" href="{% url enrollment.views_gift.form %}"><i class="icon-arrow-left"></i> Tilbake</a>
       <a class="btn btn-large btn-success" href="{% url enrollment.views_gift.send %}"><i class="icon-ok"></i> Send bestilling</a>
     </p>
+    <p>
+      Du vil få tilsendt faktura, gavekort og medlemskort til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
+    </p>
+    {% if any_normal_memberships %}
+      <p>
+        Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="{% url membership.views.index %}">Se gjeldende kontingentsatser</a>.
+      </p>
+    {% endif %}
   </div>
 
   <div class="span8">

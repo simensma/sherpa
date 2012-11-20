@@ -84,7 +84,11 @@ def validate(request):
             r['email']
             ))
 
-    request.session['gift_membership'] = {'giver': giver, 'receivers': receivers}
+    request.session['gift_membership'] = {
+        'giver': giver,
+        'receivers': receivers,
+        'any_normal_memberships': any(r.type['code'] == 'normal' for r in receivers)}
+
     if not giver.validate():
         return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
     for receiver in receivers:
@@ -99,7 +103,8 @@ def confirm(request):
 
     context = {
         'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers']
+        'receivers': request.session['gift_membership']['receivers'],
+        'any_normal_memberships': request.session['gift_membership']['any_normal_memberships']
     }
     return render(request, 'enrollment/gift/confirm.html', context)
 
