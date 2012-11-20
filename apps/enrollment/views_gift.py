@@ -115,6 +115,8 @@ class Receiver():
         return True
 
 def index(request):
+    if 'gift_membership' in request.session:
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
     return render(request, 'enrollment/gift/index.html')
 
 def form(request):
