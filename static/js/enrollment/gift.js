@@ -137,7 +137,7 @@ $(document).ready(function() {
             var div = addReceiver();
 
             // Pre-insert form data
-            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type + "']").attr('selected', true);
+            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").attr('selected', true);
             div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
             div.find("input[name='receiver_name']").val(session_receivers[i].name);
             div.find("select[name='receiver_dob_dd'] option[value='" + Number(session_receivers[i].dob_dd) + "']").attr('selected', true);
