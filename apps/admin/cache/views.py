@@ -11,13 +11,23 @@ from page.models import *
 
 @login_required
 def index(request):
-    versions = Version.objects.filter(
-        variant__article__isnull=False, variant__segment__isnull=True,
-        variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.now()
+    page_versions = Version.objects.filter(
+        variant__page__isnull=False,
+        active=True
+        ).order_by('variant__page__title')
+
+    article_versions = Version.objects.filter(
+        variant__article__isnull=False,
+        variant__segment__isnull=True,
+        variant__article__published=True,
+        active=True,
+        variant__article__pub_date__lt=datetime.now()
         ).order_by('-variant__article__pub_date')
-    for version in versions:
+    for version in article_versions:
         version.load_preview()
-    context = {'versions': versions}
+    context = {
+        'article_versions': article_versions,
+        'page_versions': page_versions}
     return render(request, 'admin/cache/index.html', context)
 
 @login_required
@@ -28,8 +38,15 @@ def delete(request):
     if request.POST['key'] == 'frontpage':
         id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
         cache.delete('content.version.%s' % id)
+    elif request.POST['key'] == 'page':
+        cache.delete('content.version.%s' % request.POST['id'])
     elif request.POST['key'] == 'article':
-        cache.delete('articles.%s' % request.POST['article'])
+        cache.delete('articles.%s' % request.POST['id'])
     elif request.POST['key'] == 'main-menu':
         cache.delete('main.menu')
+    elif request.POST['key'] == 'blog-widget':
+        cache.delete('widgets.blog.category.Alle')
+        # Chances are, this was done to show it on the frontpage, so just delete the frontpage-cache too since it's cached twice.
+        id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
+        cache.delete('content.version.%s' % id)
     return HttpResponse()

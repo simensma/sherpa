@@ -20,36 +20,78 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Forside-cachen:</h2>
-    <p>
-      Cacher alt innholdet på forsiden (inkludert lista med nyheter) i 10 minutter.
-    </p>
 
-    <p><button class="frontpage btn btn-inverse btn-large"><i class="icon-remove icon-white"></i> Slett forside-cachen</button></p>
+    <h2>Slett innhold fra cachen</h2>
+    <table class="table delete-cache">
+      <tr>
+        <th>Hovedmenyen</th>
+        <td>Hovedmenyen som vises øverst på alle sider.</td>
+        <td>24 timer</td>
+        <td>
+          <button class="btn btn-danger main-menu"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Forsiden</th>
+        <td>Alt innholdet på forsiden (inkludert lista med nyheter).</td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger frontpage"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Andre sider</th>
+        <td>
+          Alle innholdssider på {{ site.domain }}.<br>
+          <select name="page" style="width: 400px" data-placeholder="Velg en side...">
+            <option value=""></option>
+            {% for version in page_versions %}
+              <option value="{{ version.id }}">{{ version.variant.page.title }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger page"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Artikkel</th>
+        <td>
+          Én enkelt artikkelvisning.<br>
+          <select name="article" style="width: 400px" data-placeholder="Velg en artikkel...">
+            <option value=""></option>
+            {% for version in article_versions %}
+              <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger article"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Bloggwidget</th>
+        <td>Widgeten som viser nyeste blogginnlegg, bl.a. på forsiden.</td>
+        <td>30 min</td>
+        <td>
+          <button class="btn btn-danger blog-widget"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+    </table>
 
-    <h2>Artikler:</h2>
-    <p>
-      Cacher innholdet for én enkelt artikkelvisning i 10 minutter.
-    </p>
+    <div class="alert alert-info hide delete-success">
+      <a class="close">x</a>
+      <strong><span class="name"></span> har blitt sletta</strong><br>
+      Du kan nå besøke den aktuelle siden for å se oppdatert versjon.
+    </div>
 
-    <p>
-      <button class="article btn btn-inverse btn-large"><i class="icon-remove icon-white"></i> Slett en artikkel-cache</button>
-      <select name="article" style="width: 400px" data-placeholder="Velg en artikkel...">
-        <option value=""></option>
-        {% for version in versions %}
-          <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
-        {% endfor %}
-      </select>
-    </p>
-
-    <h2>Hovedmenyen:</h2>
-    <p>
-      Cacher hovedmenyen i ett døgn, da denne endres veldig skjeldent.
-    </p>
-
-    <p>
-      <button class="main-menu btn btn-inverse btn-large"><i class="icon-remove icon-white"></i> Slett hovdemeny-cachen</button>
-    </p>
   </div>
 </div>
 
