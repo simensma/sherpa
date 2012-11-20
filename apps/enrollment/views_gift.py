@@ -62,7 +62,7 @@ def form(request):
 
 def validate(request):
     if not request.session.has_key('gift_membership'):
-        return HttpResponseRedirect(reverse('enrollment.views.form'))
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
 
     giver = Giver(
         request.POST['giver_name'],
@@ -98,8 +98,8 @@ def validate(request):
     return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
 
 def confirm(request):
-    if not request.session.has_key('gift_membership'):
-        return HttpResponseRedirect(reverse('enrollment.views.form'))
+    if not 'gift_membership' in request.session:
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
 
     context = {
         'giver': request.session['gift_membership']['giver'],
