@@ -9,30 +9,33 @@ div.instagram-wrapper {
 
     img {
       display: block;
+    }
+
+    div.container {
       margin-right: @margin;
       margin-bottom: @margin;
     }
 
-    img.small {
+    div.container.small, div.container.small img {
       width: 150px;
       height: 150px;
     }
 
-    img.medium {
+    div.container.medium, div.container.medium img {
       width: 303px;
       height: 303px;
     }
 
-    img.large {
+    div.container.large, div.container.large img {
       width: 609px;
       height: 609px;
     }
 
-    div.left, div.left img {
+    div.left, div.left div.container, div.left img {
       float: left;
     }
 
-    div.right, div.right img {
+    div.right, div.right div.container, div.right img {
       float: right;
     }
 
