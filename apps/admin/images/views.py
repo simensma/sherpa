@@ -172,7 +172,7 @@ def update_images(request):
             return render(request, 'admin/images/modify_multiple.html', context)
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
-            # Should maybe log an error here in case this was our fault.
+            # TODO: Should maybe log an error here in case this was our fault.
             if request.GET.get('origin', '') != '':
                 return HttpResponseRedirect(origin)
             else:
