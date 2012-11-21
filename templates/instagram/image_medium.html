@@ -1,6 +1,15 @@
 <div class="container medium" data-href="{{ item.link }}">
   <img src="{{ item.images.low_resolution.url }}">
   <div class="hover-content hide">
-    Bruker: <a href="http://instagram.com/{{ item.user.username }}/" class="noexternal">{{ item.user.username }}</a>
+    <p>
+      Bruker: <a href="http://instagram.com/{{ item.user.username }}/" class="noexternal">{{ item.user.username }}</a>
+    </p>
+
+    <p>
+      {# Unless the tags are really really long, this magic amount of tags should be able to fit in this image #}
+      {% for tag in item.tags|slice:":15" %}
+         #{{ tag }}
+      {% endfor %}
+    </p>
   </div>
 </div>
