@@ -7,7 +7,7 @@ class Segment(models.Model):
     def match(self, request):
         if   self.name == 'opera': return self.matchOpera(request)
         elif self.name == 'firefox': return self.matchFirefox(request)
-        else: return False # Log an error here, we're not supposed to receive an undefined segment
+        else: return False # TODO: Log an error here, we're not supposed to receive an undefined segment
 
     def matchOpera(self, request):
         return (request.META['HTTP_USER_AGENT'].find("Opera") != -1)

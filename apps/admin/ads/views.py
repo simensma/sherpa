@@ -26,7 +26,6 @@ def list(request):
 @login_required
 def create_ad(request):
     if not 'ad' in request.FILES:
-        # TODO error handling
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
     hash, extension, content_type = upload(request.FILES['ad'])

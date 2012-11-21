@@ -16,12 +16,12 @@ from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from enrollment.models import State
 
 from datetime import datetime, timedelta
-import requests
-import re
-import json
+import requests, re, json, logging, sys
 from lxml import etree
 from urllib import quote_plus
 from smtplib import SMTPDataError
+
+logger = logging.getLogger('sherpa')
 
 # Number of days the temporary membership proof is valid
 TEMPORARY_PROOF_VALIDITY = 14
@@ -182,12 +182,26 @@ def household(request):
             request.session['enrollment']['existing'] = request.POST['existing']
 
         if validate_location(request.session['enrollment']['location']):
-            focus_zipcode = FocusZipcode.objects.filter(zipcode=request.session['enrollment']['location']['zipcode'])
-            if request.session['enrollment']['location']['country'] == 'NO' and (len(focus_zipcode) != 1 or not Association.objects.filter(focus_id=focus_zipcode[0].main_association_id).exists()):
-                # TODO - NEW ZIPCODE - THIS SHOULD BE LOGGED!
-                messages.add_message(request, messages.ERROR, 'focus_zipcode_missing')
-            else:
+            if request.session['enrollment']['location']['country'] != 'NO':
                 return HttpResponseRedirect(reverse('enrollment.views.verification'))
+            else:
+                try:
+                    focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
+                    association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
+                    return HttpResponseRedirect(reverse('enrollment.views.verification'))
+                except FocusZipcode.DoesNotExist:
+                    # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
+                    logger.error(u"Postnummer '%s' finnes i Zipcode, men ikke i Focus!" % request.session['enrollment']['location']['zipcode'],
+                        exc_info=sys.exc_info(),
+                        extra={'request': request}
+                    )
+                    messages.error(request, 'focus_zipcode_missing')
+                except Association.DoesNotExist:
+                    logger.error(u"Focus-postnummer mangler foreningstilknytning!",
+                        exc_info=sys.exc_info(),
+                        extra={'request': request}
+                    )
+                    messages.error(request, 'focus_zipcode_missing')
         else:
             errors = True
 

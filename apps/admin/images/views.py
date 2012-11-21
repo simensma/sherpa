@@ -14,9 +14,10 @@ from PIL.ExifTags import TAGS
 import random, Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
-import json
+import json, simples3, logging, sys
 from datetime import datetime
-import simples3
+
+logger = logging.getLogger('sherpa')
 
 # Note: A lot of views includes 'origin', used for redirects after posting (e.g. when moving images)
 # because we want to redirect to the page where the action was taken.
@@ -172,7 +173,7 @@ def update_images(request):
             return render(request, 'admin/images/modify_multiple.html', context)
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
-            # Should maybe log an error here in case this was our fault.
+            # TODO: Should maybe log an error here in case this was our fault.
             if request.GET.get('origin', '') != '':
                 return HttpResponseRedirect(origin)
             else:
@@ -237,8 +238,11 @@ def upload_image(request):
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
         return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
-    except Exception:
-        # TODO: This REALLY needs to be logged.
+    except Exception as e:
+        logger.error(u"Uventet exception ved bildeopplasting",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return render(request, 'admin/images/iframe.html', {'result': 'unknown_exception'})
 
 @login_required
