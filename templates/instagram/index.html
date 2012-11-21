@@ -5,4 +5,25 @@
 
 {% block body %}
 
+<div class="row">
+  <div class="span12">
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12 instagram-bulk1">
+
+    <div class="wrap">
+      <img src="{{ bulk.0.thumbnail.url }}">
+      <img src="{{ bulk.1.thumbnail.url }}">
+      <img src="{{ bulk.2.thumbnail.url }}">
+      <img src="{{ bulk.3.thumbnail.url }}">
+      <img src="{{ bulk.4.low_resolution.url }}">
+    </div>
+
+    <img src="{{ bulk.5.standard_resolution.url }}">
+
+  </div>
+</div>
+
 {% endblock %}
