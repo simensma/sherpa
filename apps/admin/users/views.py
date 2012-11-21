@@ -39,10 +39,10 @@ def new(request):
         profile.save()
         return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
     except ValueError:
-        messages.add_message(request, messages.ERROR, 'value_error')
+        messages.error(request, 'value_error')
         return HttpResponseRedirect(reverse('admin.users.views.index'))
     except IntegrityError:
-        messages.add_message(request, messages.ERROR, 'integrity_error')
+        messages.error(request, 'integrity_error')
         return HttpResponseRedirect(reverse('admin.users.views.index'))
 
 def show(request, user):
