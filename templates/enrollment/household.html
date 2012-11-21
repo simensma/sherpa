@@ -31,7 +31,8 @@
         <div class="alert alert-error">
           <a class="close">x</a><strong>Dette postnummeret er ikke tilknyttet noen forening</strong><br>
           Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå.<br>
-          Vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig.
+          Vi har logget feilen, og vil knytte postnummer <strong>{{ location.zipcode }}</strong> til rett forening så snart som mulig.<br>
+          I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig.
         </div>
       {% endif %}
     {% endfor %}
