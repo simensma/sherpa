@@ -12,7 +12,9 @@ from core.models import Zipcode
 from enrollment.models import State
 
 from datetime import datetime
-import json
+import json, logging, sys
+
+logger = logging.getLogger('sherpa')
 
 def index(request):
     return render(request, 'membership/index.html')
@@ -69,14 +71,20 @@ def zipcode_search(request):
     except FocusZipcode.DoesNotExist:
         # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
         if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
-            # TODO - NEW, UNREGISTERED ZIPCODE - THIS SHOULD BE LOGGED!
+            logger.error(u"Postnummer '%s' finnes i Zipcode, men ikke i Focus!" % request.POST['zipcode'],
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
             return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
         else:
-            # This *could* be an entirely new Zipcode, or just an invalid one. Should maybe log this?
+            # This *could* be an entirely new Zipcode, or just an invalid one.
             return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
 
     except Association.DoesNotExist:
-        # TODO - Zipcode exists in Focus, but has no related association! THIS SHOULD BE LOGGED!
+        logger.error(u"Focus-postnummer mangler foreningstilknytning!",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
 
 def service(request):
