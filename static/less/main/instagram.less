@@ -1,19 +1,81 @@
-div.instagram-bulk1 {
+div.instagram {
 
   @margin: 2px;
   @imagesize: 150px;
 
-  div, img {
-    float: left;
+  div.bulk1 {
+
+    div, img {
+      float: left;
+      display: block;
+      margin: @margin;
+    }
+
+    div {
+      margin-top: 0;
+    }
+
+    div.wrap {
+      width: (@imagesize * 2) + (@margin * 2 * 2);
+    }
+  }
+
+  div.bulk2 {
+
+    div, img {
+      float: left;
+      display: block;
+      margin: @margin;
+    }
+
+    div {
+      margin-top: 0;
+    }
+
+    div.wrap {
+      width: (@imagesize * 4) + (@margin * 2 * 4);
+    }
+  }
+}
+
+div.instagram2 {
+  @margin: 3px;
+  @imagesize: 150px;
+
+  width: @imagesize * 6 + @margin * 6;
+  margin-left: auto;
+  margin-right: auto;
+
+  img {
     display: block;
-    margin: @margin;
+    margin-right: @margin;
+    margin-bottom: @margin;
   }
 
-  div {
-    margin-top: 0;
+  img.small {
+    width: 150px;
+    height: 150px;
   }
 
-  div.wrap {
-    width: (@imagesize * 2) + (@margin * 2 * 2);
+  img.medium {
+    width: 303px;
+    height: 303px;
+  }
+
+  img.large {
+    width: 609px;
+    height: 609px;
+  }
+
+  div.left, div.left img {
+    float: left;
+  }
+
+  div.right, div.right img {
+    float: right;
+  }
+
+  div.wrap2 {
+    width: (@imagesize * 2) + (@margin * 2);
   }
 }
