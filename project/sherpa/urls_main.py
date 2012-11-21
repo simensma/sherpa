@@ -30,6 +30,9 @@ urlpatterns = patterns('',
     # Search
     url(ur'^søk/', 'page.views.search'),
 
+    # Instagram
+    url(r'^instagram/', include('instagram.urls')),
+
     # Ads
     url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),
 

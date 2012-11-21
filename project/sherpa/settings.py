@@ -19,6 +19,7 @@ AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
 BLOG_URL = 'blogg.turistforeningen.no'
 BLOG_CATEGORY_API = 'api/get_category_index/'
+INSTAGRAM_CLIENT_ID = '9f849b1f6e97480ea58ee989159a597a'
 
 # NETS URLs used for payment
 NETS_REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
@@ -76,6 +77,7 @@ INSTALLED_APPS = (
     'enrollment',
     'association',
     'membership',
+    'instagram',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
