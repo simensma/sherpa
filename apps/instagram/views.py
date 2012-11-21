@@ -9,10 +9,8 @@ initial_url = 'https://api.instagram.com/v1/tags/turistforeningen/media/recent?c
 def index(request):
     r = requests.get(initial_url)
     data = json.loads(r.content)
-    bulk = data['data'][0:6]
-    bulk2 = data['data'][6:18]
+    bulk = data['data']
     context = {
         'bulk': bulk,
-        'bulk2': bulk2,
     }
     return render(request, 'instagram/index.html', context)
