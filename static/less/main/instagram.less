@@ -48,13 +48,21 @@ div.instagram-wrapper {
     div.hover-content {
       cursor: pointer;
       padding: @hover-content-padding;
-      font-family: "DTL Nobel" !important;
       color: rgb(255, 255, 255);
       background-color: rgb(10, 10, 10);
       opacity: 0.8;
       filter: alpha(opacity=80);
       position: absolute;
       z-index: 1000;
+
+      div.content {
+        position: absolute;
+        bottom: 0;
+
+        * {
+          font-family: "DTL Nobel" !important;
+        }
+      }
     }
 
     div.small div.hover-content {
