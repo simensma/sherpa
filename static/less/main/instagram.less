@@ -1,41 +1,54 @@
-div.instagram {
-  @margin: 3px;
-  @imagesize: 150px;
+div.instagram-wrapper {
+  div.instagram {
+    @margin: 3px;
+    @imagesize: 150px;
 
-  width: @imagesize * 6 + @margin * 6;
-  margin-left: auto;
-  margin-right: auto;
+    width: @imagesize * 6 + @margin * 6;
+    margin-left: auto;
+    margin-right: auto;
 
-  img {
-    display: block;
-    margin-right: @margin;
-    margin-bottom: @margin;
+    img {
+      display: block;
+      margin-right: @margin;
+      margin-bottom: @margin;
+    }
+
+    img.small {
+      width: 150px;
+      height: 150px;
+    }
+
+    img.medium {
+      width: 303px;
+      height: 303px;
+    }
+
+    img.large {
+      width: 609px;
+      height: 609px;
+    }
+
+    div.left, div.left img {
+      float: left;
+    }
+
+    div.right, div.right img {
+      float: right;
+    }
+
+    div.wrap2 {
+      width: (@imagesize * 2) + (@margin * 2);
+    }
+
   }
 
-  img.small {
-    width: 150px;
-    height: 150px;
-  }
-
-  img.medium {
-    width: 303px;
-    height: 303px;
-  }
-
-  img.large {
-    width: 609px;
-    height: 609px;
-  }
-
-  div.left, div.left img {
-    float: left;
-  }
-
-  div.right, div.right img {
-    float: right;
-  }
-
-  div.wrap2 {
-    width: (@imagesize * 2) + (@margin * 2);
+  div.loader {
+    border: 1px solid rgb(180, 180, 180);
+    text-align: center;
+    color: rgb(95, 95, 95);
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 25px;
   }
 }

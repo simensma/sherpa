@@ -3,6 +3,10 @@
 {% block title %}Instagram{% endblock %}
 {% block breadcrumb_title %}Instagram{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/instagram.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -11,8 +15,14 @@
 </div>
 
 <div class="row">
-  <div class="span12">
+  <div class="span12 instagram-wrapper">
     {% include 'instagram/bulk.html' with bulk=bulk %}
+
+    <div style="clear: both;"></div>
+    <div class="loader">
+      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+      Laster flere bilder, vennligst vent...
+    </div>
   </div>
 </div>
 
