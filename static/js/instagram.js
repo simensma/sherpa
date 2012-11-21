@@ -19,4 +19,16 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('mouseenter', 'div.instagram div.container', function() {
+        $(this).find('div.hover-content').fadeIn(200);
+    });
+
+    $(document).on('mouseleave', 'div.instagram div.container', function() {
+        $(this).find('div.hover-content').fadeOut(200);
+    });
+
+    $(document).on('click', 'div.instagram div.container', function() {
+        window.location = $(this).attr('data-href');
+    });
+
 });

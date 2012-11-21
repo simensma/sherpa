@@ -43,6 +43,32 @@ div.instagram-wrapper {
       width: (@imagesize * 2) + (@margin * 2);
     }
 
+    @hover-content-padding: 15px;
+
+    div.hover-content {
+      cursor: pointer;
+      padding: @hover-content-padding;
+      font-family: "DTL Nobel" !important;
+      color: rgb(255, 255, 255);
+      background-color: rgb(10, 10, 10);
+      opacity: 0.8;
+      filter: alpha(opacity=80);
+      position: absolute;
+      z-index: 1000;
+    }
+
+    div.small div.hover-content {
+      width: 150px - (@hover-content-padding * 2);
+      height: 150px - (@hover-content-padding * 2);
+    }
+    div.medium div.hover-content {
+      width: 303px - (@hover-content-padding * 2);
+      height: 303px - (@hover-content-padding * 2);
+    }
+    div.large div.hover-content {
+      width: 609px - (@hover-content-padding * 2);
+      height: 609px - (@hover-content-padding * 2);
+    }
   }
 
   div.loader {

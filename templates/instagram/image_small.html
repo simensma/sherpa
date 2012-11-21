@@ -1,3 +1,6 @@
-<div class="container small">
+<div class="container small" data-href="{{ item.link }}">
   <img src="{{ item.images.thumbnail.url }}">
+  <div class="hover-content hide">
+    <a href="http://instagram.com/{{ item.user.username }}/" class="noexternal">{{ item.user.username }}</a>
+  </div>
 </div>
