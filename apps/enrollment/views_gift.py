@@ -12,9 +12,10 @@ import json
 
 from enrollment.models import Giver, Receiver, membership_types
 
-EMAIL_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
-EMAIL_SUBJECT = "Gavemedlemskap"
+EMAIL_MEMBERSERVICE_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
+EMAIL_MEMBERSERVICE_SUBJECT = u"Gavemedlemskap"
+EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
 def index(request):
     if 'gift_membership' in request.session:
@@ -124,14 +125,18 @@ def confirm(request):
 def send(request):
     if not 'gift_membership' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
-    email_recipients = []
-    t = loader.get_template('enrollment/gift/email.html')
+    t1 = loader.get_template('enrollment/gift/email-memberservice.html')
+    t2 = loader.get_template('enrollment/gift/email-giver.html')
+    # Note that this context is used for both email templates
     c = RequestContext(request, {
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers']
     })
-    message = t.render(c)
-    send_mail(EMAIL_SUBJECT, message, EMAIL_FROM, [EMAIL_RECIPIENT])
+    memberservice_message = t1.render(c)
+    giver_message = t2.render(c)
+    send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM, [EMAIL_MEMBERSERVICE_RECIPIENT])
+    if request.session['gift_membership']['giver'].email != '':
+        send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
     request.session['gift_membership']['order_sent'] = True
     request.session.modified = True
     return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
