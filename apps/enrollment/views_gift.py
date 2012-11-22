@@ -115,8 +115,7 @@ def confirm(request):
 
     context = {
         'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers'],
-        'any_normal_memberships': request.session['gift_membership']['any_normal_memberships']
+        'receivers': request.session['gift_membership']['receivers']
     }
     return render(request, 'enrollment/gift/confirm.html', context)
 

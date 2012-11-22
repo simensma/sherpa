@@ -51,11 +51,6 @@
     <p>
       Du vil få tilsendt faktura, gavekort og medlemskort til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
     </p>
-    {% if any_normal_memberships %}
-      <p>
-        Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="{% url membership.views.index %}">Se gjeldende kontingentsatser</a>.
-      </p>
-    {% endif %}
   </div>
 
   <div class="span8">
@@ -63,7 +58,16 @@
 
     {% for receiver in receivers %}
       <div class="form-border">
-        <p class="gift-receiver-type pull-right">{{ receiver.type.name }}{% if receiver.type.price %} kr. {{ receiver.type.price }}{% endif %}</p>
+        <p class="gift-receiver-type pull-right">
+          {{ receiver.type.name }}
+          {% if receiver.type.code == 'normal' %}
+            <a class="price-popover" href="{% url membership.views.index %}">
+              <img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_195_circle_info.png" alt="Pris" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Prisen varierer" data-content="Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. Klikk for å se gjeldende kontingentsatser.">
+            </a>
+          {% else %}
+            kr. {{ receiver.type.price }}
+          {% endif %}
+        </p>
         <table class="gift-receiver">
           <tr>
             <td><strong>{{ receiver.name }}</strong></td>
