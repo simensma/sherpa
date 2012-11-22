@@ -1,16 +1,24 @@
 $(document).ready(function() {
 
     var loading = false;
+    var end = false;
     var wrapper = $("div.instagram-wrapper");
     var loader = wrapper.find("div.loader");
+    var ender = wrapper.find("div.ender");
 
     $(window).scroll(function() {
-        if(!loading && $(window).scrollTop() + $(window).height() > loader.offset().top) {
+        if(!loading && !end && $(window).scrollTop() + $(window).height() > loader.offset().top) {
             loading = true;
             $.ajaxQueue({
                 url: '/instagram/flere/'
             }).done(function(result) {
-                $(result).addClass('hide').insertAfter($("div.instagram").last()).fadeIn();
+                result = JSON.parse(result);
+                $(result.content).addClass('hide').insertAfter($("div.instagram").last()).fadeIn();
+                if(result.meta.end) {
+                    end = true;
+                    loader.hide();
+                    ender.show();
+                }
             }).fail(function(result) {
                 alert("Beklager, det oppstod en feil når vi forsøkte å laste flere instagrambilder. Prøv å oppdatere siden, og scrolle ned igjen.");
             }).always(function(result) {

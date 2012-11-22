@@ -30,7 +30,12 @@ def more(request):
         cache.set('instagram.url.%s' % request.session['next_instagram_url'], data, 60 * 60)
 
     bulk = data['data']
-    request.session['next_instagram_url'] = data['pagination']['next_url']
+    meta = {}
+    if not 'next_url' in data['pagination']:
+        meta['end'] = True
+        del request.session['next_instagram_url']
+    else:
+        request.session['next_instagram_url'] = data['pagination']['next_url']
     t = loader.get_template('instagram/bulk.html')
     c = RequestContext(request, {'bulk': bulk})
-    return HttpResponse(t.render(c))
+    return HttpResponse(json.dumps({'content': t.render(c), 'meta': meta}))
