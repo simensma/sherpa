@@ -5,6 +5,8 @@ $(document).ready(function() {
     var wrapper = $("div.instagram-wrapper");
     var loader = wrapper.find("div.loader");
     var ender = wrapper.find("div.ender");
+    var skeleton = wrapper.find("div.instagram-skeleton");
+    var iteration = 0;
 
     $(window).scroll(function() {
         if(!loading && !end && $(window).scrollTop() + $(window).height() > loader.offset().top) {
@@ -13,7 +15,34 @@ $(document).ready(function() {
                 url: '/instagram/flere/'
             }).done(function(result) {
                 result = JSON.parse(result);
-                $(result.content).addClass('hide').insertAfter($("div.instagram").last()).fadeIn();
+                for(var i=0; i<result.items.length; i++) {
+                    var instagram = $("div.instagram").last();
+                    if(iteration == 0) {
+                        instagram = skeleton.clone();
+                        instagram.removeClass('instagram-skeleton hide').addClass('instagram').insertAfter($("div.instagram").last());
+                    }
+                    var item = $(result.items[i]).addClass('hide');
+                    var children = instagram.children();
+                    if(iteration < 5) {
+                       item.appendTo(children.first());
+                    } else if(iteration < 6) {
+                       item.appendTo(children.slice(1, 2));
+                    } else if(iteration < 9) {
+                       item.appendTo(children.slice(2, 3));
+                    } else if(iteration < 12) {
+                       item.appendTo(children.slice(3, 4));
+                    } else if(iteration < 17) {
+                       item.appendTo(children.slice(4, 5));
+                    } else {
+                       item.appendTo(children.last());
+                    }
+                    item.slideDown();
+                    iteration += 1;
+                    if(iteration == 18) {
+                        iteration = 0;
+                    }
+                }
+                $(result.items[i]).addClass('hide').insertAfter($("div.instagram").last()).fadeIn();
                 if(result.meta.end) {
                     end = true;
                     loader.hide();
