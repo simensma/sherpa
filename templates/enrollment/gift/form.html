@@ -115,6 +115,7 @@
   <button class="btn btn-danger remove-receiver pull-right"><i class="icon-remove"></i> Ta bort</button>
   <h3>Mottaker av gavemedlemskapet</h3>
   <div class="control-group receiver_type">
+    <label>Velg type medlemskap <span class="asterisk red">*</span></label>
     <select name="receiver_type" data-placeholder="Velg type medlemskap...">
       {% for type in types %}
         <option value="{{ forloop.counter0 }}"{% if forloop.counter0 == chosen_type %} selected{% endif %}>{{ type.name }}{% if type.price %} (kr. {{ type.price }}){% endif %}</option>
