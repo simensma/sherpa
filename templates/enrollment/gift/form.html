@@ -9,7 +9,7 @@
   <script>
     window.session_receivers = [
 {% for receiver in receivers %}{
-  'type_index': '{{ receiver.type_index }}',
+  'type_index': '{% firstof chosen_type receiver.type_index %}',
   'name': '{{ receiver.name }}',
   'dob_dd': '{{ receiver.dob|date:"d" }}',
   'dob_mm': '{{ receiver.dob|date:"m" }}',

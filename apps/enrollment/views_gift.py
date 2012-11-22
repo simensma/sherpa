@@ -18,10 +18,8 @@ EMAIL_MEMBERSERVICE_SUBJECT = u"Bestilling av gavemedlemskap"
 EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
 def index(request):
-    if 'gift_membership' in request.session:
-        if 'order_sent' in request.session['gift_membership']:
-            return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
-        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+    if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
+        return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
     return render(request, 'enrollment/gift/index.html')
 
 def form(request):
@@ -60,7 +58,7 @@ def form(request):
         'types': membership_types,
         'giver': request.session['gift_membership'].get('giver', None),
         'receivers': request.session['gift_membership'].get('receivers', []),
-        'chosen_type': int(request.POST.get('type', -1)),
+        'chosen_type': request.POST.get('type'),
     })
     return render(request, 'enrollment/gift/form.html', context)
 
