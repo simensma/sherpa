@@ -13,7 +13,7 @@
     </td>
     <td class="step{% if step == 3 %} current{% endif %}">
       {% if step > 3 and step < 4 %}<a href="{% url enrollment.views_gift.validate %}">{% endif %}
-        Bekreftelse
+        Bekreft
       {% if step > 3 and step < 4 %}</a>{% endif %}
     </td>
     <td class="step{% if step == 4 %} final{% endif %}">
@@ -36,7 +36,7 @@
     {% if step == 2 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
     {% if step == 3 %}<strong>{% endif %}
       {% if step > 3 and step < 4 %}<a href="{% url enrollment.views_gift.validate %}">{% endif %}
-        Bekreftelse
+        Bekreft
       {% if step > 3 and step < 4 %}</a>{% endif %}
     {% if step == 3 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
     {% if step == 4 %}<strong>{% endif %}
