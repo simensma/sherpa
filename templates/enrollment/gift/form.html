@@ -47,13 +47,13 @@
     {% if messages %}
       <div class="alert alert-error">
         <a class="close">x</a>
-        <strong>Vennligst fiks følgende feil i skjemaet:</strong>
+        <strong>Vennligst sjekk følgende:</strong>
         <ul>
           {% for message in messages %}
             <li>{{ message }}</li>
           {% endfor %}
         </ul>
-        <p>Felt med feil er markert med rødt under.</p>
+        <p>Felt med feil eller mangler er markert med rødt under.</p>
       </div>
     {% endif %}
   </div>

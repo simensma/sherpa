@@ -43,18 +43,18 @@ class Giver():
 
         if not validator.name(self.name):
             if add_messages:
-                messages.error(request, u"Ditt eget navn mangler.")
+                messages.error(request, u"Du har glemt å skrive inn navnet ditt.")
             valid = False
 
         if not validator.address(self.address):
             if add_messages:
-                messages.error(request, u"Din egen adresse mangler. Vi sender faktura og medlemskort til denne, derfor må vi ha den.")
+                messages.error(request, u"Du må oppgi din egen adresse da vi sender faktura og medlemskort hjem til deg.")
             valid = False
 
         if not validator.zipcode(self.zipcode) or self.area == '':
             # Empty area defines invalid zipcode, as stated in __init__
             if add_messages:
-                messages.error(request, u"Postnummeret ditt er ikke gyldig. Vi sender faktura og medlemskort til din adresse, derfor må vi ha den.")
+                messages.error(request, u"Postnummeret ditt ser ikke riktig ut. Du må oppgi et gyldig postnummer da vi sender faktura og medlemskort hjem til deg.")
             valid = False
 
         if not validator.memberno(self.memberno, req=False):
@@ -121,7 +121,7 @@ class Receiver():
 
         if not validator.zipcode(self.zipcode) or self.area == '':
             if add_messages:
-                messages.error(request, u"Postnummeret til %s er ikke gyldig." % self.name)
+                messages.error(request, u"Postnummeret til %s er mangler eller er feil." % self.name)
             valid = False
 
         if not validator.phone(self.phone, req=False):
