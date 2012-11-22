@@ -51,6 +51,11 @@ def form(request):
         for receiver in request.session['gift_membership']['receivers']:
             receiver.validate(request, add_messages=True)
 
+    if 'type' in request.POST:
+        chosen_type = int(request.POST['type'])
+    else:
+        chosen_type = None
+
     context.update({
         'days': range(1, 32),
         'months': months,
@@ -58,7 +63,7 @@ def form(request):
         'types': membership_types,
         'giver': request.session['gift_membership'].get('giver', None),
         'receivers': request.session['gift_membership'].get('receivers', []),
-        'chosen_type': request.POST.get('type'),
+        'chosen_type': chosen_type,
     })
     return render(request, 'enrollment/gift/form.html', context)
 
