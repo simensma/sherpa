@@ -441,3 +441,60 @@ div.ad {
     position: absolute;
   }
 }
+
+/* Progress bar */
+
+table.registration-progress {
+  margin: 0 0 25px 0;
+  width: 100%;
+
+  td.step:first-of-type {
+    border-left: 3px solid rgb(255, 255, 255);
+  }
+
+  td.step {
+    /* Line-height is 24px so set vertical padding to max 48 (height of arrow-image) - line-height */
+    background-color: #dcddde;
+    padding: 12px 30px 12px 15px;
+    border-right: 3px solid rgb(255, 255, 255);
+  }
+
+  td.step.current {
+    color: white;
+    background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
+    border-right: none !important;
+  }
+
+  td.step.final {
+    color: white;
+    background: #d82a20 top right no-repeat;
+  }
+}
+
+div.registration-progress-small {
+  display: none;
+}
+
+/* Progress bar for small screens */
+
+@media (max-width: 767px) {
+  table.registration-progress {
+    display: none;
+  }
+
+  div.registration-progress-small {
+    display: block;
+    padding: 6px;
+    border: 1px solid rgb(152, 152, 152);
+    margin-bottom: 18px;
+  }
+
+  div.registration-progress-small p {
+    font-family: "DTL Nobel" !important;
+    margin-bottom: 0;
+  }
+
+  div.registration-progress-small p i {
+    margin: 3px 3px 0 3px;
+  }
+}
