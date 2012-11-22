@@ -39,6 +39,11 @@ $(document).ready(function() {
         deleteCache($(this), 'article', id);
     });
 
+    table.find("button.instagram").click(function() {
+        $("div.delete-success span.name").text("Instagramfeed-cachen");
+        deleteCache($(this), 'instagram');
+    })
+
     function deleteCache(button, key, id) {
         button.hide();
         button.siblings("img.loader").show();

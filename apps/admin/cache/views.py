@@ -9,6 +9,8 @@ from datetime import datetime
 
 from page.models import *
 
+from instagram.views import initial_url as instagram_initial_url
+
 @login_required
 def index(request):
     page_versions = Version.objects.filter(
@@ -49,4 +51,6 @@ def delete(request):
         # Chances are, this was done to show it on the frontpage, so just delete the frontpage-cache too since it's cached twice.
         id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
         cache.delete('content.version.%s' % id)
+    elif request.POST['key'] == 'instagram':
+        cache.delete('instagram.url.%s' % instagram_initial_url)
     return HttpResponse()
