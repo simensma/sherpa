@@ -27,7 +27,7 @@
       Tom for gaveidéer? Et medlemskap i DNT varer lenge og kan brukes så mye man vil. I tillegg til flotte naturopplevelser gir medlemskapet rabatt på overnatting på DNTs hytter, mulighet for å være med på turer, kurs og andre aktiviteter, samt en rekke andre fordeler. Velg mellom:
     </p>
 
-    <form id="gift-entry" method="post" action="{% url enrollment.views_gift.form %}">
+    <form class="gift-entry" method="post" action="{% url enrollment.views_gift.form %}">
       {% csrf_token %}
       <input type="hidden" name="type" value="">
       <div class="row-fluid">
