@@ -18,9 +18,9 @@ class State(models.Model):
 # Gift-membership-types
 membership_types = [
   {'code': 'normal', 'name': 'Vanlig medlemskap', 'price': None},
-  {'code': 'baptism', 'name': 'Dåpsgave', 'price': 900},
-  {'code': 'jubilee', 'name': 'Jubileum', 'price': 5500},
-  {'code': 'life', 'name': 'Livsvarig medlemskap', 'price': 13750},
+  {'code': 'baptism', 'name': 'Dåpsgave', 'price': 1000},
+  {'code': 'jubilee', 'name': 'Jubileum', 'price': 5700},
+  {'code': 'life', 'name': 'Livsvarig medlemskap', 'price': 14250},
 ]
 
 # Not a DB-model! Used in session for gift memberships
