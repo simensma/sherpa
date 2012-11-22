@@ -14,7 +14,7 @@ from enrollment.models import Giver, Receiver, membership_types
 
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_MEMBERSERVICE_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
-EMAIL_MEMBERSERVICE_SUBJECT = u"Gavemedlemskap"
+EMAIL_MEMBERSERVICE_SUBJECT = u"Bestilling av gavemedlemskap"
 EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
 def index(request):
