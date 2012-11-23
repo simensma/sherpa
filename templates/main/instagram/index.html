@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'main/layout.html' %}
 
 {% block title %}Instagram{% endblock %}
 {% block breadcrumb_title %}Instagram{% endblock %}
@@ -19,7 +19,7 @@
 
 <div class="row">
   <div class="span12 instagram-wrapper">
-    {% include 'instagram/bulk.html' with bulk=bulk %}
+    {% include 'main/instagram/bulk.html' with bulk=bulk %}
 
     <div style="clear: both;"></div>
     <div class="loader">
