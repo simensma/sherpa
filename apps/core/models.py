@@ -22,6 +22,9 @@ class Zipcode(models.Model):
     city_code = models.CharField(max_length=4)
     city = models.CharField(max_length=100)
 
+class ZipcodeState(models.Model):
+    last_update = models.DateTimeField()
+
 class County(models.Model):
     code = models.CharField(max_length=2)
     sherpa_id = models.IntegerField(null=True)
