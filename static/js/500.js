@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    $("div.plax img.background").plaxify({"xRange": 200, "yRange": 25, "invert": true})
-    $("div.plax p").plaxify({"xRange": 20, "yRange": 20})
-    $("div.plax h1").plaxify({"xRange": 20, "yRange": 20, "invert": true})
+    $("div.plax img.background").plaxify({"xRange": 15, "yRange": 15})
+    $("div.plax p").plaxify({"xRange": 20, "yRange": 20, "invert": true})
+    $("div.plax h1").plaxify({"xRange": 20, "yRange": 25})
     $.plax.enable();
 
     $("a.refresh").click(function() {
