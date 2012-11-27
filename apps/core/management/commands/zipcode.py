@@ -30,8 +30,8 @@ class ZipcodeRemoval():
         self.date = date
 
 class Command(BaseCommand):
-    args = '<check|report|sync|focus>'
-    help = 'Rapporterer og utfører endringer i postens postnummerregister'
+    args = u'<check|report|sync|focus>'
+    help = u'Rapporterer og utfører endringer i postens postnummerregister'
 
     def handle(self, *args, **options):
 
