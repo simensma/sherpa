@@ -13,7 +13,7 @@ def index(request):
         request.session['instagram'] = {}
 
     data = cache.get('instagram.url.%s' % initial_url)
-    if data == None:
+    if data is None:
         r = requests.get(initial_url)
         data = json.loads(r.content)
         cache.set('instagram.url.%s' % initial_url, data, 60 * 60)
@@ -30,7 +30,7 @@ def index(request):
 
 def more(request):
     data = cache.get('instagram.url.%s' % request.session['instagram']['next_url'])
-    if data == None:
+    if data is None:
         r = requests.get(request.session['instagram']['next_url'])
         data = json.loads(r.content)
         cache.set('instagram.url.%s' % request.session['instagram']['next_url'], data, 60 * 60)

@@ -20,19 +20,19 @@ def index(request):
     return render(request, 'membership/index.html')
 
 def benefits(request, association_id):
-    if association_id == None:
+    if association_id is None:
         # No association-attachment provided, use default prices (DNT Oslo og Omegn).
         association_focus_id = 10
         association = None
     else:
         association = cache.get('association.%s' % association_id)
-        if association == None:
+        if association is None:
             association = Association.objects.get(id=association_id)
             cache.set('association.%s' % association_id, association, 60 * 60 * 24)
         association_focus_id = association.focus_id
 
     price = cache.get('association.price.%s' % association_focus_id)
-    if price == None:
+    if price is None:
         price = Price.objects.get(association_id=association_focus_id)
         cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
 
@@ -54,13 +54,13 @@ def zipcode_search(request):
     try:
         # Get focus zipcode-association ID
         focus_association_id = cache.get('focus.zipcode_association.%s' % request.POST['zipcode'])
-        if focus_association_id == None:
+        if focus_association_id is None:
             focus_association_id = FocusZipcode.objects.get(zipcode=request.POST['zipcode']).main_association_id
             cache.set('focus.zipcode_association.%s' % request.POST['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
 
         # Get association based on zipcode-ID
         association = cache.get('focus.association.%s' % focus_association_id)
-        if association == None:
+        if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
             cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
 

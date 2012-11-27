@@ -33,7 +33,7 @@ def parse_widget(widget):
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
         data = cache.get('widgets.blog.category.' + widget['category'])
-        if data == None:
+        if data is None:
 
             feed_url = "http://%s/" % settings.BLOG_URL;
 
@@ -49,7 +49,7 @@ def parse_widget(widget):
 
             entries = []
             entries_matched = 0;
-            if channel != None:
+            if channel is not None:
                 for item in channel.findall('item'):
 
                     item_categories = []
@@ -62,7 +62,7 @@ def parse_widget(widget):
                         content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
                         image = None
                         m = re.search('<img.*?src="(.*?)" ', content)
-                        if m != None:
+                        if m is not None:
                             image = m.group(1)
                         entries.append({
                             'title': item.find('title').text,

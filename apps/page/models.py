@@ -92,7 +92,7 @@ class Version(models.Model):
                 self.hide_thumbnail = True
         # Statically use the 150px version. This should be optimized; save
         # the available sizes with the model and use the smallest appropriate one.
-        if self.thumbnail != None and settings.AWS_BUCKET in self.thumbnail:
+        if self.thumbnail is not None and settings.AWS_BUCKET in self.thumbnail:
             t = self.thumbnail
             # Remove previous size spec if existing
             t = re.sub('-\d+\.', '.', t)
@@ -157,7 +157,7 @@ class Ad(models.Model):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
     def has_fallback(self):
-        return self.fallback_sha1_hash != None and self.fallback_extension != None
+        return self.fallback_sha1_hash is not None and self.fallback_extension is not None
 
     def fallback_url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)

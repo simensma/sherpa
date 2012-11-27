@@ -72,7 +72,7 @@ def list_albums(request, album):
 @login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
-    parents = [] if image.album == None else list_parents(image.album)
+    parents = [] if image.album is None else list_parents(image.album)
     exif = json.loads(image.exif)
     try:
         taken = datetime.strptime(exif['DateTime'], '%Y:%m:%d %H:%M:%S')
@@ -96,7 +96,7 @@ def move_items(request):
     destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
     for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
         def parent_in_parent(destination, child):
-            while destination != None:
+            while destination is not None:
                 if destination == child:
                     return True
                 destination = destination.parent
@@ -115,7 +115,7 @@ def move_items(request):
         image.album = destination_album
         image.save()
 
-    if destination_album != None:
+    if destination_album is not None:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[destination_album.id]))
     elif request.POST.get('origin', '') != '':
         return HttpResponseRedirect(request.POST['origin'])
@@ -136,7 +136,7 @@ def delete_items(request, album):
 
 @login_required
 def add_album(request, parent):
-    parent = None if parent == None else Album.objects.get(id=parent)
+    parent = None if parent is None else Album.objects.get(id=parent)
     album = Album(name=request.POST['name'], parent=parent)
     album.save()
     if parent is None:
@@ -387,7 +387,7 @@ def parse_objects(parents, albums, images):
 def list_parents(album):
     parents = []
     parents.append(album)
-    while(album.parent != None):
+    while(album.parent is not None):
         album = Album.objects.get(id=album.parent.id)
         parents.insert(0, album)
     return parents
@@ -395,7 +395,7 @@ def list_parents(album):
 def list_parents_values(album):
     parents = []
     parents.append({'id': album.id, 'name': album.name})
-    while(album.parent != None):
+    while(album.parent is not None):
         album = Album.objects.get(id=album.parent.id)
         parents.insert(0, {'id': album.id, 'name': album.name})
     return parents
@@ -464,7 +464,7 @@ def parse_image(file):
     # Parse XMP-keywords
     from core import xmp
     xmp_dict = xmp.parse_xmp(data)
-    keywords = xmp.keywords(xmp_dict) if xmp_dict != None else []
+    keywords = xmp.keywords(xmp_dict) if xmp_dict is not None else []
 
     thumbs = []
     ext = file.name.split(".")[-1].lower()

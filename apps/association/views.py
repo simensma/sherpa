@@ -31,7 +31,7 @@ def index(request):
             category['chosen'] = True
 
     full_list = cache.get('associations.full_list')
-    if full_list == None:
+    if full_list is None:
         full_list = Association.objects.filter(
                 Q(type="|Hovedforening") |
                 Q(type="|Underforening") |
@@ -66,7 +66,7 @@ def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
         return HttpResponseRedirect(reverse('association.views.index'))
     result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
-    if result == None:
+    if result is None:
         exists = False
         for category in get_categories():
             if request.POST['category'].title() == category['db']:
@@ -97,7 +97,7 @@ def filter(request):
             parents = []
             try:
                 parent = Association.objects.get(id=association.parent)
-                while parent != None:
+                while parent is not None:
                     parents.append(parent)
                     parent = Association.objects.get(id=parent.parent)
             except Association.DoesNotExist:

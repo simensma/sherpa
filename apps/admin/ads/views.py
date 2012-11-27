@@ -52,8 +52,8 @@ def update_ad(request):
     ad.name = request.POST['name']
     ad.destination = request.POST['destination']
     ad.viewcounter = request.POST['viewcounter']
-    if ad.width != None: ad.width = request.POST['width']
-    if ad.height != None: ad.height = request.POST['height']
+    if ad.width is not None: ad.width = request.POST['width']
+    if ad.height is not None: ad.height = request.POST['height']
     if 'ad' in request.FILES:
         ad.delete_file()
         ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
@@ -86,7 +86,7 @@ def update_placement(request):
     try:
         placement = AdPlacement.objects.get(id=request.POST['id'])
         placement.ad = Ad.objects.get(id=request.POST['ad'])
-        if placement.start_date != None:
+        if placement.start_date is not None:
             placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
             placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
         else:

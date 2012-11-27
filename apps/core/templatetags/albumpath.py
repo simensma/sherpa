@@ -6,7 +6,7 @@ register = template.Library()
 def albumpath(album):
     albums = [album]
     parent = album.parent
-    while parent != None:
+    while parent is not None:
         albums.insert(0, parent)
         parent = parent.parent
     return albums

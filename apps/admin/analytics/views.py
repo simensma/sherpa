@@ -13,7 +13,7 @@ def index(request):
 @login_required
 def searches(request):
     most_searched = cache.get('analytics.searches.most_searched')
-    if most_searched == None:
+    if most_searched is None:
         searches = Search.objects.all()
         hashes = {}
 

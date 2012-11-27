@@ -11,7 +11,7 @@ def menus(request):
         return {}
     else:
         menus = cache.get('main.menu')
-        if menus == None:
+        if menus is None:
             menus = Menu.objects.all().order_by('order')
             cache.set('main.menu', menus, 60 * 60 * 24)
         for menu in menus:

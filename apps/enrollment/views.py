@@ -312,31 +312,31 @@ def verification(request):
         # Use main members' association if applicable
         focus_association_id = Actor.objects.get(memberid=request.session['enrollment']['existing']).main_association_id
         association = cache.get('focus.association.%s' % focus_association_id)
-        if association == None:
+        if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
             cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
         if request.session['enrollment']['location']['country'] == 'NO':
             focus_association_id = cache.get('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'])
-            if focus_association_id == None:
+            if focus_association_id is None:
                 focus_association_id = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).main_association_id
                 cache.set('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
             association = cache.get('focus.association.%s' % focus_association_id)
-            if association == None:
+            if association is None:
                 association = Association.objects.get(focus_id=focus_association_id)
                 cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
             oslo_association_id = 2 # This is the current ID for that association
             association = cache.get('association.%s' % oslo_association_id)
-            if association == None:
+            if association is None:
                 association = Association.objects.get(id=oslo_association_id)
                 cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
     request.session['enrollment']['association'] = association
 
     # Get the prices for that association
     price = cache.get('association.price.%s' % request.session['enrollment']['association'].focus_id)
-    if price == None:
+    if price is None:
         price = Price.objects.get(association_id=request.session['enrollment']['association'].focus_id)
         cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
@@ -350,7 +350,7 @@ def verification(request):
     youth_or_older_count = 0
     main = None
     for user in request.session['enrollment']['users']:
-        if main == None or (user['age'] < main['age'] and user['age'] >= AGE_YOUTH):
+        if main is None or (user['age'] < main['age'] and user['age'] >= AGE_YOUTH):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
         if user['age'] >= AGE_YOUTH:
@@ -454,7 +454,7 @@ def payment(request):
             else:
                 user['household'] = True
                 user['yearbook'] = False
-        if main == None:
+        if main is None:
             # The specified main-member index doesn't exist
             return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), nonexistent_main_member_key))
     else:
@@ -468,7 +468,7 @@ def payment(request):
                 return HttpResponseRedirect("%s?%s" % (reverse('enrollment.views.verification'), no_main_member_key))
 
     # Ok. We need the memberID of the main user, so add that user and generate its ID
-    if main != None:
+    if main is not None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
             request.session['enrollment']['location'], main['phone'], main['email'],
@@ -509,7 +509,7 @@ def payment(request):
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
 
     # Infer order details based on (poor) conventions.
-    if main != None:
+    if main is not None:
         order_number = 'I_%s' % main['id']
         first_name = main['name'].split(' ')[0]
         last_name = main['name'].split(' ')[1:]
@@ -881,10 +881,10 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     last_name = name.split(' ')[-1]
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
-    type = focus_type_of(age, linked_to != None)
+    type = focus_type_of(age, linked_to is not None)
     payment_method = focus_payment_method_code(payment_method)
-    price = price_of(age, linked_to != None, price)
-    linked_to = '' if linked_to == None else str(linked_to)
+    price = price_of(age, linked_to is not None, price)
+    linked_to = '' if linked_to is None else str(linked_to)
     if location['country'] == 'NO':
         # Override yearbook value for norwegians based on age and household status
         yearbook = focus_receive_yearbook(age, linked_to)

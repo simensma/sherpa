@@ -32,8 +32,8 @@ def page(request, slug):
         raise Http404
     matched_variant = match_user(request, page)
     requested_variant = request.GET.get(variant_key)
-    if requested_variant == None:
-        if matched_variant == None:
+    if requested_variant is None:
+        if matched_variant is None:
             # No variant requested, and no variant matched. The default, simple view for a page.
             default_variant = Variant.objects.get(page=page, segment__isnull=True)
             version = Version.objects.get(variant=default_variant, active=True)
@@ -48,7 +48,7 @@ def page(request, slug):
         requested_variant = Variant.objects.get(id=requested_variant)
         version = Version.objects.get(variant=requested_variant, active=True)
         # In case the user happens to requests a variant without actually matching any
-        if matched_variant == None:
+        if matched_variant is None:
             matched_segment = None
         else:
             matched_segment = matched_variant.segment
@@ -56,7 +56,7 @@ def page(request, slug):
 
 def parse_content(request, version):
     context = cache.get('content.version.%s' % version.id)
-    if context == None:
+    if context is None:
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
             columns = Column.objects.filter(row=row).order_by('order')
@@ -71,13 +71,13 @@ def parse_content(request, version):
             row.columns = columns
         # If parents, generate page hierarchy for breadcrumb path
         page_hierarchy = []
-        if version.variant.page.parent != None:
+        if version.variant.page.parent is not None:
             page_hierarchy.append({
                 'title': version.variant.page.title,
                 'url': version.variant.page.slug
                 })
             parent = version.variant.page.parent
-            while parent != None:
+            while parent is not None:
                 page_hierarchy.append({
                     'title': parent.title,
                     'url': parent.slug
@@ -197,7 +197,7 @@ def redirect_cabin(request):
         if not 'ca_id' in request.GET:
             raise Sherpa2Cabin.DoesNotExist
         cabin = Sherpa2Cabin.objects.get(id=request.GET['ca_id'])
-        if cabin.url_ut == None or cabin.url_ut == '':
+        if cabin.url_ut is None or cabin.url_ut == '':
             raise Sherpa2Cabin.DoesNotExist
         return HttpResponsePermanentRedirect(cabin.url_ut)
     except Sherpa2Cabin.DoesNotExist:

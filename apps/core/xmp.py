@@ -6,7 +6,7 @@ def keywords(xmp):
 
 def parse_xmp(data):
     xmp_string = find_xmp_string(data)
-    return None if xmp_string == None else xmp_to_dict(xmp_string)
+    return None if xmp_string is None else xmp_to_dict(xmp_string)
 
 def find_xmp_string(data):
     start_tag = '<x:xmpmeta'

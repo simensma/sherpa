@@ -55,7 +55,7 @@ def more_old(request):
 
 def show(request, article, text):
     context = cache.get('articles.%s' % article)
-    if context == None:
+    if context is None:
         # Assume no segmentation for now
         try:
             article = Article.objects.get(id=article)
@@ -83,7 +83,7 @@ def show(request, article, text):
 
 def show_old(request, article, text):
     context = cache.get('old_articles.%s' % article)
-    if context == None:
+    if context is None:
         # Assume no segmentation for now
         try:
             article = OldArticle.objects.get(id=article)

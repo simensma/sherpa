@@ -70,7 +70,7 @@ def parent(request, page):
     else:
         new_parent = Page.objects.get(id=request.POST['parent'])
         parent = new_parent
-        while parent != None:
+        while parent is not None:
             if parent.id == page.id:
                 return HttpResponse(json.dumps({'error': 'parent_in_parent'}))
             parent = parent.parent
@@ -92,7 +92,7 @@ def publish(request, page):
 
     page = Page.objects.get(id=page)
     page.published = json.loads(status)["status"]
-    if date_object == None:
+    if date_object is None:
         page.pub_date = datetime.now()
     else:
         page.pub_date = date_object
@@ -265,7 +265,7 @@ def create_template(template, version):
 # Return the list of categories available in the blogwidget
 def blog_category_list():
     categories = cache.get('widgets.blog.category_list')
-    if categories == None:
+    if categories is None:
         r = requests.get("http://%s/%s" % (settings.BLOG_URL, settings.BLOG_CATEGORY_API))
         response = json.loads(r.text)
         categories = ['Alle']
