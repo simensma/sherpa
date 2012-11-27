@@ -7,6 +7,13 @@ import re
 
 # Note: Does not compare the state of the DB to the files - simply lists the changes based on last update in ZipcodeState.
 
+class ZipcodeCurrent():
+    def __init__(self, zipcode, area, city_code, city):
+        self.zipcode = zipcode
+        self.area = area
+        self.city_code = city_code
+        self.city = city
+
 class ZipcodeNew():
     def __init__(self, zipcode, area, city_code, city, date):
         self.zipcode = zipcode
@@ -30,8 +37,8 @@ class ZipcodeRemoval():
         self.date = date
 
 class Command(BaseCommand):
-    args = u'<check|report|sync|focus>'
-    help = u'Rapporterer og utfører endringer i postens postnummerregister'
+    args = u'<check|report|sync|deleted|focus>'
+    help = u'Rapporterer og utfører endringer i postens postnummerregister - se https://github.com/Turistforeningen/sherpa/wiki/Postnumre'
 
     def handle(self, *args, **options):
 
@@ -40,7 +47,7 @@ class Command(BaseCommand):
             args = ['check']
 
         if args[0] == 'check':
-            if not self.parse_registers():
+            if not self.parse_changes():
                 return
             self.stdout.write("Endringer siden %s:\n" % self.last_update)
             self.stdout.write(" - %s nye postnumre\n" % len(self.to_be_created))
@@ -51,7 +58,7 @@ class Command(BaseCommand):
             self.stdout.write("Kjør med 'sync' for å oppdatere databasen automatisk\n")
 
         elif args[0] == 'report':
-            if not self.parse_registers():
+            if not self.parse_changes():
                 return
             self.stdout.write("Postnummerendringer siden %s:\n\n" % self.last_update)
 
@@ -71,7 +78,7 @@ class Command(BaseCommand):
 
 
         elif args[0] == 'sync':
-            if not self.parse_registers():
+            if not self.parse_changes():
                 return
             self.stdout.write(" - %s nye postnumre vil legges inn\n" % len(self.to_be_created))
             self.stdout.write(" - %s postnumre vil endres\n" % len(self.to_be_changed))
@@ -116,6 +123,23 @@ class Command(BaseCommand):
                     self.stdout.write("\n")
                     self.stdout.write("Merk: Disse postnumrene vil ikke listes ved neste sync, fordi last_update er satt til \"nå\"\n")
 
+        elif args[0] == 'deleted':
+            if not self.parse_register():
+                return
+            excessive_zipcodes = Zipcode.objects.exclude(zipcode__in=[z.zipcode for z in self.current_zipcodes]).order_by('zipcode')
+            if len(excessive_zipcodes) == 0:
+                self.stdout.write("Det er ingen postnumre i databasen som burde ha vært slettet.\n")
+            else:
+                self.stdout.write("Følgende postnumre skulle ha vært slettet fra databasen:\n")
+                self.stdout.write("\n")
+                for zipcode in excessive_zipcodes:
+                    self.stdout.write("%s %s %s %s\n" % (zipcode.zipcode, zipcode.area, zipcode.city_code, zipcode.city))
+                self.stdout.write("\n")
+                self.stdout.write("%s postnumre skulle vært slettet.\n" % len(excessive_zipcodes))
+                self.stdout.write("\n")
+                self.stdout.write("Du bør sjekke opp hvilke relasjoner som er tilknyttet postnumrene, og\n")
+                self.stdout.write("hva som kan gjøres med disse for å få slettet postnumrene.\n")
+
         elif args[0] == 'focus':
             self.stdout.write("Følgende er i vår database men ikke i Focus:\n")
             missing = Zipcode.objects.exclude(zipcode__in=[z['zipcode'] for z in FocusZipcode.objects.all().values('zipcode')]).order_by('zipcode')
@@ -125,8 +149,8 @@ class Command(BaseCommand):
 
             self.stdout.write("Totalt %s manglende postnumre.\n" % len(missing))
 
-    def parse_registers(self):
-        self.stdout.write("Parser postnummerregistre, vennligst vent...\n\n")
+    def parse_changes(self):
+        self.stdout.write("Parser endringstabeller, vennligst vent...\n\n")
 
         filename_new = 'postnummerlogg_nye_ansi.txt'
         filename_changes = 'postnummerlogg_endringer_ansi.txt'
@@ -184,3 +208,28 @@ class Command(BaseCommand):
              self.stdout.write("Last dem ned herfra: http://www.bring.no/144754/postnummertabeller\n")
              return False
 
+
+    def parse_register(self):
+        self.stdout.write("Parser postnummerregisteret, vennligst vent...\n\n")
+        filename_current = 'postnummerregister_ansi.txt'
+        try:
+            with open(filename_current, 'rt') as f:
+                self.current_zipcodes = list()
+                for line in f:
+                    line = line.decode('iso-8859-1')
+                    m = re.match('^(\d{4})\t(.*)\t(\d{4})\t(.*?)\t', line)
+                    if m:
+                        g = m.groups(0)
+                        self.current_zipcodes.append(ZipcodeCurrent(g[0], g[1], g[2], g[3]))
+                    else:
+                        self.stdout.write("Error: Klarte ikke å parse følgende linje i '%s':\n" % filename_current)
+                        self.stdout.write("  -> '%s'\n" % line.strip())
+                        self.stdout.write("Sjekk om det er nytt format i postnummerregisterfilene. Du må kanskje inn og oppdatere zipcode-kommandoen :)\n")
+                        return False
+            return True
+
+        except IOError:
+             self.stdout.write("Forventet å finne følgende fil i denne mappa:\n")
+             self.stdout.write("  '%s' (Postnummer i rekkefølge med TAB-separerte felter, ANSI).\n" % filename_current)
+             self.stdout.write("Last den ned herfra: http://www.bring.no/144754/postnummertabeller\n")
+             return False
