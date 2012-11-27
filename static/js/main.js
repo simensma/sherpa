@@ -4,7 +4,7 @@ $(document).ready(function() {
     $("div#forgot-password").hide();
     $("div#login a.forgot").click(function() {
         $(this).hide();
-        $("div#forgot-password").show();
+        $("div#forgot-password").slideDown();
     });
     $("div#forgot-password input[name='email']").keyup(function(e) {
         if(e.which == 13) {
