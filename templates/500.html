@@ -1,26 +1,51 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
+  <title>Teknisk feil &mdash; Turistforeningen</title>
+  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
 
-{% block title %}Teknisk feil{% endblock %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/500.css" media="screen">
 
-{% block body %}
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
+  <script src="{{ STATIC_URL }}js/ga.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}lib/plax/plax.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}js/500.js"></script>
+</head>
+<body>
 
-<div class="row">
-  <div class="offset1 span10">
-
-    <h2>
-      <img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_196_circle_exclamation_mark.png" alt="!">
-      Beklager, det har skjedd en feil
-    </h2>
+  <div class="plax">
+    <img class="background" src="{{ STATIC_URL }}img/500.jpg" alt="Bakgrunn">
+    <h1>
+      Oops!
+    </h1>
 
     <p>
-      Feilen er logget i vårt system, og vi vil rette den så snart som mulig.
-    </p>
-
-    <p>
-      Vi beklager at vi ikke kunne hjelpe deg akkurat nå, men håper du vil forsøke igjen senere.
+      <span>Beklager, her har det skjedd en feil! Feilen er logget<br>
+        <span>i vårt system, og vil rette den så snart som mulig. Du<br>
+          <span>kan forsøke å <a class="refresh" href="javascript:undefined">oppdatere siden</a>. Hvis feilen ikke går<br>
+            <span>bort beklager vi at vi ikke kunne hjelpe deg akkurat nå,<br>
+              <span>men håper du vil forsøke igjen senere eller gå <a href="{% url page.views.page %}">tilbake</a><br>
+                <span><a href="{% url page.views.page %}">til forsiden</a>.</span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
     </p>
 
   </div>
-</div>
+  <div class="noplax">
 
-{% endblock %}
+    <h1>Oops!</h1>
+
+    <p>
+      Beklager, her har det skjedd en feil! Feilen er logget i vårt system, og vil rette den så snart som mulig. Du kan forsøke å <a class="refresh" href="javascript:undefined">oppdatere siden</a>. Hvis feilen ikke går bort beklager vi at vi ikke kunne hjelpe deg akkurat nå, men håper du vil forsøke igjen senere eller gå <a href="{% url page.views.page %}">tilbake til forsiden</a>.
+    </p>
+  </div>
+
+</body>
+</html>
