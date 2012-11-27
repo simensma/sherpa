@@ -418,7 +418,7 @@ def payment(request):
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
-        messages.add_message(request, messages.ERROR, 'invalid_payment_method')
+        messages.error(request, 'invalid_payment_method')
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
     request.session['enrollment']['payment_method'] = request.POST['payment_method']
 
@@ -437,7 +437,7 @@ def payment(request):
             if user['index'] == int(request.session['enrollment']['main_member']):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_YOUTH:
-                    messages.add_message(request, messages.ERROR, 'invalid_main_member')
+                    messages.error(request, 'invalid_main_member')
                     return HttpResponseRedirect(reverse('enrollment.views.verification'))
                 user['household'] = False
                 user['yearbook'] = True
@@ -447,7 +447,7 @@ def payment(request):
                 user['yearbook'] = False
         if main is None:
             # The specified main-member index doesn't exist
-            messages.add_message(request, messages.ERROR, 'nonexistent_main_member')
+            messages.error(request, 'nonexistent_main_member')
             return HttpResponseRedirect(reverse('enrollment.views.verification'))
     else:
         # In this case, one or more members below youth age are registered,
@@ -457,7 +457,7 @@ def payment(request):
             user['yearbook'] = False
             # Verify that all members are below youth age
             if user['age'] >= AGE_YOUTH:
-                messages.add_message(request, messages.ERROR, 'no_main_member')
+                messages.error(request, 'no_main_member')
                 return HttpResponseRedirect(reverse('enrollment.views.verification'))
 
     # Ok. We need the memberID of the main user, so add that user and generate its ID
@@ -726,10 +726,10 @@ def validate(request, require_location, require_existing):
     if len(request.session['enrollment']['users']) == 0:
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_youth_count(request.session['enrollment']['users']):
-        messages.add_message(request, messages.ERROR, 'too_many_underage')
+        messages.error(request, 'too_many_underage')
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if not validate_user_contact(request.session['enrollment']['users']):
-        messages.add_message(request, messages.ERROR, 'contact_missing')
+        messages.error(request, 'contact_missing')
         return HttpResponseRedirect(reverse("enrollment.views.registration"))
     if require_location:
         if not 'location' in request.session['enrollment'] or not validate_location(request.session['enrollment']['location']):

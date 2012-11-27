@@ -214,7 +214,7 @@ class SetActiveAssociation(object):
             if m != None:
                 # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
                 association = Association.objects.get(id=m.groupdict()['association'])
-                if not association in request.user.get_profile().associations.all():
+                if not association in request.user.get_profile().all_associations():
                     raise PermissionDenied
 
                 request.session['active_association'] = association
@@ -245,7 +245,7 @@ class CheckSherpaPermissions(object):
                 request.path.startswith('/sherpa/nyheter/') or
                 request.path.startswith('/sherpa/annonser/') or
                 request.path.startswith(u'/sherpa/analyse/søk/')):
-                messages.add_message(request, messages.ERROR, 'no_association_site')
+                messages.error(request, 'no_association_site')
                 return render(request, 'common/admin/no_association_site.html')
 
 class DeactivatedEnrollment():

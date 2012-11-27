@@ -37,19 +37,19 @@ def update_account(request):
     errors = False
 
     if not validator.name(request.POST['name']):
-        messages.add_message(request, messages.ERROR, 'no_name_provided')
+        messages.error(request, 'no_name_provided')
         errors = True
 
     if not validator.email(request.POST['email']):
-        messages.add_message(request, messages.ERROR, 'invalid_email_address')
+        messages.error(request, 'invalid_email_address')
         errors = True
 
     if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
-        messages.add_message(request, messages.ERROR, 'duplicate_email_address')
+        messages.error(request, 'duplicate_email_address')
         errors = True
 
     if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
-        messages.add_message(request, messages.ERROR, 'phone_too_long')
+        messages.error(request, 'phone_too_long')
         errors = True
 
     if not errors:
@@ -64,18 +64,18 @@ def update_account(request):
         profile = request.user.get_profile()
         profile.phone = request.POST['phone']
         profile.save()
-        messages.add_message(request, messages.INFO, 'update_success')
+        messages.info(request, 'update_success')
 
     return HttpResponseRedirect(reverse('user.views.account'))
 
 @login_required
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-        messages.add_message(request, messages.ERROR, 'password_too_short')
+        messages.error(request, 'password_too_short')
     else:
         request.user.set_password(request.POST['password'])
         request.user.save()
-        messages.add_message(request, messages.INFO, 'password_update_success')
+        messages.info(request, 'password_update_success')
     return HttpResponseRedirect(reverse('user.views.account'))
 
 def login(request):

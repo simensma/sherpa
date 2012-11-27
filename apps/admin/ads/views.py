@@ -71,7 +71,7 @@ def create_placement(request):
         ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date, view_limit=view_limit)
         ap.save()
     except ValueError:
-        messages.add_message(request, messages.ERROR, 'invalid_date')
+        messages.error(request, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def update_placement(request):
@@ -85,7 +85,7 @@ def update_placement(request):
             placement.view_limit = request.POST['view_limit']
         placement.save()
     except ValueError:
-        messages.add_message(request, messages.ERROR, 'invalid_date')
+        messages.error(request, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):
