@@ -20,7 +20,7 @@ EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 def index(request):
     if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
         return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
-    return render(request, 'enrollment/gift/index.html')
+    return render(request, 'main/enrollment/gift/index.html')
 
 def form(request):
     if not 'gift_membership' in request.session:
@@ -65,7 +65,7 @@ def form(request):
         'receivers': request.session['gift_membership'].get('receivers', []),
         'chosen_type': chosen_type,
     })
-    return render(request, 'enrollment/gift/form.html', context)
+    return render(request, 'main/enrollment/gift/form.html', context)
 
 def validate(request):
     if not 'gift_membership' in request.session:
@@ -122,13 +122,13 @@ def confirm(request):
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers']
     }
-    return render(request, 'enrollment/gift/confirm.html', context)
+    return render(request, 'main/enrollment/gift/confirm.html', context)
 
 def send(request):
     if not 'gift_membership' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
-    t1 = loader.get_template('enrollment/gift/email-memberservice.html')
-    t2 = loader.get_template('enrollment/gift/email-giver.html')
+    t1 = loader.get_template('main/enrollment/gift/email-memberservice.html')
+    t2 = loader.get_template('main/enrollment/gift/email-giver.html')
     # Note that this context is used for both email templates
     c = RequestContext(request, {
         'giver': request.session['gift_membership']['giver'],
@@ -151,7 +151,7 @@ def receipt(request):
         'receivers': request.session['gift_membership']['receivers'],
         'any_normal_memberships': request.session['gift_membership']['any_normal_memberships']
     }
-    return render(request, 'enrollment/gift/receipt.html', context)
+    return render(request, 'main/enrollment/gift/receipt.html', context)
 
 def clear(request):
     del request.session['gift_membership']

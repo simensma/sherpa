@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
 {% block breadcrumb_title %}Gavemedlemskap{% endblock %}
 
@@ -7,7 +7,7 @@
 <div class="row">
   <div class="span12">
     <h1>Gi bort gavemedlemskap</h1>
-    {% include 'enrollment/gift/progress.html' with step=4 %}
+    {% include 'main/enrollment/gift/progress.html' with step=4 %}
 
     <p class="gift-order-sent">
       Din bestilling har blitt sendt!
