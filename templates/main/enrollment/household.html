@@ -11,10 +11,7 @@
 
   {% if errors %}
     <script>
-      // Trigger form validations
-      $(document).ready(function() {
-        $("form#household input").focusout();
-      });
+      window.trigger_form_validations = true;
     </script>
   {% endif %}
 {% endblock %}

@@ -1,55 +1,36 @@
 $(document).ready(function() {
 
     $("form#household img.ajaxloader").hide();
-    $("form#household input[name='zipcode']").keyup(searchZip);
     $("form#household select[name='country']").chosen();
-    if($("form#household select[name='country'] option:selected").val() == 'NO') {
-        $("form#household input[name='zipcode']").keyup();
-    }
 
-    function searchZip() {
-        if($(this).val().match(/^\d{4}$/)) {
-            $("form#household img.zip.ajaxloader").show();
-            $.ajax({
-                url: '/postnummer/' + encodeURIComponent($(this).val()) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                result = JSON.parse(result);
-                if(result.area != undefined) {
-                    $("form#household input[name='area']").val(result.area);
-                    $("form#household div.control-group.zipcode").removeClass('error').addClass('success');
-                } else if(result.error == "does_not_exist") {
-                    $("form#household input[name='area']").val("Ukjent postnummer");
-                    $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
-                }
-            }).fail(function(result) {
-                $("form#household input[name='area']").val("Teknisk feil");
-                $("form#household div.control-group.zipcode").removeClass('success').addClass('error');
-            }).always(function(result) {
-                $("form#household img.zip.ajaxloader").hide();
-            });
-        } else {
-            $("form#household input[name='area']").val("");
-        }
-    }
+    // Zipcode-validations
+    var zipcode_control_group = $("form#household div.control-group.zipcode");
+    var zipcode = $("form#household input[name='zipcode']");
+    var area = $("form#household input[name='area']");
+    var loader = $("form#household img.zip.ajaxloader");
 
-    $("form#household select[name='country']").change(setAddressState);
-    setAddressState();
-    function setAddressState() {
+    $("form#household select[name='country']").change(function() {
+        setAddressState(false);
+    });
+    setAddressState(true);
+    function setAddressState(first) {
         var sel = $("form#household select[name='country'] option:selected");
         if(sel.val() == 'NO') {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").hide();
-            $("form#household input[name='area']").attr('disabled', true);
-            $("form#household input[name='zipcode']").keyup(searchZip);
-            $("form#household input[name='zipcode']").keyup();
+            area.attr('disabled', true);
+            ZipcodeValidator.validate(zipcode_control_group, zipcode, area, loader);
+            if(!first || (first && zipcode.val() != '')) {
+                ZipcodeValidator.trigger(zipcode);
+            }
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").show();
-            $("form#household input[name='area']").removeAttr('disabled');
-            $("form#household input[name='zipcode']").off('keyup');
+            area.removeAttr('disabled');
+            ZipcodeValidator.stopValidation(zipcode);
+            zipcode.focusout();
         } else {
             $("form#household div.world").show();
             $("form#household div.scandinavia").hide();
@@ -73,25 +54,21 @@ $(document).ready(function() {
         $(this).parents("div.control-group").addClass('success');
     });
 
-    $("form#household input[name='zipcode']").focusout(function() {
-        if($("form#household select[name='country'] option:selected").val() == 'NO') {
-            if(!$(this).val().match(/^\d{4}$/)) {
-                $(this).parents("div.control-group").removeClass('success').addClass('error');
-            }
-        } else {
-            if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='area']").val() == '') {
-                $(this).parents("div.control-group").removeClass('success').addClass('error');
+    zipcode.focusout(function() {
+        if($("form#household select[name='country'] option:selected").val() != 'NO') {
+            if($(this).val() == '' || area.val() == '') {
+                zipcode_control_group.removeClass('success').addClass('error');
             } else {
-                $(this).parents("div.control-group").removeClass('error').addClass('success');
+                zipcode_control_group.removeClass('error').addClass('success');
             }
         }
     });
 
-    $("form#household input[name='area']").focusout(function() {
-        if($(this).val() == '' || $(this).parents("div.control-group").find("input[name='zipcode']").val() == '') {
-            $(this).parents("div.control-group").removeClass('success').addClass('error');
+    area.focusout(function() {
+        if($(this).val() == '' || zipcode.val() == '') {
+            zipcode_control_group.removeClass('success').addClass('error');
         } else {
-            $(this).parents("div.control-group").removeClass('error').addClass('success');
+            zipcode_control_group.removeClass('error').addClass('success');
         }
     });
 
@@ -162,4 +139,8 @@ $(document).ready(function() {
         $("div.existing-result").hide();
     }
 
+    if(window.hasOwnProperty('trigger_form_validations')) {
+        $("form#household input").focusout();
+        ZipcodeValidator.trigger(zipcode);
+    }
 });
