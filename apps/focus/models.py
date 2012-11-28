@@ -122,6 +122,33 @@ class Actor(models.Model):
     class Meta:
         db_table = u'Actor'
 
+class ActorService(models.Model):
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor_id = models.IntegerField(null=True, db_column=u'ActSeqNo', blank=True)
+    memberid = models.IntegerField(null=True, db_column=u'ActNo', blank=True)
+    code = models.CharField(max_length=25, db_column=u'ArticleNo', blank=True)
+    actpayno = models.IntegerField(null=True, db_column=u'ActPayNo', blank=True)
+    invtype = models.IntegerField(null=True, db_column=u'InvType', blank=True)
+    invprinttype = models.IntegerField(null=True, db_column=u'InvPrintType', blank=True)
+    startdt = models.DateTimeField(null=True, db_column=u'StartDt', blank=True)
+    enddt = models.DateTimeField(null=True, db_column=u'EndDt', blank=True)
+    stopdt = models.DateTimeField(null=True, db_column=u'StopDt', blank=True)
+    newstartdt = models.DateTimeField(null=True, db_column=u'NewStartDt', blank=True)
+    previousinvoicedt = models.DateTimeField(null=True, db_column=u'PreviousInvoiceDt', blank=True)
+    invoicefreq = models.IntegerField(null=True, db_column=u'InvoiceFreq', blank=True)
+    pricecd = models.IntegerField(null=True, db_column=u'PriceCd', blank=True)
+    price = models.FloatField(null=True, db_column=u'Price', blank=True)
+    qty = models.FloatField(null=True, db_column=u'Qty', blank=True)
+    optint1 = models.IntegerField(null=True, db_column=u'OptInt1', blank=True)
+    description = models.TextField(db_column=u'Description', blank=True)
+    crby = models.CharField(max_length=25, db_column=u'CrBy', blank=True)
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
+    chby = models.CharField(max_length=25, db_column=u'ChBy', blank=True)
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt', blank=True)
+    invdate = models.DateTimeField(null=True, db_column=u'InvDate', blank=True)
+    class Meta:
+        db_table = u'ActService'
+
 class ActorAddress(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
     actor = models.OneToOneField(Actor, unique=True, related_name='address', db_column=u'ActSeqNo')
