@@ -31,10 +31,7 @@
   <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
   {% if messages %}
     <script>
-      $(document).on('validator_ready', function() {
-        window.validator.runValidations();
-        $("input.zipcode").trigger('focusout'); // Zipcode inputs aren't part of the validator
-      });
+      window.trigger_form_validations = true;
     </script>
   {% endif %}
 {% endblock %}

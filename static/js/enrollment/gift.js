@@ -2,42 +2,21 @@ window.datePickerCount = 1;
 
 $(document).ready(function() {
 
-    $(document).on('keyup focusout', 'form#gift input.zipcode', function() {
-        var self = $(this);
-        if(self.val().match(/^\d{4}$/)) {
-            self.siblings("img.ajaxloader").show();
-            $.ajaxQueue({
-                url: '/postnummer/' + encodeURIComponent(self.val()) + '/'
-            }).done(function(result) {
-                result = JSON.parse(result);
-                if(result.area != undefined) {
-                    self.siblings("input.area").val(result.area);
-                    self.parents("div.control-group").removeClass('error').addClass('success');
-                } else if(result.error == "does_not_exist") {
-                    self.siblings("input.area").val("Ukjent postnummer");
-                    self.parents("div.control-group").removeClass('success').addClass('error');
-                }
-            }).fail(function(result) {
-                self.siblings("input.area").val("Teknisk feil");
-                self.parents("div.control-group").removeClass('success').addClass('error');
-            }).always(function(result) {
-                self.siblings("img.ajaxloader").hide();
-            });
-        } else {
-            self.parents("div.control-group").removeClass('error success');
-            self.siblings("input.area").val("");
-            if(!$(this).is(":focus")) {
-                self.parents("div.control-group").addClass('error');
-            }
-        }
-    });
+    var giver_control_group = $("div.control-group.giver_zipcode");
+    var giver_zipcode = $("input[name='giver_zipcode']");
+    var giver_area = $("input[name='giver_area']");
+    var giver_loader = zipcode.siblings("img.ajaxloader");
+    ZipcodeValidator.validate(giver_control_group, giver_zipcode, giver_area, giver_loader);
+    if(giver_zipcode.val() != '') {
+        ZipcodeValidator.trigger(giver_zipcode);
+    }
 
     // Clear input validation-status upon focus
     $(document).on('focus', "form#gift input", function() {
         $(this).parents("div.control-group").removeClass('error success');
     });
 
-    window.validator = new Validator();
+    var validator = new Validator();
 
     // Generic validation-complete function for most of the controls
     function markInput(el, valid) {
@@ -59,6 +38,13 @@ $(document).ready(function() {
         validator.addValidation('address', box.find("input[name='receiver_address']"), markInput, true);
         validator.addValidation('phone', box.find("input[name='receiver_phone']"), markInput, false);
         validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
+
+        ZipcodeValidator.validate(
+            box.find("div.control-group.receiver_zipcode"),
+            box.find("input[name='receiver_zipcode']"),
+            box.find("input[name='receiver_area']"),
+            box.find("div.control-group.receiver_zipcode img.ajaxloader")
+            );
 
         var forms = {};
         forms[box.find("select[name='receiver_dob_dd']").attr('id')]= "%d";
@@ -151,5 +137,8 @@ $(document).ready(function() {
         }
     }
 
-    $(document).trigger('validator_ready');
+    if(window.trigger_form_validations) {
+      validator.runValidations();
+      ZipcodeValidator.trigger($("input[name='receiver_zipcode']")); // Zipcode inputs aren't part of the validator
+    }
 });
