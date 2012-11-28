@@ -9,10 +9,6 @@ var Validator = function() {
             if(!req && input == '') { return true; }
             return input.match(/[^\s]/) != null;
         },
-        'zipcode': function(input, req, opts) {
-            if(!req && input == '') { return true; }
-            return input.match(/^\d{4}$/) != null;
-        },
         'phone': function(input, req, opts) {
             if(!req && input == '') { return true; }
             return input.length >= 8 && input.match(/[a-z]/i) == null;
