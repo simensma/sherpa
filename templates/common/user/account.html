@@ -60,7 +60,7 @@
       {% endfor %}
     </div>
 
-    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal">
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal account-info">
       {% csrf_token %}
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>
@@ -70,8 +70,12 @@
       </div>
       <div class="control-group email">
         <label class="control-label" for="email">E-post</label>
-        <div class="controls">
+        <div class="controls"{% if perms.user.sherpa %} data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Gravatar-tips" data-content="Hvis du skriver artikler i Sherpa, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på www.gravatar.com med <strong>samme</strong> e-postadresse som du bruker her."{% endif %}>
           <input type="text" class="input-xlarge" name="email" value="{{ user.email }}">
+          {% if perms.user.sherpa %}
+            <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+            <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
+          {% endif %}
         </div>
       </div>
       <div class="control-group phone">
@@ -85,12 +89,6 @@
           <button type="submit" class="btn"><i class="icon-ok"></i> Oppdater opplysningene</button>
         </div>
       </div>
-
-      {% if perms.user.sherpa %}
-        <p>
-          <strong>Tips:</strong> Hvis du skriver artikler, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på <a href="http://en.gravatar.com/">Gravatar</a> med <strong>samme</strong> e-postadresse som du bruker her.
-        </p>
-      {% endif %}
     </form>
 
     <h2>Endre passord</h2>
