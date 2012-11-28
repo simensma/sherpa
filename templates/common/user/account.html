@@ -27,6 +27,30 @@
     <p>{{ user.get_full_name }}</p>
     <p>{{ user.email }}</p>
     <p>{{ user.get_profile.phone }}</p>
+    <p>{{ user.get_profile.memberid }}</p>
+
+    <hr>
+
+    {# TODO lots #}
+    {% if not user.get_profile.actor %}
+      <p>Du har ingen actor</p>
+    {% else %}
+      <p>{{ user.get_profile.actor.first_name }} {{ user.get_profile.actor.last_name }}</p>
+      <p>{{ user.get_profile.actor.email }}</p>
+      <p>{{ user.get_profile.actor.mobph }}</p>
+      <p>{{ user.get_profile.actor.ph|default:"" }}</p>
+      <p>Født {{ user.get_profile.actor.birth_date|date:"j. F Y" }}</p>
+      {% if user.get_profile.actor.address.country == 'NO' %}
+        <p>{{ user.get_profile.actor.address.zipcode }} {{ user.get_profile.actor.address.parea|title }}</p>
+        <p>{{ user.get_profile.actor.address.a1 }}</p>
+      {% else %}
+        <p>{{ user.get_profile.actor.address.a1 }}</p>
+        <p>{{ user.get_profile.actor.address.a2 }}</p>
+        <p>{{ user.get_profile.actor.address.a3 }}</p>
+      {% endif %}
+      <p>{{ user.get_profile.actor.main_association.name }}</p>
+      <p>{{ user.get_profile.actor.membership_type }}</p>
+    {% endif %}
 
     <a href="{% url user.views.update_account %}">Endre brukeropplysninger</a>
   </div>

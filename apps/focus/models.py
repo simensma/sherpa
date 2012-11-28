@@ -1,4 +1,8 @@
+# encoding: utf-8
 from django.db import models
+from django.core.cache import cache
+
+from association.models import Association
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -119,6 +123,38 @@ class Actor(models.Model):
     crdt = models.DateTimeField(db_column=u'CrDt')
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(db_column=u'ChDt')
+
+    def main_association(self):
+        association = cache.get('focus.association.%s' % self.main_association_id)
+        if association is None:
+            association = Association.objects.get(focus_id=self.main_association_id)
+            cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def membership_type(self):
+        # Supposedly, there should only be one service in this range
+        return self.membership_type_name(self.services().get(code__gt=100, code__lt=110).code.strip())
+
+    def services(self):
+        services = cache.get('actor.services.%s' % self.memberid)
+        if services is None:
+            services = ActorService.objects.filter(memberid=self.memberid)
+            cache.set('actor.services.%s' % self.memberid, 60 * 60)
+        return services
+
+    def membership_type_name(self, code):
+        # Should be moved to some kind of "Focus utility" module and merged with the
+        # functionality currently found in enrollment/views
+        if   code == u'101': return u'Hovedmedlem'
+        elif code == u'102': return u'Ungdomsmedlem'
+        elif code == u'103': return u'Honnørmedlem'
+        elif code == u'104': return u'Livsvarig medlem'
+        elif code == u'105': return u'Barnemedlem'
+        elif code == u'106': return u'Skoleungdomsmedlem'
+        elif code == u'107': return u'Husstandsmedlem'
+        elif code == u'108': return u'Husstandsmedlem'
+        elif code == u'109': return u'Livsvarig husstandsmedlem'
+
     class Meta:
         db_table = u'Actor'
 

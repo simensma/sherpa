@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.cache import cache
+
+from focus.models import Actor
 
 class Profile(models.Model):
     PHONE_MAX_LENGTH = 20
@@ -24,6 +27,15 @@ class Profile(models.Model):
                 return self.associations.filter(associationrole__role=role)
             else:
                 return self.associations.all()
+
+    def actor(self):
+        if self.memberid is None:
+            return None
+        actor = cache.get('actor.%s' % self.memberid)
+        if actor is None:
+            actor = Actor.objects.get(memberid=self.memberid)
+            cache.set('actor.%s' % self.memberid, actor, 60 * 60)
+        return actor
 
     class Meta:
         permissions = [
