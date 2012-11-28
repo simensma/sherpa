@@ -10,7 +10,7 @@ class Profile(models.Model):
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True, unique=True)
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
-    # At some point, this model will be extended to contain member data, syncing with Focus.
+    memberid = models.IntegerField(null=True)
 
     def all_associations(self, role=None):
         from association.models import Association
