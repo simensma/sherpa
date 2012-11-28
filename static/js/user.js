@@ -6,12 +6,12 @@ $(document).ready(function() {
             $("form div.control-group.password").addClass('error');
             $("form div.control-group.password-duplicate").addClass('error');
             addInfo("Passordene er ikke like!");
-            e.preventDefault();
+            //e.preventDefault();
         } else if($(this).find("input[name='password']").val().length > 0 && $(this).find("input[name='password']").val().length < password_length) {
             $("form div.control-group.password").addClass('error');
             $("form div.control-group.password-duplicate").addClass('error');
             addInfo("Passordet må være minst " + password_length + " tegn!");
-            e.preventDefault();
+            //e.preventDefault();
         }
     });
 

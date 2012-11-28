@@ -27,56 +27,62 @@ def home_new(request):
 
 @login_required
 def account(request):
-    context = {
-        'password_length': settings.USER_PASSWORD_LENGTH,
-        'phone_max_length': Profile.PHONE_MAX_LENGTH}
-    return render(request, 'common/user/account.html', context)
+    return render(request, 'common/user/account.html')
 
 @login_required
 def update_account(request):
-    errors = False
+    if request.method == 'GET':
+        context = {
+            'password_length': settings.USER_PASSWORD_LENGTH,
+            'phone_max_length': Profile.PHONE_MAX_LENGTH}
+        return render(request, 'common/user/update_account.html', context)
 
-    if not validator.name(request.POST['name']):
-        messages.error(request, 'no_name_provided')
-        errors = True
+    elif request.method == 'POST':
+        errors = False
 
-    if not validator.email(request.POST['email']):
-        messages.error(request, 'invalid_email_address')
-        errors = True
+        if not validator.name(request.POST['name']):
+            messages.error(request, 'no_name_provided')
+            errors = True
 
-    if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
-        messages.error(request, 'duplicate_email_address')
-        errors = True
+        if not validator.email(request.POST['email']):
+            messages.error(request, 'invalid_email_address')
+            errors = True
 
-    if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
-        messages.error(request, 'phone_too_long')
-        errors = True
+        if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+            messages.error(request, 'duplicate_email_address')
+            errors = True
 
-    if not errors:
-        split = request.POST['name'].split(' ')
-        first_name = split[0]
-        last_name = ' '.join(split[1:])
-        request.user.username = username(request.POST['email'])
-        request.user.email = request.POST['email']
-        request.user.first_name = first_name
-        request.user.last_name = last_name
-        request.user.save()
-        profile = request.user.get_profile()
-        profile.phone = request.POST['phone']
-        profile.save()
-        messages.info(request, 'update_success')
+        if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
+            messages.error(request, 'phone_too_long')
+            errors = True
 
-    return HttpResponseRedirect(reverse('user.views.account'))
+        if not errors:
+            split = request.POST['name'].split(' ')
+            first_name = split[0]
+            last_name = ' '.join(split[1:])
+            request.user.username = username(request.POST['email'])
+            request.user.email = request.POST['email']
+            request.user.first_name = first_name
+            request.user.last_name = last_name
+            request.user.save()
+            profile = request.user.get_profile()
+            profile.phone = request.POST['phone']
+            profile.save()
+            messages.info(request, 'update_success')
+            return HttpResponseRedirect(reverse('user.views.account'))
+        else:
+            return HttpResponseRedirect(reverse('user.views.update_account'))
 
 @login_required
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
+        return HttpResponseRedirect(reverse('user.views.update_account'))
     else:
         request.user.set_password(request.POST['password'])
         request.user.save()
         messages.info(request, 'password_update_success')
-    return HttpResponseRedirect(reverse('user.views.account'))
+        return HttpResponseRedirect(reverse('user.views.account'))
 
 def login(request):
     if request.method == 'GET':
