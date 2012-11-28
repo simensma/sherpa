@@ -3,12 +3,10 @@ from __future__ import absolute_import
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Max
-from django.contrib.auth.decorators import login_required
 from page.models import Version, Row, Column, Content
 
 import json
 
-@login_required
 def add_columns(request):
     version = Version.objects.get(id=request.POST['version'])
     for row in Row.objects.filter(version=version, order__gte=request.POST['order']):
@@ -23,7 +21,6 @@ def add_columns(request):
         ids.append(obj.id)
     return HttpResponse(json.dumps(ids))
 
-@login_required
 def delete(request, row):
     if request.is_ajax():
         row = Row.objects.get(id=row)

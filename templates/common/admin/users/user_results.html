@@ -1,0 +1,7 @@
+{% for user in users %}
+  <tr class="result">
+    <td><a href="{% url admin.users.views.show user.id %}">{{ user.get_full_name }}</a></td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.get_profile.phone }}</td>
+  </tr>
+{% endfor %}

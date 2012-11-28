@@ -1,18 +1,23 @@
+# encoding: utf-8
 from django import http
 from django.shortcuts import render
-from django.contrib.sites.models import Site
 from django.conf import settings
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.core.mail import mail_managers
+from django.core.exceptions import PermissionDenied
 from django.utils.http import urlquote
 from django.core import urlresolvers
 from django.utils.log import getLogger
+from django.core.urlresolvers import resolve, Resolver404
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from datetime import datetime
 import hashlib
 import re
 
-from core.models import SiteDetails, SiteTemplate
+from core.models import Site, SiteTemplate
+from association.models import Association
 
 logger = getLogger('django.request')
 
@@ -24,6 +29,32 @@ if not model_cache.loaded:
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class RedirectTrailingDot():
+    def process_request(self, request):
+        # If hostname contains a trailing dot, strip it with redirect
+        # - mainly to support the sites framework.
+        # This should preferably be in the nginx config, but it seems to ignore the trailing dot.
+        domain = request.get_host().split(':', 1)[0]
+        if domain.endswith('.'):
+            return HttpResponsePermanentRedirect("http://%s%s" % (domain[:-1], request.get_full_path()))
+
+class Sites():
+    def process_request(self, request):
+        try:
+            request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+            request.urlconf = "sherpa.urls_%s" % request.site.template.name
+            urlresolvers.set_urlconf(request.urlconf)
+        except Site.DoesNotExist:
+            # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
+            raise Http404
+
+class CurrentApp(object):
+    def process_request(self, request):
+        try:
+            request.current_app = resolve(request.path).app_name
+        except Resolver404:
+            request.current_app = ''
 
 class DecodeQueryString(object):
     def process_request(self, request):
@@ -39,32 +70,6 @@ class DecodeQueryString(object):
         # Unable to decode the query string. Just leave it as it is, and if any later usage
         # of it leads to a decoding error, let it happen and be logged for further inspection.
 
-class RedirectTrailingDot():
-    def process_request(self, request):
-        # If hostname contains a trailing dot, strip it with redirect
-        # - mainly to support the sites framework.
-        # This should preferably be in the nginx config, but it seems to ignore the trailing dot.
-        domain = request.get_host().split(':', 1)[0]
-        if domain.endswith('.'):
-            return HttpResponsePermanentRedirect("http://%s%s" % (domain[:-1], request.get_full_path()))
-
-class Sites():
-    def process_request(self, request):
-        try:
-            request.site = Site.objects.get(domain=request.get_host().split(":")[0])
-            request.urlconf = "sherpa.urls_%s" % request.site.details.template.name
-            urlresolvers.set_urlconf(request.urlconf)
-        except Site.DoesNotExist:
-            # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
-            raise Http404
-
-class DeactivatedEnrollment():
-    def process_request(self, request):
-        from enrollment.models import State
-        # The enrollment slug is duplicated and hardcoded here :(
-        # However, it's not really likely to change often since it's an important URL.
-        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
-            return render(request, 'enrollment/unavailable.html')
 
 class CommonMiddlewareMonkeypatched(object):
     """
@@ -199,3 +204,54 @@ def _is_internal_request(domain, referer):
     """
     # Different subdomains are treated as different domains.
     return referer is not None and re.match("^https?://%s/" % re.escape(domain), referer)
+
+
+class SetActiveAssociation(object):
+    def process_request(self, request):
+        # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_association'.
+        if request.user.is_authenticated() and request.user.has_perm('user.sherpa'):
+            m = re.match(r'/sherpa/aktiv-forening/(?P<association>\d+)/', request.path)
+            if m != None:
+                # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
+                association = Association.objects.get(id=m.groupdict()['association'])
+                if not association in request.user.get_profile().all_associations():
+                    raise PermissionDenied
+
+                request.session['active_association'] = association
+                if request.META.get('HTTP_REFERER') != None:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                else:
+                    return HttpResponseRedirect(reverse('admin.views.index'))
+
+
+class CheckSherpaPermissions(object):
+    def process_request(self, request):
+        if request.current_app == 'admin':
+            # Not logged in
+            if not request.user.is_authenticated():
+                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+            # Missing sherpa-permission
+            if not request.user.has_perm('user.sherpa'):
+                raise PermissionDenied
+
+            # No active association set
+            if not 'active_association' in request.session:
+                return render(request, 'common/admin/set_active_association.html')
+
+            # Accessing CMS-functionality, but no site set
+            if request.session['active_association'].site == None and (
+                request.path.startswith('/sherpa/cms/') or
+                request.path.startswith('/sherpa/nyheter/') or
+                request.path.startswith('/sherpa/annonser/') or
+                request.path.startswith(u'/sherpa/analyse/søk/')):
+                messages.error(request, 'no_association_site')
+                return render(request, 'common/admin/no_association_site.html')
+
+class DeactivatedEnrollment():
+    def process_request(self, request):
+        from enrollment.models import State
+        # The enrollment slug is duplicated and hardcoded here :(
+        # However, it's not really likely to change often since it's an important URL.
+        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
+            return render(request, 'main/enrollment/unavailable.html')

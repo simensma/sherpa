@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 
 from datetime import datetime
@@ -11,7 +10,6 @@ from page.models import *
 
 from instagram.views import initial_url as instagram_initial_url
 
-@login_required
 def index(request):
     page_versions = Version.objects.filter(
         variant__page__isnull=False,
@@ -23,22 +21,29 @@ def index(request):
         variant__segment__isnull=True,
         variant__article__published=True,
         active=True,
-        variant__article__pub_date__lt=datetime.now()
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.session['active_association'].site
         ).order_by('-variant__article__pub_date')
+
     for version in article_versions:
         version.load_preview()
+
     context = {
         'article_versions': article_versions,
         'page_versions': page_versions}
-    return render(request, 'admin/cache/index.html', context)
+    return render(request, 'common/admin/cache/index.html', context)
 
-@login_required
 def delete(request):
     if not request.is_ajax():
         return HttpResponseRedirect(reverse('admin.cache.views.index'))
 
     if request.POST['key'] == 'frontpage':
-        id = Version.objects.get(active=True, variant__segment__isnull=True, variant__page__slug='').id
+        id = Version.objects.get(
+            active=True,
+            variant__segment__isnull=True,
+            variant__page__slug='',
+            variant__page__site=request.session['active_association'].site
+            ).id
         cache.delete('content.version.%s' % id)
     elif request.POST['key'] == 'page':
         cache.delete('content.version.%s' % request.POST['id'])

@@ -26,7 +26,7 @@ def index(request):
         'bulk': bulk,
     }
     request.session.modified = True
-    return render(request, 'instagram/index.html', context)
+    return render(request, 'main/instagram/index.html', context)
 
 def more(request):
     data = cache.get('instagram.url.%s' % request.session['instagram']['next_url'])
@@ -47,7 +47,7 @@ def more(request):
 
 iterations = ['small', 'small', 'small', 'small', 'medium', 'large', 'medium', 'small', 'small', 'small', 'small', 'medium', 'medium', 'medium', 'medium', 'small', 'small', 'large']
 def next_image(request, item):
-    t = loader.get_template('instagram/image_%s.html' % iterations[request.session['instagram']['iteration']])
+    t = loader.get_template('main/instagram/image_%s.html' % iterations[request.session['instagram']['iteration']])
     c = RequestContext(request, {'item': item})
     request.session['instagram']['iteration'] += 1
     if request.session['instagram']['iteration'] == len(iterations):

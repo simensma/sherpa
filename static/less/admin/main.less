@@ -18,21 +18,29 @@ header {
     text-align: center;
   }
 
-  .line {
-    /* Based on the logo image height */
-    height: 115px;
-  }
-
   div.right {
     text-align: right;
     padding-top: 20px;
-    height: 95px; /* Logo image height (115) - padding-top */
+
+    select[name='user_association'] {
+      width: 100%;
+    }
   }
 
   h1 {
     /* Based on the logo image height */
     margin-top: 25px;
-    font-size: 280%;
+    font-size: 45px;
+  }
+
+  p.userline {
+    font-weight: bold;
+    margin-bottom: 0px;
+
+    span.logout {
+      font-size: 14px;
+      font-weight: normal;
+    }
   }
 }
 
@@ -59,6 +67,7 @@ nav.dashboard {
 
   h2 {
     font-weight: normal;
+    margin-top: 10px;
   }
 }
 
@@ -87,6 +96,27 @@ div.sherpa-news {
 
 h2.skinny {
   font-weight: normal;
+}
+
+/* Set active association */
+
+ul.active-association-list {
+  list-style-type: none;
+
+  li {
+    margin: 10px 0;
+  }
+
+  li a {
+    font-family: "DTL Nobel" !important;
+    font-size: 22px;
+    padding: 8px 4px;
+    .rounded-corners(6px);
+  }
+
+  li a:hover {
+    background-color: rgb(235, 235, 235);
+  }
 }
 
 /* New page */

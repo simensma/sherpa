@@ -1,0 +1,38 @@
+{# Used for the index page; subsequent requests are generated dynamically based upon this template. #}
+<div class="instagram">
+  <div class="wrap2 left">
+    {% include 'main/instagram/image_small.html' with item=bulk.0 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.1 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.2 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.3 %}
+    {% include 'main/instagram/image_medium.html' with item=bulk.4 %}
+  </div>
+
+  <div class="right">
+    {% include 'main/instagram/image_large.html' with item=bulk.5 %}
+  </div>
+
+  <div class="wrap2 left">
+    {% include 'main/instagram/image_medium.html' with item=bulk.6 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.7 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.8 %}
+  </div>
+
+  <div class="wrap2 left">
+    {% include 'main/instagram/image_small.html' with item=bulk.9 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.10 %}
+    {% include 'main/instagram/image_medium.html' with item=bulk.11 %}
+  </div>
+
+  <div class="wrap2 right">
+    {% include 'main/instagram/image_medium.html' with item=bulk.12 %}
+    {% include 'main/instagram/image_medium.html' with item=bulk.13 %}
+    {% include 'main/instagram/image_medium.html' with item=bulk.14 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.15 %}
+    {% include 'main/instagram/image_small.html' with item=bulk.16 %}
+  </div>
+
+  <div class="left">
+    {% include 'main/instagram/image_large.html' with item=bulk.17 %}
+  </div>
+</div>

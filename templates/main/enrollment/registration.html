@@ -1,0 +1,150 @@
+{% extends 'main/enrollment/index.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+    window.email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+  </script>
+{% endblock %}
+
+{% block enrollment %}
+
+<div class="row">
+  <div class="span8">
+
+    {% include 'main/enrollment/progress.html' with step=1 %}
+
+    {% if errors %}
+      <script>
+        // Trigger form validations
+        $(document).ready(function() {
+          $("form#registration input").focusout();
+          validateDatepicker();
+          validateGender();
+        });
+      </script>
+      <div class="alert alert-error">
+        <a class="close">x</a><strong>Vi klarte ikke å lagre opplysningene.</strong><br>
+        Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt.
+      </div>
+    {% endif %}
+    {% for message in messages %}
+      {% if message.message == 'too_many_underage' %}
+        <div class="notice-alert">
+          <h2>Beklager, men du kan ikke registrere disse medlemmene!</h2>
+          <p>Du har registrert {{ users|length }} medlemmer, hvorav ingen er gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks 3 slike medlemmer av gangen.</p>
+          <p>Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik begrensning.</p>
+        </div>
+      {% elif message.message == 'contact_missing' %}
+        <div class="alert alert-error">
+          <a class="close">x</a><strong><i class="icon-warning-sign"></i> Kontaktinformasjon mangler.</strong><br>
+          Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post).
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if users %}
+      <div class="well members">
+        <h2>Du har registrert:</h2>
+        <table class="table table-bordered memberlist">
+        {% for user in users %}
+          <tr>
+            <td>
+              <a href="{% url enrollment.views.registration user.index %}" title="Rediger {{ user.name }}">
+                {% if user.name %}
+                  {{ user.name }}
+                {% else %}
+                  (Anonym)
+                {% endif %}
+              </a>
+              <span class="remove">
+                <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+        </table>
+        <label class="checkbox">
+          <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" data-toggle="modal" data-target="#heisann">betingelsene</a>
+        </label>
+        <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right icon-white"></i></a></p>
+      </div>
+      <h2>Meld inn flere i familien/husstanden:</h2>
+      <p>Du kan kun melde inn flere samtidig hvis alle bor på samme adresse.</p>
+      <br>
+    {% endif %}
+
+    <form id="registration" class="form-border" action="{% url enrollment.views.registration %}" method="post">
+      {% csrf_token %}
+      {% if person.index >= 0 %}
+        <input type="hidden" name="user" value="{{ person.index }}">
+      {% endif %}
+      <div class="control-group name">
+        <label>Fullt navn <span class="asterisk red">*</span></label>
+        <input type="text" class="input-large" name="name" value="{{ person.name }}">
+      </div>
+      <div class="control-group dob">
+        <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
+        <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
+      </div>
+      <div class="control-group gender">
+        <label> Kjønn <span class="asterisk red">*</span></label>
+        <label class="radio gender">
+          <input type="radio" name="gender" value="f"{% if person.gender == 'f' %} checked{% endif %}> Kvinne
+        </label>
+        <label class="radio gender">
+          <input type="radio" name="gender" value="m"{% if person.gender == 'm' %} checked{% endif %}> Mann
+        </label>
+      </div>
+      <div style="clear: both;"></div>
+      <div class="control-group phone">
+        <label> Mobiltelefon {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+        <input type="text" class="input-medium" name="phone" value="{{ person.phone }}">
+      </div>
+      <div class="control-group email">
+        <label> E-post {% if users|length == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+        <input type="text" class="input-large" name="email" value="{{ person.email }}">
+      </div>
+      <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if person.index >= 0 %}Lagre endringer{% else %}Legg til medlem{% endif %}</button><br>
+    </form>
+  </div>
+
+  <div class="span4">
+    {% include 'main/enrollment/memberservice.html' %}
+  </div>
+</div>
+
+{# Conditions modal #}
+<div class="modal conditions hide" id="heisann">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">X</button>
+    <h1>Betingelser for medlemskap i Den Norske Turistforening</h1>
+  </div>
+  <div class="modal-body">
+  <ul>
+    <li>Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret og gjelder fra 1. januar til 31. desember. Etter 1. {{ new_membership_year|date:"F" }} kan man kjøpe medlemskap for påfølgende år. </li>
+    <li>Medlemskapet er personlig.</li>
+    <li>Det er ingen angrerett på betalt medlemskap.</li>
+    <li>Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%) gis rett til honnørmedlemskap.</li>
+    <li>Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig med stempel eller oblat fra bank/post.</li>
+    <li>DNT forplikter seg til ikke å videreformidle personlige opplysninger til andre enn våre egne lokalforeninger, samt enkelte samarbeidspartnere i forbindelse med tilbud på utvalgte medlemsfordeler. Det er mulig å reservere seg mot dette på Min side.</li>
+  </ul>
+
+  <p>
+    Sist endret: 9. november 2012.<br>
+    Med forbehold om endringer i løpet av medlemsåret.
+  </p>
+
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ class PathURLNode(Node):
         self.urlnode = urlnode
 
     def render(self, context):
-        prefix = context['site'].details.prefix
+        prefix = context['site'].prefix
         return '%s%s' % ('/%s' % prefix if prefix != '' else '', self.urlnode.render(context))
 
 @register.tag

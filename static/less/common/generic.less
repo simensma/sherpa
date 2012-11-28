@@ -1,4 +1,16 @@
+/* Mixins and variables */
+
 @profile-red: rgb(216, 45, 32);
+
+.rounded-corners (@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+/* Generic styles */
 
 .form-border {
   padding: 14px 20px;
@@ -21,4 +33,34 @@ form.form-horizontal label.control-label {
   font-size: 16px;
   position: absolute;
   z-index: 10000;
+}
+
+.well.nav-container {
+  padding: 8px 0;
+}
+
+div.association-logo {
+  @img-width: 59px;
+  @img-height: 56px;
+  @padding-top: 15px;
+  @padding-horizontal: 16px;
+  color: white;
+  height: @img-height;
+  font-family: "DTL Nobel" !important;
+  font-size: 17px;
+  margin-left: auto;
+  margin-right: auto;
+  background: @profile-red url('/static/img/header-logo-part.png') top right no-repeat;
+  padding-top: @padding-top;
+  padding-right: @img-width + @padding-horizontal;
+  padding-left: @padding-horizontal;
+  height: @img-height - @padding-top;
+}
+
+div.association-logo.left {
+  float: left;
+}
+
+div.association-logo.right {
+  float: right;
 }

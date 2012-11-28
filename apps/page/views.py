@@ -15,7 +15,7 @@ import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article, OldArticle
-from core.models import Search
+from analytics.models import Search
 from page.widgets import parse_widget
 from sherpa2.models import Cabin as Sherpa2Cabin
 
@@ -26,7 +26,7 @@ SEARCH_CHAR_LIMIT = 3
 
 def page(request, slug):
     try:
-        page = Page.objects.get(slug=slug, published=True, pub_date__lt=datetime.now())
+        page = Page.on(request.site).get(slug=slug, published=True, pub_date__lt=datetime.now())
     except Page.DoesNotExist:
         # This is (as of this writing) the only point of entry to the 404 template.
         raise Http404
@@ -64,7 +64,7 @@ def parse_content(request, version):
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
                     if content.type == 'widget':
-                        content.content = parse_widget(json.loads(content.content))
+                        content.content = parse_widget(request, json.loads(content.content))
                     elif content.type == 'image':
                         content.content = json.loads(content.content)
                 column.contents = contents
@@ -107,29 +107,29 @@ def parse_content(request, version):
         ]
 
     for promo in promos:
-        if request.path == promo['url']:
-            context['promo'] = "widgets/promo/static/%s.html" % promo['template']
+        if request.path == promo['url'] and request.site.domain == 'www.turistforeningen.no':
+            context['promo'] = 'main/widgets/promo/static/%s.html' % promo['template']
 
     context['request'] = request
     context['promos'] = promos
-    return render(request, "page/page.html", context)
+    return render(request, 'common/page/page.html', context)
 
 @csrf_exempt
 def search(request):
     # Very simple search for now
     if not 'q' in request.GET:
-        return render(request, 'page/search.html')
+        return render(request, 'common/page/search.html')
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
         context = {'search_query': request.GET['q'],
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT}
-        return render(request, 'page/search.html', context)
+        return render(request, 'common/page/search.html', context)
 
     # Record the search
-    search = Search(query=request.GET['q'])
+    search = Search(query=request.GET['q'], site=request.site)
     search.save()
 
-    pages = Page.objects.filter(
+    pages = Page.on(request.site).filter(
         # Match page title or content
         Q(variant__version__row__column__content__content__icontains=request.GET['q']) |
         Q(title__icontains=request.GET['q']),
@@ -146,25 +146,30 @@ def search(request):
         # Active version, default segment, published article
         active=True,
         variant__segment=None,
-        variant__article__published=True, variant__article__pub_date__lt=datetime.now()
+        variant__article__published=True,
+        variant__article__pub_date__lt=datetime.now(),
+        variant__article__site=request.site
         ).distinct().order_by('-variant__article__pub_date')
 
-    old_articles = OldArticle.objects.filter(
-        Q(title__icontains=request.GET['q']) |
-        Q(lede__icontains=request.GET['q']) |
-        Q(content__icontains=request.GET['q'])
-        ).distinct().order_by('-date')
+    if request.site.domain == 'www.turistforeningen.no':
+        old_articles = OldArticle.objects.filter(
+            Q(title__icontains=request.GET['q']) |
+            Q(lede__icontains=request.GET['q']) |
+            Q(content__icontains=request.GET['q'])
+            ).distinct().order_by('-date')
+    else:
+        old_articles = []
 
     for version in article_versions:
         version.load_preview()
 
     context = {
-    'search_query': request.GET['q'],
-    'article_versions': article_versions,
-    'pages': pages,
-    'old_articles': old_articles,
-    'article_count': len(article_versions) + len(old_articles)}
-    return render(request, 'page/search.html', context)
+        'search_query': request.GET['q'],
+        'article_versions': article_versions,
+        'pages': pages,
+        'old_articles': old_articles,
+        'article_count': len(article_versions) + len(old_articles)}
+    return render(request, 'common/page/search.html', context)
 
 def ad(request, ad):
     try:
@@ -208,7 +213,7 @@ def redirect_index(request):
         return HttpResponseRedirect(reverse('membership.views.benefits'))
     raise Http404
 
-def page_not_found(request, template_name='404.html'):
+def page_not_found(request, template_name='main/404.html'):
     # Use a custom page_not_found view to add GET parameters
     param_str = request.GET.urlencode()
     if param_str != '':
@@ -222,7 +227,7 @@ def page_not_found(request, template_name='404.html'):
     c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
 
-def server_error(request, template_name='500.html'):
+def server_error(request, template_name='main/500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))

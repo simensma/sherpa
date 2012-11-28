@@ -1,0 +1,134 @@
+{% extends 'main/enrollment/index.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/household.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    var existing = {% if existing %}true{% else %}false{% endif %};
+    var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
+  </script>
+
+  {% if errors %}
+    <script>
+      // Trigger form validations
+      $(document).ready(function() {
+        $("form#household input").focusout();
+      });
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block enrollment %}
+
+<div class="row">
+  <div class="span8">
+
+    {% include 'main/enrollment/progress.html' with step=2 %}
+
+    {% for message in messages %}
+      {% if message.message == 'focus_zipcode_missing' %}
+        <div class="alert alert-error">
+          <a class="close">x</a><strong>Dette postnummeret er ikke tilknyttet noen forening</strong><br>
+          Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå.<br>
+          Vi har logget feilen, og vil knytte postnummer <strong>{{ location.zipcode }}</strong> til rett forening så snart som mulig.<br>
+          I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig.
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if invalid_existing %}
+      <div class="alert alert-error">
+        <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
+        Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at medlemmet bor på samme adresse som dere.
+      </div>
+    {% endif %}
+
+    {% if errors %}
+      <div class="alert alert-error">
+        <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
+        Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+      </div>
+    {% endif %}
+
+    <form id="household" action="{% url enrollment.views.household %}" method="post">
+      {% csrf_token %}
+
+      <div class="form-border">
+        <h2 style="margin-bottom: 15px;">Hvor bor {% if users|length > 1 %}dere{% else %}du{% endif %}?</h2>
+        <div class="control-group country">
+          <label> Land <span class="asterisk red">*</span></label>
+          <select name="country">
+            <optgroup id="scandinavia" label="Scandinavia">
+              <option value="{{ countries_norway.code }}"{% if location.country == countries_norway.code or not location %} selected{% endif %}>{{ countries_norway.name }}</option>
+              {% for c in countries_other_scandinavian %}
+                <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+              {% endfor %}
+            </optgroup>
+            <optgroup id="world" label="Rest of world">
+            {% for c in countries_other %}
+              <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+            </optgroup>
+          </select>
+        </div>
+        <div class="control-group address1">
+          <label> Adresse <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="address1" value="{{ location.address1 }}">
+        </div>
+        <div class="scandinavia">
+          <div class="control-group zipcode">
+            <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+            <input type="text" class="input-small" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
+            <input type="text" class="input-medium" name="area" value="{{ location.area }}" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+          </div>
+        </div>
+        <div class="world">
+          <div class="control-group address2">
+            <label> Adresse 2</label>
+            <input type="text" class="input-large" name="address2" value="{{ location.address2 }}">
+          </div>
+          <div class="control-group address3">
+            <label> Adresse 3</label>
+            <input type="text" class="input-large" name="address3" value="{{ location.address3 }}">
+          </div>
+        </div>
+        {% if main %}
+        <div class="control-group yearbook">
+          <label class="checkbox">
+            <input type="checkbox" name="yearbook"{% if yearbook %} checked{% endif %}> Motta Årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+          </label>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="well">
+        <h2>Husstandsmedlemskap</h2>
+        <p>
+          Bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med et <strong>eksisterende</strong> hovedmedlem, kan {% if users|length > 1 %}dere{% else %}du{% endif %} få billigere medlemskap som husstandsmedlem{% if users|length > 1 %}mer{% endif %}.
+        </p>
+        <p>
+          <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
+          <button class="btn search"><i class="icon-search"></i> Søk</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
+        </p>
+
+        <div class="existing-result">
+          <p><span class="description">Hovedmedlem: </span><span class="result"></span></p>
+        </div>
+
+      </div>
+      <p>
+        <a class="btn btn-large" href="{% url enrollment.views.registration %}"><i class="icon-arrow-left"></i> Tilbake</a>
+        <button class="btn btn-danger btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
+      </p>
+    </form>
+  </div>
+
+  <div class="span4">
+    {% include 'main/enrollment/memberservice.html' %}
+  </div>
+</div>
+
+{% endblock %}

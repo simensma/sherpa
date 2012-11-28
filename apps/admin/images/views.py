@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Q
 
@@ -23,11 +22,9 @@ logger = logging.getLogger('sherpa')
 # because we want to redirect to the page where the action was taken.
 # Consider using a session variable instead, including hidden form field is kind of inconvenient
 
-@login_required
 def index(request):
     return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
 
-@login_required
 def user_images(request, profile):
     profile = Profile.objects.get(id=profile)
     images = Image.objects.filter(uploader=profile)
@@ -44,9 +41,8 @@ def user_images(request, profile):
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': current_navigation,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-    return render(request, 'admin/images/user_images.html', context)
+    return render(request, 'common/admin/images/user_images.html', context)
 
-@login_required
 def list_albums(request, album):
     albums = Album.objects.filter(parent=album).order_by('name')
     parents = []
@@ -67,9 +63,8 @@ def list_albums(request, album):
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-    return render(request, 'admin/images/list_albums.html', context)
+    return render(request, 'common/admin/images/list_albums.html', context)
 
-@login_required
 def image_details(request, image):
     image = Image.objects.get(id=image)
     parents = [] if image.album is None else list_parents(image.album)
@@ -89,9 +84,8 @@ def image_details(request, image):
         'origin': request.get_full_path(),
         'all_users': Profile.objects.all().order_by('user__first_name'),
         'current_navigation': 'albums'}
-    return render(request, 'admin/images/image_details.html', context)
+    return render(request, 'common/admin/images/image_details.html', context)
 
-@login_required
 def move_items(request):
     destination_album = None if request.POST['destination_album'] == '' else Album.objects.get(id=request.POST['destination_album'])
     for album in Album.objects.filter(id__in=json.loads(request.POST['albums'])):
@@ -122,7 +116,6 @@ def move_items(request):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
-@login_required
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
@@ -134,7 +127,6 @@ def delete_items(request, album):
         album = Album.objects.get(id=album)
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
 
-@login_required
 def add_album(request, parent):
     parent = None if parent is None else Album.objects.get(id=parent)
     album = Album(name=request.POST['name'], parent=parent)
@@ -144,7 +136,6 @@ def add_album(request, parent):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
-@login_required
 def update_album(request):
     albums = Album.objects.filter(id__in=json.loads(request.POST['albums']))
     for album in albums:
@@ -156,7 +147,6 @@ def update_album(request):
     else:
         return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
 
-@login_required
 def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
@@ -166,11 +156,11 @@ def update_images(request):
             'origin': request.GET.get('origin', '')}
         if len(ids) == 1:
             context.update({'image': Image.objects.get(id=ids[0])})
-            return render(request, 'admin/images/modify_single.html', context)
+            return render(request, 'common/admin/images/modify_single.html', context)
         elif len(ids) > 1:
             images = Image.objects.filter(id__in=ids)
             context.update({'images': images})
-            return render(request, 'admin/images/modify_multiple.html', context)
+            return render(request, 'common/admin/images/modify_multiple.html', context)
         else:
             # No images to edit, not sure why, just redirect them to origin or home.
             # TODO: Should maybe log an error here in case this was our fault.
@@ -217,11 +207,10 @@ def update_images(request):
         else:
             return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
 
-@login_required
 def upload_image(request):
     try:
         if len(request.FILES.getlist('files')) == 0:
-            return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+            return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
         #parsing
         parsed_images = []
@@ -229,7 +218,7 @@ def upload_image(request):
             try:
                 parsed_images.append(parse_image(file))
             except(IOError, KeyError):
-                return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+                return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
 
         #storing
         ids = []
@@ -237,26 +226,25 @@ def upload_image(request):
         for image in parsed_images:
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
-        return render(request, 'admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
     except Exception as e:
         logger.error(u"Uventet exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
-        return render(request, 'admin/images/iframe.html', {'result': 'unknown_exception'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'unknown_exception'})
 
-@login_required
 def fast_upload(request):
     try:
         file = request.FILES['file']
     except KeyError:
-        return render(request, 'admin/images/iframe.html', {'result': 'no_files'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
     #parse file
     try:
         parsed_image = parse_image(file)
     except(IOError, KeyError):
-        return render(request, 'admin/images/iframe.html', {'result': 'parse_error'})
+        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
 
     #store stuff on s3 and in db
     stored_image = store_image(parsed_image, None, request.user)
@@ -279,9 +267,8 @@ def fast_upload(request):
         tag.save()
         tag.images.add(image)
 
-    return render(request, 'admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+    return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
-@login_required
 def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -292,7 +279,6 @@ def content_json(request, album):
         objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     return HttpResponse(json.dumps(objects))
 
-@login_required
 def album_content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)
@@ -303,7 +289,6 @@ def album_content_json(request, album):
         path = []
     return HttpResponse(json.dumps({'albums': list(albums.values()), 'path': path}))
 
-@login_required
 def album_search_json(request):
     if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
         return HttpResponse('[]')
@@ -314,7 +299,6 @@ def album_search_json(request):
         items.append(list_parents_values(album))
     return HttpResponse(json.dumps({'items': items}))
 
-@login_required
 def search(request):
     context = {
         'origin': request.get_full_path(),
@@ -324,7 +308,7 @@ def search(request):
             'too_short_query': True,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         })
-        return render(request, 'admin/images/search.html', context)
+        return render(request, 'common/admin/images/search.html', context)
     images = []
     for word in request.GET['q'].split(' '):
         images.extend(Image.objects.filter(
@@ -341,9 +325,8 @@ def search(request):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'search_query': request.GET['q']})
-    return render(request, 'admin/images/search.html', context)
+    return render(request, 'common/admin/images/search.html', context)
 
-@login_required
 def search_json(request):
     images = []
     if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
@@ -363,7 +346,6 @@ def search_json(request):
     objects = parse_objects([], [], images)
     return HttpResponse(json.dumps(objects))
 
-@login_required
 def photographer(request):
     images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
     photographers = []

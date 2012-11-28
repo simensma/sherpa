@@ -1,0 +1,46 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Instagram{% endblock %}
+{% block breadcrumb_title %}Instagram{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/instagram.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row instagram-header">
+  <div class="span12">
+
+    <h1 class="instagram-logo">Del dine turbilder</h1>
+    <p>Her kan du dele turbildene dine med oss. Legg ut bildene på <a href="http://instagram.com/">Instagram</a> og tagg dem med <span class="tag">#turistforeningen</span>.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12 instagram-wrapper">
+    {% include 'main/instagram/bulk.html' with bulk=bulk %}
+
+    <div style="clear: both;"></div>
+    <div class="loader">
+      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+      Laster flere bilder, vennligst vent...
+    </div>
+
+    <div class="ender hide">
+      Dette var alle bildene vi klarte å finne i denne omgang.
+    </div>
+
+    <div class="instagram-skeleton hide">
+      <div class="wrap2 left"></div>
+      <div class="right"></div>
+      <div class="wrap2 left"></div>
+      <div class="wrap2 left"></div>
+      <div class="wrap2 right"></div>
+      <div class="left"></div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

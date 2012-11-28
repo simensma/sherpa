@@ -1,0 +1,104 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Søk{% endblock %}
+{% block breadcrumb_title %}Søk{% endblock %}
+{% block body %}
+
+<div id="search-results">
+  <h1>Søk</h1>
+
+  {% if query_too_short %}
+
+    <p>
+      Vennligst bruk minst {{ search_char_limit }} tegn når du søker, ellers vil du få alt for mange treff.
+    </p>
+
+  {% else %}
+
+    {% if pages|length > 0 or article_versions|length > 0 or old_articles|length > 0 %}
+
+      <p class="hits">
+        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_count }} artikler.
+      </p>
+
+      <div class="row-fluid">
+        <div class="span6">
+
+          <h2>Websider</h2>
+
+          {% for page in pages %}
+            <div class="search-result">
+              <h3>
+                <a href="http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}">{{ page.title }}</a>
+              </h3>
+              <p class="url">
+                <a href="http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}">
+                  http://{{ site.domain }}/{% if page.slug %}{{ page.slug }}/{% endif %}
+                </a>
+              </p>
+            </div>
+          {% empty %}
+            <p>Ingen websider matchet søket.</p>
+          {% endfor %}
+
+        </div>
+        <div class="span6">
+
+          <h2>Artikler</h2>
+
+          {% for version in article_versions %}
+            <div class="search-result">
+              {% if not version.hide_thumbnail %}
+                <img class="thumbnail" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
+              {% endif %}
+              <h3>
+                <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>
+              </h3>
+              <span class="published">{{ version.variant.article.pub_date|date:"j. F Y" }}</span>
+              <p>{{ version.lede.content|striptags|safe|truncatewords:15 }}</p>
+              <div style="clear: both;"></div>
+            </div>
+          {% endfor %}
+
+          {% for article in old_articles %}
+            <div class="search-result old-article">
+              <h3>
+                <a href="{% url articles.views.show_old article.id article.title|slugify %}">{{ article.title }}</a>
+              </h3>
+              <span class="published">{{ article.date|date:"j. F Y" }}</span>
+              {{ article.lede|safe }}
+            </div>
+          {% endfor %}
+
+          {% if article_count == 0 %}
+            <p>Ingen artikler matchet søket.</p>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <h3>Fant du ikke det du lette etter?</h3>
+
+    {% else %}
+
+      <p>Vi fant dessverre ingenting som inneholdt "<strong>{{ search_query }}</strong>".</p>
+
+    {% endif %}
+
+    <p>
+      <a href="http://{{ old_site }}/">Våre gamle nettsider</a> er fortsatt tilgjengelige, i tilfelle du ikke finner det du leter etter her. Inntil videre vil deler av innholdet og tjenestene, som <a href="http://{{ old_site }}/activity.php">turer og aktiviteter</a>, <a href="https://{{ old_site }}/fjelltreffen/">Fjelltreffen</a> og <a href="https://{{ old_site }}/minside/">Min side</a> være på de gamle sidene, mens vi jobber med å flytte dette over.
+    </p>
+
+    <h3>Spørsmål?</h3>
+    <p>
+      <a href="/kontakt/">Ta kontakt med oss</a> hvis du lurer på noe.
+    </p>
+
+    <h3>Skal du ut på tur?</h3>
+    <p>
+      På <a href="http://ut.no">UT.no</a> finner du alle våre hytter, ruter, forslag til fine turer og mye mer.
+    </p>
+
+  {% endif %}
+
+</div>
+{% endblock %}

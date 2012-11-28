@@ -11,7 +11,7 @@ import datetime
 from page.models import Version
 
 # Note: This is also imported by some views in admin, and a view in articles
-def parse_widget(widget):
+def parse_widget(request, widget):
     if widget['widget'] == "quote":
         data = {'quote': widget['quote'], 'author': widget['author']}
     elif widget['widget'] == 'carousel':
@@ -19,8 +19,12 @@ def parse_widget(widget):
         data = {'id':random.randint(0,10000), 'images':widget['images']}
     elif widget['widget'] == "articles":
         versions = Version.objects.filter(
-            variant__article__isnull=False, variant__segment__isnull=True,
-            variant__article__published=True, active=True, variant__article__pub_date__lt=datetime.datetime.now()
+            variant__article__isnull=False,
+            variant__segment__isnull=True,
+            variant__article__published=True,
+            active=True,
+            variant__article__pub_date__lt=datetime.datetime.now(),
+            variant__article__site=request.site
             ).order_by('-variant__article__pub_date')
 
         for tag in widget['tags']:
@@ -80,6 +84,6 @@ def parse_widget(widget):
 
     data.update({
         'json': json.dumps(widget),
-        'template': 'widgets/%s/display.html' % widget['widget'],
+        'template': 'main/widgets/%s/display.html' % widget['widget'],
         'widget': widget['widget']})
     return data

@@ -1,0 +1,107 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Caching &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.cache.views.index %}">Caching</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/cache.js"></script>
+{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <p>
+      I Sherpa benytter vi <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste, men dette medfører at når du for eksempel lager en ny artikkel så blir den synlig på forsiden først etter en stund.
+    </p>
+    <p>
+      Her kan du som er utålmodig <strong>slette cachen</strong>, som gjør at ting blir synlige med en gang.<br>
+      <strong>Slett med måte!</strong> Overdreven bruk av funksjonaliteten her kan gjøre sidene trege å laste.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+
+    <h2>Slett innhold fra cachen</h2>
+    <table class="table delete-cache">
+      <tr>
+        <th>Hovedmenyen</th>
+        <td>Hovedmenyen som vises øverst på alle sider.</td>
+        <td>24 timer</td>
+        <td>
+          <button class="btn btn-danger main-menu"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Forsiden</th>
+        <td>Alt innholdet på forsiden (inkludert lista med nyheter).</td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger frontpage"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Andre sider</th>
+        <td>
+          Alle innholdssider på {{ site.domain }}.<br>
+          <select name="page" style="width: 400px" data-placeholder="Velg en side...">
+            <option value=""></option>
+            {% for version in page_versions %}
+              <option value="{{ version.id }}">{{ version.variant.page.title }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger page"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Artikkel</th>
+        <td>
+          Én enkelt artikkelvisning.<br>
+          <select name="article" style="width: 400px" data-placeholder="Velg en artikkel...">
+            <option value=""></option>
+            {% for version in article_versions %}
+              <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>10 min</td>
+        <td>
+          <button class="btn btn-danger article"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Bloggwidget</th>
+        <td>Widgeten som viser nyeste blogginnlegg, bl.a. på forsiden.</td>
+        <td>30 min</td>
+        <td>
+          <button class="btn btn-danger blog-widget"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+      <tr>
+        <th>Instagram</th>
+        <td>Instagramfeeden for bilder tagget med #turistforeningen</td>
+        <td>1 time</td>
+        <td>
+          <button class="btn btn-danger instagram"><i class="icon-remove"></i> Slett</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+        </td>
+      </tr>
+    </table>
+
+    <div class="alert alert-info hide delete-success">
+      <a class="close">x</a>
+      <strong><span class="name"></span> har blitt sletta</strong><br>
+      Du kan nå besøke den aktuelle siden for å se oppdatert versjon.
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

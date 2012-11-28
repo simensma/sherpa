@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 
-@login_required
 def index(request):
-    return render(request, 'admin/dashboard.html')
+    return render(request, 'common/admin/dashboard.html')

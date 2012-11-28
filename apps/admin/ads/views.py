@@ -2,8 +2,8 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.contrib import messages
 
 from datetime import datetime
 import json
@@ -12,18 +12,13 @@ import simples3
 
 from page.models import Ad, AdPlacement
 
-invalid_date = 'ugyldig-datoformat'
-
-@login_required
 def list(request):
     ads = Ad.objects.all().order_by('name')
     time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
-    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements,
-        'invalid_date': invalid_date in request.GET}
-    return render(request, 'admin/ads/list.html', context)
+    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
+    return render(request, 'common/admin/ads/list.html', context)
 
-@login_required
 def create_ad(request):
     if not 'ad' in request.FILES:
         return HttpResponseRedirect(reverse('admin.ads.views.list'))
@@ -46,7 +41,6 @@ def create_ad(request):
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
     ad.name = request.POST['name']
@@ -63,7 +57,6 @@ def update_ad(request):
     ad.save()
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def create_placement(request):
     try:
         ad = Ad.objects.get(id=request.POST['ad'])
@@ -78,10 +71,9 @@ def create_placement(request):
         ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date, view_limit=view_limit)
         ap.save()
     except ValueError:
-        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+        messages.error(request, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
-@login_required
 def update_placement(request):
     try:
         placement = AdPlacement.objects.get(id=request.POST['id'])
@@ -93,7 +85,7 @@ def update_placement(request):
             placement.view_limit = request.POST['view_limit']
         placement.save()
     except ValueError:
-        return HttpResponseRedirect("%s?%s" % (reverse('admin.ads.views.list'), invalid_date))
+        messages.error(request, 'invalid_date')
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):

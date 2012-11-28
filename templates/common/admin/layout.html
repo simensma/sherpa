@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Sherpa{% endblock %} &mdash; Turistforeningen</title>
+  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+
+  {# image cropping #}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/imgareaselect/css/imgareaselect-default.css">
+
+  {% block extra_css %}{% endblock %}
+
+  {# Set rendered JS globals before anything else #}
+  {% block js_globals %}{% endblock %}
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.1.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
+
+  {# image cropping #}
+  <script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-cropper.js"></script>
+
+  <!--[if lte IE 9]><script src="{{ STATIC_URL }}js/placeholder-ie.js"></script><![endif]-->
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}js/trim-ie.js"></script><![endif]-->
+  <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}js/admin/main.js"></script>
+  <script src="{{ STATIC_URL }}js/common.js"></script>
+  <script src="{{ STATIC_URL }}js/widgets.js"></script>
+  {% block extra_js %}{% endblock %}
+</head>
+<body class="container">
+
+<header class="row">
+  <div class="span2 logo">
+    <a href="{% url admin.views.index %}">
+      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening" title="Tilbake til Sherpa-forsiden">
+    </a>
+  </div>
+  <div class="span6">
+    <h1 class="sherpa">
+      {% block header %}<a href="{% url admin.views.index%}">Sherpa</a>{% endblock %}
+    </h1>
+  </div>
+  <div class="span4 right">
+    <p class="userline">
+      <a href="{% url user.views.home_new %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url user.views.logout %}">Logg ut</a>)</span>
+    </p>
+    <select name="user_association" data-placeholder="Velg en forening...">
+      <option value=""></option>
+      {% if user_associations.central|length > 0 %}
+        <optgroup label="Sentralt/nasjonalt">
+          {% for association in user_associations.central %}
+            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if user_associations.associations|length > 0 %}
+        <optgroup label="Medlemsforeninger">
+          {% for association in user_associations.associations %}
+            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if user_associations.small_associations|length > 0 %}
+        <optgroup label="Lokale turlag">
+        {% for association in user_associations.small_associations %}
+            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if user_associations.hike_groups|length > 0 %}
+        <optgroup label="Turgrupper">
+        {% for association in user_associations.hike_groups %}
+            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+    </select>
+  </div>
+</header>
+
+<hr>
+
+{% block body %}{% endblock %}
+<footer>
+</footer>
+
+{# "Global" csrf_token for AJAX-requests #}
+{% csrf_token %}
+
+</body>
+</html>

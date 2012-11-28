@@ -19,20 +19,30 @@ class Menu(models.Model):
     # Used to mark the current active menu page
     active = None
 
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return Menu.objects.filter(site=site)
+
 @receiver(pre_delete, sender=Menu, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
-    for menu in Menu.objects.filter(order__gt=kwargs['instance'].order):
+    for menu in Menu.on(kwargs['instance'].site).filter(order__gt=kwargs['instance'].order):
         menu.order = (menu.order-1)
         menu.save();
 
 class Page(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.CharField(max_length=50, unique=True)
+    slug = models.CharField(max_length=50)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     publisher = models.ForeignKey('user.Profile')
     parent = models.ForeignKey('page.Page', null=True)
+
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return Page.objects.filter(site=site)
 
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):

@@ -1,0 +1,59 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Logg inn{% endblock %}
+{% block breadcrumb_title %}Innlogging{% endblock %}
+
+{% block body %}
+
+<div id="login">
+  <div class="row">
+    <div class="span6">
+      {% if invalid_credentials %}
+        <div class="alert alert-danger">
+          <a class="close">x</a>
+          <strong>Feil e-postadresse eller passord</strong><br>
+          Vennligst prøv igjen.
+        </div>
+      {% endif %}
+
+      <h2>Ny bruker?</h2>
+      <p>
+        Er du medlem i DNT kan du registrere deg her og få tilgang til Min side. Da kan du se status på medlemskap, endre dine kontaktopplysninger, finne elektronisk arkiv for Fjell og Vidde, UT og årboken, og mye mer.
+      </p>
+      <p>
+        <a href="{% url user.views.register %}" class="btn btn-large btn-danger">Registrer deg nå</a>
+      </p>
+    </div>
+
+    <div class="span6">
+      <h2>Logg inn til Min side</h2>
+      <form action="{% url user.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
+        {% csrf_token %}
+        <table class="table">
+          <tr>
+            <td>
+              E-postadresse:
+            </td>
+            <td><input type="text" name="email" class="input-large"></td>
+          </tr>
+          <tr>
+            <td>Passord:</td>
+            <td><input type="password" name="password" class="input-large"></td>
+          </tr>
+          <tr>
+            <td><a href="javascript:undefined" class="forgot">Glemt passord?</a></td>
+            <td><button type="submit" class="btn btn-danger btn-large login">Logg inn</button></td>
+          </tr>
+        </table>
+      </form>
+
+      <div id="forgot-password">
+        <h3>Har du glemt ditt passord?</h3>
+        <input type="text" name="email" placeholder="Fyll ut din e-post adresse...">
+        <button class="btn restore-password">Gjenopprett passord</button>
+        <p class="info"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

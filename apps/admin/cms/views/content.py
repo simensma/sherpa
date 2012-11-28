@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
 
 from page.models import Column, Content
@@ -9,7 +8,6 @@ from page.widgets import parse_widget
 
 import json
 
-@login_required
 def add(request):
     if request.is_ajax():
         column = Column.objects.get(id=request.POST['column'])
@@ -22,13 +20,12 @@ def add(request):
         if content.type == 'html' or content.type == 'image':
             result = content.content
         else:
-            widget = parse_widget(json.loads(content.content))
+            widget = parse_widget(request, json.loads(content.content))
             t = loader.get_template(widget['template'])
             c = RequestContext(request, {'widget': widget})
             result = t.render(c)
         return HttpResponse(json.dumps({'id': content.id, 'content': result, 'json': content.content}))
 
-@login_required
 def delete(request, content):
     if request.is_ajax():
         try:
@@ -39,12 +36,11 @@ def delete(request, content):
             pass
         return HttpResponse()
 
-@login_required
 def update_widget(request, widget):
     widget = Content.objects.get(id=widget)
     widget.content = request.POST['content']
     widget.save()
-    widget = parse_widget(json.loads(widget.content))
+    widget = parse_widget(request, json.loads(widget.content))
     t = loader.get_template(widget['template'])
     c = RequestContext(request, {'widget': widget})
     result = t.render(c)

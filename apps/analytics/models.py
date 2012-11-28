@@ -1,5 +1,14 @@
 from django.db import models
 
+class Search(models.Model):
+    query = models.CharField(max_length=1024)
+    date = models.DateTimeField(auto_now_add=True)
+
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return Search.objects.filter(site=site)
+
 class Segment(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()

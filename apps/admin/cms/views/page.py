@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext, loader
@@ -17,30 +16,37 @@ import json
 import requests
 import urllib
 
-@login_required
 def list(request):
-    versions = Version.objects.filter(variant__page__isnull=False, variant__page__parent__isnull=True, active=True).order_by('variant__page__title')
+    versions = Version.objects.filter(
+        variant__page__isnull=False,
+        variant__page__parent__isnull=True,
+        active=True,
+        variant__page__site=request.session['active_association'].site
+        ).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
-    menus = Menu.objects.all().order_by('order')
+    menus = Menu.on(request.session['active_association'].site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
-    return render(request, 'admin/pages/list.html', context)
+    return render(request, 'common/admin/pages/list.html', context)
 
-@login_required
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
-    t = loader.get_template('admin/pages/result.html')
+    t = loader.get_template('common/admin/pages/result.html')
     c = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(t.render(c))
 
-@login_required
 def new(request):
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
         raise Exception("Slug is not unique (error handling TBD)")
-    page = Page(title=request.POST['title'], slug=request.POST['slug'], published=False, publisher=request.user.get_profile())
+    page = Page(
+        title=request.POST['title'],
+        slug=request.POST['slug'],
+        published=False,
+        publisher=request.user.get_profile(),
+        site=request.session['active_association'].site)
     page.save()
     variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
@@ -49,26 +55,23 @@ def new(request):
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
 
-@login_required
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
-    page_valid = not Page.objects.filter(slug=request.POST['slug']).exists()
+    page_valid = not Page.on(request.session['active_association'].site).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
-@login_required
 def rename(request, page):
-    page = Page.objects.get(id=page)
+    page = Page.on(request.session['active_association'].site).get(id=page)
     page.title = request.POST['title']
     page.save()
     return HttpResponse()
 
-@login_required
 def parent(request, page):
-    page = Page.objects.get(id=page)
+    page = Page.on(request.session['active_association'].site).get(id=page)
     if request.POST['parent'] == 'None':
         new_parent = None
     else:
-        new_parent = Page.objects.get(id=request.POST['parent'])
+        new_parent = Page.on(request.session['active_association'].site).get(id=request.POST['parent'])
         parent = new_parent
         while parent is not None:
             if parent.id == page.id:
@@ -78,7 +81,6 @@ def parent(request, page):
     page.save()
     return HttpResponse('{}')
 
-@login_required
 def publish(request, page):
     datetime_string = urllib.unquote_plus(request.POST["datetime"])
     status = urllib.unquote_plus(request.POST["status"])
@@ -90,7 +92,7 @@ def publish(request, page):
         #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
         date_object = None
 
-    page = Page.objects.get(id=page)
+    page = Page.on(request.session['active_association'].site).get(id=page)
     page.published = json.loads(status)["status"]
     if date_object is None:
         page.pub_date = datetime.now()
@@ -99,22 +101,19 @@ def publish(request, page):
     page.save()
     return HttpResponse()
 
-@login_required
 def display_ads(request, version):
     version = Version.objects.get(id=version)
     version.ads = json.loads(request.POST['ads'])
     version.save()
     return HttpResponse()
 
-@login_required
 def delete(request, page):
-    Page.objects.get(id=page).delete()
+    Page.on(request.session['active_association'].site).get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
-@login_required
 def edit_version(request, version):
     if request.method == 'GET':
-        pages = Page.objects.all().order_by('title')
+        pages = Page.on(request.session['active_association'].site).all().order_by('title')
         version = Version.objects.get(id=version)
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
@@ -123,7 +122,7 @@ def edit_version(request, version):
                 contents = Content.objects.filter(column=column).order_by('order')
                 for content in contents:
                     if content.type == 'widget':
-                        content.content = parse_widget(json.loads(content.content))
+                        content.content = parse_widget(request, json.loads(content.content))
                     elif content.type == 'image':
                         content.content = json.loads(content.content)
                 column.contents = contents
@@ -133,7 +132,7 @@ def edit_version(request, version):
         }
         context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-        return render(request, 'admin/pages/edit_version.html', context)
+        return render(request, 'common/admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
         version = Version.objects.get(id=version)
         for row in json.loads(request.POST['rows']):

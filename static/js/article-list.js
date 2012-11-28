@@ -30,9 +30,14 @@ $(window).load(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.length == 0) {
-                old_list.fadeIn();
-                status = 'old';
-                loadOldArticles();
+                if(old_list.length > 0) {
+                    old_list.fadeIn();
+                    status = 'old';
+                    loadOldArticles();
+                } else {
+                    loader.fadeOut();
+                    status = 'complete';
+                }
                 return;
             }
             list.data('current', Number(list.data('current')) + result.length);

@@ -1,8 +1,10 @@
 from django.core.urlresolvers import resolve
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 
 from page.models import Menu
+from association.models import Association
 
 import re
 
@@ -12,7 +14,7 @@ def menus(request):
     else:
         menus = cache.get('main.menu')
         if menus is None:
-            menus = Menu.objects.all().order_by('order')
+            menus = Menu.on(request.site).all().order_by('order')
             cache.set('main.menu', menus, 60 * 60 * 24)
         for menu in menus:
             url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
@@ -29,3 +31,10 @@ def current_site(request):
 
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
+
+def admin_user_associations(request):
+    if request.path.startswith('/sherpa'):
+        return {
+            'user_associations': Association.sort_and_apply_roles(request.user.get_profile().all_associations(), request.user),
+            'active_association': request.session.get('active_association', '')}
+    return {}

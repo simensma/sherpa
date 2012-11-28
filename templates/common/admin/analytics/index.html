@@ -1,0 +1,18 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Analyse &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.analytics.views.index %}">Analyse</a>{% endblock %}
+{% block body %}
+
+<p>
+  Her vil det komme muligheter for analyse av bruksmønstre på nettsidene. Foreløpig har vi kun følgende her:
+</p>
+
+<ul>
+  <li><a href="{% url admin.analytics.views.searches %}">Søkestatistikk</a></li>
+</ul>
+
+<p>
+  Kom tilbake senere, så har vi kanskje fått noe mer!
+</p>
+
+{% endblock %}

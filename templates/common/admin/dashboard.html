@@ -1,0 +1,165 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span8">
+    <nav class="dashboard">
+      <ul>
+        {% if active_association.site %}
+          <li>
+            <a href="{% url admin.cms.views.page.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg">
+            </a>
+            <h2><a href="{% url admin.cms.views.page.list %}">Websider</a></h2>
+            <p>
+              Endre på hovedinnholdet på websidene.
+            </p>
+            <div style="clear: both;"></div>
+          </li>
+          <li>
+            <a href="{% url admin.articles.views.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg">
+            </a>
+            <h2><a href="{% url admin.articles.views.list %}">Nyheter</a></h2>
+            <p>Skriv og publiser artikler som vises under <a href="{% url articles.views.index %}">/nyheter/</a></p>
+            <div style="clear: both;"></div>
+          </li>
+          <li>
+            <a href="{% url admin.ads.views.list %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
+            </a>
+            <h2><a href="{% url admin.ads.views.list %}">Annonser</a></h2>
+            <p>Last opp og legg ut annonser. Hvilke sider annonsene vises på velges under "<a href="{% url admin.cms.views.page.list %}">Websider</a>".</p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
+        <li>
+          <a href="{% url admin.images.views.index %}">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
+          </a>
+          <h2><a href="{% url admin.images.views.index %}">Bildearkiv</a></h2>
+          <p>Finn bilder eller last opp nye. Det gamle bildearkivet finner du foreløpig i <a href="https://{{ old_site }}/admin/">gamle sherpa</a>, mens vi jobber med å flytte dem hit.</p>
+          <div style="clear: both;"></div>
+        </li>
+        <li>
+          <a href="{% url admin.analytics.views.index %}">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/statistics.jpg">
+          </a>
+          <h2><a href="{% url admin.analytics.views.index %}">Analyse</a></h2>
+          <p>Statistikk og analyse av bruksmønstre på siden. Foreløpig finner man kun søkestatistikk her, men vi ønsker å utvide funksjonaliteten etter hvert.</p>
+          <div style="clear: both;"></div>
+        </li>
+        <li>
+          <a href="{% url admin.users.views.index %}">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/users.png">
+          </a>
+          <h2><a href="{% url admin.users.views.index %}">Brukere</a></h2>
+          <p>Finn Sherpa-brukere eller opprett ny bruker i din forening (eller en underforening).</p>
+          <div style="clear: both;"></div>
+        </li>
+        {% if active_association.site %}
+          <li>
+            <a href="{% url admin.cache.views.index %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cache.png">
+            </a>
+            <h2><a href="{% url admin.cache.views.index %}">Caching</a></h2>
+            <p>
+              Vi benytter <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste. Her kan du slette cachede sider for å se endringer kjapt.
+            </p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
+        {% if active_association.id == 56 %}
+          {# Applies only to DNT Central #}
+          <li>
+            <a href="{% url admin.enrollment.views.index %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/enrollment.jpg">
+            </a>
+            <h2><a href="{% url admin.enrollment.views.index %}">Innmelding</a></h2>
+            <p>Her kan medlemsservice deaktivere kortinnbetaling, eller hele innmeldingsskjemaet, ved behov.</p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
+      </ul>
+
+      <h2 style="margin-top: 40px;">Gamle Sherpa</h2>
+      <p>
+        Mens vi jobber med funksjonalitet i nye Sherpa, må du fremdeles logge på gamle Sherpa for enkelte ting. Her er noe av det du fremdeles finner i gamle Sherpa:
+      </p>
+
+      <ul>
+        <li>
+          <a href="http://www.turistforeningen.no/admin/activity.php">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/activity.php">Aktiviteter</a></h2>
+          <p>
+            Vi jobber med et nytt system for forvaltning av aktiviteter; i mellomtiden må systemet i gamle Sherpa benyttes.
+          </p>
+          <div style="clear: both;"></div>
+        </li>
+        <li>
+          <a href="http://www.turistforeningen.no/admin/cabin.php">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cabin.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/cabin.php">Hytter</a></h2>
+          <p>
+            Forvaltning av hytteinfo, åpningstider etc.
+          </p>
+          <div style="clear: both;"></div>
+        </li>
+        <li>
+          <a href="http://www.turistforeningen.no/admin/trip.php">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/trail.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/trip.php">Turer</a></h2>
+          <p>
+            Turforslag som publiseres på <a href="http://ut.no/">UT.no</a>
+          </p>
+          <div style="clear: both;"></div>
+        </li>
+        <li>
+          <a href="http://www.turistforeningen.no/admin/conditions.php">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/weather.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/conditions.php">Føremeldinger</a></h2>
+          <p>
+            Føremeldinger forvaltes fremdeles i gamle Sherpa.
+          </p>
+          <div style="clear: both;"></div>
+        </li>
+        {# Don't link directly to the file manager, there's some security stuff in place in case you're not logged in to the old sherpa which will block you from the entire domain for a short period. #}
+        <li>
+          <a href="http://www.turistforeningen.no/admin/">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/folders.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/">Filer</a></h2>
+          <p>
+            Filarkivet skal flyttes over, men i mellomtiden finner man alt av filer i det gamle arkivet.
+          </p>
+          <div style="clear: both;"></div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="span4">
+    <div class="sherpa-news">
+      <h2>Bloggwidget-cachen kan slettes</h2>
+      <p class="byline">Ali Kaafarani, 20. november 2012</p>
+      <p>
+        Nå er det mulig å <a href="{% url admin.cache.views.index %}">slette blogg-widget cachen</a>, hvis du veldig veldig gjerne vil ha det nyeste blogginnlegget ut på forsiden med en gang... :)
+      </p>
+
+      <h2>Ingen autolagring</h2>
+      <p class="byline">Ali Kaafarani, 19. oktober 2012</p>
+      <p>
+        Autolagring på sider og artikler er nå <strong>skrudd av</strong>. Du vil nå ikke miste artikkelen selv om den er åpen i flere vinduer, men husk å alltid lagre før du lukker vinduet.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

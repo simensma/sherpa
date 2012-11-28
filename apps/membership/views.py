@@ -17,7 +17,7 @@ import json, logging, sys
 logger = logging.getLogger('sherpa')
 
 def index(request):
-    return render(request, 'membership/index.html')
+    return render(request, 'main/membership/index.html')
 
 def benefits(request, association_id):
     if association_id is None:
@@ -45,7 +45,7 @@ def benefits(request, association_id):
         'now': now,
         'enrollment_active': State.objects.all()[0].active,
         'new_membership_year': new_membership_year}
-    return render(request, 'membership/benefits.html', context)
+    return render(request, 'main/membership/benefits.html', context)
 
 def zipcode_search(request):
     if not 'zipcode' in request.POST:
@@ -88,4 +88,4 @@ def zipcode_search(request):
         return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
 
 def service(request):
-    return render(request, 'membership/service.html')
+    return render(request, 'main/membership/service.html')
