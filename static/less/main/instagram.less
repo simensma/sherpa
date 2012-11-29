@@ -28,31 +28,31 @@ div.instagram-wrapper {
       display: block;
     }
 
-    div.container {
+    div.display {
       margin-right: @margin;
       margin-bottom: @margin;
     }
 
-    div.container.small, div.container.small img {
+    div.display.small, div.display.small img {
       width: 150px;
       height: 150px;
     }
 
-    div.container.medium, div.container.medium img {
+    div.display.medium, div.display.medium img {
       width: 303px;
       height: 303px;
     }
 
-    div.container.large, div.container.large img {
+    div.display.large, div.display.large img {
       width: 609px;
       height: 609px;
     }
 
-    div.left, div.left div.container, div.left img {
+    div.left, div.left div.display, div.left img {
       float: left;
     }
 
-    div.right, div.right div.container, div.right img {
+    div.right, div.right div.display, div.right img {
       float: right;
     }
 
@@ -94,6 +94,7 @@ div.instagram-wrapper {
       width: 609px - (@hover-content-padding * 2);
       height: 609px - (@hover-content-padding * 2);
     }
+
   }
 
   div.loader, div.ender {
@@ -104,5 +105,18 @@ div.instagram-wrapper {
     font-weight: bold;
     margin-top: 25px;
     margin-bottom: 25px;
+  }
+}
+
+div.instagram-modal {
+
+  width: 642px; // 612px image + (2 * 15px padding)
+
+  * {
+    font-family: "DTL Nobel" !important;
+  }
+
+  p.caption-text {
+    word-wrap: break-word;
   }
 }
