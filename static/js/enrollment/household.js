@@ -20,16 +20,16 @@ $(document).ready(function() {
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").hide();
             area.attr('disabled', true);
-            ZipcodeValidator.validate(zipcode_control_group, zipcode, area, loader);
+            Validator.validateZipcode(zipcode_control_group, zipcode, area, loader);
             if(!first || (first && zipcode.val() != '')) {
-                ZipcodeValidator.trigger(zipcode);
+                Validator.triggerZipcode(zipcode);
             }
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
             $("form#household div.world").hide();
             $("form#household div.scandinavia").show();
             $("form#household div.yearbook").show();
             area.removeAttr('disabled');
-            ZipcodeValidator.stopValidation(zipcode);
+            Validator.stopZipcodeValidation(zipcode);
             zipcode.focusout();
         } else {
             $("form#household div.world").show();
@@ -141,6 +141,6 @@ $(document).ready(function() {
 
     if(window.hasOwnProperty('trigger_form_validations')) {
         $("form#household input").focusout();
-        ZipcodeValidator.trigger(zipcode);
+        Validator.triggerZipcode(zipcode);
     }
 });
