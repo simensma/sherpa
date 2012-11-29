@@ -105,7 +105,10 @@ def logout(request):
     return HttpResponseRedirect(reverse('page.views.page'))
 
 def register(request):
-    return render(request, 'common/user/register.html')
+    context = {
+        'user_password_length': settings.USER_PASSWORD_LENGTH
+    }
+    return render(request, 'common/user/registration.html', context)
 
 def send_restore_password_email(request):
     try:
