@@ -5,46 +5,83 @@ $(document).ready(function() {
     var giver_control_group = $("div.control-group.giver_zipcode");
     var giver_zipcode = $("input[name='giver_zipcode']");
     var giver_area = $("input[name='giver_area']");
-    var giver_loader = zipcode.siblings("img.ajaxloader");
-    ZipcodeValidator.validate(giver_control_group, giver_zipcode, giver_area, giver_loader);
+    var giver_loader = giver_zipcode.siblings("img.ajaxloader");
+    Validator.validateZipcode(giver_control_group, giver_zipcode, giver_area, giver_loader);
     if(giver_zipcode.val() != '') {
-        ZipcodeValidator.trigger(giver_zipcode);
+        Validator.triggerZipcode(giver_zipcode);
     }
 
-    // Clear input validation-status upon focus
-    $(document).on('focus', "form#gift input", function() {
-        $(this).parents("div.control-group").removeClass('error success');
+    Validator.validate({
+        method: 'full_name',
+        control_group: $("form#gift div.control-group.giver_name"),
+        input: $("form#gift input[name='giver_name']"),
+        req: true
     });
 
-    var validator = new Validator();
+    Validator.validate({
+        method: 'address',
+        control_group: $("form#gift div.control-group.giver_address"),
+        input: $("form#gift input[name='giver_address']"),
+        req: true
+    });
 
-    // Generic validation-complete function for most of the controls
-    function markInput(el, valid) {
-        if(valid) {
-            el.parents("div.control-group").addClass('success');
-        } else {
-            el.parents("div.control-group").addClass('error');
-        }
-    }
+    Validator.validate({
+        method: 'memberid',
+        control_group: $("form#gift div.control-group.giver_memberno"),
+        input: $("form#gift input[name='giver_memberno']"),
+        req: false
+    });
 
-    validator.addValidation('full_name', $("form#gift input[name='giver_name']"), markInput, true);
-    validator.addValidation('address', $("form#gift input[name='giver_address']"), markInput, true);
-    validator.addValidation('memberno', $("form#gift input[name='giver_memberno']"), markInput, false);
-    validator.addValidation('phone', $("form#gift input[name='giver_phone']"), markInput, false);
-    validator.addValidation('email', $("form#gift input[name='giver_email']"), markInput, false);
+    Validator.validate({
+        method: 'phone',
+        control_group: $("form#gift div.control-group.giver_phone"),
+        input: $("form#gift input[name='giver_phone']"),
+        req: false
+    });
+
+    Validator.validate({
+        method: 'email',
+        control_group: $("form#gift div.control-group.giver_email"),
+        input: $("form#gift input[name='giver_email']"),
+        req: false
+    });
+
 
     function addReceiverValidations(box) {
-        validator.addValidation('full_name', box.find("input[name='receiver_name']"), markInput, true);
-        validator.addValidation('address', box.find("input[name='receiver_address']"), markInput, true);
-        validator.addValidation('phone', box.find("input[name='receiver_phone']"), markInput, false);
-        validator.addValidation('email', box.find("input[name='receiver_email']"), markInput, false);
+        Validator.validate({
+            method: 'full_name',
+            control_group: box.find("div.control-group.receiver_name"),
+            input: box.find("input[name='receiver_name']"),
+            req: true
+        });
 
-        ZipcodeValidator.validate(
+        Validator.validate({
+            method: 'address',
+            control_group: box.find("div.control-group.receiver_address"),
+            input: box.find("input[name='receiver_address']"),
+            req: true
+        });
+
+        Validator.validate({
+            method: 'phone',
+            control_group: box.find("div.control-group.receiver_phone"),
+            input: box.find("input[name='receiver_phone']"),
+            req: false
+        });
+
+        Validator.validate({
+            method: 'email',
+            control_group: box.find("div.control-group.receiver_email"),
+            input: box.find("input[name='receiver_email']"),
+            req: false
+        });
+
+        Validator.validateZipcode(
             box.find("div.control-group.receiver_zipcode"),
             box.find("input[name='receiver_zipcode']"),
             box.find("input[name='receiver_area']"),
             box.find("div.control-group.receiver_zipcode img.ajaxloader")
-            );
+        );
 
         var forms = {};
         forms[box.find("select[name='receiver_dob_dd']").attr('id')]= "%d";
@@ -138,7 +175,7 @@ $(document).ready(function() {
     }
 
     if(window.trigger_form_validations) {
-      validator.runValidations();
-      ZipcodeValidator.trigger($("input[name='receiver_zipcode']")); // Zipcode inputs aren't part of the validator
+        Validator.trigger();
+        Validator.triggerZipcode($("input[name='receiver_zipcode']"));
     }
 });
