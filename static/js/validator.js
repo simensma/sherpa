@@ -126,4 +126,51 @@
         });
     }
 
+    /**
+     * Password-validator
+     */
+     Validator.validatePasswords = function(opts) {
+
+         opts.pass1.on('focusin.passwordvalidator', function() { opts.control_group.removeClass('error success'); opts.hints.hide(); });
+         opts.pass2.on('focusin.passwordvalidator', function() { opts.control_group.removeClass('error success'); opts.hints.hide(); });
+
+         opts.pass1.on('focusout.passwordvalidator', function() {
+             var len = checkLength(opts);
+             // If length is invalid, just complain about that.
+             // If not, check if pass2 is filled out. If it is, check for equality, but if not,
+             // the user might just not have gotten to the second field, so don't say anything
+             // about validity yet.
+             if(len && opts.pass2.val() != '' && checkEquality(opts)) {
+                 opts.control_group.removeClass('error').addClass('success');
+             }
+         });
+
+         opts.pass2.on('focusout.passwordvalidator', function() {
+             if(checkLength(opts) && checkEquality(opts)) {
+                 opts.control_group.removeClass('error').addClass('success');
+                 opts.hints.hide();
+             }
+         });
+
+
+         function checkEquality(opts) {
+             if(opts.pass1.val() != opts.pass2.val()) {
+                 opts.control_group.removeClass('success').addClass('error');
+                 opts.hints.filter(".unequal").show();
+                 return false;
+             }
+             return true;
+         }
+
+         function checkLength(opts) {
+             if(opts.pass1.val().length < opts.min_length) {
+                 opts.control_group.removeClass('success').addClass('error');
+                 opts.hints.filter(".short").show();
+                 return false;
+             }
+             return true;
+         }
+
+     }
+
 }(window.Validator = window.Validator || {}, jQuery ));
