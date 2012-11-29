@@ -30,19 +30,22 @@ $(document).ready(function() {
         method: 'full_name',
         control_group: $("form#registration div.control-group.name"),
         input: $("form#registration input[name='name']"),
-        req: true});
+        req: true
+    });
 
     Validator.validate({
         method: 'phone',
         control_group: $("form#registration div.control-group.phone"),
         input: $("form#registration input[name='phone']"),
-        req: phone_required});
+        req: phone_required
+    });
 
     Validator.validate({
         method: 'email',
         control_group: $("form#registration div.control-group.email"),
         input: $("form#registration input[name='email']"),
-        req: email_required});
+        req: email_required
+    });
 
 
     window.validateDatepicker = validateDatepicker;
