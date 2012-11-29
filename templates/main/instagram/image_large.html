@@ -1,4 +1,4 @@
-<div class="container large" data-href="{{ item.link }}">
+<div class="display large" data-toggle="modal" data-target=".item-{{ item.id }}">
   <img src="{{ item.images.standard_resolution.url }}">
   <div class="hover-content hide">
     <div class="content">
@@ -15,3 +15,4 @@
     </div>
   </div>
 </div>
+{% include 'main/instagram/modal.html' with item=item %}

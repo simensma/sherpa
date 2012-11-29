@@ -1,0 +1,20 @@
+<div class="modal instagram-modal hide item-{{ item.id }}">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">X</button>
+    <h3>Bruker: <a href="http://instagram.com/{{ item.user.username }}/" class="noexternal">{{ item.user.username }}</a></h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      <img src="{{ item.images.standard_resolution.url }}" alt="Turistforeningen på Instagram">
+    </p>
+    <p class="caption-text">{{ item.caption.text }}</p>
+  </div>
+  <div class="modal-footer">
+    <p class="pull-left">
+      <a href="{{ item.link }}" class="noexternal">{{ item.link }}</a>
+    </p>
+    <p>
+      <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    </p>
+  </div>
+</div>

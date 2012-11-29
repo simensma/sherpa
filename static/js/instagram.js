@@ -36,7 +36,7 @@ $(document).ready(function() {
                     } else {
                        item.appendTo(children.last());
                     }
-                    item.slideDown();
+                    item.filter(".display").slideDown();
                     iteration += 1;
                     if(iteration == 18) {
                         iteration = 0;
@@ -55,16 +55,12 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('mouseenter', 'div.instagram div.container', function() {
+    $(document).on('mouseenter', 'div.instagram div.display', function() {
         $(this).find('div.hover-content').fadeIn(200);
     });
 
-    $(document).on('mouseleave', 'div.instagram div.container', function() {
+    $(document).on('mouseleave', 'div.instagram div.display', function() {
         $(this).find('div.hover-content').fadeOut(200);
-    });
-
-    $(document).on('click', 'div.instagram div.container', function() {
-        window.location = $(this).attr('data-href');
     });
 
 });
