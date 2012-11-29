@@ -76,8 +76,6 @@
     Validator.stopZipcodeValidation = function(zipcode) { zipcode.off('.zipcodevalidator'); }
     Validator.validateZipcode = function(control_group, zipcode, area, loader, options) {
 
-        triggers.push(function() { zipcode.keyup(); });
-
         zipcode.on('focusin.zipcodevalidator', function() {
             control_group.removeClass('error success');
         });
