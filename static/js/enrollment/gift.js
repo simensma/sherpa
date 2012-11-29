@@ -52,8 +52,8 @@ $(document).ready(function() {
         forms[box.find("select[name='receiver_dob_yyyy']").attr('id')]= "%Y";
         datePickerController.createDatePicker({
             formElements: forms,
-            statusFormat:"%d. %F %Y",
-            noTodayButton:true,
+            statusFormat: "%d. %F %Y",
+            noTodayButton: true,
             positioned: box.find("span.dob-placement").attr('id')
         });
     }
