@@ -18,6 +18,17 @@
   <div class="span12">
     <h2>Registrer deg</h2>
 
+    {% for message in messages %}
+      {% if message.message == 'invalid_memberid' %}
+        {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong>Feil medlemsnummer eller postnummer</strong><br>
+          Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <form action="{# url user.views.register #}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
       <div class="control-group email">
@@ -58,9 +69,16 @@
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
         </div>
       </div>
     </form>
+
+    <div class="no-memberid-match hide alert alert-error">
+      <a class="close">x</a>
+      <strong>Feil medlemsnummer eller postnummer</strong><br>
+      Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+    </div>
   </div>
 </div>
 

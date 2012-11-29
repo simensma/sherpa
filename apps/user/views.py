@@ -17,6 +17,7 @@ import re
 
 from user.models import Profile
 from core import validator
+from focus.models import Actor
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -105,10 +106,28 @@ def logout(request):
     return HttpResponseRedirect(reverse('page.views.page'))
 
 def register(request):
-    context = {
-        'user_password_length': settings.USER_PASSWORD_LENGTH
-    }
-    return render(request, 'common/user/registration.html', context)
+    if request.method == 'GET':
+        context = {
+            'user_password_length': settings.USER_PASSWORD_LENGTH
+        }
+        return render(request, 'common/user/registration.html', context)
+    elif request.method == 'POST':
+        try:
+            if not Actor.objects.filter(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode']).exists():
+                # Meh, just raise ValueError so the logic isn't duplicated
+                raise ValueError
+        except ValueError:
+            messages.error(request, 'invalid_memberid')
+            return HttpResponseRedirect(reverse('user.views.register'))
+
+        return HttpResponseRedirect(reverse('user.views.register'))
+
+def verify_memberid(request):
+    try:
+        val = Actor.objects.filter(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode']).exists()
+        return HttpResponse(json.dumps(val))
+    except ValueError:
+        return HttpResponse(json.dumps(False))
 
 def send_restore_password_email(request):
     try:

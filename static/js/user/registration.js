@@ -29,4 +29,38 @@ $(document).ready(function() {
         $("img.ajaxloader.zipcode")
     );
 
+    var memberid_accepted = false;
+    var no_memberid_match = $("div.no-memberid-match");
+    $("form").submit(function(e) {
+        if(memberid_accepted) {
+            return $(this);
+        }
+        no_memberid_match.hide();
+        e.preventDefault();
+        var form = $(this);
+        form.find("button[type='submit']").hide();
+        form.find("img.ajaxloader.submit").show();
+        $.ajax({
+            url: '/minside/sjekk-medlemsnummer/',
+            data: 'memberid=' + encodeURIComponent(form.find("input[name='memberid']").val()) +
+                  '&zipcode=' + encodeURIComponent(form.find("input[name='zipcode']").val())
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result) {
+                memberid_accepted = true;
+                form.submit();
+            } else {
+                no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
+                no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());
+                no_memberid_match.slideDown();
+                form.find("button[type='submit']").show();
+                form.find("img.ajaxloader.submit").hide();
+            }
+        }).fail(function() {
+            alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
+            form.find("button[type='submit']").show();
+            form.find("img.ajaxloader.submit").hide();
+        })
+    });
+
 });
