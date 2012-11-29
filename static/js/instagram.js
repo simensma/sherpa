@@ -42,7 +42,6 @@ $(document).ready(function() {
                         iteration = 0;
                     }
                 }
-                $(result.items[i]).addClass('hide').insertAfter($("div.instagram").last()).fadeIn();
                 if(result.meta.end) {
                     end = true;
                     loader.hide();
