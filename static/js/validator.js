@@ -1,6 +1,36 @@
-var Validator = function() {
-    this.validations = [];
-    this.methods = {
+(function(Validator, $, undefined ) {
+
+    var triggers = [];
+
+    // Manually trigger all validations
+    Validator.trigger = function() {
+        for(var i=0; i<triggers.length; i++) {
+            triggers[i]();
+        }
+    }
+
+    Validator.validate = function(opts) {
+        // Save a list of how to manually trigger validations
+        triggers.push(function() { opts.input.focusout(); });
+
+        // Clear status on focusin
+        opts.input.on('focusin.validator', function() {
+            opts.control_group.removeClass('error success');
+        });
+
+        // Perform the validation on focusout
+        opts.input.on('focusout.validator', function() { Validator.performValidation(opts); });
+    }
+
+    Validator.performValidation = function(opts) {
+        if(methods[opts.method](opts.input.val(), opts.req, opts.opts)) {
+            opts.control_group.removeClass('error').addClass('success');
+        } else {
+            opts.control_group.removeClass('success').addClass('error');
+        }
+    }
+
+    var methods = {
         'full_name': function(input, req, opts) {
             if(!req && input == '') { return true; }
             return input.match(/^.+\s.+$/) != null;
@@ -17,7 +47,7 @@ var Validator = function() {
             if(!req && input == '') { return true; }
             return input.match(/^\s*[^\s]+@[^\s]+\.[^\s]+\s*$/) != null;
         },
-        'memberno': function(input, req, opts) {
+        'memberid': function(input, req, opts) {
             if(!req && input == '') { return true; }
             return input.match(/^\d+$/) != null;
         },
@@ -31,38 +61,11 @@ var Validator = function() {
                 }
             }
             return res;
+        },
+        'anything': function(input, req, opts) {
+            if(!req && input == '') { return true; }
+            return input.match(/[^\s]+/) != null;
         }
     };
-}
 
-Validator.prototype.addValidation = function(method, el, complete, req, opts) {
-    var self = this;
-    self.validations.push({
-        'method': method,
-        'el': el,
-        'complete': complete,
-        'req': req,
-        'opts': opts
-    });
-    el.focusout(function() {
-        complete(el, self.validate(method, el.val(), req, opts));
-    });
-}
-
-Validator.prototype.validate = function(method, input, req, opts) {
-    if(!this.methods.hasOwnProperty(method)) {
-        throw new Error("Tried to validate with unknown validation method: " + method);
-    }
-    return this.methods[method](input, req, opts);
-}
-
-Validator.prototype.runValidations = function() {
-    var self = this;
-    for(var i=0; i<self.validations.length; i++) {
-        self.validations[i].complete(self.validations[i].el, self.validate(
-            self.validations[i].method,
-            self.validations[i].el.val(),
-            self.validations[i].req,
-            self.validations[i].opts));
-    }
-}
+}(window.Validator = window.Validator || {}, jQuery ));

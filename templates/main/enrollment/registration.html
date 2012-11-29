@@ -23,12 +23,7 @@
 
     {% if errors %}
       <script>
-        // Trigger form validations
-        $(document).ready(function() {
-          $("form#registration input").focusout();
-          validateDatepicker();
-          validateGender();
-        });
+        window.trigger_form_validations = true;
       </script>
       <div class="alert alert-error">
         <a class="close">x</a><strong>Vi klarte ikke å lagre opplysningene.</strong><br>

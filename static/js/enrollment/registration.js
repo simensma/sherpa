@@ -26,26 +26,35 @@ $(document).ready(function() {
         $(this).parents("div.control-group").removeClass('error warning success');
     });
 
-    var validator = new Validator();
+    Validator.validate({
+        method: 'full_name',
+        control_group: $("form#registration div.control-group.name"),
+        input: $("form#registration input[name='name']"),
+        req: true});
 
-    // Generic validation-complete function for most of the controls
-    function markInput(el, valid) {
-        if(valid) {
-            el.parents("div.control-group").addClass('success');
-        } else {
-            el.parents("div.control-group").addClass('error');
-        }
-    }
+    Validator.validate({
+        method: 'phone',
+        control_group: $("form#registration div.control-group.phone"),
+        input: $("form#registration input[name='phone']"),
+        req: phone_required});
 
-    validator.addValidation('full_name', $("form#registration input[name='name']"), markInput, true);
-    validator.addValidation('phone', $("form#registration input[name='phone']"), markInput, phone_required);
-    validator.addValidation('email', $("form#registration input[name='email']"), markInput, email_required);
+    Validator.validate({
+        method: 'email',
+        control_group: $("form#registration div.control-group.email"),
+        input: $("form#registration input[name='email']"),
+        req: email_required});
+
 
     window.validateDatepicker = validateDatepicker;
     function validateDatepicker() {
         // Datepicker calls this on close
-        var dob = $("form#registration input[name='dob']");
-        markInput(dob, validator.validate('date', dob.val(), true, {'min_year': 1900}));
+        Validator.performValidation({
+            method: 'date',
+            control_group: $("form#registration div.control-group.dob"),
+            input: $("form#registration input[name='dob']"),
+            req: true,
+            opts: {'min_year': 1900}
+        });
     }
 
     $("a.step2").click(function(e) {
@@ -65,6 +74,12 @@ $(document).ready(function() {
     $("div.dialog.conditions a.close-dialog").click(function() {
         $("div.dialog.conditions").dialog('close');
     });
+
+    if(window.hasOwnProperty('trigger_form_validations')) {
+        Validator.trigger();
+        validateDatepicker();
+        validateGender();
+    }
 
 });
 
