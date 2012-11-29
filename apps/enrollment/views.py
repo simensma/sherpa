@@ -614,6 +614,7 @@ def process_card(request):
         else:
             request.session['enrollment']['result'] = 'fail'
     else:
+        request.session['enrollment']['state'] = 'registration'
         request.session['enrollment']['result'] = 'cancel'
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
@@ -622,7 +623,7 @@ def result(request):
     if not 'enrollment' in request.session:
         return HttpResponseRedirect(reverse('enrollment.views.registration'))
 
-    if request.session['enrollment']['state'] == 'registration':
+    if request.session['enrollment']['state'] == 'registration' and request.session['enrollment'].get('result') != 'cancel':
         # Whoops, how did we get here without going through payment first? Redirect back.
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
     elif request.session['enrollment']['state'] == 'payment':
