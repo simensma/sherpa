@@ -19,7 +19,7 @@ $(document).ready(function() {
         method: 'memberid',
         control_group: $("div.control-group.memberid"),
         input: $("input[name='memberid']"),
-        req: false
+        req: true
     });
 
     Validator.validateZipcode(
