@@ -37,20 +37,40 @@ def logout(request):
 
 def register(request):
     if request.method == 'GET':
+        # TODO: Should refill form with values upon error and redirect back here
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH
         }
         return render(request, 'common/user/registration.html', context)
     elif request.method == 'POST':
         try:
-            if not Actor.objects.filter(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode']).exists():
-                # Meh, just raise ValueError so the logic isn't duplicated
-                raise ValueError
-        except ValueError:
+            # Check that the password is long enough
+            if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+                messages.error(request, 'too_short_password')
+                return HttpResponseRedirect(reverse('user.login.views.register'))
+
+            # Check that the memberid is correct (and retrieve the Actor-entry)
+            actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+
+            # Check that the user doesn't already have an account
+            if Profile.objects.filter(memberid=request.POST['memberid']).exists():
+                messages.error(request, 'profile_exists')
+                return HttpResponseRedirect(reverse('user.login.views.register'))
+
+            # Check that the email address isn't in use
+            if User.objects.filter(username=username(request.POST['email'])).exists():
+                # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
+                messages.error(request, 'email_exists')
+                return HttpResponseRedirect(reverse('user.login.views.register'))
+
+            user = User.objects.create_user(username(actor.email), password=request.POST['password'])
+            profile = Profile(user=user, memberid=actor.memberid)
+            profile.save()
+            log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+            return HttpResponseRedirect(reverse('user.views.home_new'))
+        except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.login.views.register'))
-
-        return HttpResponseRedirect(reverse('user.login.views.register'))
 
 def verify_memberid(request):
     try:
