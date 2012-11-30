@@ -133,12 +133,12 @@ class Actor(models.Model):
 
     def membership_type(self):
         # Supposedly, there should only be one service in this range
-        return self.membership_type_name(self.services().get(code__gt=100, code__lt=110).code.strip())
+        return self.membership_type_name(self.services_cached().get(code__gt=100, code__lt=110).code.strip())
 
-    def services(self):
+    def services_cached(self):
         services = cache.get('actor.services.%s' % self.memberid)
         if services is None:
-            services = ActorService.objects.filter(memberid=self.memberid)
+            services = self.services
             cache.set('actor.services.%s' % self.memberid, 60 * 60)
         return services
 
@@ -160,7 +160,7 @@ class Actor(models.Model):
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
-    actor_id = models.IntegerField(null=True, db_column=u'ActSeqNo')
+    actor = models.ForeignKey(Actor, related_name='services', db_column=u'ActSeqNo')
     memberid = models.IntegerField(null=True, db_column=u'ActNo')
     code = models.CharField(max_length=25, db_column=u'ArticleNo')
     actpayno = models.IntegerField(null=True, db_column=u'ActPayNo')
