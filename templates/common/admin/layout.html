@@ -59,7 +59,7 @@
   </div>
   <div class="span4 right">
     <p class="userline">
-      <a href="{% url user.views.home_new %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url user.views.logout %}">Logg ut</a>)</span>
+      <a href="{% url user.views.home_new %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url user.login.views.logout %}">Logg ut</a>)</span>
     </p>
     <select name="user_association" data-placeholder="Velg en forening...">
       <option value=""></option>

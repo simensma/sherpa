@@ -99,7 +99,7 @@
         <div class="alert alert-danger">
           <a class="close">x</a>
           <strong>E-postadressen er allerede i bruk!</strong><br>
-          Er du sikker på at du ikke allerede har en registrert bruker? Hvis du har glemt passordet ditt, kan du opprette et nytt ved å trykke "Glemt passord"-linken på <a href="{% url user.views.login %}">login-siden</a>.</strong>
+          Er du sikker på at du ikke allerede har en registrert bruker? Hvis du har glemt passordet ditt, kan du opprette et nytt ved å trykke "Glemt passord"-linken på <a href="{% url user.login.views.login %}">login-siden</a>.</strong>
         </div>
       {% endif %}
     {% endfor %}

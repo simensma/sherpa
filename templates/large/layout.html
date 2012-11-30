@@ -103,7 +103,7 @@
         {% if user.is_authenticated %}
           {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
           <a href="{% url user.views.home_new %}">Min side</a>
-          <a href="{% url user.views.logout %}">Logg ut</a>
+          <a href="{% url user.login.views.logout %}">Logg ut</a>
         {% else %}
           <a href="{% url user.views.home_new %}">Min side</a>
         {% endif %}
