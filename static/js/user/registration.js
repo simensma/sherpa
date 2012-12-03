@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     function enableStep2(result) {
         memberid_accepted = true;
-        $("div.form-elements div.step1 input").attr('disabled', true);
+        $("div.form-elements div.step1 input").attr('readonly', true);
         $("div.form-elements div.step2").slideDown();
 
         var hints = $("div.form-hints");
