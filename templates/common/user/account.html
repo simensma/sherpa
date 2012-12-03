@@ -24,16 +24,26 @@
     </div>
 
     <h2>Brukeropplysninger</h2>
-    <p>{{ user.get_profile.get_full_name }}</p>
-    <p>{{ user.get_profile.get_email }}</p>
-    <p>{{ user.get_profile.memberid }}</p>
 
-    <hr>
-
-    {# TODO lots #}
     {% if not user.get_profile.actor %}
-      <p>Du har ingen actor</p>
+
+      <table class="table">
+        <tr>
+          <th>Navn</th>
+          <td>{{ user.get_profile.get_full_name }}</td>
+        </tr>
+        <tr>
+          <th>Epost</th>
+          <td>{{ user.get_profile.get_email }}</td>
+        </tr>
+      </table>
+
+      <p>
+        Du er ikke registrert som medlem i DNT. <a href="">Jeg er medlem, registrer meg!</a>
+      </p>
+
     {% else %}
+
       <p>{{ user.get_profile.actor.first_name }} {{ user.get_profile.actor.last_name }}</p>
       <p>{{ user.get_profile.actor.email }}</p>
       <p>{{ user.get_profile.actor.phone_mobile }}</p>
