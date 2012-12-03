@@ -67,16 +67,19 @@ $(document).ready(function() {
         $("div.form-elements div.step1 input").attr('disabled', true);
         $("div.form-elements div.step2").slideDown();
 
-        $("div.form-hints div.step2 span.name").text(result.name);
+        var hints = $("div.form-hints");
+        hints.find("div.step2 span.name").text(result.name);
         if(result.email != '') {
-            $("div.form-hints div.step2 span.email-found").show().find("span.email").text(result.email);
+            hints.find("div.step2 p.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
+        } else {
+            hints.find("div.step2 p.email-not-found").show();
         }
         $("div.form-elements div.step2 input[name='email']").val(result.email);
         $("button.step2").show();
         $("img.ajaxloader.submit").hide();
-        $("div.form-hints div.step1").fadeOut(function() {
+        hints.find("div.step1").fadeOut(function() {
             // Wait for fadeOut to complete before fadeIn
-            $("div.form-hints div.step2").fadeIn();
+            hints.find("div.step2").fadeIn();
         });
     }
 

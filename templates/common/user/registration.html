@@ -78,13 +78,20 @@
 
           <div class="form-hints">
             <div class="step1">For å opprette din bruker må vi først vite hvem du er. Hva er medlemsnummeret ditt, og postnummeret du er registrert med?</div>
+
             <div class="hide step2">
-              Hei, <span class="name"></span>!
-              <span class="hide email-found">Vi har lagret e-postadresse <span class="email"></span> på deg. Hvis denne ikke er rett, kan du endre den her.</span>
-              Du må opprette et passord, som du kan bruke for å logge på sammen med e-postadressen din senere.
+              <p>Velkommen, <span class="name"></span>!</p>
+              <p class="hide email-found">
+                Er din e-postadresse <a class="email" href=""></a>? Hvis ikke kan du endre den her.<br><br>
+                Så må du opprette et passord, som du kan bruke til å logge inn sammen med e-postadressen din senere.
+              </p>
+              <p class="hide email-not-found">
+                Vi trenger e-postadressen din, og et passord du velger selv, som du kan bruke til å logge inn med senere.
+              </p>
+              <p></p>
             </div>
-            <div class="hide no-memberid-match alert alert-error">
-              <a class="close">x</a>
+
+            <div class="hide no-memberid-match error">
               <strong>Feil medlemsnummer eller postnummer</strong><br>
               Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
             </div>
