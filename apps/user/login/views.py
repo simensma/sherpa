@@ -82,9 +82,14 @@ def register(request):
 
 def register_memberless(request):
     if request.method == 'GET':
-        # TODO: Should refill form with values upon error
+        user_data = {}
+        if 'user.registration_memberless_attempt' in request.session:
+            user_data = request.session['user.registration_memberless_attempt']
+            del request.session['user.registration_memberless_attempt']
+
         context = {
-            'user_password_length': settings.USER_PASSWORD_LENGTH
+            'user_password_length': settings.USER_PASSWORD_LENGTH,
+            'user_data': user_data
         }
         return render(request, 'common/user/registration_memberless.html', context)
     elif request.method == 'POST':
@@ -112,6 +117,9 @@ def register_memberless(request):
             errors = True
 
         if errors:
+            request.session['user.registration_memberless_attempt'] = {
+                'name': request.POST['name'],
+                'email': request.POST['email']}
             return HttpResponseRedirect(reverse('user.login.views.register_memberless'))
 
         user = User.objects.create_user(
