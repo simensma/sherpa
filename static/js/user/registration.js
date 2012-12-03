@@ -47,7 +47,7 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-            $("img.ajaxloader.submit").hide();
+                $("img.ajaxloader.submit").hide();
                 if(!result.profile_exists) {
                     enableStep2(result);
                 } else {
