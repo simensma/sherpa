@@ -1,0 +1,107 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb_title %}Min side{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/update_account_nonmember.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    var user_password_length = {{ user_password_length }};
+  </script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Brukeropplysninger</h2>
+
+    <div class="info-area">
+      {% for message in messages %}
+        {% if message.message == 'no_name_provided' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn fullt navn.</strong>
+          </div>
+        {% elif message.message == 'invalid_email_address' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn en gyldig e-post adresse.</strong>
+          </div>
+        {% elif message.message == 'password_too_short' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>Vennligst fyll inn et passord på minst {{ user_password_length }} tegn.</strong>
+          </div>
+        {% elif message.message == 'duplicate_email_address' %}
+          <div class="alert alert-danger">
+            <a class="close">x</a>
+            <strong>E-postadressen er allerede i bruk!</strong><br>
+            Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal account-info">
+      {% csrf_token %}
+      <div class="control-group name">
+        <label class="control-label" for="name">Fullt navn</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="name" value="{{ user.get_profile.get_full_name }}">
+        </div>
+      </div>
+      <div class="control-group email">
+        <label class="control-label" for="email">E-post</label>
+        <div class="controls"{% if perms.user.sherpa %} data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Gravatar-tips" data-content="Hvis du skriver artikler i Sherpa, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på www.gravatar.com med <strong>samme</strong> e-postadresse som du bruker her."{% endif %}>
+          <input type="text" class="input-xlarge" name="email" value="{{ user.get_profile.get_email }}">
+          {% if perms.user.sherpa %}
+            <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+            <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
+          {% endif %}
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn"><i class="icon-ok"></i> Oppdater opplysningene</button>
+        </div>
+      </div>
+    </form>
+
+    <h2>Endre passord</h2>
+    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal password">
+      {% csrf_token %}
+      <div class="control-group password">
+        <label class="control-label" for="password">Passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password">
+        </div>
+      </div>
+
+      <div class="control-group password-repeat">
+        <label class="control-label" for="password-repeat">Gjenta passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password-repeat">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn"><i class="icon-ok"></i> Endre passord</button>
+        </div>
+      </div>
+
+      <div class="password-hints">
+        <div class="hide short">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+        <div class="hide unequal">Passordene er ikke like, har du skrevet feil?</div>
+      </div>
+    </form>
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='account' %}
+  </div>
+</div>
+
+{% endblock %}

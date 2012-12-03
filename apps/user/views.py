@@ -24,40 +24,77 @@ def account(request):
 
 @login_required
 def update_account(request):
-    if request.method == 'GET':
-        context = {
-            'password_length': settings.USER_PASSWORD_LENGTH
-        }
-        return render(request, 'common/user/update_account.html', context)
+    if request.user.get_profile().memberid is None:
+        if request.method == 'GET':
+            context = {
+                'user_password_length': settings.USER_PASSWORD_LENGTH
+            }
+            return render(request, 'common/user/update_account_nonmember.html', context)
 
-    elif request.method == 'POST':
-        errors = False
+        elif request.method == 'POST':
+            errors = False
 
-        if not validator.name(request.POST['name']):
-            messages.error(request, 'no_name_provided')
-            errors = True
+            if not validator.name(request.POST['name']):
+                messages.error(request, 'no_name_provided')
+                errors = True
 
-        if not validator.email(request.POST['email']):
-            messages.error(request, 'invalid_email_address')
-            errors = True
+            if not validator.email(request.POST['email']):
+                messages.error(request, 'invalid_email_address')
+                errors = True
 
-        if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
-            messages.error(request, 'duplicate_email_address')
-            errors = True
+            if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+                messages.error(request, 'duplicate_email_address')
+                errors = True
 
-        if not errors:
-            split = request.POST['name'].split(' ')
-            first_name = split[0]
-            last_name = ' '.join(split[1:])
-            request.user.username = username(request.POST['email'])
-            request.user.email = request.POST['email']
-            request.user.first_name = first_name
-            request.user.last_name = last_name
-            request.user.save()
-            messages.info(request, 'update_success')
-            return HttpResponseRedirect(reverse('user.views.account'))
-        else:
-            return HttpResponseRedirect(reverse('user.views.update_account'))
+            if not errors:
+                split = request.POST['name'].split(' ')
+                first_name = split[0]
+                last_name = ' '.join(split[1:])
+                request.user.username = username(request.POST['email'])
+                request.user.email = request.POST['email']
+                request.user.first_name = first_name
+                request.user.last_name = last_name
+                request.user.save()
+                messages.info(request, 'update_success')
+                return HttpResponseRedirect(reverse('user.views.account'))
+            else:
+                return HttpResponseRedirect(reverse('user.views.update_account'))
+    else:
+        # TBD
+        if request.method == 'GET':
+            context = {
+                'password_length': settings.USER_PASSWORD_LENGTH
+            }
+            return render(request, 'common/user/update_account.html', context)
+
+        elif request.method == 'POST':
+            errors = False
+
+            if not validator.name(request.POST['name']):
+                messages.error(request, 'no_name_provided')
+                errors = True
+
+            if not validator.email(request.POST['email']):
+                messages.error(request, 'invalid_email_address')
+                errors = True
+
+            if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+                messages.error(request, 'duplicate_email_address')
+                errors = True
+
+            if not errors:
+                split = request.POST['name'].split(' ')
+                first_name = split[0]
+                last_name = ' '.join(split[1:])
+                request.user.username = username(request.POST['email'])
+                request.user.email = request.POST['email']
+                request.user.first_name = first_name
+                request.user.last_name = last_name
+                request.user.save()
+                messages.info(request, 'update_success')
+                return HttpResponseRedirect(reverse('user.views.account'))
+            else:
+                return HttpResponseRedirect(reverse('user.views.update_account'))
 
 @login_required
 def update_account_password(request):
