@@ -35,12 +35,6 @@ $(document).ready(function() {
         }
     });
 
-    $("form input[name='phone']").focusout(function() {
-        if($(this).val().length > phone_max_length) {
-            $(this).parents("div.control-group").addClass('error');
-        }
-    });
-
     function addInfo(header) {
         $("div.info-area").append('<div class="alert alert-danger"><a class="close">x</a><strong>' + header + '</strong></div>');
     }

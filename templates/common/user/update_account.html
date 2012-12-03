@@ -8,7 +8,6 @@
 {% block js_globals %}
   <script>
     var password_length = {{ password_length }};
-    var phone_max_length = {{ phone_max_length }};
   </script>
 {% endblock %}
 
@@ -42,11 +41,6 @@
             <strong>E-postadressen er allerede i bruk!</strong><br>
             Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
           </div>
-        {% elif message.message == 'phone_too_long' %}
-          <div class="alert alert-danger">
-            <a class="close">x</a>
-            <strong>Mobiltelefonen din har vel ikke over {{ phone_max_length }} siffer?</strong>
-          </div>
         {% endif %}
       {% endfor %}
     </div>
@@ -67,12 +61,6 @@
             <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
             <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
           {% endif %}
-        </div>
-      </div>
-      <div class="control-group phone">
-        <label class="control-label" for="phone">Mobiltelefon</label>
-        <div class="controls">
-          <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.get_phone }}">
         </div>
       </div>
       <div class="control-group">

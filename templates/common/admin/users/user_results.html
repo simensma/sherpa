@@ -2,6 +2,5 @@
   <tr class="result">
     <td><a href="{% url admin.users.views.show user.id %}">{{ user.get_profile.get_full_name }}</a></td>
     <td>{{ user.get_profile.get_email }}</td>
-    <td>{{ user.get_profile.get_phone }}</td>
   </tr>
 {% endfor %}

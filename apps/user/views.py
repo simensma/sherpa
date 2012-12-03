@@ -26,8 +26,8 @@ def account(request):
 def update_account(request):
     if request.method == 'GET':
         context = {
-            'password_length': settings.USER_PASSWORD_LENGTH,
-            'phone_max_length': Profile.PHONE_MAX_LENGTH}
+            'password_length': settings.USER_PASSWORD_LENGTH
+        }
         return render(request, 'common/user/update_account.html', context)
 
     elif request.method == 'POST':
@@ -45,10 +45,6 @@ def update_account(request):
             messages.error(request, 'duplicate_email_address')
             errors = True
 
-        if len(request.POST['phone']) > Profile.PHONE_MAX_LENGTH:
-            messages.error(request, 'phone_too_long')
-            errors = True
-
         if not errors:
             split = request.POST['name'].split(' ')
             first_name = split[0]
@@ -58,9 +54,6 @@ def update_account(request):
             request.user.first_name = first_name
             request.user.last_name = last_name
             request.user.save()
-            profile = request.user.get_profile()
-            profile.phone = request.POST['phone']
-            profile.save()
             messages.info(request, 'update_success')
             return HttpResponseRedirect(reverse('user.views.account'))
         else:
