@@ -24,7 +24,7 @@ def login(request):
             # User is already authenticated, skip login
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         context = {'next': request.GET.get('next')}
-        return render(request, 'common/user/login.html', context)
+        return render(request, 'common/user/login/login.html', context)
     elif request.method == 'POST':
         user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
@@ -32,7 +32,7 @@ def login(request):
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
             context = {'invalid_credentials': True, 'next': request.GET.get('next')}
-            return render(request, 'common/user/login.html', context)
+            return render(request, 'common/user/login/login.html', context)
 
 def logout(request):
     log_user_out(request)
@@ -43,7 +43,7 @@ def register(request):
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH
         }
-        return render(request, 'common/user/registration.html', context)
+        return render(request, 'common/user/login/registration.html', context)
     elif request.method == 'POST':
         try:
             # Check that the password is long enough
@@ -90,7 +90,7 @@ def register_memberless(request):
             'user_password_length': settings.USER_PASSWORD_LENGTH,
             'user_data': user_data
         }
-        return render(request, 'common/user/registration_memberless.html', context)
+        return render(request, 'common/user/login/registration_memberless.html', context)
     elif request.method == 'POST':
         errors = False
 
@@ -159,7 +159,7 @@ def send_restore_password_email(request):
     profile.password_restore_key = key
     profile.password_restore_date = datetime.now()
     profile.save()
-    t = loader.get_template('common/user/restore-password-email.html')
+    t = loader.get_template('common/user/login/restore-password-email.html')
     c = RequestContext(request, {
         'found_user': profile.user,
         'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
@@ -171,22 +171,22 @@ def restore_password(request, key):
         profile = Profile.objects.get(password_restore_key=key)
     except Profile.DoesNotExist:
         context = {'no_such_key': True}
-        return render(request, 'common/user/restore-password.html', context)
+        return render(request, 'common/user/login/restore-password.html', context)
     deadline = profile.password_restore_date + timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
     if datetime.now() > deadline:
         # We've passed the deadline for key validity
         context = {'key_expired': True, 'validity_period': settings.RESTORE_PASSWORD_VALIDITY}
-        return render(request, 'common/user/restore-password.html', context)
+        return render(request, 'common/user/login/restore-password.html', context)
 
     # Passed all tests, looks like we're ready to reset the password
     if request.method == 'GET':
         context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH}
-        return render(request, 'common/user/restore-password.html', context)
+        return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
         if request.POST['password'] != request.POST['password-duplicate'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
             context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH,
                 'unacceptable_password': True}
-            return render(request, 'common/user/restore-password.html', context)
+            return render(request, 'common/user/login/restore-password.html', context)
         # Everything is in order. Reset the password.
         profile.user.set_password(request.POST['password'])
         profile.user.save()
@@ -194,4 +194,4 @@ def restore_password(request, key):
         profile.password_restore_date = None
         profile.save()
         context = {'success': True}
-        return render(request, 'common/user/restore-password.html', context)
+        return render(request, 'common/user/login/restore-password.html', context)
