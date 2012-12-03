@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/registration_memberless.js"></script>
+  <script src="{{ STATIC_URL }}js/user/registration_nonmember.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -24,7 +24,7 @@
       Er du medlem så bør du bruke <a href="{% url user.login.views.register %}">dette skjemaet</a>. Ønsker du å bli medlem så kan du <a href="{% url membership.views.benefits %}">melde deg inn her</a>.
     </div>
 
-    <form action="{% url user.login.views.register_memberless %}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url user.login.views.register_nonmember %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="row-fluid">

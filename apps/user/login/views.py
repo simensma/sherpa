@@ -79,18 +79,18 @@ def register(request):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.login.views.register'))
 
-def register_memberless(request):
+def register_nonmember(request):
     if request.method == 'GET':
         user_data = {}
-        if 'user.registration_memberless_attempt' in request.session:
-            user_data = request.session['user.registration_memberless_attempt']
-            del request.session['user.registration_memberless_attempt']
+        if 'user.registration_nonmember_attempt' in request.session:
+            user_data = request.session['user.registration_nonmember_attempt']
+            del request.session['user.registration_nonmember_attempt']
 
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH,
             'user_data': user_data
         }
-        return render(request, 'common/user/login/registration_memberless.html', context)
+        return render(request, 'common/user/login/registration_nonmember.html', context)
     elif request.method == 'POST':
         errors = False
 
@@ -116,10 +116,10 @@ def register_memberless(request):
             errors = True
 
         if errors:
-            request.session['user.registration_memberless_attempt'] = {
+            request.session['user.registration_nonmember_attempt'] = {
                 'name': request.POST['name'],
                 'email': request.POST['email']}
-            return HttpResponseRedirect(reverse('user.login.views.register_memberless'))
+            return HttpResponseRedirect(reverse('user.login.views.register_nonmember'))
 
         user = User.objects.create_user(
             username(request.POST['email']),
