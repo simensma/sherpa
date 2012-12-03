@@ -38,7 +38,7 @@ def user_images(request, profile):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
         'current_navigation': current_navigation,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'common/admin/images/user_images.html', context)
@@ -60,7 +60,7 @@ def list_albums(request, album):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'common/admin/images/list_albums.html', context)
@@ -82,7 +82,7 @@ def image_details(request, image):
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name'),
+        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
         'current_navigation': 'albums'}
     return render(request, 'common/admin/images/image_details.html', context)
 
@@ -302,7 +302,7 @@ def album_search_json(request):
 def search(request):
     context = {
         'origin': request.get_full_path(),
-        'all_users': Profile.objects.all().order_by('user__first_name')}
+        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name())}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({
             'too_short_query': True,
@@ -330,6 +330,8 @@ def search(request):
 def search_json(request):
     images = []
     if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
+        # TODO: Should search (programmatically) for uploader name/email
+        # These might be in our DB or in Focus.
         for word in request.POST['query'].split(' '):
             images += Image.objects.filter(
                 Q(description__icontains=word) |
@@ -338,9 +340,6 @@ def search_json(request):
                 Q(credits__icontains=word) |
                 Q(licence__icontains=word) |
                 Q(exif__icontains=word) |
-                Q(uploader__user__first_name__icontains=word) |
-                Q(uploader__user__last_name__icontains=word) |
-                Q(uploader__user__email__icontains=word) |
                 Q(tags__name__icontains=word)
         )
     objects = parse_objects([], [], images)
