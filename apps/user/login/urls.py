@@ -10,5 +10,6 @@ urlpatterns = patterns('user.login.views',
 
     # Registration
     url(r'^registrer/$', 'register'),
+    url(r'^registrer/ikke-medlemmer/$', 'register_memberless'),
     url(r'^sjekk-medlemsnummer/$', 'verify_memberid'),
 )

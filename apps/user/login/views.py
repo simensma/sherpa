@@ -80,6 +80,52 @@ def register(request):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.login.views.register'))
 
+def register_memberless(request):
+    if request.method == 'GET':
+        # TODO: Should refill form with values upon error
+        context = {
+            'user_password_length': settings.USER_PASSWORD_LENGTH
+        }
+        return render(request, 'common/user/registration_memberless.html', context)
+    elif request.method == 'POST':
+        errors = False
+
+        # Check that name is provided
+        if not validator.name(request.POST['name']):
+            messages.error(request, 'invalid_name')
+            errors = True
+
+        # Check that the email address is valid
+        if not validator.email(request.POST['email']):
+            messages.error(request, 'invalid_email')
+            errors = True
+
+        # Check that the email address isn't in use
+        if User.objects.filter(username=username(request.POST['email'])).exists():
+            # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
+            messages.error(request, 'email_exists')
+            errors = True
+
+        # Check that the password is long enough
+        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+            messages.error(request, 'too_short_password')
+            errors = True
+
+        if errors:
+            return HttpResponseRedirect(reverse('user.login.views.register_memberless'))
+
+        user = User.objects.create_user(
+            username(request.POST['email']),
+            email=request.POST['email'],
+            password=request.POST['password'])
+        user.first_name = ' '.join(request.POST['name'].split(' ')[:-1])
+        user.last_name = request.POST['name'].split(' ')[-1]
+        user.save()
+        profile = Profile(user=user)
+        profile.save()
+        log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+        return HttpResponseRedirect(reverse('user.views.home_new'))
+
 def verify_memberid(request):
     try:
         actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])

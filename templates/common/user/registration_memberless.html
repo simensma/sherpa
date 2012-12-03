@@ -1,0 +1,110 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Logg inn{% endblock %}
+{% block breadcrumb_title %}Registrering{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.user_password_length = {{ user_password_length }};
+  </script>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/registration_memberless.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h2>Registrering for ikke-medlemmer</h2>
+
+    <div class="alert alert-info">
+      <strong>Er du sikker på at du har kommet rett?</strong><br>
+      Denne registreringen er kun for deg som har engasjement i DNT, men ikke er medlem.<br>
+      Er du medlem så bør du bruke <a href="{% url user.login.views.register %}">dette skjemaet</a>. Ønsker du å bli medlem så kan du <a href="{% url membership.views.benefits %}">melde deg inn her</a>.
+    </div>
+
+    <form action="{% url user.login.views.register_memberless %}" method="post" class="form-default form-border form-horizontal">
+      {% csrf_token %}
+
+      <div class="row-fluid">
+        <div class="span7">
+
+          <div class="form-elements">
+
+            <div class="control-group name">
+              <label class="control-label" for="name">Fullt navn:</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" name="name">
+              </div>
+            </div>
+            <div class="control-group email">
+              <label class="control-label" for="email">E-postadresse:</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" name="email">
+              </div>
+            </div>
+            <div class="control-group password">
+              <label class="control-label" for="password">Passord:</label>
+              <div class="controls">
+                <input type="password" class="input-xlarge" name="password">
+              </div>
+            </div>
+            <div class="control-group password-repeat">
+              <label class="control-label" for="password-repeat">Gjenta passord:</label>
+              <div class="controls">
+                <input type="password" class="input-xlarge" name="password-repeat">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="span5">
+
+          <div class="form-hints">
+            <p>
+              Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn.
+            </p>
+
+            <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+            <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
+
+            {% for message in messages %}
+              {% if message.message == 'invalid_name' %}
+                <div class="error">
+                  <strong>Du har ikke oppgitt fullt navn!</strong><br>
+                  Vennligst oppgi navnet ditt, både fornavn og etternavn.
+                </div>
+              {% elif message.message == 'invalid_email' %}
+                <div class="error">
+                  <strong>E-postadressen din er ikke gyldig!</strong><br>
+                  Vennligst oppgi en gyldig e-postadresse.
+                </div>
+              {% elif message.message == 'email_exists' %}
+                <div class="error">
+                  <strong>E-postadressen din er allerede i bruk!</strong><br>
+                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+                </div>
+              {% elif message.message == 'too_short_password' %}
+                <div class="error">
+                  <strong>For kort passord</strong><br>
+                  Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}
