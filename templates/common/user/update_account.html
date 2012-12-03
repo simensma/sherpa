@@ -56,13 +56,13 @@
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="name" value="{{ user.get_full_name }}">
+          <input type="text" class="input-xlarge" name="name" value="{{ user.get_profile.get_full_name }}">
         </div>
       </div>
       <div class="control-group email">
         <label class="control-label" for="email">E-post</label>
         <div class="controls"{% if perms.user.sherpa %} data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Gravatar-tips" data-content="Hvis du skriver artikler i Sherpa, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på www.gravatar.com med <strong>samme</strong> e-postadresse som du bruker her."{% endif %}>
-          <input type="text" class="input-xlarge" name="email" value="{{ user.email }}">
+          <input type="text" class="input-xlarge" name="email" value="{{ user.get_profile.get_email }}">
           {% if perms.user.sherpa %}
             <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
             <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
@@ -72,7 +72,7 @@
       <div class="control-group phone">
         <label class="control-label" for="phone">Mobiltelefon</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.phone }}">
+          <input type="text" class="input-medium" name="phone" value="{{ user.get_profile.get_phone }}">
         </div>
       </div>
       <div class="control-group">

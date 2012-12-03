@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -104,7 +105,7 @@ def send_restore_password_email(request):
     c = RequestContext(request, {
         'found_user': user,
         'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    user.email_user("Gjenopprettelse av passord", t.render(c))
+    send_email("Gjenopprettelse av passord", t.render(c), [profile.get_email()])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):

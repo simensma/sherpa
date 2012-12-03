@@ -15,7 +15,9 @@ class Profile(models.Model):
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     memberid = models.IntegerField(null=True, unique=True)
 
-    # Focus-related
+    ### Focus-related ###
+
+    # Return this users' Actor (cached), or None
     def actor(self):
         if self.memberid is None:
             return None
@@ -24,6 +26,36 @@ class Profile(models.Model):
             actor = Actor.objects.get(memberid=self.memberid)
             cache.set('actor.%s' % self.memberid, actor, 60 * 60)
         return actor
+
+    def get_first_name(self):
+        if self.memberid is None:
+            return self.user.first_name
+        else:
+            return self.actor().first_name
+
+    def get_last_name(self):
+        if self.memberid is None:
+            return self.user.last_name
+        else:
+            return self.actor().last_name
+
+    def get_email(self):
+        if self.memberid is None:
+            return self.user.email
+        else:
+            return self.actor().email
+
+    def get_phone(self):
+        if self.memberid is None:
+            return self.phone
+        else:
+            return self.actor().phone_mobile
+
+    def get_full_name(self):
+        if self.memberid is None:
+            return self.user.get_full_name()
+        else:
+            return "%s %s" % (self.actor().first_name, self.actor().last_name)
 
     # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):

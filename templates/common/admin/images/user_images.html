@@ -76,7 +76,7 @@
 </div>
 
 {% if active_profile != user.get_profile %}
-  <h2 style="text-align: center;">{{ active_profile.user.get_full_name }}s bilder</h2>
+  <h2 style="text-align: center;">{{ active_profile.user.get_profile.get_full_name }}s bilder</h2>
 {% else %}
   {% include 'common/admin/images/uploader.html' %}
 {% endif %}
@@ -86,7 +86,7 @@
     {% if active_profile == user.get_profile %}
       Du
     {% else %}
-      {{ active_profile.user.get_full_name }}
+      {{ active_profile.user.get_profile.get_full_name }}
     {% endif %}
     har ikke lastet opp noen bilder.
   </div>
