@@ -40,7 +40,6 @@ def logout(request):
 
 def register(request):
     if request.method == 'GET':
-        # TODO: Should refill form with values upon error and redirect back here
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH
         }
