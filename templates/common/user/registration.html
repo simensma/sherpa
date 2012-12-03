@@ -54,8 +54,6 @@
                 <label class="control-label" for="password">Passord:</label>
                 <div class="controls">
                   <input type="password" class="input-xlarge" name="password">
-                  <span class="hint short hide">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</span>
-                  <span class="hint unequal hide">Passordene er ikke like, har du skrevet feil?</span>
                 </div>
               </div>
               <div class="control-group password-repeat">
@@ -90,6 +88,9 @@
               <strong>Feil medlemsnummer eller postnummer</strong><br>
               Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
             </div>
+
+            <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+            <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
 
             {% for message in messages %}
               {% if message.message == 'invalid_memberid' %}

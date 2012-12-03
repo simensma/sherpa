@@ -12,7 +12,7 @@ $(document).ready(function() {
         pass1: $("input[name='password']"),
         pass2: $("input[name='password-repeat']"),
         min_length: user_password_length,
-        hints: $("div.control-group.password span.hint")
+        hints: $("div.form-hints div.password-hint")
     });
 
     Validator.validate({
