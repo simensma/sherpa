@@ -15,6 +15,8 @@ from user.models import Profile
 from focus.models import Actor
 from user.util import username
 
+from core import validator
+
 def login(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
@@ -47,6 +49,11 @@ def register(request):
             # Check that the password is long enough
             if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 messages.error(request, 'too_short_password')
+                return HttpResponseRedirect(reverse('user.login.views.register'))
+
+            # Check that the email address is valid
+            if not validator.email(request.POST['email']):
+                messages.error(request, 'invalid_email')
                 return HttpResponseRedirect(reverse('user.login.views.register'))
 
             # Check that the memberid is correct (and retrieve the Actor-entry)

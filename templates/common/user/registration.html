@@ -127,6 +127,11 @@
                   <strong>E-postadressen din er allerede i bruk!</strong><br>
                   Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
                 </div>
+              {% elif message.message == 'invalid_email' %}
+                <div class="error">
+                  <strong>E-postadressen din er ikke gyldig!</strong><br>
+                  Vennligst oppgi en gyldig e-postadresse.
+                </div>
               {% endif %}
             {% endfor %}
           </div>
