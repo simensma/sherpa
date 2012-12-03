@@ -21,7 +21,7 @@ def home_new(request):
 
 @login_required
 def account(request):
-    return render(request, 'common/user/account.html')
+    return render(request, 'common/user/account/account.html')
 
 @login_required
 def update_account(request):
@@ -30,7 +30,7 @@ def update_account(request):
             context = {
                 'user_password_length': settings.USER_PASSWORD_LENGTH
             }
-            return render(request, 'common/user/update_account_nonmember.html', context)
+            return render(request, 'common/user/account/update_account_nonmember.html', context)
 
         elif request.method == 'POST':
             errors = False
@@ -66,7 +66,7 @@ def update_account(request):
             context = {
                 'password_length': settings.USER_PASSWORD_LENGTH
             }
-            return render(request, 'common/user/update_account.html', context)
+            return render(request, 'common/user/account/update_account.html', context)
 
         elif request.method == 'POST':
             errors = False
@@ -114,7 +114,7 @@ def become_member(request):
         return HttpResponseRedirect(reverse('user.views.home_new'))
 
     if request.method == 'GET':
-        return render(request, 'common/user/become_member.html')
+        return render(request, 'common/user/account/become_member.html')
     else:
         try:
             # Check that the memberid is correct (and retrieve the Actor-entry)
