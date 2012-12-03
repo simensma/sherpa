@@ -211,14 +211,14 @@ class SetActiveAssociation(object):
         # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_association'.
         if request.user.is_authenticated() and request.user.has_perm('user.sherpa'):
             m = re.match(r'/sherpa/aktiv-forening/(?P<association>\d+)/', request.path)
-            if m != None:
+            if m is not None:
                 # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
                 association = Association.objects.get(id=m.groupdict()['association'])
                 if not association in request.user.get_profile().all_associations():
                     raise PermissionDenied
 
                 request.session['active_association'] = association
-                if request.META.get('HTTP_REFERER') != None:
+                if request.META.get('HTTP_REFERER') is not None:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
                     return HttpResponseRedirect(reverse('admin.views.index'))
@@ -240,7 +240,7 @@ class CheckSherpaPermissions(object):
                 return render(request, 'common/admin/set_active_association.html')
 
             # Accessing CMS-functionality, but no site set
-            if request.session['active_association'].site == None and (
+            if request.session['active_association'].site is None and (
                 request.path.startswith('/sherpa/cms/') or
                 request.path.startswith('/sherpa/nyheter/') or
                 request.path.startswith('/sherpa/annonser/') or
