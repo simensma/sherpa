@@ -18,7 +18,7 @@
   <div class="span12">
     <h2>Registrer deg</h2>
 
-    <form action="{# url user.login.views.register #}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url user.login.views.register %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="row-fluid">
