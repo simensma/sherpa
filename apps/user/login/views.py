@@ -78,7 +78,8 @@ def verify_memberid(request):
         return HttpResponse(json.dumps({
             'exists': True,
             'name': "%s %s" % (actor.first_name, actor.last_name),
-            'email': actor.email or ''}))
+            'email': actor.email or '',
+            'profile_exists': Profile.objects.filter(memberid=request.POST['memberid']).exists()}))
     except (ValueError, Actor.DoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
 

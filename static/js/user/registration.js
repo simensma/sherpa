@@ -47,7 +47,12 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-                enableStep2(result);
+            $("img.ajaxloader.submit").hide();
+                if(!result.profile_exists) {
+                    enableStep2(result);
+                } else {
+                    $("div.form-elements div.profile-exists").slideDown();
+                }
             } else {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());
@@ -76,7 +81,6 @@ $(document).ready(function() {
         }
         $("div.form-elements div.step2 input[name='email']").val(result.email);
         $("button.step2").show();
-        $("img.ajaxloader.submit").hide();
         hints.find("div.step1").fadeOut(function() {
             // Wait for fadeOut to complete before fadeIn
             hints.find("div.step2").fadeIn();

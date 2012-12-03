@@ -71,6 +71,12 @@
                 <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
               </div>
             </div>
+
+            <div class="hide profile-exists">
+              <strong>Du har allerede en Min side-bruker!</strong>
+              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+            </div>
+
           </div>
 
         </div>
