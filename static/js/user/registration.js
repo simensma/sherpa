@@ -30,7 +30,7 @@ $(document).ready(function() {
     );
 
     var memberid_accepted = false;
-    var no_memberid_match = $("div.no-memberid-match");
+    var no_memberid_match = $("div.form-hints div.no-memberid-match");
     $("form").submit(function(e) {
         if(memberid_accepted) {
             return $(this);
@@ -64,11 +64,20 @@ $(document).ready(function() {
 
     function enableStep2(result) {
         memberid_accepted = true;
-        $("div.step1 input").attr('disabled', true);
-        $("div.step2").slideDown();
-        $("div.step2 input[name='email']").val(result.email);
+        $("div.form-elements div.step1 input").attr('disabled', true);
+        $("div.form-elements div.step2").slideDown();
+
+        $("div.form-hints div.step2 span.name").text(result.name);
+        if(result.email != '') {
+            $("div.form-hints div.step2 span.email-found").show().find("span.email").text(result.email);
+        }
+        $("div.form-elements div.step2 input[name='email']").val(result.email);
         $("button.step2").show();
         $("img.ajaxloader.submit").hide();
+        $("div.form-hints div.step1").fadeOut(function() {
+            // Wait for fadeOut to complete before fadeIn
+            $("div.form-hints div.step2").fadeIn();
+        });
     }
 
 });

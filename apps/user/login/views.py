@@ -75,7 +75,10 @@ def register(request):
 def verify_memberid(request):
     try:
         actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
-        return HttpResponse(json.dumps({'exists': True, 'email': actor.email}))
+        return HttpResponse(json.dumps({
+            'exists': True,
+            'name': "%s %s" % (actor.first_name, actor.last_name),
+            'email': actor.email or ''}))
     except (ValueError, Actor.DoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
 
