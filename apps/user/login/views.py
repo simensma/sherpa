@@ -93,19 +93,24 @@ def verify_memberid(request):
 
 def send_restore_password_email(request):
     try:
-        user = User.objects.get(email=request.POST['email'])
-    except (User.DoesNotExist, KeyError):
+        profile = User.objects.get(email=request.POST['email']).get_profile()
+    except User.DoesNotExist:
+        try:
+            actor = Actor.objects.get(email=request.POST['email'])
+            profile = Profile.objects.get(memberid=actor.memberid)
+        except Actor.DoesNotExist:
+            return HttpResponse(json.dumps({'status': 'invalid_email'}))
+    except KeyError:
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
-    profile = user.get_profile()
     key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
     profile.password_restore_key = key
     profile.password_restore_date = datetime.now()
     profile.save()
     t = loader.get_template('common/user/restore-password-email.html')
     c = RequestContext(request, {
-        'found_user': user,
+        'found_user': profile.user,
         'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    send_email("Gjenopprettelse av passord", t.render(c), [profile.get_email()])
+    send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
