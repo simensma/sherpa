@@ -74,10 +74,10 @@ def register(request):
 
 def verify_memberid(request):
     try:
-        val = Actor.objects.filter(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode']).exists()
-        return HttpResponse(json.dumps(val))
-    except ValueError:
-        return HttpResponse(json.dumps(False))
+        actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+        return HttpResponse(json.dumps({'exists': True, 'email': actor.email}))
+    except (ValueError, Actor.DoesNotExist):
+        return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
     try:

@@ -46,21 +46,29 @@ $(document).ready(function() {
                   '&zipcode=' + encodeURIComponent(form.find("input[name='zipcode']").val())
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result) {
-                memberid_accepted = true;
-                form.submit();
+            if(result.exists) {
+                enableStep2(result);
             } else {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());
                 no_memberid_match.slideDown();
-                form.find("button[type='submit']").show();
+                form.find("button.step1").show();
                 form.find("img.ajaxloader.submit").hide();
             }
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
             form.find("button[type='submit']").show();
             form.find("img.ajaxloader.submit").hide();
-        })
+        });
     });
+
+    function enableStep2(result) {
+        memberid_accepted = true;
+        $("div.step1 input").attr('disabled', true);
+        $("div.step2").slideDown();
+        $("div.step2 input[name='email']").val(result.email);
+        $("button.step2").show();
+        $("img.ajaxloader.submit").hide();
+    }
 
 });

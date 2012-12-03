@@ -49,44 +49,51 @@
 
     <form action="{# url user.login.views.register #}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
-      <div class="control-group email">
-        <label class="control-label" for="email">E-postadresse:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="email">
+
+      <div class="step1">
+        <div class="control-group memberid">
+          <label class="control-label" for="memberid">Medlemsnummer:</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="memberid">
+          </div>
+        </div>
+        <div class="control-group zipcode">
+          <label class="control-label" for="zipcode">Postnummer:</label>
+          <div class="controls">
+            <input type="text" class="input-small" name="zipcode" maxlength="4">
+            <input type="text" class="input-medium" name="area" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+          </div>
         </div>
       </div>
-      <div class="control-group password">
-        <label class="control-label" for="password">Passord:</label>
-        <div class="controls">
-          <input type="password" class="input-xlarge" name="password">
-          <span class="hint short hide">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</span>
-          <span class="hint unequal hide">Passordene er ikke like, har du skrevet feil?</span>
+
+      <div class="step2 hide">
+        <div class="control-group email">
+          <label class="control-label" for="email">E-postadresse:</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="email">
+          </div>
         </div>
-      </div>
-      <div class="control-group password-repeat">
-        <label class="control-label" for="password-repeat">Gjenta passord:</label>
-        <div class="controls">
-          <input type="password" class="input-xlarge" name="password-repeat">
+        <div class="control-group password">
+          <label class="control-label" for="password">Passord:</label>
+          <div class="controls">
+            <input type="password" class="input-xlarge" name="password">
+            <span class="hint short hide">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</span>
+            <span class="hint unequal hide">Passordene er ikke like, har du skrevet feil?</span>
+          </div>
         </div>
-      </div>
-      <div class="control-group memberid">
-        <label class="control-label" for="memberid">Medlemsnummer:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="memberid">
-        </div>
-      </div>
-      <div class="control-group zipcode">
-        <label class="control-label" for="zipcode">Postnummer:</label>
-        <div class="controls">
-          <input type="text" class="input-small" name="zipcode" maxlength="4">
-          <input type="text" class="input-medium" name="area" disabled>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+        <div class="control-group password-repeat">
+          <label class="control-label" for="password-repeat">Gjenta passord:</label>
+          <div class="controls">
+            <input type="password" class="input-xlarge" name="password-repeat">
+          </div>
         </div>
       </div>
 
       <div class="control-group">
         <div class="controls">
-          <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
+          <button type="submit" class="btn btn-large btn-danger step1"><i class="icon-search icon-white"></i> Hent medlemsinfo</button>
+          <button type="submit" class="btn btn-large btn-danger step2 hide"><i class="icon-ok icon-white"></i> Registrer deg</button>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
         </div>
       </div>
