@@ -15,6 +15,17 @@ class Profile(models.Model):
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     memberid = models.IntegerField(null=True, unique=True)
 
+    # Focus-related
+    def actor(self):
+        if self.memberid is None:
+            return None
+        actor = cache.get('actor.%s' % self.memberid)
+        if actor is None:
+            actor = Actor.objects.get(memberid=self.memberid)
+            cache.set('actor.%s' % self.memberid, actor, 60 * 60)
+        return actor
+
+    # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
         from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):
@@ -27,15 +38,6 @@ class Profile(models.Model):
                 return self.associations.filter(associationrole__role=role)
             else:
                 return self.associations.all()
-
-    def actor(self):
-        if self.memberid is None:
-            return None
-        actor = cache.get('actor.%s' % self.memberid)
-        if actor is None:
-            actor = Actor.objects.get(memberid=self.memberid)
-            cache.set('actor.%s' % self.memberid, actor, 60 * 60)
-        return actor
 
     class Meta:
         permissions = [
