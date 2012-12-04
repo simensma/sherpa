@@ -43,7 +43,7 @@ def update_account(request):
                 messages.error(request, 'invalid_email_address')
                 errors = True
 
-            if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+            if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
                 messages.error(request, 'duplicate_email_address')
                 errors = True
 
