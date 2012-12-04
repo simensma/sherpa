@@ -86,6 +86,12 @@
             </td>
           </tr>
       {% endif %}
+        <tr>
+          <th></th>
+          <td>
+            <i class="icon-pencil"></i> <a href="{% url user.views.update_account %}">Endre dine opplysninger</a>
+          </td>
+        </tr>
       </table>
 
       <h2>Ditt medlemskap</h2>
@@ -126,8 +132,6 @@
       </table>
 
     {% endif %}
-
-    <a href="{% url user.views.update_account %}">Endre brukeropplysninger</a>
   </div>
 
   <div class="span3">

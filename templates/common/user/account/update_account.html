@@ -16,7 +16,7 @@
 <div class="row">
   <div class="span9">
 
-    <h2>Brukeropplysninger</h2>
+    <h2>Dine opplysninger</h2>
 
     <div class="info-area">
       {% for message in messages %}
@@ -47,12 +47,14 @@
 
     <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal account-info">
       {% csrf_token %}
+
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>
         <div class="controls">
           <input type="text" class="input-xlarge" name="name" value="{{ user.get_profile.get_full_name }}">
         </div>
       </div>
+
       <div class="control-group email">
         <label class="control-label" for="email">E-post</label>
         <div class="controls"{% if perms.user.sherpa %} data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Gravatar-tips" data-content="Hvis du skriver artikler i Sherpa, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på www.gravatar.com med <strong>samme</strong> e-postadresse som du bruker her."{% endif %}>
@@ -63,6 +65,47 @@
           {% endif %}
         </div>
       </div>
+
+      <div class="control-group phone_home">
+        <label class="control-label" for="phone_home">Telefon</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="phone_home" value="{{ user.get_profile.actor.phone_home|default:"" }}">
+        </div>
+      </div>
+
+      <div class="control-group phone_mobile">
+        <label class="control-label" for="phone_mobile">Mobil</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="phone_mobile" value="{{ user.get_profile.actor.phone_mobile|default:"" }}">
+        </div>
+      </div>
+
+      <div class="control-group dob">
+        <label class="control-label" for="dob">Født</label>
+        <div class="controls">
+          <input type="text" class="input-medium pickadate" name="dob" value="{{ user.get_profile.actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.actor.birth_date|date:"Y/m/d" }}">
+        </div>
+      </div>
+
+      {% if user.get_profile.actor.address.country == 'NO' %}
+        <div class="control-group address">
+          <label class="control-label" for="address">Adresse</label>
+          <div class="controls">
+            <input type="text" class="input-large" name="address" value="{{ user.get_profile.actor.address.a1 }}">
+          </div>
+        </div>
+
+        <div class="control-group zipcode" for="zipcode">
+          <label class="control-label">Postnummer</label>
+          <div class="controls">
+            <input type="text" class="input-small" name="zipcode" value="{{ user.get_profile.actor.address.zipcode }}" maxlength="4">
+            <input type="text" class="input-medium" name="area" value="{{ user.get_profile.actor.address.area }}" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader hide" alt="Laster poststed..." title="Laster poststed...">
+          </div>
+        </div>
+      {% endif %}
+      {# TODO: Let international members change address? #}
+
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn"><i class="icon-ok"></i> Oppdater opplysningene</button>
