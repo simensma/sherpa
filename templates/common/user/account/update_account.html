@@ -45,7 +45,7 @@
       {% endfor %}
     </div>
 
-    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal account-info">
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal form-default account-info">
       {% csrf_token %}
 
       <div class="control-group name">
@@ -100,7 +100,7 @@
           <div class="controls">
             <input type="text" class="input-small" name="zipcode" value="{{ user.get_profile.actor.address.zipcode }}" maxlength="4">
             <input type="text" class="input-medium" name="area" value="{{ user.get_profile.actor.address.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader hide" alt="Laster poststed..." title="Laster poststed...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
           </div>
         </div>
       {% endif %}
