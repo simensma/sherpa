@@ -163,6 +163,24 @@ class Actor(models.Model):
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
 
+    def get_parent(self):
+        parent = self.parent
+        if parent == 0 or parent == self.memberid:
+            return None
+        else:
+            actor = cache.get('actor.%s' % parent)
+            if actor is None:
+                actor = Actor.objects.get(memberid=parent)
+                cache.set('actor.%s' % parent, actor, 60 * 60)
+            return actor
+
+    def get_children(self):
+        children = cache.get('actor.children.%s' % self.memberid)
+        if children is None:
+            children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
+            cache.set('actor.children.%s' % self.memberid, children, 60 * 60)
+        return children
+
     class Meta:
         db_table = u'Actor'
 
