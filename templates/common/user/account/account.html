@@ -44,7 +44,7 @@
 
     {% else %}
 
-      <p>{{ user.get_profile.actor.first_name }} {{ user.get_profile.actor.last_name }}</p>
+      <p>{{ user.get_profile.actor.get_full_name }}</p>
       <p>{{ user.get_profile.actor.email }}</p>
       <p>{{ user.get_profile.actor.phone_mobile }}</p>
       <p>{{ user.get_profile.actor.phone_home|default:"" }}</p>

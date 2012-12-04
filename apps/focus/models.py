@@ -160,6 +160,9 @@ class Actor(models.Model):
         elif code == u'108': return u'Husstandsmedlem'
         elif code == u'109': return u'Livsvarig husstandsmedlem'
 
+    def get_full_name(self):
+        return ("%s %s" % (self.first_name, self.last_name)).strip()
+
     class Meta:
         db_table = u'Actor'
 
