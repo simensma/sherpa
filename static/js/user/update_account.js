@@ -30,7 +30,7 @@ $(document).ready(function() {
 
     $("input[name='dob']").pickadate({
         format: 'dd.mm.yyyy',
-        yearSelector: true,
+        yearSelector: 200,
         monthSelector: true,
         onClose: function() {
             Validator.performValidation({

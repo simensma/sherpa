@@ -6,8 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from datetime import datetime
+
 from user.models import Profile
 from core import validator
+from core.models import Zipcode
 from focus.models import Actor
 
 from user.util import username
@@ -78,23 +81,62 @@ def update_account(request):
                 messages.error(request, 'invalid_email_address')
                 errors = True
 
-            if User.objects.filter(email=request.POST['email']).exclude(id=request.user.id).exists():
+            if not validator.phone(request.POST['phone_home'], req=False):
+                messages.error(request, 'invalid_phone_home')
+                errors = True
+
+            if not validator.phone(request.POST['phone_mobile'], req=False):
+                messages.error(request, 'invalid_phone_mobile')
+                errors = True
+
+            try:
+                parsed_dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
+            except ValueError:
+                messages.error(request, 'invalid_dob')
+                errors = True
+
+            if parsed_dob > datetime.now():
+                messages.error(request, 'future_dob')
+                errors = True
+
+            if not validator.address(request.POST['address']):
+                messages.error(request, 'invalid_address')
+                errors = True
+
+            try:
+                zipcode = Zipcode.objects.get(zipcode=request.POST['zipcode'])
+            except Zipcode.DoesNotExist:
+                messages.error(request, 'invalid_zipcode')
+                errors = True
+
+            if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
                 messages.error(request, 'duplicate_email_address')
                 errors = True
 
-            if not errors:
-                split = request.POST['name'].split(' ')
-                first_name = split[0]
-                last_name = ' '.join(split[1:])
-                request.user.username = username(request.POST['email'])
-                request.user.email = request.POST['email']
-                request.user.first_name = first_name
-                request.user.last_name = last_name
-                request.user.save()
-                messages.info(request, 'update_success')
-                return HttpResponseRedirect(reverse('user.views.account'))
-            else:
+            if errors:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
+
+            request.user.username = username(request.POST['email'])
+            request.user.save()
+
+            actor = request.user.get_profile().actor()
+            name_split = request.POST['name'].split(' ')
+
+            actor.first_name = name_split[0]
+            actor.last_name = ' '.join(name_split[1:])
+            actor.email = request.POST['email']
+            actor.phone_home = request.POST['phone_home']
+            actor.phone_mobile = request.POST['phone_mobile']
+            actor.birth_date = parsed_dob
+            actor.save()
+
+            actor.address.a1 = request.POST['address']
+            actor.address.zipcode = zipcode.zipcode
+            actor.address.area = zipcode.area
+            actor.address.save()
+
+            messages.info(request, 'update_success')
+            return HttpResponseRedirect(reverse('user.views.account'))
 
 @login_required
 def update_account_password(request):

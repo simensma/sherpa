@@ -10,7 +10,7 @@ class Router(object):
         if model._meta.app_label == 'sherpa2':
             raise Exception("Don't write to this model!")
         elif model._meta.app_label == 'focus':
-            if model._meta.object_name in ['Actor', 'Enrollment']:
+            if model._meta.object_name in ['Actor', 'ActorAddress', 'Enrollment']:
                 return 'focus'
             else:
                 raise Exception("Don't write to this model!")
