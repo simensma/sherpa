@@ -9,8 +9,11 @@ div.pickadate__calendar {
   font-family: sans-serif !important;
 
   select {
-    color: black;
     padding: 0 5px;
     font-size: 1em;
+
+    /* Color and border-color are overriden by control-groups with success/error classes, so use important to ignore */
+    color: black !important;
+    border-color: rgb(204, 204, 204) !important;
   }
 }
