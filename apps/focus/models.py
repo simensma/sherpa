@@ -53,8 +53,8 @@ class Actor(models.Model):
     phone_mobile = models.CharField(max_length=50, db_column=u'MobPh')
 
     # Membership information
-    memberid = models.IntegerField(db_column=u'ActNo')
-    parent = models.IntegerField(null=True, db_column=u'ActRel6')
+    memberid = models.IntegerField(unique=True, db_column=u'ActNo')
+    parent = models.IntegerField(db_column=u'ActRel6')
     main_association_id = models.IntegerField(db_column=u'ActRel4')
     local_association_id = models.IntegerField(db_column=u'ActRel5')
 
