@@ -42,19 +42,27 @@ class Enrollment(models.Model):
 
 class Actor(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
-    type = models.CharField(max_length=50, db_column=u'Type')
-    memberid = models.IntegerField(db_column=u'ActNo')
-    last_name = models.CharField(max_length=50, db_column=u'Nm')
+
+    # User data
     first_name = models.CharField(max_length=50, db_column=u'FiNm')
+    last_name = models.CharField(max_length=50, db_column=u'Nm')
     birth_date = models.DateTimeField(null=True, db_column=u'BDt')
-    pno = models.CharField(max_length=50, db_column=u'PNo')
     sex = models.CharField(max_length=1, db_column=u'Sex')
-    orgno = models.CharField(max_length=50, db_column=u'OrgNo')
-    fax = models.CharField(max_length=50, db_column=u'Fax')
+    email = models.CharField(max_length=250, db_column=u'EMail')
     phone_home = models.CharField(max_length=50, db_column=u'Ph')
     phone_mobile = models.CharField(max_length=50, db_column=u'MobPh')
-    email = models.CharField(max_length=250, db_column=u'EMail')
+
+    # Membership information
+    memberid = models.IntegerField(db_column=u'ActNo')
+    parent = models.IntegerField(null=True, db_column=u'ActRel6')
+    main_association_id = models.IntegerField(db_column=u'ActRel4')
+    local_association_id = models.IntegerField(db_column=u'ActRel5')
+
+    orgno = models.CharField(max_length=50, db_column=u'OrgNo')
+    fax = models.CharField(max_length=50, db_column=u'Fax')
     web = models.CharField(max_length=250, db_column=u'Web')
+    pno = models.CharField(max_length=50, db_column=u'PNo')
+    type = models.CharField(max_length=50, db_column=u'Type')
     adtype = models.CharField(max_length=3, db_column=u'AdType')
     note1 = models.TextField(db_column=u'Note1')
     note2 = models.TextField(db_column=u'Note2')
@@ -102,9 +110,6 @@ class Actor(models.Model):
     actrel1 = models.IntegerField(db_column=u'ActRel1')
     actrel2 = models.IntegerField(db_column=u'ActRel2')
     actrel3 = models.IntegerField(db_column=u'ActRel3')
-    main_association_id = models.IntegerField(db_column=u'ActRel4')
-    local_association_id = models.IntegerField(db_column=u'ActRel5')
-    actrel6 = models.IntegerField(null=True, db_column=u'ActRel6')
     actrel7 = models.IntegerField(null=True, db_column=u'ActRel7')
     actrel8 = models.IntegerField(null=True, db_column=u'ActRel8')
     actrel9 = models.IntegerField(null=True, db_column=u'ActRel9')
