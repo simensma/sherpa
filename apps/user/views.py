@@ -61,10 +61,9 @@ def update_account(request):
             else:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
     else:
-        # TBD
         if request.method == 'GET':
             context = {
-                'password_length': settings.USER_PASSWORD_LENGTH
+                'user_password_length': settings.USER_PASSWORD_LENGTH
             }
             return render(request, 'common/user/account/update_account.html', context)
 

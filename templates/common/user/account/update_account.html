@@ -7,7 +7,7 @@
 
 {% block js_globals %}
   <script>
-    var password_length = {{ password_length }};
+    var user_password_length = {{ user_password_length }};
   </script>
 {% endblock %}
 
@@ -33,7 +33,7 @@
         {% elif message.message == 'password_too_short' %}
           <div class="alert alert-danger">
             <a class="close">x</a>
-            <strong>Vennligst fyll inn et passord på minst {{ password_length }} tegn.</strong>
+            <strong>Vennligst fyll inn et passord på minst {{ user_password_length }} tegn.</strong>
           </div>
         {% elif message.message == 'duplicate_email_address' %}
           <div class="alert alert-danger">
@@ -114,7 +114,7 @@
     </form>
 
     <h2>Endre passord</h2>
-    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal password">
+    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal form-default">
       {% csrf_token %}
       <div class="control-group password">
         <label class="control-label" for="password">Passord</label>
@@ -122,16 +122,20 @@
           <input type="password" class="input-large" name="password">
         </div>
       </div>
-      <div class="control-group password-duplicate">
-        <label class="control-label" for="password-duplicate">Gjenta passord</label>
+      <div class="control-group password-repeat">
+        <label class="control-label" for="password-repeat">Gjenta passord</label>
         <div class="controls">
-          <input type="password" class="input-large" name="password-duplicate">
+          <input type="password" class="input-large" name="password-repeat">
         </div>
       </div>
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn"><i class="icon-ok"></i> Endre passord</button>
         </div>
+      </div>
+      <div class="form-hints">
+        <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+        <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
       </div>
     </form>
   </div>
