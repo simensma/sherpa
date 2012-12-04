@@ -73,7 +73,7 @@
             <th>Adresse</th>
             <td>
               {{ user.get_profile.actor.address.a1 }}<br>
-              {{ user.get_profile.actor.address.zipcode }} {{ user.get_profile.actor.address.parea|title }}
+              {{ user.get_profile.actor.address.zipcode }} {{ user.get_profile.actor.address.area|title }}
             </td>
           </tr>
         {% else %}

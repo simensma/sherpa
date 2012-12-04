@@ -220,7 +220,7 @@ class ActorAddress(models.Model):
     a2 = models.CharField(max_length=40, db_column=u'A2')
     a3 = models.CharField(max_length=40, db_column=u'A3')
     zipcode = models.CharField(max_length=9, db_column=u'PCode')
-    parea = models.CharField(max_length=30, db_column=u'PArea')
+    area = models.CharField(max_length=30, db_column=u'PArea')
     country = models.CharField(max_length=3, db_column=u'CtryCode')
     frdt = models.DateTimeField(null=True, db_column=u'FrDt')
     todt = models.DateTimeField(null=True, db_column=u'ToDt')
