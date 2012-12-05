@@ -53,6 +53,9 @@ $(document).ready(function() {
                 } else {
                     $("div.form-elements div.profile-exists").slideDown();
                 }
+            } else if(result.memberid_lookups_exceeded) {
+                form.find("img.ajaxloader.submit").hide();
+                $("div.form-hints div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());

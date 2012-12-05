@@ -39,7 +39,6 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-                $("img.ajaxloader.submit").hide();
                 if(!result.profile_exists) {
                     memberid_accepted = true;
                     var email = $("div.control-group.email");
@@ -55,14 +54,16 @@ $(document).ready(function() {
                 } else {
                     $("div.profile-exists").slideDown();
                 }
+                form.find("button[type='submit']").show();
+            } else if(result.memberid_lookups_exceeded) {
+                $("div.form-hints div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());
                 no_memberid_match.slideDown();
-                form.find("img.ajaxloader.submit").hide();
                 form.find("button[type='submit']").show();
             }
-            form.find("button[type='submit']").show();
+            form.find("img.ajaxloader.submit").hide();
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
             form.find("button[type='submit']").show();

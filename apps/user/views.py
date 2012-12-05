@@ -13,7 +13,7 @@ from core import validator
 from core.models import Zipcode
 from focus.models import Actor
 
-from user.util import username
+from user.util import username, memberid_lookups_exceeded
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -155,10 +155,14 @@ def become_member(request):
         return HttpResponseRedirect(reverse('user.views.home_new'))
 
     if request.method == 'GET':
-        return render(request, 'common/user/account/become_member.html')
+        context = {'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
+        return render(request, 'common/user/account/become_member.html', context)
     else:
         try:
             # Check that the memberid is correct (and retrieve the Actor-entry)
+            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
+                messages.error(request, 'memberid_lookups_exceeded')
+                return HttpResponseRedirect(reverse('user.views.become_member'))
             actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             if request.POST['email-equal'] == 'true':

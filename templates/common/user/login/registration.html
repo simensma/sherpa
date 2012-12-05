@@ -102,6 +102,11 @@
               Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
             </div>
 
+            <div class="hide memberid-lookups-exceeded error">
+              <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+            </div>
+
             <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
             <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
 
@@ -111,6 +116,11 @@
                 <div class="error">
                   <strong>Feil medlemsnummer eller postnummer</strong><br>
                   Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+                </div>
+              {% elif message.message == 'memberid_lookups_exceeded' %}
+                <div class="error">
+                  <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+                  Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
                 </div>
               {% elif message.message == 'too_short_password' %}
                 <div class="error">

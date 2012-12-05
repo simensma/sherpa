@@ -14,7 +14,7 @@ import json, re
 
 from user.models import Profile
 from focus.models import Actor
-from user.util import username
+from user.util import username, memberid_lookups_exceeded
 
 from core import validator
 
@@ -41,7 +41,8 @@ def logout(request):
 def register(request):
     if request.method == 'GET':
         context = {
-            'user_password_length': settings.USER_PASSWORD_LENGTH
+            'user_password_length': settings.USER_PASSWORD_LENGTH,
+            'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT
         }
         return render(request, 'common/user/login/registration.html', context)
     elif request.method == 'POST':
@@ -57,6 +58,9 @@ def register(request):
                 return HttpResponseRedirect(reverse('user.login.views.register'))
 
             # Check that the memberid is correct (and retrieve the Actor-entry)
+            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
+                messages.error(request, 'memberid_lookups_exceeded')
+                return HttpResponseRedirect(reverse('user.login.views.register'))
             actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             # Check that the user doesn't already have an account
@@ -134,6 +138,8 @@ def register_nonmember(request):
         return HttpResponseRedirect(reverse('user.views.home_new'))
 
 def verify_memberid(request):
+    if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
+        return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
     try:
         actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
         return HttpResponse(json.dumps({
