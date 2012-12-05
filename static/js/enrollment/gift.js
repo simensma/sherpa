@@ -105,6 +105,7 @@ $(document).ready(function() {
         var new_receiver = $("p.new-receiver");
         new_receiver.detach();
         $("div.receiver-box").last().append(new_receiver);
+        clone.find("div.control-group.receiver_type").popover();
         clone.find("select[name='receiver_type']").chosen({disable_search: true})
         window.datePickerCount += 1;
         clone.find("select[name='receiver_dob_dd']").attr('id', 'dp-dd-' + window.datePickerCount);
