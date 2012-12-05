@@ -144,7 +144,7 @@ class Actor(models.Model):
         services = cache.get('actor.services.%s' % self.memberid)
         if services is None:
             services = self.services
-            cache.set('actor.services.%s' % self.memberid, 60 * 60)
+            cache.set('actor.services.%s' % self.memberid, services, 60 * 60)
         return services
 
     def membership_type_name(self, code):
