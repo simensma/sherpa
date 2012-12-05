@@ -140,12 +140,12 @@ class Actor(models.Model):
 
     def membership_type(self):
         # Supposedly, there should only be one service in this range
-        return self.membership_type_name(self.services_cached().get(code__gt=100, code__lt=110).code.strip())
+        return self.membership_type_name(self.get_services().get(code__gt=100, code__lt=110).code.strip())
 
-    def services_cached(self):
+    def get_services(self):
         services = cache.get('actor.services.%s' % self.memberid)
         if services is None:
-            services = self.services
+            services = self.services.all()
             cache.set('actor.services.%s' % self.memberid, services, 60 * 60)
         return services
 
