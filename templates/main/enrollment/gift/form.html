@@ -73,7 +73,7 @@
           <input type="text" class="input-medium area" name="giver_area" value="{{ giver.area }}" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
-        <div class="control-group giver_memberno">
+        <div class="control-group giver_memberno" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i familien/i samme husstand? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
           <label>Medlemsnummer</label>
           <input type="text" class="input-large" name="giver_memberno" value="{{ giver.memberno }}">
         </div>
