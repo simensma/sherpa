@@ -29,7 +29,6 @@ $(document).ready(function() {
     });
 
     $("input[name='dob']").pickadate({
-        format: 'dd.mm.yyyy',
         yearSelector: 200,
         monthSelector: true,
         onClose: function() {
