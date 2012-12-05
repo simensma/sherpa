@@ -45,7 +45,7 @@ $(document).ready(function() {
     });
 
 
-    function addReceiverValidations(box) {
+    function addReceiverValidations(box, initial_date) {
         Validator.validate({
             method: 'full_name',
             control_group: box.find("div.control-group.receiver_name"),
@@ -82,7 +82,7 @@ $(document).ready(function() {
         );
 
         var dob = box.find("input[name='receiver_dob']");
-        dob.datepicker({
+        dob.val(initial_date).datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
             startView: 'decade',
@@ -98,7 +98,7 @@ $(document).ready(function() {
         });
     }
 
-    function addReceiver() {
+    function addReceiver(initial_date) {
         var clone = $("div.receiver-box-skeleton").clone();
         clone.removeClass('receiver-box-skeleton').addClass('receiver-box');
         $("form#gift div.receivers").append(clone);
@@ -107,7 +107,7 @@ $(document).ready(function() {
         $("div.receiver-box").last().append(new_receiver);
         clone.find("div.control-group.receiver_type").popover();
         clone.find("select[name='receiver_type']").chosen({disable_search: true})
-        addReceiverValidations(clone);
+        addReceiverValidations(clone, initial_date);
         clone.slideDown();
         return clone;
     }
@@ -151,13 +151,12 @@ $(document).ready(function() {
         addReceiver();
     } else {
         for(var i=0; i<session_receivers.length; i++) {
-            var div = addReceiver();
+            var div = addReceiver(session_receivers[i].dob);
 
             // Pre-insert form data
             div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").attr('selected', true);
             div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
             div.find("input[name='receiver_name']").val(session_receivers[i].name);
-            div.find("input[name='receiver_dob']").val(session_receivers[i].dob);
             div.find("input[name='receiver_address']").val(session_receivers[i].address);
             div.find("input[name='receiver_zipcode']").val(session_receivers[i].zipcode);
             div.find("input[name='receiver_area']").val(session_receivers[i].area);
