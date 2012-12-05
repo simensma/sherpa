@@ -77,11 +77,11 @@
           <label>Medlemsnummer</label>
           <input type="text" class="input-large" name="giver_memberid" value="{{ giver.memberid }}">
         </div>
-        <div class="control-group giver_phone">
+        <div class="control-group giver_phone" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> Mobiltelefon</label>
           <input type="text" class="input-medium" name="giver_phone" value="{{ giver.phone }}">
         </div>
-        <div class="control-group giver_email">
+        <div class="control-group giver_email" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> E-post</label>
           <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
         </div>
