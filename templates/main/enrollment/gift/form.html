@@ -73,7 +73,7 @@
           <input type="text" class="input-medium area" name="giver_area" value="{{ giver.area }}" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
-        <div class="control-group giver_memberid" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i familien/i samme husstand? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
+        <div class="control-group giver_memberid" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i husstanden? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
           <label>Medlemsnummer</label>
           <input type="text" class="input-large" name="giver_memberid" value="{{ giver.memberid }}">
         </div>
@@ -104,7 +104,7 @@
 <div class="receiver-box-skeleton border hide">
   <button class="btn btn-danger remove-receiver pull-right"><i class="icon-remove icon-white"></i> Ta bort</button>
   <h3>Mottaker av gavemedlemskapet</h3>
-  <div class="control-group receiver_type" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Medlemskapstype" data-content="Hvis du selv er hovedmedlem og skal gi gavemedlemskap til andre i familien (bosatt på samme adresse) kan disse få billigere medlemskap som husstandsmedlemmer. Du må i så fall oppgi medlemsnummeret ditt. <strong>Dette gjelder kun vanlig medlemskap i ett kalenderår.</strong>">
+  <div class="control-group receiver_type" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Medlemskapstype" data-content="Hvis du selv er hovedmedlem og skal gi gavemedlemskap til andre i husstanden kan disse få billigere medlemskap som husstandsmedlemmer. Du må i så fall oppgi medlemsnummeret ditt. <strong>Dette gjelder kun vanlig medlemskap i ett kalenderår.</strong>">
     <label>Velg type medlemskap <span class="asterisk red">*</span></label>
     <select name="receiver_type" data-placeholder="Velg type medlemskap...">
       {% for type in types %}
