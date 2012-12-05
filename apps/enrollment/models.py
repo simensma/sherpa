@@ -114,6 +114,11 @@ class Receiver():
                 messages.error(request, u"Fødselsdatoen til %s er ugyldig." % self.name)
             valid = False
 
+        if isinstance(self.dob, datetime) and self.dob >= datetime.now():
+            if add_messages:
+                messages.error(request, u"Fødselsdatoen til %s kan ikke være i fremtiden." % self.name)
+            valid = False
+
         if not validator.address(self.address):
             if add_messages:
                 messages.error(request, u"%s mangler adresse." % self.name)
