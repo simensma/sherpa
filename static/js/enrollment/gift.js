@@ -27,8 +27,8 @@ $(document).ready(function() {
 
     Validator.validate({
         method: 'memberid',
-        control_group: $("form#gift div.control-group.giver_memberno"),
-        input: $("form#gift input[name='giver_memberno']"),
+        control_group: $("form#gift div.control-group.giver_memberid"),
+        input: $("form#gift input[name='giver_memberid']"),
         req: false
     });
 

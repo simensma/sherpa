@@ -58,7 +58,7 @@ def validate(request):
         request.POST['giver_name'],
         request.POST['giver_address'],
         request.POST['giver_zipcode'],
-        request.POST['giver_memberno'],
+        request.POST['giver_memberid'],
         request.POST['giver_phone'],
         request.POST['giver_email'])
 

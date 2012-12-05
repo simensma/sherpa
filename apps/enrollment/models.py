@@ -25,7 +25,7 @@ membership_types = [
 
 # Not a DB-model! Used in session for gift memberships
 class Giver():
-    def __init__(self, name, address, zipcode, memberno, phone, email):
+    def __init__(self, name, address, zipcode, memberid, phone, email):
         self.name = name
         self.address = address
         self.zipcode = zipcode
@@ -34,7 +34,7 @@ class Giver():
         except Zipcode.DoesNotExist:
             # We'll let empty area define invalid zipcode in this case.
             self.area = ''
-        self.memberno = memberno
+        self.memberid = memberid
         self.phone = phone
         self.email = email
 
@@ -57,7 +57,7 @@ class Giver():
                 messages.error(request, u"Postnummeret ditt ser ikke riktig ut. Du må oppgi et gyldig postnummer da vi sender faktura og medlemskort hjem til deg.")
             valid = False
 
-        if not validator.memberno(self.memberno, req=False):
+        if not validator.memberno(self.memberid, req=False):
             if add_messages:
                 messages.error(request, u"Medlemsnummeret ditt kan kun bestå av tall. Du trenger ikke være medlem for å bestille gavemedlemskap, da kan du la medlemsnummerfeltet stå tomt.")
             valid = False
