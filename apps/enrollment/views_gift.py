@@ -28,22 +28,6 @@ def form(request):
     if 'order_sent' in request.session['gift_membership']:
         return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
 
-    context = {}
-    months = zip(range(1, 13), [
-        'Januar',
-        'Februar',
-        'Mars',
-        'April',
-        'Mai',
-        'Juni',
-        'Juli',
-        'August',
-        'September',
-        'Oktober',
-        'November',
-        'Desember'
-    ])
-
     if 'giver' in request.session['gift_membership']:
         request.session['gift_membership']['giver'].validate(request, add_messages=True)
 
@@ -56,15 +40,12 @@ def form(request):
     else:
         chosen_type = None
 
-    context.update({
-        'days': range(1, 32),
-        'months': months,
-        'years': reversed(range(1900, datetime.now().year + 1)),
+    context = {
         'types': membership_types,
         'giver': request.session['gift_membership'].get('giver', None),
         'receivers': request.session['gift_membership'].get('receivers', []),
         'chosen_type': chosen_type,
-    })
+    }
     return render(request, 'main/enrollment/gift/form.html', context)
 
 def validate(request):

@@ -83,15 +83,18 @@ $(document).ready(function() {
             box.find("div.control-group.receiver_zipcode img.ajaxloader")
         );
 
-        var forms = {};
-        forms[box.find("select[name='receiver_dob_dd']").attr('id')]= "%d";
-        forms[box.find("select[name='receiver_dob_mm']").attr('id')]= "%n";
-        forms[box.find("select[name='receiver_dob_yyyy']").attr('id')]= "%Y";
-        datePickerController.createDatePicker({
-            formElements: forms,
-            statusFormat: "%d. %F %Y",
-            noTodayButton: true,
-            positioned: box.find("span.dob-placement").attr('id')
+        var dob = box.find("input[name='receiver_dob']");
+        dob.pickadate({
+            yearSelector: 200,
+            monthSelector: true,
+            onClose: function() {
+                Validator.performValidation({
+                    method: 'date',
+                    control_group: $("div.control-group.receiver_dob"),
+                    input: dob,
+                    req: true
+                });
+            }
         });
     }
 
@@ -137,9 +140,7 @@ $(document).ready(function() {
             var receiver = {
                 type: $(this).find("select[name='receiver_type'] option:selected").val(),
                 name: $(this).find("input[name='receiver_name']").val(),
-                dob: $(this).find("select[name='receiver_dob_dd'] option:selected").val() + "." +
-                     $(this).find("select[name='receiver_dob_mm'] option:selected").val() + "." +
-                    $(this).find("select[name='receiver_dob_yyyy'] option:selected").val(),
+                dob: $(this).find("input[name='receiver_dob']").val(),
                 address: $(this).find("input[name='receiver_address']").val(),
                 zipcode: $(this).find("input[name='receiver_zipcode']").val(),
                 phone: $(this).find("input[name='receiver_phone']").val(),
@@ -160,12 +161,7 @@ $(document).ready(function() {
             div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").attr('selected', true);
             div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
             div.find("input[name='receiver_name']").val(session_receivers[i].name);
-            div.find("select[name='receiver_dob_dd'] option[value='" + Number(session_receivers[i].dob_dd) + "']").attr('selected', true);
-            div.find("select[name='receiver_dob_dd']").trigger("liszt:updated"); // Update chosen
-            div.find("select[name='receiver_dob_mm'] option[value='" + Number(session_receivers[i].dob_mm) + "']").attr('selected', true);
-            div.find("select[name='receiver_dob_mm']").trigger("liszt:updated"); // Update chosen
-            div.find("select[name='receiver_dob_yyyy'] option[value='" + Number(session_receivers[i].dob_yyyy) + "']").attr('selected', true);
-            div.find("select[name='receiver_dob_yyyy']").trigger("liszt:updated"); // Update chosen
+            div.find("input[name='receiver_dob']").val(session_receivers[i].dob);
             div.find("input[name='receiver_address']").val(session_receivers[i].address);
             div.find("input[name='receiver_zipcode']").val(session_receivers[i].zipcode);
             div.find("input[name='receiver_area']").val(session_receivers[i].area);
@@ -176,6 +172,9 @@ $(document).ready(function() {
 
     if(window.trigger_form_validations) {
         Validator.trigger();
+        $("div.receiver-box input[name='receiver_dob']").each(function() {
+            $(this).data('pickadate').close();
+        });
         Validator.triggerZipcode($("input[name='receiver_zipcode']"));
     }
 });

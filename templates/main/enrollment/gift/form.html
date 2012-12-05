@@ -1,19 +1,14 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
 {% block breadcrumb_title %}Gavemedlemskap{% endblock %}
-{% block extra_css %}
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/datePicker/css/datepicker.min.css" media="screen">
-{% endblock %}
+
 {% block js_globals %}
   <script>
     window.session_receivers = [
 {% for receiver in receivers %}{
   'type_index': '{% firstof chosen_type receiver.type_index %}',
   'name': '{{ receiver.name }}',
-  'dob_dd': '{{ receiver.dob|date:"d" }}',
-  'dob_mm': '{{ receiver.dob|date:"m" }}',
-  'dob_yyyy': '{{ receiver.dob|date:"Y" }}',
+  'dob': '{{ receiver.dob|date:"d.m.Y" }}',
   'address': '{{ receiver.address }}',
   'zipcode': '{{ receiver.zipcode }}',
   'area': '{{ receiver.area }}',
@@ -24,10 +19,8 @@
     ];
   </script>
 {% endblock %}
+
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/datePicker/js/lang/no.js"></script>
-  <script src="{{ STATIC_URL }}lib/datePicker/js/datepicker.min.js"></script>
   <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
   {% if messages %}
     <script>
@@ -123,24 +116,9 @@
     <label>Fullt navn <span class="asterisk red">*</span></label>
     <input type="text" class="input-large" name="receiver_name">
   </div>
-  <div class="control-group dob">
+  <div class="control-group receiver_dob">
     <label>Fødselsdato <span class="asterisk red">*</span></label>
-    <select name="receiver_dob_dd">
-      {% for day in days %}
-        <option value="{{ day }}">{{ day }}</option>
-      {% endfor %}
-    </select>
-    <select name="receiver_dob_mm">
-      {% for month in months %}
-        <option value="{{ month.0 }}">{{ month.1 }}</option>
-      {% endfor %}
-    </select>
-    <select name="receiver_dob_yyyy">
-      {% for year in years %}
-        <option value="{{ year }}">{{ year }}</option>
-      {% endfor %}
-    </select>
-    <span class="dob-placement"></span>
+    <input type="text" class="input-medium pickadate" name="receiver_dob">
   </div>
   <div class="control-group receiver_address">
     <label> Adresse <span class="asterisk red">*</span></label>
