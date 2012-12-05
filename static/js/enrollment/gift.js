@@ -1,5 +1,3 @@
-window.datePickerCount = 1;
-
 $(document).ready(function() {
 
     var giver_control_group = $("div.control-group.giver_zipcode");
@@ -109,11 +107,6 @@ $(document).ready(function() {
         $("div.receiver-box").last().append(new_receiver);
         clone.find("div.control-group.receiver_type").popover();
         clone.find("select[name='receiver_type']").chosen({disable_search: true})
-        window.datePickerCount += 1;
-        clone.find("select[name='receiver_dob_dd']").attr('id', 'dp-dd-' + window.datePickerCount);
-        clone.find("select[name='receiver_dob_mm']").attr('id', 'dp-mm-' + window.datePickerCount);
-        clone.find("select[name='receiver_dob_yyyy']").attr('id', 'dp-yyyy-' + window.datePickerCount);
-        clone.find("span.dob-placement").attr('id', 'dob-placement-' + window.datePickerCount);
         addReceiverValidations(clone);
         clone.slideDown();
         return clone;
