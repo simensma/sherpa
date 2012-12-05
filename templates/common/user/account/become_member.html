@@ -88,7 +88,6 @@
 
         {% for message in messages %}
           {% if message.message == 'invalid_memberid' %}
-            {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
             <div class="error">
               <strong>Feil medlemsnummer eller postnummer</strong><br>
               Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
