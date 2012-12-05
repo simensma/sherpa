@@ -139,7 +139,7 @@ $(document).ready(function() {
         $("div.existing-result").hide();
     }
 
-    if(window.hasOwnProperty('trigger_form_validations')) {
+    if(window.trigger_form_validations) {
         $("form#household input").focusout();
         Validator.triggerZipcode(zipcode);
     }

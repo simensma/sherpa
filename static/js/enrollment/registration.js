@@ -78,7 +78,7 @@ $(document).ready(function() {
         $("div.dialog.conditions").dialog('close');
     });
 
-    if(window.hasOwnProperty('trigger_form_validations')) {
+    if(window.trigger_form_validations) {
         Validator.trigger();
         validateDatepicker();
         validateGender();
