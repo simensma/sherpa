@@ -84,17 +84,19 @@ $(document).ready(function() {
         );
 
         var dob = box.find("input[name='receiver_dob']");
-        dob.pickadate({
-            yearSelector: 200,
-            monthSelector: true,
-            onClose: function() {
-                Validator.performValidation({
-                    method: 'date',
-                    control_group: $("div.control-group.receiver_dob"),
-                    input: dob,
-                    req: true
-                });
-            }
+        dob.datepicker({
+            format: 'dd.mm.yyyy',
+            weekStart: 1,
+            startView: 'decade',
+            autoclose: true,
+            language: 'nb'
+        }).on('hide', function() {
+            Validator.performValidation({
+                method: 'date',
+                control_group: box.find("div.control-group.receiver_dob"),
+                input: dob,
+                req: true
+            });
         });
     }
 
@@ -173,9 +175,7 @@ $(document).ready(function() {
 
     if(window.trigger_form_validations) {
         Validator.trigger();
-        $("div.receiver-box input[name='receiver_dob']").each(function() {
-            $(this).data('pickadate').close();
-        });
+        $("div.receiver-box input[name='receiver_dob']").datepicker('hide');
         Validator.triggerZipcode($("input[name='receiver_zipcode']"));
     }
 });
