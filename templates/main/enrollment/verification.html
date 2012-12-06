@@ -118,7 +118,7 @@
                     {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
                   {% endif %}
                   {% if user.phone %}{{ user.phone }}<br>{% endif %}
-                  {% if user.get_profile.get_email %}{{ user.get_profile.get_email }}{% endif %}
+                  {% if user.email %}{{ user.email }}{% endif %}
                 </td>
                 <td class="type"></td>
                 <td><span class="price"></span>,-</td>
