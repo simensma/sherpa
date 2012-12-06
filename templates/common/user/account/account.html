@@ -36,6 +36,12 @@
           <th>Epost</th>
           <td>{{ user.get_profile.get_email }}</td>
         </tr>
+        <tr>
+          <th></th>
+          <td>
+            <i class="icon-pencil"></i> <a href="{% url user.views.update_account %}">Endre dine opplysninger</a>
+          </td>
+        </tr>
       </table>
 
       <p>
