@@ -28,17 +28,19 @@ $(document).ready(function() {
         req: false
     });
 
-    $("input[name='dob']").pickadate({
-        yearSelector: 200,
-        monthSelector: true,
-        onClose: function() {
-            Validator.performValidation({
-                method: 'date',
-                control_group: $("div.control-group.dob"),
-                input: $("input[name='dob']"),
-                req: true
-            });
-        }
+    $("input[name='dob']").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        startView: 'decade',
+        autoclose: true,
+        language: 'nb'
+    }).on('hide', function() {
+        Validator.performValidation({
+            method: 'date',
+            control_group: $("div.control-group.dob"),
+            input: $("input[name='dob']"),
+            req: true
+        });
     });
 
     Validator.validate({
@@ -65,7 +67,7 @@ $(document).ready(function() {
 
     // Trigger all validations
     Validator.trigger();
-    $("input[name='dob']").data('pickadate').close();
+    $("input[name='dob']").datepicker('hide');
     Validator.triggerZipcode($("input[name='zipcode']"));
 
 });
