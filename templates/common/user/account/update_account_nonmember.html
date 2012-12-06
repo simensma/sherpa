@@ -45,7 +45,7 @@
       {% endfor %}
     </div>
 
-    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal account-info">
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-default form-horizontal account-info">
       {% csrf_token %}
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>
