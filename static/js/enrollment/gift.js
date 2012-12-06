@@ -168,6 +168,6 @@ $(document).ready(function() {
     if(window.trigger_form_validations) {
         Validator.trigger();
         $("div.receiver-box input[name='receiver_dob']").datepicker('hide');
-        Validator.triggerZipcode($("input[name='receiver_zipcode']"));
+        Validator.triggerZipcode($("input[name='giver_zipcode'], input[name='receiver_zipcode']"));
     }
 });
