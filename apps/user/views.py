@@ -50,19 +50,19 @@ def update_account(request):
                 messages.error(request, 'duplicate_email_address')
                 errors = True
 
-            if not errors:
-                split = request.POST['name'].split(' ')
-                first_name = split[0]
-                last_name = ' '.join(split[1:])
-                request.user.username = username(request.POST['email'])
-                request.user.email = request.POST['email']
-                request.user.first_name = first_name
-                request.user.last_name = last_name
-                request.user.save()
-                messages.info(request, 'update_success')
-                return HttpResponseRedirect(reverse('user.views.account'))
-            else:
+            if errors:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
+
+            split = request.POST['name'].split(' ')
+            first_name = split[0]
+            last_name = ' '.join(split[1:])
+            request.user.username = username(request.POST['email'])
+            request.user.email = request.POST['email']
+            request.user.first_name = first_name
+            request.user.last_name = last_name
+            request.user.save()
+            messages.info(request, 'update_success')
+            return HttpResponseRedirect(reverse('user.views.account'))
     else:
         if request.method == 'GET':
             context = {
