@@ -1,0 +1,46 @@
+{# Use table because I couldn't achieve 100% width with an ordered list :( #}
+<table class="registration-progress">
+  <tr>
+    <td class="step{% if step == 1 %} current{% endif %}">
+      {% if step > 1 and step < 4 %}<a href="{% url enrollment.views_gift.index %}">{% endif %}
+        Velg gave
+      {% if step > 1 and step < 4 %}</a>{% endif %}
+    </td>
+    <td class="step{% if step == 2 %} current{% endif %}">
+      {% if step > 2 and step < 4 %}<a href="{% url enrollment.views_gift.form %}">{% endif %}
+        Personopplysninger
+      {% if step > 2 and step < 4 %}</a>{% endif %}
+    </td>
+    <td class="step{% if step == 3 %} current{% endif %}">
+      {% if step > 3 and step < 4 %}<a href="{% url enrollment.views_gift.validate %}">{% endif %}
+        Bekreft
+      {% if step > 3 and step < 4 %}</a>{% endif %}
+    </td>
+    <td class="step{% if step == 4 %} final{% endif %}">
+      Kvittering
+    </td>
+  </tr>
+</table>
+
+<div class="registration-progress-small">
+  <p>
+    {% if step == 1 %}<strong>{% endif %}
+      {% if step > 1 and step < 4 %}<a href="{% url enrollment.views_gift.index %}">{% endif %}
+        Velg gave
+      {% if step > 1 and step < 4 %}</a>{% endif %}
+    {% if step == 1 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 2 %}<strong>{% endif %}
+      {% if step > 2 and step < 4 %}<a href="{% url enrollment.views_gift.form %}">{% endif %}
+        Personopplysninger
+      {% if step > 2 and step < 4 %}</a>{% endif %}
+    {% if step == 2 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 3 %}<strong>{% endif %}
+      {% if step > 3 and step < 4 %}<a href="{% url enrollment.views_gift.validate %}">{% endif %}
+        Bekreft
+      {% if step > 3 and step < 4 %}</a>{% endif %}
+    {% if step == 3 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 4 %}<strong>{% endif %}
+        Kvittering
+    {% if step == 4 %}</strong>{% endif %}
+  </p>
+</div>

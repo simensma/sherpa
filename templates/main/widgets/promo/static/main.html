@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="span12">
+    <div class="wrapper ut">
+      {% include 'main/widgets/promo/static/menu.html' %}
+
+      <div class="right">
+        <h1 style="text-align: center; font-size: 50px; margin-top: 40px; padding-left: 20px; padding-right: 20p">Tom for gaveidéer?</h1>
+
+        <p style="text-align: center; font-size: 30px; font-family: 'DTL Nobel' !important; padding-left: 50px; padding-right: 50px">
+          <strong>Et medlemskap i DNT varer lenge og kan brukes så mye man vil.</strong>
+        </p>
+
+        <p class="button" style="text-align: center;">
+          <a class="btn btn-large" href="{% url enrollment.views_gift.index %}?utm_campaign=Gavemedlemskap">Gi bort gavemedlemskap</a>
+        </p>
+
+      </div>
+      <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/gavemedlemskap.jpg" alt="Gavemedlemskap">
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</div>

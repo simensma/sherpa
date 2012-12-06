@@ -1,0 +1,16 @@
+Fra: {{ giver.name }}
+{{ giver.address }}
+{{ giver.zipcode }} {{ giver.area }}{% if giver.memberid %}
+Medlemsnummer: {{ giver.memberid }}{% endif %}{% if giver.phone %}
+Tlf: {{ giver.phone }}{% endif %}{% if giver.email %}
+Epost: {{ giver.email }}{% endif %}
+
+{% for receiver in receivers %}Til: {{ receiver.name }}
+Type: {{ receiver.type.name }}
+Født: {{ receiver.dob|date:"j. F Y" }}
+{{ receiver.address }}
+{{ receiver.zipcode }} {{ receiver.area }}{% if receiver.phone %}
+Tlf: {{ receiver.phone }}{% endif %}{% if receiver.email %}
+Epost: {{ receiver.email }}{% endif %}
+
+{% endfor %}

@@ -1,0 +1,143 @@
+{% extends 'main/layout.html' %}
+{% block title %}Gavemedlemskap{% endblock %}
+{% block breadcrumb_title %}Gavemedlemskap{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.session_receivers = [
+{% for receiver in receivers %}{
+  'type_index': '{% firstof chosen_type receiver.type_index %}',
+  'name': '{{ receiver.name }}',
+  'dob': '{{ receiver.dob|date:"d.m.Y" }}',
+  'address': '{{ receiver.address }}',
+  'zipcode': '{{ receiver.zipcode }}',
+  'area': '{{ receiver.area }}',
+  'phone': '{{ receiver.phone }}',
+  'email': '{{ receiver.email }}'
+}
+{% if not forloop.last %},{% endif %}{% endfor %}
+    ];
+  </script>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
+  {% if messages %}
+    <script>
+      window.trigger_form_validations = true;
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Gi bort gavemedlemskap</h1>
+    {% include 'main/enrollment/gift/progress.html' with step=2 %}
+
+    {% if messages %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong>Vennligst sjekk følgende:</strong>
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        <p>Felt med feil eller mangler er markert med rødt under.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<form id="gift" method="post" action="{% url enrollment.views_gift.validate %}">
+  {% csrf_token %}
+  <input type="hidden" name="receivers" value="">
+  <div class="row">
+    <div class="span6">
+      <div class="border">
+        <h3>Dine opplysninger</h3>
+        <p>Faktura, gavekort og medlemskort blir sendt til din adresse.</p>
+        <div class="control-group giver_name">
+          <label>Fullt navn <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_name" value="{{ giver.name }}">
+        </div>
+        <div class="control-group giver_address">
+          <label> Adresse <span class="asterisk red">*</span></label>
+          <input type="text" class="input-large" name="giver_address" value="{{ giver.address }}">
+        </div>
+        <div class="control-group giver_zipcode">
+          <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{{ giver.zipcode }}" maxlength="10">
+          <input type="text" class="input-medium area" name="giver_area" value="{{ giver.area }}" disabled>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+        </div>
+        <div class="control-group giver_memberid" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i husstanden? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
+          <label>Medlemsnummer</label>
+          <input type="text" class="input-large" name="giver_memberid" value="{{ giver.memberid }}">
+        </div>
+        <div class="control-group giver_phone" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
+          <label> Mobiltelefon</label>
+          <input type="text" class="input-medium" name="giver_phone" value="{{ giver.phone }}">
+        </div>
+        <div class="control-group giver_email" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
+          <label> E-post</label>
+          <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="span6">
+      <div class="receivers">
+      </div>
+      <p class="forward-button">
+        <button class="btn btn-large btn-success" type="submit">Gå videre <i class="icon-arrow-right icon-white"></i></button>
+      </p>
+      <p class="new-receiver">
+        <button class="btn new-receiver"><i class="icon-user"></i> Legg til en ny mottaker</button>
+      </p>
+    </div>
+  </div>
+</form>
+
+<div class="receiver-box-skeleton border hide">
+  <button class="btn btn-danger remove-receiver pull-right"><i class="icon-remove icon-white"></i> Ta bort</button>
+  <h3>Mottaker av gavemedlemskapet</h3>
+  <div class="control-group receiver_type" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Medlemskapstype" data-content="Hvis du selv er hovedmedlem og skal gi gavemedlemskap til andre i husstanden kan disse få billigere medlemskap som husstandsmedlemmer. Du må i så fall oppgi medlemsnummeret ditt. <strong>Dette gjelder kun vanlig medlemskap i ett kalenderår.</strong>">
+    <label>Velg type medlemskap <span class="asterisk red">*</span></label>
+    <select name="receiver_type" data-placeholder="Velg type medlemskap...">
+      {% for type in types %}
+        <option value="{{ forloop.counter0 }}"{% if forloop.counter0 == chosen_type %} selected{% endif %}>{{ type.name }}{% if type.price %} (kr. {{ type.price }}){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="control-group receiver_name">
+    <label>Fullt navn <span class="asterisk red">*</span></label>
+    <input type="text" class="input-large" name="receiver_name">
+  </div>
+  <div class="control-group receiver_dob">
+    <label>Fødselsdato <span class="asterisk red">*</span></label>
+    <input type="text" class="input-medium" name="receiver_dob">
+  </div>
+  <div class="control-group receiver_address">
+    <label> Adresse <span class="asterisk red">*</span></label>
+    <input type="text" class="input-large" name="receiver_address">
+  </div>
+  <div class="control-group receiver_zipcode">
+    <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+    <input type="text" class="input-small zipcode" name="receiver_zipcode" maxlength="10">
+    <input type="text" class="input-medium area" name="receiver_area" disabled>
+    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+  </div>
+  <div class="control-group receiver_phone">
+    <label>Mobiltelefon</label>
+    <input type="text" class="input-large" name="receiver_phone">
+  </div>
+  <div class="control-group receiver_email">
+    <label>E-post</label>
+    <input type="text" class="input-large" name="receiver_email">
+  </div>
+</div>
+
+{% endblock %}

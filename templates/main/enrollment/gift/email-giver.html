@@ -1,0 +1,23 @@
+Takk for din bestilling av gavemedlemskap i DNT! Faktura, gavekort og medlemskort blir sendt til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
+
+Din bestilling:
+
+Fra: {{ giver.name }}
+{{ giver.address }}
+{{ giver.zipcode }} {{ giver.area }}{% if giver.memberid %}
+Medlemsnummer: {{ giver.memberid }}{% endif %}{% if giver.phone %}
+Tlf: {{ giver.phone }}{% endif %}{% if giver.email %}
+Epost: {{ giver.email }}{% endif %}
+
+{% for receiver in receivers %}Til: {{ receiver.name }}
+Type: {{ receiver.type.name }}
+Født: {{ receiver.dob|date:"j. F Y" }}
+{{ receiver.address }}
+{{ receiver.zipcode }} {{ receiver.area }}{% if receiver.phone %}
+Tlf: {{ receiver.phone }}{% endif %}{% if receiver.email %}
+Epost: {{ receiver.email }}{% endif %}
+
+{% endfor %}Feil med bestillingen? Ta kontakt med DNTs medlemsservice på telefon 40001870 eller e-post medlem@turistforeningen.no
+
+Mvh
+Den Norske Turistforening

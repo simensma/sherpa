@@ -1,0 +1,98 @@
+{% extends 'main/layout.html' %}
+{% block title %}Gavemedlemskap{% endblock %}
+{% block breadcrumb_title %}Gavemedlemskap{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Gi bort gavemedlemskap</h1>
+    {% include 'main/enrollment/gift/progress.html' with step=4 %}
+
+    <p class="gift-order-sent">
+      Din bestilling har blitt sendt!
+    </p>
+    <p>
+      Faktura, gavekort og medlemskort blir sendt til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
+    </p>
+    {% if any_normal_memberships %}
+      <p>
+        Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="{% url membership.views.index %}">Se gjeldende kontingentsatser</a>.
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row gift-receipt-details">
+  <div class="span4">
+
+    <h2 class="gift-from-to">Fra:</h2>
+    <div class="form-border">
+      <table class="gift-giver">
+        <tr>
+          <td><strong>{{ giver.name }}</strong></td>
+        </tr>
+        <tr>
+          <td>
+            {{ giver.address }}<br>
+            {{ giver.zipcode }} {{ giver.area }}
+          </td>
+        </tr>
+        {% if giver.memberid %}
+          <tr>
+            <td>Medlemsnummer: {{ giver.memberid }}</td>
+          </tr>
+        {% endif %}
+        {% if giver.phone %}
+          <tr>
+            <td>{{ giver.phone }}</td>
+          </tr>
+        {% endif %}
+        {% if giver.email %}
+          <tr>
+            <td>{{ giver.email }}</td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+    <p>
+      <a class="btn btn-large" href="{% url enrollment.views_gift.clear %}">Opprett ny bestilling</a>
+    </p>
+  </div>
+
+  <div class="span8">
+    <h2 class="gift-from-to">Til:</h2>
+
+    {% for receiver in receivers %}
+      <div class="form-border">
+        <p class="gift-receiver-type pull-right">{{ receiver.type.name }}{% if receiver.type.price %} kr. {{ receiver.type.price }}{% endif %}</p>
+        <table class="gift-receiver">
+          <tr>
+            <td><strong>{{ receiver.name }}</strong></td>
+          </tr>
+          <tr>
+            <td>Født: {{ receiver.dob|date:"j. F Y" }}</td>
+          </tr>
+          <tr>
+            <td>
+              {{ receiver.address }}<br>
+              {{ receiver.zipcode }} {{ receiver.area }}
+            </td>
+          </tr>
+          {% if receiver.phone %}
+            <tr>
+              <td>Tlf: {{ receiver.phone }}</td>
+            </tr>
+          {% endif %}
+          {% if receiver.email %}
+            <tr>
+              <td>{{ receiver.email }}</td>
+            </tr>
+          {% endif %}
+        </table>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

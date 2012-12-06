@@ -1,6 +1,6 @@
 /* Enrollment */
 
-form#registration label, form#household label {
+form#registration label, form#household label, form#gift label {
   font-size: 110%;
   font-family: "DTL Nobel" !important;
 }
@@ -149,63 +149,6 @@ p.address {
   padding: 12px;
 }
 
-/* Progress bar */
-
-table.registration-progress {
-  margin: 0 0 25px 0;
-  width: 100%;
-
-  td.step:first-of-type {
-    border-left: 3px solid rgb(255, 255, 255);
-  }
-
-  td.step {
-    /* Line-height is 24px so set vertical padding to max 48 (height of arrow-image) - line-height */
-    background-color: #dcddde;
-    padding: 12px 30px 12px 15px;
-    border-right: 3px solid rgb(255, 255, 255);
-  }
-
-  td.step.current {
-    color: white;
-    background: #d82a20 url('/static/img/step-current.png') top right no-repeat;
-    border-right: none !important;
-  }
-
-  td.step.final {
-    color: white;
-    background: #d82a20 top right no-repeat;
-  }
-}
-
-div.registration-progress-small {
-  display: none;
-}
-
-/* Progress bar for small screens */
-
-@media (max-width: 767px) {
-  table.registration-progress {
-    display: none;
-  }
-
-  div.registration-progress-small {
-    display: block;
-    padding: 6px;
-    border: 1px solid rgb(152, 152, 152);
-    margin-bottom: 18px;
-  }
-
-  div.registration-progress-small p {
-    font-family: "DTL Nobel" !important;
-    margin-bottom: 0;
-  }
-
-  div.registration-progress-small p i {
-    margin: 3px 3px 0 3px;
-  }
-}
-
 span.asterisk {
   font-size: 120%;
   font-weight: bold;
@@ -259,4 +202,109 @@ p.sms {
 
 table td.sum {
   font-weight: bold;
+}
+
+/* Gift */
+
+form.gift-entry {
+  margin-top: 40px;
+}
+
+form#gift {
+  margin-top: 20px;
+}
+
+form#gift div.border {
+  border: 1px solid rgb(221, 221, 221);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+}
+
+div.types {
+  border: 1px solid rgb(221, 221, 221);
+  padding: 14px 20px;
+  height: 170px;
+}
+
+form#gift div.receiver-box:first-of-type button.remove-receiver {
+  display: none;
+}
+
+p.type-display {
+  font-family: "DTL Nobel" !important;
+}
+
+p.type-display span {
+  font-weight: bold;
+}
+
+form#gift {
+  margin-top: 0;
+}
+
+form#gift input, form#gift select {
+  color: rgb(0, 0, 0);
+}
+
+form#gift select[name='receiver_type'] {
+  width: 300px;
+}
+
+form#gift a.date-picker-control {
+  margin-bottom: 8px;
+}
+
+form#gift {
+  div.control-group.giver_phone label, div.control-group.giver_email label, div.control-group.giver_memberid label, div.control-group.receiver_type label {
+    padding-left: 20px;
+    background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+  }
+
+  div.control-group.giver_phone:hover label, div.control-group.giver_email:hover label, div.control-group.giver_memberid:hover label, div.control-group.receiver_type:hover label {
+    background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+  }
+}
+
+table.gift-receiver {
+  margin-right: 20px;
+}
+
+table.gift-giver, table.gift-receiver {
+  td {
+    font-family: "DTL Nobel" !important;
+  }
+}
+
+p.gift-receiver-type {
+  font-family: "DTL Nobel" !important;
+  font-size: 18px;
+  font-weight: bold;
+
+  span.price-popover {
+    margin-left: 5px;
+
+    div.popover {
+      color: rgb(0, 0, 0);
+      font-weight: normal;
+    }
+  }
+}
+
+p.gift-order-sent {
+  font-family: "DTL Nobel" !important;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+p.gift-confirmation-buttons {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+div.gift-receipt-details {
+  margin-top: 40px;
+}
+
+h2.gift-from-to {
+  font-size: 22px;
 }
