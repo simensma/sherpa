@@ -5,24 +5,24 @@
     <div class="byline">
       {% if version.publishers.all|length == 1 %}
         {% with publisher=version.publishers.all.0 %}
-          <a href="mailto:{{ publisher.user.get_profile.get_email }}">
-            <img src="{% gravatar publisher.user.get_profile.get_email %}">
+          <a href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">
+            <img src="{% gravatar publisher.user.get_profile.get_sherpa_email %}">
           </a>
           <p>
-            Skrevet av <a href="mailto:{{ publisher.user.get_profile.get_email }}">{{ publisher.user.get_profile.get_full_name }}</a> {{ version.variant.article.pub_date|date:"j. F Y" }}<br>
-            <a class="email" href="mailto:{{ publisher.user.get_profile.get_email }}">{{ publisher.user.get_profile.get_email }}</a>
+            Skrevet av <a href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">{{ publisher.user.get_profile.get_full_name }}</a> {{ version.variant.article.pub_date|date:"j. F Y" }}<br>
+            <a class="email" href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">{{ publisher.user.get_profile.get_sherpa_email }}</a>
           </p>
         {% endwith %}
       {% else %}
         <p>Skrevet {{ version.variant.article.pub_date|date:"j. F Y" }} av:</p>
         {% for publisher in version.publishers.all %}
           <div class="multiple-authors">
-            <a href="mailto:{{ publisher.user.get_profile.get_email }}">
-              <img src="{% gravatar publisher.user.get_profile.get_email %}">
+            <a href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">
+              <img src="{% gravatar publisher.user.get_profile.get_sherpa_email %}">
             </a>
             <p>
-              <a href="mailto:{{ publisher.user.get_profile.get_email }}">{{ publisher.user.get_profile.get_full_name }}</a><br>
-              <a class="email" href="mailto:{{ publisher.user.get_profile.get_email }}">{{ publisher.user.get_profile.get_email }}</a>
+              <a href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">{{ publisher.user.get_profile.get_full_name }}</a><br>
+              <a class="email" href="mailto:{{ publisher.user.get_profile.get_sherpa_email }}">{{ publisher.user.get_profile.get_sherpa_email }}</a>
             </p>
           </div>
         {% endfor %}
