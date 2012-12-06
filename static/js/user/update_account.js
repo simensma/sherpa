@@ -14,6 +14,16 @@ $(document).ready(function() {
         req: true
     });
 
+    var control_group = $("div.control-group.sherpa-email");
+    if(control_group.length > 0) {
+        Validator.validate({
+            method: 'email',
+            control_group: control_group,
+            input: control_group.find("input[name='sherpa-email']"),
+            req: false
+        });
+    }
+
     Validator.validate({
         method: 'phone',
         control_group: $("div.control-group.phone_home"),
@@ -69,5 +79,13 @@ $(document).ready(function() {
     Validator.trigger();
     $("input[name='dob']").datepicker('hide');
     Validator.triggerZipcode($("input[name='zipcode']"));
+
+    $("input[name='toggle-sherpa-email']").change(function() {
+        if($(this).is(':checked')) {
+            $("input[name='sherpa-email']").removeAttr('readonly');
+        } else {
+            $("input[name='sherpa-email']").val('').attr('readonly', true).focusout();
+        }
+    });
 
 });

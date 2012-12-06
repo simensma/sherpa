@@ -46,12 +46,21 @@ def update_account(request):
                 messages.error(request, 'invalid_email_address')
                 errors = True
 
+            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
+                messages.error(request, 'invalid_sherpa_email_address')
+                errors = True
+
             if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
                 messages.error(request, 'duplicate_email_address')
                 errors = True
 
             if errors:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
+
+            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
+                profile = request.user.get_profile()
+                profile.sherpa_email = request.POST['sherpa-email']
+                profile.save()
 
             split = request.POST['name'].split(' ')
             first_name = split[0]
@@ -79,6 +88,10 @@ def update_account(request):
 
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email_address')
+                errors = True
+
+            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
+                messages.error(request, 'invalid_sherpa_email_address')
                 errors = True
 
             if not validator.phone(request.POST['phone_home'], req=False):
@@ -118,6 +131,11 @@ def update_account(request):
 
             request.user.username = username(request.POST['email'])
             request.user.save()
+
+            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
+                profile = request.user.get_profile()
+                profile.sherpa_email = request.POST['sherpa-email']
+                profile.save()
 
             actor = request.user.get_profile().actor()
             name_split = request.POST['name'].split(' ')

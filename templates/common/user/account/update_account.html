@@ -31,6 +31,10 @@
             <div class="hint error">
               <strong>Du må oppgi en gyldig e-post adresse.</strong>
             </div>
+          {% elif message.message == 'invalid_sherpa_email_address' %}
+            <div class="hint error">
+              <strong>Du har angitt en ugyldig Sherpa-epostadresse. En slik adresse er valgfri, hvis du ikke vil ha den tar du bare bort krysset foran tekstfeltet.</strong>
+            </div>
           {% elif message.message == 'invalid_phone_home' %}
             <div class="hint error">
               <strong>Du har ikke fylt inn et gyldig hjemtelefonnummer. Dette feltet er ikke påkrevd, du kan la det stå tomt om du ønsker.</strong>
@@ -77,14 +81,22 @@
 
       <div class="control-group email">
         <label class="control-label" for="email">E-post</label>
-        <div class="controls"{% if perms.user.sherpa %} data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Gravatar-tips" data-content="Hvis du skriver artikler i Sherpa, bruker vi e-posten din til å hente ditt <em>Gravatar</em>-bilde. For å få et slikt bilde, registrer deg på www.gravatar.com med <strong>samme</strong> e-postadresse som du bruker her."{% endif %}>
+        <div class="controls">
           <input type="text" class="input-xlarge" name="email" value="{{ user.get_profile.get_email }}">
-          {% if perms.user.sherpa %}
-            <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
-            <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
-          {% endif %}
         </div>
       </div>
+
+      {% if perms.user.sherpa %}
+        <div class="control-group sherpa-email">
+          <label class="control-label" for="sherpa-email">E-post i Sherpa</label>
+          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Egen Sherpa-epost" data-content="Hvis du bruker din private e-postadresse på Min side, kan du angi en egen e-postadresse for Sherpa. Den vil vises i artikler du skriver og på din Sherpa-profil.<br><br>Tips: Registrer adressen på www.gravatar.com!">
+            <input name="toggle-sherpa-email" type="checkbox"{% if user.get_profile.sherpa_email != '' %} checked{% endif %}>
+            <input type="text" class="input-xlarge" name="sherpa-email" value="{{ user.get_profile.sherpa_email }}"{% if user.get_profile.sherpa_email == '' %} readonly{% endif %}>
+            <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+            <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
+          </div>
+        </div>
+      {% endif %}
 
       <div class="control-group phone_home">
         <label class="control-label" for="phone_home">Telefon</label>

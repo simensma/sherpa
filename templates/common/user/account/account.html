@@ -33,9 +33,15 @@
           <td>{{ user.get_profile.get_full_name }}</td>
         </tr>
         <tr>
-          <th>Epost</th>
+          <th>E-post</th>
           <td>{{ user.get_profile.get_email }}</td>
         </tr>
+        {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
+          <tr>
+            <th>E-post i Sherpa</th>
+            <td>{{ user.get_profile.sherpa_email }}</td>
+          </tr>
+        {% endif %}
         <tr>
           <th></th>
           <td>
@@ -58,9 +64,15 @@
           <td>{{ user.get_profile.actor.get_full_name }}</td>
         </tr>
         <tr>
-          <th>E-postadresse</th>
+          <th>Epost</th>
           <td>{{ user.get_profile.actor.email }}</td>
         </tr>
+        {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
+          <tr>
+            <th>Epost i Sherpa</th>
+            <td>{{ user.get_profile.sherpa_email }}</td>
+          </tr>
+        {% endif %}
         <tr>
           <th>Telefon</th>
           <td>{{ user.get_profile.actor.phone_home|default:"" }}</td>
