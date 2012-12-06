@@ -11,6 +11,7 @@ class Profile(models.Model):
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     memberid = models.IntegerField(null=True, unique=True)
+    sherpa_email = models.EmailField()
 
     ### Focus-related ###
 
@@ -47,6 +48,12 @@ class Profile(models.Model):
             return self.user.email
         else:
             return self.actor().email
+
+    def get_sherpa_email(self):
+        if self.sherpa_email != '':
+            return self.sherpa_email
+        else:
+            return self.get_email()
 
     # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
