@@ -36,17 +36,17 @@ class Profile(models.Model):
         else:
             return self.actor().last_name
 
-    def get_email(self):
-        if self.memberid is None:
-            return self.user.email
-        else:
-            return self.actor().email
-
     def get_full_name(self):
         if self.memberid is None:
             return self.user.get_full_name()
         else:
             return "%s %s" % (self.actor().first_name, self.actor().last_name)
+
+    def get_email(self):
+        if self.memberid is None:
+            return self.user.email
+        else:
+            return self.actor().email
 
     # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
