@@ -28,7 +28,7 @@ def list(request):
     return render(request, 'common/admin/articles/list.html', context)
 
 def new(request):
-    article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None)
+    article = Article(thumbnail=None, hide_thumbnail=False, published=False, pub_date=None, site=request.session['active_association'].site)
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user.get_profile())
     variant.save()
