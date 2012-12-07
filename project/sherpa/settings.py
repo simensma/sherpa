@@ -67,6 +67,7 @@ INSTALLED_APPS = (
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
+    'sherpa25', # Only db-models from Sherpa 2.5
     'core',
     'page',
     'admin',
