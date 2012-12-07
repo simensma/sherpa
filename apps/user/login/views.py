@@ -14,7 +14,7 @@ import json, re
 
 from user.models import Profile
 from focus.models import Actor
-from user.util import username, memberid_lookups_exceeded
+from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
 
 from core import validator
 
@@ -31,8 +31,26 @@ def login(request):
             log_user_in(request, user)
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
-            context = {'invalid_credentials': True, 'next': request.GET.get('next')}
-            return render(request, 'common/user/login/login.html', context)
+            old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
+            if old_member is not None:
+                if Profile.objects.filter(memberid=old_member.memberid).exists():
+                    messages.error(request, 'old_memberid_but_memberid_exists')
+                    return render(request, 'common/user/login/login.html')
+
+                if User.objects.filter(username=username(request.POST['email'])):
+                    messages.error(request, 'old_memberid_but_email_exists')
+                    return render(request, 'common/user/login/login.html')
+
+                # Authenticated old user, create a new one
+                User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
+                user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
+                profile = Profile(user=user, memberid=old_member.memberid)
+                profile.save()
+                log_user_in(request, user)
+                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+            else:
+                context = {'invalid_credentials': True, 'next': request.GET.get('next')}
+                return render(request, 'common/user/login/login.html', context)
 
 def logout(request):
     log_user_out(request)

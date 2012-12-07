@@ -25,6 +25,23 @@
     </div>
 
     <div class="span6">
+
+      {% for message in messages %}
+        {% if message.message == 'old_memberid_but_memberid_exists' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Feil e-postadresse eller passord</strong><br>
+            Du logget på med din gamle bruker, du må bruke ditt nye passord eller din nye e-postadresse. Hvis du har glemt passordet, klikk på "Glemt passord?" under.
+          </div>
+        {% elif message.message == 'old_memberid_but_email_exists' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>E-postadressen er allerede i bruk</strong><br>
+            Vi fant din gamle Min side-bruker, men når vi prøvde å flytte deg over til nye Min side, så vi at det allerede finnes en bruker med samme e-postadresse. Den brukeren har imidlertid ikke samme medlemsnummer, så er du sikker på at du har angitt rett e-postadresse?
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <h2>Logg inn til Min side</h2>
       <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post">
         {% csrf_token %}

@@ -2,7 +2,9 @@
 from django.core.cache import cache
 from django.conf import settings
 
-import md5
+import md5, hashlib
+
+from sherpa25.models import Member
 
 # This returns a username value based on the email address.
 # Define it as the first 30 hex-characters of the MD5 hash of the stripped, lowercase email.
@@ -29,3 +31,12 @@ def memberid_lookups_exceeded(ip_address):
         else:
             return True
     return False
+
+def authenticate_sherpa2_user(email, password):
+    sha1 = hashlib.sha1()
+    sha1.update(password)
+    hashed_password = sha1.hexdigest()
+    try:
+        return Member.objects.get(email=email, password=hashed_password)
+    except Member.DoesNotExist:
+        return None
