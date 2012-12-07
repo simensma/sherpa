@@ -48,31 +48,49 @@
 </article>
 
 {# Adding columns #}
-<div id="dialog-columns" class="dialog" data-title="Velg kolonnestruktur" data-width="auto">
-  <h1 class="sherpa">Én kolonne:</h1>
-  <p><img src="{{ STATIC_URL }}img/columns/full.png" data-choice="0" alt="Én kolonne"></p>
+<div class="modal hide insert-columns" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg kolonnestruktur</h3>
+  </div>
+  <div class="modal-body">
+    <h1 class="sherpa">Én kolonne:</h1>
+    <p><img src="{{ STATIC_URL }}img/columns/full.png" data-choice="0" alt="Én kolonne"></p>
 
-  <h1 class="sherpa">To kolonner (sidebar):</h1>
-  <p><img src="{{ STATIC_URL }}img/columns/sidebar.png" data-choice="1" alt="To kolonner (sidebar)"></p>
+    <h1 class="sherpa">To kolonner (sidebar):</h1>
+    <p><img src="{{ STATIC_URL }}img/columns/sidebar.png" data-choice="1" alt="To kolonner (sidebar)"></p>
 
-  <h1 class="sherpa">To kolonner:</h1>
-  <p><img src="{{ STATIC_URL }}img/columns/two.png" data-choice="2" alt="To kolonner"></p>
+    <h1 class="sherpa">To kolonner:</h1>
+    <p><img src="{{ STATIC_URL }}img/columns/two.png" data-choice="2" alt="To kolonner"></p>
 
-  <h1 class="sherpa">Tre kolonner:</h1>
-  <p><img src="{{ STATIC_URL }}img/columns/three.png" data-choice="3" alt="Tre kolonner"></p>
+    <h1 class="sherpa">Tre kolonner:</h1>
+    <p><img src="{{ STATIC_URL }}img/columns/three.png" data-choice="3" alt="Tre kolonner"></p>
 
-  <h1 class="sherpa">Fire kolonner:</h1>
-  <p><img src="{{ STATIC_URL }}img/columns/four.png" data-choice="4" alt="Fire kolonner"></p>
+    <h1 class="sherpa">Fire kolonner:</h1>
+    <p><img src="{{ STATIC_URL }}img/columns/four.png" data-choice="4" alt="Fire kolonner"></p>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
 
 {# Adding widgets #}
-<div id="dialog-add-widget" class="dialog" data-title="Legg til ny widget" data-width="90%">
-  {% include 'main/widgets/quote/thumbnail.html' %}
-  {% include 'main/widgets/articles/thumbnail.html' %}
-  {% include 'main/widgets/blog/thumbnail.html' %}
-  {% include 'main/widgets/embed/thumbnail.html' %}
-  {% include 'main/widgets/carousel/thumbnail.html' %}
-  {% include 'main/widgets/fact/thumbnail.html' %}
+<div class="modal container hide add-widget">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg en widget</h3>
+  </div>
+  <div class="modal-body">
+    {% include 'main/widgets/quote/thumbnail.html' %}
+    {% include 'main/widgets/articles/thumbnail.html' %}
+    {% include 'main/widgets/blog/thumbnail.html' %}
+    {% include 'main/widgets/embed/thumbnail.html' %}
+    {% include 'main/widgets/carousel/thumbnail.html' %}
+    {% include 'main/widgets/fact/thumbnail.html' %}
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
 
 {# Widget edit-dialogs #}
@@ -93,63 +111,72 @@
 {% include 'common/admin/editor/image-dialog.html' %}
 
 {# Insert button #}
-<div id="dialog-add-button" class="dialog" data-title="Legg til ny knapp" data-width="auto">
-  <div class="alert alert-info">
-    <a class="close">x</a>
-    <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
+<div class="modal hide add-button" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Legg til ny knapp</h3>
   </div>
-  <table>
-    <tr>
-      <td>Tekst på knappen:</td>
-      <td><input type="text" name="text" class="input-small"></td>
-    </tr>
-    <tr>
-      <td>Adresse knappen går til:</td>
-      <td><input type="text" name="url" class="input-xlarge"></td>
-    </tr>
-  </table>
-  {# Size-buttons here have font-size hardcoded because the font-size set by bootstrap is overridden by jquery-ui. It's not a pretty hack, but those font sizes are unlikely to change much so, whatever. #}
-  <table class="table choices">
-    <tr>
-      <td><input type="radio" name="color" value="" checked></td>
-      <td><button class="btn">Vanlig knapp</button></td>
-      <td><input type="radio" name="size" value=" btn-large"></td>
-      <td><button class="btn btn-large" style="font-size: 15px">Stor</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-primary"></td>
-      <td><button class="btn btn-primary">Hovedknapp</button></td>
-      <td><input type="radio" name="size" value="" checked></td>
-      <td><button class="btn">Middels</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-info"></td>
-      <td><button class="btn btn-info">Informasjon</button></td>
-      <td><input type="radio" name="size" value="btn-small"></td>
-      <td><button class="btn btn-small" style="font-size: 11px">Liten</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-success"></td>
-      <td><button class="btn btn-success">Suksess</button></td>
-      <td><input type="radio" name="size" value="btn-mini"></td>
-      <td><button class="btn btn-mini" style="font-size: 11px">Mini</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-warning"></td>
-      <td><button class="btn btn-warning">Advarsel</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-danger"></td>
-      <td><button class="btn btn-danger">Fare</button></td>
-    </tr>
-    <tr>
-      <td><input type="radio" name="color" value="btn-inverse"></td>
-      <td><button class="btn btn-inverse">Invertert</button></td>
-    </tr>
-  </table>
-  <p style="width: 100%; text-align: center;">
-    <button class="btn btn-primary btn-large insert"><i class="icon-share-alt"></i> Sett inn knapp</button>
-  </p>
+  <div class="modal-body">
+    <div class="alert alert-info">
+      <a class="close">x</a>
+      <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
+    </div>
+    <table>
+      <tr>
+        <td>Tekst på knappen:</td>
+        <td><input type="text" name="text" class="input-small"></td>
+      </tr>
+      <tr>
+        <td>Adresse knappen går til:</td>
+        <td><input type="text" name="url" class="input-xlarge"></td>
+      </tr>
+    </table>
+    {# Size-buttons here have font-size hardcoded because the font-size set by bootstrap is overridden by jquery-ui. It's not a pretty hack, but those font sizes are unlikely to change much so, whatever. #}
+    <table class="table choices">
+      <tr>
+        <td><input type="radio" name="color" value="" checked></td>
+        <td><button class="btn">Vanlig knapp</button></td>
+        <td><input type="radio" name="size" value=" btn-large"></td>
+        <td><button class="btn btn-large" style="font-size: 15px">Stor</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-primary"></td>
+        <td><button class="btn btn-primary">Hovedknapp</button></td>
+        <td><input type="radio" name="size" value="" checked></td>
+        <td><button class="btn">Middels</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-info"></td>
+        <td><button class="btn btn-info">Informasjon</button></td>
+        <td><input type="radio" name="size" value="btn-small"></td>
+        <td><button class="btn btn-small" style="font-size: 11px">Liten</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-success"></td>
+        <td><button class="btn btn-success">Suksess</button></td>
+        <td><input type="radio" name="size" value="btn-mini"></td>
+        <td><button class="btn btn-mini" style="font-size: 11px">Mini</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-warning"></td>
+        <td><button class="btn btn-warning">Advarsel</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-danger"></td>
+        <td><button class="btn btn-danger">Fare</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-inverse"></td>
+        <td><button class="btn btn-inverse">Invertert</button></td>
+      </tr>
+    </table>
+    <p style="width: 100%; text-align: center;">
+      <button class="btn btn-primary btn-large insert"><i class="icon-share-alt"></i> Sett inn knapp</button>
+    </p>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
 
 {# Main toolbar #}
@@ -181,7 +208,7 @@
   </select>
   <div class="btn-group">
     <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
-    <button class="btn dialog-button insert-button" data-dialog="#dialog-add-button"><i class="icon-share-alt"></i> Knapp</button>
+    <button class="btn insert-button"><i class="icon-share-alt"></i> Knapp</button>
     <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
   </div>
   {% if toolbar_structure %}

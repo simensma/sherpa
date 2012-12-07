@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     /* Carousel */
 
-    $("div.dialog.widget-edit[data-widget='carousel'] div#ratio-radio").append(getRatioRadioButtons());
+    $("div.widget-edit[data-widget='carousel'] div#ratio-radio").append(getRatioRadioButtons());
 
     //carousel, stop spinning
     $('.carousel').each(function(){
@@ -14,18 +14,18 @@ $(document).ready(function() {
     });
 
     // Save any widget
-    $("div.dialog.widget-edit button.save").click(function() {
-        var content = validateContent($(this).parents("div.dialog.widget-edit"));
+    $("div.widget-edit button.save").click(function() {
+        var content = validateContent($(this).parents("div.widget-edit"));
         if(content === false) {
             return $(this);
         }
-        $("div.dialog.widget-edit").dialog('close');
+        $("div.widget-edit").modal('hide');
         saveWidget(content);
     });
 
     // Remove any widget
-    $("div.dialog.widget-edit button.remove").click(function() {
-        $(this).parents(".dialog").dialog('close');
+    $("div.widget-edit button.remove").click(function() {
+        $(this).parents(".widget-edit").modal('hide');
         if(widgetBeingEdited != undefined){
             removeContent(widgetBeingEdited);
         }
@@ -33,14 +33,14 @@ $(document).ready(function() {
 
     //the code below in the readyfunction is the carousel
     //navigation
-    $("div.dialog.widget-edit button.previous").click(function() {
+    $("div.widget-edit button.previous").click(function() {
         saveCropping();
         if(currentIndex > 0){
             currentIndex--;
         }
         displayCurrentImage();
     });
-    $("div.dialog.widget-edit button.next").click(function() {
+    $("div.widget-edit button.next").click(function() {
         saveCropping();
         if(currentIndex == imageList.length -1){
             //another image is added if you are at the last image and the current image isn't a blank
@@ -59,7 +59,7 @@ $(document).ready(function() {
     });
 
     //remove clicked
-    $("div.dialog.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
+    $("div.widget-edit[data-widget='carousel'] button[name='remove']").click(function(){
         imageList.splice(currentIndex, 1);
         if(currentIndex > 0){
             currentIndex--;
@@ -77,12 +77,12 @@ $(document).ready(function() {
     });
 
     //choose clicked
-    $("div.dialog.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
+    $("div.widget-edit[data-widget='carousel'] button[name='choose']").click(function(){
         chooseImagefromArchive(chooseFromSpurce);
     });
 
     //upload clicked
-    $("div.dialog.widget-edit[data-widget='carousel'] button[name='upload']").click(function(){
+    $("div.widget-edit[data-widget='carousel'] button[name='upload']").click(function(){
         openImageUpload(chooseFromSpurce);
     });
 
@@ -95,28 +95,28 @@ $(document).ready(function() {
     }
 
     //updating data in "model" on key up
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
+    $("div.widget-edit[data-widget='carousel'] input[name='url']").keyup(function(){
         imageList[currentIndex].url = $(this).val().trim();
         imageList[currentIndex].selection = undefined;
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+        $("div.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
     });
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
+    $("div.widget-edit[data-widget='carousel'] input[name='description']").keyup(function(){
         imageList[currentIndex].description = $(this).val().trim();
     });
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").keyup(function(){
+    $("div.widget-edit[data-widget='carousel'] input[name='photographer']").keyup(function(){
         imageList[currentIndex].photographer = $(this).val().trim();
     });
 
     //ratio
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']").change(function(){
-        imageList[currentIndex].ratio = $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']:checked").val();
+    $("div.widget-edit[data-widget='carousel'] input[name='ratio']").change(function(){
+        imageList[currentIndex].ratio = $("div.widget-edit[data-widget='carousel'] input[name='ratio']:checked").val();
         setCarouselRatio(true);
     });
 
     /* Articles */
 
     // Enable/disable
-    var articles = $("div.dialog.widget-edit[data-widget='articles']");
+    var articles = $("div.widget-edit[data-widget='articles']");
     articles.find("input[name='tag-link']").typeahead({
         minLength: 3,
         source: function(query, process) {
@@ -281,12 +281,12 @@ function openWidgetDialog(type, parentWidth){
 function editWidget() {
     widgetBeingEdited = $(this);
     var widget = JSON.parse($(this).attr('data-json'));
-    $("div.dialog.widget-edit[data-widget='" + widget.widget + "']").dialog('open');
+    $("div.widget-edit[data-widget='" + widget.widget + "']").modal();
     if(widget.widget == 'quote') {
-        $("div.dialog.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
-        $("div.dialog.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
+        $("div.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
+        $("div.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
     } else if(widget.widget == 'articles') {
-        var articles = $("div.dialog.widget-edit[data-widget='articles']");
+        var articles = $("div.widget-edit[data-widget='articles']");
         articles.find("input[name='title']").val(widget.title);
         articles.find("input[name='count']").val(widget.count);
         if(widget.tag_link == null) {
@@ -308,14 +308,14 @@ function editWidget() {
             articles.find("input[name='tags']").attr('disabled', true);
         }
     } else if(widget.widget == 'blog') {
-        $("div.dialog.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
-        $("div.dialog.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
+        $("div.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
+        $("div.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
     } else if(widget.widget == 'embed') {
-        $("div.dialog.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
+        $("div.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
     }else if(widget.widget == 'carousel') {
         listImages();
     } else if(widget.widget == 'fact') {
-        $("div.dialog.widget-edit[data-widget='fact'] div.content").html(widget.content);
+        $("div.widget-edit[data-widget='fact'] div.content").html(widget.content);
     }
 }
 
@@ -331,37 +331,37 @@ function displayCurrentImage(){
             imageList[currentIndex].ratio = imageList[currentIndex-1].ratio
         }
     }
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='ratio']").each(function(){
+    $("div.widget-edit[data-widget='carousel'] input[name='ratio']").each(function(){
         if($(this).val() == imageList[currentIndex].ratio){
             $(this).attr("checked", "checked");
         }
     });
 
-    $("div.dialog.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
-    $("div.dialog.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
+    $("div.widget-edit[data-widget='carousel'] label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
+    $("div.widget-edit[data-widget='carousel'] input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
+    $("div.widget-edit[data-widget='carousel'] input[name='description']").val(imageList[currentIndex].description);
+    $("div.widget-edit[data-widget='carousel'] input[name='photographer']").val(imageList[currentIndex].photographer);
 
     if(imageList[currentIndex].url.trim().length < 1){
-        var def = $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
-        $("div.dialog.widget-edit[data-widget='carousel'] div#preview").hide();
+        var def = $("div.widget-edit[data-widget='carousel'] img[name='preview']").attr("default");
+        $("div.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', def);
+        $("div.widget-edit[data-widget='carousel'] div#preview").hide();
     }else{
-        $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
-        $("div.dialog.widget-edit[data-widget='carousel'] div#preview").show();
+        $("div.widget-edit[data-widget='carousel'] img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+        $("div.widget-edit[data-widget='carousel'] div#preview").show();
     }
 
     if(currentIndex == imageList.length -1){
-        $("div.dialog.widget-edit button.next").text(" Nytt bilde");
-        $("div.dialog.widget-edit button.next").prepend("<i class='icon-plus'></i>");
+        $("div.widget-edit button.next").text(" Nytt bilde");
+        $("div.widget-edit button.next").prepend("<i class='icon-plus'></i>");
     }else{
-        $("div.dialog.widget-edit button.next").text("Neste bilde ")
-        $("div.dialog.widget-edit button.next").append("<i class='icon-chevron-right'></i>");
+        $("div.widget-edit button.next").text("Neste bilde ")
+        $("div.widget-edit button.next").append("<i class='icon-chevron-right'></i>");
     }
 
     //hax, the onload function is for when you are changing images and the selector needs a new height
-    $("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']").imagesLoaded(function(){
-        openImageCropper($("div.dialog.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.dialog.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
+    $("div.widget-edit[data-widget='carousel'] img[name='preview']").imagesLoaded(function(){
+        openImageCropper($("div.widget-edit[data-widget='carousel'] img[name='preview']"), $("div.widget-edit[data-widget='carousel']"), imageList[currentIndex].selection);
         setCarouselRatio(imageList[currentIndex].selection == undefined);
         if(imageList[currentIndex].url.trim().length < 1){
             currentCropperInstance.cancelSelection();

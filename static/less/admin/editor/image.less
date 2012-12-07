@@ -1,16 +1,24 @@
 /* Change image-dialog */
 
-div#dialog-change-image {
+div.change-image {
   h2 {
-    font-size: 120%;
+    font-size: 20px;
   }
 
   button.button-aligned {
     margin-bottom: 10px;
   }
+
+  div.preview-container {
+    max-width: 100%;
+
+    img {
+      border: 1px solid rgb(0, 0, 0);
+    }
+  }
 }
 
-div#dialog-image-archive-chooser {
+div.image-archive-chooser {
   div#imagearchive {
     div#contentlist {
       div.album {

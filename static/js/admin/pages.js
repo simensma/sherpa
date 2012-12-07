@@ -6,18 +6,21 @@ $(document).ready(function() {
 
     var validUrl = false;
 
-    $("a.open-page-dialog").click(function() {
-        $("div.page-dialog input[name='title']").keyup()
+    var newPage = $("div.new-page");
+
+    $("a.new-page").click(function() {
+        newPage.find("input[name='title']").keyup();
+        newPage.modal();
     });
-    $("div.page-dialog img.loader").hide();
-    $("div.page-dialog span.valid").hide();
-    $("div.page-dialog span.invalid").hide();
-    $("div.page-dialog input[name='title']").keyup(function() {
+    newPage.find("img.loader").hide();
+    newPage.find("span.valid").hide();
+    newPage.find("span.invalid").hide();
+    newPage.find("input[name='title']").keyup(function() {
         lookupVal = $(this).val().replace(/[^-_a-z0-9\s]+/gi, '')
                                  .replace(/\s+/g, "-")
                                  .toLowerCase();
         updateSlash(lookupVal.length == 0);
-        $("div.page-dialog span.slug").text(lookupVal);
+        newPage.find("span.slug").text(lookupVal);
         initiateLookup();
         clearTimeout(lookupTimer);
         lookupTimer = setTimeout(performLookup, KEY_LOOKUP_DELAY);
@@ -28,9 +31,9 @@ $(document).ready(function() {
     var KEY_LOOKUP_DELAY = 1000;
 
     function initiateLookup() {
-        $("div.page-dialog span.valid").hide();
-        $("div.page-dialog span.invalid").hide();
-        $("div.page-dialog img.loader").show();
+        newPage.find("span.valid").hide();
+        newPage.find("span.invalid").hide();
+        newPage.find("img.loader").show();
     }
 
     function performLookup() {
@@ -42,26 +45,26 @@ $(document).ready(function() {
             result = JSON.parse(result);
             if(result.valid) {
                 validUrl = true;
-                $("div.page-dialog span.valid").show();
+                newPage.find("span.valid").show();
             } else {
                 validUrl = false;
-                $("div.page-dialog span.invalid").show();
+                newPage.find("span.invalid").show();
             }
         }).fail(function(result) {
             // Todo
         }).always(function() {
-            $("div.page-dialog img.loader").hide();
+            newPage.find("img.loader").hide();
         });
     }
 
-    $("div.page-dialog i.save-slug").hide().click(saveSlug);
-    $("div.page-dialog i.edit-slug").click(editSlug);
-    $("div.page-dialog span.slug").click(editSlug);
+    newPage.find("i.save-slug").hide().click(saveSlug);
+    newPage.find("i.edit-slug").click(editSlug);
+    newPage.find("span.slug").click(editSlug);
 
     function editSlug() {
-        $("div.page-dialog i.edit-slug").hide();
-        $("div.page-dialog i.save-slug").show();
-        var span = $("div.page-dialog span.slug");
+        newPage.find("i.edit-slug").hide();
+        newPage.find("i.save-slug").show();
+        var span = newPage.find("span.slug");
         var input = $('<input type="text" name="slug-input" value="' + decodeURIComponent(span.text()) + '">');
         input.focusout(saveSlug);
         input.keyup(function() {
@@ -76,7 +79,7 @@ $(document).ready(function() {
     }
 
     function saveSlug() {
-        var input = $("div.page-dialog input[name='slug-input']");
+        var input = newPage.find("input[name='slug-input']");
         var val = input.val();
         val = val.replace(/\/+$/, '');
         updateSlash(val.length == 0);
@@ -86,32 +89,32 @@ $(document).ready(function() {
         lookupVal = val;
         initiateLookup();
         performLookup();
-        $("div.page-dialog i.save-slug").hide();
-        $("div.page-dialog i.edit-slug").show();
+        newPage.find("i.save-slug").hide();
+        newPage.find("i.edit-slug").show();
     }
 
     function updateSlash(hide) {
         if(hide) {
-            $("div.page-dialog span.slash").text('');
+            newPage.find("span.slash").text('');
         } else {
-            $("div.page-dialog span.slash").text('/');
+            newPage.find("span.slash").text('/');
         }
     }
 
-    $("div.page-dialog form").submit(function() {
+    newPage.find("form").submit(function() {
         $(this).find("input[name='slug']").val($(this).find("span.slug").text());
     });
 
-    $("div.page-dialog img[data-template]").click(function() {
+    newPage.find("img[data-template]").click(function() {
         if(!validUrl) {
             alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
             return;
         }
-        if($("div.page-dialog input[name='title']").val().length == 0) {
+        if(newPage.find("input[name='title']").val().length == 0) {
             alert("Du må skrive inn en tittel på siden før du oppretter den!");
             return;
         }
-        $("div.page-dialog input[name='template']").val($(this).attr('data-template'));
+        newPage.find("input[name='template']").val($(this).attr('data-template'));
         $(this).parents("form").submit();
     });
 

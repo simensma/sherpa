@@ -1,43 +1,52 @@
-<div id="dialog-change-image" class="dialog" data-title="Velg bilde" data-width="60%">
-  <div class="image-details">
-    <div class="alert alert-error empty-src">
-      <a class="close">x</a>
-      <strong>Sett inn hvilket bilde?</strong><br>
-      Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
-    </div>
-    <table>
-      <tr>
-        <td>Bilde:</td>
-        <td><input type="text" class="input-xlarge" name="src"></td>
-        <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button></td>
-        <td><button class="btn btn-success upload-image"><i class="icon-share-alt"></i> Last opp bilde</button></td>
-      </tr>
-      <tr class="description">
-        <td>Bildetekst:</td>
-        <td><input type="text" class="input-xlarge" name="description"></td>
-      </tr>
-      <tr class="photographer">
-        <td>Fotograf:</td>
-        <td><input type="text" class="input-xlarge" name="photographer"></td>
-      </tr>
-      <tr class="anchor">
-        <td>Lenker til:</td>
-        <td><input type="text" class="input-xlarge" name="anchor"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>
-          <button class="btn btn-success btn-large insert-image"><i class="icon-ok"></i> Sett inn</button>
-          <button class="btn btn-danger btn-large remove-image"><i class="icon-remove"></i> Fjern bildet</button>
-        </td>
-      </tr>
-    </table>
+<div class="modal container hide change-image">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg et bilde å sette inn...</h3>
   </div>
-  <br>
-  <div style="max-width:100%;" class="preview-container">
-    <h2>Her kan du beskjære bildet:</h2>
-    <div id="ratio-radio">
+  <div class="modal-body">
+    <div class="image-details">
+      <div class="alert alert-error empty-src">
+        <a class="close">x</a>
+        <strong>Sett inn hvilket bilde?</strong><br>
+        Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
+      </div>
+      <table>
+        <tr>
+          <td>Bilde:</td>
+          <td><input type="text" class="input-xlarge" name="src"></td>
+          <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button></td>
+          <td><button class="btn btn-success upload-image"><i class="icon-share-alt"></i> Last opp bilde</button></td>
+        </tr>
+        <tr class="description">
+          <td>Bildetekst:</td>
+          <td><input type="text" class="input-xlarge" name="description"></td>
+        </tr>
+        <tr class="photographer">
+          <td>Fotograf:</td>
+          <td><input type="text" class="input-xlarge" name="photographer"></td>
+        </tr>
+        <tr class="anchor">
+          <td>Lenker til:</td>
+          <td><input type="text" class="input-xlarge" name="anchor"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button class="btn btn-success btn-large insert-image"><i class="icon-ok"></i> Sett inn</button>
+            <button class="btn btn-danger btn-large remove-image"><i class="icon-remove"></i> Fjern bildet</button>
+          </td>
+        </tr>
+      </table>
     </div>
-    <img class="preview" src="{{ STATIC_URL }}/img/blank_placeholder.png">
+    <br>
+    <div class="preview-container">
+      <h2>Her kan du beskjære bildet:</h2>
+      <div id="ratio-radio">
+      </div>
+      <img class="preview" src="{{ STATIC_URL }}/img/blank_placeholder.png">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>

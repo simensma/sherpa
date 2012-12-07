@@ -1,16 +1,25 @@
-<div class="dialog widget-edit" data-widget="blog" data-title="Blogg-liste-widget" data-width="auto">
-  <p>
-    <label>Antall innlegg:</label>
-    <input type="text" name="count" class="input-small"><br>
+<div class="modal hide widget-edit" data-widget="blog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Blogg-liste-widget</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      <label>Antall innlegg:</label>
+      <input type="text" name="count" class="input-small"><br>
 
-    <label>Kategori:</label>
-    <select name="category" class="input-small">
-      {% for category in widget_data.blog.categories %}
-        <option value="{{category}}">{{category}}</option>
-      {% endfor %}
-    </select><br>
+      <label>Kategori:</label>
+      <select name="category" class="input-small">
+        {% for category in widget_data.blog.categories %}
+          <option value="{{category}}">{{category}}</option>
+        {% endfor %}
+      </select><br>
 
-    <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
-    <button class="btn btn-danger remove"><i class="icon-warning-sign"></i> Slett widget</button>
-  </p>
+      <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
+      <button class="btn btn-danger remove"><i class="icon-warning-sign"></i> Slett widget</button>
+    </p>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>

@@ -1,38 +1,49 @@
-<div id="dialog-image-fast-upload" class="dialog" data-title="Last opp bilde" data-width="500">
-  <div class="alert alert-info uploading">
-    Vent mens bildet lastes opp...<a class="close">x</a>
+<div class="modal hide image-fast-upload" data-width="500">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg et bilde å laste opp...</h3>
   </div>
-  <div class="alert alert-error upload-failed">
-    Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
-  </div>
-  <div class="alert alert-error upload-no-files">
-    Du må velge et bilde å laste opp!<a class="close">x</a>
-  </div>
+  <div class="modal-body">
 
-  <form class="image-uploader" action="{% url admin.images.views.fast_upload %}" method="post" enctype="multipart/form-data" target="inlineframe">
-    {% csrf_token %}
-    <input type="file" name="file"><br>
-    <label>Beskrivelse av bildet:</label>
-    <textarea name="description" class="span4" rows="3"></textarea>
-    <label>Fotograf:</label>
-    <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
-    <label>Kreditering:</label>
-    <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
-    <label>Bruksrett:</label>
-    <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
-    <label>Nøkkelord</label>
-    <input type="text" class="input-xlarge" name="tags"><br>
-    <input type="hidden" name="tags-serialized">
-    <div class="tag-box">
+    <div class="alert alert-info uploading">
+      Vent mens bildet lastes opp...<a class="close">x</a>
     </div>
-    <div style="clear: both;"></div>
-    <input class="btn btn-success" type="submit" value="Last opp">
-    <input class="btn" type="reset" value="Tøm skjema">
-    <iframe name="inlineframe" style="display:none;"></iframe>
-  </form>
-  <button class="btn cancel-upload">Avbryt</button><br><br>
-  <div class="alert alert-error licencing">
-    <h2 class="alert-heading">Lisensiering</h2>
-    <p>Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.</p>
+    <div class="alert alert-error upload-failed">
+      Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
+    </div>
+    <div class="alert alert-error upload-no-files">
+      Du må velge et bilde å laste opp!<a class="close">x</a>
+    </div>
+
+    <form class="image-uploader" action="{% url admin.images.views.fast_upload %}" method="post" enctype="multipart/form-data" target="inlineframe">
+      {% csrf_token %}
+      <input type="file" name="file"><br>
+      <label>Beskrivelse av bildet:</label>
+      <textarea name="description" class="span4" rows="3"></textarea>
+      <label>Fotograf:</label>
+      <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..."><br>
+      <label>Kreditering:</label>
+      <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..."><br>
+      <label>Bruksrett:</label>
+      <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..."><br>
+      <label>Nøkkelord</label>
+      <input type="text" class="input-xlarge" name="tags"><br>
+      <input type="hidden" name="tags-serialized">
+      <div class="tag-box">
+      </div>
+      <div style="clear: both;"></div>
+      <input class="btn btn-success" type="submit" value="Last opp">
+      <input class="btn" type="reset" value="Tøm skjema">
+      <iframe name="inlineframe" class="hide"></iframe>
+    </form>
+    <button class="btn cancel-upload">Avbryt</button><br><br>
+    <div class="alert alert-error licencing">
+      <h2 class="alert-heading">Lisensiering</h2>
+      <p>Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.</p>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
