@@ -87,3 +87,24 @@ def parse_widget(request, widget):
         'template': 'main/widgets/%s/display.html' % widget['widget'],
         'widget': widget['widget']})
     return data
+
+
+def widget_admin_context():
+    def blog_category_list():
+        # The list of categories available in the blogwidget
+        categories = cache.get('widgets.blog.category_list')
+        if categories is None:
+            r = requests.get("http://%s/%s" % (settings.BLOG_URL, settings.BLOG_CATEGORY_API))
+            response = json.loads(r.text)
+            categories = ['Alle']
+            for category in response['categories']:
+                if category['id'] == 1:
+                    # Uncategorized
+                    continue
+                categories.append(category['title'])
+            cache.set('widgets.blog.category_list', categories, 60 * 60 * 24 * 7)
+        return categories
+
+    return {
+        'blog': {'categories': blog_category_list()}
+    }

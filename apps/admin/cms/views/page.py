@@ -8,7 +8,7 @@ from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from page.widgets import parse_widget
+from page.widgets import parse_widget, widget_admin_context
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 from datetime import datetime
@@ -127,10 +127,11 @@ def edit_version(request, version):
                         content.content = json.loads(content.content)
                 column.contents = contents
             row.columns = columns
-        widget_data = {
-            'blog': {'categories': blog_category_list()}
-        }
-        context = {'rows': rows, 'version': version, 'widget_data': widget_data, 'pages': pages,
+        context = {
+            'rows': rows,
+            'version': version,
+            'widget_data': widget_admin_context(),
+            'pages': pages,
             'image_search_length': settings.IMAGE_SEARCH_LENGTH}
         return render(request, 'common/admin/pages/edit_version.html', context)
     elif request.method == 'POST' and request.is_ajax():
@@ -260,18 +261,3 @@ def create_template(template, version):
         for i in range(len(contents_lower)):
             content = Content(column=column, content=contents_lower[i]['content'], type=contents_lower[i]['type'], order=i)
             content.save()
-
-# Return the list of categories available in the blogwidget
-def blog_category_list():
-    categories = cache.get('widgets.blog.category_list')
-    if categories is None:
-        r = requests.get("http://%s/%s" % (settings.BLOG_URL, settings.BLOG_CATEGORY_API))
-        response = json.loads(r.text)
-        categories = ['Alle']
-        for category in response['categories']:
-            if category['id'] == 1:
-                # Uncategorized
-                continue
-            categories.append(category['title'])
-        cache.set('widgets.blog.category_list', categories, 60 * 60 * 24 * 7)
-    return categories

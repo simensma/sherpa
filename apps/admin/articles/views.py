@@ -9,7 +9,7 @@ import json
 
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
-from page.widgets import parse_widget
+from page.widgets import parse_widget, widget_admin_context
 from user.models import Profile
 from core.models import Tag
 
@@ -91,8 +91,12 @@ def delete(request, article):
 def edit_version(request, version):
     rows, version = parse_version_content(request, version)
     profiles = Profile.objects.all().order_by('user__first_name')
-    context = {'rows': rows, 'version': version, 'profiles': profiles,
-        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+    context = {
+        'rows': rows,
+        'version': version,
+        'profiles': profiles,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH,
+        'widget_data': widget_admin_context()}
     return render(request, 'common/admin/articles/edit_version.html', context)
 
 def preview(request, version):
