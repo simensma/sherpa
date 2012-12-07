@@ -12,7 +12,8 @@ import json
 
 from enrollment.models import Giver, Receiver, membership_types
 
-EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
+EMAIL_FROM_MEMBERSERVICE = "Den Norske Turistforening <no-reply@turistforeningen.no>" # The "from"-address in the email going to our memberservice
+EMAIL_FROM_GIVER = "Den Norske Turistforening <medlem@turistforeningen.no>" # The "from"-address in the email going to the giver making the order
 EMAIL_MEMBERSERVICE_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>"
 EMAIL_MEMBERSERVICE_SUBJECT = u"Bestilling av gavemedlemskap"
 EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
@@ -117,9 +118,9 @@ def send(request):
     })
     memberservice_message = t1.render(c)
     giver_message = t2.render(c)
-    send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM, [EMAIL_MEMBERSERVICE_RECIPIENT])
+    send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
     if request.session['gift_membership']['giver'].email != '':
-        send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+        send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
     request.session['gift_membership']['order_sent'] = True
     request.session.modified = True
     return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
