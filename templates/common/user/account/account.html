@@ -108,9 +108,9 @@
           <tr>
             <th>Adresse</th>
             <td>
-              {{ user.get_profile.actor.address.a1 }}<br>
-              {{ user.get_profile.actor.address.a2 }}<br>
-              {{ user.get_profile.actor.address.a3 }}
+              {% if user.get_profile.actor.address.a1 %}{{ user.get_profile.actor.address.a1 }}<br>{% endif %}
+              {% if user.get_profile.actor.address.a2 %}{{ user.get_profile.actor.address.a2 }}<br>{% endif %}
+              {% if user.get_profile.actor.address.a3 %}{{ user.get_profile.actor.address.a3 }}{% endif %}
             </td>
           </tr>
       {% endif %}
