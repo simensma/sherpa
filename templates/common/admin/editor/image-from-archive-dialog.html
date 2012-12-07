@@ -1,17 +1,17 @@
 <div id="dialog-image-archive-chooser" class="dialog" data-title="Velg bilde" data-width="60%">
-    <h2>Finn bilde i arkivet:</h2>
-    <input type="text" name="search" class="input-xlarge" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
-    <button class="btn btn-success button-aligned image-search"><i class="icon-search"></i> Søk</button>
-    <div id="imagearchive">
-        <ul class="breadcrumb"></ul>
-        <div class="alert alert-error span4 too-few-chars">
-            <a class="close">x</a>
-            <strong>For få søketegn!</strong><br>Vennligst bruk minst {{ image_search_length }} tegn når du søker, ellers får du garantert mange flere resultater enn du vil ha.
-        </div>
-        <div style="clear: both;"></div>
-        <div id="contentlist"></div>
-        <ul id="images"></ul>
+  <h2>Finn bilde i arkivet:</h2>
+  <input type="text" name="search" class="input-xlarge" placeholder="Søk etter nøkkelord, fotograf, beskrivelse, eller liknende...">
+  <button class="btn btn-success button-aligned image-search"><i class="icon-search"></i> Søk</button>
+  <div id="imagearchive">
+    <ul class="breadcrumb"></ul>
+    <div class="alert alert-error span4 too-few-chars">
+      <a class="close">x</a>
+      <strong>For få søketegn!</strong><br>Vennligst bruk minst {{ image_search_length }} tegn når du søker, ellers får du garantert mange flere resultater enn du vil ha.
     </div>
     <div style="clear: both;"></div>
-    <button class="btn cancel-chooser"><i class="icon-remove"></i> Avbryt</button>
+    <div id="contentlist"></div>
+    <ul id="images"></ul>
+  </div>
+  <div style="clear: both;"></div>
+  <button class="btn cancel-chooser"><i class="icon-remove"></i> Avbryt</button>
 </div>
