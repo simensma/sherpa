@@ -3,6 +3,7 @@ from django.db import models
 from django.core.cache import cache
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 from association.models import Association
 
@@ -146,7 +147,7 @@ class Actor(models.Model):
         services = cache.get('actor.services.%s' % self.memberid)
         if services is None:
             services = self.services.all()
-            cache.set('actor.services.%s' % self.memberid, services, 60 * 60)
+            cache.set('actor.services.%s' % self.memberid, services, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return services
 
     def membership_type_name(self, code):
@@ -173,14 +174,14 @@ class Actor(models.Model):
             actor = cache.get('actor.%s' % parent)
             if actor is None:
                 actor = Actor.objects.get(memberid=parent)
-                cache.set('actor.%s' % parent, actor, 60 * 60)
+                cache.set('actor.%s' % parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
             return actor
 
     def get_children(self):
         children = cache.get('actor.children.%s' % self.memberid)
         if children is None:
             children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
-            cache.set('actor.children.%s' % self.memberid, children, 60 * 60)
+            cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
     class Meta:

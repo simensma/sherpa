@@ -22,7 +22,7 @@ class Profile(models.Model):
         actor = cache.get('actor.%s' % self.memberid)
         if actor is None:
             actor = Actor.objects.get(memberid=self.memberid)
-            cache.set('actor.%s' % self.memberid, actor, 60 * 60)
+            cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
 
     def get_first_name(self):
