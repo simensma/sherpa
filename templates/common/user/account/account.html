@@ -2,6 +2,10 @@
 {% block title %}Min side{% endblock %}
 {% block breadcrumb_title %}Min side{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/account.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -18,6 +22,12 @@
           <div class="alert alert-success">
             <a class="close">x</a>
             <strong>Passordet ditt har blitt endret.</strong>
+          </div>
+        {% elif message.message == 'synchronization_success' %}
+          <div class="alert alert-success">
+            <a class="close">x</a>
+            <strong>Dine medlemsopplysninger har blitt oppdatert.</strong><br>
+            Hvis noe skulle være feil, vennligst ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a>.</strong>
           </div>
         {% endif %}
       {% endfor %}
@@ -147,6 +157,16 @@
             </td>
           </tr>
         {% endif %}
+        <tr>
+          <th></th>
+          <td data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Synkroniser medlemsdata" data-content="Vi henter denne informasjonen fra medlemsregisteret en gang i timen. Hvis du nylig har endret ditt medlemskap, kan du synkronisere umiddelbart og se endringene her.<br><br>Dette kan ta en stund.">
+            <a class="sync-memberinfo" href="javascript:undefined"><i class="icon-refresh"></i> Synkroniser med medlemsregisteret</a>
+            <p class="sync-loading hide">
+              <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader sync" alt="Synkroniserer, vennligst vent...">
+              Synkroniserer, vennligst vent...
+            </p>
+          </td>
+        </tr>
       </table>
 
     {% endif %}

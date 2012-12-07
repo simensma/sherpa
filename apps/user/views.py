@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.cache import cache
 
 from datetime import datetime
 
@@ -228,3 +229,14 @@ def become_member(request):
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.become_member'))
+
+@login_required
+def delete_actor_cache(request):
+    cache.delete('actor.%s' % request.user.get_profile().memberid)
+    cache.delete('actor.services.%s' % request.user.get_profile().memberid)
+    cache.delete('actor.children.%s' % request.user.get_profile().memberid)
+    for child in request.user.get_profile().actor().get_children():
+        cache.delete('actor.%s' % child.memberid)
+        cache.delete('actor.services.%s' % child.memberid)
+    messages.info(request, 'synchronization_success')
+    return HttpResponse()
