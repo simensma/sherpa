@@ -10,7 +10,7 @@
 
 <div class="row">
   <div class="span12">
-    <p style="text-align: center;"><a id="add-article" class="btn btn-success btn-large dialog-button" data-dialog=".article-dialog" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny artikkel</a></p>
+    <p style="text-align: center;"><a class="btn btn-success btn-large new-article" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny artikkel</a></p>
   </div>
 </div>
 
@@ -78,27 +78,36 @@
 </table>
 {% endif %}
 
-<div class="dialog article-dialog" data-title="Opprett ny artikkel" data-width="80%">
-  <form action="{% url admin.articles.views.new %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="template" value="0">
-    <input type="hidden" name="slug" value="">
-    <table class="table">
-    <tr>
-      <td class="big">Tittel på artikkelen:</td>
-      <td><input type="text" name="title" class="input-xxlarge"></td>
-    </tr>
-    </table>
-    <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
-    <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="0">
-      <p>Én full kolonne</p>
-    </div>
-    <div class="template">
-      <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="1">
-      <p>Hovedkolonne med sidebar</p>
-    </div>
-  </form>
+<div class="modal hide new-article" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Opprett ny artikkel</h3>
+  </div>
+  <div class="modal-body">
+    <form action="{% url admin.articles.views.new %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="template" value="0">
+      <input type="hidden" name="slug" value="">
+      <table class="table">
+      <tr>
+        <td class="big">Tittel på artikkelen:</td>
+        <td><input type="text" name="title" class="input-xxlarge"></td>
+      </tr>
+      </table>
+      <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
+      <div class="template">
+        <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="0">
+        <p>Én full kolonne</p>
+      </div>
+      <div class="template">
+        <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="1">
+        <p>Hovedkolonne med sidebar</p>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
 
 {% endblock %}

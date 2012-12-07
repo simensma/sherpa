@@ -217,7 +217,7 @@ $(document).ready(function() {
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
             widgetStartWidth = $(this).outerWidth();
-            $("#dialog-add-widget").dialog('open');
+            $("div.add-widget").modal();
             enableToolbar();
             widgetPosition = {
                 prev: $(this).prev(),
@@ -229,11 +229,11 @@ $(document).ready(function() {
             setEmpties();
         });
     });
-    $("#dialog-add-widget div.widget-thumbnail").click(function() {
+    $("div.add-widget div.widget-thumbnail").click(function() {
         widgetBeingEdited = undefined;
-        $(this).parents("#dialog-add-widget").dialog('close');
+        $(this).parents("div.add-widget").modal('hide');
         $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
-        $("div.dialog.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").dialog('open');
+        $("div.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").modal();
         if($(this).attr('data-widget') == "carousel" ){
             openWidgetDialog($(this).attr('data-widget'), widgetStartWidth);
         }
@@ -273,18 +273,23 @@ $(document).ready(function() {
     });
 
     // Insert custom button
-    $("div#dialog-add-button div.alert").hide();
-    $("div#dialog-add-button").bind('dialogopen', function(event, ui) {
-        if(selection === undefined) {
-            $(this).dialog('close');
+    $("button.insert-button").click(function() {
+        $("div.add-button").modal();
+    });
+    $("div.add-button div.alert").hide();
+    $("div.add-button").on('show', function(event) {
+        if(typeof selection === 'undefined') {
             alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
+            $(this).on('shown', function() {
+                $(this).modal('hide');
+            });
         }
     });
-    $("div#dialog-add-button button.insert").click(function() {
-        var text = $("div#dialog-add-button input[name='text']").val();
-        var url = $("div#dialog-add-button input[name='url']").val();
+    $("div.add-button button.insert").click(function() {
+        var text = $("div.add-button input[name='text']").val();
+        var url = $("div.add-button input[name='url']").val();
         if(text == "") {
-            $("div#dialog-add-button div.alert").show();
+            $("div.add-button div.alert").show();
             return;
         }
         var el;
@@ -297,12 +302,12 @@ $(document).ready(function() {
             el = 'button';
         }
         var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
-        button.addClass($("div#dialog-add-button input[name='color']:checked").val())
-              .addClass($("div#dialog-add-button input[name='size']:checked").val());
+        button.addClass($("div.add-button input[name='color']:checked").val())
+              .addClass($("div.add-button input[name='size']:checked").val());
         $(selection.anchorNode).parents(".editable").append($('<p></p>').prepend(button), $('<p><br></p>'));
-        $("div#dialog-add-button").dialog('close');
+        $("div.add-button").modal('hide');
     });
-    $("div#dialog-add-button table.choices button").click(function() {
+    $("div.add-button table.choices button").click(function() {
         $(this).parent().prev().children("input[type='radio']").click();
     });
 
@@ -316,13 +321,13 @@ $(document).ready(function() {
             $(".insertable").remove();
         });
         insertables("Klikk her for å sette inn en rad", $("article"), function(event) {
-            $("#dialog-columns").dialog('open');
+            $("div.insert-columns").modal();
             insertable = $(this);
         });
     });
 
-    $("#dialog-columns img[data-choice]").click(function() {
-        $(this).parents("#dialog-columns").dialog('close');
+    $("div.insert-columns img[data-choice]").click(function() {
+        $(this).parents("div.insert-columns").modal('hide');
         addColumns($(this).attr('data-choice'));
     });
 

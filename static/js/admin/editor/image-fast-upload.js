@@ -1,16 +1,16 @@
 $(document).ready(function() {
 
-    var tagger = new TypicalTagger($("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags']"), $("div.dialog#dialog-image-fast-upload div.tag-box"));
+    var tagger = new TypicalTagger($("div.image-fast-upload form.image-uploader input[name='tags']"), $("div.image-fast-upload div.tag-box"));
 
-    $("div#dialog-image-fast-upload form").submit(function(e) {
-        $("div#dialog-image-fast-upload div.uploading").show();
+    $("div.image-fast-upload form").submit(function(e) {
+        $("div.image-fast-upload div.uploading").show();
         var tags = JSON.stringify(tagger.tags);
-        $("div.dialog#dialog-image-fast-upload form.image-uploader input[name='tags-serialized']").val(tags);
-        $("div#dialog-image-fast-upload input[type='submit']").attr('disabled', 'disabled');
-        $("div#dialog-image-fast-upload input[type='reset']").attr('disabled', 'disabled');
+        $("div.image-fast-upload form.image-uploader input[name='tags-serialized']").val(tags);
+        $("div.image-fast-upload input[type='submit']").attr('disabled', 'disabled');
+        $("div.image-fast-upload input[type='reset']").attr('disabled', 'disabled');
     });
 
-    $("div#dialog-image-fast-upload form input[name='photographer']").typeahead({
+    $("div.image-fast-upload form input[name='photographer']").typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
@@ -22,9 +22,9 @@ $(document).ready(function() {
         }
     });
 
-    $("div#dialog-image-fast-upload button.cancel-upload").click(function(e) {
+    $("div.image-fast-upload button.cancel-upload").click(function(e) {
         uploadCancelled = false
-        $("div#dialog-image-fast-upload").dialog("close");
+        $("div.image-fast-upload").modal('hide');
     });
 });
 
@@ -34,21 +34,21 @@ var uploadCancelled = false;
 function uploadComplete(status, url){
     if(!uploadCancelled){
         if(status === "no_files"){
-            $("div#dialog-image-fast-upload input[type='submit']").removeAttr('disabled');
-            $("div#dialog-image-fast-upload input[type='reset']").removeAttr('disabled');
-            $("div#dialog-image-fast-upload div.upload-no-files").show();
-            $("div#dialog-image-fast-upload div.uploading").hide();
+            $("div.image-fast-upload input[type='submit']").removeAttr('disabled');
+            $("div.image-fast-upload input[type='reset']").removeAttr('disabled');
+            $("div.image-fast-upload div.upload-no-files").show();
+            $("div.image-fast-upload div.uploading").hide();
         } else if(status === "success"){
-            var description = $("div#dialog-image-fast-upload input[name='credits']").val();
-            var photographer = $("div#dialog-image-fast-upload input[name='photographer']").val();
-            $("div#dialog-image-fast-upload div.uploading").hide();
-            $("div#dialog-image-fast-upload").dialog("close");
+            var description = $("div.image-fast-upload input[name='credits']").val();
+            var photographer = $("div.image-fast-upload input[name='photographer']").val();
+            $("div.image-fast-upload div.uploading").hide();
+            $("div.image-fast-upload").modal('hide');
             uploadCompleteCallback(url, description, photographer);
         } else {//parse error or unexpected reply
-            $("div#dialog-image-fast-upload input[type='submit']").removeAttr('disabled');
-            $("div#dialog-image-fast-upload input[type='reset']").removeAttr('disabled');
-            $("div#dialog-image-fast-upload div.upload-failed").show();
-            $("div#dialog-image-fast-upload div.uploading").hide();
+            $("div.image-fast-upload input[type='submit']").removeAttr('disabled');
+            $("div.image-fast-upload input[type='reset']").removeAttr('disabled');
+            $("div.image-fast-upload div.upload-failed").show();
+            $("div.image-fast-upload div.uploading").hide();
         }
     }
 }
@@ -57,18 +57,18 @@ function openImageUpload(callback){
     uploadCancelled = false;
     uploadCompleteCallback = callback;
 
-    $("div#dialog-image-fast-upload").dialog("open");
-    $("div#dialog-image-fast-upload input[type='submit']").removeAttr('disabled');
-    $("div#dialog-image-fast-upload input[type='reset']").removeAttr('disabled');
+    $("div.image-fast-upload").modal();
+    $("div.image-fast-upload input[type='submit']").removeAttr('disabled');
+    $("div.image-fast-upload input[type='reset']").removeAttr('disabled');
     resetImageUpload();
 }
 
 function resetImageUpload(){
-    $("div#dialog-image-fast-upload input[type='reset']").click();
-    $("div#dialog-image-fast-upload input[name='tags-serialized']").val("");
-    $("div#dialog-image-fast-upload div.tag-box").empty();
+    $("div.image-fast-upload input[type='reset']").click();
+    $("div.image-fast-upload input[name='tags-serialized']").val("");
+    $("div.image-fast-upload div.tag-box").empty();
 
-    $("div#dialog-image-fast-upload div.uploading").hide();
-    $("div#dialog-image-fast-upload div.upload-failed").hide();
-    $("div#dialog-image-fast-upload div.upload-no-files").hide();
+    $("div.image-fast-upload div.uploading").hide();
+    $("div.image-fast-upload div.upload-failed").hide();
+    $("div.image-fast-upload div.upload-no-files").hide();
 }

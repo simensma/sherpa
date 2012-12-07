@@ -1,40 +1,49 @@
-<div class="dialog widget-edit" data-widget="carousel" data-title="Bildekarusell-widget" data-width="60%">
-    <p>	
-    	<table>
-	    	<tr> 
-	            <td><label>Bilde:</label></td>
-	            <td><input name="url" type="text" class="input-xlarge"></td>
-	            <td><button name="choose" class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn i arkivet</button></td>
-                <td><button name="upload" class="btn btn-success"><i class="icon-share-alt"></i> Last opp</button></td>
-	            <td><button name="remove" class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern</button></td>
-	        </tr>
-            <tr>
-                <td><label>Bildetekst:</label></td>
-                <td><input name="description" type='text' class='input-xlarge'></td>
-            </tr>
-            <tr>
-                <td><label>Fotograf:</label></td>
-                <td><input name='photographer' type='text' class='input-xlarge'></td>
-            </tr>
-            <tr>
-            	<td><label name="sequence">Bilde 1 av 1 </label></td>
-                <td><button class="btn btn-success previous"><i class="icon-chevron-left"></i> Forrige bilde</button>
-                <button class="btn btn-success next">Neste bilde <i class="icon-chevron-right"></i></button></td>
-            </tr>
-        </table> 
+<div class="modal container hide widget-edit" data-widget="carousel">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Bildekarusell-widget</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      <table>
+        <tr>
+          <td><label>Bilde:</label></td>
+          <td><input name="url" type="text" class="input-xlarge"></td>
+          <td><button name="choose" class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn i arkivet</button></td>
+          <td><button name="upload" class="btn btn-success"><i class="icon-share-alt"></i> Last opp</button></td>
+          <td><button name="remove" class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern</button></td>
+        </tr>
+        <tr>
+          <td><label>Bildetekst:</label></td>
+          <td><input name="description" type='text' class='input-xlarge'></td>
+        </tr>
+        <tr>
+          <td><label>Fotograf:</label></td>
+          <td><input name='photographer' type='text' class='input-xlarge'></td>
+        </tr>
+        <tr>
+          <td><label name="sequence">Bilde 1 av 1 </label></td>
+          <td><button class="btn btn-success previous"><i class="icon-chevron-left"></i> Forrige bilde</button>
+          <button class="btn btn-success next">Neste bilde <i class="icon-chevron-right"></i></button></td>
+        </tr>
+      </table>
 
-        <br>
+      <br>
 
-        <button class="btn btn-success btn-large save"><i class="icon-ok"></i> Lagre widget</button>
-        <button class="btn btn-danger btn-large remove"><i class="icon-warning-sign"></i> Slett widget</button>
+      <button class="btn btn-success btn-large save"><i class="icon-ok"></i> Lagre widget</button>
+      <button class="btn btn-danger btn-large remove"><i class="icon-warning-sign"></i> Slett widget</button>
 
-        <br>
-        <br>
-        <div id="preview"style="max-width:100%;;">
-	       <h2>Her kan du beskjære bildet:</h2>
-            <div id="ratio-radio">
-            </div>
-	       <img name="preview" default="{{ STATIC_URL }}/img/blank_placeholder.png" src="{{ STATIC_URL }}/img/blank_placeholder.png"></img>
-        </div>
+      <br>
+      <br>
+      <div id="preview"style="max-width:100%;;">
+        <h2>Her kan du beskjære bildet:</h2>
+          <div id="ratio-radio">
+          </div>
+         <img name="preview" default="{{ STATIC_URL }}/img/blank_placeholder.png" src="{{ STATIC_URL }}/img/blank_placeholder.png"></img>
+      </div>
     </p>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
 </div>
