@@ -54,6 +54,8 @@ def validate(request):
         return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
     if 'order_sent' in request.session['gift_membership']:
         return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
 
     giver = Giver(
         request.POST['giver_name'],
