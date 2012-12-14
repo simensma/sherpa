@@ -94,7 +94,7 @@ $(document).ready(function() {
 
         var anchor = dialog.find("input[name='anchor']");
         if(anchor.length > 0) {
-            anchor = anchor.val();
+            anchor = anchor.val().trim();
             if(anchor.length != 0 && !anchor.match(/^https?:\/\//)) {
                 anchor = "http://" + anchor;
             }

@@ -44,7 +44,7 @@ def create_ad(request):
 def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
     ad.name = request.POST['name']
-    ad.destination = request.POST['destination']
+    ad.destination = request.POST['destination'].strip()
     ad.viewcounter = request.POST['viewcounter']
     if ad.width is not None: ad.width = request.POST['width']
     if ad.height is not None: ad.height = request.POST['height']

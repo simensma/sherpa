@@ -70,7 +70,7 @@ $(document).ready(function() {
                 range.setEnd(range.endContainer, range.endOffset - 1);
             }
             selection.setSingleRange(range);
-            var url = $("#toolbar input[name='url']").val();
+            var url = $("#toolbar input[name='url']").val().trim();
             if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }

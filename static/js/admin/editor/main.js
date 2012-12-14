@@ -287,7 +287,7 @@ $(document).ready(function() {
     });
     $("div.add-button button.insert").click(function() {
         var text = $("div.add-button input[name='text']").val();
-        var url = $("div.add-button input[name='url']").val();
+        var url = $("div.add-button input[name='url']").val().trim();
         if(text == "") {
             $("div.add-button div.alert").show();
             return;
