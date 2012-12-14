@@ -218,8 +218,10 @@ class SetActiveAssociation(object):
                     raise PermissionDenied
 
                 request.session['active_association'] = association
-                if request.META.get('HTTP_REFERER') is not None:
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                if 'referrer' in request.session:
+                    referrer = request.session['referrer']
+                    del request.session['referrer']
+                    return HttpResponseRedirect(referrer)
                 else:
                     return HttpResponseRedirect(reverse('admin.views.index'))
 
@@ -237,6 +239,7 @@ class CheckSherpaPermissions(object):
 
             # No active association set
             if not 'active_association' in request.session:
+                request.session['referrer'] = request.get_full_path()
                 if len(request.user.get_profile().all_associations()) == 1:
                     # The user has only access to 1 association, set it automatically
                     return HttpResponseRedirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
