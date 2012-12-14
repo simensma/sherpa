@@ -237,7 +237,12 @@ class CheckSherpaPermissions(object):
 
             # No active association set
             if not 'active_association' in request.session:
-                return render(request, 'common/admin/set_active_association.html')
+                if len(request.user.get_profile().all_associations()) == 1:
+                    # The user has only access to 1 association, set it automatically
+                    return HttpResponseRedirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
+                else:
+                    # Let the user choose
+                    return render(request, 'common/admin/set_active_association.html')
 
             # Accessing CMS-functionality, but no site set
             if request.session['active_association'].site is None and (
