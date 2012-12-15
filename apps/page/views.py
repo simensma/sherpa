@@ -205,7 +205,7 @@ def redirect_cabin(request):
         if cabin.url_ut is None or cabin.url_ut == '':
             raise Sherpa2Cabin.DoesNotExist
         return HttpResponsePermanentRedirect(cabin.url_ut)
-    except Sherpa2Cabin.DoesNotExist:
+    except (Sherpa2Cabin.DoesNotExist, ValueError):
         return redirect(request, url='http://%s%s' % (settings.OLD_SITE, request.path))
 
 def redirect_index(request):
