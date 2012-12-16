@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django', # Error logging
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
