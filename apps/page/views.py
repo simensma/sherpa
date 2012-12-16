@@ -15,7 +15,7 @@ import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article, OldArticle
-from analytics.models import Search
+from analytics.models import Search, NotFound
 from page.widgets import parse_widget
 from sherpa2.models import Cabin as Sherpa2Cabin
 
@@ -214,7 +214,14 @@ def redirect_index(request):
     raise Http404
 
 def page_not_found(request, template_name='main/404.html'):
-    # Use a custom page_not_found view to add GET parameters
+    # Record the attempted 404-path
+    nf = NotFound(
+        path=request.path,
+        date=datetime.now(),
+        site=request.site)
+    nf.save()
+
+    # Massage the path and render 404-template with RequestContext
     param_str = request.GET.urlencode()
     if param_str != '':
         param_str = "?%s" % param_str
