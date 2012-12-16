@@ -219,7 +219,7 @@ def page_not_found(request, template_name='main/404.html'):
     if param_str != '':
         param_str = "?%s" % param_str
     path = request.path
-    if path.find(".php") != -1:
+    if path.find(".php") != -1 and path[-1] == '/':
         # Remove trailing slash for old php files
         path = path[:-1]
     path = "%s%s" % (path, param_str)
