@@ -9,6 +9,15 @@ class Search(models.Model):
     def on(site):
         return Search.objects.filter(site=site)
 
+class NotFound(models.Model):
+    path = models.CharField(max_length=2048)
+    date = models.DateTimeField()
+
+    site = models.ForeignKey('core.Site')
+    @staticmethod
+    def on(site):
+        return NotFound.objects.filter(site=site)
+
 class Segment(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
