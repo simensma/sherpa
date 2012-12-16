@@ -1,0 +1,62 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Analyse &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.analytics.views.index %}">Analyse</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/analytics.js"></script>
+{% endblock %}
+{% block body %}
+
+<h2>404-treff for {{ active_association.site.domain }}</h2>
+
+<p>
+  Merk: Det gjøres ikke forskjell på store/små bokstaver ved opptelling.
+</p>
+
+<p>
+  Flest treff-listen er ganske stor og caches i 24 timer.
+</p>
+
+<div class="row">
+
+  <div class="span6">
+    <table class="table">
+      <tr>
+        <th colspan="2">Flest treff</th>
+      </tr>
+      {% for request in most_requested %}
+        {% if forloop.counter < 50 %}
+          <tr>
+            <td>{{ request.count }}</td>
+            <td>{{ request.path }}</td>
+          </tr>
+        {% else %}
+          <tr class="hide">
+            <td>{{ request.count }}</td>
+            <td>{{ request.path }}</td>
+          </tr>
+        {% endif %}
+        {% if forloop.counter == 50 %}
+          <tr class="expand">
+            <td colspan="2"><button class="btn"><i class="icon-plus"></i> Vis alle</button></td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="span6">
+    <table class="table">
+      <tr>
+        <th colspan="2">Nyeste treff</th>
+      </tr>
+      {% for request in latest_requests %}
+        <tr>
+          <td>{{ request.date|date:"H:i" }}</td>
+          <td>{{ request.path }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}
