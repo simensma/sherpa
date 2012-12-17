@@ -42,11 +42,6 @@ THUMB_SIZES = [1880, 940, 500, 150]
 # Require this many characters for an image search
 IMAGE_SEARCH_LENGTH = 3
 
-MANAGERS = ADMINS = (
-    ('Ali Kaafarani', 'ali@kvikshaug.no'),
-    ('Håvard Eidheim', 'eidheim@live.no'),
-)
-
 DEFAULT_FROM_EMAIL = 'Den Norske Turistforening <no-reply@turistforeningen.no>'
 SERVER_EMAIL = 'DNT Django <server-errors@turistforeningen.no>'
 
@@ -65,6 +60,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django', # Error logging
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
