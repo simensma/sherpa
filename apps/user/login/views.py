@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -17,6 +18,9 @@ from focus.models import Actor
 from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
 
 from core import validator
+
+EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
+EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
 
 def login(request):
     if request.method == 'GET':
@@ -97,6 +101,9 @@ def register(request):
             profile = Profile(user=user, memberid=actor.memberid)
             profile.save()
             log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+            t = loader.get_template('common/user/login/registered_email.html')
+            c = RequestContext(request)
+            send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
             return HttpResponseRedirect(reverse('user.views.home_new'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
@@ -154,6 +161,9 @@ def register_nonmember(request):
         profile = Profile(user=user)
         profile.save()
         log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+        t = loader.get_template('common/user/login/registered_nonmember_email.html')
+        c = RequestContext(request)
+        send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
         return HttpResponseRedirect(reverse('user.views.home_new'))
 
 def verify_memberid(request):
