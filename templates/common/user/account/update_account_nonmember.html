@@ -21,27 +21,27 @@
     <div class="info-area">
       {% for message in messages %}
         {% if message.message == 'no_name_provided' %}
-          <div class="alert alert-danger">
+          <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Vennligst fyll inn fullt navn.</strong>
           </div>
         {% elif message.message == 'invalid_email_address' %}
-          <div class="alert alert-danger">
+          <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Vennligst fyll inn en gyldig e-post adresse.</strong>
           </div>
         {% elif message.message == 'invalid_sherpa_email_address' %}
-          <div class="alert alert-danger">
+          <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Du har angitt en ugyldig Sherpa-epostadresse. En slik adresse er valgfri, hvis du ikke vil ha den tar du bare bort krysset foran tekstfeltet.</strong>
           </div>
         {% elif message.message == 'password_too_short' %}
-          <div class="alert alert-danger">
+          <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Vennligst fyll inn et passord på minst {{ user_password_length }} tegn.</strong>
           </div>
         {% elif message.message == 'duplicate_email_address' %}
-          <div class="alert alert-danger">
+          <div class="alert alert-error">
             <a class="close">x</a>
             <strong>E-postadressen er allerede i bruk!</strong><br>
             Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
