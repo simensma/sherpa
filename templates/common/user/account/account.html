@@ -111,6 +111,10 @@
               {% if user.get_profile.actor.address.a1 %}{{ user.get_profile.actor.address.a1 }}<br>{% endif %}
               {% if user.get_profile.actor.address.a2 %}{{ user.get_profile.actor.address.a2 }}<br>{% endif %}
               {% if user.get_profile.actor.address.a3 %}{{ user.get_profile.actor.address.a3 }}{% endif %}
+              {% if user.get_profile.actor.address.country != 'NO' %}
+                <br>
+                {{ user.get_profile.actor.address.get_country.name }}
+              {% endif %}
             </td>
           </tr>
       {% endif %}

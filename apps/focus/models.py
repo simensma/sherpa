@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from association.models import Association
+from core.models import FocusCountry
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -237,6 +238,9 @@ class ActorAddress(models.Model):
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
     class Meta:
         db_table = u'ActAd'
+
+    def get_country(self):
+        return FocusCountry.objects.get(code=self.country)
 
 class FocusZipcode(models.Model):
     zipcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')

@@ -113,15 +113,16 @@ def update_account(request):
                 messages.error(request, 'future_dob')
                 errors = True
 
-            if not validator.address(request.POST['address']):
-                messages.error(request, 'invalid_address')
-                errors = True
+            if request.user.get_profile().actor().address.country == 'NO':
+                if not validator.address(request.POST['address']):
+                    messages.error(request, 'invalid_address')
+                    errors = True
 
-            try:
-                zipcode = Zipcode.objects.get(zipcode=request.POST['zipcode'])
-            except Zipcode.DoesNotExist:
-                messages.error(request, 'invalid_zipcode')
-                errors = True
+                try:
+                    zipcode = Zipcode.objects.get(zipcode=request.POST['zipcode'])
+                except Zipcode.DoesNotExist:
+                    messages.error(request, 'invalid_zipcode')
+                    errors = True
 
             if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
                 messages.error(request, 'duplicate_email_address')
@@ -149,10 +150,11 @@ def update_account(request):
             actor.birth_date = parsed_dob
             actor.save()
 
-            actor.address.a1 = request.POST['address']
-            actor.address.zipcode = zipcode.zipcode
-            actor.address.area = zipcode.area
-            actor.address.save()
+            if actor.address.country == 'NO':
+                actor.address.a1 = request.POST['address']
+                actor.address.zipcode = zipcode.zipcode
+                actor.address.area = zipcode.area
+                actor.address.save()
 
             messages.info(request, 'update_success')
             return HttpResponseRedirect(reverse('user.views.account'))
