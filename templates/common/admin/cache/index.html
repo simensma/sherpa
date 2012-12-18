@@ -45,7 +45,7 @@
         <th>Andre sider</th>
         <td>
           Alle innholdssider på {{ site.domain }}.<br>
-          <select name="page" style="width: 400px" data-placeholder="Velg en side...">
+          <select name="page" class="chosen" data-placeholder="Velg en side...">
             <option value=""></option>
             {% for version in page_versions %}
               <option value="{{ version.id }}">{{ version.variant.page.title }}</option>
@@ -62,7 +62,7 @@
         <th>Artikkel</th>
         <td>
           Én enkelt artikkelvisning.<br>
-          <select name="article" style="width: 400px" data-placeholder="Velg en artikkel...">
+          <select name="article" class="chosen" data-placeholder="Velg en artikkel...">
             <option value=""></option>
             {% for version in article_versions %}
               <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
