@@ -1,45 +1,41 @@
 $(document).ready(function() {
 
     /* Restore password */
-    $("div#forgot-password").hide();
+    var forgot_password = $("div.forgot-password");
     $("div#login a.forgot").click(function() {
-        $(this).hide();
-        $("div#forgot-password").slideDown();
+        $(this).parent().hide();
+        forgot_password.slideDown();
     });
-    $("div#forgot-password input[name='email']").keyup(function(e) {
-        if(e.which == 13) {
-            // Enter
-            $("div#forgot-password button.restore-password").click();
+    forgot_password.find("input[name='email']").keyup(function(e) {
+        if(e.which == 13) { // Enter
+            forgot_password.find("button.restore-password").click();
         }
     });
-    $("div#forgot-password button.restore-password").click(function() {
-        $("div#forgot-password p.info").removeClass('success').removeClass('failure').text("");
-        $(this).attr('disabled', true);
-        $(this).attr('data-original-text', $(this).text());
-        $(this).text("Sender e-post...");
+    forgot_password.find("button.restore-password").click(function() {
+        forgot_password.find("p.info").hide();
         var button = $(this);
+        button.hide();
+        $("img.ajaxloader").show();
         $.ajax({
             url: '/minside/gjenopprett-passord/e-post/',
-            data: 'email=' + encodeURIComponent($("div#forgot-password input[name='email']").val())
+            data: 'email=' + encodeURIComponent(forgot_password.find("input[name='email']").val())
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.status == 'invalid_email') {
-                var info = $("div#forgot-password p.info");
-                info.addClass('failure');
-                info.text("Denne e-postadressen er ikke registrert på noen av våre brukere.");
-                button.removeAttr('disabled');
-                button.text(button.attr('data-original-text'));
+            if(result.status == 'unknown_email') {
+                forgot_password.find("p.info.unknown").show();
+                button.show();
+            } else if(result.status == 'invalid_email') {
+                forgot_password.find("p.info.invalid").show();
+                button.show();
             } else if(result.status == 'success') {
-                var info = $("div#forgot-password p.info");
-                info.addClass('success');
-                info.text("En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.");
-                info.siblings().hide();
+                forgot_password.find("p.info.success").show();
             }
         }).fail(function(r) {
-            $("p.info").addClass('failure');
-            $("p.info").text("En teknisk feil oppstod! Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.");
+            forgot_password.find("p.info.error").show();
             button.removeAttr('disabled');
             button.text(button.attr('data-original-text'));
+        }).always(function(r) {
+            $("img.ajaxloader").hide();
         });
     });
 

@@ -401,11 +401,7 @@ div#search-results {
 
 /* Login page */
 
-div#login button.login {
-  width: 150px;
-}
-
-div#forgot-password {
+div.forgot-password {
   button.restore-password {
     margin-bottom: 10px;
   }
@@ -414,7 +410,7 @@ div#forgot-password {
     color: rgb(45, 140, 32);
   }
 
-  p.info.failure {
+  p.info.unknown, p.info.invalid, p.info.error {
     color: @profile-red;
   }
 }

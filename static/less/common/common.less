@@ -196,10 +196,20 @@ div.albumpath {
   font-size: 14px !important;
 }
 
+.form-hint-color {
+  color: rgb(185, 74, 74); // Copied from bootstrap's control-group error color
+}
+
 div.form-hints {
 
   div, p {
     .form-hint-font;
+  }
+
+  li {
+    .form-hint-font;
+    .form-hint-color;
+    margin-bottom: 0;
   }
 
   a {
@@ -211,7 +221,7 @@ div.form-hints {
   }
 
   div.error {
-    color: rgb(185, 74, 74); // Copied from bootstrap's control-group error color
+    .form-hint-color;
   }
 }
 
