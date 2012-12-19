@@ -151,6 +151,20 @@ class Actor(models.Model):
             cache.set('actor.services.%s' % self.memberid, services, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return services
 
+    def get_invoice_type(self):
+        # Invoice type is stored as a service column with the same value in all rows. What the fuck :)
+        return self.get_services()[0].invoicetype
+
+    def get_invoice_type_text(self):
+        # Note: The old member system checked for 5, and regarded it as both 'avtalegiro' and 'efaktura'.
+        # However, absolutely no records exist with that value, so we'll ignore that here.
+        if self.get_invoice_type() == 1:
+            return 'avtalegiro'
+        elif self.get_invoice_type() == 3:
+            return 'efaktura'
+        else:
+            return ''
+
     def membership_type_name(self, code):
         # Should be moved to some kind of "Focus utility" module and merged with the
         # functionality currently found in enrollment/views
@@ -198,7 +212,7 @@ class ActorService(models.Model):
     memberid = models.IntegerField(null=True, db_column=u'ActNo')
     code = models.CharField(max_length=25, db_column=u'ArticleNo')
     actpayno = models.IntegerField(null=True, db_column=u'ActPayNo')
-    invtype = models.IntegerField(null=True, db_column=u'InvType')
+    invoicetype = models.IntegerField(null=True, db_column=u'InvType')
     invprinttype = models.IntegerField(null=True, db_column=u'InvPrintType')
     startdt = models.DateTimeField(null=True, db_column=u'StartDt')
     enddt = models.DateTimeField(null=True, db_column=u'EndDt')
