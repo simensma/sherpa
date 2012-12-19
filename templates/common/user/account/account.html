@@ -142,16 +142,16 @@
           </td>
         </tr>
         <tr>
+          <th>Medlemsnummer</th>
+          <td>{{ user.get_profile.memberid }}</td>
+        </tr>
+        <tr>
           <th>Lokalforening</th>
           <td>
             {% if user.get_profile.actor.main_association.site %}<a href="http://{{ user.get_profile.actor.main_association.site.domain }}/">{% endif %}
               {{ user.get_profile.actor.main_association.name }}
             {% if user.get_profile.actor.main_association.site %}</a>{% endif %}
           </td>
-        </tr>
-        <tr>
-          <th>Medlemsnummer</th>
-          <td>{{ user.get_profile.memberid }}</td>
         </tr>
         <tr>
           <th>Medlemstype</th>
