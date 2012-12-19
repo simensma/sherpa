@@ -270,3 +270,25 @@ class Price(models.Model):
     unknown = models.IntegerField(null=True, db_column=u'C108')
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
+
+# This is a view which uses 2-3 other views/tables to collect some sort of balance.
+# Instead of wasting time studying its logic, we'll just use this view to get the
+# data we need, even though it performs relatively slow.
+class BalanceHistory(models.Model):
+    id = models.OneToOneField(Actor, related_name='balance', primary_key=True, db_column=u'ActSeqNo')
+    memberid = models.IntegerField(db_column=u'ActActNo')
+    current_year = models.FloatField(db_column=u'ThisYear') # Dammit, this returns float, smells like trouble
+    # Note - this view also has a 'LastYear' column. That field retrieves info from the table
+    # "Cust_Turist_Balance_Hist", but upon further inspection, that table has no entry for member with memberid
+    # above 3000000 - which is from ca 2006. This probably means that it is not in use anymore, so we'll ignore it.
+    # It was used in the old user page - after October, when "årskrav" is processed, a members payment status
+    # Would be if _either_ the current_year or last_year balance was <= 0.
+
+    def is_payed(self):
+        # This will be incorrect in the period between "årskrav" processing and year end.
+        # The user might have paid for the current year, and the membership *should* be valid
+        # for the remainder, but Focus will regard 'current year' as next year from this point.
+        return self.current_year <= 0
+
+    class Meta:
+        db_table = u'Cust_Turist_Balance_Hist_v'
