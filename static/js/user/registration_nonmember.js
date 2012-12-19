@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+    $("a.confirm").click(function() {
+        $(this).parents("div.alert").hide();
+        $("form.registration").fadeIn();
+    });
+
     Validator.validate({
         method: 'full_name',
         control_group: $("div.control-group.name"),

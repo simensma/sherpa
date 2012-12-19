@@ -16,15 +16,19 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Registrering for ikke-medlemmer</h2>
+    <h2>Registrering uten medlemskap</h2>
 
     <div class="alert alert-info">
-      <strong>Er du sikker på at du har kommet rett?</strong><br>
-      Denne registreringen er kun for deg som har engasjement i DNT, men ikke er medlem.<br>
-      Er du medlem så bør du bruke <a href="{% url user.login.views.register %}">dette skjemaet</a>. Ønsker du å bli medlem så kan du <a href="{% url membership.views.benefits %}">melde deg inn her</a>.
+      Du er i ferd med å registrere deg som bruker uten medlemskap på DNTs nettsted. Da går du glipp av innhold og tjenester som kun er tilgjengelige for DNTs medlemmer.
+
+      <ul>
+        <li><a href="{% url user.login.views.register %}">Registrer MED medlemskap</a></li>
+        <li><a href="{% url membership.views.benefits %}">Bli medlem</a></li>
+        <li><a href="javascript:undefined" class="confirm">Fortsett</a></li>
+      </ul>
     </div>
 
-    <form action="{% url user.login.views.register_nonmember %}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url user.login.views.register_nonmember %}" method="post" class="registration hide form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="row-fluid">
