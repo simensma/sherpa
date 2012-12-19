@@ -130,6 +130,18 @@
 
       <table class="table table-hover">
         <tr>
+          <th>Status</th>
+          <td>
+            {% if user.get_profile.actor.balance.is_payed %}
+              Betalt for
+              {% if next_year %}{{ year|add:"1" }}, samt ut {{ year }}{% else %}{{ year }}{% endif %}
+            {% else %}
+              Ikke betalt for
+                {% if next_year %}{{ year }} og {{ year|add:"1" }}{% else %}{{ year }}{% endif %}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
           <th>Lokalforening</th>
           <td>
             {% if user.get_profile.actor.main_association.site %}<a href="http://{{ user.get_profile.actor.main_association.site.domain }}/">{% endif %}

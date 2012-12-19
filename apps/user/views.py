@@ -25,7 +25,12 @@ def home_new(request):
 
 @login_required
 def account(request):
-    return render(request, 'common/user/account/account.html')
+    now = datetime.now()
+    context = {
+        'year': now.year,
+        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START
+    }
+    return render(request, 'common/user/account/account.html', context)
 
 @login_required
 def update_account(request):
