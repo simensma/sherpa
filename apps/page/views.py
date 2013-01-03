@@ -216,7 +216,7 @@ def redirect_index(request):
 def page_not_found(request, template_name='main/404.html'):
     # Record the attempted 404-path
     nf = NotFound(
-        path=request.path,
+        path=request.path[:2048],
         date=datetime.now(),
         site=request.site)
     nf.save()
