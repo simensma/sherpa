@@ -5,7 +5,6 @@ from django.contrib.auth.models import User, Permission
 from django.contrib.auth.context_processors import PermWrapper
 from django.contrib import messages
 from django.conf import settings
-from django.db.utils import IntegrityError
 from django.db.models import Q
 from django.template import RequestContext, loader
 from django.core.exceptions import PermissionDenied
@@ -19,31 +18,6 @@ from user.views import username
 def index(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
     return render(request, 'common/admin/users/index.html', context)
-
-def new(request):
-    try:
-        if len(request.POST['name']) == 0:
-            raise ValueError("No name provided")
-        if len(re.findall('.+@.+\..+', request.POST['email'])) == 0:
-            raise ValueError("Invalid email address")
-        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            raise ValueError("Password too short (minimum %s)" % settings.USER_PASSWORD_LENGTH)
-        split = request.POST['name'].split(' ')
-        first_name = split[0]
-        last_name = ' '.join(split[1:])
-        user = User.objects.create_user(username(request.POST['email']), request.POST['email'], request.POST['password'])
-        user.first_name = first_name
-        user.last_name = last_name
-        user.save()
-        profile = Profile(user=user)
-        profile.save()
-        return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
-    except ValueError:
-        messages.error(request, 'value_error')
-        return HttpResponseRedirect(reverse('admin.users.views.index'))
-    except IntegrityError:
-        messages.error(request, 'integrity_error')
-        return HttpResponseRedirect(reverse('admin.users.views.index'))
 
 def show(request, user):
     user = User.objects.get(id=user)
