@@ -57,7 +57,7 @@ class Giver():
                 messages.error(request, u"Postnummeret ditt ser ikke riktig ut. Du må oppgi et gyldig postnummer da vi sender faktura og medlemskort hjem til deg.")
             valid = False
 
-        if not validator.memberno(self.memberid, req=False):
+        if not validator.memberid(self.memberid, req=False):
             if add_messages:
                 messages.error(request, u"Medlemsnummeret ditt kan kun bestå av tall. Du trenger ikke være medlem for å bestille gavemedlemskap, da kan du la medlemsnummerfeltet stå tomt.")
             valid = False
