@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.cache import cache
 from django.template import RequestContext, loader
 
@@ -93,6 +93,13 @@ def show(request, article, text):
     return render(request, 'common/page/article.html', context)
 
 def show_old(request, article, text):
+    # TODO - HACK:
+    # Redirect this specific old article to the updated content page, to avoid confusing users
+    # (The search currently presents this article in such a way that it's more likely to be
+    # clicked than the relevant page when searching for the appropriate keywords)
+    if article == '1151':
+        return HttpResponseRedirect('/vintermerking/')
+
     context = cache.get('old_articles.%s' % article)
     if context is None:
         # Assume no segmentation for now
