@@ -3,7 +3,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span8">
+  <div class="span12">
     <nav class="dashboard">
       <ul>
         {% if active_association.site %}
@@ -142,23 +142,6 @@
         </li>
       </ul>
     </nav>
-  </div>
-
-  <div class="span4">
-    <div class="sherpa-news">
-      <h2>Bloggwidget-cachen kan slettes</h2>
-      <p class="byline">Ali Kaafarani, 20. november 2012</p>
-      <p>
-        Nå er det mulig å <a href="{% url admin.cache.views.index %}">slette blogg-widget cachen</a>, hvis du veldig veldig gjerne vil ha det nyeste blogginnlegget ut på forsiden med en gang... :)
-      </p>
-
-      <h2>Ingen autolagring</h2>
-      <p class="byline">Ali Kaafarani, 19. oktober 2012</p>
-      <p>
-        Autolagring på sider og artikler er nå <strong>skrudd av</strong>. Du vil nå ikke miste artikkelen selv om den er åpen i flere vinduer, men husk å alltid lagre før du lukker vinduet.
-      </p>
-
-    </div>
   </div>
 </div>
 
