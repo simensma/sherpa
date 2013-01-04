@@ -709,11 +709,11 @@ def prepare_and_send_email(users, association, location, payment_method, price_s
     try:
         send_mail(subject, message, EMAIL_FROM, email_recipients)
     except SMTPDataError:
-        # Silently ignore this error. The user will have to do without email receipt.
-        # TODO: Should probably log this error with detailed information.
-        # Experienced this error when someone registered "har@ikke.no" as their address,
-        # and got this message: (554, 'Message rejected: Address blacklisted.')
-        pass
+        # Silently log and ignore this error. The user will have to do without email receipt.
+        logger.error(u"Klarte ikke å sende innmeldingskvitteringepost",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
 
 def updateIndices(session):
     i = 0
