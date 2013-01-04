@@ -243,6 +243,11 @@ footer.main {
   }
 
   div.sponsors-underline {
+    @main: 162px;
+    @tour: 222px;
+    @other: 216px;
+    margin-left: 145px;
+
     div {
       float: left;
       font-family: "DTL Nobel" !important;
@@ -256,15 +261,15 @@ footer.main {
     }
 
     div.main {
-      width: 162px;
+      width: @main;
     }
 
     div.tour {
-      width: 511px;
+      width: @tour;
     }
 
     div.other {
-      width: 216px;
+      width: @other;
     }
   }
 }
