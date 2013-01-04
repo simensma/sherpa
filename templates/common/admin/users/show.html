@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="span12">
-    <h2>{{ other_user.get_full_name }}</h2>
+    <h2>{{ other_user.get_profile.get_full_name }}</h2>
   </div>
 </div>
 
@@ -22,15 +22,11 @@
     <table class="table">
       <tr>
         <th>Navn</th>
-        <td>{{ other_user.get_full_name }}</td>
+        <td>{{ other_user.get_profile.get_full_name }}</td>
       </tr>
       <tr>
         <th>E-post</th>
-        <td><a href="mailto:{{ other_user.email }}">{{ other_user.email }}</a></td>
-      </tr>
-      <tr>
-        <th>Telefon</th>
-        <td>{{ other_user.get_profile.phone }}</td>
+        <td><a href="mailto:{{ other_user.get_profile.get_sherpa_email }}">{{ other_user.get_profile.get_sherpa_email }}</a></td>
       </tr>
     </table>
 
@@ -46,7 +42,7 @@
 
       {% if other_user_associations.central|length == 0 and other_user_associations.associations|length == 0 and other_user_associations.small_associations|length == 0 and other_user_associations.hike_groups|length == 0 %}
         <div class="alert alert-error">
-          <strong>{{ other_user.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
+          <strong>{{ other_user.get_profile.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
           Gi ham/henne tilgang til minst én forening, ellers gir det ikke mening at han/henne har tilgang til Sherpa.
         </div>
       {% else %}
@@ -119,7 +115,7 @@
       {% endif %}
 
     {% else %}
-      <p>{{ other_user.get_full_name }} har ikke tilgang til Sherpa.</p>
+      <p>{{ other_user.get_profile.get_full_name }} har ikke tilgang til Sherpa.</p>
     {% endif %}
 
     {% if user == other_user %}                   {# Don't let a user modify his/her own permissions #}
@@ -130,13 +126,13 @@
       <p><button class="btn btn-danger make-sherpa-user">Gi tilgang til Sherpa</button></p>
       <div class="alert alert-error hide make-sherpa-user">
         <p>
-          <strong>Gjør {{ other_user.get_full_name }} til Sherpa-bruker?</strong> Husk:<br>
+          <strong>Gjør {{ other_user.get_profile.get_full_name }} til Sherpa-bruker?</strong> Husk:<br>
         </p>
         <ol>
           <li>Du må gi brukeren tilgang til minst én forening etterpå, ellers gir det ikke mening at han/henne er Sherpa-bruker.</li>
           <li>Turledere trenger ikke nødvendigvis tilgang til Sherpa. Hvis du setter en bruker som turleder på en aktivitet, får han/henne tilgang fra Min side.</li>
         </ol>
-        <p><a href="{% url admin.users.views.give_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-bruker</a></p>
+        <p><a href="{% url admin.users.views.give_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-bruker</a></p>
         <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
       </div>
 
@@ -155,13 +151,13 @@
             <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
             Sherpa-administratorer har tilgang til absolutt alt, og kan gjøre andre brukere til Sherpa-administratorer.
           </p>
-          <p><a href="{% url admin.users.views.make_sherpa_admin other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
+          <p><a href="{% url admin.users.views.make_sherpa_admin other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-administrator</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
         <div class="alert alert-error hide revoke-sherpa-access">
           <p>
             <strong>Ta bort Sherpa-tilgang!?</strong><br>
-            {{ other_user.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
+            {{ other_user.get_profile.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
           </p>
           <p><a href="{% url admin.users.views.revoke_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
@@ -226,7 +222,7 @@
           <input type="hidden" name="association" value="">
           <input type="hidden" name="role" value="">
           <p>
-            <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
+            <strong>Gi {{ other_user.get_profile.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
           </p>
           <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, gi tilgang</button></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
@@ -273,7 +269,7 @@
               <input type="hidden" name="user" value="{{ other_user.id }}">
               <input type="hidden" name="association" value="">
               <p>
-                <strong>Ta bort {{ other_user.get_full_name }}s tilgang til <span class="association"></span>?</strong>
+                <strong>Ta bort {{ other_user.get_profile.get_full_name }}s tilgang til <span class="association"></span>?</strong>
               </p>
               <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort tilgangen</button></p>
               <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>

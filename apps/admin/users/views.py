@@ -35,7 +35,7 @@ def new(request):
         user.first_name = first_name
         user.last_name = last_name
         user.save()
-        profile = Profile(user=user, phone=request.POST['phone'])
+        profile = Profile(user=user)
         profile.save()
         return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
     except ValueError:

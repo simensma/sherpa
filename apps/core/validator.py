@@ -27,7 +27,7 @@ def email(email, req=True):
     # Email matches anything@anything.anything, without whitespace
     return len(re.findall('^[^\s]+@[^\s]+\.[^\s]+$', email)) > 0
 
-def memberno(memberno, req=True):
-    if not req and memberno == '':
+def memberid(memberid, req=True):
+    if not req and memberid == '':
         return True
-    return len(re.findall('^\d+$', memberno)) > 0
+    return len(re.findall('^\d+$', memberid)) > 0

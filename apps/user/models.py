@@ -1,17 +1,61 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.cache import cache
+
+from focus.models import Actor
 
 class Profile(models.Model):
-    PHONE_MAX_LENGTH = 20
-
     user = models.OneToOneField(User)
-    phone = models.CharField(max_length=PHONE_MAX_LENGTH)
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True, unique=True)
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
-    # At some point, this model will be extended to contain member data, syncing with Focus.
+    memberid = models.IntegerField(null=True, unique=True)
+    sherpa_email = models.EmailField()
 
+    ### Focus-related ###
+
+    # Return this users' Actor (cached), or None
+    def actor(self):
+        if self.memberid is None:
+            return None
+        actor = cache.get('actor.%s' % self.memberid)
+        if actor is None:
+            actor = Actor.objects.get(memberid=self.memberid)
+            cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return actor
+
+    def get_first_name(self):
+        if self.memberid is None:
+            return self.user.first_name
+        else:
+            return self.actor().first_name
+
+    def get_last_name(self):
+        if self.memberid is None:
+            return self.user.last_name
+        else:
+            return self.actor().last_name
+
+    def get_full_name(self):
+        if self.memberid is None:
+            return self.user.get_full_name()
+        else:
+            return "%s %s" % (self.actor().first_name, self.actor().last_name)
+
+    def get_email(self):
+        if self.memberid is None:
+            return self.user.email
+        else:
+            return self.actor().email
+
+    def get_sherpa_email(self):
+        if self.sherpa_email != '':
+            return self.sherpa_email
+        else:
+            return self.get_email()
+
+    # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
         from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):

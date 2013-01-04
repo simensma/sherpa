@@ -30,6 +30,9 @@ NETS_PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 USER_PASSWORD_LENGTH = 6
 RESTORE_PASSWORD_KEY_LENGTH = 40
 RESTORE_PASSWORD_VALIDITY = 12 # Hours
+MEMBERID_LOOKUPS_LIMIT = 15 # Amount of allowed memberid + zipcode lookups when registering for user page
+MEMBERID_LOOKUPS_BAN = 60 * 60 * 4 # Amount of seconds the ban should last when exceeding lookup limit
+FOCUS_MEMBER_CACHE_PERIOD = 60 * 60 # Caching of memberdata (Actor, Services)
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -64,6 +67,7 @@ INSTALLED_APPS = (
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
+    'sherpa25', # Only db-models from Sherpa 2.5
     'core',
     'page',
     'admin',

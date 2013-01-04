@@ -8,11 +8,23 @@
 <div class="row">
   <div class="span9">
 
-    <h2>Min side — {{ user.get_full_name }}</h2>
+    <h2>Min side — {{ user.get_profile.get_full_name }}</h2>
 
-    <p>
-      Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
-    </p>
+    {% if user.get_profile.actor %}
+      <p>
+        Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
+      </p>
+    {% else %}
+      <p>
+        Du er ikke registrert som medlem i DNT, mye av funksjonaliteten i Min side vil ikke være tilgjengelig.
+        {% if user.perms.user.sherpa %}
+          Du har imidlertid tilgang til <a href="{% url admin.views.index %}">Sherpa</a>.
+        {% endif %}
+      </p>
+      <p>
+        Er du medlem? <a href="{% url user.views.become_member %}">Registrer medlemsnummeret ditt</a>!
+      </p>
+    {% endif %}
   </div>
 
   <div class="span3">

@@ -36,6 +36,6 @@ $(document).ready(function() {
     });
 
     function addInfo(header) {
-        $("div.info-area").append('<div class="alert alert-danger"><a class="close">x</a><strong>' + header + '</strong></div>');
+        $("div.info-area").append('<div class="alert alert-error"><a class="close">x</a><strong>' + header + '</strong></div>');
     }
 });

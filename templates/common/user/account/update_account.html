@@ -1,0 +1,185 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb_title %}Min side{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/update_account.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    var user_password_length = {{ user_password_length }};
+  </script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Dine opplysninger</h2>
+
+    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal form-default account-info">
+      {% csrf_token %}
+
+      <div class="form-hints">
+        {% for message in messages %}
+          {% if message.message == 'no_name_provided' %}
+            <div class="hint error">
+              <strong>Du må fylle inn fullt navn.</strong>
+            </div>
+          {% elif message.message == 'invalid_email_address' %}
+            <div class="hint error">
+              <strong>Du må oppgi en gyldig e-post adresse.</strong>
+            </div>
+          {% elif message.message == 'invalid_sherpa_email_address' %}
+            <div class="hint error">
+              <strong>Du har angitt en ugyldig Sherpa-epostadresse. En slik adresse er valgfri, hvis du ikke vil ha den tar du bare bort krysset foran tekstfeltet.</strong>
+            </div>
+          {% elif message.message == 'invalid_phone_home' %}
+            <div class="hint error">
+              <strong>Du har ikke fylt inn et gyldig hjemtelefonnummer. Dette feltet er ikke påkrevd, du kan la det stå tomt om du ønsker.</strong>
+            </div>
+          {% elif message.message == 'invalid_phone_mobile' %}
+            <div class="hint error">
+              <strong>Du har ikke fylt inn et gyldig mobiltelefonnummer.</strong>
+            </div>
+          {% elif message.message == 'invalid_address' %}
+            <div class="hint error">
+              <strong>Du har ikke fylt inn en gyldig adresse.</strong>
+            </div>
+          {% elif message.message == 'invalid_zipcode' %}
+            <div class="hint error">
+              <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
+            </div>
+          {% elif message.message == 'duplicate_email_address' %}
+            <div class="hint error">
+              <strong>E-postadressen er allerede i bruk!</strong><br>
+              Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
+            </div>
+          {% elif message.message == 'password_too_short' %}
+            <div class="hint error">
+              <strong>Du må fylle inn et passord på minst {{ user_password_length }} tegn.</strong>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="control-group name">
+        <label class="control-label" for="name">Fullt navn</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="name" value="{{ user.get_profile.get_full_name }}">
+        </div>
+      </div>
+
+      <div class="control-group email">
+        <label class="control-label" for="email">E-post</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="email" value="{{ user.get_profile.get_email }}">
+        </div>
+      </div>
+
+      {% if perms.user.sherpa %}
+        <div class="control-group sherpa-email">
+          <label class="control-label" for="sherpa-email">E-post i Sherpa</label>
+          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Egen Sherpa-epost" data-content="Hvis du bruker din private e-postadresse på Min side, kan du angi en egen e-postadresse for Sherpa. Den vil vises i artikler du skriver og på din Sherpa-profil.<br><br>Tips: Registrer adressen på www.gravatar.com!">
+            <input name="toggle-sherpa-email" type="checkbox"{% if user.get_profile.sherpa_email != '' %} checked{% endif %}>
+            <input type="text" class="input-xlarge" name="sherpa-email" value="{{ user.get_profile.sherpa_email }}"{% if user.get_profile.sherpa_email == '' %} readonly{% endif %}>
+            <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+            <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="control-group phone_home">
+        <label class="control-label" for="phone_home">Telefon</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="phone_home" value="{{ user.get_profile.actor.phone_home|default:"" }}">
+        </div>
+      </div>
+
+      <div class="control-group phone_mobile">
+        <label class="control-label" for="phone_mobile">Mobil</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="phone_mobile" value="{{ user.get_profile.actor.phone_mobile|default:"" }}">
+        </div>
+      </div>
+
+      <div class="control-group dob">
+        <label class="control-label" for="dob">Født</label>
+        <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Fødselsdato kan ikke endres" data-content="Vennligst kontakt medlemsservice dersom denne fødselsdatoen ikke stemmer.">
+          <input type="text" class="input-medium" name="dob" value="{{ user.get_profile.actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.actor.birth_date|date:"Y/m/d" }}" disabled>
+          <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+          <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
+        </div>
+      </div>
+
+      {% if user.get_profile.actor.address.country == 'NO' %}
+        <div class="control-group address">
+          <label class="control-label" for="address">Adresse</label>
+          <div class="controls">
+            <input type="text" class="input-large" name="address" value="{{ user.get_profile.actor.address.a1 }}">
+          </div>
+        </div>
+
+        <div class="control-group zipcode" for="zipcode">
+          <label class="control-label">Postnummer</label>
+          <div class="controls">
+            <input type="text" class="input-small" name="zipcode" value="{{ user.get_profile.actor.address.zipcode }}" maxlength="4">
+            <input type="text" class="input-medium" name="area" value="{{ user.get_profile.actor.address.area }}" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+          </div>
+        </div>
+      {% else %}
+        <div class="control-group">
+          <label class="control-label">Adresse</label>
+          <div class="controls">
+            {% if user.get_profile.actor.address.a1 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a1 }}" disabled></p>{% endif %}
+            {% if user.get_profile.actor.address.a2 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a2 }}" disabled></p>{% endif %}
+            {% if user.get_profile.actor.address.a3 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a3 }}" disabled></p>{% endif %}
+            <div class="alert alert-error">
+              Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a> om du har behov for å endre din adresse.
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn"><i class="icon-ok"></i> Oppdater opplysningene</button>
+        </div>
+      </div>
+    </form>
+
+    <h2>Endre passord</h2>
+    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal form-default">
+      {% csrf_token %}
+      <div class="control-group password">
+        <label class="control-label" for="password">Passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password">
+        </div>
+      </div>
+      <div class="control-group password-repeat">
+        <label class="control-label" for="password-repeat">Gjenta passord</label>
+        <div class="controls">
+          <input type="password" class="input-large" name="password-repeat">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn"><i class="icon-ok"></i> Endre passord</button>
+        </div>
+      </div>
+      <div class="form-hints">
+        <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+        <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
+      </div>
+    </form>
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='account' %}
+  </div>
+</div>
+
+{% endblock %}

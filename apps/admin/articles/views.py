@@ -90,7 +90,7 @@ def delete(request, article):
 
 def edit_version(request, version):
     rows, version = parse_version_content(request, version)
-    profiles = Profile.objects.all().order_by('user__first_name')
+    profiles = sorted(Profile.objects.all(), key=lambda p: p.get_first_name())
     context = {
         'rows': rows,
         'version': version,

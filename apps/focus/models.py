@@ -1,4 +1,12 @@
+# encoding: utf-8
 from django.db import models
+from django.core.cache import cache
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+
+from association.models import Association
+from core.models import FocusCountry
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -38,29 +46,37 @@ class Enrollment(models.Model):
 
 class Actor(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+
+    # User data
+    first_name = models.CharField(max_length=50, db_column=u'FiNm')
+    last_name = models.CharField(max_length=50, db_column=u'Nm')
+    birth_date = models.DateTimeField(null=True, db_column=u'BDt')
+    sex = models.CharField(max_length=1, db_column=u'Sex')
+    email = models.CharField(max_length=250, db_column=u'EMail')
+    phone_home = models.CharField(max_length=50, db_column=u'Ph')
+    phone_mobile = models.CharField(max_length=50, db_column=u'MobPh')
+
+    # Membership information
+    memberid = models.IntegerField(unique=True, db_column=u'ActNo')
+    parent = models.IntegerField(db_column=u'ActRel6')
+    main_association_id = models.IntegerField(db_column=u'ActRel4')
+    local_association_id = models.IntegerField(db_column=u'ActRel5')
+
+    orgno = models.CharField(max_length=50, db_column=u'OrgNo')
+    fax = models.CharField(max_length=50, db_column=u'Fax')
+    web = models.CharField(max_length=250, db_column=u'Web')
+    pno = models.CharField(max_length=50, db_column=u'PNo')
     type = models.CharField(max_length=50, db_column=u'Type')
-    memberid = models.IntegerField(db_column=u'ActNo')
-    last_name = models.CharField(max_length=50, db_column=u'Nm', blank=True)
-    first_name = models.CharField(max_length=50, db_column=u'FiNm', blank=True)
-    birth_date = models.DateTimeField(null=True, db_column=u'BDt', blank=True)
-    pno = models.CharField(max_length=50, db_column=u'PNo', blank=True)
-    sex = models.CharField(max_length=1, db_column=u'Sex', blank=True)
-    orgno = models.CharField(max_length=50, db_column=u'OrgNo', blank=True)
-    ph = models.CharField(max_length=50, db_column=u'Ph', blank=True)
-    fax = models.CharField(max_length=50, db_column=u'Fax', blank=True)
-    mobph = models.CharField(max_length=50, db_column=u'MobPh', blank=True)
-    email = models.CharField(max_length=250, db_column=u'EMail', blank=True)
-    web = models.CharField(max_length=250, db_column=u'Web', blank=True)
-    adtype = models.CharField(max_length=3, db_column=u'AdType', blank=True)
-    note1 = models.TextField(db_column=u'Note1', blank=True)
-    note2 = models.TextField(db_column=u'Note2', blank=True)
-    startdt = models.DateTimeField(null=True, db_column=u'StartDt', blank=True)
-    startcd = models.CharField(max_length=5, db_column=u'StartCd', blank=True)
-    enddt = models.DateTimeField(null=True, db_column=u'EndDt', blank=True)
-    endcd = models.CharField(max_length=5, db_column=u'EndCd', blank=True)
+    adtype = models.CharField(max_length=3, db_column=u'AdType')
+    note1 = models.TextField(db_column=u'Note1')
+    note2 = models.TextField(db_column=u'Note2')
+    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
+    startcd = models.CharField(max_length=5, db_column=u'StartCd')
+    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
+    endcd = models.CharField(max_length=5, db_column=u'EndCd')
     payterm = models.IntegerField(db_column=u'PayTerm')
-    accno = models.CharField(max_length=50, db_column=u'AccNo', blank=True)
-    disc = models.SmallIntegerField(null=True, db_column=u'Disc', blank=True)
+    accno = models.CharField(max_length=50, db_column=u'AccNo')
+    disc = models.SmallIntegerField(null=True, db_column=u'Disc')
     vatcd = models.BooleanField(db_column=u'VatCd')
     optint1 = models.IntegerField(db_column=u'OptInt1')
     optint2 = models.IntegerField(db_column=u'OptInt2')
@@ -71,15 +87,15 @@ class Actor(models.Model):
     optint7 = models.IntegerField(db_column=u'OptInt7')
     optint8 = models.IntegerField(db_column=u'OptInt8')
     optint9 = models.IntegerField(db_column=u'OptInt9')
-    optchar1 = models.CharField(max_length=10, db_column=u'OptChar1', blank=True)
-    optchar2 = models.CharField(max_length=10, db_column=u'OptChar2', blank=True)
-    optchar3 = models.CharField(max_length=10, db_column=u'OptChar3', blank=True)
-    optchar4 = models.CharField(max_length=10, db_column=u'OptChar4', blank=True)
-    optchar5 = models.CharField(max_length=10, db_column=u'OptChar5', blank=True)
-    optchar6 = models.CharField(max_length=10, db_column=u'OptChar6', blank=True)
-    optchar7 = models.CharField(max_length=10, db_column=u'OptChar7', blank=True)
-    optchar8 = models.CharField(max_length=10, db_column=u'OptChar8', blank=True)
-    optchar9 = models.CharField(max_length=10, db_column=u'OptChar9', blank=True)
+    optchar1 = models.CharField(max_length=10, db_column=u'OptChar1')
+    optchar2 = models.CharField(max_length=10, db_column=u'OptChar2')
+    optchar3 = models.CharField(max_length=10, db_column=u'OptChar3')
+    optchar4 = models.CharField(max_length=10, db_column=u'OptChar4')
+    optchar5 = models.CharField(max_length=10, db_column=u'OptChar5')
+    optchar6 = models.CharField(max_length=10, db_column=u'OptChar6')
+    optchar7 = models.CharField(max_length=10, db_column=u'OptChar7')
+    optchar8 = models.CharField(max_length=10, db_column=u'OptChar8')
+    optchar9 = models.CharField(max_length=10, db_column=u'OptChar9')
     optbit1 = models.BooleanField(db_column=u'OptBit1')
     optbit2 = models.BooleanField(db_column=u'OptBit2')
     optbit3 = models.BooleanField(db_column=u'OptBit3')
@@ -89,84 +105,204 @@ class Actor(models.Model):
     optlng1 = models.FloatField(db_column=u'OptLng1')
     optlng2 = models.FloatField(db_column=u'OptLng2')
     optlng3 = models.FloatField(db_column=u'OptLng3')
-    optdate1 = models.DateTimeField(null=True, db_column=u'OptDate1', blank=True)
-    optdate2 = models.DateTimeField(null=True, db_column=u'OptDate2', blank=True)
-    optdate3 = models.DateTimeField(null=True, db_column=u'OptDate3', blank=True)
-    optdate4 = models.DateTimeField(null=True, db_column=u'OptDate4', blank=True)
-    county1 = models.CharField(max_length=50, db_column=u'County1', blank=True)
-    county2 = models.CharField(max_length=50, db_column=u'County2', blank=True)
+    optdate1 = models.DateTimeField(null=True, db_column=u'OptDate1')
+    optdate2 = models.DateTimeField(null=True, db_column=u'OptDate2')
+    optdate3 = models.DateTimeField(null=True, db_column=u'OptDate3')
+    optdate4 = models.DateTimeField(null=True, db_column=u'OptDate4')
+    county1 = models.CharField(max_length=50, db_column=u'County1')
+    county2 = models.CharField(max_length=50, db_column=u'County2')
     actrel1 = models.IntegerField(db_column=u'ActRel1')
     actrel2 = models.IntegerField(db_column=u'ActRel2')
     actrel3 = models.IntegerField(db_column=u'ActRel3')
-    main_association_id = models.IntegerField(db_column=u'ActRel4')
-    local_association_id = models.IntegerField(db_column=u'ActRel5')
-    actrel6 = models.IntegerField(null=True, db_column=u'ActRel6', blank=True)
-    actrel7 = models.IntegerField(null=True, db_column=u'ActRel7', blank=True)
-    actrel8 = models.IntegerField(null=True, db_column=u'ActRel8', blank=True)
-    actrel9 = models.IntegerField(null=True, db_column=u'ActRel9', blank=True)
-    inf1 = models.CharField(max_length=50, db_column=u'Inf1', blank=True)
-    inf2 = models.CharField(max_length=50, db_column=u'Inf2', blank=True)
-    inf3 = models.CharField(max_length=50, db_column=u'Inf3', blank=True)
-    inf4 = models.CharField(max_length=50, db_column=u'Inf4', blank=True)
-    inf5 = models.CharField(max_length=50, db_column=u'Inf5', blank=True)
-    webusr = models.CharField(max_length=50, db_column=u'WebUsr', blank=True)
-    webpw = models.CharField(max_length=50, db_column=u'WebPw', blank=True)
+    actrel7 = models.IntegerField(null=True, db_column=u'ActRel7')
+    actrel8 = models.IntegerField(null=True, db_column=u'ActRel8')
+    actrel9 = models.IntegerField(null=True, db_column=u'ActRel9')
+    inf1 = models.CharField(max_length=50, db_column=u'Inf1')
+    inf2 = models.CharField(max_length=50, db_column=u'Inf2')
+    inf3 = models.CharField(max_length=50, db_column=u'Inf3')
+    inf4 = models.CharField(max_length=50, db_column=u'Inf4')
+    inf5 = models.CharField(max_length=50, db_column=u'Inf5')
+    webusr = models.CharField(max_length=50, db_column=u'WebUsr')
+    webpw = models.CharField(max_length=50, db_column=u'WebPw')
     websh = models.IntegerField(db_column=u'WebSh')
-    weblang = models.CharField(max_length=5, db_column=u'WebLang', blank=True)
-    webcrby = models.CharField(max_length=25, db_column=u'WebCrBy', blank=True)
-    webcrdt = models.DateTimeField(null=True, db_column=u'WebCrDt', blank=True)
+    weblang = models.CharField(max_length=5, db_column=u'WebLang')
+    webcrby = models.CharField(max_length=25, db_column=u'WebCrBy')
+    webcrdt = models.DateTimeField(null=True, db_column=u'WebCrDt')
     crby = models.CharField(max_length=25, db_column=u'CrBy')
     crdt = models.DateTimeField(db_column=u'CrDt')
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(db_column=u'ChDt')
+
+    def main_association(self):
+        association = cache.get('focus.association.%s' % self.main_association_id)
+        if association is None:
+            association = Association.objects.get(focus_id=self.main_association_id)
+            cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def membership_type(self):
+        # Supposedly, there should only be one service in this range
+        return self.membership_type_name(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+
+    def get_services(self):
+        services = cache.get('actor.services.%s' % self.memberid)
+        if services is None:
+            services = self.services.all()
+            cache.set('actor.services.%s' % self.memberid, services, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return services
+
+    def get_invoice_type(self):
+        # Invoice type is stored as a service column with the same value in all rows. What the fuck :)
+        return self.get_services()[0].invoicetype
+
+    def get_invoice_type_text(self):
+        # Note: The old member system checked for 5, and regarded it as both 'avtalegiro' and 'efaktura'.
+        # However, absolutely no records exist with that value, so we'll ignore that here.
+        if self.get_invoice_type() == 1:
+            return 'avtalegiro'
+        elif self.get_invoice_type() == 3:
+            return 'efaktura'
+        else:
+            return ''
+
+    def membership_type_name(self, code):
+        # Should be moved to some kind of "Focus utility" module and merged with the
+        # functionality currently found in enrollment/views
+        if   code == u'101': return u'Hovedmedlem'
+        elif code == u'102': return u'Ungdomsmedlem'
+        elif code == u'103': return u'Honnørmedlem'
+        elif code == u'104': return u'Livsvarig medlem'
+        elif code == u'105': return u'Barnemedlem'
+        elif code == u'106': return u'Skoleungdomsmedlem'
+        elif code == u'107': return u'Husstandsmedlem'
+        elif code == u'108': return u'Husstandsmedlem'
+        elif code == u'109': return u'Livsvarig husstandsmedlem'
+
+    def get_full_name(self):
+        return ("%s %s" % (self.first_name, self.last_name)).strip()
+
+    def get_parent(self):
+        parent = self.parent
+        if parent == 0 or parent == self.memberid:
+            return None
+        else:
+            actor = cache.get('actor.%s' % parent)
+            if actor is None:
+                actor = Actor.objects.get(memberid=parent)
+                cache.set('actor.%s' % parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            return actor
+
+    def get_children(self):
+        children = cache.get('actor.children.%s' % self.memberid)
+        if children is None:
+            children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
+            cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return children
+
     class Meta:
         db_table = u'Actor'
+
+@receiver(post_save, sender=Actor, dispatch_uid="focus.models")
+def delete_actor_cache(sender, **kwargs):
+    cache.delete('actor.%s' % kwargs['instance'].memberid)
+
+class ActorService(models.Model):
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor = models.ForeignKey(Actor, related_name='services', db_column=u'ActSeqNo')
+    memberid = models.IntegerField(null=True, db_column=u'ActNo')
+    code = models.CharField(max_length=25, db_column=u'ArticleNo')
+    actpayno = models.IntegerField(null=True, db_column=u'ActPayNo')
+    invoicetype = models.IntegerField(null=True, db_column=u'InvType')
+    invprinttype = models.IntegerField(null=True, db_column=u'InvPrintType')
+    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
+    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
+    stopdt = models.DateTimeField(null=True, db_column=u'StopDt')
+    newstartdt = models.DateTimeField(null=True, db_column=u'NewStartDt')
+    previousinvoicedt = models.DateTimeField(null=True, db_column=u'PreviousInvoiceDt')
+    invoicefreq = models.IntegerField(null=True, db_column=u'InvoiceFreq')
+    pricecd = models.IntegerField(null=True, db_column=u'PriceCd')
+    price = models.FloatField(null=True, db_column=u'Price')
+    qty = models.FloatField(null=True, db_column=u'Qty')
+    optint1 = models.IntegerField(null=True, db_column=u'OptInt1')
+    description = models.TextField(db_column=u'Description')
+    crby = models.CharField(max_length=25, db_column=u'CrBy')
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt')
+    chby = models.CharField(max_length=25, db_column=u'ChBy')
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt')
+    invdate = models.DateTimeField(null=True, db_column=u'InvDate')
+    class Meta:
+        db_table = u'ActService'
 
 class ActorAddress(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
     actor = models.OneToOneField(Actor, unique=True, related_name='address', db_column=u'ActSeqNo')
     actnojoin = models.IntegerField(db_column=u'ActNoJoin')
-    actadtype = models.CharField(max_length=3, unique=True, db_column=u'ActAdType', blank=True)
-    a1 = models.CharField(max_length=40, db_column=u'A1', blank=True)
-    a2 = models.CharField(max_length=40, db_column=u'A2', blank=True)
-    a3 = models.CharField(max_length=40, db_column=u'A3', blank=True)
-    zipcode = models.CharField(max_length=9, db_column=u'PCode', blank=True)
-    parea = models.CharField(max_length=30, db_column=u'PArea', blank=True)
-    country = models.CharField(max_length=3, db_column=u'CtryCode', blank=True)
-    frdt = models.DateTimeField(null=True, db_column=u'FrDt', blank=True)
-    todt = models.DateTimeField(null=True, db_column=u'ToDt', blank=True)
-    chby = models.CharField(max_length=50, db_column=u'ChBy', blank=True)
-    chdt = models.DateTimeField(null=True, db_column=u'ChDt', blank=True)
-    crby = models.CharField(max_length=50, db_column=u'CrBy', blank=True)
-    crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
+    actadtype = models.CharField(max_length=3, unique=True, db_column=u'ActAdType')
+    a1 = models.CharField(max_length=40, db_column=u'A1')
+    a2 = models.CharField(max_length=40, db_column=u'A2')
+    a3 = models.CharField(max_length=40, db_column=u'A3')
+    zipcode = models.CharField(max_length=9, db_column=u'PCode')
+    area = models.CharField(max_length=30, db_column=u'PArea')
+    country = models.CharField(max_length=3, db_column=u'CtryCode')
+    frdt = models.DateTimeField(null=True, db_column=u'FrDt')
+    todt = models.DateTimeField(null=True, db_column=u'ToDt')
+    chby = models.CharField(max_length=50, db_column=u'ChBy')
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt')
+    crby = models.CharField(max_length=50, db_column=u'CrBy')
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt')
     class Meta:
         db_table = u'ActAd'
+
+    def get_country(self):
+        return FocusCountry.objects.get(code=self.country)
 
 class FocusZipcode(models.Model):
     zipcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
     postarea = models.CharField(max_length=40, db_column=u'PostArea')
-    county1no = models.CharField(max_length=10, db_column=u'County1No', blank=True)
-    county1name = models.CharField(max_length=40, db_column=u'County1Name', blank=True)
-    county2no = models.CharField(max_length=10, db_column=u'County2No', blank=True)
-    county2name = models.CharField(max_length=40, db_column=u'County2Name', blank=True)
-    main_association_id = models.IntegerField(null=True, db_column=u'District1', blank=True)
-    local_association_id = models.IntegerField(null=True, db_column=u'District2', blank=True)
-    crby = models.CharField(max_length=25, db_column=u'CrBy', blank=True)
-    crdt = models.DateTimeField(null=True, db_column=u'CrDt', blank=True)
-    chby = models.CharField(max_length=25, db_column=u'ChBy', blank=True)
-    chdt = models.DateTimeField(null=True, db_column=u'ChDt', blank=True)
+    county1no = models.CharField(max_length=10, db_column=u'County1No')
+    county1name = models.CharField(max_length=40, db_column=u'County1Name')
+    county2no = models.CharField(max_length=10, db_column=u'County2No')
+    county2name = models.CharField(max_length=40, db_column=u'County2Name')
+    main_association_id = models.IntegerField(null=True, db_column=u'District1')
+    local_association_id = models.IntegerField(null=True, db_column=u'District2')
+    crby = models.CharField(max_length=25, db_column=u'CrBy')
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt')
+    chby = models.CharField(max_length=25, db_column=u'ChBy')
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     class Meta:
         db_table = u'PostalCode'
 
 class Price(models.Model):
     association_id = models.IntegerField(primary_key=True, db_column=u'Region')
-    main = models.IntegerField(null=True, db_column=u'C101', blank=True)
-    youth = models.IntegerField(null=True, db_column=u'C102', blank=True)
-    senior = models.IntegerField(null=True, db_column=u'C103', blank=True)
-    lifelong = models.IntegerField(null=True, db_column=u'C104', blank=True)
-    child = models.IntegerField(null=True, db_column=u'C105', blank=True)
-    school = models.IntegerField(null=True, db_column=u'C106', blank=True)
-    household = models.IntegerField(null=True, db_column=u'C107', blank=True)
-    unknown = models.IntegerField(null=True, db_column=u'C108', blank=True)
+    main = models.IntegerField(null=True, db_column=u'C101')
+    youth = models.IntegerField(null=True, db_column=u'C102')
+    senior = models.IntegerField(null=True, db_column=u'C103')
+    lifelong = models.IntegerField(null=True, db_column=u'C104')
+    child = models.IntegerField(null=True, db_column=u'C105')
+    school = models.IntegerField(null=True, db_column=u'C106')
+    household = models.IntegerField(null=True, db_column=u'C107')
+    unknown = models.IntegerField(null=True, db_column=u'C108')
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
+
+# This is a view which uses 2-3 other views/tables to collect some sort of balance.
+# Instead of wasting time studying its logic, we'll just use this view to get the
+# data we need, even though it performs relatively slow.
+class BalanceHistory(models.Model):
+    id = models.OneToOneField(Actor, related_name='balance', primary_key=True, db_column=u'ActSeqNo')
+    memberid = models.IntegerField(db_column=u'ActActNo')
+    current_year = models.FloatField(db_column=u'ThisYear') # Dammit, this returns float, smells like trouble
+    # Note - this view also has a 'LastYear' column. That field retrieves info from the table
+    # "Cust_Turist_Balance_Hist", but upon further inspection, that table has no entry for member with memberid
+    # above 3000000 - which is from ca 2006. This probably means that it is not in use anymore, so we'll ignore it.
+    # It was used in the old user page - after October, when "årskrav" is processed, a members payment status
+    # Would be if _either_ the current_year or last_year balance was <= 0.
+
+    def is_payed(self):
+        # This will be incorrect in the period between "årskrav" processing and year end.
+        # The user might have paid for the current year, and the membership *should* be valid
+        # for the remainder, but Focus will regard 'current year' as next year from this point.
+        return self.current_year <= 0
+
+    class Meta:
+        db_table = u'Cust_Turist_Balance_Hist_v'
