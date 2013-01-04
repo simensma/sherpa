@@ -108,16 +108,6 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            try:
-                parsed_dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
-            except ValueError:
-                messages.error(request, 'invalid_dob')
-                errors = True
-
-            if parsed_dob > datetime.now():
-                messages.error(request, 'future_dob')
-                errors = True
-
             if request.user.get_profile().actor().address.country == 'NO':
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
@@ -152,7 +142,6 @@ def update_account(request):
             actor.email = request.POST['email']
             actor.phone_home = request.POST['phone_home']
             actor.phone_mobile = request.POST['phone_mobile']
-            actor.birth_date = parsed_dob
             actor.save()
 
             if actor.address.country == 'NO':

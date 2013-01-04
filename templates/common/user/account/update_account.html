@@ -43,14 +43,6 @@
             <div class="hint error">
               <strong>Du har ikke fylt inn et gyldig mobiltelefonnummer.</strong>
             </div>
-          {% elif message.message == 'invalid_dob' %}
-            <div class="hint error">
-              <strong>Du har ikke fylt inn en gyldig fødselsdato.</strong>
-            </div>
-          {% elif message.message == 'future_dob' %}
-            <div class="hint error">
-              <strong>Du kan ikke ha en fødselsdato i fremtiden.</strong>
-            </div>
           {% elif message.message == 'invalid_address' %}
             <div class="hint error">
               <strong>Du har ikke fylt inn en gyldig adresse.</strong>
@@ -114,8 +106,10 @@
 
       <div class="control-group dob">
         <label class="control-label" for="dob">Født</label>
-        <div class="controls">
-          <input type="text" class="input-medium" name="dob" value="{{ user.get_profile.actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.actor.birth_date|date:"Y/m/d" }}">
+        <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Fødselsdato kan ikke endres" data-content="Vennligst kontakt medlemsservice dersom denne fødselsdatoen ikke stemmer.">
+          <input type="text" class="input-medium" name="dob" value="{{ user.get_profile.actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.actor.birth_date|date:"Y/m/d" }}" disabled>
+          <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
+          <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
         </div>
       </div>
 
