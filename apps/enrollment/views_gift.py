@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from django.contrib import messages
 
 from datetime import datetime
-from smtplib import SMTPDataError
 import json
 
 from enrollment.models import Giver, Receiver, membership_types
