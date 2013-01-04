@@ -70,7 +70,7 @@
       {% if perms.user.sherpa %}
         <div class="control-group sherpa-email">
           <label class="control-label" for="sherpa-email">E-post i Sherpa</label>
-          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Egen Sherpa-epost" data-content="Hvis du bruker din private e-postadresse på Min side, kan du angi en egen e-postadresse for Sherpa. Den vil vises i artikler du skriver og på din Sherpa-profil.<br><br>Tips: Registrer adressen på www.gravatar.com!">
+          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Egen Sherpa-epost" data-content="Hvis du bruker din private e-postadresse på Min side, kan du angi en egen e-postadresse for Sherpa. Den vil vises i artikler du skriver og på din Sherpa-profil.<br><br>Tips: Registrer adressen på www.gravatar.com!<br><br><strong>Du kan ikke logge på med denne e-postadressen!</strong>">
             <input name="toggle-sherpa-email" type="checkbox"{% if user.get_profile.sherpa_email != '' %} checked{% endif %}>
             <input type="text" class="input-xlarge" name="sherpa-email" value="{{ user.get_profile.sherpa_email }}"{% if user.get_profile.sherpa_email == '' %} readonly{% endif %}>
             <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
