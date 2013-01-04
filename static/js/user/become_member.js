@@ -76,6 +76,7 @@ $(document).ready(function() {
             $("input[name='email']").removeAttr('disabled');
         } else {
             $("input[name='email']").attr('disabled', true);
+            $("div.control-group.email").removeClass('error success');
         }
     });
 
