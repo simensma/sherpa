@@ -4,6 +4,7 @@ class Annonse(models.Model):
     userprofile = models.ForeignKey('user.Profile')
     timeadded = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     fylke = models.ForeignKey('core.County')
     image = models.CharField(max_length=2048, null=True)

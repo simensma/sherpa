@@ -14,12 +14,10 @@
   <div class="span9">
     <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
       <h3>Rediger Annonse:</h3>
-      <label>Tittel</label>
-      <input class="annonse-title" type="text" value="{{ annonse.title }}"></input><br>
-      <label>Fylke</label>
+      <input class="annonse-title" type="text" value="{{ annonse.title }}" placeholder="Tittel"></input><br>
+      <input class="annonse-email" type="text" value="{{ annonse.email }}" placeholder="Epost"></input><br>
       {% include 'main/fjelltreffen/fylkelist.html' with selectedfylke=annonse.fylke %}<br>
-      <label>Annonse</label>
-      <textarea class="annonse-text" rows="10" cols="50" >{{ annonse.text|linebreaksbr }}</textarea><br>
+      <textarea class="annonse-text" rows="10" cols="50" placeholder="Skriv annonsen din her...">{{ annonse.text|linebreaksbr }}</textarea><br>
       <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
       <br>
       <button class="btn save-annonse">Lagre</button>
@@ -35,12 +33,11 @@
   <div class="span9">
     <div class="annonse" data-hidden="true">
       <h3>Ny Annonse:</h3>
-      <label>Tittel</label>
-      <input class="annonse-title" type="text"></input><br>
+      <input class="annonse-title" type="text" placeholder="Tittel"></input><br>
+      <input class="annonse-email" type="text" placeholder="Epost"></input><br>
       <label>Fylke</label>
       {% include 'main/fjelltreffen/fylkelist.html'%}<br>
-      <label>Annonse</label>
-      <textarea class="annonse-text" rows="10" cols="50" ></textarea><br>
+      <textarea class="annonse-text" rows="10" cols="50" placeholder="Skriv annonsen din her..."></textarea><br>
       <input type="checkbox" class="annonse-hideage">Skjul min presise alder<br>
       <br>
       <button class="btn save-annonse">Lagre</button>
