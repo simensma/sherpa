@@ -1,0 +1,11 @@
+from django.conf.urls.defaults import patterns, include, url
+
+urlpatterns = patterns('fjelltreffen.views',
+    url(r'^$', 'index'),
+    url(r'^(?P<id>\d+)/$', 'single'),
+    url(r'^ny/$', 'new'),
+    url(r'^mine/$', 'mine'),
+    url(r'^save/$', 'save'),
+    url(r'^delete/(?P<id>\d+)/$', 'delete'),
+
+)

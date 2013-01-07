@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     # Keep old user page
     # Note: This URL uses hardcoded links in enrollment result pages and email receipts.
     url(r'^minside/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/minside/' % settings.OLD_SITE}),
-    url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
+    #url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
 
     # Old static content
     url(r'^img/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/img/' % settings.OLD_SITE}),

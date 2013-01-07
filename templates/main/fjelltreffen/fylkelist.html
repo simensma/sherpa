@@ -1,0 +1,6 @@
+{# fylker and selectedfylke is assumed #}
+<select class="annonse-fylke">
+    {% for fylke in fylker %}
+    <option {% if selectedfylke.code == fylke.code %}selected="selected"{% endif %}value="{{ fylke.code }}">{{ fylke.name }}</option>
+    {% endfor %}
+</select>

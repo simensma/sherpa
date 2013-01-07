@@ -1,0 +1,58 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+{% block breadcrumb_title %}Ny annonse{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/fjelltreffen.js"></script>
+{% endblock%}
+
+{% block body %}
+
+<div class="row">
+  {% if annonse %}
+  <div class="span9">
+    <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
+      <h3>Rediger Annonse:</h3>
+      <label>Tittel</label>
+      <input class="annonse-title" type="text">{{ annonse.title }}</input><br>
+      <label>Fylke</label>
+      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylke=annonse.fylke %}<br>
+      <label>Annonse</label>
+      <textarea class="annonse-text" rows="10" cols="50" >{{ annonse.text|linebreaksbr }}</textarea><br>
+      <input type="checkbox" class="hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
+      <br>
+      <button class="save-annonse" class="btn btn-large" >Lagre</button>
+      <button {% if not annonse.hidden %}style="display:none"{% endif %}class="publish-annonse" class="btn btn-large" >Publiser og lagre</button>
+      <button {% if annonse.hidden %}style="display:none"{% endif %}class="hide-annonse" class="btn btn-large" >Skjul</button>
+      <button class="delete-annonse" class="btn btn-large" >Slett</button>
+    </div>
+  </div>
+  <div class="span3">
+  {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+  </div>
+  {% else %}
+  <div class="span9">
+    <div class="annonse" data-hidden="true">
+      <h3>Ny Annonse:</h3>
+      <label>Tittel</label>
+      <input class="annonse-title" type="text"></input><br>
+      <label>Fylke</label>
+      {% include 'main/fjelltreffen/fylkelist.html'%}<br>
+      <label>Annonse</label>
+      <textarea class="annonse-text" rows="10" cols="50" ></textarea><br>
+      <input type="checkbox" class="hideage">Skjul min presise alder<br>
+      <br>
+      <button class="save-annonse" class="btn btn-large" >Lagre</button>
+      <button class="publish-annonse" class="btn btn-large" >Publiser og lagre</button>
+      <button style="display:none" class="hide-annonse" class="btn btn-large" >Skjul</button>
+      <button style="display:none" class="delete-annonse" class="btn btn-large" >Slett</button>
+    </div>
+  </div>
+  <div class="span3">
+  {% include 'main/fjelltreffen/navigation.html' with active='new' %}
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
