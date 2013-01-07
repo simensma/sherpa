@@ -19,45 +19,46 @@ $(document).ready(function() {
     });
 
     toolbar.find("select.formatting").change(function() {
-        toolbar.find("select.formatting option:selected").each(function() {
-            // The smart thing to do here would be:
-            // document.execCommand('formatblock', false, $(this).val());
-            // But IE doesn't support that, so. FML.
-            if(typeof selection === "undefined") {
-                alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på linjen du vil gjøre til overskrift, før du velger skrifttypen her.");
-                return $(this);
-            }
-            var node = $(selection.anchorNode);
-            if(node.find(".editable").length != 0) {
-                alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
-                return $(this);
-            }
-            if(node.hasClass('editable')) {
-                // No wrapper node, browser uses content div as wrapper. We'll not be able to
-                // format the requested block as expected.
-                alert("Whoops, det har oppstått en teknisk feil som er litt vanskelig å forklare! I hovedsak skyldes det at browseren din ikke genererer HTML-markup slik den burde.\n\nPrøv å fjerne linjeskiftene rundt teksten du vil formatere for så å lage nye, slik at det genereres nye DOM-elementer. Du kan også prøve \"Fjern formatering\"-knappen.\n\nHvis ikke det funker, er du rett og slett nødt til å bruke en annen browser, som f.eks. Opera.\n\nBeklager dette! Vi vil prøve å lage en manuell fiks for dette problemet snart.");
-                return $(this);
-            }
-            var parent = node.parent();
-            while(!parent.hasClass('editable')) {
-                node = parent;
-                parent = node.parent();
-            }
-            var replacement = $('<' + $(this).val() + '></' + $(this).val() + '>');
-            var clazz = $(this).attr('data-class');
-            if(clazz !== undefined) {
-                replacement.addClass(clazz);
-            }
-            if(node.get(0).nodeType == 3) {
-                // Text node - wrap the text in the new node instead of replacing it
-                replacement.append(node.clone());
-                node.parent().prepend(replacement);
-                node.remove();
-            } else {
-                node.replaceWith(replacement.prepend(node.contents()));
-            }
-        });
-        toolbar.find("select").val("default");
+        var selected = toolbar.find("select.formatting option:selected");
+        var newElement = selected.val();
+        var newClass = selected.attr('data-class');
+        toolbar.find("select.formatting").val("default");
+
+        // The smart thing to do here would be:
+        // document.execCommand('formatblock', false, $(this).val());
+        // But IE doesn't support that, so. FML.
+        if(typeof selection === "undefined") {
+            alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på linjen du vil gjøre til overskrift, før du velger skrifttypen her.");
+            return $(this);
+        }
+        var node = $(selection.anchorNode);
+        if(node.find(".editable").length != 0) {
+            alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
+            return $(this);
+        }
+        if(node.hasClass('editable')) {
+            // No wrapper node, browser uses content div as wrapper. We'll not be able to
+            // format the requested block as expected.
+            alert("Whoops, det har oppstått en teknisk feil som er litt vanskelig å forklare! I hovedsak skyldes det at browseren din ikke genererer HTML-markup slik den burde.\n\nPrøv å fjerne linjeskiftene rundt teksten du vil formatere for så å lage nye, slik at det genereres nye DOM-elementer. Du kan også prøve \"Fjern formatering\"-knappen.\n\nHvis ikke det funker, er du rett og slett nødt til å bruke en annen browser, som f.eks. Opera.\n\nBeklager dette! Vi vil prøve å lage en manuell fiks for dette problemet snart.");
+            return $(this);
+        }
+        var parent = node.parent();
+        while(!parent.hasClass('editable')) {
+            node = parent;
+            parent = node.parent();
+        }
+        var replacement = $('<' + newElement + '></' + newElement + '>');
+        if(newClass !== undefined) {
+            replacement.addClass(newClass);
+        }
+        if(node.get(0).nodeType == 3) {
+            // Text node - wrap the text in the new node instead of replacing it
+            replacement.append(node.clone());
+            node.parent().prepend(replacement);
+            node.remove();
+        } else {
+            node.replaceWith(replacement.prepend(node.contents()));
+        }
     });
     toolbar.find("a.button.anchor-add").click(function(event) {
         toolbar.find("*").hide();
