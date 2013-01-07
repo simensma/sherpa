@@ -27,7 +27,7 @@ $(document).ready(function() {
         // The smart thing to do here would be:
         // document.execCommand('formatblock', false, $(this).val());
         // But IE doesn't support that, so. FML.
-        if(typeof selection === "undefined") {
+        if(typeof selection === "undefined" || selection.rangeCount == 0) {
             alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på eller merke linjen du vil endre, før du velger skrifttypen her.");
             return $(this);
         }
