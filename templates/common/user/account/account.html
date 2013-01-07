@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb_title %}Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.account %}">Dine opplysninger</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/account.js"></script>

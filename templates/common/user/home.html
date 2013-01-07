@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb_title %}Min side{% endblock %}
+{% block breadcrumb %}<em><a href="{% url user.views.home_new %}">Min side</a></em>{% endblock %}
 
 {% block body %}
 

@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Registrer deg{% endblock %}
-{% block breadcrumb_title %}Registrering{% endblock %}
+{% block breadcrumb %}<em><a href="{% url user.login.views.register %}">Registrer deg</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>

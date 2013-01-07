@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Registrer deg uten medlemskap{% endblock %}
-{% block breadcrumb_title %}Registrering{% endblock %}
+{% block breadcrumb %}<em><a href="{% url user.login.views.register_nonmember %}">Registrer deg</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>

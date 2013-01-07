@@ -1,7 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}Instagram{% endblock %}
-{% block breadcrumb_title %}Instagram{% endblock %}
+{% block breadcrumb %}<em><a href="{% url instagram.views.index %}">Instagram</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/instagram.js"></script>

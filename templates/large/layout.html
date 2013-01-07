@@ -134,7 +134,7 @@
             / <em><a href="">{{ version.title.content|striptags }}</a></em>
           {% else %}
             {# Fall back to the static title #}
-            / <em><a href="">{% block breadcrumb_title %}Turistforeningen{% endblock %}</a></em>
+            / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
           {% endif %}
       </div>
     </div>

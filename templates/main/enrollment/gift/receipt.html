@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb_title %}Gavemedlemskap{% endblock %}
+{% block breadcrumb %}<a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a> / <em><a href="{% url enrollment.views_gift.receipt %}">Kvittering</a></em>{% endblock %}
 
 {% block body %}
 

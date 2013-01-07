@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Logg inn{% endblock %}
-{% block breadcrumb_title %}Innlogging{% endblock %}
+{% block breadcrumb %}<em><a href="{% url user.login.views.login %}">Logg inn</a></em>{% endblock %}
 
 {% block body %}
 

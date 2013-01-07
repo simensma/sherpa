@@ -1,7 +1,7 @@
 {% extends site.template.name|add:"/layout.html" %}
 
 {% block title %}Nyheter{% endblock %}
-{% block breadcrumb_title %}Nyheter{% endblock %}
+{% block breadcrumb %}<em><a href="">Nyheter</a></em>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/article-list.js"></script>
 {% endblock %}
