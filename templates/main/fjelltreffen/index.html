@@ -10,16 +10,18 @@
   <div class="span9">
     <h2>Fjelltreffen</h2>
 
-    
-    
     {% if annonser %}
       {% for annonse in annonser %}
         <a href="{% url fjelltreffen.views.show annonse.id %}"><h3>{{ annonse.title }}</h3></a>
         <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"d.m.Y" }}</p>
         <p>{{ annonse.text|linebreaksbr }}</p>
       {% endfor %}
+    {% elif page > 0%}
+      <p>Det finnes desverre ikke så mange sider.<br>
+      Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
     {% else %}
-      <p>Ingen annonser siste 3 måneder.<br>Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
+      <p>Det er ikke lagt ut noen annonser de siste 90 dagene.<br>
+      Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
     {% endif %}
   </div>
 

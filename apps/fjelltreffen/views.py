@@ -13,14 +13,15 @@ from django.core.cache import cache
 NUM_ANNONSER_TO_DISPLAY = 15
 
 def index(request):
-    
-    now = datetime.now();
-    ninetydaysago = now - timedelta(days=90)
-    #all annonser that are not hidden og is newer than 90 days, order by date
-    annonser = getAndCacheAnnonser()
+    return page(request, 0)
+
+def page(request, page):
+    page = int(page)
+    A = NUM_ANNONSER_TO_DISPLAY
+    annonser = getAndCacheAnnonser()[(page*A):((page+1)*A)]
     print annonser
 
-    context = {'annonser': annonser}
+    context = {'annonser':annonser, 'page':page}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def getAndCacheFylker():
@@ -31,11 +32,14 @@ def getAndCacheFylker():
     return fylker
 
 def getAndCacheAnnonser():
+    now = datetime.now();
+    ninetydaysago = now - timedelta(days=90)
+    #all annonser that are not hidden og is newer than 90 days, order by date
     annonser = cache.get('fjelltreffenannonser')
     if annonser == None:
         annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago).order_by('-timeadded')
         cache.set('fjelltreffenannonser', annonser, 60 * 60)
-    return fylker
+    return annonser
 
 def edit(request, id):
     try:
