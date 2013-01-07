@@ -17,7 +17,7 @@ def index(request):
     now = datetime.now();
     ninetydaysago = now - timedelta(days=90)
     #all annonser that are not hidden og is newer than 90 days, order by date
-    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago).order_by('-timeadded')
+    annonser = getAndCacheAnnonser()
     print annonser
 
     context = {'annonser': annonser}
@@ -28,6 +28,13 @@ def getAndCacheFylker():
     if fylker == None:
         fylker = County.objects.all().order_by('name')
         cache.set('annonse-fylker', fylker, 60 * 60)
+    return fylker
+
+def getAndCacheAnnonser():
+    annonser = cache.get('fjelltreffenannonser')
+    if annonser == None:
+        annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago).order_by('-timeadded')
+        cache.set('fjelltreffenannonser', annonser, 60 * 60)
     return fylker
 
 def edit(request, id):
@@ -41,6 +48,9 @@ def edit(request, id):
     return render(request, 'main/fjelltreffen/new.html', context)
 
 def new(request):
+    #users want instant response, so cache is invalidated when an annonse is submitted
+    #this should be alright, there is only 1-4 annonser pr day
+    cache.delete('fjelltreffenannonser')
     context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/new.html', context)
 
@@ -107,11 +117,11 @@ def mine(request):
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)
 
-def single(request, id):
+def show(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
     except (Annonse.DoesNotExist):
         annonse = None
     context = {'annonse': annonse}
-    return render(request, 'main/fjelltreffen/single.html', context)
+    return render(request, 'main/fjelltreffen/show.html', context)
 
