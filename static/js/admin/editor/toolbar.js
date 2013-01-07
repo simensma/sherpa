@@ -28,7 +28,7 @@ $(document).ready(function() {
         // document.execCommand('formatblock', false, $(this).val());
         // But IE doesn't support that, so. FML.
         if(typeof selection === "undefined") {
-            alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på linjen du vil gjøre til overskrift, før du velger skrifttypen her.");
+            alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på eller merke linjen du vil endre, før du velger skrifttypen her.");
             return $(this);
         }
         var node = $(selection.anchorNode);
