@@ -15,23 +15,23 @@
     <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
       <h3>Rediger Annonse:</h3>
       <label>Tittel</label>
-      <input class="annonse-title" type="text">{{ annonse.title }}</input><br>
+      <input class="annonse-title" type="text" value="{{ annonse.title }}"></input><br>
       <label>Fylke</label>
       {% include 'main/fjelltreffen/fylkelist.html' with selectedfylke=annonse.fylke %}<br>
       <label>Annonse</label>
       <textarea class="annonse-text" rows="10" cols="50" >{{ annonse.text|linebreaksbr }}</textarea><br>
-      <input type="checkbox" class="hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
+      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
       <br>
-      <button class="save-annonse" class="btn btn-large" >Lagre</button>
-      <button {% if not annonse.hidden %}style="display:none"{% endif %}class="publish-annonse" class="btn btn-large" >Publiser og lagre</button>
-      <button {% if annonse.hidden %}style="display:none"{% endif %}class="hide-annonse" class="btn btn-large" >Skjul</button>
-      <button class="delete-annonse" class="btn btn-large" >Slett</button>
+      <button class="btn save-annonse">Lagre</button>
+      <button {% if not annonse.hidden %}style="display:none"{% endif %}class="btn publish-annonse">Publiser og lagre</button>
+      <button {% if annonse.hidden %}style="display:none"{% endif %}class="btn hide-annonse">Skjul</button>
+      <button class="btn delete-annonse">Slett</button>
     </div>
   </div>
   <div class="span3">
   {% include 'main/fjelltreffen/navigation.html' with active='None' %}
   </div>
-  {% else %}
+  {% elif new %}
   <div class="span9">
     <div class="annonse" data-hidden="true">
       <h3>Ny Annonse:</h3>
@@ -41,18 +41,27 @@
       {% include 'main/fjelltreffen/fylkelist.html'%}<br>
       <label>Annonse</label>
       <textarea class="annonse-text" rows="10" cols="50" ></textarea><br>
-      <input type="checkbox" class="hideage">Skjul min presise alder<br>
+      <input type="checkbox" class="annonse-hideage">Skjul min presise alder<br>
       <br>
-      <button class="save-annonse" class="btn btn-large" >Lagre</button>
-      <button class="publish-annonse" class="btn btn-large" >Publiser og lagre</button>
-      <button style="display:none" class="hide-annonse" class="btn btn-large" >Skjul</button>
-      <button style="display:none" class="delete-annonse" class="btn btn-large" >Slett</button>
+      <button class="btn save-annonse">Lagre</button>
+      <button class="btn publish-annonse">Publiser og lagre</button>
+      <button style="display:none" class="btn hide-annonse">Skjul</button>
+      <button style="display:none" class="btn delete-annonse">Slett</button>
     </div>
   </div>
   <div class="span3">
-  {% include 'main/fjelltreffen/navigation.html' with active='new' %}
+  {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+  </div>
+  {% else %}
+  <div class="span9">
+    <h3>Fant ikke annonsen:</h3>
+    <p>Kunne ikke finne annonsen, er du logget på?</p>
+  </div>
+  <div class="span3">
+  {% include 'main/fjelltreffen/navigation.html' with active='None' %}
   </div>
   {% endif %}
+
 </div>
 
 {% endblock %}

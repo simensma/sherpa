@@ -34,10 +34,10 @@ $(document).ready(function() {
     }
 
     function saveAnnonse(hide){
-
         content = {
             id:annonseid,
             hidden:hide,
+            hideage:$("input.annonse-hideage").prop("checked"),
             title:$("input.annonse-title").val(),
             text:$("textarea.annonse-text").val(),
             fylke:$("select.annonse-fylke").val()

@@ -18,7 +18,6 @@ def index(request):
     ninetydaysago = now - timedelta(days=90)
     #all annonser that are not hidden og is newer than 90 days, order by date
     annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago).order_by('-timeadded')
-    #annonser = Annonse.objects.all()
     print annonser
 
     context = {'annonser': annonser}
@@ -31,20 +30,31 @@ def getAndCacheFylker():
         cache.set('annonse-fylker', fylker, 60 * 60)
     return fylker
 
+def edit(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id)
+        if annonse.userprofile != request.user.get_profile():
+            annonse = None
+    except Annonse.DoesNotExist:
+        annonse = None
+    context = {'new':False,'annonse':annonse,'fylker':getAndCacheFylker()}
+    return render(request, 'main/fjelltreffen/new.html', context)
+
 def new(request):
-    context = {'annonse':None,'fylker':getAndCacheFylker()}
+    context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 def delete(request, id):
     try:
-        annonse = Annonse.objects.get(id=content['id']);
+        annonse = Annonse.objects.get(id=id);
         if annonse.userprofile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
             return HttpResponse(500)   
         else:
-            annonse.delete       
+            annonse.delete()
+            return HttpResponse()
     except (Annonse.DoesNotExist, KeyError) as e:
-        return HttpResponse(500)   
+        return HttpResponse(500)  
 
 def save(request):
     try:
@@ -79,6 +89,7 @@ def save(request):
         annonse.image = content.get('image')
         annonse.text = content['text']
         annonse.hidden = content['hidden']
+        annonse.hideage = content['hideage']
         annonse.compute_age()
         annonse.compute_gender()
     except KeyError as e:
@@ -88,16 +99,6 @@ def save(request):
     print 'saved'
 
     return HttpResponse(json.dumps({'id':annonse.id, 'hidden':annonse.hidden}))
-
-def new_edit_annonse(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id)
-    except (Annonse.DoesNotExist):
-        annonse = None
-    context = {'annonse':annonse,}
-    return render(request, 'main/fjelltreffen/edit.html', context)
-
-
 
 def mine(request):
     #alle annonser som tilhorer den aktive brukeren
@@ -111,7 +112,6 @@ def single(request, id):
         annonse = Annonse.objects.get(id=id)
     except (Annonse.DoesNotExist):
         annonse = None
-        #raise Http404
     context = {'annonse': annonse}
     return render(request, 'main/fjelltreffen/single.html', context)
 

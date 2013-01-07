@@ -10,9 +10,14 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-
     age = models.IntegerField()
     ismale = models.BooleanField()
+
+    def get_age(self):
+        if self.hideage:
+            return '' + str(int(self.age/5) * 5) + '-' + str((int((self.age+5)/5) * 5)-1)
+        else:
+            return self.age
 
     def get_date(self):
         return timeadded.day + '.' + timeadded.month + '.' + timeadded.year
