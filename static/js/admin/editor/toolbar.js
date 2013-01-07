@@ -1,12 +1,14 @@
 $(document).ready(function() {
 
+    var toolbar = $("#toolbar");
+
     /**
      * Toolbar buttons
      */
-    $("#toolbar a.button").each(function() {
+    toolbar.find("a.button").each(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
     });
-    $("#toolbar a.button").hover(function() {
+    toolbar.find("a.button").hover(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     }, function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
@@ -16,8 +18,8 @@ $(document).ready(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
-    $("#toolbar select.formatting").change(function() {
-        $("#toolbar select.formatting option:selected").each(function() {
+    toolbar.find("select.formatting").change(function() {
+        toolbar.find("select.formatting option:selected").each(function() {
             // The smart thing to do here would be:
             // document.execCommand('formatblock', false, $(this).val());
             // But IE doesn't support that, so. FML.
@@ -55,10 +57,10 @@ $(document).ready(function() {
                 node.replaceWith(replacement.prepend(node.contents()));
             }
         });
-        $("#toolbar select").val("default");
+        toolbar.find("select").val("default");
     });
-    $("#toolbar a.button.anchor-add").click(function(event) {
-        $("#toolbar *").hide();
+    toolbar.find("a.button.anchor-add").click(function(event) {
+        toolbar.find("*").hide();
         var p = $('<p class="anchor-insert">URL-adresse: </p>');
         var input = $('<input type="text" name="url">');
         p.append(input);
@@ -70,7 +72,7 @@ $(document).ready(function() {
                 range.setEnd(range.endContainer, range.endOffset - 1);
             }
             selection.setSingleRange(range);
-            var url = $("#toolbar input[name='url']").val().trim();
+            var url = toolbar.find("input[name='url']").val().trim();
             if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }
@@ -81,51 +83,51 @@ $(document).ready(function() {
             reset();
         });
         function reset() {
-            $("#toolbar p.anchor-insert, #toolbar div.anchor-buttons").remove();
-            $("#toolbar *").show();
+            toolbar.find("p.anchor-insert, #toolbar div.anchor-buttons").remove();
+            toolbar.find("*").show();
         }
-        $("#toolbar").append(p, buttons);
+        toolbar.append(p, buttons);
     });
-    $("#toolbar a.anchor-remove").click(function(event) {
+    toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
     });
-    $("#toolbar a.button.bold").click(function(event) {
+    toolbar.find("a.button.bold").click(function(event) {
         document.execCommand('bold', false, null);
     });
-    $("#toolbar a.button.italic").click(function(event) {
+    toolbar.find("a.button.italic").click(function(event) {
         document.execCommand('italic', false, null);
     });
-    $("#toolbar a.button.underline").click(function(event) {
+    toolbar.find("a.button.underline").click(function(event) {
         document.execCommand('underline', false, null);
     });
-    $("#toolbar a.button.ol").click(function(event) {
+    toolbar.find("a.button.ol").click(function(event) {
         document.execCommand('insertorderedlist', false, null);
     });
-    $("#toolbar a.button.ul").click(function(event) {
+    toolbar.find("a.button.ul").click(function(event) {
         document.execCommand('insertunorderedlist', false, null);
     });
-    $("#toolbar a.button.align-left").click(function(event) {
+    toolbar.find("a.button.align-left").click(function(event) {
         document.execCommand('justifyleft', false, null);
     });
-    $("#toolbar a.button.align-center").click(function(event) {
+    toolbar.find("a.button.align-center").click(function(event) {
         document.execCommand('justifycenter', false, null);
     });
-    $("#toolbar a.button.align-right").click(function(event) {
+    toolbar.find("a.button.align-right").click(function(event) {
         document.execCommand('justifyright', false, null);
     });
-    $("#toolbar a.button.full").click(function(event) {
+    toolbar.find("a.button.full").click(function(event) {
         document.execCommand('justifyfull', false, null);
     });
-    $("#toolbar a.button.hr").click(function(event) {
+    toolbar.find("a.button.hr").click(function(event) {
         document.execCommand('inserthorizontalrule', false, null);
     });
-    $("#toolbar a.button.remove-format").click(function(event) {
+    toolbar.find("a.button.remove-format").click(function(event) {
         document.execCommand('removeformat', false, null);
     });
 
     /* Show tooltip for toolbar formatting buttons */
 
-    $("#toolbar a.button").hover(function() {
+    toolbar.find("a.button").hover(function() {
         var tooltip = $('<button class="btn btn-primary title">' + $(this).attr('data-title') + '</button>');
         tooltip.css('font-weight', 'bold');
         tooltip.css('position', 'absolute');
