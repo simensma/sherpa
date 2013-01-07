@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+    // All elements from the spec[1] plus header elements (h1-h6)
+    // [1] http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command
+    var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
+
     var toolbar = $("#toolbar");
 
     /**
@@ -19,46 +23,87 @@ $(document).ready(function() {
     });
 
     toolbar.find("select.formatting").change(function() {
-        var selected = toolbar.find("select.formatting option:selected");
-        var newElement = selected.val();
-        var newClass = selected.attr('data-class');
-        toolbar.find("select.formatting").val("default");
+        var styleClass = toolbar.find("select.formatting option:selected").val();
+        $(this).val("default");
 
-        // The smart thing to do here would be:
-        // document.execCommand('formatblock', false, $(this).val());
-        // But IE doesn't support that, so. FML.
         if(typeof selection === "undefined" || selection.rangeCount == 0) {
-            alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på eller merke linjen du vil endre, før du velger skrifttypen her.");
+            alert("Du har ikke merket noen tekst!\n\n" +
+                  "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
             return $(this);
         }
-        var node = $(selection.anchorNode);
-        if(node.find(".editable").length != 0) {
-            alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
+
+        var range = selection.getRangeAt(0);
+        var start = $(range.startContainer);
+
+        if(start[0].nodeType != 3) {
+            alert("Du har ikke merket et tekstelement.\n\n" +
+                  "Hvis du endret teksten to ganger på rad må du huske å merke teksten igjen før du endrer den andre gang.\n\n" +
+                  "Hvis markøren er på en tom linje, må du skrive litt tekst før du velger teksttype.\n\n" +
+                  "Prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre)\n\n" +
+                  "Hvis ikke det hjelper, bør du kanskje prøve å oppgradere eller bytte nettleser.");
             return $(this);
         }
-        if(node.hasClass('editable')) {
-            // No wrapper node, browser uses content div as wrapper. We'll not be able to
-            // format the requested block as expected.
-            alert("Whoops, det har oppstått en teknisk feil som er litt vanskelig å forklare! I hovedsak skyldes det at browseren din ikke genererer HTML-markup slik den burde.\n\nPrøv å fjerne linjeskiftene rundt teksten du vil formatere for så å lage nye, slik at det genereres nye DOM-elementer. Du kan også prøve \"Fjern formatering\"-knappen.\n\nHvis ikke det funker, er du rett og slett nødt til å bruke en annen browser, som f.eks. Opera.\n\nBeklager dette! Vi vil prøve å lage en manuell fiks for dette problemet snart.");
-            return $(this);
-        }
-        var parent = node.parent();
-        while(!parent.hasClass('editable')) {
-            node = parent;
-            parent = node.parent();
-        }
-        var replacement = $('<' + newElement + '></' + newElement + '>');
-        if(newClass !== undefined) {
-            replacement.addClass(newClass);
-        }
-        if(node.get(0).nodeType == 3) {
-            // Text node - wrap the text in the new node instead of replacing it
-            replacement.append(node.clone());
-            node.parent().prepend(replacement);
-            node.remove();
+
+        var container = start.parent();
+        if(styleClass === 'bread') {
+            if(!container.is(FORMATTER_ELEMENTS)) {
+                alert("Dette elementet er allerede brødtekst.\n\n" +
+                      "Hvis du mener det ikke stemmer, prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre).");
+                return $(this);
+            }
+            mozillaMadness(container);
         } else {
-            node.replaceWith(replacement.prepend(node.contents()));
+            if(container.is(FORMATTER_ELEMENTS)) {
+                // Replace the parent formatter element
+                mozillaMadness(container, ['<span class="' + styleClass + '">', '</span>']);
+            } else {
+                // The element isn't contained by a formatting element. Ignore parents and mozilla madness, just wrap the contents in a span.
+                start.replaceWith('<span class="' + styleClass + '">' + start.text() + '</span>');
+            }
         }
+
+        // Special cases for mozillas linebreaks. Sad fucking panda.
+        function mozillaMadness(container, content) {
+            if(start.prev().is("br")) {
+                // Breaks are before
+                start.prev().attr('data-special-case-tmp', '');
+                if(start.next().is("br")) {
+                    // Breaks are *both* before and after
+                    start.next().attr('data-special-case-tmp-2', '');
+                    var match = /(.*)<.*?data-special-case-tmp.*?>(.*)<.*?data-special-case-tmp-2.*?>(.*)/.exec(container.html());
+                    var clone = container.clone().html(match[3]);
+                    if(typeof content !== 'undefined') {
+                        match[2] = content[0] + match[2] + content[1];
+                    }
+                    container.html(match[1]).after('<br>', match[2], '<br>', clone);
+                } else {
+                    // Breaks are *only* before
+                    var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
+                    if(typeof content !== 'undefined') {
+                        match[2] = content[0] + match[2] + content[1];
+                    }
+                    container.html(match[1]).after('<br>', match[2]);
+                }
+            } else if(start.next().is("br")) {
+                // Breaks are *only* after
+                start.next().attr('data-special-case-tmp', '');
+                var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
+                if(typeof content !== 'undefined') {
+                    match[1] = content[0] + match[1] + content[1];
+                }
+                container.html(match[2]).before(match[1], '<br>');
+            } else {
+                // No mozilla madness, just remove the containernode <3
+                var text = container.text();
+                if(typeof content !== 'undefined') {
+                    text = content[0] + text + content[1];
+                }
+                container.replaceWith(text);
+            }
+        }
+
+        // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
+        selection.refresh();
     });
     toolbar.find("a.button.anchor-add").click(function(event) {
         toolbar.find("*").hide();
@@ -124,6 +169,47 @@ $(document).ready(function() {
     });
     toolbar.find("a.button.remove-format").click(function(event) {
         document.execCommand('removeformat', false, null);
+
+        // Also do some extra custom cleanup:
+
+        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+            alert("Du har ikke merket noen tekst!\n\n" +
+                  "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
+            return $(this);
+        }
+
+        var ancestor = $(selection.getRangeAt(0).commonAncestorContainer);
+
+        if(ancestor[0].nodeType === 3) {
+            ancestor = ancestor.parent();
+        }
+        if(ancestor.is(FORMATTER_ELEMENTS)) {
+            var textNode = $(document.createTextNode(ancestor.text()));
+            ancestor.replaceWith(textNode);
+            ancestor = textNode.parent();
+        }
+        ancestor.find(FORMATTER_ELEMENTS).each(function() {
+            $(this).replaceWith($(this).text());
+        });
+
+        mergeTextNodes(ancestor.contents().filter(function() {
+            return this.nodeType == 3;
+        })[0]);
+
+        function mergeTextNodes(textNode) {
+            var text = textNode.data;
+            var nodes = [textNode];
+            while(textNode.nextSibling !== null && textNode.nextSibling.nodeType === 3) {
+                textNode = textNode.nextSibling;
+                nodes.push(textNode);
+                text += textNode.data;
+            }
+            for(var i=1; i<nodes.length; i++) {
+                $(nodes[i]).remove();
+            }
+            $(nodes[0]).replaceWith(text);
+        }
+        selection.removeAllRanges();
     });
 
     /* Show tooltip for toolbar formatting buttons */
