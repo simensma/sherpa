@@ -23,9 +23,9 @@
               <img  src="{{ content.content.src }}" 
               {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
               {% if content.content.selection %}data-selection="{{ content.content.selection }}"{% endif %}
-              {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}}
-              {% if content.content.ratioWidth %}data-ratio-width="{{ content.content.ratioWidth }}"{% endif %}}
-              {% if content.content.ratioHeight %}data-ratio-height="{{ content.content.ratioHeight }}"{% endif %}}>
+              {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}
+              {% if content.content.ratioWidth %}data-ratio-width="{{ content.content.ratioWidth }}"{% endif %}
+              {% if content.content.ratioHeight %}data-ratio-height="{{ content.content.ratioHeight }}"{% endif %}>
             {% if content.content.anchor %}</a>{% endif %}
             <div style="width:auto" class="img-desc">
               <span class="description">{{ content.content.description }}</span>
