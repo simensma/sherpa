@@ -20,7 +20,31 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    function collectRows() {
+    $("div.editor-header button.save").click(save);
+    $("div.editor-header button.preview").click(function() {
+        var button = $(this);
+        button.html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
+        button.attr('disabled', true);
+        var url = $(this).attr('data-href');
+        save(function() {
+            window.location = url;
+        }, function() {
+            button.html('<i class="icon-search"></i> Forhåndsvisning');
+            button.removeAttr('disabled');
+        });
+    });
+
+    window.save = save;
+    function save(done, fail) {
+        clearInterval(updateSaveCountID);
+        var saveButton = $("div.editor-header button.save");
+        saveButton.attr('disabled', true);
+        saveButton.html('<i class="icon-heart"></i> Lagrer...');
+        $("div.no-save-warning").hide();
+
+        var data = {};
+
+        // Rows
         var rows = []
         $("article > div.row-fluid").each(function() {
             var row = {
@@ -29,10 +53,9 @@ $(document).ready(function() {
             };
             rows.push(row);
         });
-        return rows;
-    }
+        data.rows = JSON.stringify(rows);
 
-    function collectColumns() {
+        // Columns
         var columns = [];
         $("article div.column").each(function() {
             var column = {
@@ -41,10 +64,9 @@ $(document).ready(function() {
             };
             columns.push(column);
         });
-        return columns;
-    }
+        data.columns = JSON.stringify(columns);
 
-    function collectContents() {
+        // Contents
         var contents = [];
         $("article > div.row-fluid > div.column > div.html, article > div.row-fluid > div.column > div.title, article > div.row-fluid > div.column > div.lede").each(function() {
             if($(this).is('[data-placeholder]')) {
@@ -84,36 +106,7 @@ $(document).ready(function() {
             };
             contents.push(content);
         });
-        return contents;
-    }
-
-    $("div.editor-header button.save").click(save);
-    $("div.editor-header button.preview").click(function() {
-        var button = $(this);
-        button.html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
-        button.attr('disabled', true);
-        var url = $(this).attr('data-href');
-        save(function() {
-            window.location = url;
-        }, function() {
-            button.html('<i class="icon-search"></i> Forhåndsvisning');
-            button.removeAttr('disabled');
-        });
-    });
-
-    window.save = save;
-    function save(done, fail) {
-        clearInterval(updateSaveCountID);
-        var saveButton = $("div.editor-header button.save");
-        saveButton.attr('disabled', true);
-        saveButton.html('<i class="icon-heart"></i> Lagrer...');
-        $("div.no-save-warning").hide();
-
-        var data = {
-            rows: JSON.stringify(collectRows()),
-            columns: JSON.stringify(collectColumns()),
-            contents: JSON.stringify(collectContents())
-        }
+        data.contents = JSON.stringify(contents);
 
         var parent_select = $("div.editor-header.page select[name='parent']");
         if($("div.editor-header.page").length > 0) {
