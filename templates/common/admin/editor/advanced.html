@@ -20,7 +20,7 @@
         {% elif content.type == 'image' %}
           <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img  src="{{ content.content.src }}" 
+            <img src="{{ content.content.src }}"
               {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
               {% if content.content.selection %}data-selection="{{ content.content.selection }}"{% endif %}
               {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}
