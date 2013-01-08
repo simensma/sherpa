@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 
-from page.models import Column, Content
+from page.models import Version, Row, Column, Content
 from page.widgets import parse_widget
 
 import json
@@ -45,3 +45,20 @@ def update_widget(request, widget):
     c = RequestContext(request, {'widget': widget})
     result = t.render(c)
     return HttpResponse(json.dumps({'content': result, 'json': request.POST['content']}))
+
+def save(request, version):
+    version = Version.objects.get(id=version)
+    for row in json.loads(request.POST['rows']):
+        obj = Row.objects.get(id=row['id'])
+        obj.order = row['order']
+        obj.save()
+    for column in json.loads(request.POST['columns']):
+        obj = Column.objects.get(id=column['id'])
+        obj.order = column['order']
+        obj.save()
+    for content in json.loads(request.POST['contents']):
+        obj = Content.objects.get(id=content['id'])
+        obj.order = content['order']
+        obj.content = content['content']
+        obj.save()
+    return HttpResponse()

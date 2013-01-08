@@ -111,7 +111,7 @@ $(document).ready(function() {
 
         // Save content
         $.ajaxQueue({
-            url: '/sherpa/cms/editor/' + $("div.editor-header").attr('data-version-id') + '/',
+            url: '/sherpa/cms/editor/lagre/' + $("div.editor-header").attr('data-version-id') + '/',
             data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
                   "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
                   "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))

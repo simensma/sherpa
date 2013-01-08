@@ -112,44 +112,28 @@ def delete(request, page):
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
 def edit_version(request, version):
-    if request.method == 'GET':
-        pages = Page.on(request.session['active_association'].site).all().order_by('title')
-        version = Version.objects.get(id=version)
-        rows = Row.objects.filter(version=version).order_by('order')
-        for row in rows:
-            columns = Column.objects.filter(row=row).order_by('order')
-            for column in columns:
-                contents = Content.objects.filter(column=column).order_by('order')
-                for content in contents:
-                    if content.type == 'widget':
-                        content.content = parse_widget(request, json.loads(content.content))
-                    elif content.type == 'image':
-                        content.content = json.loads(content.content)
-                column.contents = contents
-            row.columns = columns
-        context = {
-            'rows': rows,
-            'version': version,
-            'widget_data': widget_admin_context(),
-            'pages': pages,
-            'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-        return render(request, 'common/admin/pages/edit_version.html', context)
-    elif request.method == 'POST' and request.is_ajax():
-        version = Version.objects.get(id=version)
-        for row in json.loads(request.POST['rows']):
-            obj = Row.objects.get(id=row['id'])
-            obj.order = row['order']
-            obj.save()
-        for column in json.loads(request.POST['columns']):
-            obj = Column.objects.get(id=column['id'])
-            obj.order = column['order']
-            obj.save()
-        for content in json.loads(request.POST['contents']):
-            obj = Content.objects.get(id=content['id'])
-            obj.order = content['order']
-            obj.content = content['content']
-            obj.save()
-        return HttpResponse()
+    pages = Page.on(request.session['active_association'].site).all().order_by('title')
+    version = Version.objects.get(id=version)
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'widget':
+                    content.content = parse_widget(request, json.loads(content.content))
+                elif content.type == 'image':
+                    content.content = json.loads(content.content)
+            column.contents = contents
+        row.columns = columns
+    context = {
+        'rows': rows,
+        'version': version,
+        'widget_data': widget_admin_context(),
+        'pages': pages,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+    return render(request, 'common/admin/pages/edit_version.html', context)
+
 
 def slug_is_unique(slug):
     # Verify against the root 'folder' path

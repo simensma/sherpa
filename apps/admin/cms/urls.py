@@ -13,6 +13,7 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^side/annonser/(?P<version>\d+)/$', 'page.display_ads'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
     url(r'^editor/(?P<version>\d+)/$', 'page.edit_version'),
+    url(r'^editor/lagre/(?P<version>\d+)/$', 'content.save'),
 
     # Menus
     url(r'^meny/ny/$', 'menu.new'),
