@@ -1,6 +1,11 @@
-{# fylker and selectedfylke is assumed #}
-<select class="annonse-fylke">
+{# fylker, includeall, and selectedfylkecode is assumed #}
+<select class="fylkeselect annonse-fylke">
+
+	{% if includeall %}
+		<option {% if selectedfylkecode == 0 %}selected="selected"{% endif %}value="0">Hele landet</option>
+	{% endif %}
+	
     {% for fylke in fylker %}
-    <option {% if selectedfylke.code == fylke.code %}selected="selected"{% endif %}value="{{ fylke.code }}">{{ fylke.name }}</option>
+    	<option {% if selectedfylkecode == fylke.code %}selected="selected"{% endif %}value="{{ fylke.code }}">{{ fylke.name }}</option>
     {% endfor %}
 </select>

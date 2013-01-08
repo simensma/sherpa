@@ -15,10 +15,11 @@
     <div class="wrapper">
     <h2>Fjelltreffen</h2>
 
+    {% include 'main/fjelltreffen/filter.html' %}
+
+    <div class="annonse-list-wrapper">
     {% if annonser %}
-      <div class="annonse-list-wrapper">
       {% include 'main/fjelltreffen/annonselist.html' %}
-      </div>
     {% elif page > 0 %}
       <p>Det finnes desverre ikke så mange sider.<br>
       Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
@@ -26,6 +27,7 @@
       <p>Det er ikke lagt ut noen annonser de siste 90 dagene.<br>
       Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
     {% endif %}
+    </div>
   </div>
   </div>
 

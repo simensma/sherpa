@@ -18,4 +18,3 @@
 @import "main/enrollment.less";
 @import "main/instagram.less";
 @import "main/user.less";
-@import "main/fjelltreffen.less";

@@ -12,7 +12,7 @@ class Annonse(models.Model):
     hidden = models.BooleanField()
     hideage = models.BooleanField()
     age = models.IntegerField()
-    ismale = models.BooleanField()
+    gender = models.BooleanField()
 
     def get_age(self):
         if self.hideage:
@@ -43,7 +43,7 @@ class Annonse(models.Model):
     def compute_age(self):
         actor = self.userprofile.actor()
         if actor == None:
-            self.age = 1
+            self.age = 18
             self.save()
             return
         born = userprofile.get_actor().birth_date

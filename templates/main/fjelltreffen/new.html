@@ -16,7 +16,7 @@
       <h3>Rediger Annonse:</h3>
       <input class="annonse-title" type="text" value="{{ annonse.title }}" placeholder="Tittel"></input><br>
       <input class="annonse-email" type="text" value="{{ annonse.email }}" placeholder="Epost"></input><br>
-      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylke=annonse.fylke %}<br>
+      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
       <textarea class="annonse-text" rows="10" cols="50" placeholder="Skriv annonsen din her...">{{ annonse.text|linebreaksbr }}</textarea><br>
       <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
       <br>

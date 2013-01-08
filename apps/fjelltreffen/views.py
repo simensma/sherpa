@@ -12,18 +12,39 @@ import json
 import urllib
 from django.core.cache import cache
 
-BULKLOADNUM = 5
+BULKLOADNUM = 20
+
+defaultMinAge = 18
+defaultMaxAge = 200
+defaultFylke = 0
+defaultGender = None
+
+cachedQueries = []
 
 def index(request):
-    annonser = getAndCacheAnnonser()[0:BULKLOADNUM]
+    annonser = getAndCacheAnnonserByFilter(defaultMinAge, defaultMaxAge, defaultFylke, defaultGender)[0:BULKLOADNUM]
 
-    context = {'annonser':annonser}
+    context = {'annonser':annonser, 'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, page):
+    annonsefilter = None
+    try:
+        annonsefilter = json.loads(request.POST['filter'])
+        minage = int(annonsefilter.get('minage'))
+        maxage = int(annonsefilter.get('maxage'))
+        gender = annonsefilter.get('gender')
+        fylke = int(annonsefilter.get('fylke'))
+    except (JSONDecodeError, KeyError, ValueError) as e:
+        minage = defaultMinAge
+        maxage = defaultMaxAge
+        gender = defaultGender
+        fylke = defaultFylke
+
     page = int(page)
     A = BULKLOADNUM
-    annonser = getAndCacheAnnonser()[(page*A):((page+1)*A)]
+    annonser = getAndCacheAnnonserByFilter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
+
     context = RequestContext(request)
     context['annonser'] = annonser
     string = render_to_string('main/fjelltreffen/annonselist.html', context)
@@ -36,14 +57,23 @@ def getAndCacheFylker():
         cache.set('annonse-fylker', fylker, 60 * 60)
     return fylker
 
-def getAndCacheAnnonser():
+def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
     now = datetime.now();
     ninetydaysago = now - timedelta(days=90)
-    #all annonser that are not hidden og is newer than 90 days, order by date
-    annonser = cache.get('fjelltreffenannonser')
+    #all annonser that are not hidden, is newer than 90 days, and matches the query, order by date
+
+    cacheKey = 'fjelltreffenannonser' + str(minage) + str(maxage) + str(fylke) + str(gender)
+    annonser = cache.get(cacheKey)
     if annonser == None:
-        annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago).order_by('-timeadded')
-        cache.set('fjelltreffenannonser', annonser, 60 * 60)
+        annonser = Annonse.objects.filter(hidden=False, age__gte=minage, age__lte=maxage, timeadded__gte=ninetydaysago)
+        if gender != None:
+            annonser = annonser.filter(gender=gender)
+        if fylke != 0:
+            annonser = annonser.filter(fylke=fylke)
+        annonser = annonser.order_by('-timeadded')
+
+        cache.set(cacheKey, annonser, 60 * 60)
+        cachedQueries.append(cacheKey)
     return annonser
 
 def edit(request, id):
@@ -57,9 +87,6 @@ def edit(request, id):
     return render(request, 'main/fjelltreffen/new.html', context)
 
 def new(request):
-    #users want instant response, so cache is invalidated when an annonse is submitted
-    #this should be alright, there is only 1-4 annonser pr day
-    cache.delete('fjelltreffenannonser')
     context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/new.html', context)
 
@@ -77,12 +104,9 @@ def delete(request, id):
 
 def save(request):
     try:
-        content = json.loads(urllib.unquote_plus(request.POST['annonse']))
+        content = json.loads(request.POST['annonse'])
     except (JSONDecodeError, KeyError) as e:
         return HttpResponse(500)
-
-    print content
-    #return HttpResponse()
 
     try:
         id = content['id']
@@ -115,7 +139,11 @@ def save(request):
         print e
         return HttpResponse(500)
     annonse.save()
-    print 'saved'
+    
+    #users want instant response, so cache is invalidated when an annonse is submitted
+    #this should be alright, there is less than 1 new annonse being submitted pr hour on average
+    for cacheKey in cachedQueries:
+        cache.delete(cacheKey)
 
     return HttpResponse(json.dumps({'id':annonse.id, 'hidden':annonse.hidden}))
 

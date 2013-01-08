@@ -47,7 +47,7 @@ $(document).ready(function() {
         console.log(content);
         $.ajaxQueue({
             url: '/fjelltreffen/save/',
-            data: 'annonse=' + encodeURIComponent(JSON.stringify(content))
+            data: 'annonse=' + JSON.stringify(content)
         }).done(function(result) {
             returnedData = JSON.parse(result);
             hidden = returnedData['hidden'];
