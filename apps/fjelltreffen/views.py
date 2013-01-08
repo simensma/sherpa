@@ -2,6 +2,8 @@
 from fjelltreffen.models import Annonse
 from core.models import County
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from datetime import timedelta
@@ -10,19 +12,22 @@ import json
 import urllib
 from django.core.cache import cache
 
-NUM_ANNONSER_TO_DISPLAY = 15
+BULKLOADNUM = 5
 
 def index(request):
-    return page(request, 0)
+    annonser = getAndCacheAnnonser()[0:BULKLOADNUM]
 
-def page(request, page):
-    page = int(page)
-    A = NUM_ANNONSER_TO_DISPLAY
-    annonser = getAndCacheAnnonser()[(page*A):((page+1)*A)]
-    print annonser
-
-    context = {'annonser':annonser, 'page':page}
+    context = {'annonser':annonser}
     return render(request, 'main/fjelltreffen/index.html', context)
+
+def load(request, page):
+    page = int(page)
+    A = BULKLOADNUM
+    annonser = getAndCacheAnnonser()[(page*A):((page+1)*A)]
+    context = RequestContext(request)
+    context['annonser'] = annonser
+    string = render_to_string('main/fjelltreffen/annonselist.html', context)
+    return HttpResponse(json.dumps({'html':string}))
 
 def getAndCacheFylker():
     fylker = cache.get('annonse-fylker')
