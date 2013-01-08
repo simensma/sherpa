@@ -58,26 +58,6 @@ def image_hide(request, article):
     article.save()
     return HttpResponse()
 
-def publish(request, article):
-    datetime_string = urllib.unquote_plus(request.POST["datetime"])
-    status =  urllib.unquote_plus(request.POST["status"])
-
-    #date format is this one (dd.mm.yyyy hh:mm)
-    try:
-        date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-    except:
-        #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
-        date_object = None
-
-    article = Article.objects.get(id=article)
-    article.published = json.loads(status)["status"]
-    if date_object is None:
-        article.pub_date = datetime.now()
-    else:
-        article.pub_date = date_object
-    article.save()
-    return HttpResponse()
-
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     version.load_preview()
@@ -122,26 +102,6 @@ def parse_version_content(request, version):
             column.contents = contents
         row.columns = columns
     return rows, version
-
-def update_publishers(request, version):
-    version = Version.objects.get(id=version)
-    publisher_list = json.loads(request.POST['authors'])
-    publishers = Profile.objects.filter(id__in=publisher_list)
-    version.publishers = publishers
-    return HttpResponse()
-
-def update_tags(request, version):
-    version = Version.objects.get(id=version)
-    tag_objects = []
-    for tag in json.loads(request.POST['tags']):
-        try:
-            tag_obj = Tag.objects.get(name__iexact=tag)
-        except Tag.DoesNotExist:
-            tag_obj = Tag(name=tag)
-            tag_obj.save()
-        tag_objects.append(tag_obj)
-    version.tags = tag_objects
-    return HttpResponse()
 
 def create_template(template, version, title):
     if template == '0':

@@ -31,18 +31,17 @@
     <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
       <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
         <div class="title">
-          Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}"> <span class="title-status"><i class="icon-ok"></i></span>
+          Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}">
         </div>
 
         <div class="parent">
           Ligger under:
-          <select name="parent">
-            <option value="None">Ingen</option>
+          <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
+            <option value=""></option>
             {% for page in pages %}
               <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
             {% endfor %}
           </select>
-          <span class="parent-status"><i class="icon-ok"></i></span>
         </div>
 
         <div class="publish">

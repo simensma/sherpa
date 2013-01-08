@@ -14,7 +14,6 @@ from page.models import Menu, Page, Variant, Version, Row, Column, Content
 from datetime import datetime
 import json
 import requests
-import urllib
 
 def list(request):
     versions = Version.objects.filter(
@@ -59,53 +58,6 @@ def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
     page_valid = not Page.on(request.session['active_association'].site).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
-
-def rename(request, page):
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    page.title = request.POST['title']
-    page.save()
-    return HttpResponse()
-
-def parent(request, page):
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    if request.POST['parent'] == 'None':
-        new_parent = None
-    else:
-        new_parent = Page.on(request.session['active_association'].site).get(id=request.POST['parent'])
-        parent = new_parent
-        while parent is not None:
-            if parent.id == page.id:
-                return HttpResponse(json.dumps({'error': 'parent_in_parent'}))
-            parent = parent.parent
-    page.parent = new_parent
-    page.save()
-    return HttpResponse('{}')
-
-def publish(request, page):
-    datetime_string = urllib.unquote_plus(request.POST["datetime"])
-    status = urllib.unquote_plus(request.POST["status"])
-
-    #date format is this one (dd.mm.yyyy hh:mm)
-    try:
-        date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-    except:
-        #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
-        date_object = None
-
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    page.published = json.loads(status)["status"]
-    if date_object is None:
-        page.pub_date = datetime.now()
-    else:
-        page.pub_date = date_object
-    page.save()
-    return HttpResponse()
-
-def display_ads(request, version):
-    version = Version.objects.get(id=version)
-    version.ads = json.loads(request.POST['ads'])
-    version.save()
-    return HttpResponse()
 
 def delete(request, page):
     Page.on(request.session['active_association'].site).get(id=page).delete()

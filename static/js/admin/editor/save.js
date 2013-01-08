@@ -109,18 +109,73 @@ $(document).ready(function() {
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
         $("div.no-save-warning").hide();
 
+        var data = {
+            rows: JSON.stringify(collectRows()),
+            columns: JSON.stringify(collectColumns()),
+            contents: JSON.stringify(collectContents())
+        }
+
+        var parent_select = $("div.editor-header.page select[name='parent']");
+        if($("div.editor-header.page").length > 0) {
+            /* Page-specific */
+
+            // Title
+            data.title = $("div.editor-header.page input[name='title']").val();
+
+            // Parent page
+            data.parent = parent_select.find("option:selected").val();
+
+            // Whether or not to display ads
+            data.ads = JSON.stringify($("div.editor-header.page input[name='display-ads']:checked").length > 0);
+
+            // Publish-state
+            data.datetime= $("input[name='page-datetime-field']").val();
+            data.status= JSON.stringify($("div.editor-header input[name='publish']:checked").length > 0);
+        } else if($("div.editor-header.article").length > 0) {
+            /* Article-specific */
+
+            // Authors
+            var authors = [];
+            $("select[name='authors'] > option:selected").each(function() {
+                authors.push($(this).val());
+            });
+            data.authors = JSON.stringify(authors);
+
+            // Publish-state
+            data.datetime = $("input[name='article-datetime-field']").val();
+            data.status = JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0});
+
+            // Tags
+            data.tags = JSON.stringify(article_tagger.tags);
+        }
+
         // Save content
         $.ajaxQueue({
             url: '/sherpa/cms/editor/lagre/' + $("div.editor-header").attr('data-version-id') + '/',
-            data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
-                  "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
-                  "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
+            data: data
         }).done(function(result) {
+            result = JSON.parse(result);
+
             lastSaveCount = 0;
             statusIcon = '<i class="icon-heart"></i>';
             saveButton.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
+            }
+
+            // Parent page-response
+            if(result.parent_error == 'parent_in_parent') {
+                alert('Du kan ikke velge den foreldresiden, fordi *den* allerede er en underside av denne siden.');
+                parent_select.val(parent_select.find("option.default").val());
+                parent_select.trigger('liszt:updated');
+            } else {
+                parent_select.find("option.default").removeClass('default');
+                parent_select.find("option:selected").addClass('default');
+            }
+
+            // Article-authors response
+            if(result.author_error == 'no_authors') {
+                alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
             }
         }).fail(function(result) {
             statusIcon = '<i class="icon-warning-sign"></i>';
@@ -136,59 +191,6 @@ $(document).ready(function() {
             saveButton.removeAttr('disabled');
         });
 
-        // Page-specific saving
-        if($("div.editor-header.page").length > 0) {
-            // Save whether or not to display ads
-            var value = $("div.editor-header.page input[name='display-ads']:checked").length > 0;
-            $.ajaxQueue({
-                url: '/sherpa/cms/side/annonser/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'ads=' + encodeURIComponent(JSON.stringify(value))
-            });
-
-            // Publish-state
-            $.ajaxQueue({
-                url: '/sherpa/cms/side/publiser/' + $("div.editor-header").attr('data-page-id') + '/',
-                data: {
-                    datetime : encodeURIComponent($("input[name='page-datetime-field']").val()),
-                    status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
-                }
-            });
-        }
-
-        // Article-specific saving
-        if($("div.editor-header.article").length > 0) {
-            // Save authors
-            var authors = [];
-            var selected = $("select[name='authors'] > option:selected");
-            if(selected.length == 0) {
-                alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
-                return;
-            }
-            selected.each(function() {
-                authors.push($(this).val());
-            });
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/forfattere/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
-            }).always(function() {
-                $("button.save-authors").removeAttr('disabled');
-            });
-
-            // Publish-state
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/publiser/' + $("div.editor-header").attr('data-article-id') + '/',
-                data: {
-                    datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
-                    status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
-                }
-            });
-
-            // Save tags
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/nokkelord/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'tags=' + encodeURIComponent(JSON.stringify(article_tagger.tags))
-            });
-        }
     }
 
 });
