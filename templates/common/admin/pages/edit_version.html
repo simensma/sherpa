@@ -45,10 +45,12 @@
         </div>
 
         <div class="publish">
-          <p>
-            <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
-            <input type="text" class="input-large" name="page-datetime-field" value="{{ version.variant.page.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt...">
-          </p>
+          <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+          <input type="text" class="input-large" name="page-datetime-field" value="{{ version.variant.page.pub_date|date:"d.m.Y H:i" }}" placeholder="Velg publiseringstidspunkt...">
+        </div>
+
+        <div class="display-ads">
+          <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
         </div>
 
         <div class="save">
@@ -56,9 +58,6 @@
           <a class="btn btn-danger delete-page" href="{% url admin.cms.views.page.delete version.variant.page.id %}">
             <i class="icon-warning-sign"></i> Slett siden for godt
           </a>
-        </div>
-        <div class="display-ads">
-          <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
         </div>
       </div>
 
