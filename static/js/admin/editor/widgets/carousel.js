@@ -1,4 +1,4 @@
-(function(ImageCarouselWidget, $, undefined ) {
+(function(ImageCarouselWidgetEditor, $, undefined ) {
 
     /* Private variables */
 
@@ -76,7 +76,7 @@
 
     /* Public methods */
 
-    ImageCarouselWidget.listImages = function(parentWidth) {
+    ImageCarouselWidgetEditor.listImages = function(parentWidth) {
         currentIndex = 0;
         newWidgetParentWidth = 0;
 
@@ -99,7 +99,7 @@
         displayCurrentImage();
     }
 
-    ImageCarouselWidget.saveCropping = function() {
+    ImageCarouselWidgetEditor.saveCropping = function() {
         var parentWidth = 0;
         if(widgetBeingEdited == undefined){
             parentWidth = newWidgetParentWidth;
@@ -129,7 +129,7 @@
         });
     }
 
-    ImageCarouselWidget.validateContent = function() {
+    ImageCarouselWidgetEditor.validateContent = function() {
         var numImages = 0;
         for(var i = 0; i < imageList.length; i++){
             if(imageList[i].url.trim().length > 0){
@@ -167,14 +167,14 @@
 
         // carousel navigation
         widget_editor.find("button.previous").click(function() {
-            ImageCarouselWidget.saveCropping();
+            ImageCarouselWidgetEditor.saveCropping();
             if(currentIndex > 0){
                 currentIndex--;
             }
             displayCurrentImage();
         });
         widget_editor.find("button.next").click(function() {
-            ImageCarouselWidget.saveCropping();
+            ImageCarouselWidgetEditor.saveCropping();
             if(currentIndex == imageList.length -1){
                 //another image is added if you are at the last image and the current image isn't a blank
                 if(imageList[currentIndex].url.trim().length > 0){
@@ -240,5 +240,5 @@
 
     });
 
-}(window.ImageCarouselWidget = window.ImageCarouselWidget || {}, jQuery ));
+}(window.ImageCarouselWidgetEditor = window.ImageCarouselWidgetEditor || {}, jQuery ));
 

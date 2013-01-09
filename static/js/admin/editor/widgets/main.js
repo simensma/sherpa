@@ -99,8 +99,8 @@ function validateContent(widget) {
             author: widget.find("input[name='author']").val()
         };
     } else if(widget.attr('data-widget') == 'carousel') {
-        ImageCarouselWidget.saveCropping();
-        return ImageCarouselWidget.validateContent();
+        ImageCarouselWidgetEditor.saveCropping();
+        return ImageCarouselWidgetEditor.validateContent();
 
     } else if(widget.attr('data-widget') == 'articles') {
         var count = widget.find("input[name='count']").val();
@@ -166,7 +166,7 @@ function validateContent(widget) {
 
 function openWidgetDialog(type, parentWidth){
     if(type == 'carousel') {
-        ImageCarouselWidget.listImages(parentWidth);
+        ImageCarouselWidgetEditor.listImages(parentWidth);
     }
 }
 
@@ -205,7 +205,7 @@ function editWidget() {
     } else if(widget.widget == 'embed') {
         $("div.widget-editor[data-widget='embed'] textarea[name='code']").text(widget.code);
     }else if(widget.widget == 'carousel') {
-        ImageCarouselWidget.listImages();
+        ImageCarouselWidgetEditor.listImages();
     } else if(widget.widget == 'fact') {
         $("div.widget-editor[data-widget='fact'] div.content").html(widget.content);
     }
