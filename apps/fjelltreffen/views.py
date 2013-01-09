@@ -77,6 +77,7 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
         cachedQueries.append(cacheKey)
     return annonser
 
+@login_required
 def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -87,11 +88,13 @@ def edit(request, id):
     context = {'new':False,'annonse':annonse,'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/new.html', context)
 
+@login_required
 def new(request):
     user = request.user.get_profile()
     context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker(), 'user':user}
     return render(request, 'main/fjelltreffen/new.html', context)
 
+@login_required
 def delete(request, id):
     try:
         annonse = Annonse.objects.get(id=id);
@@ -104,10 +107,11 @@ def delete(request, id):
     except (Annonse.DoesNotExist, KeyError) as e:
         return HttpResponse(500)  
 
+@login_required
 def save(request):
     try:
         content = json.loads(request.POST['annonse'])
-    except (JSONDecodeError, KeyError) as e:
+    except KeyError as e:
         return HttpResponse(500)
 
     try:
@@ -151,6 +155,7 @@ def save(request):
 
     return HttpResponse(json.dumps({'id':annonse.id, 'hidden':annonse.hidden}))
 
+@login_required
 def mine(request):
     #alle annonser som tilhorer den aktive brukeren
     annonser = Annonse.objects.all()
