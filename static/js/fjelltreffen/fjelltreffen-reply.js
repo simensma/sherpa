@@ -3,7 +3,6 @@ $(document).ready(function() {
     var annonseid = $("div.annonse").attr("data-id");
 
     $("button.annonsereply-send").click(function(){
-        console.log("dkjsl");
         disableButtons();
         reply();
     });
@@ -30,7 +29,7 @@ $(document).ready(function() {
 
         //simple client-side validation, proper validation is performed server-side
         if(namecontrol.hasClass("error")){
-            alert("Du må ha en tittel!");
+            alert("Du må ha et navn!");
             enableButtons();
             return;
         }
@@ -39,8 +38,8 @@ $(document).ready(function() {
             enableButtons();
             return;
         }
-        if(text.val().length <= 3){
-            alert("Skal du virkelig sende et så kort svar?");
+        if(text.val().length <= 5){
+            alert("Du må skrive et litt lengere svar!");
             enableButtons();
             return;
         }
@@ -51,7 +50,7 @@ $(document).ready(function() {
             email:$("input.annonsereply-email").val(),
             text:$("textarea.annonsereply-text").val(),
         }
-        console.log(content);
+        
         $.ajaxQueue({
             url: '/fjelltreffen/reply/',
             data: 'reply=' + JSON.stringify(content)
