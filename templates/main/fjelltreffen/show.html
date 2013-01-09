@@ -3,22 +3,35 @@
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb_title %}Fjelltreffen{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/fjelltreffen/fjelltreffen-reply.js"></script>
+{% endblock%}
+
 {% block body %}
 
 <div class="row">
 
   <div class="span9">
       {% if annonse %}
+      <div class="annonse" data-id="{{ annonse.id }}">
         <h2>{{ annonse.title }}</h2>
         <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
 
         <p>{{ annonse.text|linebreaksbr }}</p>
         <br>
         <h3>Her kan du svare på annonsen:</h3>
-        <input type="text" placeholder="Navn"></input><br>
-        <input type="text" placeholder="Epost"></input><br>
-        <textarea rows="10" cols="50" placeholder="Skriv svaret ditt her..."></textarea><br>
-        <button class="btn send-reply-annonse">Send</button>
+
+        <div class="control-group annonsereply-name-control">
+          <input type="text" class="annonsereply-name input-large"  placeholder="Navn"><span class="asterisk red"> *</span>
+        </div>
+
+        <div class="control-group annonsereply-email-control">
+          <input type="text" class="annonsereply-email input-large"  placeholder="Epost"><span class="asterisk red"> *</span>
+        </div>
+
+        <textarea class="annonsereply-text" placeholder="Skriv svaret ditt her..."></textarea><br>
+        <button class="btn btn-success annonsereply-send">Send</button>
+      </div>
       {% else %}
         <h2>Ikke funnet</h2>
         <p>Annonsen du leter etter ble ikke funnet. Den kan ha gått ut på dato, eller blitt slettet av annonsøren.</p>

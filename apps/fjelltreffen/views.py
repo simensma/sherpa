@@ -11,6 +11,9 @@ from django.http import HttpResponse, Http404
 import json
 import urllib
 from django.core.cache import cache
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from core.validator import email
 
 BULKLOADNUM = 20
 
@@ -100,38 +103,64 @@ def delete(request, id):
         annonse = Annonse.objects.get(id=id);
         if annonse.userprofile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
-            return HttpResponse(500)   
+            return HttpResponse(status=400)   
         else:
             annonse.delete()
             return HttpResponse()
     except (Annonse.DoesNotExist, KeyError) as e:
-        return HttpResponse(500)  
+        return HttpResponse(status=400)
+
+def reply(request):
+    try:
+        content = json.loads(request.POST['reply'])
+        print content
+    except KeyError as e:
+        print 'mail5001'
+        return HttpResponse(status=400)
+
+    try:
+        replyid = content['id']
+        replyname = content['name']
+        replyemail = content['email']
+        replytext = content['text']
+
+        #validate input
+        if email(replyemail) and len(replyname) > 0 and len(replytext) > 5:
+            
+            replytoemail = Annonse.objects.get(id=replyid).email
+            try:
+                send_mail('DNT Fjelltreffen - Svar fra ' + replyname, replytext, replyemail, ['eidheim@live.no'], fail_silently=False)    
+            except SMTPException as e:
+                return HttpResponse(status=400)
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=400)
+    except (Annonse.DoesNotExist, KeyError) as e:
+        return HttpResponse(status=400)
 
 @login_required
 def save(request):
     try:
         content = json.loads(request.POST['annonse'])
     except KeyError as e:
-        return HttpResponse(500)
+        return HttpResponse(status=400)
 
     try:
         id = content['id']
         annonse = Annonse.objects.get(id=id);
         if annonse.userprofile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
-            return HttpResponse(500)          
+            return HttpResponse(status=400)
     except (Annonse.DoesNotExist, KeyError) as e:
-        print e
+        #the user is creating a new annonse, not editing an excisting one
         annonse = Annonse()
         annonse.userprofile = request.user.get_profile()
     
     try:
         annonse.fylke = County.objects.get(code=content['fylke'])
-        print 'fylke'
-        print content['fylke']
     except (County.DoesNotExist, KeyError) as e:
         #could happen if the user tampers with the html to select an illegal county
-        return HttpResponse(500)
+        return HttpResponse(status=400)
     
     try:
         annonse.email = content['email']
@@ -144,8 +173,13 @@ def save(request):
         annonse.compute_gender()
     except KeyError as e:
         #something is missing in the data sendt
-        return HttpResponse(500)
-    annonse.save()
+        return HttpResponse(status=400)
+
+    #validate input
+    if email(annonse.email) and len(str.strip(annonse.title)) > 0 and len(str.strip(annonse.text)) > 10:
+        annonse.save()
+    else:
+        return HttpResponse(status=400)
     
     #users want instant response, so cache is invalidated when an annonse is submitted
     #this should be alright, there is less than 1 new annonse being submitted pr hour on average

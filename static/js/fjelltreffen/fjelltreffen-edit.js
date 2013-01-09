@@ -29,7 +29,7 @@ $(document).ready(function() {
         $.ajaxQueue({
             url: '/fjelltreffen/delete/' + annonseid + "/",
         }).done(function(result) {
-            window.location.href = "www.turistforeningen.no/fjelltreffen/mine";
+            window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
         }).fail(function(result) {
             alert("Det skjedde en feil under sletting av annonsen, sjekk at du er koblet til internet eller prøv igjen senere.");
             enableButtons();
@@ -55,7 +55,7 @@ $(document).ready(function() {
             enableButtons();
             return;
         }
-        if(text.val().length < 10){
+        if(text.val().length <= 10){
             alert("Du får neppe napp med en så kort annonse!");
             enableButtons();
             return;
@@ -70,14 +70,13 @@ $(document).ready(function() {
             text:$("textarea.annonse-text").val(),
             fylke:$("select.annonse-fylke").val()
         }
-        console.log(content);
         $.ajaxQueue({
             url: '/fjelltreffen/save/',
             data: 'annonse=' + JSON.stringify(content)
         }).done(function(result) {
             returnedData = JSON.parse(result);
             annonseid = returnedData['id']
-            window.location.href = "www.turistforeningen.no/fjelltreffen/mine";
+            window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
         }).fail(function(result) {
             alert("Det skjedde en feil under lagring av annonsen, sjekk at feltene er fylt ut riktig og at du er koblet til internet.");
         }).always(function() {
