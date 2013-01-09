@@ -181,7 +181,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<div class="content image"><img src="http://www.turistforeningen.no/static/img/placeholder.png" alt=""><div class="img-desc"><span class="description"></span><span class="photographer">Foto: <span class="content"></span></div>');
+            var image = $('<div class="content image"><img src="http://www.turistforeningen.no/static/img/placeholder.png" alt=""><div class="img-desc"><span class="description"></span> <span class="photographer">Foto: <span class="content"></span></div>');
             image.css("overflow", "hidden");
             image.insertAfter($(event.target));
             image.find("img").click();
