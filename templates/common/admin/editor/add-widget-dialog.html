@@ -3,45 +3,51 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg en widget</h3>
   </div>
+
   <div class="modal-body">
-    <div class="widget-thumbnail" data-widget="quote">
-      <p>
-        <img src="{{ STATIC_URL }}img/widgets/quote/thumbnail.png" alt="Sitat">
-        Sitat
-      </p>
-    </div>
-    <div class="widget-thumbnail" data-widget="articles">
-      <p>
-        <img src="{{ STATIC_URL }}img/widgets/articles/thumbnail.png" alt="Nyheter">
-        Nyheter
-      </p>
-    </div>
-    <div class="widget-thumbnail" data-widget="blog">
-      <p>
-        <img src="{{ STATIC_URL }}img/widgets/blog/thumbnail.png" alt="Blogg">
-        Blogg
-      </p>
-    </div>
-    <div class="widget-thumbnail" data-widget="embed">
-      <p>
-        <img src="{{ STATIC_URL }}img/widgets/embed/thumbnail.png" alt="Nyheter">
-        Video
-      </p>
+    <div class="widget-thumbnail" data-widget="carousel" title="Lar deg velge flere bilder som vises i en karusell, som roterer automatisk.">
+      Bildekarusell
+      <div class="wrapper">
+        <img src="{{ STATIC_URL }}img/widgets/carousel/thumbnail.png" alt="Bildekarusell">
+      </div>
     </div>
 
-    <div class="widget-thumbnail" data-widget="carousel">
-      <p>
-        <img src="{{ STATIC_URL }}img/widgets/carousel/thumbnail.png" alt="Bildekarusell">
-        Bildekarusell
-      </p>
+    <div class="widget-thumbnail" data-widget="embed" title="Video fra YouTube, Vimeo eller liknende. Kan også brukes til å sette inn ren HTML på siden.">
+      Video
+      <div class="wrapper">
+        <img src="{{ STATIC_URL }}img/widgets/embed/thumbnail.png" alt="Nyheter">
+      </div>
     </div>
-    <div class="widget-thumbnail" data-widget="fact">
-      <p>
+
+    <div class="widget-thumbnail" data-widget="quote" title="Et sitat med tilpasset design (litt større tekst, strek foran navnet, etc).">
+      Sitat
+      <div class="wrapper">
+        <img src="{{ STATIC_URL }}img/widgets/quote/thumbnail.png" alt="Sitat">
+      </div>
+    </div>
+
+    <div class="widget-thumbnail" data-widget="fact" title="Som vanlig tekst, men med grå bakgrunn - passer best i sidekolonner.">
+      Faktaboks
+      <div class="wrapper">
         <img src="{{ STATIC_URL }}img/widgets/fact/thumbnail.png" alt="Faktaboks">
-        Faktaboks
-      </p>
+      </div>
+    </div>
+
+    <div class="widget-thumbnail" data-widget="articles" title="Liste over siste nyheter, plasseres vanligvis kun på forsiden.">
+      Nyheter
+      <div class="wrapper">
+        <img src="{{ STATIC_URL }}img/widgets/articles/thumbnail.png" alt="Nyheter">
+      </div>
+    </div>
+
+    <div class="widget-thumbnail" data-widget="blog" title="Liste over siste innlegg på Turistforeningens blogg.">
+      Blogg
+      <div class="wrapper">
+        <img src="{{ STATIC_URL }}img/widgets/blog/thumbnail.png" alt="Blogg">
+      </div>
     </div>
   </div>
+
   <div class="modal-footer" style="clear: both;">
     <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
   </div>

@@ -9,6 +9,8 @@ $(document).ready(function() {
         }
     });
 
+    $("div.add-widget div.widget-thumbnail").tooltip();
+
 });
 
 function saveWidget(content) {
