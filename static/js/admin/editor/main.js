@@ -513,7 +513,9 @@ $(document).ready(function() {
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.editable").attr('contenteditable', 'true');
-        $(document).on('click', 'div.widget', editWidget);
+        $(document).on('click', 'div.widget', function() {
+            $(this).trigger('widget.edit');
+        });
         $(document).on('click', 'div.image', changeImage);
     }
 

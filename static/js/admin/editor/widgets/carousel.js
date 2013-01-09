@@ -153,6 +153,12 @@
 
     /* Preparations and events */
 
+    $(document).on('widget.edit', 'div.widget.carousel', function() {
+        widgetBeingEdited = $(this);
+        widget_editor.modal();
+        ImageCarouselWidgetEditor.listImages();
+    });
+
     $(document).ready(function() {
 
         widget_editor = $("div.widget-editor[data-widget='carousel']");
