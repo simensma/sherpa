@@ -2,18 +2,18 @@
 $(document).ready(function() {
 
     // Save any widget
-    $("div.widget-edit button.save").click(function() {
-        var content = validateContent($(this).parents("div.widget-edit"));
+    $("div.widget-editor button.save").click(function() {
+        var content = validateContent($(this).parents("div.widget-editor"));
         if(content === false) {
             return $(this);
         }
-        $("div.widget-edit").modal('hide');
+        $("div.widget-editor").modal('hide');
         saveWidget(content);
     });
 
     // Remove any widget
-    $("div.widget-edit button.remove").click(function() {
-        $(this).parents(".widget-edit").modal('hide');
+    $("div.widget-editor button.remove").click(function() {
+        $(this).parents(".widget-editor").modal('hide');
         if(widgetBeingEdited != undefined){
             removeContent(widgetBeingEdited);
         }
@@ -22,7 +22,7 @@ $(document).ready(function() {
     /* Articles */
 
     // Enable/disable
-    var articles = $("div.widget-edit[data-widget='articles']");
+    var articles = $("div.widget-editor[data-widget='articles']");
     articles.find("input[name='tag-link']").typeahead({
         minLength: 3,
         source: function(query, process) {
@@ -174,12 +174,12 @@ function openWidgetDialog(type, parentWidth){
 function editWidget() {
     widgetBeingEdited = $(this);
     var widget = JSON.parse($(this).attr('data-json'));
-    $("div.widget-edit[data-widget='" + widget.widget + "']").modal();
+    $("div.widget-editor[data-widget='" + widget.widget + "']").modal();
     if(widget.widget == 'quote') {
-        $("div.widget-edit[data-widget='quote'] textarea[name='quote']").val(widget.quote);
-        $("div.widget-edit[data-widget='quote'] input[name='author']").val(widget.author);
+        $("div.widget-editor[data-widget='quote'] textarea[name='quote']").val(widget.quote);
+        $("div.widget-editor[data-widget='quote'] input[name='author']").val(widget.author);
     } else if(widget.widget == 'articles') {
-        var articles = $("div.widget-edit[data-widget='articles']");
+        var articles = $("div.widget-editor[data-widget='articles']");
         articles.find("input[name='title']").val(widget.title);
         articles.find("input[name='count']").val(widget.count);
         if(widget.tag_link == null) {
@@ -201,13 +201,13 @@ function editWidget() {
             articles.find("input[name='tags']").attr('disabled', true);
         }
     } else if(widget.widget == 'blog') {
-        $("div.widget-edit[data-widget='blog'] input[name='count']").val(widget.count);
-        $("div.widget-edit[data-widget='blog'] select[name='category']").val(widget.category);
+        $("div.widget-editor[data-widget='blog'] input[name='count']").val(widget.count);
+        $("div.widget-editor[data-widget='blog'] select[name='category']").val(widget.category);
     } else if(widget.widget == 'embed') {
-        $("div.widget-edit[data-widget='embed'] textarea[name='code']").text(widget.code);
+        $("div.widget-editor[data-widget='embed'] textarea[name='code']").text(widget.code);
     }else if(widget.widget == 'carousel') {
         ImageCarouselWidget.listImages();
     } else if(widget.widget == 'fact') {
-        $("div.widget-edit[data-widget='fact'] div.content").html(widget.content);
+        $("div.widget-editor[data-widget='fact'] div.content").html(widget.content);
     }
 }

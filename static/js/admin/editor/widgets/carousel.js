@@ -155,7 +155,7 @@
 
     $(document).ready(function() {
 
-        widget_editor = $("div.widget-edit[data-widget='carousel']");
+        widget_editor = $("div.widget-editor[data-widget='carousel']");
         widget_editor.find("div#ratio-radio").append(getRatioRadioButtons());
 
         //carousel, stop spinning

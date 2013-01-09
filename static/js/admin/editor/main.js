@@ -221,8 +221,8 @@ $(document).ready(function() {
     $("div.add-widget div.widget-thumbnail").click(function() {
         widgetBeingEdited = undefined;
         $(this).parents("div.add-widget").modal('hide');
-        $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
-        $("div.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").modal();
+        $("div.widget-editor input[type='text'], div.widget-editor textarea").val('');
+        $("div.widget-editor[data-widget='" + $(this).attr('data-widget') + "']").modal();
         if($(this).attr('data-widget') == "carousel" ){
             openWidgetDialog($(this).attr('data-widget'), widgetStartWidth);
         }
