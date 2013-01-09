@@ -79,89 +79,59 @@ $(document).ready(function() {
         // Contents
         var contents = [];
         var contents_awaiting_id = [];
-        content_elements.filter(".html,.title,.lede").each(function() {
+        content_elements.each(function() {
             var content = {
+                column: $(this).parents('div.column').attr('data-id'),
                 order: $(this).prevAll().length
-            };
-
-            // Don't include placeholder text
-            if($(this).is('[data-placeholder]')) {
-                content.content = '';
-            } else {
-                content.content = $(this).html();
             }
 
+            // Check if this is a new or existing element
             if($(this).is('[data-id]')) {
                 content.id = $(this).attr('data-id');
             } else {
                 contents_awaiting_id.push($(this));
             }
 
-            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
-            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
-            content.column = $(this).parents('div.column').attr('data-id');
-            if($(this).hasClass('html')) {
-                content.type = 'html';
-            } else if($(this).hasClass('title')) {
-                content.type = 'title';
-            } else if($(this).hasClass('lede')) {
-                content.type = 'lede';
+            // Retrieve content and content type
+            if($(this).is('.html,.title,.lede')) {
+                if($(this).is('.html')) {
+                    content.type = 'html';
+                } else if($(this).is('.title')) {
+                    content.type = 'title';
+                } else if($(this).is('.lede')) {
+                    content.type = 'lede';
+                }
+
+                // Don't include placeholder text
+                if($(this).is('[data-placeholder]')) {
+                    content.content = '';
+                } else {
+                    content.content = $(this).html();
+                }
+            } else if($(this).is('.image')) {
+                var anchor;
+                if($(this).find('a').length == 0) {
+                    anchor = null;
+                } else {
+                    anchor = $(this).find('a').attr('href');
+                }
+                var image = {
+                    src: $(this).find('img').attr('src'),
+                    style: $(this).find('img').attr('style'),
+                    selection: $(this).find('img').attr('data-selection'),
+                    ratioWidth: $(this).find('img').attr('data-ratio-width'),
+                    ratioHeight: $(this).find('img').attr('data-ratio-height'),
+                    parentHeight: $(this).find('img').attr('data-parentHeight'),
+                    description: $(this).find('span.description').text(),
+                    photographer: $(this).find('span.photographer span.content').text(),
+                    anchor: anchor
+                };
+                content.type = 'image';
+                content.content = JSON.stringify(image);
+            } else if($(this).is('.widget')) {
+                content.type = 'widget';
+                content.content = $(this).attr('data-json');
             }
-
-            contents.push(content);
-        });
-        content_elements.filter(".image").each(function() {
-            var anchor;
-            if($(this).find('a').length == 0) {
-                anchor = null;
-            } else {
-                anchor = $(this).find('a').attr('href');
-            }
-            var image = {
-                src: $(this).find('img').attr('src'),
-                style: $(this).find('img').attr('style'),
-                selection: $(this).find('img').attr('data-selection'),
-                ratioWidth: $(this).find('img').attr('data-ratio-width'),
-                ratioHeight: $(this).find('img').attr('data-ratio-height'),
-                parentHeight: $(this).find('img').attr('data-parentHeight'),
-                description: $(this).find('span.description').text(),
-                photographer: $(this).find('span.photographer span.content').text(),
-                anchor: anchor
-            };
-            var content = {
-                order: $(this).prevAll().length,
-                content: JSON.stringify(image)
-            };
-            if($(this).is('[data-id]')) {
-                content.id = $(this).attr('data-id');
-            } else {
-                contents_awaiting_id.push($(this));
-            }
-
-            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
-            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
-            content.column = $(this).parents('div.column').attr('data-id');
-            content.type = 'image';
-
-            contents.push(content);
-        });
-        content_elements.filter(".widget").each(function() {
-            var content = {
-                order: $(this).prevAll().length,
-                content: $(this).attr('data-json')
-            };
-
-            if($(this).is('[data-id]')) {
-                content.id = $(this).attr('data-id');
-            } else {
-                contents_awaiting_id.push($(this));
-            }
-
-            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
-            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
-            content.column = $(this).parents('div.column').attr('data-id');
-            content.type = 'widget';
-
             contents.push(content);
         });
         data.contents = JSON.stringify(contents);
