@@ -119,7 +119,6 @@ def save(request):
         annonse = Annonse.objects.get(id=id);
         if annonse.userprofile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
-            print 'wrongusererror'
             return HttpResponse(500)          
     except (Annonse.DoesNotExist, KeyError) as e:
         print e
@@ -132,10 +131,10 @@ def save(request):
         print content['fylke']
     except (County.DoesNotExist, KeyError) as e:
         #could happen if the user tampers with the html to select an illegal county
-        print e
         return HttpResponse(500)
     
     try:
+        annonse.email = content['email']
         annonse.title = content['title']
         annonse.image = content.get('image')
         annonse.text = content['text']
@@ -144,7 +143,7 @@ def save(request):
         annonse.compute_age()
         annonse.compute_gender()
     except KeyError as e:
-        print e
+        #something is missing in the data sendt
         return HttpResponse(500)
     annonse.save()
     
@@ -153,19 +152,19 @@ def save(request):
     for cacheKey in cachedQueries:
         cache.delete(cacheKey)
 
-    return HttpResponse(json.dumps({'id':annonse.id, 'hidden':annonse.hidden}))
+    return HttpResponse(json.dumps({'id':annonse.id}))
 
 @login_required
 def mine(request):
     #alle annonser som tilhorer den aktive brukeren
-    annonser = Annonse.objects.all()
+    annonser = Annonse.objects.filter(userprofile=request.user.get_profile()).order_by('-timeadded')
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)
 
 def show(request, id):
     try:
-        annonse = Annonse.objects.get(id=id)
+        annonse = Annonse.objects.get(id=id, hidden=False)
     except (Annonse.DoesNotExist):
         annonse = None
     context = {'annonse': annonse}

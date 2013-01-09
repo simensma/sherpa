@@ -10,7 +10,7 @@
   <div class="span9">
       {% if annonse %}
         <h2>{{ annonse.title }}</h2>
-        <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"d.m.Y" }}</p>
+        <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
 
         <p>{{ annonse.text|linebreaksbr }}</p>
         <br>

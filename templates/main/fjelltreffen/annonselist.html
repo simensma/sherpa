@@ -1,7 +1,11 @@
 {% for annonse in annonser %}
     <div class="fjelltreffen-annonse">
+    	{% if active == 'mine'%}
+    	<a href="{% url fjelltreffen.views.edit annonse.id %}"><h3>{{ annonse.title }}</h3></a>
+    	{% else %}
         <a href="{% url fjelltreffen.views.show annonse.id %}"><h3>{{ annonse.title }}</h3></a>
-        <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"d.m.Y" }}</p>
-        <p>{{ annonse.text|linebreaksbr }}</p>
+        {% endif %}
+        <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
+        <p>{{ annonse.text|truncatechars:100 }}</p>
     </div>
 {% endfor %}
