@@ -24,6 +24,20 @@
 
         widget_editor = $("div.widget-editor[data-widget='embed']");
 
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            var code = widget_editor.find("textarea[name='code']").val();
+            if(code == '') {
+                alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
+                return $(this);
+            }
+            saveWidget({
+                widget: "embed",
+                code: code
+            });
+            widget_editor.modal('hide');
+        });
+
     });
 
 }(window.EmbedWidgetEditor = window.EmbedWidgetEditor || {}, jQuery ));

@@ -24,6 +24,16 @@
 
         widget_editor = $("div.widget-editor[data-widget='fact']");
 
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            var content = widget_editor.find("div.content").html();
+            saveWidget({
+                widget: "fact",
+                content: content
+            });
+            widget_editor.modal('hide');
+        });
+
     });
 
 }(window.FactWidgetEditor = window.FactWidgetEditor || {}, jQuery ));

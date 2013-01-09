@@ -75,6 +75,38 @@
         // Create the tagger object, make it globally accessible
         window.article_widget_tagger = new TypicalTagger(widget_editor.find("input[name='tags']"), widget_editor.find("div.tag-box"));
 
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            var count = widget_editor.find("input[name='count']").val();
+            if(isNaN(Number(count))) {
+                alert("Du må angi et tall for antall nyheter som skal vises!");
+                return $(this);
+            } else if(count < 1) {
+                alert("Du må vise minst én nyhet!");
+                return $(this);
+            }
+            var title = widget_editor.find("input[name='title']").val();
+            if(widget_editor.find("input[name='set-tag-link']").is(':checked')) {
+                var tag_link = widget_editor.find("input[name='tag-link']").val();
+            } else {
+                var tag_link = null;
+            }
+            if(widget_editor.find("input[name='enable-tags']:checked").length > 0) {
+                var tags = article_widget_tagger.tags;
+            } else {
+                var tags = [];
+            }
+
+            saveWidget({
+                widget: "articles",
+                title: title,
+                tag_link: tag_link,
+                tags: tags,
+                count: count
+            });
+            widget_editor.modal('hide');
+        });
+
     });
 
 }(window.ArticleWidgetEditor = window.ArticleWidgetEditor || {}, jQuery ));

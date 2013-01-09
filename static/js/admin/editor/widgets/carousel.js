@@ -129,28 +129,6 @@
         });
     }
 
-    ImageCarouselWidgetEditor.validateContent = function() {
-        var numImages = 0;
-        for(var i = 0; i < imageList.length; i++){
-            if(imageList[i].url.trim().length > 0){
-                numImages++;
-            }
-        }
-        if(numImages < 1){
-            alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bildeelementet)");
-            return false;
-        }
-        for(var i = 0; i < imageList.length; i++){
-            if(imageList[i].url.trim().length < 1){
-                imageList.splice(i, 1);
-            }
-        }
-        return {
-            widget: "carousel",
-            images: imageList
-        };
-    }
-
     /* New widget */
 
     $(document).on('widget.new.carousel', function() {
@@ -249,6 +227,32 @@
         widget_editor.find("input[name='ratio']").change(function(){
             imageList[currentIndex].ratio = widget_editor.find("input[name='ratio']:checked").val();
             setCarouselRatio(true);
+        });
+
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            ImageCarouselWidgetEditor.saveCropping();
+
+            var numImages = 0;
+            for(var i = 0; i < imageList.length; i++){
+                if(imageList[i].url.trim().length > 0){
+                    numImages++;
+                }
+            }
+            if(numImages < 1){
+                alert("Du må legge til minst ett bilde(og helst flere, hvis ikke kunne du brukt bildeelementet)");
+                return $(this);
+            }
+            for(var i = 0; i < imageList.length; i++){
+                if(imageList[i].url.trim().length < 1){
+                    imageList.splice(i, 1);
+                }
+            }
+            saveWidget({
+                widget: "carousel",
+                images: imageList
+            });
+            widget_editor.modal('hide');
         });
 
     });

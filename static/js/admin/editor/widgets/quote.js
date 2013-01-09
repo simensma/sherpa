@@ -26,6 +26,16 @@
 
         widget_editor = $("div.widget-editor[data-widget='quote']");
 
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            saveWidget({
+                widget: "quote",
+                quote: widget_editor.find("textarea[name='quote']").val(),
+                author: widget_editor.find("input[name='author']").val()
+            });
+            widget_editor.modal('hide');
+        });
+
     });
 
 }(window.QuoteWidgetEditor = window.QuoteWidgetEditor || {}, jQuery ));

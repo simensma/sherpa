@@ -25,6 +25,27 @@
 
         widget_editor = $("div.widget-editor[data-widget='blog']");
 
+        /* Saving */
+        widget_editor.find("button.save").click(function() {
+            var count = widget_editor.find("input[name='count']").val();
+            var category = widget_editor.find("select[name='category']").val();
+
+            if(isNaN(Number(count))) {
+                alert("Du må angi et tall for antall blogginnlegg som skal vises!");
+                return $(this);
+            } else if(count < 1) {
+                alert("Du må vise minst ett blogginnlegg!");
+                return $(this);
+            }
+
+            saveWidget({
+                widget: "blog",
+                count: count,
+                category : category
+            });
+            widget_editor.modal('hide');
+        });
+
     });
 
 }(window.BlogWidgetEditor = window.BlogWidgetEditor || {}, jQuery ));
