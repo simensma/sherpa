@@ -1,7 +1,15 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}Fjelltreffen{% endblock %}
-{% block breadcrumb_title %}Ny annonse{% endblock %}
+{% block breadcrumb %}
+  {% if new %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ny Annonse</a></em>
+  {% elif annonse %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">{{ annonse.title }}</a></em>
+  {% else %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">Ikke Funnet</a></em>
+  {% endif %}
+{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/fjelltreffen/fjelltreffen-edit.js"></script>

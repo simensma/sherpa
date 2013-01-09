@@ -1,7 +1,9 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}Fjelltreffen{% endblock %}
-{% block breadcrumb_title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+<a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a></em>
+{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/fjelltreffen/fjelltreffen-list.js"></script>

@@ -88,7 +88,7 @@ def edit(request, id):
             annonse = None
     except Annonse.DoesNotExist:
         annonse = None
-    context = {'new':False,'annonse':annonse,'fylker':getAndCacheFylker()}
+    context = {'new':False,'annonse':annonse,'fylker':getAndCacheFylker(), 'requestedid':id}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 @login_required
@@ -201,6 +201,6 @@ def show(request, id):
         annonse = Annonse.objects.get(id=id, hidden=False)
     except (Annonse.DoesNotExist):
         annonse = None
-    context = {'annonse': annonse}
+    context = {'annonse': annonse, 'requestedid':id}
     return render(request, 'main/fjelltreffen/show.html', context)
 

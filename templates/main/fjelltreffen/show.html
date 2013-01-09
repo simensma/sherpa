@@ -1,7 +1,13 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}Fjelltreffen{% endblock %}
-{% block breadcrumb_title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+{% if annonse %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show requestedid %}">{{ annonse.title }}</a></em>
+{% else %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show requestedid %}">Ikke Funnet</a></em>
+{% endif %}
+{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/fjelltreffen/fjelltreffen-reply.js"></script>
