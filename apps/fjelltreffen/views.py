@@ -88,7 +88,8 @@ def edit(request, id):
     return render(request, 'main/fjelltreffen/new.html', context)
 
 def new(request):
-    context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker()}
+    user = request.user.get_profile()
+    context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker(), 'user':user}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 def delete(request, id):

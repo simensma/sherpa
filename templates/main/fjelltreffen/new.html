@@ -34,9 +34,8 @@
     <div class="annonse" data-hidden="true">
       <h3>Ny Annonse:</h3>
       <input class="annonse-title" type="text" placeholder="Tittel"></input><br>
-      <input class="annonse-email" type="text" placeholder="Epost"></input><br>
-      <label>Fylke</label>
-      {% include 'main/fjelltreffen/fylkelist.html'%}<br>
+      <input class="annonse-email" type="text" placeholder="Epost" value="{{ user.get_email }}"></input><br>
+      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_county %}<br>
       <textarea class="annonse-text" rows="10" cols="50" placeholder="Skriv annonsen din her..."></textarea><br>
       <input type="checkbox" class="annonse-hideage">Skjul min presise alder<br>
       <br>

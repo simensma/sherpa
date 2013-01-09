@@ -4,7 +4,7 @@
 	{% if includeall %}
 		<option {% if selectedfylkecode == 0 %}selected="selected"{% endif %}value="00">Hele landet</option>
 	{% endif %}
-	
+	<option>Dummy</option>
     {% for fylke in fylker %}
     	<option {% if selectedfylkecode == fylke.code %}selected="selected"{% endif %}value="{{ fylke.code }}">{{ fylke.name }}</option>
     {% endfor %}
