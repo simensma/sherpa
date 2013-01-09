@@ -555,56 +555,6 @@ $(document).ready(function() {
         });
     }
 
-    /**
-     * Major DOM changes.
-     * Typically includes an ajax request and,
-     * depending on the result, DOM manipulation.
-     */
-
-    /* Add content-objects to some column */
-    window.addContent = addContent;
-    function addContent(prev, parent, column, order, content, type, done) {
-        enableOverlay();
-        $.ajaxQueue({
-            url: '/sherpa/cms/innhold/ny/',
-            data: "column=" + encodeURIComponent(column) +
-                  "&order=" + encodeURIComponent(order) +
-                  "&content=" + encodeURIComponent(content) +
-                  "&type=" + encodeURIComponent(type)
-        }).done(function(result) {
-            result = JSON.parse(result);
-            var editable = '';
-            if(type == 'html' || type == 'title' || type == 'lede') {
-                editable = ' editable';
-            }
-            var wrapper = $('<div class="content ' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
-            if(type == "image"){
-                wrapper.css("overflow", "hidden");
-            }
-            if(result.json !== undefined) {
-                wrapper.attr('data-json', result.json);
-            }
-            if(prev.length == 0) {
-                parent.prepend(wrapper);
-            } else {
-                prev.after(wrapper);
-            }
-            if(type == 'widget') {
-                disableIframes(wrapper);
-                widget = JSON.parse(result.json).widget;
-                wrapper.addClass(widget);
-            }
-            // Disable the overlay _before_ calling the provided 'done' function
-            disableOverlay();
-            done(wrapper);
-        }).fail(function(result) {
-            // Todo
-            disableOverlay();
-        }).always(function(result) {
-            enableToolbar();
-        });
-    }
-
     window.removeContent = removeContent;
     function removeContent(content) {
         if(content.siblings().length == 0) {
