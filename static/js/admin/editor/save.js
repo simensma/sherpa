@@ -197,7 +197,7 @@ $(document).ready(function() {
 
             // Update IDs for contents we thought existed serverside, but didn't
             for(var i=0; i<result.unexpected_content_ids.length; i++) {
-                content_elements.filter("[data-id='" + result.unexpected_content_ids[i].old + "']").attr('data-id', result.unexpected_content_ids[i].new);
+                content_elements.filter("[data-id='" + result.unexpected_content_ids[i].old_id + "']").attr('data-id', result.unexpected_content_ids[i].new_id);
             }
 
             // Parent page-response

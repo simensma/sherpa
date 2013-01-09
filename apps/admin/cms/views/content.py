@@ -67,8 +67,8 @@ def save(request, version):
 
                 # The client will need to update the client-side ID for this element
                 response['unexpected_content_ids'].append({
-                    'old': content['id'],
-                    'new': new_obj.id})
+                    'old_id': content['id'],
+                    'new_id': new_obj.id})
         else:
             # Send the generated ID to the client
             new_obj = create_new_content(content)
