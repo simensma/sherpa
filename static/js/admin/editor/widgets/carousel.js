@@ -145,10 +145,10 @@
                 imageList.splice(i, 1);
             }
         }
-        return JSON.stringify({
+        return {
             widget: "carousel",
             images: imageList
-        });
+        };
     }
 
     /* Preparations and events */

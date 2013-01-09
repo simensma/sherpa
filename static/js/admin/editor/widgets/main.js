@@ -58,22 +58,21 @@ $(document).ready(function() {
 
 function saveWidget(content) {
     var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
+    var content_json = JSON.stringify(content);
     if(widgetBeingEdited !== undefined) {
         widgetBeingEdited.empty().append(rendring_message);
-        widgetBeingEdited.attr('data-json', content);
+        widgetBeingEdited.attr('data-json', content_json);
         $.ajaxQueue({
             url: '/sherpa/cms/widget/',
-            data: { content: content }
+            data: { content: content_json }
         }).done(function(result) {
             widgetBeingEdited.empty().append(result);
             disableIframes(widgetBeingEdited);
         });
     } else {
-        // Re-parse widget type for now - but later, have validateContent return an *object* content and stringify it here
-        var widget_type = JSON.parse(content).widget;
-        var wrapper = $('<div class="content widget ' + widget_type + '"></div>');
+        var wrapper = $('<div class="content widget ' + content.widget + '"></div>');
         wrapper.append(rendring_message);
-        wrapper.attr('data-json', content);
+        wrapper.attr('data-json', content_json);
         if(widgetPosition.prev.length == 0) {
             widgetPosition.parent.prepend(wrapper);
         } else {
@@ -83,7 +82,7 @@ function saveWidget(content) {
         setEmpties();
         $.ajaxQueue({
             url: '/sherpa/cms/widget/',
-            data: { content: content }
+            data: { content: content_json }
         }).done(function(result) {
             wrapper.empty().append(result);
             disableIframes(wrapper);
@@ -94,11 +93,11 @@ function saveWidget(content) {
 
 function validateContent(widget) {
     if(widget.attr('data-widget') == 'quote') {
-        return JSON.stringify({
+        return {
             widget: "quote",
             quote: widget.find("textarea[name='quote']").val(),
             author: widget.find("input[name='author']").val()
-        });
+        };
     } else if(widget.attr('data-widget') == 'carousel') {
         ImageCarouselWidget.saveCropping();
         return ImageCarouselWidget.validateContent();
@@ -123,13 +122,13 @@ function validateContent(widget) {
         } else {
             var tags = [];
         }
-        return JSON.stringify({
+        return {
             widget: "articles",
             title: title,
             tag_link: tag_link,
             tags: tags,
             count: count
-        });
+        };
     } else if(widget.attr('data-widget') == 'blog') {
         var count = widget.find("input[name='count']").val();
         var category = widget.find("select[name='category']").val();
@@ -141,27 +140,27 @@ function validateContent(widget) {
             alert("Du må vise minst ett blogginnlegg!");
             return false;
         }
-        return JSON.stringify({
+        return {
             widget: "blog",
             count: count,
             category : category
-        });
+        };
     } else if(widget.attr('data-widget') == 'embed') {
         var code = widget.find("textarea[name='code']").val();
         if(code == '') {
             alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
             return false;
         }
-        return JSON.stringify({
+        return {
             widget: "embed",
             code: code
-        });
+        };
     } else if(widget.attr('data-widget') == 'fact') {
         var content = widget.find("div.content").html();
-        return JSON.stringify({
+        return {
             widget: "fact",
             content: content
-        });
+        };
     }
 }
 
