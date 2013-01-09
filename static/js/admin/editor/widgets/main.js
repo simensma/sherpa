@@ -19,41 +19,6 @@ $(document).ready(function() {
         }
     });
 
-    /* Articles */
-
-    // Enable/disable
-    var articles = $("div.widget-editor[data-widget='articles']");
-    articles.find("input[name='tag-link']").typeahead({
-        minLength: 3,
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: '/tags/filter/',
-                data: 'name=' + encodeURIComponent(query)
-            }).done(function(result) {
-                process(JSON.parse(result));
-            });
-        }
-    });
-    articles.find("input[name='set-tag-link']").change(function() {
-        if($(this).is(':checked')) {
-            articles.find("input[name='tag-link']").removeAttr('disabled');
-        } else {
-            articles.find("input[name='tag-link']").attr('disabled', true).val("");
-        }
-    });
-
-    articles.find("input[name='enable-tags']").change(function() {
-        if($(this).is(':checked')) {
-            articles.find("input[name='tags']").removeAttr('disabled');
-        } else {
-            articles.find("input[name='tags']").attr('disabled', true).val("");
-            articles.find("div.tag-box").empty();
-        }
-    });
-
-    // Create the tagger object, make it globally accessible
-    window.article_widget_tagger = new TypicalTagger(articles.find("input[name='tags']"), articles.find("div.tag-box"));
-
 });
 
 function saveWidget(content) {
