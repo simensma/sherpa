@@ -74,26 +74,8 @@
   </div>
 </div>
 
-{# Adding widgets #}
-<div class="modal container hide add-widget">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Velg en widget</h3>
-  </div>
-  <div class="modal-body">
-    {% include 'main/widgets/quote/thumbnail.html' %}
-    {% include 'main/widgets/articles/thumbnail.html' %}
-    {% include 'main/widgets/blog/thumbnail.html' %}
-    {% include 'main/widgets/embed/thumbnail.html' %}
-    {% include 'main/widgets/carousel/thumbnail.html' %}
-    {% include 'main/widgets/fact/thumbnail.html' %}
-  </div>
-  <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-  </div>
-</div>
-
 {# Widget edit-dialogs #}
+{% include 'common/admin/editor/add-widget-dialog.html' %}
 {% include 'main/widgets/quote/edit.html' %}
 {% include 'main/widgets/articles/edit.html' %}
 {% include 'main/widgets/blog/edit.html' %}
