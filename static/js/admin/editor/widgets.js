@@ -150,26 +150,38 @@ $(document).ready(function() {
 
 });
 
-function saveWidget(content){
+function saveWidget(content) {
+    var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
     if(widgetBeingEdited !== undefined) {
-        enableOverlay();
+        widgetBeingEdited.empty().append(rendring_message);
+        widgetBeingEdited.attr('data-json', content);
         $.ajaxQueue({
-            url: '/sherpa/cms/widget/oppdater/' + widgetBeingEdited.attr('data-id') + '/',
-            data: 'content=' + encodeURIComponent(content)
+            url: '/sherpa/cms/widget/',
+            data: { content: content }
         }).done(function(result) {
-            result = JSON.parse(result);
-            widgetBeingEdited.contents().remove();
-            widgetBeingEdited.append(result.content);
-            widgetBeingEdited.attr('data-json', result.json);
+            widgetBeingEdited.empty().append(result);
             disableIframes(widgetBeingEdited);
-        }).always(function() {
-            disableOverlay();
         });
     } else {
-        addContent(widgetPosition.prev, widgetPosition.parent, widgetPosition.column, widgetPosition.order, content, 'widget', function(wrapper) {
+        // Re-parse widget type for now - but later, have validateContent return an *object* content and stringify it here
+        var widget_type = JSON.parse(content).widget;
+        var wrapper = $('<div class="content widget ' + widget_type + '"></div>');
+        wrapper.append(rendring_message);
+        wrapper.attr('data-json', content);
+        if(widgetPosition.prev.length == 0) {
+            widgetPosition.parent.prepend(wrapper);
+        } else {
+            widgetPosition.prev.after(wrapper);
+        }
+        removeEmpties();
+        setEmpties();
+        $.ajaxQueue({
+            url: '/sherpa/cms/widget/',
+            data: { content: content }
+        }).done(function(result) {
+            wrapper.empty().append(result);
+            disableIframes(wrapper);
             refreshSort();
-            removeEmpties();
-            setEmpties();
         });
     }
 }

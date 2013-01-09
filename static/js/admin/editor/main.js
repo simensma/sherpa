@@ -212,12 +212,10 @@ $(document).ready(function() {
             enableToolbar();
             widgetPosition = {
                 prev: $(this).prev(),
-                parent: $(this).parent(),
-                column: $(this).parent(".column").attr("data-id"),
-                order: $(this).prevAll(":not(.insertable)").length
+                parent: $(this).parent()
             };
             $("article .insertable").remove();
-            setEmpties();
+            enableToolbar();
         });
     });
     $("div.add-widget div.widget-thumbnail").click(function() {

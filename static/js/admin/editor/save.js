@@ -145,6 +145,25 @@ $(document).ready(function() {
 
             contents.push(content);
         });
+        content_elements.filter(".widget").each(function() {
+            var content = {
+                order: $(this).prevAll().length,
+                content: $(this).attr('data-json')
+            };
+
+            if($(this).is('[data-id]')) {
+                content.id = $(this).attr('data-id');
+            } else {
+                contents_awaiting_id.push($(this));
+            }
+
+            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
+            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
+            content.column = $(this).parents('div.column').attr('data-id');
+            content.type = 'widget';
+
+            contents.push(content);
+        });
         data.contents = JSON.stringify(contents);
 
         var parent_select = $("div.editor-header.page select[name='parent']");

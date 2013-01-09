@@ -11,33 +11,11 @@ from core.models import Tag
 from datetime import datetime
 import json
 
-def add(request):
-    if request.is_ajax():
-        column = Column.objects.get(id=request.POST['column'])
-        for content in Content.objects.filter(column=column, order__gte=request.POST['order']):
-            content.order = content.order + 1
-            content.save()
-        content = Content(column=column, content=request.POST['content'], type=request.POST['type'],
-            order=request.POST['order'])
-        content.save()
-        if content.type == 'html' or content.type == 'image':
-            result = content.content
-        else:
-            widget = parse_widget(request, json.loads(content.content))
-            t = loader.get_template(widget['template'])
-            c = RequestContext(request, {'widget': widget})
-            result = t.render(c)
-        return HttpResponse(json.dumps({'id': content.id, 'content': result, 'json': content.content}))
-
-def update_widget(request, widget):
-    widget = Content.objects.get(id=widget)
-    widget.content = request.POST['content']
-    widget.save()
-    widget = parse_widget(request, json.loads(widget.content))
+def render_widget(request):
+    widget = parse_widget(request, json.loads(request.POST['content']))
     t = loader.get_template(widget['template'])
     c = RequestContext(request, {'widget': widget})
-    result = t.render(c)
-    return HttpResponse(json.dumps({'content': result, 'json': request.POST['content']}))
+    return HttpResponse(t.render(c))
 
 def save(request, version):
     version = Version.objects.get(id=version)
