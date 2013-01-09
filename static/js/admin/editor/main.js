@@ -233,17 +233,17 @@ $(document).ready(function() {
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'div.html, div.widget:not(.static), div.image');
+            $(document).off('mouseenter mouseleave click', 'div.html, div.widget, div.image');
             enableEditing();
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'div.html, div.widget:not(.static), div.image', function() {
+        $(document).on('mouseenter', 'div.html, div.widget, div.image', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'div.html, div.widget:not(.static), div.image', function() {
+        }).on('mouseleave', 'div.html, div.widget, div.image', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'div.html, div.widget:not(.static), div.image', function() {
+        }).on('click', 'div.html, div.widget, div.image', function() {
             doneRemoving();
             var content = $(this);
             content.hide();

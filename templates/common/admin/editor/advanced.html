@@ -35,7 +35,7 @@
             </div>
           </div>
         {% elif content.type == 'widget' %}
-          <div class="content widget {{ content.content.widget }}{% if content.content.static %} static{% endif %}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+          <div class="content widget {{ content.content.widget }}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
             {% include content.content.template with widget=content.content %}
           </div>
         {% endif %}
