@@ -258,4 +258,3 @@
     });
 
 }(window.ImageCarouselWidgetEditor = window.ImageCarouselWidgetEditor || {}, jQuery ));
-
