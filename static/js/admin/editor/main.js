@@ -134,7 +134,6 @@ $(document).ready(function() {
             currentPhotographer.text(photographer);
             hidePictureText(content);
 
-            $("div.editor-header button.save").click();
         }, function() {
             removeContent(content);
         });
@@ -156,21 +155,17 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var html = $('<p><br></p>');
-            function done(wrapper) {
-                if(sortState == 'formatting') {
-                    wrapper.attr('contenteditable', 'true').focus();
-                }
-                refreshSort();
-                setEmpties();
-                wrapper.click();
-                wrapper.focus();
-                $("article .insertable").remove();
+            var content = $('<div class="content html editable"></div>');
+            content.insertAfter($(event.target));
+            refreshSort();
+            setEmpties();
+            enableToolbar();
+            $("article .insertable").remove();
+            if(sortState == 'formatting') {
+                content.attr('contenteditable', 'true').focus();
+            } else {
+                content.trigger('focusout');
             }
-            addContent($(event.target).prev(), $(event.target).parent(),
-                $(event.target).parent(".column").attr("data-id"),
-                $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(html).html(), 'html', done);
         });
     });
 
@@ -186,18 +181,14 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img src="" alt=""><div class="img-desc"><span class="description"></span><span class="photographer">Foto: <span class="content"></span>');
-            function imageDone(wrapper) {
-                var image = wrapper.find("img");
-                image.click();
-                refreshSort();
-                setEmpties();
-                $("article .insertable").remove();
-            }
-            addContent($(event.target).prev(), $(event.target).parent(),
-                $(event.target).parent(".column").attr("data-id"),
-                $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(image).html(), 'image', imageDone);
+            var image = $('<div class="content image"><img src="http://www.turistforeningen.no/static/img/placeholder.png" alt=""><div class="img-desc"><span class="description"></span><span class="photographer">Foto: <span class="content"></span></div>');
+            image.css("overflow", "hidden");
+            image.insertAfter($(event.target));
+            image.find("img").click();
+            refreshSort();
+            setEmpties();
+            $("article .insertable").remove();
+            enableToolbar();
         });
     });
 
@@ -622,19 +613,11 @@ $(document).ready(function() {
 
     window.removeContent = removeContent;
     function removeContent(content) {
-        $.ajaxQueue({
-            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-            type: 'POST'
-        }).done(function(result) {
-            if(content.siblings().length == 0) {
-                setEmpty(content.parent());
-            }
-            content.remove();
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            refreshSort();
-        });
+        if(content.siblings().length == 0) {
+            setEmpty(content.parent());
+        }
+        content.remove();
+        refreshSort();
     }
 
 });

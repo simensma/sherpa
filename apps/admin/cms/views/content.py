@@ -29,16 +29,6 @@ def add(request):
             result = t.render(c)
         return HttpResponse(json.dumps({'id': content.id, 'content': result, 'json': content.content}))
 
-def delete(request, content):
-    if request.is_ajax():
-        try:
-            content = Content.objects.get(id=content)
-            content.delete()
-        except Content.DoesNotExist:
-            # Ignore; it's being deleted anyway
-            pass
-        return HttpResponse()
-
 def update_widget(request, widget):
     widget = Content.objects.get(id=widget)
     widget.content = request.POST['content']
@@ -51,22 +41,60 @@ def update_widget(request, widget):
 
 def save(request, version):
     version = Version.objects.get(id=version)
-    response = {}
+    response = {
+        'new_content_ids': [],
+        'unexpected_content_ids': [],
+    }
 
-    # Content
     for row in json.loads(request.POST['rows']):
         obj = Row.objects.get(id=row['id'])
         obj.order = row['order']
         obj.save()
+
     for column in json.loads(request.POST['columns']):
         obj = Column.objects.get(id=column['id'])
         obj.order = column['order']
         obj.save()
+
+        # Remove contained elements that aren't there client-side
+        # If any code in this project should ever be bug-free, it's this.
+        # Do NOT do this *after* creating new content elements
+        Content.objects.filter(column=obj).exclude(id__in=column['contained_elements']).delete()
+
     for content in json.loads(request.POST['contents']):
-        obj = Content.objects.get(id=content['id'])
-        obj.order = content['order']
-        obj.content = content['content']
-        obj.save()
+        def create_new_content(content):
+            column = Column.objects.get(id=content['column'])
+            obj = Content(
+                column=column,
+                content=content['content'],
+                type=content['type'],
+                order=content['order'])
+            obj.save()
+            return obj
+
+        if 'id' in content:
+            try:
+                # Existing element - update it
+                obj = Content.objects.get(id=content['id'])
+                obj.order = content['order']
+                obj.content = content['content']
+                obj.save()
+            except Content.DoesNotExist:
+                # Whoops, it didn't exist! We'll choose to think that the user is right, and the element
+                # should be created, since they have it client-side and are trying to save it.
+                # This might happen if two users are editing the same version of a page; one user removes
+                # an element and saves, and then the other user saves *her* version, which will try to update
+                # a non-existing element.
+                new_obj = create_new_content(content)
+
+                # The client will need to update the client-side ID for this element
+                response['unexpected_content_ids'].append({
+                    'old': content['id'],
+                    'new': new_obj.id})
+        else:
+            # Send the generated ID to the client
+            new_obj = create_new_content(content)
+            response['new_content_ids'].append(new_obj.id)
 
     # Article/Page data
     if version.variant.page is not None:

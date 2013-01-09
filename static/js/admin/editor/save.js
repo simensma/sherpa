@@ -44,44 +44,73 @@ $(document).ready(function() {
 
         var data = {};
 
+        // Element selectors
+        var article_element = $("article");
+        var row_elements = article_element.children("div.row-fluid");
+        var column_elements = row_elements.children("div.column");
+        var content_elements = column_elements.children("div.content");
+
         // Rows
         var rows = []
-        $("article > div.row-fluid").each(function() {
-            var row = {
+        row_elements.each(function() {
+            rows.push({
                 id: $(this).attr('data-id'),
                 order: $(this).prevAll().length
-            };
-            rows.push(row);
+            });
         });
         data.rows = JSON.stringify(rows);
 
         // Columns
         var columns = [];
-        $("article div.column").each(function() {
-            var column = {
+        column_elements.each(function() {
+            var contained_elements = [];
+            $(this).children('[data-id]').each(function() {
+                // This is used server-side to delete items, so be pretty fucking sure that everything is included
+                contained_elements.push($(this).attr('data-id'));
+            });
+            columns.push({
                 id: $(this).attr('data-id'),
-                order: $(this).prevAll().length
-            };
-            columns.push(column);
+                order: $(this).prevAll().length,
+                contained_elements: contained_elements
+            });
         });
         data.columns = JSON.stringify(columns);
 
         // Contents
         var contents = [];
-        $("article > div.row-fluid > div.column > div.html, article > div.row-fluid > div.column > div.title, article > div.row-fluid > div.column > div.lede").each(function() {
-            if($(this).is('[data-placeholder]')) {
-                var html = '';
-            } else {
-                var html = $(this).html();
-            }
+        var contents_awaiting_id = [];
+        content_elements.filter(".html,.title,.lede").each(function() {
             var content = {
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length,
-                content: html
+                order: $(this).prevAll().length
             };
+
+            // Don't include placeholder text
+            if($(this).is('[data-placeholder]')) {
+                content.content = '';
+            } else {
+                content.content = $(this).html();
+            }
+
+            if($(this).is('[data-id]')) {
+                content.id = $(this).attr('data-id');
+            } else {
+                contents_awaiting_id.push($(this));
+            }
+
+            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
+            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
+            content.column = $(this).parents('div.column').attr('data-id');
+            if($(this).hasClass('html')) {
+                content.type = 'html';
+            } else if($(this).hasClass('title')) {
+                content.type = 'title';
+            } else if($(this).hasClass('lede')) {
+                content.type = 'lede';
+            }
+
             contents.push(content);
         });
-        $("article div.image").each(function() {
+        content_elements.filter(".image").each(function() {
             var anchor;
             if($(this).find('a').length == 0) {
                 anchor = null;
@@ -100,10 +129,20 @@ $(document).ready(function() {
                 anchor: anchor
             };
             var content = {
-                id: $(this).attr('data-id'),
                 order: $(this).prevAll().length,
                 content: JSON.stringify(image)
             };
+            if($(this).is('[data-id]')) {
+                content.id = $(this).attr('data-id');
+            } else {
+                contents_awaiting_id.push($(this));
+            }
+
+            // This metadata is strictly only necessary for *new* elements, but if we're trying to update
+            // an element which doesn't exist, we'll create it, and then we'll need it for those elements too.
+            content.column = $(this).parents('div.column').attr('data-id');
+            content.type = 'image';
+
             contents.push(content);
         });
         data.contents = JSON.stringify(contents);
@@ -154,6 +193,22 @@ $(document).ready(function() {
             saveButton.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
+            }
+
+            // Retrieve new contents IDs
+            if(result.new_content_ids.length != contents_awaiting_id.length) {
+                alert("Whoops! Serveren sier at vi opprettet " + result.new_content_ids.length + " nye elementer, mens vi egentlig opprettet " + contents_awaiting_id.length + "!\n\n" +
+                      "Dette er ikke bra - det kan være at du har mistet noe av arbeidet du har gjort. Du bør ta kopi av det du kan, og lagre det lokalt, før du gjør noe annet.\n\n" +
+                      "Når du har tatt en lokal kopi kan du prøve å oppdatere siden, og se om noen av elementene forsvinner.\n\n" +
+                      "Dette skal egentlig ikke skje. Du bør rapportere feilen til DNTs webutviklingsteam. Beklager!");
+            }
+            for(var i=0; i<contents_awaiting_id.length; i++) {
+                contents_awaiting_id[i].attr('data-id', result.new_content_ids[i]);
+            }
+
+            // Update IDs for contents we thought existed serverside, but didn't
+            for(var i=0; i<result.unexpected_content_ids.length; i++) {
+                content_elements.filter("[data-id='" + result.unexpected_content_ids[i].old + "']").attr('data-id', result.unexpected_content_ids[i].new);
             }
 
             // Parent page-response

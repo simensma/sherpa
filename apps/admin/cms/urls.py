@@ -23,6 +23,5 @@ urlpatterns = patterns('admin.cms.views',
 
     # Content
     url(r'^innhold/ny/$', 'content.add'),
-    url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
     url(r'^widget/oppdater/(?P<widget>\d+)/$', 'content.update_widget'),
 )
