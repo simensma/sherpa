@@ -290,7 +290,7 @@ function editWidget() {
         articles.find("input[name='title']").val(widget.title);
         articles.find("input[name='count']").val(widget.count);
         if(widget.tag_link == null) {
-            articles.find("input[name='set-tag-link'").removeAttr('checked');
+            articles.find("input[name='set-tag-link]'").removeAttr('checked');
             articles.find("input[name='tag-link']").attr('disabled', true).val("");
         }
         article_widget_tagger.tags = widget.tags;
