@@ -66,7 +66,7 @@
 
         //hax, the onload function is for when you are changing images and the selector needs a new height
         widget_editor.find("img[name='preview']").imagesLoaded(function(){
-            openImageCropper(widget_editor.find("img[name='preview']"), widget_editor, imageList[currentIndex].selection);
+            openImageCropper(widget_editor.find("img[name='preview']"), widget_editor.find("div#preview"), imageList[currentIndex].selection);
             setCarouselRatio(imageList[currentIndex].selection == undefined);
             if(imageList[currentIndex].url.trim().length < 1){
                 currentCropperInstance.cancelSelection();
@@ -148,6 +148,15 @@
 
         widget_editor = $("div.widget-editor[data-widget='carousel']");
         widget_editor.find("div#ratio-radio").append(getRatioRadioButtons());
+
+        // Ensure imgareaselect follows the bootstrap-modal scrolling
+        widget_editor.on('shown', function() {
+            $("div.modal-scrollable").scroll(function() {
+                if(typeof currentCropperInstance !== 'undefined') {
+                    currentCropperInstance.update();
+                }
+            });
+        });
 
         //carousel, stop spinning
         $('.carousel').each(function(){
