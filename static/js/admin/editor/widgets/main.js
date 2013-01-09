@@ -128,9 +128,3 @@ function validateContent(widget) {
         };
     }
 }
-
-function openWidgetDialog(type, parentWidth){
-    if(type == 'carousel') {
-        ImageCarouselWidgetEditor.listImages(parentWidth);
-    }
-}

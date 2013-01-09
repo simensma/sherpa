@@ -76,7 +76,7 @@
 
     /* Public methods */
 
-    ImageCarouselWidgetEditor.listImages = function(parentWidth) {
+    ImageCarouselWidgetEditor.listImages = function() {
         currentIndex = 0;
         newWidgetParentWidth = 0;
 
@@ -84,7 +84,7 @@
         var ratioHeight = 0;
 
         if(widgetBeingEdited == undefined){
-            newWidgetParentWidth = parentWidth;
+            newWidgetParentWidth = widgetPosition.parent.outerWidth();
             imageList = [{
                 url:"",
                 description:"",
@@ -150,6 +150,13 @@
             images: imageList
         };
     }
+
+    /* New widget */
+
+    $(document).on('widget.new.carousel', function() {
+        ImageCarouselWidgetEditor.listImages();
+        widget_editor.modal();
+    });
 
     /* Preparations and events */
 

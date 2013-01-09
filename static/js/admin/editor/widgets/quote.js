@@ -2,6 +2,13 @@
 
     var widget_editor; // Gets set in the preparations below
 
+
+    /* New widget */
+
+    $(document).on('widget.new.quote', function() {
+        widget_editor.modal();
+    });
+
     /* Editing existing widget */
 
     $(document).on('widget.edit', 'div.widget.quote', function() {

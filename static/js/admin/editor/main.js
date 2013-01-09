@@ -195,7 +195,6 @@ $(document).ready(function() {
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
-    widgetStartWidth = 0;
     $("#toolbar a.button.widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -207,7 +206,6 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            widgetStartWidth = $(this).outerWidth();
             $("div.add-widget").modal();
             enableToolbar();
             widgetPosition = {
@@ -221,11 +219,7 @@ $(document).ready(function() {
     $("div.add-widget div.widget-thumbnail").click(function() {
         widgetBeingEdited = undefined;
         $(this).parents("div.add-widget").modal('hide');
-        $("div.widget-editor input[type='text'], div.widget-editor textarea").val('');
-        $("div.widget-editor[data-widget='" + $(this).attr('data-widget') + "']").modal();
-        if($(this).attr('data-widget') == "carousel" ){
-            openWidgetDialog($(this).attr('data-widget'), widgetStartWidth);
-        }
+        $(document).trigger('widget.new.' + $(this).attr('data-widget'));
     });
 
     // Remove content (text/image/widget)
