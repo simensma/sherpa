@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import datetime
+from datetime import timedelta
 
 class Annonse(models.Model):
     userprofile = models.ForeignKey('user.Profile')
@@ -12,6 +14,7 @@ class Annonse(models.Model):
     hidden = models.BooleanField()
     hideage = models.BooleanField()
     age = models.IntegerField()
+    #Male ->True, female -> False
     gender = models.BooleanField()
 
     def get_age(self):
@@ -24,7 +27,7 @@ class Annonse(models.Model):
         return timeadded.day + '.' + timeadded.month + '.' + timeadded.year
 
     def get_gender(self):
-        if self.ismale == True:
+        if self.gender == True:
             return 'Mann'
         else:
             return "Kvinne"
@@ -32,13 +35,14 @@ class Annonse(models.Model):
     def compute_gender(self):
         actor = self.userprofile.actor()
         if actor == None:
-            self.ismale = False
+            print 'no actor'
+            self.gender = False
             return
 
-        if actor.sex == 'm':
-            self.ismale = True
+        if actor.sex == 'M':
+            self.gender = True
         else:
-            self.ismale = False
+            self.gender = False
 
     def compute_age(self):
         actor = self.userprofile.actor()
@@ -46,7 +50,7 @@ class Annonse(models.Model):
             self.age = 18
             self.save()
             return
-        born = userprofile.get_actor().birth_date
+        born = self.userprofile.actor().birth_date
         now = datetime.now()
         try: # raised when birth date is February 29 and the current year is not a leap year
             birthday = born.replace(year=now.year)

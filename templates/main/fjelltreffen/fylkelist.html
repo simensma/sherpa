@@ -2,7 +2,7 @@
 <select class="fylkeselect annonse-fylke">
 
 	{% if includeall %}
-		<option {% if selectedfylkecode == 0 %}selected="selected"{% endif %}value="0">Hele landet</option>
+		<option {% if selectedfylkecode == 0 %}selected="selected"{% endif %}value="00">Hele landet</option>
 	{% endif %}
 	
     {% for fylke in fylker %}

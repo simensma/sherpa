@@ -23,18 +23,12 @@ $(document).ready(function() {
     genderselect.change(filterChanged);
     fylkeselect.change(filterChanged);
 
-    //called once to match the search with the content of selects
-    filterChanged();
-
     function filterChanged(){
         minage = parseInt(lowerageselect.val());
         maxage = parseInt(upperageselect.val());
-        fylke = parseInt(fylkeselect.val());
+        //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
+        fylke = fylkeselect.attr("value");
         gender = parseInt(genderselect.val());
-
-        if(filterminage > filtermaxage){
-            return;
-        }
 
         filterminage = minage;
         filtermaxage = maxage;

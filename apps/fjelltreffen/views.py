@@ -16,7 +16,7 @@ BULKLOADNUM = 20
 
 defaultMinAge = 18
 defaultMaxAge = 200
-defaultFylke = 0
+defaultFylke = '00'
 defaultGender = None
 
 cachedQueries = []
@@ -31,11 +31,12 @@ def load(request, page):
     annonsefilter = None
     try:
         annonsefilter = json.loads(request.POST['filter'])
-        minage = int(annonsefilter.get('minage'))
-        maxage = int(annonsefilter.get('maxage'))
+        minage = int(annonsefilter['minage'])
+        maxage = int(annonsefilter['maxage'])
+        #gender can be undefined, should then return none for no gender-filter
         gender = annonsefilter.get('gender')
-        fylke = int(annonsefilter.get('fylke'))
-    except (JSONDecodeError, KeyError, ValueError) as e:
+        fylke = annonsefilter['fylke']
+    except (KeyError, ValueError) as e:
         minage = defaultMinAge
         maxage = defaultMaxAge
         gender = defaultGender
@@ -68,8 +69,8 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
         annonser = Annonse.objects.filter(hidden=False, age__gte=minage, age__lte=maxage, timeadded__gte=ninetydaysago)
         if gender != None:
             annonser = annonser.filter(gender=gender)
-        if fylke != 0:
-            annonser = annonser.filter(fylke=fylke)
+        if fylke != '00':
+            annonser = annonser.filter(fylke__code=fylke)
         annonser = annonser.order_by('-timeadded')
 
         cache.set(cacheKey, annonser, 60 * 60)
@@ -122,6 +123,8 @@ def save(request):
     
     try:
         annonse.fylke = County.objects.get(code=content['fylke'])
+        print 'fylke'
+        print content['fylke']
     except (County.DoesNotExist, KeyError) as e:
         #could happen if the user tampers with the html to select an illegal county
         print e
