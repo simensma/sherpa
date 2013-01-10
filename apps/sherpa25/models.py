@@ -1,4 +1,66 @@
 from django.db import models
+from django.conf import settings
+
+#this table links other tabels
+class Link(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fromobject = models.TextField(db_column='fromObject') # Field name made lowercase.
+    fromid = models.IntegerField(db_column='fromId') # Field name made lowercase.
+    toobject = models.TextField(db_column='toObject') # Field name made lowercase.
+    toid = models.IntegerField(db_column='toId') # Field name made lowercase.
+    role = models.IntegerField()
+    priority = models.IntegerField(null=True, blank=True)
+    class Meta:
+        db_table = u'Link'
+
+class Classified(models.Model):
+    id = models.IntegerField(primary_key=True)
+    title = models.TextField(blank=True)
+    content = models.TextField(blank=True)
+    county = models.IntegerField(null=True, blank=True)
+    created = models.DateTimeField(null=True, blank=True)
+    modified = models.DateTimeField(null=True, blank=True)
+    authorized = models.DateTimeField(null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True)
+    online = models.NullBooleanField(blank=True)
+    class Meta:
+        db_table = u'Classified'
+
+class Classifiedimage(models.Model):
+    id = models.IntegerField(primary_key=True)
+    path = models.TextField(blank=True)
+    created = models.DateTimeField(null=True, blank=True)
+    modified = models.DateTimeField(null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True)
+    online = models.NullBooleanField(blank=True)
+    class Meta:
+        db_table = u'ClassifiedImage'
+
+def get_old_fjelltreffen_annonser(profile):
+    try:
+        memberid = Member.objects.get(memberid=profile.memberid).id
+    except Member.DoesNotExist:
+        return []
+    annonseids = []
+    for link in Link.objects.filter(fromobject='Member', fromid=memberid, toobject='Classified'):
+        annonseids.append(link.toid)
+
+    annonser = []
+    for annonseid in annonseids:
+        try:
+            imageid = Link.objects.get(fromobject='Classified', fromid=annonseid, toobject='ClassifiedImage').toid
+            #this assumes url on the form dnt/img/hash.jpg, which is the old sites imageurl-format
+            imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
+        except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
+            imageurl = None
+        try:
+            member = Member.objects.get(memberid=profile.memberid)
+            annonse = Classified.objects.get(id=annonseid)
+        except (Member.DoesNotExist, Classified.DoesNotExist) as e:
+            return []
+
+        annonser.append((member, annonse, imageurl))
+    return annonser
 
 class Member(models.Model):
     id = models.IntegerField(primary_key=True)

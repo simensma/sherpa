@@ -1,5 +1,5 @@
 
-from fjelltreffen.models import Annonse
+from fjelltreffen.models import Annonse, invalidate_cache, getAndCacheAnnonserByFilter
 from core.models import County
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -14,6 +14,8 @@ from django.core.cache import cache
 from django.core.mail import send_mail
 from smtplib import SMTPException
 from core.validator import email
+from sherpa25.models import Classified
+from django.conf import settings
 
 BULKLOADNUM = 20
 
@@ -22,11 +24,11 @@ defaultMaxAge = 200
 defaultFylke = '00'
 defaultGender = None
 
-cachedQueries = []
+#number of active annonser a user is allowed to have
+ANNONSELIMIT = 3
 
 def index(request):
     annonser = getAndCacheAnnonserByFilter(defaultMinAge, defaultMaxAge, defaultFylke, defaultGender)[0:BULKLOADNUM]
-
     context = {'annonser':annonser, 'fylker':getAndCacheFylker()}
     return render(request, 'main/fjelltreffen/index.html', context)
 
@@ -60,25 +62,6 @@ def getAndCacheFylker():
         fylker = County.objects.all().order_by('name')
         cache.set('annonse-fylker', fylker, 60 * 60)
     return fylker
-
-def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
-    now = datetime.now();
-    ninetydaysago = now - timedelta(days=90)
-    #all annonser that are not hidden, is newer than 90 days, and matches the query, order by date
-
-    cacheKey = 'fjelltreffenannonser' + str(minage) + str(maxage) + str(fylke) + str(gender)
-    annonser = cache.get(cacheKey)
-    if annonser == None:
-        annonser = Annonse.objects.filter(hidden=False, age__gte=minage, age__lte=maxage, timeadded__gte=ninetydaysago)
-        if gender != None:
-            annonser = annonser.filter(gender=gender)
-        if fylke != '00':
-            annonser = annonser.filter(fylke__code=fylke)
-        annonser = annonser.order_by('-timeadded')
-
-        cache.set(cacheKey, annonser, 60 * 60)
-        cachedQueries.append(cacheKey)
-    return annonser
 
 @login_required
 def edit(request, id):
@@ -138,6 +121,9 @@ def reply(request):
     except (Annonse.DoesNotExist, KeyError) as e:
         return HttpResponse(status=400)
 
+def num_active_annonser(userprofile):
+    return Annonse.objects.filter(userprofile=userprofile, hidden=False).count()
+
 @login_required
 def save(request):
     try:
@@ -176,15 +162,18 @@ def save(request):
         return HttpResponse(status=400)
 
     #validate input
-    if email(annonse.email) and len(str.strip(annonse.title)) > 0 and len(str.strip(annonse.text)) > 10:
+    if email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
+        if not annonse.hidden:
+            if(num_active_annonser(request.user.get_profile()) > ANNONSELIMIT):
+                #notify the user that he/she has too many active annonser
+                print 'toomany'
+                return HttpResponse(json.dumps({'error':'toomany', 'num':ANNONSELIMIT}), status=400)
         annonse.save()
+        #users want instant response, so cache is invalidated when an annonse is submitted
+        #this should be alright, there is less than 1 new annonse being submitted pr hour on average
+        invalidate_cache()
     else:
         return HttpResponse(status=400)
-    
-    #users want instant response, so cache is invalidated when an annonse is submitted
-    #this should be alright, there is less than 1 new annonse being submitted pr hour on average
-    for cacheKey in cachedQueries:
-        cache.delete(cacheKey)
 
     return HttpResponse(json.dumps({'id':annonse.id}))
 

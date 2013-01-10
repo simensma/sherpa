@@ -16,6 +16,13 @@
     <div class="wrapper">
     <h2>Fjelltreffen</h2>
 
+
+    <div class="alert alert-info">
+      Velkommen til nye fjelltreffen! Hvis du har annonser på gamle 
+      fjelltreffen blir de automatisk lagt inn i nye fjelltreffen når du <a href="{% url user.views.home_new %}">logger inn</a>.
+      Hvis du vil se de gamle annonsene kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.<a class="close">x</a>
+    </div>
+
     {% include 'main/fjelltreffen/filter.html' %}
 
     <div class="annonse-list-wrapper">

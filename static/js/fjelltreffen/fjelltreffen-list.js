@@ -37,7 +37,7 @@ $(document).ready(function() {
 
         loadindex = 0;
         cleanslate = true;
-        listwrapper.fadeOut();
+        listwrapper.addClass("hide");
 
         loadAnnonser();
     }

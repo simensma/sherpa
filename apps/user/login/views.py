@@ -19,6 +19,9 @@ from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_
 
 from core import validator
 
+from sherpa25.models import get_old_fjelltreffen_annonser
+from fjelltreffen.models import create_and_save_new_annonse_from_old_annonse
+
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
 
@@ -33,6 +36,9 @@ def login(request):
         user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
             log_user_in(request, user)
+
+            
+
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
@@ -50,6 +56,11 @@ def login(request):
                 user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
+                #if the user had annonser in fjelltreffen, import them
+                annonser = get_old_fjelltreffen_annonser(user.get_profile())
+                for annonse in annonser:
+                    create_and_save_new_annonse_from_old_annonse(annonse[0], annonse[1], annonse[2])
+                    
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
             else:

@@ -78,7 +78,15 @@ $(document).ready(function() {
             annonseid = returnedData['id']
             window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
         }).fail(function(result) {
-            alert("Det skjedde en feil under lagring av annonsen, sjekk at feltene er fylt ut riktig og at du er koblet til internet.");
+            console.log(result);
+            try{
+                returnedData = JSON.parse(result['responseText']);
+                if (returnedData['error'] == 'toomany'){
+                    alert("Du har for mange aktive annonser! Du kan ha max " + returnedData['num'] + " synlige annonser av gangen. Du kan slette eller skjule annonser under mine annonser. Du kan også lagre denne annonsen hvis du velger å skjule den, så mister du ikke det du har skrevet.");
+                }
+            }catch(err){
+                alert("Det skjedde en feil under lagring av annonsen, sjekk at feltene er fylt ut riktig og at du er koblet til internet.");
+            }
         }).always(function() {
             enableButtons();
         });
@@ -93,6 +101,5 @@ $(document).ready(function() {
     function enableButtons(){
         $("button.save-annonse").attr("disabled", false)
         $("button.delete-annonse").attr("disabled", false)
-        $("button.delete-annonse").show()
     }
 });
