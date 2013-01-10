@@ -4,7 +4,7 @@ $(document).ready(function() {
     // Remove any widget
     $("div.widget-editor button.remove").click(function() {
         $(this).parents(".widget-editor").modal('hide');
-        if(widgetBeingEdited != undefined){
+        if(typeof widgetBeingEdited !== 'undefined'){
             removeContent(widgetBeingEdited);
         }
     });
@@ -16,7 +16,7 @@ $(document).ready(function() {
 function saveWidget(content) {
     var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
     var content_json = JSON.stringify(content);
-    if(widgetBeingEdited !== undefined) {
+    if(typeof widgetBeingEdited !== 'undefined') {
         widgetBeingEdited.empty().append(rendring_message);
         widgetBeingEdited.attr('data-json', content_json);
         $.ajaxQueue({
