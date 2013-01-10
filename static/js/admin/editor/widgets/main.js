@@ -26,7 +26,8 @@ function saveWidget(widget, content) {
         }).fail(function(result) {
             widget.empty().append(rendring_failed);
         }).done(function(result) {
-            widget.empty().append(result);
+            widget.empty().hide().append(result);
+            widget.slideDown();
             disableIframes(widget);
         });
     } else {
@@ -46,7 +47,8 @@ function saveWidget(widget, content) {
         }).fail(function(result) {
             widget.empty().append(rendring_failed);
         }).done(function(result) {
-            widget.empty().append(result);
+            widget.empty().hide().append(result);
+            widget.slideDown();
             disableIframes(widget);
             refreshSort();
         });
