@@ -9,10 +9,10 @@ class Article(models.Model):
     hide_thumbnail = models.BooleanField()
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
-    created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('user.Profile', related_name='articles_created')
-    modified_date = models.DateTimeField(null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.Profile', related_name='articles_modified', null=True)
+    modified_date = models.DateTimeField(null=True)
 
     site = models.ForeignKey('core.Site')
     @staticmethod
