@@ -30,13 +30,13 @@ function saveWidget(widget, content) {
             disableIframes(widget);
         });
     } else {
-        var wrapper = $('<div class="content widget ' + content.widget + '"></div>');
-        wrapper.append(rendring_message);
-        wrapper.attr('data-json', content_json);
+        var widget = $('<div class="content widget ' + content.widget + '"></div>');
+        widget.append(rendring_message);
+        widget.attr('data-json', content_json);
         if(widgetPosition.prev.length == 0) {
-            widgetPosition.parent.prepend(wrapper);
+            widgetPosition.parent.prepend(widget);
         } else {
-            widgetPosition.prev.after(wrapper);
+            widgetPosition.prev.after(widget);
         }
         removeEmpties();
         setEmpties();
@@ -44,10 +44,10 @@ function saveWidget(widget, content) {
             url: '/sherpa/cms/widget/',
             data: { content: content_json }
         }).fail(function(result) {
-            wrapper.empty().append(rendring_failed);
+            widget.empty().append(rendring_failed);
         }).done(function(result) {
-            wrapper.empty().append(result);
-            disableIframes(wrapper);
+            widget.empty().append(result);
+            disableIframes(widget);
             refreshSort();
         });
     }
