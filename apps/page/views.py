@@ -16,7 +16,7 @@ import json
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
 from articles.models import Article, OldArticle
 from analytics.models import Search, NotFound
-from page.widgets import parse_widget
+from page.widgets import parse_widget, get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
 
 variant_key = 'var'
@@ -91,27 +91,10 @@ def parse_content(request, version):
     # Include ads if specified for this page
     context['advertisement'] = AdPlacement.get_active_ad() if context['version'].ads else None
 
-    # Used temporary for static promo content
-    promos = [
-        {'name': 'Nytt turår!', 'url': '/', 'template': 'main'},
-        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
-        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
-        {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
-        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung'},
-        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport'},
-        {'name': 'Senior', 'url': '/senior/', 'template': 'senior'},
-        {'name': 'Skole', 'url': '/skole/', 'template': 'skole'},
-        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs'},
-        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle'},
-        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut'},
-        ]
-
-    for promo in promos:
-        if request.path == promo['url'] and request.site.domain == 'www.turistforeningen.no':
-            context['promo'] = 'main/widgets/promo/static/%s.html' % promo['template']
-
     context['request'] = request
-    context['promos'] = promos
+
+    if request.site.domain == 'www.turistforeningen.no':
+        context.update(get_static_promo_context(request.path))
     return render(request, 'common/page/page.html', context)
 
 @csrf_exempt

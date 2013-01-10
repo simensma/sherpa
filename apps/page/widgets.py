@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.core.cache import cache
 from django.conf import settings
 
@@ -108,3 +109,28 @@ def widget_admin_context():
     return {
         'blog': {'categories': blog_category_list()}
     }
+
+# Used temporary for static promo content
+def get_static_promo_context(path):
+    context = {}
+    promos = [
+        {'name': 'Nytt turår!', 'url': '/', 'template': 'main'},
+        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
+        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
+        {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
+        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung'},
+        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport'},
+        {'name': 'Senior', 'url': '/senior/', 'template': 'senior'},
+        {'name': 'Skole', 'url': '/skole/', 'template': 'skole'},
+        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs'},
+        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle'},
+        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut'},
+        ]
+
+    for promo in promos:
+        if path == promo['url']:
+            context['promo'] = 'main/widgets/promo/static/%s.html' % promo['template']
+
+    context['promos'] = promos
+
+    return context
