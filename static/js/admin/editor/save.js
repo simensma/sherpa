@@ -11,7 +11,7 @@ $(document).ready(function() {
     var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + lastSaveCount + ')');
+        $("div.editor-header button.save").html(statusIcon + ' Lagre (' + lastSaveCount + ')');
 
         if(lastSaveCount == NO_SAVE_WARNING) {
             $("div.no-save-warning").show();
@@ -23,7 +23,7 @@ $(document).ready(function() {
     $("div.editor-header button.save").click(save);
     $("div.editor-header button.preview").click(function() {
         var button = $(this);
-        button.html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
+        button.html('<i class="icon-search"></i> Lagrer først...');
         button.attr('disabled', true);
         var url = $(this).attr('data-href');
         save(function() {
