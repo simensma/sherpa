@@ -97,7 +97,7 @@
                 var tags = [];
             }
 
-            saveWidget({
+            saveWidget(widgetBeingEdited, {
                 widget: "articles",
                 title: title,
                 tag_link: tag_link,

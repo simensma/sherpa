@@ -28,7 +28,7 @@
 
         /* Saving */
         widget_editor.find("button.save").click(function() {
-            saveWidget({
+            saveWidget(widgetBeingEdited, {
                 widget: "quote",
                 quote: widget_editor.find("textarea[name='quote']").val(),
                 author: widget_editor.find("input[name='author']").val()

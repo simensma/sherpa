@@ -31,7 +31,7 @@
                 alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
                 return $(this);
             }
-            saveWidget({
+            saveWidget(widgetBeingEdited, {
                 widget: "embed",
                 code: code
             });

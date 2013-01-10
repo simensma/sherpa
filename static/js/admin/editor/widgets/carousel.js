@@ -257,7 +257,7 @@
                     imageList.splice(i, 1);
                 }
             }
-            saveWidget({
+            saveWidget(widgetBeingEdited, {
                 widget: "carousel",
                 images: imageList
             });

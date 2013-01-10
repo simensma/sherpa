@@ -13,18 +13,18 @@ $(document).ready(function() {
 
 });
 
-function saveWidget(content) {
+function saveWidget(widget, content) {
     var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
     var content_json = JSON.stringify(content);
-    if(typeof widgetBeingEdited !== 'undefined') {
-        widgetBeingEdited.empty().append(rendring_message);
-        widgetBeingEdited.attr('data-json', content_json);
+    if(typeof widget !== 'undefined') {
+        widget.empty().append(rendring_message);
+        widget.attr('data-json', content_json);
         $.ajaxQueue({
             url: '/sherpa/cms/widget/',
             data: { content: content_json }
         }).done(function(result) {
-            widgetBeingEdited.empty().append(result);
-            disableIframes(widgetBeingEdited);
+            widget.empty().append(result);
+            disableIframes(widget);
         });
     } else {
         var wrapper = $('<div class="content widget ' + content.widget + '"></div>');

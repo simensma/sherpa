@@ -27,7 +27,7 @@
         /* Saving */
         widget_editor.find("button.save").click(function() {
             var content = widget_editor.find("div.content").html();
-            saveWidget({
+            saveWidget(widgetBeingEdited, {
                 widget: "fact",
                 content: content
             });
