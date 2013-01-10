@@ -15,6 +15,7 @@ $(document).ready(function() {
 
 function saveWidget(widget, content) {
     var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
+    var rendring_failed = '<p class="widget-rendring-failed">Klarte ikke å rendre widgeten! Er du sikker på at du har tilgang til internett?<br>Klikk her og velg lagre på nytt for å prøve å rendre igjen.</p>'
     var content_json = JSON.stringify(content);
     if(typeof widget !== 'undefined') {
         widget.empty().append(rendring_message);
@@ -22,6 +23,8 @@ function saveWidget(widget, content) {
         $.ajaxQueue({
             url: '/sherpa/cms/widget/',
             data: { content: content_json }
+        }).fail(function(result) {
+            widget.empty().append(rendring_failed);
         }).done(function(result) {
             widget.empty().append(result);
             disableIframes(widget);
@@ -40,6 +43,8 @@ function saveWidget(widget, content) {
         $.ajaxQueue({
             url: '/sherpa/cms/widget/',
             data: { content: content_json }
+        }).fail(function(result) {
+            wrapper.empty().append(rendring_failed);
         }).done(function(result) {
             wrapper.empty().append(result);
             disableIframes(wrapper);
