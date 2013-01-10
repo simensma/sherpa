@@ -11,7 +11,7 @@ class Article(models.Model):
     pub_date = models.DateTimeField(null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('user.Profile', related_name='articles_created')
-    modified_date = models.DateTimeField(auto_now=True)
+    modified_date = models.DateTimeField()
     modified_by = models.ForeignKey('user.Profile', related_name='articles_modified')
 
     site = models.ForeignKey('core.Site')
