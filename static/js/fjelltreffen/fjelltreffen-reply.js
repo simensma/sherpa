@@ -23,17 +23,19 @@ $(document).ready(function() {
 
     function reply(){
 
-        var namecontrol = $("input.annonsereply-name-control");
-        var emailcontrol = $("input.annonsereply-email-control");
+        var name = $("input.annonsereply-name");
+        var email = $("input.annonsereply-email");
+        var namecontrol = $("div.annonsereply-name-control");
+        var emailcontrol = $("div.annonsereply-email-control");
         var text = $("textarea.annonsereply-text");
 
         //simple client-side validation, proper validation is performed server-side
-        if(namecontrol.hasClass("error")){
+        if(namecontrol.hasClass("error") || name.val().length < 1){
             alert("Du må ha et navn!");
             enableButtons();
             return;
         }
-        if(emailcontrol.hasClass("error")){
+        if(emailcontrol.hasClass("error") || email.val().length < 3){
             alert("Du må skrive inn en epostadresse, uten denne kan ikke annonsøren svare deg!");
             enableButtons();
             return;
@@ -46,9 +48,9 @@ $(document).ready(function() {
 
         content = {
             id:annonseid,
-            name:$("input.annonsereply-name").val(),
-            email:$("input.annonsereply-email").val(),
-            text:$("textarea.annonsereply-text").val(),
+            name:name.val(),
+            email:email.val(),
+            text:text.val(),
         }
         
         $.ajaxQueue({

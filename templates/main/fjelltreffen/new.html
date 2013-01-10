@@ -2,12 +2,12 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  {% if new %}
+  {% if annonse %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> /  <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">{{ annonse.title }}</a></em>
+    {% elif  new%}
     <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ny Annonse</a></em>
-  {% elif annonse %}
-    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">{{ annonse.title }}</a></em>
-  {% else %}
-    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">Ikke Funnet</a></em>
+    {% else %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">Ikke Funnet</a></em>
   {% endif %}
 {% endblock %}
 
