@@ -134,7 +134,6 @@ $(document).ready(function() {
             currentPhotographer.text(photographer);
             hidePictureText(content);
 
-            $("div.editor-header button.save").click();
         }, function() {
             removeContent(content);
         });
@@ -156,21 +155,17 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var html = $('<p><br></p>');
-            function done(wrapper) {
-                if(sortState == 'formatting') {
-                    wrapper.attr('contenteditable', 'true').focus();
-                }
-                refreshSort();
-                setEmpties();
-                wrapper.click();
-                wrapper.focus();
-                $("article .insertable").remove();
+            var content = $('<div class="content html editable"></div>');
+            content.insertAfter($(event.target));
+            refreshSort();
+            setEmpties();
+            enableToolbar();
+            $("article .insertable").remove();
+            if(sortState == 'formatting') {
+                content.attr('contenteditable', 'true').focus();
+            } else {
+                content.trigger('focusout');
             }
-            addContent($(event.target).prev(), $(event.target).parent(),
-                $(event.target).parent(".column").attr("data-id"),
-                $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(html).html(), 'html', done);
         });
     });
 
@@ -186,25 +181,20 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $('<img src="" alt=""><div class="img-desc"><span class="description"></span><span class="photographer">Foto: <span class="content"></span>');
-            function imageDone(wrapper) {
-                var image = wrapper.find("img");
-                image.click();
-                refreshSort();
-                setEmpties();
-                $("article .insertable").remove();
-            }
-            addContent($(event.target).prev(), $(event.target).parent(),
-                $(event.target).parent(".column").attr("data-id"),
-                $(event.target).prevAll(":not(.insertable)").length,
-                $("<div/>").append(image).html(), 'image', imageDone);
+            var image = $('<div class="content image"><img src="http://www.turistforeningen.no/static/img/placeholder.png" alt=""><div class="img-desc"><span class="description"></span> <span class="photographer">Foto: <span class="content"></span></div>');
+            image.css("overflow", "hidden");
+            image.insertAfter($(event.target));
+            image.find("img").click();
+            refreshSort();
+            setEmpties();
+            $("article .insertable").remove();
+            enableToolbar();
         });
     });
 
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
-    widgetStartWidth = 0;
     $("#toolbar a.button.widget").click(function() {
         if($("article").children().length == 0) {
             alert(noStructureForContentWarning);
@@ -216,43 +206,36 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            widgetStartWidth = $(this).outerWidth();
             $("div.add-widget").modal();
             enableToolbar();
             widgetPosition = {
                 prev: $(this).prev(),
-                parent: $(this).parent(),
-                column: $(this).parent(".column").attr("data-id"),
-                order: $(this).prevAll(":not(.insertable)").length
+                parent: $(this).parent()
             };
             $("article .insertable").remove();
-            setEmpties();
+            enableToolbar();
         });
     });
     $("div.add-widget div.widget-thumbnail").click(function() {
         widgetBeingEdited = undefined;
         $(this).parents("div.add-widget").modal('hide');
-        $("div.widget-edit input[type='text'], div.widget-edit textarea").val('');
-        $("div.widget-edit[data-widget='" + $(this).attr('data-widget') + "']").modal();
-        if($(this).attr('data-widget') == "carousel" ){
-            openWidgetDialog($(this).attr('data-widget'), widgetStartWidth);
-        }
+        $(document).trigger('widget.new.' + $(this).attr('data-widget'));
     });
 
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'div.html, div.widget:not(.static), div.image');
+            $(document).off('mouseenter mouseleave click', 'div.html, div.widget, div.image');
             enableEditing();
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'div.html, div.widget:not(.static), div.image', function() {
+        $(document).on('mouseenter', 'div.html, div.widget, div.image', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'div.html, div.widget:not(.static), div.image', function() {
+        }).on('mouseleave', 'div.html, div.widget, div.image', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'div.html, div.widget:not(.static), div.image', function() {
+        }).on('click', 'div.html, div.widget, div.image', function() {
             doneRemoving();
             var content = $(this);
             content.hide();
@@ -271,6 +254,17 @@ $(document).ready(function() {
             });
         });
     });
+
+    // Actually remove the content from DOM
+    window.removeContent = removeContent;
+    function removeContent(content) {
+        if(content.siblings().length == 0) {
+            setEmpty(content.parent());
+        }
+        content.remove();
+        refreshSort();
+    }
+
 
     // Insert custom button
     $("button.insert-button").click(function() {
@@ -524,7 +518,9 @@ $(document).ready(function() {
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.editable").attr('contenteditable', 'true');
-        $(document).on('click', 'div.widget', editWidget);
+        $(document).on('click', 'div.widget', function() {
+            $(this).trigger('widget.edit');
+        });
         $(document).on('click', 'div.image', changeImage);
     }
 
@@ -567,73 +563,6 @@ $(document).ready(function() {
             div.css('width', width);
             div.css('height', height);
             $(this).replaceWith(div);
-        });
-    }
-
-    /**
-     * Major DOM changes.
-     * Typically includes an ajax request and,
-     * depending on the result, DOM manipulation.
-     */
-
-    /* Add content-objects to some column */
-    window.addContent = addContent;
-    function addContent(prev, parent, column, order, content, type, done) {
-        enableOverlay();
-        $.ajaxQueue({
-            url: '/sherpa/cms/innhold/ny/',
-            data: "column=" + encodeURIComponent(column) +
-                  "&order=" + encodeURIComponent(order) +
-                  "&content=" + encodeURIComponent(content) +
-                  "&type=" + encodeURIComponent(type)
-        }).done(function(result) {
-            result = JSON.parse(result);
-            var editable = '';
-            if(type == 'html' || type == 'title' || type == 'lede') {
-                editable = ' editable';
-            }
-            var wrapper = $('<div class="content ' + type + editable + '" data-id="' + result.id + '"></div>').append(result.content);
-            if(type == "image"){
-                wrapper.css("overflow", "hidden");
-            }
-            if(result.json !== undefined) {
-                wrapper.attr('data-json', result.json);
-            }
-            if(prev.length == 0) {
-                parent.prepend(wrapper);
-            } else {
-                prev.after(wrapper);
-            }
-            if(type == 'widget') {
-                disableIframes(wrapper);
-                widget = JSON.parse(result.json).widget;
-                wrapper.addClass(widget);
-            }
-            // Disable the overlay _before_ calling the provided 'done' function
-            disableOverlay();
-            done(wrapper);
-        }).fail(function(result) {
-            // Todo
-            disableOverlay();
-        }).always(function(result) {
-            enableToolbar();
-        });
-    }
-
-    window.removeContent = removeContent;
-    function removeContent(content) {
-        $.ajaxQueue({
-            url: '/sherpa/cms/innhold/slett/' + encodeURIComponent(content.attr('data-id')) + '/',
-            type: 'POST'
-        }).done(function(result) {
-            if(content.siblings().length == 0) {
-                setEmpty(content.parent());
-            }
-            content.remove();
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            refreshSort();
         });
     }
 

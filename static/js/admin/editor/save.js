@@ -20,73 +20,6 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    function collectRows() {
-        var rows = []
-        $("article > div.row-fluid").each(function() {
-            var row = {
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length
-            };
-            rows.push(row);
-        });
-        return rows;
-    }
-
-    function collectColumns() {
-        var columns = [];
-        $("article div.column").each(function() {
-            var column = {
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length
-            };
-            columns.push(column);
-        });
-        return columns;
-    }
-
-    function collectContents() {
-        var contents = [];
-        $("article > div.row-fluid > div.column > div.html, article > div.row-fluid > div.column > div.title, article > div.row-fluid > div.column > div.lede").each(function() {
-            if($(this).is('[data-placeholder]')) {
-                var html = '';
-            } else {
-                var html = $(this).html();
-            }
-            var content = {
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length,
-                content: html
-            };
-            contents.push(content);
-        });
-        $("article div.image").each(function() {
-            var anchor;
-            if($(this).find('a').length == 0) {
-                anchor = null;
-            } else {
-                anchor = $(this).find('a').attr('href');
-            }
-            var image = {
-                src: $(this).find('img').attr('src'),
-                style: $(this).find('img').attr('style'),
-                selection: $(this).find('img').attr('data-selection'),
-                ratioWidth: $(this).find('img').attr('data-ratio-width'),
-                ratioHeight: $(this).find('img').attr('data-ratio-height'),
-                parentHeight: $(this).find('img').attr('data-parentHeight'),
-                description: $(this).find('span.description').text(),
-                photographer: $(this).find('span.photographer span.content').text(),
-                anchor: anchor
-            };
-            var content = {
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length,
-                content: JSON.stringify(image)
-            };
-            contents.push(content);
-        });
-        return contents;
-    }
-
     $("div.editor-header button.save").click(save);
     $("div.editor-header button.preview").click(function() {
         var button = $(this);
@@ -109,18 +42,177 @@ $(document).ready(function() {
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
         $("div.no-save-warning").hide();
 
+        var data = {};
+
+        // Element selectors
+        var article_element = $("article");
+        var row_elements = article_element.children("div.row-fluid");
+        var column_elements = row_elements.children("div.column");
+        var content_elements = column_elements.children("div.content");
+
+        // Rows
+        var rows = []
+        row_elements.each(function() {
+            rows.push({
+                id: $(this).attr('data-id'),
+                order: $(this).prevAll().length
+            });
+        });
+        data.rows = JSON.stringify(rows);
+
+        // Columns
+        var columns = [];
+        column_elements.each(function() {
+            var contained_elements = [];
+            $(this).children('[data-id]').each(function() {
+                // This is used server-side to delete items, so be pretty fucking sure that everything is included
+                contained_elements.push($(this).attr('data-id'));
+            });
+            columns.push({
+                id: $(this).attr('data-id'),
+                order: $(this).prevAll().length,
+                contained_elements: contained_elements
+            });
+        });
+        data.columns = JSON.stringify(columns);
+
+        // Contents
+        var contents = [];
+        var contents_awaiting_id = [];
+        content_elements.each(function() {
+            var content = {
+                column: $(this).parents('div.column').attr('data-id'),
+                order: $(this).prevAll().length
+            }
+
+            // Check if this is a new or existing element
+            if($(this).is('[data-id]')) {
+                content.id = $(this).attr('data-id');
+            } else {
+                contents_awaiting_id.push($(this));
+            }
+
+            // Retrieve content and content type
+            if($(this).is('.html,.title,.lede')) {
+                if($(this).is('.html')) {
+                    content.type = 'html';
+                } else if($(this).is('.title')) {
+                    content.type = 'title';
+                } else if($(this).is('.lede')) {
+                    content.type = 'lede';
+                }
+
+                // Don't include placeholder text
+                if($(this).is('[data-placeholder]')) {
+                    content.content = '';
+                } else {
+                    content.content = $(this).html();
+                }
+            } else if($(this).is('.image')) {
+                var anchor;
+                if($(this).find('a').length == 0) {
+                    anchor = null;
+                } else {
+                    anchor = $(this).find('a').attr('href');
+                }
+                var image = {
+                    src: $(this).find('img').attr('src'),
+                    style: $(this).find('img').attr('style'),
+                    selection: $(this).find('img').attr('data-selection'),
+                    ratioWidth: $(this).find('img').attr('data-ratio-width'),
+                    ratioHeight: $(this).find('img').attr('data-ratio-height'),
+                    parentHeight: $(this).find('img').attr('data-parentHeight'),
+                    description: $(this).find('span.description').text(),
+                    photographer: $(this).find('span.photographer span.content').text(),
+                    anchor: anchor
+                };
+                content.type = 'image';
+                content.content = JSON.stringify(image);
+            } else if($(this).is('.widget')) {
+                content.type = 'widget';
+                content.content = $(this).attr('data-json');
+            }
+            contents.push(content);
+        });
+        data.contents = JSON.stringify(contents);
+
+        var parent_select = $("div.editor-header.page select[name='parent']");
+        if($("div.editor-header.page").length > 0) {
+            /* Page-specific */
+
+            // Title
+            data.title = $("div.editor-header.page input[name='title']").val();
+
+            // Parent page
+            data.parent = parent_select.find("option:selected").val();
+
+            // Whether or not to display ads
+            data.ads = JSON.stringify($("div.editor-header.page input[name='display-ads']:checked").length > 0);
+
+            // Publish-state
+            data.datetime= $("input[name='page-datetime-field']").val();
+            data.status= JSON.stringify($("div.editor-header input[name='publish']:checked").length > 0);
+        } else if($("div.editor-header.article").length > 0) {
+            /* Article-specific */
+
+            // Authors
+            var authors = [];
+            $("select[name='authors'] > option:selected").each(function() {
+                authors.push($(this).val());
+            });
+            data.authors = JSON.stringify(authors);
+
+            // Publish-state
+            data.datetime = $("input[name='article-datetime-field']").val();
+            data.status = JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0});
+
+            // Tags
+            data.tags = JSON.stringify(article_tagger.tags);
+        }
+
         // Save content
         $.ajaxQueue({
-            url: '/sherpa/cms/editor/' + $("div.editor-header").attr('data-version-id') + '/',
-            data: "rows=" + encodeURIComponent(JSON.stringify(collectRows())) +
-                  "&columns=" + encodeURIComponent(JSON.stringify(collectColumns())) +
-                  "&contents=" + encodeURIComponent(JSON.stringify(collectContents()))
+            url: '/sherpa/cms/editor/lagre/' + $("div.editor-header").attr('data-version-id') + '/',
+            data: data
         }).done(function(result) {
+            result = JSON.parse(result);
+
             lastSaveCount = 0;
             statusIcon = '<i class="icon-heart"></i>';
             saveButton.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
+            }
+
+            // Retrieve new contents IDs
+            if(result.new_content_ids.length != contents_awaiting_id.length) {
+                alert("Whoops! Serveren sier at vi opprettet " + result.new_content_ids.length + " nye elementer, mens vi egentlig opprettet " + contents_awaiting_id.length + "!\n\n" +
+                      "Dette er ikke bra - det kan være at du har mistet noe av arbeidet du har gjort. Du bør ta kopi av det du kan, og lagre det lokalt, før du gjør noe annet.\n\n" +
+                      "Når du har tatt en lokal kopi kan du prøve å oppdatere siden, og se om noen av elementene forsvinner.\n\n" +
+                      "Dette skal egentlig ikke skje. Du bør rapportere feilen til DNTs webutviklingsteam. Beklager!");
+            }
+            for(var i=0; i<contents_awaiting_id.length; i++) {
+                contents_awaiting_id[i].attr('data-id', result.new_content_ids[i]);
+            }
+
+            // Update IDs for contents we thought existed serverside, but didn't
+            for(var i=0; i<result.unexpected_content_ids.length; i++) {
+                content_elements.filter("[data-id='" + result.unexpected_content_ids[i].old_id + "']").attr('data-id', result.unexpected_content_ids[i].new_id);
+            }
+
+            // Parent page-response
+            if(result.parent_error == 'parent_in_parent') {
+                alert('Du kan ikke velge den foreldresiden, fordi *den* allerede er en underside av denne siden.');
+                parent_select.val(parent_select.find("option.default").val());
+                parent_select.trigger('liszt:updated');
+            } else {
+                parent_select.find("option.default").removeClass('default');
+                parent_select.find("option:selected").addClass('default');
+            }
+
+            // Article-authors response
+            if(result.author_error == 'no_authors') {
+                alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
             }
         }).fail(function(result) {
             statusIcon = '<i class="icon-warning-sign"></i>';
@@ -136,59 +228,6 @@ $(document).ready(function() {
             saveButton.removeAttr('disabled');
         });
 
-        // Page-specific saving
-        if($("div.editor-header.page").length > 0) {
-            // Save whether or not to display ads
-            var value = $("div.editor-header.page input[name='display-ads']:checked").length > 0;
-            $.ajaxQueue({
-                url: '/sherpa/cms/side/annonser/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'ads=' + encodeURIComponent(JSON.stringify(value))
-            });
-
-            // Publish-state
-            $.ajaxQueue({
-                url: '/sherpa/cms/side/publiser/' + $("div.editor-header").attr('data-page-id') + '/',
-                data: {
-                    datetime : encodeURIComponent($("input[name='page-datetime-field']").val()),
-                    status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
-                }
-            });
-        }
-
-        // Article-specific saving
-        if($("div.editor-header.article").length > 0) {
-            // Save authors
-            var authors = [];
-            var selected = $("select[name='authors'] > option:selected");
-            if(selected.length == 0) {
-                alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
-                return;
-            }
-            selected.each(function() {
-                authors.push($(this).val());
-            });
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/forfattere/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'authors=' + encodeURIComponent(JSON.stringify(authors))
-            }).always(function() {
-                $("button.save-authors").removeAttr('disabled');
-            });
-
-            // Publish-state
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/publiser/' + $("div.editor-header").attr('data-article-id') + '/',
-                data: {
-                    datetime : encodeURIComponent($("input[name='article-datetime-field']").val()),
-                    status : encodeURIComponent(JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0}))
-                }
-            });
-
-            // Save tags
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/nokkelord/' + $("div.editor-header").attr('data-version-id') + '/',
-                data: 'tags=' + encodeURIComponent(JSON.stringify(article_tagger.tags))
-            });
-        }
     }
 
 });

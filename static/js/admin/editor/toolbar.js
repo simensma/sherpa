@@ -1,12 +1,18 @@
 $(document).ready(function() {
 
+    // All elements from the spec[1] plus header elements (h1-h6)
+    // [1] http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command
+    var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
+
+    var toolbar = $("#toolbar");
+
     /**
      * Toolbar buttons
      */
-    $("#toolbar a.button").each(function() {
+    toolbar.find("a.button").each(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
     });
-    $("#toolbar a.button").hover(function() {
+    toolbar.find("a.button").hover(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     }, function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-inactive.png)');
@@ -16,49 +22,91 @@ $(document).ready(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
-    $("#toolbar select.formatting").change(function() {
-        $("#toolbar select.formatting option:selected").each(function() {
-            // The smart thing to do here would be:
-            // document.execCommand('formatblock', false, $(this).val());
-            // But IE doesn't support that, so. FML.
-            if(typeof selection === "undefined") {
-                alert("Jeg vet ikke hvor du vil endre skrifttypen! Du må klikke på linjen du vil gjøre til overskrift, før du velger skrifttypen her.");
+    toolbar.find("select.formatting").change(function() {
+        var styleClass = toolbar.find("select.formatting option:selected").val();
+        $(this).val("default");
+
+        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+            alert("Du har ikke merket noen tekst!\n\n" +
+                  "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
+            return $(this);
+        }
+
+        var range = selection.getRangeAt(0);
+        var start = $(range.startContainer);
+
+        if(start[0].nodeType != 3) {
+            alert("Du har ikke merket et tekstelement.\n\n" +
+                  "Hvis du endret teksten to ganger på rad må du huske å merke teksten igjen før du endrer den andre gang.\n\n" +
+                  "Hvis markøren er på en tom linje, må du skrive litt tekst før du velger teksttype.\n\n" +
+                  "Prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre)\n\n" +
+                  "Hvis ikke det hjelper, bør du kanskje prøve å oppgradere eller bytte nettleser.");
+            return $(this);
+        }
+
+        var container = start.parent();
+        if(styleClass === 'bread') {
+            if(!container.is(FORMATTER_ELEMENTS)) {
+                alert("Dette elementet er allerede brødtekst.\n\n" +
+                      "Hvis du mener det ikke stemmer, prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre).");
                 return $(this);
             }
-            var node = $(selection.anchorNode);
-            if(node.find(".editable").length != 0) {
-                alert("Whoops, det har oppstått en liten feil! Prøv å velge teksten du vil endre skrifttypen på en gang til, og prøv igjen.");
-                return $(this);
-            }
-            if(node.hasClass('editable')) {
-                // No wrapper node, browser uses content div as wrapper. We'll not be able to
-                // format the requested block as expected.
-                alert("Whoops, det har oppstått en teknisk feil som er litt vanskelig å forklare! I hovedsak skyldes det at browseren din ikke genererer HTML-markup slik den burde.\n\nPrøv å fjerne linjeskiftene rundt teksten du vil formatere for så å lage nye, slik at det genereres nye DOM-elementer. Du kan også prøve \"Fjern formatering\"-knappen.\n\nHvis ikke det funker, er du rett og slett nødt til å bruke en annen browser, som f.eks. Opera.\n\nBeklager dette! Vi vil prøve å lage en manuell fiks for dette problemet snart.");
-                return $(this);
-            }
-            var parent = node.parent();
-            while(!parent.hasClass('editable')) {
-                node = parent;
-                parent = node.parent();
-            }
-            var replacement = $('<' + $(this).val() + '></' + $(this).val() + '>');
-            var clazz = $(this).attr('data-class');
-            if(clazz !== undefined) {
-                replacement.addClass(clazz);
-            }
-            if(node.get(0).nodeType == 3) {
-                // Text node - wrap the text in the new node instead of replacing it
-                replacement.append(node.clone());
-                node.parent().prepend(replacement);
-                node.remove();
+            mozillaMadness(container);
+        } else {
+            if(container.is(FORMATTER_ELEMENTS)) {
+                // Replace the parent formatter element
+                mozillaMadness(container, ['<span class="' + styleClass + '">', '</span>']);
             } else {
-                node.replaceWith(replacement.prepend(node.contents()));
+                // The element isn't contained by a formatting element. Ignore parents and mozilla madness, just wrap the contents in a span.
+                start.replaceWith('<span class="' + styleClass + '">' + start.text() + '</span>');
             }
-        });
-        $("#toolbar select").val("default");
+        }
+
+        // Special cases for mozillas linebreaks. Sad fucking panda.
+        function mozillaMadness(container, content) {
+            if(start.prev().is("br")) {
+                // Breaks are before
+                start.prev().attr('data-special-case-tmp', '');
+                if(start.next().is("br")) {
+                    // Breaks are *both* before and after
+                    start.next().attr('data-special-case-tmp-2', '');
+                    var match = /(.*)<.*?data-special-case-tmp.*?>(.*)<.*?data-special-case-tmp-2.*?>(.*)/.exec(container.html());
+                    var clone = container.clone().html(match[3]);
+                    if(typeof content !== 'undefined') {
+                        match[2] = content[0] + match[2] + content[1];
+                    }
+                    container.html(match[1]).after('<br>', match[2], '<br>', clone);
+                } else {
+                    // Breaks are *only* before
+                    var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
+                    if(typeof content !== 'undefined') {
+                        match[2] = content[0] + match[2] + content[1];
+                    }
+                    container.html(match[1]).after('<br>', match[2]);
+                }
+            } else if(start.next().is("br")) {
+                // Breaks are *only* after
+                start.next().attr('data-special-case-tmp', '');
+                var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
+                if(typeof content !== 'undefined') {
+                    match[1] = content[0] + match[1] + content[1];
+                }
+                container.html(match[2]).before(match[1], '<br>');
+            } else {
+                // No mozilla madness, just remove the containernode <3
+                var text = container.text();
+                if(typeof content !== 'undefined') {
+                    text = content[0] + text + content[1];
+                }
+                container.replaceWith(text);
+            }
+        }
+
+        // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
+        selection.refresh();
     });
-    $("#toolbar a.button.anchor-add").click(function(event) {
-        $("#toolbar *").hide();
+    toolbar.find("a.button.anchor-add").click(function(event) {
+        toolbar.find("*").hide();
         var p = $('<p class="anchor-insert">URL-adresse: </p>');
         var input = $('<input type="text" name="url">');
         p.append(input);
@@ -70,7 +118,7 @@ $(document).ready(function() {
                 range.setEnd(range.endContainer, range.endOffset - 1);
             }
             selection.setSingleRange(range);
-            var url = $("#toolbar input[name='url']").val().trim();
+            var url = toolbar.find("input[name='url']").val().trim();
             if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }
@@ -81,51 +129,92 @@ $(document).ready(function() {
             reset();
         });
         function reset() {
-            $("#toolbar p.anchor-insert, #toolbar div.anchor-buttons").remove();
-            $("#toolbar *").show();
+            toolbar.find("p.anchor-insert, #toolbar div.anchor-buttons").remove();
+            toolbar.find("*").show();
         }
-        $("#toolbar").append(p, buttons);
+        toolbar.append(p, buttons);
     });
-    $("#toolbar a.anchor-remove").click(function(event) {
+    toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
     });
-    $("#toolbar a.button.bold").click(function(event) {
+    toolbar.find("a.button.bold").click(function(event) {
         document.execCommand('bold', false, null);
     });
-    $("#toolbar a.button.italic").click(function(event) {
+    toolbar.find("a.button.italic").click(function(event) {
         document.execCommand('italic', false, null);
     });
-    $("#toolbar a.button.underline").click(function(event) {
+    toolbar.find("a.button.underline").click(function(event) {
         document.execCommand('underline', false, null);
     });
-    $("#toolbar a.button.ol").click(function(event) {
+    toolbar.find("a.button.ol").click(function(event) {
         document.execCommand('insertorderedlist', false, null);
     });
-    $("#toolbar a.button.ul").click(function(event) {
+    toolbar.find("a.button.ul").click(function(event) {
         document.execCommand('insertunorderedlist', false, null);
     });
-    $("#toolbar a.button.align-left").click(function(event) {
+    toolbar.find("a.button.align-left").click(function(event) {
         document.execCommand('justifyleft', false, null);
     });
-    $("#toolbar a.button.align-center").click(function(event) {
+    toolbar.find("a.button.align-center").click(function(event) {
         document.execCommand('justifycenter', false, null);
     });
-    $("#toolbar a.button.align-right").click(function(event) {
+    toolbar.find("a.button.align-right").click(function(event) {
         document.execCommand('justifyright', false, null);
     });
-    $("#toolbar a.button.full").click(function(event) {
+    toolbar.find("a.button.full").click(function(event) {
         document.execCommand('justifyfull', false, null);
     });
-    $("#toolbar a.button.hr").click(function(event) {
+    toolbar.find("a.button.hr").click(function(event) {
         document.execCommand('inserthorizontalrule', false, null);
     });
-    $("#toolbar a.button.remove-format").click(function(event) {
+    toolbar.find("a.button.remove-format").click(function(event) {
         document.execCommand('removeformat', false, null);
+
+        // Also do some extra custom cleanup:
+
+        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+            alert("Du har ikke merket noen tekst!\n\n" +
+                  "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
+            return $(this);
+        }
+
+        var ancestor = $(selection.getRangeAt(0).commonAncestorContainer);
+
+        if(ancestor[0].nodeType === 3) {
+            ancestor = ancestor.parent();
+        }
+        if(ancestor.is(FORMATTER_ELEMENTS)) {
+            var textNode = $(document.createTextNode(ancestor.text()));
+            ancestor.replaceWith(textNode);
+            ancestor = textNode.parent();
+        }
+        ancestor.find(FORMATTER_ELEMENTS).each(function() {
+            $(this).replaceWith($(this).text());
+        });
+
+        mergeTextNodes(ancestor.contents().filter(function() {
+            return this.nodeType == 3;
+        })[0]);
+
+        function mergeTextNodes(textNode) {
+            var text = textNode.data;
+            var nodes = [textNode];
+            while(textNode.nextSibling !== null && textNode.nextSibling.nodeType === 3) {
+                textNode = textNode.nextSibling;
+                nodes.push(textNode);
+                text += textNode.data;
+            }
+            for(var i=1; i<nodes.length; i++) {
+                $(nodes[i]).remove();
+            }
+            $(nodes[0]).replaceWith(text);
+        }
+        selection.removeAllRanges();
     });
 
     /* Show tooltip for toolbar formatting buttons */
 
-    $("#toolbar a.button").hover(function() {
+    toolbar.find("a.button").hover(function() {
         var tooltip = $('<button class="btn btn-primary title">' + $(this).attr('data-title') + '</button>');
         tooltip.css('font-weight', 'bold');
         tooltip.css('position', 'absolute');

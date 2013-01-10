@@ -14,7 +14,6 @@ from page.models import Menu, Page, Variant, Version, Row, Column, Content
 from datetime import datetime
 import json
 import requests
-import urllib
 
 def list(request):
     versions = Version.objects.filter(
@@ -60,96 +59,33 @@ def check_slug(request):
     page_valid = not Page.on(request.session['active_association'].site).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
-def rename(request, page):
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    page.title = request.POST['title']
-    page.save()
-    return HttpResponse()
-
-def parent(request, page):
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    if request.POST['parent'] == 'None':
-        new_parent = None
-    else:
-        new_parent = Page.on(request.session['active_association'].site).get(id=request.POST['parent'])
-        parent = new_parent
-        while parent is not None:
-            if parent.id == page.id:
-                return HttpResponse(json.dumps({'error': 'parent_in_parent'}))
-            parent = parent.parent
-    page.parent = new_parent
-    page.save()
-    return HttpResponse('{}')
-
-def publish(request, page):
-    datetime_string = urllib.unquote_plus(request.POST["datetime"])
-    status = urllib.unquote_plus(request.POST["status"])
-
-    #date format is this one (dd.mm.yyyy hh:mm)
-    try:
-        date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-    except:
-        #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
-        date_object = None
-
-    page = Page.on(request.session['active_association'].site).get(id=page)
-    page.published = json.loads(status)["status"]
-    if date_object is None:
-        page.pub_date = datetime.now()
-    else:
-        page.pub_date = date_object
-    page.save()
-    return HttpResponse()
-
-def display_ads(request, version):
-    version = Version.objects.get(id=version)
-    version.ads = json.loads(request.POST['ads'])
-    version.save()
-    return HttpResponse()
-
 def delete(request, page):
     Page.on(request.session['active_association'].site).get(id=page).delete()
     return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
 
 def edit_version(request, version):
-    if request.method == 'GET':
-        pages = Page.on(request.session['active_association'].site).all().order_by('title')
-        version = Version.objects.get(id=version)
-        rows = Row.objects.filter(version=version).order_by('order')
-        for row in rows:
-            columns = Column.objects.filter(row=row).order_by('order')
-            for column in columns:
-                contents = Content.objects.filter(column=column).order_by('order')
-                for content in contents:
-                    if content.type == 'widget':
-                        content.content = parse_widget(request, json.loads(content.content))
-                    elif content.type == 'image':
-                        content.content = json.loads(content.content)
-                column.contents = contents
-            row.columns = columns
-        context = {
-            'rows': rows,
-            'version': version,
-            'widget_data': widget_admin_context(),
-            'pages': pages,
-            'image_search_length': settings.IMAGE_SEARCH_LENGTH}
-        return render(request, 'common/admin/pages/edit_version.html', context)
-    elif request.method == 'POST' and request.is_ajax():
-        version = Version.objects.get(id=version)
-        for row in json.loads(request.POST['rows']):
-            obj = Row.objects.get(id=row['id'])
-            obj.order = row['order']
-            obj.save()
-        for column in json.loads(request.POST['columns']):
-            obj = Column.objects.get(id=column['id'])
-            obj.order = column['order']
-            obj.save()
-        for content in json.loads(request.POST['contents']):
-            obj = Content.objects.get(id=content['id'])
-            obj.order = content['order']
-            obj.content = content['content']
-            obj.save()
-        return HttpResponse()
+    pages = Page.on(request.session['active_association'].site).all().order_by('title')
+    version = Version.objects.get(id=version)
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'widget':
+                    content.content = parse_widget(request, json.loads(content.content))
+                elif content.type == 'image':
+                    content.content = json.loads(content.content)
+            column.contents = contents
+        row.columns = columns
+    context = {
+        'rows': rows,
+        'version': version,
+        'widget_data': widget_admin_context(),
+        'pages': pages,
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+    return render(request, 'common/admin/pages/edit_version.html', context)
+
 
 def slug_is_unique(slug):
     # Verify against the root 'folder' path

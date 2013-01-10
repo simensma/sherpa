@@ -1,0 +1,67 @@
+<div class="modal hide add-button" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Legg til ny knapp</h3>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-info">
+      <a class="close">x</a>
+      <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
+    </div>
+    <table>
+      <tr>
+        <td>Tekst på knappen:</td>
+        <td><input type="text" name="text" class="input-small"></td>
+      </tr>
+      <tr>
+        <td>Adresse knappen går til:</td>
+        <td><input type="text" name="url" class="input-xlarge"></td>
+      </tr>
+    </table>
+    {# Size-buttons here have font-size hardcoded because the font-size set by bootstrap is overridden by jquery-ui. It's not a pretty hack, but those font sizes are unlikely to change much so, whatever. #}
+    <table class="table choices">
+      <tr>
+        <td><input type="radio" name="color" value="" checked></td>
+        <td><button class="btn">Vanlig knapp</button></td>
+        <td><input type="radio" name="size" value=" btn-large"></td>
+        <td><button class="btn btn-large" style="font-size: 15px">Stor</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-primary"></td>
+        <td><button class="btn btn-primary">Hovedknapp</button></td>
+        <td><input type="radio" name="size" value="" checked></td>
+        <td><button class="btn">Middels</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-info"></td>
+        <td><button class="btn btn-info">Informasjon</button></td>
+        <td><input type="radio" name="size" value="btn-small"></td>
+        <td><button class="btn btn-small" style="font-size: 11px">Liten</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-success"></td>
+        <td><button class="btn btn-success">Suksess</button></td>
+        <td><input type="radio" name="size" value="btn-mini"></td>
+        <td><button class="btn btn-mini" style="font-size: 11px">Mini</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-warning"></td>
+        <td><button class="btn btn-warning">Advarsel</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-danger"></td>
+        <td><button class="btn btn-danger">Fare</button></td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="color" value="btn-inverse"></td>
+        <td><button class="btn btn-inverse">Invertert</button></td>
+      </tr>
+    </table>
+    <p style="width: 100%; text-align: center;">
+      <button class="btn btn-primary btn-large insert"><i class="icon-share-alt"></i> Sett inn knapp</button>
+    </p>
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
+</div>

@@ -20,7 +20,7 @@
         {% elif content.type == 'image' %}
           <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-              <img  src="{{ content.content.src }}" 
+            <img src="{{ content.content.src }}"
               {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
               {% if content.content.selection %}data-selection="{{ content.content.selection }}"{% endif %}
               {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}
@@ -35,7 +35,7 @@
             </div>
           </div>
         {% elif content.type == 'widget' %}
-          <div class="content widget {{ content.content.widget }}{% if content.content.static %} static{% endif %}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+          <div class="content widget {{ content.content.widget }}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
             {% include content.content.template with widget=content.content %}
           </div>
         {% endif %}
@@ -74,26 +74,8 @@
   </div>
 </div>
 
-{# Adding widgets #}
-<div class="modal container hide add-widget">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Velg en widget</h3>
-  </div>
-  <div class="modal-body">
-    {% include 'main/widgets/quote/thumbnail.html' %}
-    {% include 'main/widgets/articles/thumbnail.html' %}
-    {% include 'main/widgets/blog/thumbnail.html' %}
-    {% include 'main/widgets/embed/thumbnail.html' %}
-    {% include 'main/widgets/carousel/thumbnail.html' %}
-    {% include 'main/widgets/fact/thumbnail.html' %}
-  </div>
-  <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-  </div>
-</div>
-
 {# Widget edit-dialogs #}
+{% include 'common/admin/editor/add-widget-dialog.html' %}
 {% include 'main/widgets/quote/edit.html' %}
 {% include 'main/widgets/articles/edit.html' %}
 {% include 'main/widgets/blog/edit.html' %}
@@ -101,125 +83,9 @@
 {% include 'main/widgets/carousel/edit.html' %}
 {% include 'main/widgets/fact/edit.html' %}
 
-{# Choosing image from archive #}
+{# Other dialogs #}
 {% include 'common/admin/editor/image-from-archive-dialog.html' %}
-
-{# Upload image #}
 {% include 'common/admin/editor/image-fast-upload-dialog.html' %}
-
-{# Changing image #}
 {% include 'common/admin/editor/image-dialog.html' %}
-
-{# Insert button #}
-<div class="modal hide add-button" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Legg til ny knapp</h3>
-  </div>
-  <div class="modal-body">
-    <div class="alert alert-info">
-      <a class="close">x</a>
-      <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
-    </div>
-    <table>
-      <tr>
-        <td>Tekst på knappen:</td>
-        <td><input type="text" name="text" class="input-small"></td>
-      </tr>
-      <tr>
-        <td>Adresse knappen går til:</td>
-        <td><input type="text" name="url" class="input-xlarge"></td>
-      </tr>
-    </table>
-    {# Size-buttons here have font-size hardcoded because the font-size set by bootstrap is overridden by jquery-ui. It's not a pretty hack, but those font sizes are unlikely to change much so, whatever. #}
-    <table class="table choices">
-      <tr>
-        <td><input type="radio" name="color" value="" checked></td>
-        <td><button class="btn">Vanlig knapp</button></td>
-        <td><input type="radio" name="size" value=" btn-large"></td>
-        <td><button class="btn btn-large" style="font-size: 15px">Stor</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-primary"></td>
-        <td><button class="btn btn-primary">Hovedknapp</button></td>
-        <td><input type="radio" name="size" value="" checked></td>
-        <td><button class="btn">Middels</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-info"></td>
-        <td><button class="btn btn-info">Informasjon</button></td>
-        <td><input type="radio" name="size" value="btn-small"></td>
-        <td><button class="btn btn-small" style="font-size: 11px">Liten</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-success"></td>
-        <td><button class="btn btn-success">Suksess</button></td>
-        <td><input type="radio" name="size" value="btn-mini"></td>
-        <td><button class="btn btn-mini" style="font-size: 11px">Mini</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-warning"></td>
-        <td><button class="btn btn-warning">Advarsel</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-danger"></td>
-        <td><button class="btn btn-danger">Fare</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-inverse"></td>
-        <td><button class="btn btn-inverse">Invertert</button></td>
-      </tr>
-    </table>
-    <p style="width: 100%; text-align: center;">
-      <button class="btn btn-primary btn-large insert"><i class="icon-share-alt"></i> Sett inn knapp</button>
-    </p>
-  </div>
-  <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-  </div>
-</div>
-
-{# Main toolbar #}
-<div id="toolbar">
-  <a href="javascript:undefined" data-title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Understreket tekst" class="button underline" data-image="{{ STATIC_URL }}img/editorbuttons/underline">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Sett inn bilde" class="button image" data-image="{{ STATIC_URL }}img/editorbuttons/image">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Sett inn widget" class="button widget" data-image="{{ STATIC_URL }}img/editorbuttons/widget">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Sett inn lenke" class="button anchor-add" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-add">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Ta bort lenke" class="button anchor-remove" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-remove">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Nummerert liste" class="button ol" data-image="{{ STATIC_URL }}img/editorbuttons/ol">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Unummerert liste" class="button ul" data-image="{{ STATIC_URL }}img/editorbuttons/ul">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Venstrestill tekst" class="button align-left" data-image="{{ STATIC_URL }}img/editorbuttons/align-left">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Midtstill tekst" class="button align-center" data-image="{{ STATIC_URL }}img/editorbuttons/align-center">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Høyrestill tekst" class="button align-right" data-image="{{ STATIC_URL }}img/editorbuttons/align-right">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Sett inn strek" class="button hr" data-image="{{ STATIC_URL }}img/editorbuttons/hr">&nbsp;</a>
-  <a href="javascript:undefined" data-title="Fjern formatering" class="button remove-format" data-image="{{ STATIC_URL }}img/editorbuttons/remove-format">&nbsp;</a>
-  <div style="clear: both;"></div>
-  <select class="formatting">
-    <option value="default">Velg skrifttype...</option>
-    <optgroup label="--------------------">
-      <option value="h1">Hovedtittel</option>
-      <option value="h2">Subtittel</option>
-      <option value="h3">Mellomtittel</option>
-      <option value="p" data-class="lede">Ingress</option>
-      <option value="p">Brødtekst</option>
-    </optgroup>
-  </select>
-  <div class="btn-group">
-    <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
-    <button class="btn insert-button"><i class="icon-share-alt"></i> Knapp</button>
-    <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-  </div>
-  {% if toolbar_structure %}
-    <div class="btn-group" data-toggle="buttons-radio">
-      <button class="btn formatting"><i class="icon-pencil"></i> Tekstredigering</button>
-      <button class="btn horizontal"><i class="icon-arrow-left"></i> Flytt kolonner <i class="icon-arrow-right"></i></button>
-      <button class="btn vertical"><i class="icon-arrow-up"></i> Flytt rader <i class="icon-arrow-down"></i></button>
-    </div>
-    <div class="btn-group">
-      <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
-      <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
-    </div>
-  {% endif %}
-</div>
+{% include 'common/admin/editor/button-dialog.html' %}
+{% include 'common/admin/editor/toolbar.html' %}

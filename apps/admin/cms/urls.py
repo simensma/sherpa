@@ -7,12 +7,9 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^side/barn/(?P<page>\d+)/$', 'page.children'),
     url(r'^side/ny/$', 'page.new'),
     url(r'^side/ny/unik/$', 'page.check_slug'),
-    url(r'^side/tittel/(?P<page>\d+)/$', 'page.rename'),
-    url(r'^side/foreldre/(?P<page>\d+)/$', 'page.parent'),
-    url(r'^side/publiser/(?P<page>\d+)/$', 'page.publish'),
-    url(r'^side/annonser/(?P<version>\d+)/$', 'page.display_ads'),
     url(r'^side/slett/(?P<page>\d+)/$', 'page.delete'),
     url(r'^editor/(?P<version>\d+)/$', 'page.edit_version'),
+    url(r'^editor/lagre/(?P<version>\d+)/$', 'content.save'),
 
     # Menus
     url(r'^meny/ny/$', 'menu.new'),
@@ -25,7 +22,5 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^rad/slett/(?P<row>\d+)/$', 'row.delete'),
 
     # Content
-    url(r'^innhold/ny/$', 'content.add'),
-    url(r'^innhold/slett/(?P<content>\d+)/$', 'content.delete'),
-    url(r'^widget/oppdater/(?P<widget>\d+)/$', 'content.update_widget'),
+    url(r'^widget/$', 'content.render_widget'),
 )
