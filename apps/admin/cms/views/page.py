@@ -40,6 +40,7 @@ def new(request):
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
         raise Exception("Slug is not unique (error handling TBD)")
+
     page = Page(
         title=request.POST['title'],
         slug=request.POST['slug'],
@@ -47,10 +48,24 @@ def new(request):
         publisher=request.user.get_profile(),
         site=request.session['active_association'].site)
     page.save()
-    variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, owner=request.user.get_profile())
+
+    variant = Variant(
+        page=page,
+        article=None,
+        name='Standard',
+        segment=None,
+        priority=1,
+        owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True, ads=True)
+
+    version = Version(
+        variant=variant,
+        version=1,
+        owner=request.user.get_profile(),
+        active=True,
+        ads=True)
     version.save()
+
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
 
