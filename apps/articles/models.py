@@ -17,7 +17,7 @@ class Article(models.Model):
     site = models.ForeignKey('core.Site')
     @staticmethod
     def on(site):
-        return Menu.objects.filter(site=site)
+        return Article.objects.filter(site=site)
 
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):
