@@ -255,6 +255,17 @@ $(document).ready(function() {
         });
     });
 
+    // Actually remove the content from DOM
+    window.removeContent = removeContent;
+    function removeContent(content) {
+        if(content.siblings().length == 0) {
+            setEmpty(content.parent());
+        }
+        content.remove();
+        refreshSort();
+    }
+
+
     // Insert custom button
     $("button.insert-button").click(function() {
         $("div.add-button").modal();
@@ -553,15 +564,6 @@ $(document).ready(function() {
             div.css('height', height);
             $(this).replaceWith(div);
         });
-    }
-
-    window.removeContent = removeContent;
-    function removeContent(content) {
-        if(content.siblings().length == 0) {
-            setEmpty(content.parent());
-        }
-        content.remove();
-        refreshSort();
     }
 
 });
