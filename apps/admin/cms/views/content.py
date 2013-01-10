@@ -157,6 +157,10 @@ def save(request, version):
             tag_objects.append(tag_obj)
         version.tags = tag_objects
 
+        # Record the modification
+        article.modified_by = request.user.get_profile()
+        article.modified_date = datetime.now()
+
         version.save()
         article.save()
 
