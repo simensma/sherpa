@@ -45,7 +45,7 @@ def new(request):
         title=request.POST['title'],
         slug=request.POST['slug'],
         published=False,
-        publisher=request.user.get_profile(),
+        created_by=request.user.get_profile(),
         site=request.session['active_association'].site)
     page.save()
 

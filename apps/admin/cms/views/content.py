@@ -115,6 +115,10 @@ def save(request, version):
         else:
             page.pub_date = date_object
 
+        # Record the modification
+        page.modified_by = request.user.get_profile()
+        page.modified_date = datetime.now()
+
         version.save()
         page.save()
 
