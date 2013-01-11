@@ -56,6 +56,7 @@ def login(request):
                 user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
+                
                 #if the user had annonser in fjelltreffen, import them
                 annonser = get_old_fjelltreffen_annonser(user.get_profile())
                 for annonse in annonser:

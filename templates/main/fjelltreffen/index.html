@@ -16,11 +16,12 @@
     <div class="wrapper">
     <h2>Fjelltreffen</h2>
 
-
     <div class="alert alert-info">
-      Velkommen til nye fjelltreffen! Hvis du har annonser på gamle 
-      fjelltreffen blir de automatisk lagt inn i nye fjelltreffen når du <a href="{% url user.views.home_new %}">logger inn</a>.
-      Hvis du vil se de gamle annonsene kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.<a class="close">x</a>
+      <a class="close">x</a>
+      Velkommen til nye fjelltreffen! <br>
+      Hvis du har annonser på gamle 
+      fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.<br>
+      Hvis du vil besøke gamle fjelltreffen kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.
     </div>
 
     {% include 'main/fjelltreffen/filter.html' %}
@@ -28,9 +29,6 @@
     <div class="annonse-list-wrapper">
     {% if annonser %}
       {% include 'main/fjelltreffen/annonselist.html' %}
-    {% elif page > 0 %}
-      <p>Det finnes desverre ikke så mange sider.<br>
-      Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
     {% else %}
       <p>Det er ikke lagt ut noen annonser de siste 90 dagene.<br>
       Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>

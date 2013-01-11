@@ -29,7 +29,7 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
             annonser = annonser.filter(fylke__code=fylke)
         annonser = annonser.order_by('-timeadded')
 
-        cache.set(cacheKey, annonser, 60 * 60)
+        cache.set(cacheKey, annonser, 60 * 60 * 10)
         cachedQueries.append(cacheKey)
     return annonser
 
@@ -59,10 +59,12 @@ def create_and_save_new_annonse_from_old_annonse(oldmember, oldannonse, oldannon
     annonse.compute_gender()
     annonse.compute_age()
 
-    #hax to prevent autoadd
+    #hax to prevent autoadd now
     annonse.save()
     annonse.timeadded = oldannonse.authorized
     annonse.save()
+
+    #invalidates cache to prevent users from going: "where is my annonse? Better call support! Better submit new ones!"
     invalidate_cache()
 
 
