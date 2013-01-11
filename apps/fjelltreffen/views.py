@@ -70,6 +70,7 @@ def getAndCacheFylker():
 def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
+        #checks if the user is the owner
         if annonse.userprofile != request.user.get_profile():
             annonse = None
     except Annonse.DoesNotExist:
@@ -90,13 +91,10 @@ def has_payed(userprofile):
         try:
             #this should not be cached, when a user registers and payes whey would have to wait an hour to post
             actor = Actor.objects.get(memberid=userprofile.memberid)
-            if actor == None:
-                return False
-            else:
-                bills = BalanceHistory.objects.get(id=actor)
-                result = bills.is_payed()
-                if result == True:
-                    cache.set(cachekey, result, 60 * 60)
+            result = actor.balance.is_payed()
+
+            if result == True:
+                cache.set(cachekey, result, 60 * 60)
         except (BalanceHistory.DoesNotExist, Actor.DoesNotExist) as e:
             return False
     return result
@@ -123,9 +121,7 @@ def delete(request, id):
 def reply(request):
     try:
         content = json.loads(request.POST['reply'])
-        print content
     except KeyError as e:
-        print 'mail5001'
         return HttpResponse(status=400)
 
     try:
@@ -147,9 +143,6 @@ def reply(request):
             return HttpResponse(status=400)
     except (Annonse.DoesNotExist, KeyError) as e:
         return HttpResponse(status=400)
-
-def num_active_annonser(userprofile):
-    return Annonse.objects.filter(userprofile=userprofile, hidden=False).count()
 
 @login_required
 def save(request):
@@ -196,9 +189,9 @@ def save(request):
     #validate input
     if email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
         if not annonse.hidden:
-            if(num_active_annonser(request.user.get_profile()) > ANNONSELIMIT):
+            numposts = Annonse.objects.filter(userprofile=request.user.get_profile(), hidden=False).count()
+            if(numposts > ANNONSELIMIT):
                 #notify the user that he/she has too many active annonser
-                print 'toomany'
                 return HttpResponse(json.dumps({'error':'toomany', 'num':ANNONSELIMIT}), status=400)
         annonse.save()
         #users want instant response, so cache is invalidated when an annonse is submitted

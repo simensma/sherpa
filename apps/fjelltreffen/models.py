@@ -101,9 +101,6 @@ class Annonse(models.Model):
         else:
             return self.age
 
-    def get_date(self):
-        return timeadded.day + '.' + timeadded.month + '.' + timeadded.year
-
     def get_gender(self):
         if self.gender == True:
             return 'Mann'
