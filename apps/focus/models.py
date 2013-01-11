@@ -302,7 +302,7 @@ class BalanceHistory(models.Model):
         # This will be incorrect in the period between "årskrav" processing and year end.
         # The user might have paid for the current year, and the membership *should* be valid
         # for the remainder, but Focus will regard 'current year' as next year from this point.
-        return self.current_year <= 0
-
+        #return self.current_year <= 0
+        return True
     class Meta:
         db_table = u'Cust_Turist_Balance_Hist_v'

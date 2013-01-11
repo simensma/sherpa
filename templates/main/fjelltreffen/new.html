@@ -34,8 +34,8 @@
       {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
 
       <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
-      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min presise alder<br>
-      <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Ikke legg ut annonsen (velg dette hvis du vil lagre annonsen men ikke er helt ferdig med å skrive den enda)<br>
+      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
+      <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
       <br>
       <button class="btn btn-success save-annonse">Lagre</button>
       <button class="btn btn-danger delete-annonse">Slett</button>
@@ -59,8 +59,8 @@
 
       {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_county %}<br>
       <textarea class="annonse-text" placeholder="Skriv annonsen din her..."></textarea><br>
-      <input type="checkbox" class="annonse-hideage">Ikke vis min virkelige alder<br>
-      <input type="checkbox" class="annonse-hide">Ikke legg ut annonsen (velg dette hvis du vil lagre annonsen men ikke er helt ferdig med å skrive den enda)<br>
+      <input type="checkbox" class="annonse-hideage">Ikke vis min virkelige alder(Skjul min virkelige alder(vil vises som 40-44 hvis du er 43))<br>
+      <input type="checkbox" class="annonse-hide">Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
       <br>
       <button class="btn btn-success save-annonse">Lagre</button>
       <button style="display:none" class="btn btn-danger delete-annonse">Slett</button>

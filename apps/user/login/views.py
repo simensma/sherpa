@@ -36,9 +36,6 @@ def login(request):
         user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
         if user is not None:
             log_user_in(request, user)
-
-            
-
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         else:
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
