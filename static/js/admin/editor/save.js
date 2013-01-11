@@ -136,6 +136,9 @@ $(document).ready(function() {
         });
         data.contents = JSON.stringify(contents);
 
+        // Tags
+        data.tags = JSON.stringify(cms_tagger.tags);
+
         var parent_select = $("div.editor-header.page select[name='parent']");
         if($("div.editor-header.page").length > 0) {
             /* Page-specific */
@@ -165,9 +168,6 @@ $(document).ready(function() {
             // Publish-state
             data.datetime = $("input[name='article-datetime-field']").val();
             data.status = JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0});
-
-            // Tags
-            data.tags = JSON.stringify(article_tagger.tags);
         }
 
         // Save content

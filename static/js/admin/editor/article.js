@@ -17,18 +17,6 @@ $(document).ready(function() {
         });
     });
 
-    /* Tags */
-
-    // Create the tagger object, make it globally accessible (save.js will use this)
-    window.article_tagger = new TypicalTagger($("div.editor-header div.tags input[name='tags']"), $("div.editor-header div.tags div.tag-box"));
-
-    // Collect existing tags based on the DOM and layout
-    var tags = [];
-    $("div.editor-header div.tags div.tag").each(function() {
-        tags.push($(this).text().trim());
-    });
-    article_tagger.tags = tags;
-
     /* Change thumbnail-image */
     if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
         $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {

@@ -59,6 +59,31 @@
           <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
         </div>
 
+        <div class="tags">
+          <table>
+            <tr>
+              <td style="vertical-align: top">
+                Nøkkelord:
+                <input type="text" name="tags">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="tag-box">
+                  {% for tag in version.tags.all %}
+                    <div class="tag">
+                      <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                      {{ tag.name }}
+                    </div>
+                  {% endfor %}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="clear: left;"></div>
+
         <div class="save">
           <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
           <button class="btn btn-success preview" data-href="{% url admin.cms.views.page.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
