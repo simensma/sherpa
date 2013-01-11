@@ -71,14 +71,14 @@ var MobileMenu = function(control, mainMenu, widgetMenu, search) {
     this.searchButton = control.find("p.display-search a");
 
     this.menuButton.click(function() {
-        self.mainMenu.toggle('slow');
-        self.widgetMenu.toggle('slow');
-        self.search.hide('slow');
+        self.mainMenu.slideToggle('slow');
+        self.widgetMenu.slideToggle('slow');
+        self.search.slideUp('slow');
     });
 
     this.searchButton.click(function() {
-        self.mainMenu.hide('slow');
-        self.widgetMenu.hide('slow');
-        self.search.toggle('slow');
+        self.mainMenu.slideUp('slow');
+        self.widgetMenu.slideUp('slow');
+        self.search.slideToggle('slow');
     });
 }
