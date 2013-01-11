@@ -18,8 +18,8 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
 
-    minage = int(minage.age/5) * 5
-    maxage =(int((maxage.age+5)/5) * 5)-1
+    minage = int(minage/5) * 5
+    maxage =(int((maxage+5)/5) * 5)-1
 
     now = datetime.now();
     ninetydaysago = now - timedelta(days=90)
