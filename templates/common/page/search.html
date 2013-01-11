@@ -17,13 +17,13 @@
     {% if pages|length > 0 or article_versions|length > 0 or old_articles|length > 0 %}
 
       <p class="hits">
-        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_count }} artikler.
+        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_count }} nyheter.
       </p>
 
       <div class="row-fluid">
         <div class="span6">
 
-          <h2>Websider</h2>
+          <h2>Sider</h2>
 
           {% for page in pages %}
             <div class="search-result">
@@ -43,7 +43,7 @@
         </div>
         <div class="span6">
 
-          <h2>Artikler</h2>
+          <h2>Nyheter</h2>
 
           {% for version in article_versions %}
             <div class="search-result">
@@ -70,7 +70,7 @@
           {% endfor %}
 
           {% if article_count == 0 %}
-            <p>Ingen artikler matchet søket.</p>
+            <p>Ingen nyheter matchet søket.</p>
           {% endif %}
 
         </div>

@@ -9,12 +9,15 @@ class Article(models.Model):
     hide_thumbnail = models.BooleanField()
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('user.Profile', related_name='articles_created')
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_by = models.ForeignKey('user.Profile', related_name='articles_modified', null=True)
+    modified_date = models.DateTimeField(null=True)
 
     site = models.ForeignKey('core.Site')
     @staticmethod
     def on(site):
-        return Menu.objects.filter(site=site)
+        return Article.objects.filter(site=site)
 
 @receiver(post_delete, sender=Article, dispatch_uid="articles.models")
 def delete_article(sender, **kwargs):

@@ -566,4 +566,17 @@ $(document).ready(function() {
         });
     }
 
+    /* Tags, used for both pages and articles */
+
+    // Create the tagger object, make it globally accessible (save.js will use this)
+    window.cms_tagger = new TypicalTagger($("div.editor-header div.tags input[name='tags']"), $("div.editor-header div.tags div.tag-box"));
+
+    // Collect existing tags based on the DOM and layout
+    var tags = [];
+    $("div.editor-header div.tags div.tag").each(function() {
+        tags.push($(this).text().trim());
+    });
+    cms_tagger.tags = tags;
+
+
 });

@@ -43,3 +43,22 @@ table.article-listing {
     }
   }
 }
+
+table.article-metadata {
+
+  // We'll have to negate some bootstrap table styles here, because this is a table in a table with bootstrap-classes
+
+  font-size: 14px;
+
+  th, td {
+    background-color: transparent !important;
+    border-top: none;
+    padding: 4px 10px;
+  }
+
+  th {
+    font-weight: normal;
+    font-style: italic;
+  }
+}
+

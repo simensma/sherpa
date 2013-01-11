@@ -8,7 +8,7 @@ from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from page.widgets import parse_widget, widget_admin_context
+from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
 from datetime import datetime
@@ -40,17 +40,32 @@ def new(request):
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
         raise Exception("Slug is not unique (error handling TBD)")
+
     page = Page(
         title=request.POST['title'],
         slug=request.POST['slug'],
         published=False,
-        publisher=request.user.get_profile(),
+        created_by=request.user.get_profile(),
         site=request.session['active_association'].site)
     page.save()
-    variant = Variant(page=page, article=None, name='Standard', segment=None, priority=1, owner=request.user.get_profile())
+
+    variant = Variant(
+        page=page,
+        article=None,
+        name='Standard',
+        segment=None,
+        priority=1,
+        owner=request.user.get_profile())
     variant.save()
-    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True, ads=True)
+
+    version = Version(
+        variant=variant,
+        version=1,
+        owner=request.user.get_profile(),
+        active=True,
+        ads=True)
     version.save()
+
     create_template(request.POST['template'], version)
     return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
 
@@ -86,6 +101,26 @@ def edit_version(request, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'common/admin/pages/edit_version.html', context)
 
+def preview(request, version):
+    version = Version.objects.get(id=version)
+    rows = Row.objects.filter(version=version).order_by('order')
+    for row in rows:
+        columns = Column.objects.filter(row=row).order_by('order')
+        for column in columns:
+            contents = Content.objects.filter(column=column).order_by('order')
+            for content in contents:
+                if content.type == 'widget':
+                    content.content = parse_widget(request, json.loads(content.content))
+                elif content.type == 'image':
+                    content.content = json.loads(content.content)
+            column.contents = contents
+        row.columns = columns
+    context = {'rows': rows, 'version': version}
+    if request.site.domain == 'www.turistforeningen.no':
+        context.update(get_static_promo_context('/%s/' % version.variant.page.slug))
+    return render(request, 'common/admin/pages/preview.html', context)
+
+### Methods - not views - below ###
 
 def slug_is_unique(slug):
     # Verify against the root 'folder' path

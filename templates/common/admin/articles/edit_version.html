@@ -55,14 +55,6 @@
         </p>
       </div>
 
-      <div class="status">
-        <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
-        <button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-        <a class="btn btn-danger delete-article" href="{% url admin.articles.views.confirm_delete version.variant.article.id %}">
-          <i class="icon-warning-sign"></i> Slett artikkelen for godt
-        </a>
-      </div>
-
       <div class="author">
         <p>
           Forfattere:
@@ -97,7 +89,18 @@
         </table>
       </div>
 
+      <div style="clear: left;"></div>
+
+      <div class="status">
+        <button class="btn btn-success save"><i class="icon-heart"></i> Lagre</button>
+        <button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+        <a class="btn btn-danger delete-article" href="{% url admin.articles.views.confirm_delete version.variant.article.id %}">
+          <i class="icon-warning-sign"></i> Slett
+        </a>
+      </div>
+
       <div style="clear: both;"></div>
+
     </div>
   </div>
 </div>

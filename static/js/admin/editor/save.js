@@ -11,7 +11,7 @@ $(document).ready(function() {
     var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        $("div.editor-header button.save").html(statusIcon + ' Lagre nå (' + lastSaveCount + ')');
+        $("div.editor-header button.save").html(statusIcon + ' Lagre (' + lastSaveCount + ')');
 
         if(lastSaveCount == NO_SAVE_WARNING) {
             $("div.no-save-warning").show();
@@ -23,7 +23,7 @@ $(document).ready(function() {
     $("div.editor-header button.save").click(save);
     $("div.editor-header button.preview").click(function() {
         var button = $(this);
-        button.html('<i class="icon-search"></i> Lagrer først, vennligst vent...');
+        button.html('<i class="icon-search"></i> Lagrer først...');
         button.attr('disabled', true);
         var url = $(this).attr('data-href');
         save(function() {
@@ -136,6 +136,9 @@ $(document).ready(function() {
         });
         data.contents = JSON.stringify(contents);
 
+        // Tags
+        data.tags = JSON.stringify(cms_tagger.tags);
+
         var parent_select = $("div.editor-header.page select[name='parent']");
         if($("div.editor-header.page").length > 0) {
             /* Page-specific */
@@ -165,9 +168,6 @@ $(document).ready(function() {
             // Publish-state
             data.datetime = $("input[name='article-datetime-field']").val();
             data.status = JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0});
-
-            // Tags
-            data.tags = JSON.stringify(article_tagger.tags);
         }
 
         // Save content

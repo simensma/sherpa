@@ -74,6 +74,17 @@ def save(request, version):
             new_obj = create_new_content(content)
             response['new_content_ids'].append(new_obj.id)
 
+    # Tags - common for pages and articles
+    tag_objects = []
+    for tag in json.loads(request.POST['tags']):
+        try:
+            tag_obj = Tag.objects.get(name__iexact=tag)
+        except Tag.DoesNotExist:
+            tag_obj = Tag(name=tag)
+            tag_obj.save()
+        tag_objects.append(tag_obj)
+    version.tags = tag_objects
+
     # Article/Page data
     if version.variant.page is not None:
         page = version.variant.page
@@ -115,6 +126,10 @@ def save(request, version):
         else:
             page.pub_date = date_object
 
+        # Record the modification
+        page.modified_by = request.user.get_profile()
+        page.modified_date = datetime.now()
+
         version.save()
         page.save()
 
@@ -146,16 +161,9 @@ def save(request, version):
         else:
             article.pub_date = date_object
 
-        ### Tags ###
-        tag_objects = []
-        for tag in json.loads(request.POST['tags']):
-            try:
-                tag_obj = Tag.objects.get(name__iexact=tag)
-            except Tag.DoesNotExist:
-                tag_obj = Tag(name=tag)
-                tag_obj.save()
-            tag_objects.append(tag_obj)
-        version.tags = tag_objects
+        # Record the modification
+        article.modified_by = request.user.get_profile()
+        article.modified_date = datetime.now()
 
         version.save()
         article.save()
