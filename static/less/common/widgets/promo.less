@@ -1,4 +1,4 @@
-/* Promo widget */
+/* Promo widget - this sheet isn't very nice, fix sometime */
 
 div.widget.promo {
   margin-bottom: 30px;
@@ -8,7 +8,7 @@ div.widget.promo div.wrapper {
   position: relative;
 }
 
-/* Promo - Background-image and menu */
+/* Background-image and menu */
 
 div.widget.promo img.background-image {
   width: 50%;
@@ -62,7 +62,7 @@ div.widget.promo div.menu li:not(.active):hover a {
   text-decoration: underline;
 }
 
-/* Promo - right side */
+/* Right side */
 
 div.widget.promo div.right {
   color: white;
@@ -111,22 +111,42 @@ div.widget.promo div.right img {
   margin-left: 15px;
 }
 
-/* Promo - colors for the different sections */
+/* Centered promos */
 
-div.widget.promo div.wrapper.sommer {
+div.widget.promo div.wrapper.centered div.right {
+  text-align: center;
+}
+
+/* Specific styles for the different sections (mainly main) */
+
+div.widget.promo div.wrapper.main {
+  h1 {
+    font-size: 50px;
+    margin-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  p.content {
+    font-size: 20px;
+    font-family: 'DTL Nobel' !important;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+/* Colors for the different sections */
+
+div.widget.promo div.wrapper.main {
   background-color: @profile-red;
 }
 
-div.widget.promo div.wrapper.ut {
-  background-color: @profile-red;
-}
-
-div.widget.promo div.wrapper.ut a.white-link {
+div.widget.promo div.wrapper.main a.white-link {
   color: rgb(255, 255, 255);
   text-decoration: underline;
 }
 
-div.widget.promo div.wrapper.ut a.white-link:hover {
+div.widget.promo div.wrapper.main a.white-link:hover {
   color: rgb(78, 71, 179);
 }
 
@@ -182,7 +202,7 @@ div.widget.promo div.wrapper.tur-for-alle {
   background-color: rgb(38, 53, 26);
 }
 
-/* Promo - small-screen layout */
+/* Small-screen layout */
 
 div.widget.promo p.display-promo-menu {
   display: none;
@@ -228,7 +248,7 @@ div.widget.promo p.display-promo-menu a:hover {
   }
 
   div.widget.promo div.right h1 {
-    font-size: 28px;
-    margin-bottom: 12px;
+    font-size: 28px !important;
+    margin-bottom: 12px !important;
   }
 }
