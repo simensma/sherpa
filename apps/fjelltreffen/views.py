@@ -113,7 +113,7 @@ def delete(request, id):
         annonse = Annonse.objects.get(id=id);
         if annonse.userprofile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
-            return HttpResponse(status=400)   
+            return HttpResponse(status=400)
         else:
             annonse.delete()
             return HttpResponse()
@@ -136,10 +136,10 @@ def reply(request):
 
         #validate input
         if email(replyemail) and len(replyname) > 0 and len(replytext) > 5:
-            
+
             replytoemail = Annonse.objects.get(id=replyid).email
             try:
-                send_mail('DNT Fjelltreffen - Svar fra ' + replyname, replytext, replyemail, [replytoemail], fail_silently=False)    
+                send_mail('DNT Fjelltreffen - Svar fra ' + replyname, replytext, replyemail, [replytoemail], fail_silently=False)
             except SMTPException as e:
                 return HttpResponse(status=400)
             return HttpResponse(status=200)
@@ -173,13 +173,13 @@ def save(request):
         #the user is creating a new annonse, not editing an excisting one
         annonse = Annonse()
         annonse.userprofile = request.user.get_profile()
-    
+
     try:
         annonse.fylke = County.objects.get(code=content['fylke'])
     except (County.DoesNotExist, KeyError) as e:
         #could happen if the user tampers with the html to select an illegal county
         return HttpResponse(status=400)
-    
+
     try:
         annonse.email = content['email']
         annonse.title = content['title']
