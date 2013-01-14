@@ -114,7 +114,7 @@ def widget_admin_context():
 def get_static_promo_context(path):
     context = {}
     promos = [
-        {'name': 'Nytt turår!', 'url': '/', 'template': 'main'},
+        {'name': 'Kom deg ut', 'url': '/', 'template': 'main'},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
