@@ -4,10 +4,9 @@
 
 {% block body %}
 
-<h2>Turer og aktiviteter</h2>
+<h2>Rediger aktivitet</h2>
 
-<p>
-  <a href="{% url admin.aktiviteter.views.new %}">Opprett ny aktivitet</a>
-</p>
+{{ aktivitet.title }}
+{{ aktivitet.description }}
 
 {% endblock %}

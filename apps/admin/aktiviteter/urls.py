@@ -3,4 +3,6 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.aktiviteter.views',
     url(r'^$', 'index'),
+    url(r'^ny/$', 'new'),
+    url(r'^rediger/(?P<aktivitet>\d+)/$', 'edit'),
 )
