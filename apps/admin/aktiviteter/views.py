@@ -17,6 +17,15 @@ def new(request):
     return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
 
 def edit(request, aktivitet):
-    aktivitet = Aktivitet.objects.get(id=aktivitet)
-    context = {'aktivitet': aktivitet}
-    return render(request, 'common/admin/aktiviteter/edit.html', context)
+    if request.method == 'GET':
+        aktivitet = Aktivitet.objects.get(id=aktivitet)
+        context = {'aktivitet': aktivitet}
+        return render(request, 'common/admin/aktiviteter/edit.html', context)
+    elif request.method == 'POST':
+        # TODO: Server-side validations
+        aktivitet = Aktivitet.objects.get(id=aktivitet)
+        aktivitet.title = request.POST['title']
+        aktivitet.description = request.POST['description']
+        aktivitet.start_date = datetime.strptime("%s %s" % (request.POST['start_date'], request.POST['start_time']), "%d.%m.%Y %H:%M")
+        aktivitet.save()
+        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))

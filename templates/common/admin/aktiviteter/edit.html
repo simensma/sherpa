@@ -6,7 +6,38 @@
 
 <h2>Rediger aktivitet</h2>
 
-{{ aktivitet.title }}
-{{ aktivitet.description }}
+{# TODO: Client-side validations #}
+<form action="{% url admin.aktiviteter.views.edit aktivitet.id %}" method="post" class="form form-border form-horizontal">
+  {% csrf_token %}
+
+  <div class="control-group title">
+    <label class="control-label" for="title">Tittel:</label>
+    <div class="controls">
+      <input type="text" class="input-xxlarge" name="title" value="{{ aktivitet.title }}">
+    </div>
+  </div>
+
+  <div class="control-group description">
+    <label class="control-label" for="description">Beskrivelse:</label>
+    <div class="controls">
+      <textarea rows="6" cols="80" name="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+    </div>
+  </div>
+
+  <div class="control-group start_date">
+    <label class="control-label" for="start_date">Starter:</label>
+    <div class="controls">
+      <input type="text" class="input-medium" name="start_date" value="{{ aktivitet.start_date|date:"d.m.Y" }}">
+      <input type="text" class="input-small" name="start_time" value="{{ aktivitet.start_date|date:"H:i" }}">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> Lagre aktivitet</button>
+    </div>
+  </div>
+
+</form>
 
 {% endblock %}
