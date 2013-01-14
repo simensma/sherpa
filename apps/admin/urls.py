@@ -13,4 +13,5 @@ urlpatterns = patterns('admin.views',
     url(r'^innmelding/', include('admin.enrollment.urls')),
     url(r'^medlemsnummer-sms/', include('admin.memberid_sms.urls')),
     url(r'^publikasjoner/', include('admin.publications.urls')),
+    url(r'^aktiviteter/', include('admin.aktiviteter.urls')),
 )

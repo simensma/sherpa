@@ -89,6 +89,16 @@
             <div style="clear: both;"></div>
           </li>
         {% endif %}
+        <li>
+          <a href="{% url admin.aktiviteter.views.index %}">
+            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
+          </a>
+          <h2><a href="http://www.turistforeningen.no/admin/activity.php">Aktiviteter</a></h2>
+          <p>
+            Legg ut fellesturer og aktiviteter som listes på nettsidene, hvor deltakere kan få mer informasjon og melde seg på.
+          </p>
+          <div style="clear: both;"></div>
+        </li>
         {% if perms.user.sherpa_admin %}
           <li>
             <a href="{% url 'admin.memberid_sms.views.list' %}">
@@ -107,16 +117,6 @@
       </p>
 
       <ul>
-        <li>
-          <a href="http://www.turistforeningen.no/admin/activity.php">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
-          </a>
-          <h2><a href="http://www.turistforeningen.no/admin/activity.php">Aktiviteter</a></h2>
-          <p>
-            Vi jobber med et nytt system for forvaltning av aktiviteter; i mellomtiden må systemet i gamle Sherpa benyttes.
-          </p>
-          <div style="clear: both;"></div>
-        </li>
         <li>
           <a href="http://www.turistforeningen.no/admin/cabin.php">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cabin.jpg">
