@@ -1,0 +1,11 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<em><a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a></em>{% endblock %}
+
+{% block body %}
+
+<h2>{{ aktivitet.title }} - {{ aktivitet.start_date }}</h2>
+
+<pre>{{ aktivitet.description }}</pre>
+
+{% endblock %}
