@@ -10,4 +10,15 @@
   <a href="{% url admin.aktiviteter.views.new %}">Opprett ny aktivitet</a>
 </p>
 
+<table class="table table-striped">
+  {% for aktivitet in aktiviteter %}
+    <tr>
+      <td>
+        <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Ingen tittel)" }}</a>
+      </td>
+      <td>{{ aktivitet.start_date }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
 {% endblock %}

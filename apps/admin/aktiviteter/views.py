@@ -7,7 +7,9 @@ from aktiviteter.models import Aktivitet
 from datetime import datetime
 
 def index(request):
-    return render(request, 'common/admin/aktiviteter/index.html')
+    aktiviteter = Aktivitet.objects.all().order_by('-start_date')
+    context = {'aktiviteter': aktiviteter}
+    return render(request, 'common/admin/aktiviteter/index.html', context)
 
 def new(request):
     aktivitet = Aktivitet(start_date=datetime.now())
