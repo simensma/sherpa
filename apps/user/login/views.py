@@ -53,12 +53,12 @@ def login(request):
                 user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
-                
+
                 #if the user had annonser in fjelltreffen, import them
                 annonser = get_old_fjelltreffen_annonser(user.get_profile())
                 for annonse in annonser:
                     create_and_save_new_annonse_from_old_annonse(annonse[0], annonse[1], annonse[2])
-                    
+
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
             else:

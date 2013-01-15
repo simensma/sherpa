@@ -18,7 +18,7 @@
 <div class="row">
 
   <div class="span9">
-      {% if annonse %}
+    {% if annonse %}
       <div class="annonse" data-id="{{ annonse.id }}">
         <h2>{{ annonse.title }}</h2>
         <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>

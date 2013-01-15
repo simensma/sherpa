@@ -1,7 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% block breadcrumb %}
-<em><a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a></em>
+  <em><a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a></em>
 {% endblock %}
 
 {% block extra_js %}
@@ -12,36 +12,35 @@
 
 <div class="row">
   <div class="span9">
-    
+
     <div class="wrapper">
-    <h2>Fjelltreffen</h2>
+      <h2>Fjelltreffen</h2>
 
-    <div class="alert alert-info">
-      <a class="close">x</a>
-      Velkommen til nye fjelltreffen! <br>
-      Hvis du har annonser på gamle 
-      fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.<br>
-      Hvis du vil besøke gamle fjelltreffen kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.
+      <div class="alert alert-info">
+        <a class="close">x</a>
+        Velkommen til nye fjelltreffen! <br>
+        Hvis du har annonser på gamle
+        fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.<br>
+        Hvis du vil besøke gamle fjelltreffen kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.
+      </div>
+
+      {% include 'main/fjelltreffen/filter.html' %}
+
+      <div class="annonse-list-wrapper">
+        {% if annonser %}
+          {% include 'main/fjelltreffen/annonselist.html' %}
+        {% else %}
+          <p>Det er ikke lagt ut noen annonser de siste 90 dagene.<br>
+          Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
+        {% endif %}
+      </div>
     </div>
-
-    {% include 'main/fjelltreffen/filter.html' %}
-
-    <div class="annonse-list-wrapper">
-    {% if annonser %}
-      {% include 'main/fjelltreffen/annonselist.html' %}
-    {% else %}
-      <p>Det er ikke lagt ut noen annonser de siste 90 dagene.<br>
-      Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
-    {% endif %}
-    </div>
-  </div>
   </div>
 
   <div class="span3">
     {% include 'main/fjelltreffen/navigation.html' with active='index' %}
   </div>
 
-</div>
 </div>
 
 {% endblock %}

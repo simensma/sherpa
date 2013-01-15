@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    
+
     var annonseid = $("div.annonse").attr("data-id");
 
     $("button.annonsereply-send").click(function(){
@@ -52,7 +52,7 @@ $(document).ready(function() {
             email:email.val(),
             text:text.val(),
         }
-        
+
         $.ajaxQueue({
             url: '/fjelltreffen/svar/',
             data: 'reply=' + JSON.stringify(content)

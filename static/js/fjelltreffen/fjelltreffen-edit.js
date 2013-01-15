@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    
+
     var annonseid = $("div.annonse").attr("data-id");
 
     $("button.save-annonse").click(function(){
@@ -34,7 +34,7 @@ $(document).ready(function() {
             alert("Det skjedde en feil under sletting av annonsen, sjekk at du er koblet til internet eller prøv igjen senere.");
             enableButtons();
         }).always(function() {
-            
+
         });
     }
 

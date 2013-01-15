@@ -217,4 +217,3 @@ def show(request, id):
         annonse = None
     context = {'annonse': annonse, 'requestedid':id}
     return render(request, 'main/fjelltreffen/show.html', context)
-

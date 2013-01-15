@@ -4,9 +4,9 @@
 {% block breadcrumb %}
   {% if annonse %}
     <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> /  <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">{{ annonse.title }}</a></em>
-    {% elif  new%}
+  {% elif new %}
     <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ny Annonse</a></em>
-    {% else %}
+  {% else %}
     <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">Ikke Funnet</a></em>
   {% endif %}
 {% endblock %}
@@ -18,58 +18,64 @@
 {% block body %}
 
 <div class="row">
+
   {% if annonse %}
-  <div class="span9">
-    <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
-      <h2>Rediger Annonse</h2>
 
-      <div class="control-group annonse-title-control">
-        <input type="text" class="annonse-title input-large" value="{{ annonse.title }}" placeholder="Tittel">
+    <div class="span9">
+      <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
+        <h2>Rediger Annonse</h2>
+
+        <div class="control-group annonse-title-control">
+          <input type="text" class="annonse-title input-large" value="{{ annonse.title }}" placeholder="Tittel">
+        </div>
+
+        <div class="control-group annonse-email-control">
+          <input type="text" class="annonse-email input-large" value="{{ annonse.email }}" placeholder="Epost">
+        </div>
+
+        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
+
+        <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+        <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
+        <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
+        <br>
+        <button class="btn btn-success save-annonse">Lagre</button>
+        <button class="btn btn-danger delete-annonse">Slett</button>
       </div>
-
-      <div class="control-group annonse-email-control">
-        <input type="text" class="annonse-email input-large" value="{{ annonse.email }}" placeholder="Epost">
-      </div>
-
-      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
-
-      <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
-      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
-      <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
-      <br>
-      <button class="btn btn-success save-annonse">Lagre</button>
-      <button class="btn btn-danger delete-annonse">Slett</button>
     </div>
-  </div>
-  <div class="span3">
-  {% include 'main/fjelltreffen/navigation.html' with active='None' %}
-  </div>
+    <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+    </div>
+
   {% elif new and haspayed %}
-  <div class="span9">
-    <div class="annonse" data-hidden="true">
-      <h2>Ny Annonse</h2>
 
-      <div class="control-group annonse-title-control">
-        <input type="text" class="annonse-title input-large"  placeholder="Tittel"><span class="asterisk red"> *</span>
+    <div class="span9">
+      <div class="annonse" data-hidden="true">
+        <h2>Ny Annonse</h2>
+
+        <div class="control-group annonse-title-control">
+          <input type="text" class="annonse-title input-large"  placeholder="Tittel"><span class="asterisk red"> *</span>
+        </div>
+
+        <div class="control-group annonse-email-control">
+          <input type="text" class="annonse-email input-large" value="{{ user.get_email }}" placeholder="Epost"><span class="asterisk red"> *</span>
+        </div>
+
+        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_county %}<br>
+        <textarea class="annonse-text" placeholder="Skriv annonsen din her..."></textarea><br>
+        <input type="checkbox" class="annonse-hideage">Ikke vis min virkelige alder(Skjul min virkelige alder(vil vises som 40-44 hvis du er 43))<br>
+        <input type="checkbox" class="annonse-hide">Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
+        <br>
+        <button class="btn btn-success save-annonse">Lagre</button>
+        <button style="display:none" class="btn btn-danger delete-annonse">Slett</button>
       </div>
-
-      <div class="control-group annonse-email-control">
-        <input type="text" class="annonse-email input-large" value="{{ user.get_email }}" placeholder="Epost"><span class="asterisk red"> *</span>
-      </div>
-
-      {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_county %}<br>
-      <textarea class="annonse-text" placeholder="Skriv annonsen din her..."></textarea><br>
-      <input type="checkbox" class="annonse-hideage">Ikke vis min virkelige alder(Skjul min virkelige alder(vil vises som 40-44 hvis du er 43))<br>
-      <input type="checkbox" class="annonse-hide">Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
-      <br>
-      <button class="btn btn-success save-annonse">Lagre</button>
-      <button style="display:none" class="btn btn-danger delete-annonse">Slett</button>
     </div>
-  </div>
-  <div class="span3">
-  {% include 'main/fjelltreffen/navigation.html' with active='new' %}
-  </div>
+    <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='new' %}
+    </div>
+
   {% elif not haspayed %}
+
     <div class="span9">
       <h2>Ikke betalt</h2>
       <p>
@@ -82,15 +88,17 @@
     <div class="span3">
     {% include 'main/fjelltreffen/navigation.html' with active='None' %}
     </div>
-      
+
   {% else %}
-  <div class="span9">
-    <h3>Fant ikke annonsen:</h3>
-    <p>Kunne ikke finne annonsen, er du logget på?</p>
-  </div>
-  <div class="span3">
-  {% include 'main/fjelltreffen/navigation.html' with active='None' %}
-  </div>
+
+    <div class="span9">
+      <h3>Fant ikke annonsen:</h3>
+      <p>Kunne ikke finne annonsen, er du logget på?</p>
+    </div>
+    <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+    </div>
+
   {% endif %}
 
 </div>
