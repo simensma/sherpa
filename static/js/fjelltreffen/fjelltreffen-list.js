@@ -59,7 +59,7 @@ $(document).ready(function() {
         }
 
         $.ajaxQueue({
-            url: "/fjelltreffen/load/" + loadindex + "/",
+            url: "/fjelltreffen/last/" + loadindex + "/",
             data: 'filter=' + JSON.stringify(filter)
         }).done(function(result) {
             if(cleanslate){

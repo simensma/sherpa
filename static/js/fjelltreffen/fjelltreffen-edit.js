@@ -27,7 +27,7 @@ $(document).ready(function() {
 
     function deleteAnnonse(){
         $.ajaxQueue({
-            url: '/fjelltreffen/delete/' + annonseid + "/",
+            url: '/fjelltreffen/slett/' + annonseid + "/",
         }).done(function(result) {
             window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
         }).fail(function(result) {
@@ -71,7 +71,7 @@ $(document).ready(function() {
             fylke:$("select.annonse-fylke").val()
         }
         $.ajaxQueue({
-            url: '/fjelltreffen/save/',
+            url: '/fjelltreffen/lagre/',
             data: 'annonse=' + JSON.stringify(content)
         }).done(function(result) {
             returnedData = JSON.parse(result);

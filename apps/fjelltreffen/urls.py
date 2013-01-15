@@ -2,12 +2,12 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('fjelltreffen.views',
     url(r'^$', 'index'),
-    url(r'^load/(?P<page>\d+)/$', 'load'),
+    url(r'^last/(?P<page>\d+)/$', 'load'),
     url(r'^vis/(?P<id>\d+)/$', 'show'),
     url(r'^ny/$', 'new'),
     url(r'^rediger/(?P<id>\d+)/$', 'edit'),
     url(r'^mine/$', 'mine'),
-    url(r'^save/$', 'save'),
-    url(r'^reply/$', 'reply'),
-    url(r'^delete/(?P<id>\d+)/$', 'delete'),
+    url(r'^lagre/$', 'save'),
+    url(r'^svar/$', 'reply'),
+    url(r'^slett/(?P<id>\d+)/$', 'delete'),
 )

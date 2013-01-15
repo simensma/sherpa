@@ -54,7 +54,7 @@ $(document).ready(function() {
         }
         
         $.ajaxQueue({
-            url: '/fjelltreffen/reply/',
+            url: '/fjelltreffen/svar/',
             data: 'reply=' + JSON.stringify(content)
         }).done(function(result) {
             alert("Ditt svar har blitt sendt til annonsøren.");
