@@ -191,13 +191,9 @@ def update_images(request):
             # Save new tags, remove existing tags if specified
             if request.POST.get('replace-tags', '') == 'true':
                 image.tags.clear()
-            for tag_name in json.loads(request.POST['tags-serialized']):
-                try:
-                    tag = Tag.objects.get(name__iexact=tag_name)
-                except(Tag.DoesNotExist):
-                    tag = Tag(name=tag_name)
-                tag.save()
-                tag.images.add(image)
+            for tag in json.loads(request.POST['tags-serialized']):
+                obj, created = Tag.objects.get_or_create(name=tag)
+                image.tags.add(obj)
 
         # Temporary 'get': album key should always exist (need to update all forms that post to this view)
         if request.POST.get('album', '') != '':
@@ -259,13 +255,9 @@ def fast_upload(request):
     if request.POST['licence'] != "":      image.licence = request.POST['licence']
     image.save()
 
-    for tagName in tags:
-        try:
-            tag = Tag.objects.get(name__iexact=tagName)
-        except(Tag.DoesNotExist):
-            tag = Tag(name=tagName)
-        tag.save()
-        tag.images.add(image)
+    for tag in tags:
+        obj, created = Tag.objects.get_or_create(name=tag)
+        image.tags.add(obj)
 
     return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
@@ -406,13 +398,10 @@ def store_image(image, album, user):
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
       height=image['height'])
     image.save()
-    for tagName in tags:
-        try:
-            tag = Tag.objects.get(name__iexact=tagName)
-        except(Tag.DoesNotExist):
-            tag = Tag(name=tagName)
-        tag.save()
-        tag.images.add(image)
+    for tag in tags:
+        obj, created = Tag.objects.get_or_create(name=tag)
+        image.tags.add(obj)
+
     return {'url':url, 'id':image.id};
 
 def parse_image(file):

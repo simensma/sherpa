@@ -75,15 +75,10 @@ def save(request, version):
             response['new_content_ids'].append(new_obj.id)
 
     # Tags - common for pages and articles
-    tag_objects = []
+    version.tags.clear()
     for tag in json.loads(request.POST['tags']):
-        try:
-            tag_obj = Tag.objects.get(name__iexact=tag)
-        except Tag.DoesNotExist:
-            tag_obj = Tag(name=tag)
-            tag_obj.save()
-        tag_objects.append(tag_obj)
-    version.tags = tag_objects
+        obj, created = Tag.objects.get_or_create(name=tag)
+        version.tags.add(obj)
 
     # Article/Page data
     if version.variant.page is not None:
