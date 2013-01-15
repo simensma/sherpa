@@ -25,7 +25,7 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
     ninetydaysago = now - timedelta(days=90)
     #all annonser that are not hidden, is newer than 90 days, and matches the query, order by date
 
-    cacheKey = 'fjelltreffenannonser' + str(minage) + str(maxage) + str(fylke) + str(gender)
+    cacheKey = 'fjelltreffenannonser.%s.%s.%s.%s' % (minage, maxage, fylke, gender)
     annonser = cache.get(cacheKey)
     if annonser == None:
         annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago)
