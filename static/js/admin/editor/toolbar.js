@@ -129,7 +129,8 @@ $(document).ready(function() {
             reset();
         });
         function reset() {
-            toolbar.find("p.anchor-insert, #toolbar div.anchor-buttons").remove();
+            // Perform a new lookup since these elements are new
+            $("p.anchor-insert, #toolbar div.anchor-buttons").remove();
             toolbar.find("*").show();
         }
         toolbar.append(p, buttons);
