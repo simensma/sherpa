@@ -4,7 +4,9 @@
 
 {% block body %}
 
-<h2>{{ aktivitet.title }} - {{ aktivitet.start_date }}</h2>
+<h2>{{ aktivitet.title }}</h2>
+
+<p>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</p>
 
 <pre>{{ aktivitet.description }}</pre>
 

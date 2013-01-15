@@ -14,7 +14,9 @@ def index(request):
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
 def new(request):
-    aktivitet = Aktivitet(start_date=datetime.now())
+    aktivitet = Aktivitet(
+        start_date=datetime.now(),
+        end_date=datetime.now())
     aktivitet.save()
     return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
 
@@ -29,6 +31,7 @@ def edit(request, aktivitet):
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
         aktivitet.start_date = datetime.strptime("%s %s" % (request.POST['start_date'], request.POST['start_time']), "%d.%m.%Y %H:%M")
+        aktivitet.end_date = datetime.strptime("%s %s" % (request.POST['end_date'], request.POST['end_time']), "%d.%m.%Y %H:%M")
         aktivitet.tags.clear()
         aktivitet.save()
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:

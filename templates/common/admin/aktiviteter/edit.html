@@ -37,6 +37,14 @@
     </div>
   </div>
 
+  <div class="control-group end_date">
+    <label class="control-label" for="end_date">Slutter:</label>
+    <div class="controls">
+      <input type="text" class="input-medium" name="end_date" value="{{ aktivitet.end_date|date:"d.m.Y" }}">
+      <input type="text" class="input-small" name="end_time" value="{{ aktivitet.end_date|date:"H:i" }}">
+    </div>
+  </div>
+
   <div class="control-group tags">
     <label class="control-label" for="tags">Nøkkelord:</label>
     <div class="controls">
