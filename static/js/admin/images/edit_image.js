@@ -7,7 +7,7 @@ $(document).ready(function() {
     // Collect existing tags based on the DOM and layout
     var tags = [];
     $("div.tag").each(function() {
-        tags.push($(this).text().trim());
+        tags.push($(this).text().trim().toLowerCase());
     });
     tagger.tags = tags;
 

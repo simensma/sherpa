@@ -106,10 +106,13 @@ Tagger.prototype.parseTags = function() {
         // Trim for whitespace
         vals[i] = vals[i].trim();
 
+        // Lowercase it
+        vals[i] = vals[i].toLowerCase();
+
         // Don't add already added tags
         var cont = true;
         for(var j=0; j<this.tags.length; j++) {
-            if(this.tags[j].toLowerCase() == vals[i].toLowerCase()) {
+            if(this.tags[j] == vals[i]) {
                 this.existingTag(this.tags[j]);
                 cont = false;
             }
@@ -124,7 +127,7 @@ Tagger.prototype.parseTags = function() {
 
 Tagger.prototype.removeTag = function(tag) {
     for(var i=0; i<this.tags.length; i++) {
-        if(this.tags[i].toLowerCase() == tag.toLowerCase()) {
+        if(this.tags[i] == tag) {
             this.tags.splice(i, 1);
         }
     }

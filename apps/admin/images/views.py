@@ -191,7 +191,7 @@ def update_images(request):
             # Save new tags, remove existing tags if specified
             if request.POST.get('replace-tags', '') == 'true':
                 image.tags.clear()
-            for tag in json.loads(request.POST['tags-serialized']):
+            for tag in [tag.lower() for tag in json.loads(request.POST['tags-serialized'])]:
                 obj, created = Tag.objects.get_or_create(name=tag)
                 image.tags.add(obj)
 
@@ -255,7 +255,7 @@ def fast_upload(request):
     if request.POST['licence'] != "":      image.licence = request.POST['licence']
     image.save()
 
-    for tag in tags:
+    for tag in [tag.lower() for tag in tags]:
         obj, created = Tag.objects.get_or_create(name=tag)
         image.tags.add(obj)
 
@@ -398,7 +398,7 @@ def store_image(image, album, user):
       exif=image['exif'], uploader=user.get_profile(), width=image['width'],
       height=image['height'])
     image.save()
-    for tag in tags:
+    for tag in [tag.lower() for tag in tags]:
         obj, created = Tag.objects.get_or_create(name=tag)
         image.tags.add(obj)
 

@@ -76,7 +76,7 @@ def save(request, version):
 
     # Tags - common for pages and articles
     version.tags.clear()
-    for tag in json.loads(request.POST['tags']):
+    for tag in [t.lower() for t in json.loads(request.POST['tags'])]:
         obj, created = Tag.objects.get_or_create(name=tag)
         version.tags.add(obj)
 
