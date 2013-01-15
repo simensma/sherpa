@@ -9,7 +9,6 @@ $(window).load(function() {
     old_list.data('current', 0);
 
     $(window).scroll(function() {
-        console.log(wrapper);
         if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
             loading = true;
             loadArticles();

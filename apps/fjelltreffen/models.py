@@ -51,7 +51,6 @@ def create_and_save_new_annonse_from_old_annonse(oldmember, oldannonse, oldannon
         newcounty = '0'+str(newcounty)
     else:
         newcounty = str(newcounty)
-    print newcounty
     try:
         annonse.fylke = County.objects.get(code=newcounty)
     except County.DoesNotExist:
@@ -110,7 +109,6 @@ class Annonse(models.Model):
     def compute_gender(self):
         actor = self.userprofile.actor()
         if actor == None:
-            print 'no actor'
             self.gender = False
             return
 

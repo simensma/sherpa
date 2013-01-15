@@ -4,10 +4,10 @@ from django.conf import settings
 #this table links other tabels
 class Link(models.Model):
     id = models.IntegerField(primary_key=True)
-    fromobject = models.TextField(db_column='fromObject') # Field name made lowercase.
-    fromid = models.IntegerField(db_column='fromId') # Field name made lowercase.
-    toobject = models.TextField(db_column='toObject') # Field name made lowercase.
-    toid = models.IntegerField(db_column='toId') # Field name made lowercase.
+    fromobject = models.TextField(db_column='fromObject')
+    fromid = models.IntegerField(db_column='fromId')
+    toobject = models.TextField(db_column='toObject')
+    toid = models.IntegerField(db_column='toId')
     role = models.IntegerField()
     priority = models.IntegerField(null=True, blank=True)
     class Meta:

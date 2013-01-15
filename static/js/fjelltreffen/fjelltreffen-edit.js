@@ -78,7 +78,6 @@ $(document).ready(function() {
             annonseid = returnedData['id']
             window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
         }).fail(function(result) {
-            console.log(result);
             try{
                 returnedData = JSON.parse(result['responseText']);
                 if (returnedData['error'] == 'toomany'){
