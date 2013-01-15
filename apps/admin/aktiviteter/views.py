@@ -3,8 +3,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 from aktiviteter.models import Aktivitet
+from core.models import Tag
 
 from datetime import datetime
+import json
 
 def index(request):
     aktiviteter = Aktivitet.objects.all().order_by('-start_date')
@@ -27,5 +29,9 @@ def edit(request, aktivitet):
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
         aktivitet.start_date = datetime.strptime("%s %s" % (request.POST['start_date'], request.POST['start_time']), "%d.%m.%Y %H:%M")
+        aktivitet.tags.clear()
         aktivitet.save()
+        for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
+            obj, created = Tag.objects.get_or_create(name=tag)
+            aktivitet.tags.add(obj)
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))

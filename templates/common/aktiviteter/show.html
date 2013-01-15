@@ -8,4 +8,11 @@
 
 <pre>{{ aktivitet.description }}</pre>
 
+<h3>Nøkkelord:</h3>
+<div class="tag-box">
+  {% for tag in aktivitet.tags.all %}
+    <div class="tag">{{ tag.name }}</div>
+  {% endfor %}
+</div>
+
 {% endblock %}
