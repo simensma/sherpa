@@ -28,12 +28,14 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
     cacheKey = 'fjelltreffenannonser' + str(minage) + str(maxage) + str(fylke) + str(gender)
     annonser = cache.get(cacheKey)
     if annonser == None:
-        annonser = Annonse.objects.filter(hidden=False, age__gte=minage, age__lte=maxage, timeadded__gte=ninetydaysago)
+        annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago)
         if gender != None:
             annonser = annonser.filter(gender=gender)
         if fylke != '00':
             annonser = annonser.filter(fylke__code=fylke)
         annonser = annonser.order_by('-timeadded')
+        # We'll need to filter on Focus-data in the code, since it's a cross-db relation
+        annonser = [a for a in annonser if a.userprofile.get_actor().get_age() >= minage and a.userprofile.get_actor().get_age() <= maxage]
 
         cache.set(cacheKey, annonser, 60 * 60 * 10)
         cachedQueries.append(cacheKey)
@@ -62,7 +64,6 @@ def create_and_save_new_annonse_from_old_annonse(oldmember, oldannonse, oldannon
     annonse.hidden = False
     annonse.hideage = True
     annonse.compute_gender()
-    annonse.compute_age()
 
     #hax to prevent autoadd now
     annonse.save()
@@ -83,7 +84,6 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-    age = models.IntegerField()
     #Male ->True, female -> False
     gender = models.BooleanField()
     isold = models.BooleanField()
@@ -95,10 +95,11 @@ class Annonse(models.Model):
             return settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image
 
     def get_age(self):
+        age = self.userprofile.actor().get_age()
         if self.hideage:
-            return '' + str(int(self.age/5) * 5) + '-' + str((int((self.age+5)/5) * 5)-1)
+            return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
         else:
-            return self.age
+            return age
 
     def get_gender(self):
         if self.gender == True:
@@ -116,20 +117,3 @@ class Annonse(models.Model):
             self.gender = True
         else:
             self.gender = False
-
-    def compute_age(self):
-        actor = self.userprofile.actor()
-        if actor == None:
-            self.age = 18
-            self.save()
-            return
-        born = self.userprofile.actor().birth_date
-        now = datetime.now()
-        try: # raised when birth date is February 29 and the current year is not a leap year
-            birthday = born.replace(year=now.year)
-        except ValueError:
-            birthday = born.replace(year=now.year, day=born.day-1)
-        if birthday > now:
-            self.age = now.year - born.year - 1
-        else:
-            self.age = now.year - born.year

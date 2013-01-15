@@ -180,7 +180,6 @@ def save(request):
         annonse.text = content['text']
         annonse.hidden = content['hidden']
         annonse.hideage = content['hideage']
-        annonse.compute_age()
         annonse.compute_gender()
     except KeyError as e:
         #something is missing in the data sendt

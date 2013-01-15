@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
+from datetime import datetime
+
 from association.models import Association
 from core.models import FocusCountry
 
@@ -180,6 +182,9 @@ class Actor(models.Model):
 
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
+
+    def get_age(self):
+        return (datetime.now() - self.birth_date).days / 365
 
     def get_parent(self):
         parent = self.parent
