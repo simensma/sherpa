@@ -93,39 +93,39 @@
       <div class="control-group phone_home">
         <label class="control-label" for="phone_home">Telefon</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="phone_home" value="{{ user.get_profile.actor.phone_home|default:"" }}">
+          <input type="text" class="input-medium" name="phone_home" value="{{ user.get_profile.get_actor.phone_home|default:"" }}">
         </div>
       </div>
 
       <div class="control-group phone_mobile">
         <label class="control-label" for="phone_mobile">Mobil</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="phone_mobile" value="{{ user.get_profile.actor.phone_mobile|default:"" }}">
+          <input type="text" class="input-medium" name="phone_mobile" value="{{ user.get_profile.get_actor.phone_mobile|default:"" }}">
         </div>
       </div>
 
       <div class="control-group dob">
         <label class="control-label" for="dob">Født</label>
         <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Fødselsdato kan ikke endres" data-content="Vennligst kontakt medlemsservice dersom denne fødselsdatoen ikke stemmer.">
-          <input type="text" class="input-medium" name="dob" value="{{ user.get_profile.actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.actor.birth_date|date:"Y/m/d" }}" disabled>
+          <input type="text" class="input-medium" name="dob" value="{{ user.get_profile.get_actor.birth_date|date:"d.m.Y" }}" data-value="{{ user.get_profile.get_actor.birth_date|date:"Y/m/d" }}" disabled>
           <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
           <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
         </div>
       </div>
 
-      {% if user.get_profile.actor.address.country == 'NO' %}
+      {% if user.get_profile.get_actor.address.country == 'NO' %}
         <div class="control-group address">
           <label class="control-label" for="address">Adresse</label>
           <div class="controls">
-            <input type="text" class="input-large" name="address" value="{{ user.get_profile.actor.address.a1 }}">
+            <input type="text" class="input-large" name="address" value="{{ user.get_profile.get_actor.address.a1 }}">
           </div>
         </div>
 
         <div class="control-group zipcode" for="zipcode">
           <label class="control-label">Postnummer</label>
           <div class="controls">
-            <input type="text" class="input-small" name="zipcode" value="{{ user.get_profile.actor.address.zipcode }}" maxlength="4">
-            <input type="text" class="input-medium" name="area" value="{{ user.get_profile.actor.address.area }}" disabled>
+            <input type="text" class="input-small" name="zipcode" value="{{ user.get_profile.get_actor.address.zipcode }}" maxlength="4">
+            <input type="text" class="input-medium" name="area" value="{{ user.get_profile.get_actor.address.area }}" disabled>
             <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
           </div>
         </div>
@@ -133,9 +133,9 @@
         <div class="control-group">
           <label class="control-label">Adresse</label>
           <div class="controls">
-            {% if user.get_profile.actor.address.a1 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a1 }}" disabled></p>{% endif %}
-            {% if user.get_profile.actor.address.a2 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a2 }}" disabled></p>{% endif %}
-            {% if user.get_profile.actor.address.a3 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.actor.address.a3 }}" disabled></p>{% endif %}
+            {% if user.get_profile.get_actor.address.a1 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a1 }}" disabled></p>{% endif %}
+            {% if user.get_profile.get_actor.address.a2 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a2 }}" disabled></p>{% endif %}
+            {% if user.get_profile.get_actor.address.a3 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a3 }}" disabled></p>{% endif %}
             <div class="alert alert-error">
               Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a> om du har behov for å endre din adresse.
             </div>
