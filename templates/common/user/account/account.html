@@ -33,7 +33,7 @@
       {% endfor %}
     </div>
 
-    {% if not user.get_profile.actor %}
+    {% if not user.get_profile.get_actor %}
 
       <h2>Brukeropplysninger</h2>
 
@@ -71,11 +71,11 @@
       <table class="table table-hover">
         <tr>
           <th>Navn</th>
-          <td>{{ user.get_profile.actor.get_full_name }}</td>
+          <td>{{ user.get_profile.get_actor.get_full_name }}</td>
         </tr>
         <tr>
           <th>Epost</th>
-          <td>{{ user.get_profile.actor.email }}</td>
+          <td>{{ user.get_profile.get_actor.email }}</td>
         </tr>
         {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
           <tr>
@@ -85,35 +85,35 @@
         {% endif %}
         <tr>
           <th>Telefon</th>
-          <td>{{ user.get_profile.actor.phone_home|default:"" }}</td>
+          <td>{{ user.get_profile.get_actor.phone_home|default:"" }}</td>
         </tr>
         <tr>
           <th>Mobiltelefon</th>
-          <td>{{ user.get_profile.actor.phone_mobile }}</td>
+          <td>{{ user.get_profile.get_actor.phone_mobile }}</td>
         </tr>
         <tr>
           <th>Født</th>
-          <td>{{ user.get_profile.actor.birth_date|date:"j. F Y" }}</td>
+          <td>{{ user.get_profile.get_actor.birth_date|date:"j. F Y" }}</td>
         </tr>
 
-        {% if user.get_profile.actor.address.country == 'NO' %}
+        {% if user.get_profile.get_actor.address.country == 'NO' %}
           <tr>
             <th>Adresse</th>
             <td>
-              {{ user.get_profile.actor.address.a1 }}<br>
-              {{ user.get_profile.actor.address.zipcode }} {{ user.get_profile.actor.address.area|title }}
+              {{ user.get_profile.get_actor.address.a1 }}<br>
+              {{ user.get_profile.get_actor.address.zipcode }} {{ user.get_profile.get_actor.address.area|title }}
             </td>
           </tr>
         {% else %}
           <tr>
             <th>Adresse</th>
             <td>
-              {% if user.get_profile.actor.address.a1 %}{{ user.get_profile.actor.address.a1 }}<br>{% endif %}
-              {% if user.get_profile.actor.address.a2 %}{{ user.get_profile.actor.address.a2 }}<br>{% endif %}
-              {% if user.get_profile.actor.address.a3 %}{{ user.get_profile.actor.address.a3 }}{% endif %}
-              {% if user.get_profile.actor.address.country != 'NO' %}
+              {% if user.get_profile.get_actor.address.a1 %}{{ user.get_profile.get_actor.address.a1 }}<br>{% endif %}
+              {% if user.get_profile.get_actor.address.a2 %}{{ user.get_profile.get_actor.address.a2 }}<br>{% endif %}
+              {% if user.get_profile.get_actor.address.a3 %}{{ user.get_profile.get_actor.address.a3 }}{% endif %}
+              {% if user.get_profile.get_actor.address.country != 'NO' %}
                 <br>
-                {{ user.get_profile.actor.address.get_country.name }}
+                {{ user.get_profile.get_actor.address.get_country.name }}
               {% endif %}
             </td>
           </tr>
@@ -132,7 +132,7 @@
         <tr>
           <th>Status</th>
           <td>
-            {% if user.get_profile.actor.balance.is_payed %}
+            {% if user.get_profile.get_actor.balance.is_payed %}
               Betalt for
               {% if next_year %}{{ year|add:"1" }}, samt ut {{ year }}{% else %}{{ year }}{% endif %}
             {% else %}
@@ -148,26 +148,26 @@
         <tr>
           <th>Lokalforening</th>
           <td>
-            {% if user.get_profile.actor.main_association.site %}<a href="http://{{ user.get_profile.actor.main_association.site.domain }}/">{% endif %}
-              {{ user.get_profile.actor.main_association.name }}
-            {% if user.get_profile.actor.main_association.site %}</a>{% endif %}
+            {% if user.get_profile.get_actor.main_association.site %}<a href="http://{{ user.get_profile.get_actor.main_association.site.domain }}/">{% endif %}
+              {{ user.get_profile.get_actor.main_association.name }}
+            {% if user.get_profile.get_actor.main_association.site %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th>Medlemstype</th>
-          <td>{{ user.get_profile.actor.membership_type }}</td>
+          <td>{{ user.get_profile.get_actor.membership_type }}</td>
         </tr>
-        {% if user.get_profile.actor.get_parent %}
+        {% if user.get_profile.get_actor.get_parent %}
           <tr>
             <th>Ditt hovedmedlem</th>
-            <td>{{ user.get_profile.actor.get_parent.get_full_name }} ({{ user.get_profile.actor.get_parent.memberid }})</td>
+            <td>{{ user.get_profile.get_actor.get_parent.get_full_name }} ({{ user.get_profile.get_actor.get_parent.memberid }})</td>
           </tr>
         {% endif %}
-        {% if user.get_profile.actor.get_children|length > 0 %}
+        {% if user.get_profile.get_actor.get_children|length > 0 %}
           <tr>
             <th>Dine husstandsmedlemmer</th>
             <td>
-              {% for child in user.get_profile.actor.get_children %}
+              {% for child in user.get_profile.get_actor.get_children %}
                 {{ child.get_full_name }} ({{ child.memberid }}){% if not forloop.last %}<br>{% endif %}
               {% endfor %}
             </td>
@@ -176,9 +176,9 @@
         <tr>
           <th>Betalingsavtale</th>
           <td>
-            {% if user.get_profile.actor.get_invoice_type_text == 'avtalegiro' %}
+            {% if user.get_profile.get_actor.get_invoice_type_text == 'avtalegiro' %}
               AvtaleGiro
-            {% elif user.get_profile.actor.get_invoice_type_text == 'efaktura' %}
+            {% elif user.get_profile.get_actor.get_invoice_type_text == 'efaktura' %}
               E-faktura
             {% else %}
               Ingen

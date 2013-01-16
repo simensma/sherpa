@@ -95,7 +95,7 @@ class Annonse(models.Model):
             return settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image
 
     def get_age(self):
-        age = self.userprofile.actor().get_age()
+        age = self.userprofile.get_actor().get_age()
         if self.hideage:
             return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
         else:
@@ -108,7 +108,7 @@ class Annonse(models.Model):
             return "Kvinne"
 
     def compute_gender(self):
-        actor = self.userprofile.actor()
+        actor = self.userprofile.get_actor()
         if actor == None:
             self.gender = False
             return
