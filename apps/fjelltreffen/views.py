@@ -13,7 +13,7 @@ import urllib
 import json
 
 from fjelltreffen.models import Annonse, get_and_cache_annonser_by_filter
-from core.validator import email
+from core import validator
 from sherpa25.models import Classified
 from core.models import County
 from focus.models import Actor, BalanceHistory
@@ -131,7 +131,7 @@ def reply(request):
         replytext = content['text']
 
         #validate input
-        if email(replyemail) and len(replyname) > 0 and len(replytext) > 5:
+        if validator.email(replyemail) and len(replyname) > 0 and len(replytext) > 5:
 
             replytoemail = Annonse.objects.get(id=replyid).email
             try:
@@ -186,7 +186,7 @@ def save(request):
         return HttpResponse(status=400)
 
     #validate input
-    if email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
+    if validator.email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
         if not annonse.hidden:
             numposts = Annonse.objects.filter(userprofile=request.user.get_profile(), hidden=False).count()
             if(numposts > ANNONSELIMIT):
