@@ -55,7 +55,7 @@ class Member(models.Model):
     email = models.TextField()
     receiveemail = models.BooleanField(db_column='receiveEmail')
     password = models.TextField()
-    sex = models.CharField(max_length=1)
+    gender = models.CharField(max_length=1, db_column='sex')
     birthdate = models.DateField(null=True, db_column='birthDate')
     countryname = models.TextField(db_column='countryName')
     countrycode = models.TextField(db_column='countryCode')

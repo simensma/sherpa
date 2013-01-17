@@ -76,7 +76,7 @@ class Annonse(models.Model):
             self.gender = False
             return
 
-        if actor.sex == 'M':
+        if actor.gender == 'M':
             self.gender = True
         else:
             self.gender = False

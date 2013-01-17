@@ -53,7 +53,7 @@ class Actor(models.Model):
     first_name = models.CharField(max_length=50, db_column=u'FiNm')
     last_name = models.CharField(max_length=50, db_column=u'Nm')
     birth_date = models.DateTimeField(null=True, db_column=u'BDt')
-    sex = models.CharField(max_length=1, db_column=u'Sex')
+    gender = models.CharField(max_length=1, db_column=u'Sex')
     email = models.CharField(max_length=250, db_column=u'EMail')
     phone_home = models.CharField(max_length=50, db_column=u'Ph')
     phone_mobile = models.CharField(max_length=50, db_column=u'MobPh')
