@@ -1,5 +1,5 @@
 
-from fjelltreffen.models import Annonse, invalidate_cache, getAndCacheAnnonserByFilter
+from fjelltreffen.models import Annonse, invalidate_cache, get_and_cache_annonser_by_filter
 from core.models import County
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -25,14 +25,14 @@ ANNONSELIMIT = 5
 #annonser to load when a user requests more
 BULKLOADNUM = 20
 
-defaultMinAge = 18
-defaultMaxAge = 200
-defaultFylke = '00'
-defaultGender = None
+default_min_age = 18
+default_max_age = 200
+default_fylke = '00'
+default_gender = None
 
 def index(request):
-    annonser = getAndCacheAnnonserByFilter(defaultMinAge, defaultMaxAge, defaultFylke, defaultGender)[0:BULKLOADNUM]
-    context = {'annonser':annonser, 'fylker':getAndCacheFylker()}
+    annonser = get_and_cache_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
+    context = {'annonser':annonser, 'fylker':get_and_cache_fylker()}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, page):
@@ -45,21 +45,21 @@ def load(request, page):
         gender = annonsefilter.get('gender')
         fylke = annonsefilter['fylke']
     except (KeyError, ValueError) as e:
-        minage = defaultMinAge
-        maxage = defaultMaxAge
-        gender = defaultGender
-        fylke = defaultFylke
+        minage = default_min_age
+        maxage = default_max_age
+        gender = default_gender
+        fylke = default_fylke
 
     page = int(page)
     A = BULKLOADNUM
-    annonser = getAndCacheAnnonserByFilter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
+    annonser = get_and_cache_annonser_by_filter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
 
     context = RequestContext(request)
     context['annonser'] = annonser
     string = render_to_string('main/fjelltreffen/annonselist.html', context)
     return HttpResponse(json.dumps({'html':string}))
 
-def getAndCacheFylker():
+def get_and_cache_fylker():
     fylker = cache.get('annonse-fylker')
     if fylker == None:
         fylker = County.objects.all().order_by('name')
@@ -75,7 +75,7 @@ def edit(request, id):
             annonse = None
     except Annonse.DoesNotExist:
         annonse = None
-    context = {'new':False,'annonse':annonse,'fylker':getAndCacheFylker(), 'requestedid':id}
+    context = {'new':False,'annonse':annonse,'fylker':get_and_cache_fylker(), 'requestedid':id}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 #checks if the user has payed
@@ -102,7 +102,7 @@ def has_payed(userprofile):
 @login_required
 def new(request):
     user = request.user.get_profile()
-    context = {'new':True, 'annonse':None,'fylker':getAndCacheFylker(), 'user':user, 'haspayed':has_payed(user)}
+    context = {'new':True, 'annonse':None,'fylker':get_and_cache_fylker(), 'user':user, 'haspayed':has_payed(user)}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 @login_required
