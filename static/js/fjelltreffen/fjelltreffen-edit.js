@@ -75,8 +75,8 @@ $(document).ready(function() {
             data: 'annonse=' + JSON.stringify(content)
         }).done(function(result) {
             returnedData = JSON.parse(result);
-            annonseid = returnedData['id']
-            window.location.href = "http://www.turistforeningen.no/fjelltreffen/mine";
+            annonseid = returnedData['id'];
+            window.location = "/fjelltreffen/mine/";
         }).fail(function(result) {
             try{
                 returnedData = JSON.parse(result['responseText']);
