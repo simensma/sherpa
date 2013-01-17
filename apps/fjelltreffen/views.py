@@ -1,5 +1,5 @@
 
-from fjelltreffen.models import Annonse, invalidate_cache, get_and_cache_annonser_by_filter
+from fjelltreffen.models import Annonse, get_and_cache_annonser_by_filter
 from core.models import County
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -193,9 +193,6 @@ def save(request):
                 #notify the user that he/she has too many active annonser
                 return HttpResponse(json.dumps({'error':'toomany', 'num':ANNONSELIMIT}), status=400)
         annonse.save()
-        #users want instant response, so cache is invalidated when an annonse is submitted
-        #this should be alright, there is less than 1 new annonse being submitted pr hour on average
-        invalidate_cache()
     else:
         return HttpResponse(status=400)
 

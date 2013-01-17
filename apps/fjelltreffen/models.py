@@ -4,12 +4,6 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.cache import cache
 
-cachedQueries = []
-
-def invalidate_cache():
-    for cacheKey in cachedQueries:
-        cache.delete(cacheKey)
-
 def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
@@ -21,20 +15,15 @@ def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
     ninetydaysago = now - timedelta(days=90)
     #all annonser that are not hidden, is newer than 90 days, and matches the query, order by date
 
-    cacheKey = 'fjelltreffenannonser.%s.%s.%s.%s' % (minage, maxage, fylke, gender)
-    annonser = cache.get(cacheKey)
-    if annonser == None:
-        annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago)
-        if gender != None:
-            annonser = annonser.filter(gender=gender)
-        if fylke != '00':
-            annonser = annonser.filter(fylke__code=fylke)
-        annonser = annonser.order_by('-timeadded')
-        # We'll need to filter on Focus-data in the code, since it's a cross-db relation
-        annonser = [a for a in annonser if a.userprofile.get_actor().get_age() >= minage and a.userprofile.get_actor().get_age() <= maxage]
+    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago)
+    if gender != None:
+        annonser = annonser.filter(gender=gender)
+    if fylke != '00':
+        annonser = annonser.filter(fylke__code=fylke)
+    annonser = annonser.order_by('-timeadded')
+    # We'll need to filter on Focus-data in the code, since it's a cross-db relation
+    annonser = [a for a in annonser if a.userprofile.get_actor().get_age() >= minage and a.userprofile.get_actor().get_age() <= maxage]
 
-        cache.set(cacheKey, annonser, 60 * 60 * 10)
-        cachedQueries.append(cacheKey)
     return annonser
 
 class Annonse(models.Model):

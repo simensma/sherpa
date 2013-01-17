@@ -3,7 +3,6 @@ from django.conf import settings
 
 from user.models import Profile
 from core.models import County
-from fjelltreffen.models import invalidate_cache
 
 #this table links other tabels
 class Link(models.Model):
@@ -134,6 +133,3 @@ def import_fjelltreffen_annonser(profile):
         annonse.save()
         annonse.timeadded = oldannonse.authorized
         annonse.save()
-
-    #invalidates cache to prevent users from going: "where is my annonse? Better call support! Better submit new ones!"
-    invalidate_cache()
