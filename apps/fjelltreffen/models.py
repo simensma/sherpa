@@ -36,8 +36,6 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-    #Male ->True, female -> False
-    gender = models.BooleanField()
     isold = models.BooleanField()
 
     def get_image_url(self):
@@ -54,18 +52,7 @@ class Annonse(models.Model):
             return age
 
     def get_gender(self):
-        if self.gender == True:
+        if self.userprofile.get_actor().get_gender() == 'm':
             return 'Mann'
         else:
-            return "Kvinne"
-
-    def compute_gender(self):
-        actor = self.userprofile.get_actor()
-        if actor == None:
-            self.gender = False
-            return
-
-        if actor.gender == 'M':
-            self.gender = True
-        else:
-            self.gender = False
+            return 'Kvinne'

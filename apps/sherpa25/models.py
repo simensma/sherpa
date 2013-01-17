@@ -127,7 +127,6 @@ def import_fjelltreffen_annonser(profile):
         annonse.isold = True
         annonse.hidden = False
         annonse.hideage = True
-        annonse.compute_gender()
 
         #hax to prevent autoadd now
         annonse.save()

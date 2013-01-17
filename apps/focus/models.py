@@ -186,6 +186,14 @@ class Actor(models.Model):
     def get_age(self):
         return (datetime.now() - self.birth_date).days / 365
 
+    def get_gender(self):
+        if self.gender.lower() == 'm':
+            return 'm'
+        elif self.gender.lower() == 'k':
+            return 'f'
+        else:
+            return None
+
     def get_parent(self):
         parent = self.parent
         if parent == 0 or parent == self.memberid:
