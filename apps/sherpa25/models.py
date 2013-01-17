@@ -30,7 +30,7 @@ class Classified(models.Model):
     class Meta:
         db_table = u'Classified'
 
-class Classifiedimage(models.Model):
+class ClassifiedImage(models.Model):
     id = models.IntegerField(primary_key=True)
     path = models.TextField(blank=True)
     created = models.DateTimeField(null=True, blank=True)
@@ -84,7 +84,7 @@ def import_fjelltreffen_annonser(profile):
         try:
             # Check for any saved images, and see if we can determine a usable path
             imageid = Link.objects.get(fromobject='Classified', fromid=link.toid, toobject='ClassifiedImage').toid
-            path = Classifiedimage.objects.get(id=imageid).path
+            path = ClassifiedImage.objects.get(id=imageid).path
             if path.startswith('/var/www/hosts/turistforeningen.no/web/img/fjelltreff/'):
                 # This one is served on the old site and still usable
                 old_annonse_imageurl = path.split('/var/www/hosts/turistforeningen.no/web/')[1]
@@ -94,7 +94,7 @@ def import_fjelltreffen_annonser(profile):
             else:
                 # Unknown path, or known unusable path - ignore this image.
                 old_annonse_imageurl = ''
-        except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
+        except (Link.DoesNotExist, ClassifiedImage.DoesNotExist) as e:
             old_annonse_imageurl = ''
         try:
             old_annonse = Classified.objects.get(id=link.toid)
