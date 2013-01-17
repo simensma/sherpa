@@ -13,7 +13,7 @@ from smtplib import SMTPException
 import urllib
 import json
 
-from fjelltreffen.models import Annonse, get_and_cache_annonser_by_filter
+from fjelltreffen.models import Annonse, get_annonser_by_filter
 from core import validator
 from sherpa25.models import Classified
 from core.models import County
@@ -32,7 +32,7 @@ default_fylke = '00'
 default_gender = None
 
 def index(request):
-    annonser = get_and_cache_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
+    annonser = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
     context = {
         'annonser':annonser,
         'fylker':get_and_cache_fylker(),
@@ -56,7 +56,7 @@ def load(request, page):
 
     page = int(page)
     A = BULKLOADNUM
-    annonser = get_and_cache_annonser_by_filter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
+    annonser = get_annonser_by_filter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
 
     context = RequestContext(request)
     context['annonser'] = annonser

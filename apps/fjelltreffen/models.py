@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from datetime import datetime, timedelta
 
-def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
+def get_annonser_by_filter(minage, maxage, fylke, gender):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
 
