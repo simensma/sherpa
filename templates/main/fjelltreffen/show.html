@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load gender %}
+
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
 {% if annonse %}
@@ -21,7 +23,7 @@
     {% if annonse %}
       <div class="annonse" data-id="{{ annonse.id }}">
         <h2>{{ annonse.title }}</h2>
-        <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
+        <p>{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
 
         <p>{{ annonse.text|linebreaksbr }}</p>
         <br>

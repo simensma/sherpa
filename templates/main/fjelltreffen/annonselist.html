@@ -1,3 +1,5 @@
+{% load gender %}
+
 {% for annonse in annonser %}
   <div class="fjelltreffen-annonse">
     {% if active == 'mine'%}
@@ -5,7 +7,7 @@
     {% else %}
       <a href="{% url fjelltreffen.views.show annonse.id %}"><h3>{{ annonse.title }}</h3></a>
     {% endif %}
-    <p>{{ annonse.get_gender }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
+    <p>{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }}, {{ annonse.fylke.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
     <p>{{ annonse.text|truncatechars:100 }}</p>
   </div>
 {% endfor %}

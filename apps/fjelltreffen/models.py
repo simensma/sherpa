@@ -50,9 +50,3 @@ class Annonse(models.Model):
             return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
         else:
             return age
-
-    def get_gender(self):
-        if self.profile.get_actor().get_gender() == 'm':
-            return 'Mann'
-        else:
-            return 'Kvinne'
