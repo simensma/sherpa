@@ -12,10 +12,10 @@ def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
     maxage =(int((maxage+5)/5) * 5)-1
 
     now = datetime.now();
-    ninetydaysago = now - timedelta(days=90)
-    #all annonser that are not hidden, is newer than 90 days, and matches the query, order by date
+    period = now - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+    #all annonser that are not hidden, is newer than X days, and matches the query, order by date
 
-    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=ninetydaysago)
+    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=period)
     if gender != None:
         annonser = annonser.filter(gender=gender)
     if fylke != '00':

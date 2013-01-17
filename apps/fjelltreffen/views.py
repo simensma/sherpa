@@ -33,7 +33,10 @@ default_gender = None
 
 def index(request):
     annonser = get_and_cache_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
-    context = {'annonser':annonser, 'fylker':get_and_cache_fylker()}
+    context = {
+        'annonser':annonser,
+        'fylker':get_and_cache_fylker(),
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, page):
