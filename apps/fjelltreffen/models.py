@@ -16,13 +16,13 @@ def get_annonser_by_filter(minage, maxage, fylke, gender):
     #all annonser that are not hidden, is newer than X days, and matches the query, order by date
 
     annonser = Annonse.objects.filter(hidden=False, timeadded__gte=period)
-    if gender != None:
-        annonser = annonser.filter(gender=gender)
     if fylke != '00':
         annonser = annonser.filter(fylke__code=fylke)
     annonser = annonser.order_by('-timeadded')
     # We'll need to filter on Focus-data in the code, since it's a cross-db relation
     annonser = [a for a in annonser if a.profile.get_actor().get_age() >= minage and a.profile.get_actor().get_age() <= maxage]
+    if gender != None:
+        annonser = [a for a in annonser if a.profile.get_actor().get_gender() == gender]
 
     return annonser
 
