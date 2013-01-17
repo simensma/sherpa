@@ -18,21 +18,19 @@
     <h2>Mine annonser</h2>
 
     <div class="annonse-list-wrapper">
-    {% if annonser%}
-      {% include 'main/fjelltreffen/annonselist.html' with active='mine'%}
-    {% else %}
-      <p>Du har ikke lagt ut noen annonser.<br>
-      Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
-    {% endif %}
+      {% if annonser%}
+        {% include 'main/fjelltreffen/annonselist.html' with active='mine'%}
+      {% else %}
+        <p>Du har ikke lagt ut noen annonser.<br>
+        Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
+      {% endif %}
+      </div>
     </div>
-  </div>
   </div>
 
   <div class="span3">
     {% include 'main/fjelltreffen/navigation.html' with active='mine' %}
   </div>
-
-</div>
 </div>
 
 {% endblock %}
