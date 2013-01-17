@@ -79,7 +79,12 @@ def edit(request, id):
             annonse = None
     except Annonse.DoesNotExist:
         annonse = None
-    context = {'new':False,'annonse':annonse,'fylker':get_and_cache_fylker(), 'requestedid':id}
+    context = {
+        'new': False,
+        'annonse': annonse,
+        'fylker': get_and_cache_fylker(),
+        'requestedid': id,
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 #checks if the user has payed
@@ -106,7 +111,13 @@ def has_payed(profile):
 @login_required
 def new(request):
     user = request.user.get_profile()
-    context = {'new':True, 'annonse':None,'fylker':get_and_cache_fylker(), 'user':user, 'haspayed':has_payed(user)}
+    context = {
+        'new': True,
+        'annonse': None,
+        'fylker': get_and_cache_fylker(),
+        'user': user,
+        'haspayed': has_payed(user),
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/new.html', context)
 
 @login_required

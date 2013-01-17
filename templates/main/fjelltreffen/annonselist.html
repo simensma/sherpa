@@ -2,8 +2,8 @@
 
 {% for annonse in annonser %}
   <div class="fjelltreffen-annonse">
-    {% if active == 'mine'%}
-      <a href="{% url fjelltreffen.views.edit annonse.id %}"><h3>{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</h3></a>
+    {% if active == 'mine' %}
+      <a href="{% url fjelltreffen.views.edit annonse.id %}"><h3>{% if annonse.is_expired %}[Utgått] {% endif %}{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</h3></a>
     {% else %}
       <a href="{% url fjelltreffen.views.show annonse.id %}"><h3>{{ annonse.title }}</h3></a>
     {% endif %}

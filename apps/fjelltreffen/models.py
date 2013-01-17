@@ -50,3 +50,6 @@ class Annonse(models.Model):
             return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
         else:
             return age
+
+    def is_expired(self):
+        return self.timeadded < (datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
