@@ -96,7 +96,19 @@ def import_fjelltreffen_annonser(profile):
         annonse.profile = profile
         annonse.timeadded = old_annonse.authorized
         annonse.title = old_annonse.title
-        annonse.email = old_member.email
+
+        # Email is required, so make sure we find one for the old user
+        if old_member.email is None or old_member.email == '':
+            # Nope, it's not here. Try to get it from Focus
+            focus_email = profile.get_actor().email
+            if focus_email is None or focus_email == '':
+                # Not in Focus either! We'll have to ignore this annonse.
+                continue
+            else:
+                # Ok, use the focus email
+                annonse.email = focus_email
+        else:
+            annonse.email = old_member.email
 
         newcounty = old_annonse.county
         if newcounty < 10:
