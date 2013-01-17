@@ -6,6 +6,7 @@ from django.http import HttpResponse, Http404
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, timedelta
 from smtplib import SMTPException
@@ -111,7 +112,7 @@ def delete(request, id):
         annonse = Annonse.objects.get(id=id);
         if annonse.profile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
-            return HttpResponse(status=400)
+            raise PermissionDenied
         else:
             annonse.delete()
             return HttpResponse()
@@ -149,7 +150,7 @@ def save(request):
     #a user that has not payed will not get access to the new-view, so this should not happen
     #if it does however, just deny the save
     if not has_payed(request.user.get_profile()):
-        return HttpResponse(status=400)
+        raise PermissionDenied
 
     try:
         content = json.loads(request.POST['annonse'])
@@ -161,7 +162,7 @@ def save(request):
         annonse = Annonse.objects.get(id=id);
         if annonse.profile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
-            return HttpResponse(status=400)
+            raise PermissionDenied
     except (Annonse.DoesNotExist, KeyError) as e:
         #the user is creating a new annonse, not editing an excisting one
         annonse = Annonse()
