@@ -71,7 +71,7 @@ def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
         #checks if the user is the owner
-        if annonse.userprofile != request.user.get_profile():
+        if annonse.profile != request.user.get_profile():
             annonse = None
     except Annonse.DoesNotExist:
         annonse = None
@@ -80,17 +80,17 @@ def edit(request, id):
 
 #checks if the user has payed
 #the result is  cached when the user has payed, but not when the user hasnt in case he/she pays because he/she want to use fjelltreffen
-def has_payed(userprofile):
+def has_payed(profile):
     #user has no focus user
-    if userprofile.memberid == None:
+    if profile.memberid == None:
         return False
 
-    cachekey = 'fjelltreffen-haspayed'+str(userprofile.memberid)
+    cachekey = 'fjelltreffen-haspayed'+str(profile.memberid)
     result = cache.get(cachekey)
     if result == None:
         try:
             #this should not be cached, when a user registers and payes whey would have to wait an hour to post
-            actor = Actor.objects.get(memberid=userprofile.memberid)
+            actor = Actor.objects.get(memberid=profile.memberid)
             result = actor.balance.is_payed()
 
             if result == True:
@@ -109,7 +109,7 @@ def new(request):
 def delete(request, id):
     try:
         annonse = Annonse.objects.get(id=id);
-        if annonse.userprofile != request.user.get_profile():
+        if annonse.profile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
             return HttpResponse(status=400)
         else:
@@ -159,13 +159,13 @@ def save(request):
     try:
         id = content['id']
         annonse = Annonse.objects.get(id=id);
-        if annonse.userprofile != request.user.get_profile():
+        if annonse.profile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
             return HttpResponse(status=400)
     except (Annonse.DoesNotExist, KeyError) as e:
         #the user is creating a new annonse, not editing an excisting one
         annonse = Annonse()
-        annonse.userprofile = request.user.get_profile()
+        annonse.profile = request.user.get_profile()
 
     try:
         annonse.fylke = County.objects.get(code=content['fylke'])
@@ -187,7 +187,7 @@ def save(request):
     #validate input
     if validator.email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
         if not annonse.hidden:
-            numposts = Annonse.objects.filter(userprofile=request.user.get_profile(), hidden=False).count()
+            numposts = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count()
             if(numposts > ANNONSELIMIT):
                 #notify the user that he/she has too many active annonser
                 return HttpResponse(json.dumps({'error':'toomany', 'num':ANNONSELIMIT}), status=400)
@@ -200,7 +200,7 @@ def save(request):
 @login_required
 def mine(request):
     #all annonser that belongs to the current user
-    annonser = Annonse.objects.filter(userprofile=request.user.get_profile()).order_by('-timeadded')
+    annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-timeadded')
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)

@@ -107,7 +107,7 @@ def import_fjelltreffen_annonser(profile):
         oldannonse = annonse[1]
         oldannonseimageurl = annonse[2]
         annonse = Annonse()
-        annonse.userprofile = Profile.objects.get(memberid=oldmember.memberid)
+        annonse.profile = Profile.objects.get(memberid=oldmember.memberid)
         annonse.timeadded = oldannonse.authorized
         annonse.title = oldannonse.title
         annonse.email = oldmember.email
@@ -120,7 +120,7 @@ def import_fjelltreffen_annonser(profile):
         try:
             annonse.fylke = County.objects.get(code=newcounty)
         except County.DoesNotExist:
-            annonse.fylke = County.objects.get(code=annonse.userprofile.get_county())
+            annonse.fylke = County.objects.get(code=annonse.profile.get_county())
 
         annonse.image = oldannonseimageurl
         annonse.text = oldannonse.content

@@ -22,12 +22,12 @@ def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
         annonser = annonser.filter(fylke__code=fylke)
     annonser = annonser.order_by('-timeadded')
     # We'll need to filter on Focus-data in the code, since it's a cross-db relation
-    annonser = [a for a in annonser if a.userprofile.get_actor().get_age() >= minage and a.userprofile.get_actor().get_age() <= maxage]
+    annonser = [a for a in annonser if a.profile.get_actor().get_age() >= minage and a.profile.get_actor().get_age() <= maxage]
 
     return annonser
 
 class Annonse(models.Model):
-    userprofile = models.ForeignKey('user.Profile')
+    profile = models.ForeignKey('user.Profile')
     timeadded = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
@@ -45,14 +45,14 @@ class Annonse(models.Model):
             return settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image
 
     def get_age(self):
-        age = self.userprofile.get_actor().get_age()
+        age = self.profile.get_actor().get_age()
         if self.hideage:
             return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
         else:
             return age
 
     def get_gender(self):
-        if self.userprofile.get_actor().get_gender() == 'm':
+        if self.profile.get_actor().get_gender() == 'm':
             return 'Mann'
         else:
             return 'Kvinne'
