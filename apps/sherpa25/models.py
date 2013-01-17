@@ -3,6 +3,7 @@ from django.conf import settings
 
 from user.models import Profile
 from core.models import County
+from fjelltreffen.models import Annonse
 
 #this table links other tabels
 class Link(models.Model):
@@ -77,42 +78,27 @@ class Member(models.Model):
         db_table = u'Member'
 
 def import_fjelltreffen_annonser(profile):
-    try:
-        memberid = Member.objects.get(memberid=user.get_profile().memberid).id
-    except Member.DoesNotExist:
-        return []
-    annonseids = []
-    for link in Link.objects.filter(fromobject='Member', fromid=memberid, toobject='Classified'):
-        annonseids.append(link.toid)
+    old_member = Member.objects.get(memberid=profile.memberid)
 
-    annonser = []
-    for annonseid in annonseids:
+    for link in Link.objects.filter(fromobject='Member', fromid=old_member.id, toobject='Classified'):
         try:
-            imageid = Link.objects.get(fromobject='Classified', fromid=annonseid, toobject='ClassifiedImage').toid
+            imageid = Link.objects.get(fromobject='Classified', fromid=link.toid, toobject='ClassifiedImage').toid
             #this assumes url on the form dnt/img/hash.jpg, which is the old sites imageurl-format
-            imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
+            old_annonse_imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
         except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
-            imageurl = None
+            old_annonse_imageurl = None
         try:
-            member = Member.objects.get(memberid=user.get_profile().memberid)
-            annonse = Classified.objects.get(id=annonseid)
-        except (Member.DoesNotExist, Classified.DoesNotExist) as e:
-            return []
+            old_annonse = Classified.objects.get(id=link.toid)
+        except Classified.DoesNotExist as e:
+            continue
 
-        annonser.append((member, annonse, imageurl))
-    return annonser
-
-    for annonse in annonser:
-        oldmember = annonse[0]
-        oldannonse = annonse[1]
-        oldannonseimageurl = annonse[2]
         annonse = Annonse()
-        annonse.profile = Profile.objects.get(memberid=oldmember.memberid)
-        annonse.timeadded = oldannonse.authorized
-        annonse.title = oldannonse.title
-        annonse.email = oldmember.email
+        annonse.profile = profile
+        annonse.timeadded = old_annonse.authorized
+        annonse.title = old_annonse.title
+        annonse.email = old_member.email
 
-        newcounty = oldannonse.county
+        newcounty = old_annonse.county
         if newcounty < 10:
             newcounty = '0'+str(newcounty)
         else:
@@ -122,13 +108,13 @@ def import_fjelltreffen_annonser(profile):
         except County.DoesNotExist:
             annonse.fylke = County.objects.get(code=annonse.profile.get_county())
 
-        annonse.image = oldannonseimageurl
-        annonse.text = oldannonse.content
+        annonse.image = old_annonse_imageurl
+        annonse.text = old_annonse.content
         annonse.isold = True
         annonse.hidden = False
         annonse.hideage = True
 
         #hax to prevent autoadd now
         annonse.save()
-        annonse.timeadded = oldannonse.authorized
+        annonse.timeadded = old_annonse.authorized
         annonse.save()

@@ -51,7 +51,7 @@ def login(request):
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
 
-                #if the user had annonser in fjelltreffen, import them
+                # Import any fjelltreffen-annonser from the old system
                 import_fjelltreffen_annonser(user.get_profile())
 
                 log_user_in(request, user)
