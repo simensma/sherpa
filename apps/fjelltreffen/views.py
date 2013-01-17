@@ -94,7 +94,7 @@ def has_payed(profile):
     if profile.memberid == None:
         return False
 
-    cachekey = 'fjelltreffen-haspayed'+str(profile.memberid)
+    cachekey = 'fjelltreffen.haspayed.%s' % profile.memberid
     result = cache.get(cachekey)
     if result == None:
         try:

@@ -27,7 +27,7 @@ class Profile(models.Model):
 
     #gets the county code for this user, cached because why not
     def get_county(self):
-        cachekey = 'actorcounty.'+str(self.memberid)
+        cachekey = 'actorcounty.%s' % self.memberid
         code = cache.get(cachekey)
         if code == None:
             zipcode = ActorAddress.objects.get(actor=self.get_actor()).zipcode
