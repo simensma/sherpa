@@ -1,8 +1,8 @@
 from django.db import models
-from datetime import datetime
-from datetime import timedelta
 from django.conf import settings
 from django.core.cache import cache
+
+from datetime import datetime, timedelta
 
 def get_and_cache_annonser_by_filter(minage, maxage, fylke, gender):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
