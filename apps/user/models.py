@@ -85,8 +85,5 @@ class AssociationRole(models.Model):
 
     @staticmethod
     def friendly_role(role):
-        # This is very silly, must be a better way to do this!?
-        for choice in AssociationRole.ROLE_CHOICES:
-            if choice[0] == role:
-                return choice[1]
-        return ''
+        # Assumes that 'role' exists in the tuple and is unique
+        return [c[1] for c in AssociationRole.ROLE_CHOICES if c[0] == role][0]
