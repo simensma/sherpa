@@ -4,10 +4,6 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.cache import cache
 
-from sherpa25.models import Member, Classified
-from user.models import Profile
-from core.models import County
-
 cachedQueries = []
 
 def invalidate_cache():
@@ -40,39 +36,6 @@ def getAndCacheAnnonserByFilter(minage, maxage, fylke, gender):
         cache.set(cacheKey, annonser, 60 * 60 * 10)
         cachedQueries.append(cacheKey)
     return annonser
-
-def create_and_save_new_annonse_from_old_annonse(oldmember, oldannonse, oldannonseimageurl):
-    annonse = Annonse()
-    annonse.userprofile = Profile.objects.get(memberid=oldmember.memberid)
-    annonse.timeadded = oldannonse.authorized
-    annonse.title = oldannonse.title
-    annonse.email = oldmember.email
-
-    newcounty = oldannonse.county
-    if newcounty < 10:
-        newcounty = '0'+str(newcounty)
-    else:
-        newcounty = str(newcounty)
-    try:
-        annonse.fylke = County.objects.get(code=newcounty)
-    except County.DoesNotExist:
-        annonse.fylke = County.objects.get(code=annonse.userprofile.get_county())
-
-    annonse.image = oldannonseimageurl
-    annonse.text = oldannonse.content
-    annonse.isold = True
-    annonse.hidden = False
-    annonse.hideage = True
-    annonse.compute_gender()
-
-    #hax to prevent autoadd now
-    annonse.save()
-    annonse.timeadded = oldannonse.authorized
-    annonse.save()
-
-    #invalidates cache to prevent users from going: "where is my annonse? Better call support! Better submit new ones!"
-    invalidate_cache()
-
 
 class Annonse(models.Model):
     userprofile = models.ForeignKey('user.Profile')

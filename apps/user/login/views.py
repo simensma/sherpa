@@ -16,11 +16,8 @@ import json, re
 from user.models import Profile
 from focus.models import Actor
 from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
-
 from core import validator
-
-from sherpa25.models import get_old_fjelltreffen_annonser
-from fjelltreffen.models import create_and_save_new_annonse_from_old_annonse
+from sherpa25.models import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
@@ -55,9 +52,7 @@ def login(request):
                 profile.save()
 
                 #if the user had annonser in fjelltreffen, import them
-                annonser = get_old_fjelltreffen_annonser(user.get_profile())
-                for annonse in annonser:
-                    create_and_save_new_annonse_from_old_annonse(annonse[0], annonse[1], annonse[2])
+                import_fjelltreffen_annonser(user.get_profile())
 
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))

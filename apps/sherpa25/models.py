@@ -1,6 +1,10 @@
 from django.db import models
 from django.conf import settings
 
+from user.models import Profile
+from core.models import County
+from fjelltreffen.models import invalidate_cache
+
 #this table links other tabels
 class Link(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -35,32 +39,6 @@ class Classifiedimage(models.Model):
     online = models.NullBooleanField(blank=True)
     class Meta:
         db_table = u'ClassifiedImage'
-
-def get_old_fjelltreffen_annonser(profile):
-    try:
-        memberid = Member.objects.get(memberid=profile.memberid).id
-    except Member.DoesNotExist:
-        return []
-    annonseids = []
-    for link in Link.objects.filter(fromobject='Member', fromid=memberid, toobject='Classified'):
-        annonseids.append(link.toid)
-
-    annonser = []
-    for annonseid in annonseids:
-        try:
-            imageid = Link.objects.get(fromobject='Classified', fromid=annonseid, toobject='ClassifiedImage').toid
-            #this assumes url on the form dnt/img/hash.jpg, which is the old sites imageurl-format
-            imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
-        except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
-            imageurl = None
-        try:
-            member = Member.objects.get(memberid=profile.memberid)
-            annonse = Classified.objects.get(id=annonseid)
-        except (Member.DoesNotExist, Classified.DoesNotExist) as e:
-            return []
-
-        annonser.append((member, annonse, imageurl))
-    return annonser
 
 class Member(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -98,3 +76,64 @@ class Member(models.Model):
     online = models.BooleanField()
     class Meta:
         db_table = u'Member'
+
+def import_fjelltreffen_annonser(profile):
+    try:
+        memberid = Member.objects.get(memberid=user.get_profile().memberid).id
+    except Member.DoesNotExist:
+        return []
+    annonseids = []
+    for link in Link.objects.filter(fromobject='Member', fromid=memberid, toobject='Classified'):
+        annonseids.append(link.toid)
+
+    annonser = []
+    for annonseid in annonseids:
+        try:
+            imageid = Link.objects.get(fromobject='Classified', fromid=annonseid, toobject='ClassifiedImage').toid
+            #this assumes url on the form dnt/img/hash.jpg, which is the old sites imageurl-format
+            imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
+        except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
+            imageurl = None
+        try:
+            member = Member.objects.get(memberid=user.get_profile().memberid)
+            annonse = Classified.objects.get(id=annonseid)
+        except (Member.DoesNotExist, Classified.DoesNotExist) as e:
+            return []
+
+        annonser.append((member, annonse, imageurl))
+    return annonser
+
+    for annonse in annonser:
+        oldmember = annonse[0]
+        oldannonse = annonse[1]
+        oldannonseimageurl = annonse[2]
+        annonse = Annonse()
+        annonse.userprofile = Profile.objects.get(memberid=oldmember.memberid)
+        annonse.timeadded = oldannonse.authorized
+        annonse.title = oldannonse.title
+        annonse.email = oldmember.email
+
+        newcounty = oldannonse.county
+        if newcounty < 10:
+            newcounty = '0'+str(newcounty)
+        else:
+            newcounty = str(newcounty)
+        try:
+            annonse.fylke = County.objects.get(code=newcounty)
+        except County.DoesNotExist:
+            annonse.fylke = County.objects.get(code=annonse.userprofile.get_county())
+
+        annonse.image = oldannonseimageurl
+        annonse.text = oldannonse.content
+        annonse.isold = True
+        annonse.hidden = False
+        annonse.hideage = True
+        annonse.compute_gender()
+
+        #hax to prevent autoadd now
+        annonse.save()
+        annonse.timeadded = oldannonse.authorized
+        annonse.save()
+
+    #invalidates cache to prevent users from going: "where is my annonse? Better call support! Better submit new ones!"
+    invalidate_cache()
