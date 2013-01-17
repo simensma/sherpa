@@ -1,5 +1,5 @@
 <select class="genderselect">
-  <option>Alle Kjønn</option>
+  <option value="">Begge kjønn</option>
   <option value="f">Kvinner</option>
   <option value="m">Menn</option>
 </select>
@@ -35,8 +35,10 @@ Til:
   <option value="70">69 år</option>
   <option value="75">74 år</option>
   <option value="80">79 år</option>
-  <option selected="selected" value="200">200 år</option>
+  <option selected="selected" value="200">Alle</option>
 </select>
 
 Fra:
 {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=0 includeall='True' %}
+
+<img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">

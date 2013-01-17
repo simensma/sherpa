@@ -29,7 +29,7 @@ BULKLOADNUM = 20
 default_min_age = 18
 default_max_age = 200
 default_fylke = '00'
-default_gender = None
+default_gender = ''
 
 def index(request):
     annonser = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
@@ -45,8 +45,8 @@ def load(request, page):
         annonsefilter = json.loads(request.POST['filter'])
         minage = int(annonsefilter['minage'])
         maxage = int(annonsefilter['maxage'])
-        #gender can be undefined, should then return none for no gender-filter
-        gender = annonsefilter.get('gender')
+        # Empty gender means both genders
+        gender = annonsefilter['gender']
         fylke = annonsefilter['fylke']
     except (KeyError, ValueError) as e:
         minage = default_min_age

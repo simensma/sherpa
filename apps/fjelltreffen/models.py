@@ -21,7 +21,7 @@ def get_annonser_by_filter(minage, maxage, fylke, gender):
     annonser = annonser.order_by('-timeadded')
     # We'll need to filter on Focus-data in the code, since it's a cross-db relation
     annonser = [a for a in annonser if a.profile.get_actor().get_age() >= minage and a.profile.get_actor().get_age() <= maxage]
-    if gender != None:
+    if gender != '':
         annonser = [a for a in annonser if a.profile.get_actor().get_gender() == gender]
 
     return annonser

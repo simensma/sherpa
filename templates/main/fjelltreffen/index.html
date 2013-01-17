@@ -13,7 +13,7 @@
 <div class="row">
   <div class="span9">
 
-    <div class="wrapper">
+    <div class="fjelltreffen wrapper">
       <h2>Fjelltreffen</h2>
 
       <div class="alert alert-info">
@@ -33,6 +33,14 @@
           <p>Det er ikke lagt ut noen annonser de siste {{ annonse_retention_days }} dagene.<br>
           Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
         {% endif %}
+      </div>
+
+      <div class="no-matches alert alert-error hide">
+        Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
+      </div>
+
+      <div class="no-further-matches alert alert-error hide">
+        Dette var alle annonsene som matchet søket ditt.
       </div>
     </div>
   </div>
