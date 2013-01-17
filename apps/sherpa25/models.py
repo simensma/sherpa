@@ -82,11 +82,20 @@ def import_fjelltreffen_annonser(profile):
 
     for link in Link.objects.filter(fromobject='Member', fromid=old_member.id, toobject='Classified'):
         try:
+            # Check for any saved images, and see if we can determine a usable path
             imageid = Link.objects.get(fromobject='Classified', fromid=link.toid, toobject='ClassifiedImage').toid
-            #this assumes url on the form dnt/img/hash.jpg, which is the old sites imageurl-format
-            old_annonse_imageurl = Classifiedimage.objects.get(id=imageid).path.split('dnt')[1]
+            path = Classifiedimage.objects.get(id=imageid).path
+            if path.startswith('/var/www/hosts/turistforeningen.no/web/img/fjelltreff/'):
+                # This one is served on the old site and still usable
+                old_annonse_imageurl = path.split('/var/www/hosts/turistforeningen.no/web/')[1]
+            elif path.startswith('/www/sherpa2/www/dnt/img/fjelltreff/'):
+                # This one is served on the old site and still usable
+                old_annonse_imageurl = path.split('/www/sherpa2/www/dnt/')[1]
+            else:
+                # Unknown path, or known unusable path - ignore this image.
+                old_annonse_imageurl = ''
         except (Link.DoesNotExist, Classifiedimage.DoesNotExist) as e:
-            old_annonse_imageurl = None
+            old_annonse_imageurl = ''
         try:
             old_annonse = Classified.objects.get(id=link.toid)
         except Classified.DoesNotExist as e:

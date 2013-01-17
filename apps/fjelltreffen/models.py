@@ -32,17 +32,17 @@ class Annonse(models.Model):
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     fylke = models.ForeignKey('core.County')
-    image = models.CharField(max_length=2048, null=True)
+    image = models.CharField(max_length=2048)
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
     isold = models.BooleanField()
 
     def get_image_url(self):
-        if isold:
-            return settings.OLD_SITE + image;
+        if self.isold:
+            return "http://%s/%s" % (settings.OLD_SITE, self.image);
         else:
-            return settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image
+            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
     def get_age(self):
         age = self.profile.get_actor().get_age()
