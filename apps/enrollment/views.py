@@ -566,7 +566,9 @@ def process_invoice(request):
         # Registration has already been completed, redirect forwards to results page
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
-    prepare_and_send_email(request.session['enrollment']['users'],
+    prepare_and_send_email(
+        request,
+        request.session['enrollment']['users'],
         request.session['enrollment']['association'],
         request.session['enrollment']['location'], 'invoice',
         request.session['enrollment']['price_sum'])
@@ -606,7 +608,9 @@ def process_card(request):
                 focus_user = Enrollment.objects.get(member_id=user['id'])
                 focus_user.payed = True
                 focus_user.save()
-            prepare_and_send_email(request.session['enrollment']['users'],
+            prepare_and_send_email(
+                request,
+                request.session['enrollment']['users'],
                 request.session['enrollment']['association'],
                 request.session['enrollment']['location'], 'card',
                 request.session['enrollment']['price_sum'])
@@ -689,7 +693,7 @@ def sms(request):
     except requests.ConnectionError:
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
-def prepare_and_send_email(users, association, location, payment_method, price_sum):
+def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
     email_recipients = []
     for user in users:
         if user['email'] != '':
