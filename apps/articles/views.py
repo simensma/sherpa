@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 
 from articles.models import Article, OldArticle
@@ -36,6 +37,9 @@ def index(request):
 
 # Note: This is probably not compatible with the tag search
 def more(request):
+    if not 'current' in request.POST:
+        return HttpResponseRedirect(reverse('articles.views.index'))
+
     response = []
     versions = Version.objects.filter(
         variant__article__isnull=False,
