@@ -44,10 +44,10 @@ def get_annonser_by_filter(minage, maxage, fylke, gender):
     maxage =(int((maxage+5)/5) * 5)-1
 
     now = datetime.now();
-    period = now - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+    active_period = now - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
     #all annonser that are not hidden, is newer than X days, and matches the query, order by date
 
-    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=period)
+    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=active_period)
     if fylke != '00':
         annonser = annonser.filter(fylke__code=fylke)
     annonser = annonser.order_by('-timeadded')
