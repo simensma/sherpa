@@ -23,23 +23,21 @@ from user.models import Profile
 #number of active annonser a user is allowed to have
 ANNONSELIMIT = 5
 
-#annonser to load when a user requests more
-BULKLOADNUM = 20
-
 default_min_age = 18
 default_max_age = 200
 default_fylke = '00'
 default_gender = ''
 
 def index(request):
-    annonser = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)[0:BULKLOADNUM]
+    annonser, start_index = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)
     context = {
         'annonser':annonser,
+        'start_index': start_index,
         'fylker':get_and_cache_fylker(),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/index.html', context)
 
-def load(request, page):
+def load(request, start_index):
     annonsefilter = None
     try:
         annonsefilter = json.loads(request.POST['filter'])
@@ -54,14 +52,14 @@ def load(request, page):
         gender = default_gender
         fylke = default_fylke
 
-    page = int(page)
-    A = BULKLOADNUM
-    annonser = get_annonser_by_filter(minage, maxage, fylke, gender)[(page*A):((page+1)*A)]
+    annonser, start_index = get_annonser_by_filter(minage, maxage, fylke, gender, int(start_index))
 
     context = RequestContext(request)
     context['annonser'] = annonser
     string = render_to_string('main/fjelltreffen/annonselist.html', context)
-    return HttpResponse(json.dumps({'html':string}))
+    return HttpResponse(json.dumps({
+        'html': string,
+        'start_index': start_index}))
 
 @login_required
 def edit(request, id):

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var loadindex = 1;
+    var start_index;
     var loading = false;
     var complete = false;
 
@@ -21,8 +21,10 @@ $(document).ready(function() {
     genderselect.change(filterChanged);
     fylkeselect.change(filterChanged);
 
+    start_index = wrapper.attr('data-start-index');
+
     function filterChanged(){
-        loadindex = 0;
+        start_index = 0;
         complete = false;
 
         no_matches.fadeOut();
@@ -53,7 +55,7 @@ $(document).ready(function() {
         };
 
         $.ajaxQueue({
-            url: "/fjelltreffen/last/" + loadindex + "/",
+            url: "/fjelltreffen/last/" + start_index + "/",
             data: {filter: JSON.stringify(filter)}
         }).done(function(result) {
             result = JSON.parse(result);
@@ -61,7 +63,7 @@ $(document).ready(function() {
 
             if(new_items.length == 0) {
                 // No results
-                if(loadindex == 0) {
+                if(start_index == 0) {
                     // This was a new filter with no matches
                     no_matches.fadeIn();
                 } else {
@@ -74,7 +76,7 @@ $(document).ready(function() {
                 listwrapper.append(new_items);
                 new_items.fadeIn();
             }
-            loadindex++;
+            start_index = result.start_index;
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere annonser. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {

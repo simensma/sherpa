@@ -36,24 +36,41 @@ class Annonse(models.Model):
 # Utility methods
 #
 
-def get_annonser_by_filter(minage, maxage, fylke, gender):
+#annonser to load when a user requests more
+BULKLOADNUM = 20
+
+def get_annonser_by_filter(minage, maxage, fylke, gender, start_index=0):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
 
     minage = int(minage/5) * 5
     maxage =(int((maxage+5)/5) * 5)-1
+    active_period = datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
-    now = datetime.now();
-    active_period = now - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
-    #all annonser that are not hidden, is newer than X days, and matches the query, order by date
+    # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
+    # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
+    # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
+    # have, at least for now.
 
-    annonser = Annonse.objects.filter(hidden=False, timeadded__gte=active_period)
+    all_candidates = Annonse.objects.filter(hidden=False, timeadded__gte=active_period)
     if fylke != '00':
-        annonser = annonser.filter(fylke__code=fylke)
-    annonser = annonser.order_by('-timeadded')
-    # We'll need to filter on Focus-data in the code, since it's a cross-db relation
-    annonser = [a for a in annonser if a.profile.get_actor().get_age() >= minage and a.profile.get_actor().get_age() <= maxage]
-    if gender != '':
-        annonser = [a for a in annonser if a.profile.get_actor().get_gender() == gender]
+        all_candidates = all_candidates.filter(fylke__code=fylke)
+    all_candidates = all_candidates.order_by('-timeadded')[start_index:]
 
-    return annonser
+    annonse_matches = []
+    for a in all_candidates:
+        start_index += 1
+
+        if a.profile.get_actor().get_age() < minage or a.profile.get_actor().get_age() > maxage:
+            continue
+
+        if gender != '' and a.profile.get_actor().get_gender() != gender:
+            continue
+
+        annonse_matches.append(a)
+
+        if len(annonse_matches) >= BULKLOADNUM:
+            # We now have the amount of results we want
+            break
+
+    return (annonse_matches, start_index)
