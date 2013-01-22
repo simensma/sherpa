@@ -212,6 +212,13 @@ class Actor(models.Model):
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
+    def get_balance(self):
+        balance = cache.get('actor.balance.%s' % self.memberid)
+        if balance is None:
+            balance = self.balance
+            cache.set('actor.balance.%s' % self.memberid, balance, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return balance
+
     class Meta:
         db_table = u'Actor'
 

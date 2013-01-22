@@ -231,8 +231,10 @@ def delete_actor_cache(request):
     cache.delete('actor.%s' % request.user.get_profile().memberid)
     cache.delete('actor.services.%s' % request.user.get_profile().memberid)
     cache.delete('actor.children.%s' % request.user.get_profile().memberid)
+    cache.delete('actor.balance.%s' % request.user.get_profile().memberid)
     for child in request.user.get_profile().get_actor().get_children():
         cache.delete('actor.%s' % child.memberid)
         cache.delete('actor.services.%s' % child.memberid)
+        cache.delete('actor.balance.%s' % child.memberid)
     messages.info(request, 'synchronization_success')
     return HttpResponse()
