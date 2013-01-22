@@ -226,6 +226,9 @@ def become_member(request):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.become_member'))
 
+# This view should keep track of all cache keys related to an actor, and delete them.
+# So whenever you add a new actor-related key to the cache, remember to delete it here!
+# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
 @login_required
 def delete_actor_cache(request):
     cache.delete('actor.%s' % request.user.get_profile().memberid)
