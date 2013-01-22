@@ -63,13 +63,6 @@ def load(request, page):
     string = render_to_string('main/fjelltreffen/annonselist.html', context)
     return HttpResponse(json.dumps({'html':string}))
 
-def get_and_cache_fylker():
-    fylker = cache.get('annonse-fylker')
-    if fylker == None:
-        fylker = County.objects.all().order_by('name')
-        cache.set('annonse-fylker', fylker, 60 * 60 *60)
-    return fylker
-
 @login_required
 def edit(request, id):
     try:
@@ -86,27 +79,6 @@ def edit(request, id):
         'requestedid': id,
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/new.html', context)
-
-#checks if the user has payed
-#the result is  cached when the user has payed, but not when the user hasnt in case he/she pays because he/she want to use fjelltreffen
-def has_payed(profile):
-    #user has no focus user
-    if profile.memberid == None:
-        return False
-
-    cachekey = 'fjelltreffen.haspayed.%s' % profile.memberid
-    result = cache.get(cachekey)
-    if result == None:
-        try:
-            #this should not be cached, when a user registers and payes whey would have to wait an hour to post
-            actor = Actor.objects.get(memberid=profile.memberid)
-            result = actor.balance.is_payed()
-
-            if result == True:
-                cache.set(cachekey, result, 60 * 60)
-        except (BalanceHistory.DoesNotExist, Actor.DoesNotExist) as e:
-            return False
-    return result
 
 @login_required
 def new(request):
@@ -225,3 +197,36 @@ def show(request, id):
         annonse = None
     context = {'annonse': annonse, 'requestedid':id}
     return render(request, 'main/fjelltreffen/show.html', context)
+
+
+#
+# Utility methods
+#
+
+def get_and_cache_fylker():
+    fylker = cache.get('annonse-fylker')
+    if fylker == None:
+        fylker = County.objects.all().order_by('name')
+        cache.set('annonse-fylker', fylker, 60 * 60 *60)
+    return fylker
+
+#checks if the user has payed
+#the result is  cached when the user has payed, but not when the user hasnt in case he/she pays because he/she want to use fjelltreffen
+def has_payed(profile):
+    #user has no focus user
+    if profile.memberid == None:
+        return False
+
+    cachekey = 'fjelltreffen.haspayed.%s' % profile.memberid
+    result = cache.get(cachekey)
+    if result == None:
+        try:
+            #this should not be cached, when a user registers and payes whey would have to wait an hour to post
+            actor = Actor.objects.get(memberid=profile.memberid)
+            result = actor.balance.is_payed()
+
+            if result == True:
+                cache.set(cachekey, result, 60 * 60)
+        except (BalanceHistory.DoesNotExist, Actor.DoesNotExist) as e:
+            return False
+    return result
