@@ -110,13 +110,11 @@ def has_payed(profile):
 
 @login_required
 def new(request):
-    user = request.user.get_profile()
     context = {
         'new': True,
         'annonse': None,
         'fylker': get_and_cache_fylker(),
-        'user': user,
-        'haspayed': has_payed(user),
+        'haspayed': has_payed(request.user.get_profile()),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/new.html', context)
 
