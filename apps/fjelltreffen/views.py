@@ -17,7 +17,7 @@ from fjelltreffen.models import Annonse, get_annonser_by_filter
 from core import validator
 from sherpa25.models import Classified
 from core.models import County
-from focus.models import Actor, BalanceHistory
+from focus.models import Actor
 from user.models import Profile
 
 #number of active annonser a user is allowed to have
@@ -82,7 +82,7 @@ def edit(request, id):
 
 @login_required
 def new(request):
-    if not has_payed(request.user.get_profile()):
+    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
     context = {
@@ -135,7 +135,7 @@ def reply(request):
 def save(request):
     #a user that has not payed will not get access to the new-view, so this should not happen
     #if it does however, just deny the save
-    if not has_payed(request.user.get_profile()):
+    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
         raise PermissionDenied
 
     try:
@@ -211,24 +211,3 @@ def get_and_cache_fylker():
         fylker = County.objects.all().order_by('name')
         cache.set('annonse-fylker', fylker, 60 * 60 *60)
     return fylker
-
-#checks if the user has payed
-#the result is  cached when the user has payed, but not when the user hasnt in case he/she pays because he/she want to use fjelltreffen
-def has_payed(profile):
-    #user has no focus user
-    if profile.memberid == None:
-        return False
-
-    cachekey = 'fjelltreffen.haspayed.%s' % profile.memberid
-    result = cache.get(cachekey)
-    if result == None:
-        try:
-            #this should not be cached, when a user registers and payes whey would have to wait an hour to post
-            actor = Actor.objects.get(memberid=profile.memberid)
-            result = actor.balance.is_payed()
-
-            if result == True:
-                cache.set(cachekey, result, 60 * 60)
-        except (BalanceHistory.DoesNotExist, Actor.DoesNotExist) as e:
-            return False
-    return result
