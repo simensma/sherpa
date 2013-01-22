@@ -82,11 +82,13 @@ def edit(request, id):
 
 @login_required
 def new(request):
+    if not has_payed(request.user.get_profile()):
+        return render(request, 'main/fjelltreffen/payment_required.html')
+
     context = {
         'new': True,
         'annonse': None,
         'fylker': get_and_cache_fylker(),
-        'haspayed': has_payed(request.user.get_profile()),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/new.html', context)
 

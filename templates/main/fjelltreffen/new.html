@@ -54,7 +54,7 @@
     {% include 'main/fjelltreffen/navigation.html' with active='None' %}
     </div>
 
-  {% elif new and haspayed %}
+  {% elif new %}
 
     <div class="span9">
       <div class="annonse" data-hidden="true">
@@ -79,21 +79,6 @@
     </div>
     <div class="span3">
     {% include 'main/fjelltreffen/navigation.html' with active='new' %}
-    </div>
-
-  {% elif not haspayed %}
-
-    <div class="span9">
-      <h2>Ikke betalt</h2>
-      <p>
-        For å legge ut annonser i fjelltreffen må du være medlem og ha betalt årskontigenten.<br>
-        <br>
-        Du kan betale årskontigenten <a href="{% url user.views.become_member %}">her</a>.<br>
-        Trykk <a href="{% url fjelltreffen.views.index %}">her</a> for å gå tilbake til fjelltreffen.
-      </p>
-    </div>
-    <div class="span3">
-    {% include 'main/fjelltreffen/navigation.html' with active='None' %}
     </div>
 
   {% else %}
