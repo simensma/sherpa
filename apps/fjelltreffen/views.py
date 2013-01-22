@@ -161,7 +161,7 @@ def save(request):
     try:
         annonse.email = content['email']
         annonse.title = content['title']
-        annonse.image = content.get('image')
+        annonse.image = content.get('image', '')
         annonse.text = content['text']
         annonse.hidden = content['hidden']
         annonse.hideage = content['hideage']
