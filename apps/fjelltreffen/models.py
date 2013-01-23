@@ -40,11 +40,13 @@ class Annonse(models.Model):
 BULKLOADNUM = 20
 
 def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
-    #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
-    #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
 
-    minage = int(minage/5) * 5
-    maxage =(int((maxage+5)/5) * 5)-1
+    # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
+    # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
+    minage = min((abs(int(minage) - i), i) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
+    if maxage != '':
+        maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
+
     active_period = datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
     # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
@@ -61,7 +63,14 @@ def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
     for a in all_candidates:
         start_index += 1
 
-        if a.profile.get_actor().get_age() < minage or a.profile.get_actor().get_age() > maxage:
+        # Note - we don't account for 'hideage' when checking ages, because minage/maxage are filtered to ranges automatically.
+        # If they weren't, a search where e.g. both min/max is 47, would have to match ages 45 through 49 for a user that
+        # is within that range AND has hideage=True on their ad.
+
+        if a.profile.get_actor().get_age() < minage:
+            continue
+
+        if maxage != '' and a.profile.get_actor().get_age() > maxage:
             continue
 
         if gender != '' and a.profile.get_actor().get_gender() != gender:

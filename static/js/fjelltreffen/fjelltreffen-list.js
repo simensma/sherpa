@@ -26,6 +26,11 @@ $(document).ready(function() {
     button_trigger.click(loadAnnonser);
 
     function filterChanged(){
+        if(upperageselect.val() != '' && lowerageselect.val() > upperageselect.val()) {
+            alert("Du kan ikke søke fra en høyere alder til en lavere alder! Det får du ingen treff på. Velg en annen aldersgruppe.");
+            return;
+        }
+
         start_index = 0;
         complete = false;
 

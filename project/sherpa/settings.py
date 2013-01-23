@@ -35,6 +35,7 @@ MEMBERID_LOOKUPS_LIMIT = 15 # Amount of allowed memberid + zipcode lookups when 
 MEMBERID_LOOKUPS_BAN = 60 * 60 * 4 # Amount of seconds the ban should last when exceeding lookup limit
 FOCUS_MEMBER_CACHE_PERIOD = 60 * 60 # Caching of memberdata (Actor, Services)
 FJELLTREFFEN_ANNONSE_RETENTION_DAYS = 90 # How long fjelltreffen-annonser are shown after creation
+FJELLTREFFEN_AGE_LIMITS = [18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80] # Age queries are rounded to these values
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)

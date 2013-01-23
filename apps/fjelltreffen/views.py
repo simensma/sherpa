@@ -27,7 +27,7 @@ from user.models import Profile
 ANNONSELIMIT = 5
 
 default_min_age = 18
-default_max_age = 200
+default_max_age = '' # No limit - empty string is also used in the select box
 default_county = '00'
 default_gender = ''
 
@@ -41,15 +41,16 @@ def index(request):
         'annonser':annonser,
         'start_index': start_index,
         'counties':County.typical_objects().order_by('name'),
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
+        'age_limits': settings.FJELLTREFFEN_AGE_LIMITS}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, start_index):
     annonsefilter = None
     try:
         annonsefilter = json.loads(request.POST['filter'])
-        minage = int(annonsefilter['minage'])
-        maxage = int(annonsefilter['maxage'])
+        minage = annonsefilter['minage']
+        maxage = annonsefilter['maxage']
         # Empty gender means both genders
         gender = annonsefilter['gender']
         county = annonsefilter['county']
