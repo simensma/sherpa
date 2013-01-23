@@ -59,44 +59,76 @@
       {% endif %}
     {% endfor %}
 
-    <form action="{% url fjelltreffen.views.save %}" method="post" class="fjelltreffen-annonse-edit">
+    <form action="{% url fjelltreffen.views.save %}" method="post" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ annonse.id }}">
 
       <div class="control-group title">
-        <input type="text" name="title" value="{{ annonse.title }}" placeholder="Tittel" class="input-large">
-        <span class="asterisk red">*</span>
+        <label class="control-label" for="title">Tittel</label>
+        <div class="controls">
+          <input type="text" name="title" value="{{ annonse.title }}" placeholder="Velg en annonsetittel..." class="input-xlarge">
+          <span class="asterisk red">*</span>
+        </div>
       </div>
 
       <div class="control-group email">
-        <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Din e-postadresse (vises ikke)">
-        <span class="asterisk red">*</span>
+        <label class="control-label" for="email">E-postadresse</label>
+        <div class="controls">
+          <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="input-xlarge">
+          <span class="asterisk red">*</span> (vises ikke)
+        </div>
       </div>
 
 
-      <select name="county">
-        {% for county in counties %}
-          {% if annonse %}
-            <option{% if annonse.county.code == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
-          {% else %}
-            <option{% if user.get_profile.get_county == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
-          {% endif %}
-        {% endfor %}
-      </select>
+      <div class="control-group county">
+        <label class="control-label" for="county">Fylke</label>
+        <div class="controls">
+          <select name="county">
+            {% for county in counties %}
+              {% if annonse %}
+                <option{% if annonse.county.code == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
+              {% else %}
+                <option{% if user.get_profile.get_county == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
 
       <div class="control-group text">
-        <textarea name="text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+        <label class="control-label" for="text">Annonsetekst</label>
+        <div class="controls">
+          <textarea name="text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea>
+        </div>
       </div>
 
-      <input type="checkbox" name="hideage"{% if annonse.hideage %} checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
-      <p class="hide-annonse"{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten."{% endif %}>
-        <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} disabled{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")
-      </p>
-      <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>
-      <button type="submit" class="btn btn-success save-annonse">Lagre</button>
-      {% if annonse %}
-        <a class="btn btn-danger" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
-      {% endif %}
+      <div class="control-group hideage">
+        <label class="control-label" for="hideage">Skjul min virkelige alder (vil vises som 40-44 hvis du er 43)</label>
+        <div class="controls">
+          <input type="checkbox" name="hideage"{% if annonse.hideage %} checked="checked"{% endif %}>
+        </div>
+      </div>
+
+      <div class="control-group hide-annonse"{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten."{% endif %}>
+        <label class="control-label" for="hide-annonse">Skjul annonsen (kan kun sees av deg fra "mine annonser")</label>
+        <div class="controls">
+          <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} disabled{% endif %}>
+        </div>
+      </div>
+
+
+      <div class="control-group">
+        <div class="controls">
+          <p>
+            <button type="submit" class="btn btn-success save-annonse">Lagre</button>
+            {% if annonse %}
+              <a class="btn btn-danger" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
+            {% endif %}
+          </p>
+          <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>
+        </div>
+      </div>
+
     </form>
 
   </div>
