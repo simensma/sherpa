@@ -40,7 +40,7 @@ def index(request):
     context = {
         'annonser':annonser,
         'start_index': start_index,
-        'counties':get_and_cache_counties(),
+        'counties':County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/index.html', context)
 
@@ -119,7 +119,7 @@ def new(request):
     context = {
         'new': True,
         'annonse': None,
-        'counties': get_and_cache_counties(),
+        'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
@@ -137,7 +137,7 @@ def edit(request, id):
     context = {
         'new': False,
         'annonse': annonse,
-        'counties': get_and_cache_counties(),
+        'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
@@ -237,15 +237,3 @@ def mine(request):
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)
-
-
-#
-# Utility methods
-#
-
-def get_and_cache_counties():
-    counties = cache.get('annonse-counties')
-    if counties == None:
-        counties = County.typical_objects().order_by('name')
-        cache.set('annonse-counties', counties, 60 * 60 *60)
-    return counties
