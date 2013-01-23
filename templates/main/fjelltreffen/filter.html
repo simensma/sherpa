@@ -39,4 +39,9 @@ Til:
 </select>
 
 Fra:
-{% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=0 includeall='True' %}
+<select class="fylkeselect">
+  <option value="00" selected>Hele landet</option>
+  {% for fylke in fylker %}
+    <option value="{{ fylke.code }}">{{ fylke.name }}</option>
+  {% endfor %}
+</select>
