@@ -22,7 +22,7 @@
         {% include 'main/fjelltreffen/annonselist.html' with active='mine'%}
       {% else %}
         <p>Du har ikke lagt ut noen annonser.<br>
-        Hvorfor ikke legge inn en annonse? Trykke på "Legg inn annonse" i menyen til høyre.</p>
+        Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?</p>
       {% endif %}
       </div>
     </div>
