@@ -48,7 +48,10 @@
         {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_profile.get_county%}<br>
       {% endif %}
 
-      <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+      <div class="control-group annonse-text-control">
+        <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+      </div>
+
       <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
       <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
       <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>

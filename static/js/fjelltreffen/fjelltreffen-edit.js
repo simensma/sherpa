@@ -25,6 +25,13 @@ $(document).ready(function() {
         req: true
     });
 
+    Validator.validate({
+        method: 'anything',
+        control_group: $("div.control-group.annonse-text-control"),
+        input: $("textarea.annonse-text"),
+        req: true
+    });
+
     function deleteAnnonse(){
         $.ajaxQueue({
             url: '/fjelltreffen/slett/' + annonseid + "/",
