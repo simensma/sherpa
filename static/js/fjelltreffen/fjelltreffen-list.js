@@ -10,7 +10,7 @@ $(document).ready(function() {
     var lowerageselect = $("select.lowerageselect");
     var upperageselect = $("select.upperageselect");
     var genderselect = $("select.genderselect");
-    var fylkeselect = $("select.fylkeselect");
+    var countyselect = $("select.countyselect");
 
     var button_trigger = wrapper.find("button.load");
     var loader = wrapper.find("img.ajaxloader");
@@ -20,7 +20,7 @@ $(document).ready(function() {
     lowerageselect.change(filterChanged);
     upperageselect.change(filterChanged);
     genderselect.change(filterChanged);
-    fylkeselect.change(filterChanged);
+    countyselect.change(filterChanged);
 
     start_index = wrapper.attr('data-start-index');
     button_trigger.click(loadAnnonser);
@@ -48,7 +48,7 @@ $(document).ready(function() {
             maxage: upperageselect.val(),
             gender: genderselect.val(),
             //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
-            fylke: fylkeselect.attr("value")
+            county: countyselect.attr("value")
         };
 
         $.ajaxQueue({

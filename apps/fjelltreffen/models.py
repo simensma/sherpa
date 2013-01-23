@@ -9,7 +9,7 @@ class Annonse(models.Model):
     timeadded = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    fylke = models.ForeignKey('core.County')
+    county = models.ForeignKey('core.County')
     image = models.CharField(max_length=2048)
     text = models.TextField()
     hidden = models.BooleanField()
@@ -39,7 +39,7 @@ class Annonse(models.Model):
 #annonser to load when a user requests more
 BULKLOADNUM = 20
 
-def get_annonser_by_filter(minage, maxage, fylke, gender, start_index=0):
+def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
     #to protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     #5this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
 
@@ -53,8 +53,8 @@ def get_annonser_by_filter(minage, maxage, fylke, gender, start_index=0):
     # have, at least for now.
 
     all_candidates = Annonse.objects.filter(hidden=False, timeadded__gte=active_period)
-    if fylke != '00':
-        all_candidates = all_candidates.filter(fylke__code=fylke)
+    if county != '00':
+        all_candidates = all_candidates.filter(county__code=county)
     all_candidates = all_candidates.order_by('-timeadded')[start_index:]
 
     annonse_matches = []

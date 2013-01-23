@@ -74,12 +74,12 @@
       </div>
 
 
-      <select name="fylke">
-        {% for fylke in fylker %}
+      <select name="county">
+        {% for county in counties %}
           {% if annonse %}
-            <option{% if annonse.fylke.code == fylke.code %} selected="selected"{% endif %} value="{{ fylke.code }}">{{ fylke.name }}</option>
+            <option{% if annonse.county.code == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
           {% else %}
-            <option{% if user.get_profile.get_county == fylke.code %} selected="selected"{% endif %} value="{{ fylke.code }}">{{ fylke.name }}</option>
+            <option{% if user.get_profile.get_county == county.code %} selected="selected"{% endif %} value="{{ county.code }}">{{ county.name }}</option>
           {% endif %}
         {% endfor %}
       </select>

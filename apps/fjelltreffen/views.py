@@ -28,7 +28,7 @@ ANNONSELIMIT = 5
 
 default_min_age = 18
 default_max_age = 200
-default_fylke = '00'
+default_county = '00'
 default_gender = ''
 
 #
@@ -36,11 +36,11 @@ default_gender = ''
 #
 
 def index(request):
-    annonser, start_index = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)
+    annonser, start_index = get_annonser_by_filter(default_min_age, default_max_age, default_county, default_gender)
     context = {
         'annonser':annonser,
         'start_index': start_index,
-        'fylker':get_and_cache_fylker(),
+        'counties':get_and_cache_counties(),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/index.html', context)
 
@@ -52,14 +52,14 @@ def load(request, start_index):
         maxage = int(annonsefilter['maxage'])
         # Empty gender means both genders
         gender = annonsefilter['gender']
-        fylke = annonsefilter['fylke']
+        county = annonsefilter['county']
     except (KeyError, ValueError) as e:
         minage = default_min_age
         maxage = default_max_age
         gender = default_gender
-        fylke = default_fylke
+        county = default_county
 
-    annonser, start_index = get_annonser_by_filter(minage, maxage, fylke, gender, int(start_index))
+    annonser, start_index = get_annonser_by_filter(minage, maxage, county, gender, int(start_index))
 
     context = RequestContext(request)
     context['annonser'] = annonser
@@ -119,7 +119,7 @@ def new(request):
     context = {
         'new': True,
         'annonse': None,
-        'fylker': get_and_cache_fylker(),
+        'counties': get_and_cache_counties(),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
@@ -137,7 +137,7 @@ def edit(request, id):
     context = {
         'new': False,
         'annonse': annonse,
-        'fylker': get_and_cache_fylker(),
+        'counties': get_and_cache_counties(),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
@@ -187,7 +187,7 @@ def save(request):
         else:
             return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
 
-    annonse.fylke = County.objects.get(code=request.POST['fylke'])
+    annonse.county = County.objects.get(code=request.POST['county'])
     annonse.email = request.POST['email']
     annonse.title = request.POST['title']
     annonse.image = request.POST.get('image', '')
@@ -243,9 +243,9 @@ def mine(request):
 # Utility methods
 #
 
-def get_and_cache_fylker():
-    fylker = cache.get('annonse-fylker')
-    if fylker == None:
-        fylker = County.objects.all().order_by('name')
-        cache.set('annonse-fylker', fylker, 60 * 60 *60)
-    return fylker
+def get_and_cache_counties():
+    counties = cache.get('annonse-counties')
+    if counties == None:
+        counties = County.objects.all().order_by('name')
+        cache.set('annonse-counties', counties, 60 * 60 *60)
+    return counties
