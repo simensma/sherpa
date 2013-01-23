@@ -246,6 +246,6 @@ def mine(request):
 def get_and_cache_counties():
     counties = cache.get('annonse-counties')
     if counties == None:
-        counties = County.objects.all().order_by('name')
+        counties = County.typical_objects().order_by('name')
         cache.set('annonse-counties', counties, 60 * 60 *60)
     return counties
