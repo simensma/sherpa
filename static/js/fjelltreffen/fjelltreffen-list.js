@@ -4,13 +4,13 @@ $(document).ready(function() {
     var loading = false;
     var complete = false;
 
-    var wrapper = $("div.fjelltreffen.wrapper");
+    var wrapper = $("div.fjelltreffen-list");
     var listwrapper = $("div.annonse-list-wrapper");
 
-    var lowerageselect = $("select.lowerageselect");
-    var upperageselect = $("select.upperageselect");
-    var genderselect = $("select.genderselect");
-    var countyselect = $("select.countyselect");
+    var lowerageselect = $("select.lowerage");
+    var upperageselect = $("select.upperage");
+    var genderselect = $("select.gender");
+    var countyselect = $("select.county");
 
     var button_trigger = wrapper.find("button.load");
     var loader = wrapper.find("img.ajaxloader");

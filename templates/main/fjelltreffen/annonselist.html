@@ -1,7 +1,7 @@
 {% load gender %}
 
 {% for annonse in annonser %}
-  <div class="fjelltreffen-annonse">
+  <div class="annonse">
     {% if active == 'mine' %}
       <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{% if annonse.is_expired %}[Utgått] {% endif %}{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</a></h3>
     {% else %}

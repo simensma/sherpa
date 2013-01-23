@@ -1,15 +1,23 @@
-div.fjelltreffen-annonse {
-  margin-top: 15px;
+div.fjelltreffen-list {
+  div.annonse {
+    margin-top: 15px;
 
-  h3 {
-    margin-bottom: 0;
+    h3 {
+      margin-bottom: 0;
+    }
+
+    p.details {
+      margin-bottom: 0;
+      margin-top: 0px;
+      font-style: italic;
+      font-size: 14px;
+    }
   }
 
-  p.details {
-    margin-bottom: 0;
-    margin-top: 0px;
-    font-style: italic;
-    font-size: 14px;
+  div.load-more {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 25px;
   }
 }
 
@@ -25,38 +33,37 @@ form.fjelltreffen-annonse-edit {
   }
 }
 
-textarea.annonsereply-text {
-  width: 600px;
-  height: 200px;
-}
+div.fjelltreffen-annonse {
+  p.details {
+    font-style: italic;
+    font-size: 14px;
+  }
 
-div.annonse-display {
   div.image-container {
     margin-left: 15px;
     margin-bottom: 5px;
   }
 }
 
-div.fjelltreffen.wrapper {
-  div.load-more {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 25px;
+div.fjelltreffen-filters {
+  select.gender {
+    width: 120px;
+  }
+
+  select.lowerage {
+    width: 80px;
+  }
+
+  select.upperage {
+    width: 80px;
+  }
+
+  select.county {
+    width: 160px;
   }
 }
 
-select.genderselect {
-  width: 120px;
-}
-
-select.lowerageselect {
-  width: 80px;
-}
-
-select.upperageselect {
-  width: 80px;
-}
-
-select.countyselect {
-  width: 160px;
+textarea.annonsereply-text {
+  width: 600px;
+  height: 200px;
 }

@@ -21,14 +21,16 @@
 
   <div class="span9">
     {% if annonse %}
-      <div class="annonse annonse-display" data-id="{{ annonse.id }}">
+      <div class="fjelltreffen-annonse" data-id="{{ annonse.id }}">
         <h2>{{ annonse.title }}</h2>
         {% if annonse.image %}
           <div class="pull-right image-container">
             <img src="{{ annonse.get_image_url }}" alt="{{ annonse.title }}">
           </div>
         {% endif %}
-        <p>{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }}, {{ annonse.county.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
+        <p class="details">
+          {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.timeadded|date:"j. F Y" }}
+        </p>
 
         <p>{{ annonse.text|linebreaksbr }}</p>
         <br>

@@ -14,16 +14,16 @@
 <div class="row">
   <div class="span9">
 
-    <div class="wrapper">
-    <h2>Mine annonser</h2>
+    <div class="fjelltreffen-list">
+      <h2>Mine annonser</h2>
 
-    <div class="annonse-list-wrapper">
-      {% if annonser%}
-        {% include 'main/fjelltreffen/annonselist.html' with active='mine'%}
-      {% else %}
-        <p>Du har ikke lagt ut noen annonser.<br>
-        Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?</p>
-      {% endif %}
+      <div class="annonse-list-wrapper">
+        {% if annonser%}
+          {% include 'main/fjelltreffen/annonselist.html' with active='mine' %}
+        {% else %}
+          <p>Du har ikke lagt ut noen annonser.<br>
+          Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?</p>
+        {% endif %}
       </div>
     </div>
   </div>
