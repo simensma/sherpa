@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -108,8 +108,9 @@ def show(request, id):
 #
 
 @login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def new(request):
-    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
+    if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
     if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
@@ -123,6 +124,7 @@ def new(request):
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -140,6 +142,7 @@ def edit(request, id):
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def save(request):
     if request.user.get_profile().get_actor() == None:
         raise PermissionDenied
@@ -214,6 +217,7 @@ def save(request):
         return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def delete(request, id):
     try:
         annonse = Annonse.objects.get(id=id);
@@ -228,6 +232,7 @@ def delete(request, id):
         return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def mine(request):
     #all annonser that belongs to the current user
     annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-timeadded')
