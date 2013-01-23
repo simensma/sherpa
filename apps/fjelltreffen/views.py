@@ -177,30 +177,31 @@ def save(request):
         messages.error(request, 'missing_text')
         errors = True
 
-    # If the user is trying to show a hidden annonse, confirm that they have payed
-    if annonse.hidden and request.POST.get('hidden', '') != 'on' and not request.user.get_profile().get_actor().get_balance().is_payed():
-        messages.error(request, 'showing_when_not_payed')
-        errors = True
-
     if errors:
         if request.POST['id'] == '':
             return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
         else:
             return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
 
+    # Override any attempt to show a hidden annonse when the user hasn't payed
+    if annonse.hidden and not request.user.get_profile().get_actor().get_balance().is_payed():
+        hidden = True
+    else:
+        hidden = request.POST.get('hidden', '') == 'on'
+
     annonse.county = County.objects.get(code=request.POST['county'])
     annonse.email = request.POST['email']
     annonse.title = request.POST['title']
     annonse.image = request.POST.get('image', '')
     annonse.text = request.POST['text']
-    annonse.hidden = request.POST.get('hidden', '') == 'on'
+    annonse.hidden = hidden
     annonse.hideage = request.POST.get('hideage', '') == 'on'
 
     # Post-save validations, to potentially keep some of the input
     redirect_back = False
 
     # Hide the annonse if user has more active annonser than the limit
-    if not request.POST.get('hidden', '') == 'on' and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
+    if not hidden and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
         messages.error(request, 'too_many_active_annonser')
         annonse.hidden = True
         redirect_back = True
