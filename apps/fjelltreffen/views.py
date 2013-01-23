@@ -97,7 +97,16 @@ def reply(request, id):
         return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
     try:
-        send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], request.POST['text'], request.POST['email'], [annonse.email], fail_silently=False)
+        context = RequestContext(request, {
+            'annonse': annonse,
+            'reply': {
+                'name': request.POST['name'],
+                'email': request.POST['email'],
+                'text': request.POST['text']}
+            })
+        content = render_to_string('main/fjelltreffen/replay_email.txt', context)
+
+        send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
         messages.info(request, 'success')
         del request.session['fjelltreffen.reply']
     except Exception as e:

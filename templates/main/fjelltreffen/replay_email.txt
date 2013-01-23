@@ -1,0 +1,8 @@
+Hei {{ annonse.profile.get_full_name }}, du har fått svar på din annonse i Fjelltreffen!
+
+Re: {{ annonse.title }} (https://{{ site.domain }}{% url fjelltreffen.views.show annonse.id %})
+Fra: {{ reply.name }} <{{ reply.email }}>
+
+-----------------------------------------------------------------------------------------
+
+{{ reply.text }}
