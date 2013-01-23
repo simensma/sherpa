@@ -25,12 +25,18 @@ class Annonse(models.Model):
     def get_age(self):
         age = self.profile.get_actor().get_age()
         if self.hideage:
-            return '%s-%s' % (int(age/5) * 5, (int((age+5)/5) * 5)-1)
+            return Annonse.obscure_age(age)
         else:
             return age
 
     def is_expired(self):
         return self.timeadded < (datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
+
+    @staticmethod
+    def obscure_age(age):
+        lower = max(settings.FJELLTREFFEN_AGE_LIMITS[0], int(age/5) * 5)
+        upper = max(settings.FJELLTREFFEN_AGE_LIMITS[1], (int((age+5)/5) * 5) - 1)
+        return '%s-%s' % (lower, upper)
 
 #
 # Utility methods

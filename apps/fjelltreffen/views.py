@@ -121,7 +121,8 @@ def new(request):
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': ANNONSELIMIT}
+        'active_annonse_limit': ANNONSELIMIT,
+        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -139,7 +140,8 @@ def edit(request, id):
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': ANNONSELIMIT}
+        'active_annonse_limit': ANNONSELIMIT,
+        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -195,7 +197,7 @@ def save(request):
     annonse.image = request.POST.get('image', '')
     annonse.text = request.POST['text']
     annonse.hidden = hidden
-    annonse.hideage = request.POST.get('hideage', '') == 'on'
+    annonse.hideage = request.POST['hideage'] == 'hide'
 
     # Post-save validations, to potentially keep some of the input
     redirect_back = False

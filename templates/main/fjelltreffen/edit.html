@@ -103,16 +103,24 @@
       </div>
 
       <div class="control-group hideage">
-        <label class="control-label" for="hideage">Skjul min virkelige alder (vil vises som 40-44 hvis du er 43)</label>
+        <label class="control-label" for="hideage">Vis min alder som:</label>
         <div class="controls">
-          <input type="checkbox" name="hideage"{% if annonse.hideage %} checked="checked"{% endif %}>
+          <label for="hideage" class="radio">
+            <input type="radio" name="hideage" value="raw"{% if not annonse.hideage %} checked{% endif %}>
+            {{ user.get_profile.get_actor.get_age }} år
+          </label>
+          <label for="hideage" class="radio">
+            <input type="radio" name="hideage" value="hide"{% if annonse.hideage %} checked{% endif %}>
+            {{ obscured_age }} år
+          </label>
         </div>
       </div>
 
       <div class="control-group hide-annonse"{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten."{% endif %}>
-        <label class="control-label" for="hide-annonse">Skjul annonsen (kan kun sees av deg fra "mine annonser")</label>
+        <label class="control-label" for="hide-annonse">Skjul annonsen</label>
         <div class="controls">
           <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} disabled{% endif %}>
+          Ingen kan se eller svare på annonsen mens den er skjult.
         </div>
       </div>
 
