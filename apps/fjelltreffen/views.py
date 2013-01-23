@@ -30,6 +30,10 @@ default_max_age = 200
 default_fylke = '00'
 default_gender = ''
 
+#
+# Public views
+#
+
 def index(request):
     annonser, start_index = get_annonser_by_filter(default_min_age, default_max_age, default_fylke, default_gender)
     context = {
@@ -63,50 +67,6 @@ def load(request, start_index):
         'html': string,
         'start_index': start_index}))
 
-@login_required
-def edit(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id)
-        #checks if the user is the owner
-        if annonse.profile != request.user.get_profile():
-            raise PermissionDenied
-    except Annonse.DoesNotExist:
-        return render(request, 'main/fjelltreffen/edit_not_found.html')
-
-    context = {
-        'new': False,
-        'annonse': annonse,
-        'fylker': get_and_cache_fylker(),
-        'requestedid': id,
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
-    return render(request, 'main/fjelltreffen/edit.html', context)
-
-@login_required
-def new(request):
-    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
-        return render(request, 'main/fjelltreffen/payment_required.html')
-
-    context = {
-        'new': True,
-        'annonse': None,
-        'fylker': get_and_cache_fylker(),
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
-    return render(request, 'main/fjelltreffen/edit.html', context)
-
-@login_required
-def delete(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id);
-        if annonse.profile != request.user.get_profile():
-            #someone is trying to delete an annonse that dosent belong to them
-            raise PermissionDenied
-        else:
-            annonse.delete()
-            return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
-    except Annonse.DoesNotExist:
-        # Ignore - maybe a double-request, or something. They can try again if something failed.
-        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
-
 def reply(request):
     try:
         content = json.loads(request.POST['reply'])
@@ -132,6 +92,49 @@ def reply(request):
             return HttpResponse(status=400)
     except (Annonse.DoesNotExist, KeyError) as e:
         return HttpResponse(status=400)
+
+def show(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id, hidden=False)
+    except (Annonse.DoesNotExist):
+        annonse = None
+    context = {'annonse': annonse, 'requestedid':id}
+    return render(request, 'main/fjelltreffen/show.html', context)
+
+
+#
+# Actions for logged-in users (crud)
+#
+
+@login_required
+def new(request):
+    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
+        return render(request, 'main/fjelltreffen/payment_required.html')
+
+    context = {
+        'new': True,
+        'annonse': None,
+        'fylker': get_and_cache_fylker(),
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+    return render(request, 'main/fjelltreffen/edit.html', context)
+
+@login_required
+def edit(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id)
+        #checks if the user is the owner
+        if annonse.profile != request.user.get_profile():
+            raise PermissionDenied
+    except Annonse.DoesNotExist:
+        return render(request, 'main/fjelltreffen/edit_not_found.html')
+
+    context = {
+        'new': False,
+        'annonse': annonse,
+        'fylker': get_and_cache_fylker(),
+        'requestedid': id,
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+    return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
 def save(request):
@@ -174,20 +177,26 @@ def save(request):
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
+def delete(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id);
+        if annonse.profile != request.user.get_profile():
+            #someone is trying to delete an annonse that dosent belong to them
+            raise PermissionDenied
+        else:
+            annonse.delete()
+            return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    except Annonse.DoesNotExist:
+        # Ignore - maybe a double-request, or something. They can try again if something failed.
+        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+
+@login_required
 def mine(request):
     #all annonser that belongs to the current user
     annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-timeadded')
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)
-
-def show(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id, hidden=False)
-    except (Annonse.DoesNotExist):
-        annonse = None
-    context = {'annonse': annonse, 'requestedid':id}
-    return render(request, 'main/fjelltreffen/show.html', context)
 
 
 #
