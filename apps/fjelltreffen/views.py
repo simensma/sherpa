@@ -67,9 +67,10 @@ def edit(request, id):
         annonse = Annonse.objects.get(id=id)
         #checks if the user is the owner
         if annonse.profile != request.user.get_profile():
-            annonse = None
+            raise PermissionDenied
     except Annonse.DoesNotExist:
-        annonse = None
+        return render(request, 'main/fjelltreffen/edit_not_found.html')
+
     context = {
         'new': False,
         'annonse': annonse,

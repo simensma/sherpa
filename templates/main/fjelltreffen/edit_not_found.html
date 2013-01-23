@@ -1,0 +1,22 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+
+{% block breadcrumb %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em>Rediger annonse</em>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+    <h2>Rediger annonse</h2>
+    <p>Fant ikke annonsen som du prøver å redigere. Er du sikker på at du klikket på rett link?</p>
+    <p><a href="{% url fjelltreffen.views.mine %}">Gå tilbake til dine annonser</a>.</p>
+  </div>
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' %}
+  </div>
+</div>
+
+{% endblock %}
