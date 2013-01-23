@@ -20,44 +20,56 @@
 <div class="row">
   <div class="span9">
 
+    {% if annonse %}
+      <h2>Rediger Annonse</h2>
+    {% else %}
+      <h2>Ny Annonse</h2>
+    {% endif %}
+
     {% if annonse.is_expired %}
       <div class="alert alert-error">
         Denne annonsen har ligget lengre enn {{ annonse_retention_days }} dager og er derfor utgått.
       </div>
     {% endif %}
 
-    <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
-      {% if annonse %}
-        <h2>Rediger Annonse</h2>
-      {% else %}
-        <h2>Ny Annonse</h2>
-      {% endif %}
+    <form action="{% url fjelltreffen.views.save %}" method="post" class="fjelltreffen-annonse-edit">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ annonse.id }}">
 
-      <div class="control-group annonse-title-control">
-        <input type="text" class="annonse-title input-large" value="{{ annonse.title }}" placeholder="Tittel">
-      </div>
-
-      <div class="control-group annonse-email-control">
-        <input type="text" class="annonse-email input-large" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Epost">
+      <div class="control-group title">
+        <input type="text" name="title" value="{{ annonse.title }}" placeholder="Tittel" class="input-large">
         <span class="asterisk red">*</span>
       </div>
 
-      {% if annonse %}
-        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
-      {% else %}
-        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_profile.get_county%}<br>
-      {% endif %}
-
-      <div class="control-group annonse-text-control">
-        <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+      <div class="control-group email">
+        <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Epost">
+        <span class="asterisk red">*</span>
       </div>
 
-      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
-      <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
+
+      <select name="fylke">
+        {% for fylke in fylker %}
+          {% if annonse %}
+            <option{% if annonse.fylke.code == fylke.code %} selected="selected"{% endif %} value="{{ fylke.code }}">{{ fylke.name }}</option>
+          {% else %}
+            <option{% if user.get_profile.get_county == fylke.code %} selected="selected"{% endif %} value="{{ fylke.code }}">{{ fylke.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+
+      <div class="control-group text">
+        <textarea name="text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+      </div>
+
+      <input type="checkbox" name="hideage"{% if annonse.hideage %} checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
+      <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
       <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>
-      <button class="btn btn-success save-annonse">Lagre</button>
-      <button class="btn btn-danger delete-annonse">Slett</button>
-    </div>
+      <button type="submit" class="btn btn-success save-annonse">Lagre</button>
+      {% if annonse %}
+        <a class="btn btn-danger" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
+      {% endif %}
+    </form>
+
   </div>
   <div class="span3">
     {% if annonse %}

@@ -1,8 +1,10 @@
+# encoding: utf-8
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
@@ -100,9 +102,10 @@ def delete(request, id):
             raise PermissionDenied
         else:
             annonse.delete()
-            return HttpResponse()
-    except (Annonse.DoesNotExist, KeyError) as e:
-        return HttpResponse(status=400)
+            return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    except Annonse.DoesNotExist:
+        # Ignore - maybe a double-request, or something. They can try again if something failed.
+        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 def reply(request):
     try:
@@ -132,43 +135,30 @@ def reply(request):
 
 @login_required
 def save(request):
-    #a user that has not payed will not get access to the new-view, so this should not happen
-    #if it does however, just deny the save
-    if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
+    if request.user.get_profile().get_actor() == None:
         raise PermissionDenied
 
-    try:
-        content = json.loads(request.POST['annonse'])
-    except KeyError as e:
-        return HttpResponse(status=400)
+    # If user hasn't payed, allow editing, but not creating new annonser
+    if not request.user.get_profile().get_actor().get_balance().is_payed() and request.POST['id'] == '':
+        raise PermissionDenied
 
-    try:
-        id = content['id']
-        annonse = Annonse.objects.get(id=id);
+    if request.POST['id'] == '':
+        # New annonse (not editing an existing one), create it
+        annonse = Annonse()
+        annonse.profile = request.user.get_profile()
+    else:
+        annonse = Annonse.objects.get(id=request.POST['id']);
         if annonse.profile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
             raise PermissionDenied
-    except (Annonse.DoesNotExist, KeyError) as e:
-        #the user is creating a new annonse, not editing an excisting one
-        annonse = Annonse()
-        annonse.profile = request.user.get_profile()
 
-    try:
-        annonse.fylke = County.objects.get(code=content['fylke'])
-    except (County.DoesNotExist, KeyError) as e:
-        #could happen if the user tampers with the html to select an illegal county
-        return HttpResponse(status=400)
-
-    try:
-        annonse.email = content['email']
-        annonse.title = content['title']
-        annonse.image = content.get('image', '')
-        annonse.text = content['text']
-        annonse.hidden = content['hidden']
-        annonse.hideage = content['hideage']
-    except KeyError as e:
-        #something is missing in the data sendt
-        return HttpResponse(status=400)
+    annonse.fylke = County.objects.get(code=request.POST['fylke'])
+    annonse.email = request.POST['email']
+    annonse.title = request.POST['title']
+    annonse.image = request.POST.get('image', '')
+    annonse.text = request.POST['text']
+    annonse.hidden = request.POST.get('hidden', '') == 'on'
+    annonse.hideage = request.POST.get('hideage', '') == 'on'
 
     #validate input
     if validator.email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
@@ -181,7 +171,7 @@ def save(request):
     else:
         return HttpResponse(status=400)
 
-    return HttpResponse(json.dumps({'id':annonse.id}))
+    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
 def mine(request):
