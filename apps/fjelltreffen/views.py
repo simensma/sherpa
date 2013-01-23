@@ -151,8 +151,18 @@ def save(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed() and request.POST['id'] == '':
         raise PermissionDenied
 
-    #validate input
+    # Pre-save validations
     errors = False
+
+    if request.POST['id'] == '':
+        # New annonse (not editing an existing one), create it
+        annonse = Annonse()
+        annonse.profile = request.user.get_profile()
+    else:
+        annonse = Annonse.objects.get(id=request.POST['id']);
+        if annonse.profile != request.user.get_profile():
+            #someone is trying to edit an annonse that dosent belong to them
+            raise PermissionDenied
 
     if request.POST['title'] == '':
         messages.error(request, 'missing_title')
@@ -166,21 +176,16 @@ def save(request):
         messages.error(request, 'missing_text')
         errors = True
 
+    # If the user is trying to show a hidden annonse, confirm that they have payed
+    if annonse.hidden and request.POST.get('hidden', '') != 'on' and not request.user.get_profile().get_actor().get_balance().is_payed():
+        messages.error(request, 'showing_when_not_payed')
+        errors = True
+
     if errors:
         if request.POST['id'] == '':
             return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
         else:
             return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
-
-    if request.POST['id'] == '':
-        # New annonse (not editing an existing one), create it
-        annonse = Annonse()
-        annonse.profile = request.user.get_profile()
-    else:
-        annonse = Annonse.objects.get(id=request.POST['id']);
-        if annonse.profile != request.user.get_profile():
-            #someone is trying to edit an annonse that dosent belong to them
-            raise PermissionDenied
 
     annonse.fylke = County.objects.get(code=request.POST['fylke'])
     annonse.email = request.POST['email']

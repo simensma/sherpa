@@ -2,6 +2,8 @@ $(document).ready(function() {
 
     var form = $("form.fjelltreffen-annonse-edit");
 
+    form.find("p.hide-annonse").tooltip();
+
     Validator.validate({
         method: 'anything',
         control_group: form.find("div.control-group.title"),

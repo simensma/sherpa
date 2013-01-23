@@ -51,6 +51,11 @@
           <a class="close">x</a>
           Du har for mange aktive annonser! Du kan på det meste ha {{ active_annonse_limit }} synlige annonser av gangen. Annonsen har blitt satt som skjult. Du kan slette eller skjule <a href="{% url fjelltreffen.views.mine %}">dine andre annonser</a>, for så å vise denne.
         </div>
+      {% elif message.message == 'showing_when_not_payed' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.
+        </div>
       {% endif %}
     {% endfor %}
 
@@ -84,7 +89,9 @@
       </div>
 
       <input type="checkbox" name="hideage"{% if annonse.hideage %} checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
-      <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
+      <p class="hide-annonse"{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten."{% endif %}>
+        <input type="checkbox" name="hidden"{% if annonse.hidden %} checked="checked"{% endif %}{% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %} disabled{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")
+      </p>
       <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>
       <button type="submit" class="btn btn-success save-annonse">Lagre</button>
       {% if annonse %}
