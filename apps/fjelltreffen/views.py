@@ -117,8 +117,6 @@ def new(request):
         return render(request, 'main/fjelltreffen/too_many_active_annonser.html', context)
 
     context = {
-        'new': True,
-        'annonse': None,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'active_annonse_limit': ANNONSELIMIT}
@@ -135,7 +133,6 @@ def edit(request, id):
         return render(request, 'main/fjelltreffen/edit_not_found.html')
 
     context = {
-        'new': False,
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
