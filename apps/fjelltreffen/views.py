@@ -77,7 +77,7 @@ def edit(request, id):
         'fylker': get_and_cache_fylker(),
         'requestedid': id,
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
-    return render(request, 'main/fjelltreffen/new.html', context)
+    return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
 def new(request):
@@ -89,7 +89,7 @@ def new(request):
         'annonse': None,
         'fylker': get_and_cache_fylker(),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
-    return render(request, 'main/fjelltreffen/new.html', context)
+    return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
 def delete(request, id):

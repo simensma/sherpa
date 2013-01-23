@@ -1,0 +1,68 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+  {% if annonse %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> /  <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">{{ annonse.title }}</a></em>
+  {% elif new %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ny Annonse</a></em>
+  {% else %}
+    <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a> / <em><a href="{% url fjelltreffen.views.edit requestedid %}">Ikke Funnet</a></em>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/fjelltreffen/fjelltreffen-edit.js"></script>
+{% endblock%}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    {% if annonse.is_expired %}
+      <div class="alert alert-error">
+        Denne annonsen har ligget lengre enn {{ annonse_retention_days }} dager og er derfor utgått.
+      </div>
+    {% endif %}
+
+    <div class="annonse" data-hidden="{{ annonse.hidden }}" data-id="{{ annonse.id }}">
+      {% if annonse %}
+        <h2>Rediger Annonse</h2>
+      {% else %}
+        <h2>Ny Annonse</h2>
+      {% endif %}
+
+      <div class="control-group annonse-title-control">
+        <input type="text" class="annonse-title input-large" value="{{ annonse.title }}" placeholder="Tittel">
+      </div>
+
+      <div class="control-group annonse-email-control">
+        <input type="text" class="annonse-email input-large" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Epost">
+        <span class="asterisk red">*</span>
+      </div>
+
+      {% if annonse %}
+        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=annonse.fylke.code %}<br>
+      {% else %}
+        {% include 'main/fjelltreffen/fylkelist.html' with selectedfylkecode=user.get_profile.get_county%}<br>
+      {% endif %}
+
+      <textarea class="annonse-text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea><br>
+      <input type="checkbox" class="annonse-hideage" {% if annonse.hideage %}checked="checked"{% endif %}>Skjul min virkelige alder(vil vises som 40-44 hvis du er 43)<br>
+      <input type="checkbox" class="annonse-hide" {% if annonse.hidden %}checked="checked"{% endif %}>Skjul annonsen(kan kun sees av deg fra "mine annonser")<br>
+      <p>Merk: Annonsen blir liggende i {{ annonse_retention_days }} dager.</p>
+      <button class="btn btn-success save-annonse">Lagre</button>
+      <button class="btn btn-danger delete-annonse">Slett</button>
+    </div>
+  </div>
+  <div class="span3">
+    {% if annonse %}
+      {% include 'main/fjelltreffen/navigation.html' %}
+    {% else %}
+      {% include 'main/fjelltreffen/navigation.html' with active='new' %}
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
