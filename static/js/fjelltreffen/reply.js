@@ -1,75 +1,30 @@
 $(document).ready(function() {
 
-    var annonseid = $("div.annonse").attr("data-id");
+    var form = $("form.fjelltreffen-annonse-reply");
 
-    $("button.annonsereply-send").click(function(){
-        disableButtons();
-        reply();
+    Validator.validate({
+        method: 'full_name',
+        control_group: form.find("div.control-group.name"),
+        input: form.find("input[name='name']"),
+        req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: $("div.control-group.annonsereply-email-control"),
-        input: $("input.annonsereply-email"),
+        control_group: form.find("div.control-group.email"),
+        input: form.find("input[name='email']"),
         req: true
     });
 
     Validator.validate({
         method: 'anything',
-        control_group: $("div.control-group.annonsereply-name-control"),
-        input: $("input.annonsereply-name"),
+        control_group: form.find("div.control-group.text"),
+        input: form.find("textarea[name='text']"),
         req: true
     });
 
-    function reply(){
-
-        var name = $("input.annonsereply-name");
-        var email = $("input.annonsereply-email");
-        var namecontrol = $("div.annonsereply-name-control");
-        var emailcontrol = $("div.annonsereply-email-control");
-        var text = $("textarea.annonsereply-text");
-
-        //simple client-side validation, proper validation is performed server-side
-        if(namecontrol.hasClass("error") || name.val().length < 1){
-            alert("Du må ha et navn!");
-            enableButtons();
-            return;
-        }
-        if(emailcontrol.hasClass("error") || email.val().length < 3){
-            alert("Du må skrive inn en epostadresse, uten denne kan ikke annonsøren svare deg!");
-            enableButtons();
-            return;
-        }
-        if(text.val().length <= 5){
-            alert("Du må skrive et litt lengere svar!");
-            enableButtons();
-            return;
-        }
-
-        content = {
-            id:annonseid,
-            name:name.val(),
-            email:email.val(),
-            text:text.val(),
-        }
-
-        $.ajaxQueue({
-            url: '/fjelltreffen/svar/',
-            data: 'reply=' + JSON.stringify(content)
-        }).done(function(result) {
-            alert("Ditt svar har blitt sendt til annonsøren.");
-            location.reload();
-        }).fail(function(result) {
-            alert("Det skjedde en feil under sendig av svar, har du fylt inn feltene riktig og er koblet til internet? Det kan også hende at det er noe galt med eposten til annonsøren.");
-            enableButtons();
-        });
+    if(form.is("[data-prefilled]")) {
+        Validator.trigger();
     }
 
-    function disableButtons(){
-        $("button.annonsereply-send").attr("disabled", true)
-    }
-
-    function enableButtons(){
-        $("button.annonsereply-send").attr("disabled", false)
-    }
 });

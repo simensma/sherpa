@@ -18,10 +18,11 @@
 {% block body %}
 
 <div class="row">
-
   <div class="span9">
+
     {% if annonse %}
-      <div class="fjelltreffen-annonse" data-id="{{ annonse.id }}">
+
+      <div class="fjelltreffen-annonse">
         <h2>{{ annonse.title }}</h2>
         {% if annonse.image %}
           <div class="pull-right image-container">
@@ -34,23 +35,70 @@
 
         <p>{{ annonse.text|linebreaksbr }}</p>
         <br>
-        <h3>Her kan du svare på annonsen:</h3>
-
-        <div class="control-group annonsereply-name-control">
-          <input type="text" class="annonsereply-name input-large"  placeholder="Navn"><span class="asterisk red"> *</span>
-        </div>
-
-        <div class="control-group annonsereply-email-control">
-          <input type="text" class="annonsereply-email input-large"  placeholder="Epost"><span class="asterisk red"> *</span>
-        </div>
-
-        <textarea class="annonsereply-text" placeholder="Skriv svaret ditt her..."></textarea><br>
-        <button class="btn btn-success annonsereply-send">Send</button>
       </div>
-      {% else %}
-        <h2>Ikke funnet</h2>
-        <p>Annonsen du leter etter ble ikke funnet. Den kan ha gått ut på dato, eller blitt slettet av annonsøren.</p>
-      {% endif %}
+
+      <h3>Svar på annonsen!</h3>
+
+      {% for message in messages %}
+        {% if message.message == 'success' %}
+          <div class="alert alert-success">
+            <a class="close">x</a>
+            Svaret ditt er sendt til annonsøren. {% if annonse.profile.get_actor.get_gender|gender == 'mann' %}Han{% else %}Hun{% endif %} vil motta en e-post med ditt svar. Eventuell videre korrespondanse foregår direkte via e-post eller på annen ønsket måte.
+          </div>
+        {% elif message.message == 'email_failure' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <p><strong>Teknisk feil!</strong></p>
+            <p>
+              Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+            </p>
+            <p>
+              Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
+            </p>
+          </div>
+        {% elif message.message == 'missing_name' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            Du må legge inn navnet ditt!
+          </div>
+        {% elif message.message == 'invalid_email' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
+          </div>
+        {% elif message.message == 'missing_text' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            Du må da skrive litt i svaret til annonsøren!
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
+        {% csrf_token %}
+
+        <div class="control-group name">
+          <input type="text" name="name" placeholder="Ditt navn..." value="{{ reply.name }}" class="input-xlarge"> <span class="asterisk red">*</span>
+        </div>
+
+        <div class="control-group email">
+          <input type="text" name="email" placeholder="Din e-postadresse..." value="{{ reply.email }}" class="input-xlarge"> <span class="asterisk red">*</span>
+        </div>
+
+        <div class="control-group text">
+          <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea><br>
+        </div>
+
+        <button type="submit" class="btn btn-success">Send</button>
+      </form>
+
+    {% else %}
+
+      <h2>Ikke funnet</h2>
+      <p>Annonsen du leter etter ble ikke funnet. Den kan ha gått ut på dato, eller blitt slettet av annonsøren.</p>
+
+    {% endif %}
+
   </div>
 
   <div class="span3">

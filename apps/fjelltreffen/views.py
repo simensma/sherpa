@@ -14,6 +14,8 @@ from django.core.exceptions import PermissionDenied
 from datetime import datetime, timedelta
 from smtplib import SMTPException
 import json
+import sys
+import logging
 
 from fjelltreffen.models import Annonse, get_annonser_by_filter
 from core import validator
@@ -21,6 +23,8 @@ from sherpa25.models import Classified
 from core.models import County
 from focus.models import Actor
 from user.models import Profile
+
+logger = logging.getLogger('sherpa')
 
 #number of active annonser a user is allowed to have
 ANNONSELIMIT = 5
@@ -68,38 +72,57 @@ def load(request, start_index):
         'html': string,
         'start_index': start_index}))
 
-def reply(request):
-    try:
-        content = json.loads(request.POST['reply'])
-    except KeyError as e:
-        return HttpResponse(status=400)
+def reply(request, id):
+    annonse = Annonse.objects.get(id=id)
+    errors = False
+    request.session['fjelltreffen.reply'] = {
+        'name': request.POST['name'],
+        'email': request.POST['email'],
+        'text': request.POST['text']
+    }
+
+    if not validator.name(request.POST['name']):
+        messages.error(request, 'missing_name')
+        errors = True
+
+    if not validator.email(request.POST['email']):
+        messages.error(request, 'invalid_email')
+        errors = True
+
+    if request.POST['text'] == '':
+        messages.error(request, 'missing_text')
+        errors = True
+
+    if errors:
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
     try:
-        replyid = content['id']
-        replyname = content['name']
-        replyemail = content['email']
-        replytext = content['text']
-
-        #validate input
-        if validator.email(replyemail) and len(replyname) > 0 and len(replytext) > 5:
-
-            replytoemail = Annonse.objects.get(id=replyid).email
-            try:
-                send_mail('DNT Fjelltreffen - Svar fra ' + replyname, replytext, replyemail, [replytoemail], fail_silently=False)
-            except SMTPException as e:
-                return HttpResponse(status=400)
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=400)
-    except (Annonse.DoesNotExist, KeyError) as e:
-        return HttpResponse(status=400)
+        send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], request.POST['text'], request.POST['email'], [annonse.email], fail_silently=False)
+        messages.info(request, 'success')
+        del request.session['fjelltreffen.reply']
+    except Exception as e:
+        messages.error(request, 'email_failure')
+        logger.error(u"Klarte ikke å sende Fjelltreffen-epost",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+    return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
 def show(request, id):
     try:
         annonse = Annonse.objects.get(id=id, hidden=False)
     except (Annonse.DoesNotExist):
         annonse = None
-    context = {'annonse': annonse, 'requestedid':id}
+
+    reply = None
+    if 'fjelltreffen.reply' in request.session:
+        reply = request.session['fjelltreffen.reply']
+        del request.session['fjelltreffen.reply']
+
+    context = {
+        'annonse': annonse,
+        'requestedid': id,
+        'reply': reply}
     return render(request, 'main/fjelltreffen/show.html', context)
 
 
