@@ -12,6 +12,7 @@ $(document).ready(function() {
     var genderselect = $("select.genderselect");
     var fylkeselect = $("select.fylkeselect");
 
+    var button_trigger = wrapper.find("button.load");
     var loader = wrapper.find("img.ajaxloader");
     var no_matches = wrapper.find("div.no-matches");
     var no_further_matches = wrapper.find("div.no-further-matches");
@@ -22,6 +23,7 @@ $(document).ready(function() {
     fylkeselect.change(filterChanged);
 
     start_index = wrapper.attr('data-start-index');
+    button_trigger.click(loadAnnonser);
 
     function filterChanged(){
         start_index = 0;
@@ -36,14 +38,9 @@ $(document).ready(function() {
         });
     }
 
-    $(window).scroll(function() {
-        if(!loading && !complete && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
-            loadAnnonser();
-        }
-    });
-
     function loadAnnonser(){
         loading = true;
+        button_trigger.hide();
         loader.show();
 
         var filter = {
@@ -75,13 +72,14 @@ $(document).ready(function() {
                 new_items.hide();
                 listwrapper.append(new_items);
                 new_items.fadeIn();
+                button_trigger.show();
             }
             start_index = result.start_index;
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere annonser. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
             loading = false;
-            loader.fadeOut();
+            loader.hide();
         });
     }
 });
