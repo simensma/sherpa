@@ -30,6 +30,30 @@
       </div>
     {% endif %}
 
+    {% for message in messages %}
+      {% if message.message == 'missing_title' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          Du må fylle inn en tittel på annonsen!
+        </div>
+      {% elif message.message == 'invalid_email' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          Du må fylle inn en gyldig e-postadresse! Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.
+        </div>
+      {% elif message.message == 'missing_text' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.
+        </div>
+      {% elif message.message == 'too_many_active_annonser' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          Du har for mange aktive annonser! Du kan på det meste ha {{ active_annonse_limit }} synlige annonser av gangen. Annonsen har blitt satt som skjult. Du kan slette eller skjule <a href="{% url fjelltreffen.views.mine %}">dine andre annonser</a>, for så å vise denne.
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <form action="{% url fjelltreffen.views.save %}" method="post" class="fjelltreffen-annonse-edit">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ annonse.id }}">
@@ -40,7 +64,7 @@
       </div>
 
       <div class="control-group email">
-        <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Epost">
+        <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Din e-postadresse (vises ikke)">
         <span class="asterisk red">*</span>
       </div>
 

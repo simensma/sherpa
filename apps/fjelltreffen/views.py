@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -111,11 +112,16 @@ def new(request):
     if request.user.get_profile().get_actor() == None or not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
+    if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
+        context = {'active_annonse_limit': ANNONSELIMIT}
+        return render(request, 'main/fjelltreffen/too_many_active_annonser.html', context)
+
     context = {
         'new': True,
         'annonse': None,
         'fylker': get_and_cache_fylker(),
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
+        'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -132,8 +138,8 @@ def edit(request, id):
         'new': False,
         'annonse': annonse,
         'fylker': get_and_cache_fylker(),
-        'requestedid': id,
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
+        'active_annonse_limit': ANNONSELIMIT}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -144,6 +150,27 @@ def save(request):
     # If user hasn't payed, allow editing, but not creating new annonser
     if not request.user.get_profile().get_actor().get_balance().is_payed() and request.POST['id'] == '':
         raise PermissionDenied
+
+    #validate input
+    errors = False
+
+    if request.POST['title'] == '':
+        messages.error(request, 'missing_title')
+        errors = True
+
+    if not validator.email(request.POST['email']):
+        messages.error(request, 'invalid_email')
+        errors = True
+
+    if request.POST['text'] == '':
+        messages.error(request, 'missing_text')
+        errors = True
+
+    if errors:
+        if request.POST['id'] == '':
+            return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
+        else:
+            return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
 
     if request.POST['id'] == '':
         # New annonse (not editing an existing one), create it
@@ -163,18 +190,26 @@ def save(request):
     annonse.hidden = request.POST.get('hidden', '') == 'on'
     annonse.hideage = request.POST.get('hideage', '') == 'on'
 
-    #validate input
-    if validator.email(annonse.email) and len(annonse.title) > 0 and len(annonse.text) > 10:
-        if not annonse.hidden:
-            numposts = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count()
-            if(numposts > ANNONSELIMIT):
-                #notify the user that he/she has too many active annonser
-                return HttpResponse(json.dumps({'error':'toomany', 'num':ANNONSELIMIT}), status=400)
-        annonse.save()
-    else:
-        return HttpResponse(status=400)
+    # Post-save validations, to potentially keep some of the input
+    redirect_back = False
 
-    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    # Hide the annonse if user has more active annonser than the limit
+    if not request.POST.get('hidden', '') == 'on' and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
+        messages.error(request, 'too_many_active_annonser')
+        annonse.hidden = True
+        redirect_back = True
+
+    annonse.save()
+
+    if redirect_back:
+        if request.POST['id'] == '':
+            # Note: The user doesn't get access to the 'new' view, so this shouldn't happen, but potentially, the user
+            # can make POST requests to *this* view, so just handle the case anyway.
+            return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
+        else:
+            return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
+    else:
+        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
 def delete(request, id):

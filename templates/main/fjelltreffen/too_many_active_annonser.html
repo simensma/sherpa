@@ -1,0 +1,22 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ny Annonse</a></em>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+    <h2>For mange aktive annonser</h2>
+    <p>
+      Du har for mange aktive annonser! Du kan på det meste ha {{ active_annonse_limit }} synlige annonser av gangen. Du kan slette eller skjule <a href="{% url fjelltreffen.views.mine %}">dine eksisterende annonser</a> først, hvis du vil legge ut en ny en.
+    </p>
+  </div>
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='new' %}
+  </div>
+</div>
+
+{% endblock %}
