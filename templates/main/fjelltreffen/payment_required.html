@@ -2,26 +2,21 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Ubetalt medlemskontigent</a></em>
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.new %}">Legg ut annonse</a></em>
 {% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="span9">
-    <h2>Ikke betalt</h2>
+    <h2>Ubetalt årskontingent</h2>
     <p>
-      For å legge ut annonser i fjelltreffen må du være medlem og ha betalt årskontigenten.
+      For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.
     </p>
 
-    <p>
-      Du kan betale årskontigenten <a href="{% url user.views.become_member %}">her</a>.<br>
-      Trykk <a href="{% url fjelltreffen.views.index %}">her</a> for å gå tilbake til fjelltreffen.
-    </p>
-
-    <p>
-      Hvis du veldig nylig har betalt, kan du prøve å oppdatere din kontoinformasjon nederst på <a href="{% url user.views.account %}">denne siden</a>, og prøve igjen.
-    </p>
+    <div class="alert alert-info">
+      <i class="icon-info-sign"></i> Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
+    </div>
   </div>
   <div class="span3">
     {% include 'main/fjelltreffen/navigation.html' with active='new' %}
