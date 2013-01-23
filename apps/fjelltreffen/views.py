@@ -13,7 +13,6 @@ from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, timedelta
 from smtplib import SMTPException
-import urllib
 import json
 
 from fjelltreffen.models import Annonse, get_annonser_by_filter
