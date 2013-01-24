@@ -2,11 +2,11 @@ from django.db import models
 from django.conf import settings
 from django.core.cache import cache
 
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile')
-    timeadded = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     county = models.ForeignKey('core.County')
@@ -30,7 +30,7 @@ class Annonse(models.Model):
             return age
 
     def is_expired(self):
-        return self.timeadded < (datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
+        return self.date < (date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
 
     @staticmethod
     def obscure_age(age):
@@ -53,17 +53,17 @@ def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
     if maxage != '':
         maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
 
-    active_period = datetime.now() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+    active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
     # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
     # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
     # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
     # have, at least for now.
 
-    all_candidates = Annonse.objects.filter(hidden=False, timeadded__gte=active_period)
+    all_candidates = Annonse.objects.filter(hidden=False, date__gte=active_period)
     if county != '00':
         all_candidates = all_candidates.filter(county__code=county)
-    all_candidates = all_candidates.order_by('-timeadded')[start_index:]
+    all_candidates = all_candidates.order_by('-date')[start_index:]
 
     annonse_matches = []
     for a in all_candidates:

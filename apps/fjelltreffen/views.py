@@ -270,7 +270,7 @@ def delete(request, id):
 @user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def mine(request):
     #all annonser that belongs to the current user
-    annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-timeadded')
+    annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-date')
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)

@@ -103,7 +103,7 @@ def import_fjelltreffen_annonser(profile):
 
         annonse = Annonse()
         annonse.profile = profile
-        annonse.timeadded = old_annonse.authorized
+        annonse.date = old_annonse.authorized
         annonse.title = old_annonse.title
 
         # Email is required, so make sure we find one for the old user
@@ -137,5 +137,5 @@ def import_fjelltreffen_annonser(profile):
 
         #hax to prevent autoadd now
         annonse.save()
-        annonse.timeadded = old_annonse.authorized
+        annonse.date = old_annonse.authorized
         annonse.save()

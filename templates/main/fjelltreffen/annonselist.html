@@ -7,7 +7,7 @@
     {% else %}
       <h3><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></h3>
     {% endif %}
-    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.timeadded|date:"j. F Y" }}</p>
+    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
     <p>{{ annonse.text|truncatechars:100 }}</p>
   </div>
 {% endfor %}
