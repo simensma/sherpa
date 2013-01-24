@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 from smtplib import SMTPException
 import json
 import sys
@@ -270,7 +270,11 @@ def delete(request, id):
 @user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def mine(request):
     #all annonser that belongs to the current user
-    annonser = Annonse.objects.filter(profile=request.user.get_profile()).order_by('-date')
+    mine = Annonse.objects.filter(profile=request.user.get_profile())
+    active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+    annonser = {
+        'not_expired': mine.filter(date__gte=active_period).order_by('-date'),
+        'expired': mine.filter(date__lt=active_period).order_by('-date')}
 
     context = {'annonser': annonser}
     return render(request, 'main/fjelltreffen/mine.html', context)

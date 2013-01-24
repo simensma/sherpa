@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load gender %}
+
 {% block title %}Min annonser — Fjelltreffen{% endblock %}
 {% block breadcrumb %}
   <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.mine %}">Mine Annonser</a></em>
@@ -16,15 +18,62 @@
 
     <div class="fjelltreffen-list">
       <h2>Mine annonser</h2>
+        {% if annonser.not_expired|length > 0 or annonser.expired|length > 0 %}
 
-      <div class="annonse-list-wrapper">
-        {% if annonser%}
-          {% include 'main/fjelltreffen/annonselist.html' with active='mine' %}
+          <table class="table table-hover list-mine">
+
+            {% for annonse in annonser.not_expired %}
+              <tr>
+                <td>
+                  <div class="annonse">
+                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</a></h3>
+                    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
+                    <p>{{ annonse.text|truncatechars:100 }}</p>
+                  </div>
+                </td>
+                <td>
+                  {% if annonse.expires_in == 0 %}
+                    Utgår i natt
+                  {% else %}
+                    {{ annonse.expires_in }} dager igjen
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+
+            {% if annonser.expired|length > 0 %}
+              <tr class="expired">
+                <td colspan="2">
+                  Følgende annonser er utgått på dato og vises ikke.
+                </td>
+              </tr>
+            {% endif %}
+
+            {% for annonse in annonser.expired %}
+              <tr>
+                <td>
+                  <div class="annonse">
+                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</a></h3>
+                    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
+                    <p>{{ annonse.text|truncatechars:100 }}</p>
+                  </div>
+                </td>
+                <td>
+                  Utgått
+                </td>
+              </tr>
+            {% endfor %}
+
+          </table>
+
         {% else %}
-          <p>Du har ikke lagt ut noen annonser.<br>
-          Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?</p>
+
+          <p>
+            Du har ikke lagt ut noen annonser.<br>
+            Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?
+          </p>
+
         {% endif %}
-      </div>
     </div>
   </div>
 

@@ -32,6 +32,9 @@ class Annonse(models.Model):
     def is_expired(self):
         return self.date < (date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
 
+    def expires_in(self):
+        return ((self.date + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
+
     @staticmethod
     def obscure_age(age):
         lower = max(settings.FJELLTREFFEN_AGE_LIMITS[0], int(age/5) * 5)
