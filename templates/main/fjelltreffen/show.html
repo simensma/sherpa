@@ -78,11 +78,11 @@
         {% csrf_token %}
 
         <div class="control-group name">
-          <input type="text" name="name" placeholder="Ditt navn..." value="{{ reply.name }}" class="input-xlarge"> <span class="asterisk red">*</span>
+          <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
         </div>
 
         <div class="control-group email">
-          <input type="text" name="email" placeholder="Din e-postadresse..." value="{{ reply.email }}" class="input-xlarge"> <span class="asterisk red">*</span>
+          <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
         </div>
 
         <div class="control-group text">
