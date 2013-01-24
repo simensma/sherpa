@@ -16,13 +16,9 @@
     <div class="fjelltreffen-list" data-start-index="{{ start_index }}">
       <h2>Fjelltreffen</h2>
 
-      <div class="alert alert-info">
-        <a class="close">x</a>
-        Velkommen til nye fjelltreffen! <br>
-        Hvis du har annonser på gamle
-        fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.<br>
-        Hvis du vil besøke gamle fjelltreffen kan du trykke <a href="http://www2.turistforeningen.no/fjelltreffen">her</a>.
-      </div>
+      <p>
+        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.
+      </p>
 
       {% include 'main/fjelltreffen/filter.html' %}
 
