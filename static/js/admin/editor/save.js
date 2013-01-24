@@ -167,7 +167,7 @@ $(document).ready(function() {
 
             // Publish-state
             data.datetime = $("input[name='article-datetime-field']").val();
-            data.status = JSON.stringify({'status': $("div.editor-header input[name='publish']:checked").length > 0});
+            data.status = JSON.stringify($("div.editor-header input[name='publish']:checked").length > 0);
         }
 
         // Save content
