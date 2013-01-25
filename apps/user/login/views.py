@@ -185,14 +185,21 @@ def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
     try:
+        # Try users that aren't members first - this won't be many
         profile = User.objects.get(email=request.POST['email']).get_profile()
-        logging.info("User exists")
     except User.DoesNotExist:
         try:
             actor = Actor.objects.get(email=request.POST['email'])
             profile = Profile.objects.get(memberid=actor.memberid)
         except Actor.DoesNotExist:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
+        except Profile.DoesNotExist:
+            # This means the email exists in Focus, but the user isn't in our user-base.
+            # Maybe we should inform them that they're not registered, or something?
+            return HttpResponse(json.dumps({'status': 'unknown_email'}))
+        except Actor.MultipleObjectsReturned:
+            # TODO: Multiple email-hits will need to be handled differently soon
+            return HttpResponse(json.dumps({'status': 'multiple_hits'}))
     except KeyError:
         return HttpResponse(json.dumps({'status': 'unknown_email'}))
     key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)

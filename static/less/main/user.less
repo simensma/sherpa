@@ -18,3 +18,29 @@ form.account-info div.control-group:hover div.controls {
     display: inline;
   }
 }
+
+div.forgot-password-container {
+  p.actions {
+    padding-top: 0 !important;
+  }
+}
+
+/* Login page */
+
+div.forgot-password {
+  button.restore-password {
+    margin-bottom: 10px;
+  }
+
+  p.info.success {
+    color: rgb(45, 140, 32);
+  }
+
+  p.info.unknown, p.info.invalid, p.info.multiple, p.info.error {
+    color: @profile-red;
+  }
+}
+
+div#restore-password table td.info {
+  color: @profile-red;
+}
