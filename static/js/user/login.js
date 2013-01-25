@@ -14,7 +14,7 @@ $(document).ready(function() {
     forgot_password.find("button.restore-password").click(function() {
         forgot_password.find("p.info").hide();
         var button = $(this);
-        button.hide();
+        button.attr('disabled', true);
         $("img.ajaxloader").show();
         $.ajax({
             url: '/minside/gjenopprett-passord/e-post/',
@@ -23,10 +23,10 @@ $(document).ready(function() {
             result = JSON.parse(result);
             if(result.status == 'unknown_email') {
                 forgot_password.find("p.info.unknown").show();
-                button.show();
+                button.removeAttr('disabled');
             } else if(result.status == 'invalid_email') {
                 forgot_password.find("p.info.invalid").show();
-                button.show();
+                button.removeAttr('disabled');
             } else if(result.status == 'success') {
                 forgot_password.find("p.info.success").show();
             }
