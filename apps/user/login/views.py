@@ -97,6 +97,8 @@ def register(request):
                 messages.error(request, 'email_exists')
                 return HttpResponseRedirect(reverse('user.login.views.register'))
 
+            actor.email = request.POST['email']
+            actor.save()
             user = User.objects.create_user(username(actor.email), password=request.POST['password'])
             profile = Profile(user=user, memberid=actor.memberid)
             profile.save()
