@@ -7,7 +7,7 @@ Epost: {{ giver.email }}{% endif %}
 
 {% for receiver in receivers %}Til: {{ receiver.name }}
 Type: {{ receiver.type.name }}
-Født: {{ receiver.dob|date:"j. F Y" }}
+Født: {{ receiver.dob|date:"d.m.y" }}
 {{ receiver.address }}
 {{ receiver.zipcode }} {{ receiver.area }}{% if receiver.phone %}
 Tlf: {{ receiver.phone }}{% endif %}{% if receiver.email %}
