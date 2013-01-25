@@ -2,6 +2,10 @@
 {% block title %}Logg inn{% endblock %}
 {% block breadcrumb %}<em><a href="{% url user.login.views.login %}">Logg inn</a></em>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/login.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div id="login">
