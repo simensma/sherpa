@@ -1,7 +1,17 @@
 $(document).ready(function() {
 
+    Validator.validate({
+        method: 'email',
+        control_group: $("div.forgot-password-container div.control-group"),
+        input: $("div.forgot-password-container input[name='email']"),
+        req: true
+    });
+
     /* Restore password */
     var forgot_password = $("div.forgot-password");
+    var button = forgot_password.find("button.restore-password");
+    var loader = forgot_password.find("img.ajaxloader");
+
     $("div#login a.forgot").click(function() {
         $(this).parent().hide();
         forgot_password.slideDown();
@@ -11,14 +21,13 @@ $(document).ready(function() {
             forgot_password.find("button.restore-password").click();
         }
     });
-    forgot_password.find("button.restore-password").click(function() {
+    button.click(function() {
         forgot_password.find("p.info").hide();
-        var button = $(this);
         button.attr('disabled', true);
-        $("img.ajaxloader").show();
+        loader.show();
         $.ajax({
             url: '/minside/gjenopprett-passord/e-post/',
-            data: 'email=' + encodeURIComponent(forgot_password.find("input[name='email']").val())
+            data: { email: forgot_password.find("input[name='email']").val() }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.status == 'unknown_email') {
@@ -33,9 +42,8 @@ $(document).ready(function() {
         }).fail(function(r) {
             forgot_password.find("p.info.error").show();
             button.removeAttr('disabled');
-            button.text(button.attr('data-original-text'));
         }).always(function(r) {
-            $("img.ajaxloader").hide();
+            loader.hide();
         });
     });
 
