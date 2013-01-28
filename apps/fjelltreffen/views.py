@@ -50,19 +50,16 @@ def index(request):
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, start_index):
+    if not request.is_ajax() or request.method != 'POST':
+        raise PermissionDenied
+
     annonsefilter = None
-    try:
-        annonsefilter = json.loads(request.POST['filter'])
-        minage = annonsefilter['minage']
-        maxage = annonsefilter['maxage']
-        # Empty gender means both genders
-        gender = annonsefilter['gender']
-        county = annonsefilter['county']
-    except (KeyError, ValueError) as e:
-        minage = default_min_age
-        maxage = default_max_age
-        gender = default_gender
-        county = default_county
+    annonsefilter = json.loads(request.POST['filter'])
+    minage = annonsefilter['minage']
+    maxage = annonsefilter['maxage']
+    # Empty gender means both genders
+    gender = annonsefilter['gender']
+    county = annonsefilter['county']
 
     annonser, start_index, end = get_annonser_by_filter(minage, maxage, county, gender, int(start_index))
 
