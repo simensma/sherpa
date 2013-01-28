@@ -39,10 +39,11 @@ default_gender = ''
 #
 
 def index(request):
-    annonser, start_index = get_annonser_by_filter(default_min_age, default_max_age, default_county, default_gender)
+    annonser, start_index, end = get_annonser_by_filter(default_min_age, default_max_age, default_county, default_gender)
     context = {
         'annonser':annonser,
         'start_index': start_index,
+        'end': end,
         'counties':County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'age_limits': settings.FJELLTREFFEN_AGE_LIMITS}
@@ -63,14 +64,15 @@ def load(request, start_index):
         gender = default_gender
         county = default_county
 
-    annonser, start_index = get_annonser_by_filter(minage, maxage, county, gender, int(start_index))
+    annonser, start_index, end = get_annonser_by_filter(minage, maxage, county, gender, int(start_index))
 
     context = RequestContext(request)
     context['annonser'] = annonser
     string = render_to_string('main/fjelltreffen/annonselist.html', context)
     return HttpResponse(json.dumps({
         'html': string,
-        'start_index': start_index}))
+        'start_index': start_index,
+        'end': end}))
 
 def reply(request, id):
     annonse = Annonse.objects.get(id=id)

@@ -77,7 +77,11 @@ $(document).ready(function() {
                 new_items.hide();
                 listwrapper.append(new_items);
                 new_items.fadeIn();
-                button_trigger.show();
+                if(!result.end) {
+                    button_trigger.show();
+                } else {
+                    no_further_matches.fadeIn();
+                }
             }
             start_index = result.start_index;
         }).fail(function(result) {

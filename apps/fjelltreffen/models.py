@@ -69,8 +69,9 @@ def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
     all_candidates = all_candidates.order_by('-date')[start_index:]
 
     annonse_matches = []
+    next_start_index = start_index
     for a in all_candidates:
-        start_index += 1
+        next_start_index += 1
 
         # Note - we don't account for 'hideage' when checking ages, because minage/maxage are filtered to ranges automatically.
         # If they weren't, a search where e.g. both min/max is 47, would have to match ages 45 through 49 for a user that
@@ -91,4 +92,5 @@ def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
             # We now have the amount of results we want
             break
 
-    return (annonse_matches, start_index)
+    end = len(all_candidates) <= BULKLOADNUM
+    return (annonse_matches, next_start_index, end)
