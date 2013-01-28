@@ -4,6 +4,15 @@ from django.core.cache import cache
 
 from datetime import date, timedelta
 
+#annonser to load when a user requests more
+BULKLOADNUM = 20
+
+# Default annonse-filters
+default_min_age = '18'
+default_max_age = '' # No limit - empty string is also used in the select box
+default_county = ''  # All counties - empty string is also used in the select box
+default_gender = ''  # All genders - empty string is also used in the select box
+
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile')
     date = models.DateField(auto_now_add=True)
@@ -45,10 +54,12 @@ class Annonse(models.Model):
 # Utility methods
 #
 
-#annonser to load when a user requests more
-BULKLOADNUM = 20
-
-def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
+def get_annonser_by_filter(filter, start_index=0):
+    # Use provided filter, or default values if none provided
+    minage = filter.get('minage', default_min_age)
+    maxage = filter.get('maxage', default_max_age)
+    county = filter.get('county', default_county)
+    gender = filter.get('gender', default_gender)
 
     # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
     # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
@@ -64,7 +75,7 @@ def get_annonser_by_filter(minage, maxage, county, gender, start_index=0):
     # have, at least for now.
 
     all_candidates = Annonse.objects.filter(hidden=False, date__gte=active_period)
-    if county != '00':
+    if county != '':
         all_candidates = all_candidates.filter(county__code=county)
     all_candidates = all_candidates.order_by('-date')[start_index:]
 

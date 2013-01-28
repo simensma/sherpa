@@ -29,39 +29,35 @@ logger = logging.getLogger('sherpa')
 #number of active annonser a user is allowed to have
 ANNONSELIMIT = 5
 
-default_min_age = 18
-default_max_age = '' # No limit - empty string is also used in the select box
-default_county = '00'
-default_gender = ''
-
 #
 # Public views
 #
 
 def index(request):
-    annonser, start_index, end = get_annonser_by_filter(default_min_age, default_max_age, default_county, default_gender)
+    annonser, start_index, end = get_annonser_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
         'annonser':annonser,
         'start_index': start_index,
         'end': end,
         'counties':County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'age_limits': settings.FJELLTREFFEN_AGE_LIMITS}
+        'age_limits': settings.FJELLTREFFEN_AGE_LIMITS,
+        'filter': request.session.get('fjelltreffen.filter')}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, start_index):
     if not request.is_ajax() or request.method != 'POST':
         raise PermissionDenied
 
-    annonsefilter = None
     annonsefilter = json.loads(request.POST['filter'])
-    minage = annonsefilter['minage']
-    maxage = annonsefilter['maxage']
-    # Empty gender means both genders
-    gender = annonsefilter['gender']
-    county = annonsefilter['county']
 
-    annonser, start_index, end = get_annonser_by_filter(minage, maxage, county, gender, int(start_index))
+    request.session['fjelltreffen.filter'] = {
+            'minage': annonsefilter['minage'],
+            'maxage': annonsefilter['maxage'],
+            'gender': annonsefilter['gender'], # Empty gender means both genders
+            'county': annonsefilter['county']}
+
+    annonser, start_index, end = get_annonser_by_filter(request.session['fjelltreffen.filter'], int(start_index))
 
     context = RequestContext(request)
     context['annonser'] = annonser

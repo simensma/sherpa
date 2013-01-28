@@ -5,31 +5,31 @@
   </h3>
 
   <select class="gender">
-    <option value="">Begge kjønn</option>
-    <option value="f">Kvinner</option>
-    <option value="m">Menn</option>
+    <option value=""{% if filter.gender == '' %} selected{% endif %}>Begge kjønn</option>
+    <option value="f"{% if filter.gender == 'f' %} selected{% endif %}>Kvinner</option>
+    <option value="m"{% if filter.gender == 'm' %} selected{% endif %}>Menn</option>
   </select>
 
   Fra:
   <select class="lowerage">
     {% for age in age_limits|slice:":-1" %}
-      <option value="{{ age }}">{{ age }} år</option>
+      <option value="{{ age }}"{% if filter.minage == age|stringformat:"s" %} selected{% endif %}>{{ age }} år</option>
     {% endfor %}
   </select>
 
   Til:
   <select class="upperage">
     {% for age in age_limits|slice:"1:" %}
-      <option value="{{ age|add:-1 }}">{{ age|add:-1 }} år</option>
+      <option value="{{ age|add:-1 }}"{% if filter.maxage == age|add:-1|stringformat:"s" %} selected{% endif %}>{{ age|add:-1 }} år</option>
     {% endfor %}
-    <option value="" selected>Alle</option>
+    <option value=""{% if not filter or filter.maxage == '' %} selected{% endif %}>Alle</option>
   </select>
 
   Fra:
   <select class="county">
-    <option value="00" selected>Hele landet</option>
+    <option value="" selected>Hele landet</option>
     {% for county in counties %}
-      <option value="{{ county.code }}">{{ county.name }}</option>
+      <option value="{{ county.code }}"{% if filter.county == county.code %} selected{% endif %}>{{ county.name }}</option>
     {% endfor %}
   </select>
 
