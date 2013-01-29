@@ -9,26 +9,12 @@ import requests, json
 initial_url = 'https://api.instagram.com/v1/tags/turistforeningen/media/recent?client_id=%s' % settings.INSTAGRAM_CLIENT_ID
 
 def index(request):
-    if not 'instagram' in request.session:
-        request.session['instagram'] = {}
+    request.session['instagram'] = {
+        'iteration': 0,
+        'next_url': initial_url}
+    return render(request, 'main/instagram/index.html')
 
-    data = cache.get('instagram.url.%s' % initial_url)
-    if data is None:
-        r = requests.get(initial_url)
-        data = json.loads(r.content)
-        cache.set('instagram.url.%s' % initial_url, data, 60 * 60)
-
-    # Still assuming 18 items
-    bulk = data['data']
-    request.session['instagram']['iteration'] = 0
-    request.session['instagram']['next_url'] = data['pagination']['next_url']
-    context = {
-        'bulk': bulk,
-    }
-    request.session.modified = True
-    return render(request, 'main/instagram/index.html', context)
-
-def more(request):
+def load(request):
     data = cache.get('instagram.url.%s' % request.session['instagram']['next_url'])
     if data is None:
         r = requests.get(request.session['instagram']['next_url'])

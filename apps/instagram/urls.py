@@ -2,5 +2,5 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('instagram.views',
     url(r'^$', 'index'),
-    url(r'^flere/$', 'more'),
+    url(r'^last/$', 'load'),
 )
