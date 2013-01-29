@@ -640,10 +640,7 @@ def result(request):
             ))
 
     # Collect emails to a separate list for easier template formatting
-    emails = []
-    for user in request.session['enrollment']['users']:
-        if user['email'] != '':
-            emails.append(user['email'])
+    emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
