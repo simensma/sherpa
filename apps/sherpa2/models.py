@@ -41,8 +41,23 @@ class Cabin(models.Model):
     name = models.TextField(db_column=u'ca_name', )
     name_official = models.TextField(db_column=u'ca_name_official', blank=True)
     alias = models.TextField(db_column=u'ca_alias', blank=True)
+
+    # service er "tjenestegrad", betjent/ubetjent/etc
+    # B - Betjent
+    # C
+    # D
+    # N
+    # S
+    # U
+    # X
     service = models.TextField(db_column=u'ca_service', blank=True)
+
+    # type er om det er DNT-hytte eller privateid hytte
+    # D - DNT-hytte
+    # P - Privat
+    # R - ?
     type = models.TextField(db_column=u'ca_type', blank=True)
+
     built = models.TextField(db_column=u'ca_built', blank=True)
     content = models.TextField(db_column=u'ca_content', blank=True)
     content_extended = models.TextField(db_column=u'ca_content_extended', blank=True)
