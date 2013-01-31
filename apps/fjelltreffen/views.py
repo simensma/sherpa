@@ -100,7 +100,7 @@ def reply(request, id):
 
         send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
         messages.info(request, 'success')
-        del request.session['fjelltreffen.reply']
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show_reply_sent', args=[annonse.id]))
     except Exception as e:
         messages.error(request, 'email_failure')
         logger.error(u"Klarte ikke å sende Fjelltreffen-epost",
@@ -126,6 +126,15 @@ def show(request, id):
         'reply': reply}
     return render(request, 'main/fjelltreffen/show.html', context)
 
+def show_reply_sent(request, id):
+    if not 'fjelltreffen.reply' in request.session:
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+    annonse = Annonse.objects.get(id=id, hidden=False)
+    context = {
+        'annonse': annonse,
+        'reply': request.session['fjelltreffen.reply']}
+    del request.session['fjelltreffen.reply']
+    return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
 
 #
 # Actions for logged-in users (crud)

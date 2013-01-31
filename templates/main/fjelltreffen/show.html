@@ -40,12 +40,7 @@
       <h3>Svar på annonsen!</h3>
 
       {% for message in messages %}
-        {% if message.message == 'success' %}
-          <div class="alert alert-success">
-            <a class="close">x</a>
-            Svaret ditt er sendt til annonsøren. {% if annonse.profile.get_actor.get_gender|gender == 'mann' %}Han{% else %}Hun{% endif %} vil motta en e-post med ditt svar. Eventuell videre korrespondanse foregår direkte via e-post eller på annen ønsket måte.
-          </div>
-        {% elif message.message == 'email_failure' %}
+        {% if message.message == 'email_failure' %}
           <div class="alert alert-error">
             <a class="close">x</a>
             <p><strong>Teknisk feil!</strong></p>
