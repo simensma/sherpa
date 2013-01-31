@@ -253,8 +253,11 @@ def mine(request):
     mine = Annonse.objects.filter(profile=request.user.get_profile())
     active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
     annonser = {
-        'not_expired': mine.filter(date__gte=active_period).order_by('-date'),
+        'active': mine.filter(date__gte=active_period, hidden=False).order_by('-date'),
+        'hidden': mine.filter(date__gte=active_period, hidden=True).order_by('-date'),
         'expired': mine.filter(date__lt=active_period).order_by('-date')}
 
-    context = {'annonser': annonser}
+    context = {
+        'annonser': annonser,
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/mine.html', context)

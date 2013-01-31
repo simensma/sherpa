@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/fjelltreffen/list.js"></script>
+  <script src="{{ STATIC_URL }}js/fjelltreffen/mine.js"></script>
 {% endblock%}
 
 {% block body %}
@@ -18,48 +18,57 @@
 
     <div class="fjelltreffen-list">
       <h2>Mine annonser</h2>
-        {% if annonser.not_expired|length > 0 or annonser.expired|length > 0 %}
+        {% if annonser.active|length > 0 or annonser.expired|length > 0 %}
 
           <table class="table table-hover list-mine">
 
-            {% for annonse in annonser.not_expired %}
+            {% for annonse in annonser.active %}
               <tr>
                 <td>
                   <div class="annonse">
-                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</a></h3>
-                    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
+                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
+                    <p class="details">
+                      {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}<br>
+                      Annonsen vil ligge ute i {{ annonse.expires_in }} dager.
+                    </p>
                     <p>{{ annonse.text|truncatechars:100 }}</p>
                   </div>
                 </td>
-                <td>
-                  {% if annonse.expires_in == 0 %}
-                    Utgår i natt
-                  {% else %}
-                    {{ annonse.expires_in }} dager igjen
-                  {% endif %}
+                <td class="status">
+                  <span class="label label-success">Synlig</span>
                 </td>
               </tr>
             {% endfor %}
 
-            {% if annonser.expired|length > 0 %}
-              <tr class="expired">
-                <td colspan="2">
-                  Følgende annonser er utgått på dato og vises ikke.
+            {% for annonse in annonser.hidden %}
+              <tr>
+                <td>
+                  <div class="annonse">
+                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
+                    <p class="details">
+                      {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}<br>
+                      Annonsen vil ligge ute i {{ annonse.expires_in }} dager.
+                    </p>
+                    <p>{{ annonse.text|truncatechars:100 }}</p>
+                  </div>
+                </td>
+                <td class="status">
+                  <span class="label label-warning">Skjult</span>
                 </td>
               </tr>
-            {% endif %}
+            {% endfor %}
 
             {% for annonse in annonser.expired %}
               <tr>
                 <td>
                   <div class="annonse">
-                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{% if annonse.hidden %}[Skjult] {% endif %}{{ annonse.title }}</a></h3>
+                    <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
                     <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
                     <p>{{ annonse.text|truncatechars:100 }}</p>
                   </div>
                 </td>
                 <td>
-                  Utgått
+                  <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span>
                 </td>
               </tr>
             {% endfor %}

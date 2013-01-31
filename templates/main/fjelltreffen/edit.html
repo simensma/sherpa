@@ -26,7 +26,7 @@
 
     {% if annonse.is_expired %}
       <div class="alert alert-error">
-        Denne annonsen har lagt ute i mer enn {{ annonse_retention_days }} dager og er derfor utgått.
+        Denne annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.
       </div>
     {% endif %}
 
@@ -112,33 +112,36 @@
       </div>
 
       {# This section contains 3 parts with some duplicated code, but I prefer that to complicated inline if-statements #}
-      {% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %}
-        {# Editing existing *hidden* annonse, and user hasn't payed - don't let them show the annonse #}
-        <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
-          <label class="control-label" for="hide-annonse">Skjul annonsen</label>
-          <div class="controls">
-            <input type="checkbox" name="hidden" checked disabled>
-            Ingen kan se eller svare på annonsen mens den er skjult.
+      {% if not annonse.is_expired %}
+        {# Hidden state is irrelevant if the annonse is expired. #}
+        {% if annonse.hidden and not user.get_profile.get_actor.get_balance.is_payed %}
+          {# Editing existing *hidden* annonse, and user hasn't payed - don't let them show the annonse #}
+          <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
+            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+            <div class="controls">
+              <input type="checkbox" name="hidden" checked disabled>
+              Ingen kan se eller svare på annonsen mens den er skjult.
+            </div>
           </div>
-        </div>
-      {% elif other_active_annonse_exists %}
-        {# User already has an active one #}
-        <div class="control-group hide-annonse" title="Du har allerede en annen aktiv annonse, derfor kan du ikke vise denne. Du kan bytte aktiv annonse etterpå, under 'Mine annonser'.">
-          <label class="control-label" for="hide-annonse">Skjul annonsen</label>
-          <div class="controls">
-            <input type="checkbox" name="hidden" checked disabled>
-            Ingen kan se eller svare på annonsen mens den er skjult.
+        {% elif other_active_annonse_exists %}
+          {# User already has an active one #}
+          <div class="control-group hide-annonse" title="Du har allerede en annen synlig annonse, derfor kan du ikke vise denne. Du kan bytte synlig annonse etterpå, under 'Mine annonser'.">
+            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+            <div class="controls">
+              <input type="checkbox" name="hidden" checked disabled>
+              Ingen kan se eller svare på annonsen mens den er skjult.
+            </div>
           </div>
-        </div>
-      {% else %}
-        {# No special state, let the user do as they please #}
-        <div class="control-group hide-annonse">
-          <label class="control-label" for="hide-annonse">Skjul annonsen</label>
-          <div class="controls">
-            <input type="checkbox" name="hidden"{% if annonse.hidden %} checked{% endif %}>
-            Ingen kan se eller svare på annonsen mens den er skjult.
+        {% else %}
+          {# No special state, let the user do as they please #}
+          <div class="control-group hide-annonse">
+            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+            <div class="controls">
+              <input type="checkbox" name="hidden"{% if annonse.hidden %} checked{% endif %}>
+              Ingen kan se eller svare på annonsen mens den er skjult.
+            </div>
           </div>
-        </div>
+        {% endif %}
       {% endif %}
 
       <div class="control-group">
