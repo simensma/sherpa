@@ -49,7 +49,7 @@
       {% elif message.message == 'too_many_active_annonser' %}
         <div class="alert alert-error">
           <a class="close">x</a>
-          Du har for mange aktive annonser! Du kan på det meste ha {{ active_annonse_limit }} synlige annonser av gangen. Annonsen har blitt satt som skjult. Du kan slette eller skjule <a href="{% url fjelltreffen.views.mine %}">dine andre annonser</a>, for så å vise denne.
+          Du har allerede en aktiv annonse! Du kan ikke ha mer enn én aktiv annonse om gangen. Den nye annonsen har blitt satt som skjult. Du kan slette eller skjule <a href="{% url fjelltreffen.views.mine %}">dine andre annonser</a>, for så å vise denne.
         </div>
       {% elif message.message == 'showing_when_not_payed' %}
         <div class="alert alert-error">

@@ -138,13 +138,11 @@ def new(request):
         return render(request, 'main/fjelltreffen/payment_required.html')
 
     if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
-        context = {'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT}
-        return render(request, 'main/fjelltreffen/too_many_active_annonser.html', context)
+        return render(request, 'main/fjelltreffen/too_many_active_annonser.html')
 
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
@@ -163,7 +161,6 @@ def edit(request, id):
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
