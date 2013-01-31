@@ -37,55 +37,63 @@
         <br>
       </div>
 
-      <h3>Svar på annonsen!</h3>
+      {% if annonse.profile == user.get_profile %}
 
-      {% for message in messages %}
-        {% if message.message == 'email_failure' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            <p><strong>Teknisk feil!</strong></p>
-            <p>
-              Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
-            </p>
-            <p>
-              Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
-            </p>
+        <p><em>Dette er din annonse. Du kan <a href="{% url fjelltreffen.views.edit annonse.id %}">redigere den her</a>.</em></p>
+
+      {% else %}
+
+        <h3>Svar på annonsen!</h3>
+
+        {% for message in messages %}
+          {% if message.message == 'email_failure' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <p><strong>Teknisk feil!</strong></p>
+              <p>
+                Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+              </p>
+              <p>
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
+              </p>
+            </div>
+          {% elif message.message == 'missing_name' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må legge inn navnet ditt!
+            </div>
+          {% elif message.message == 'invalid_email' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
+            </div>
+          {% elif message.message == 'missing_text' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må da skrive litt i svaret til annonsøren!
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
+          {% csrf_token %}
+
+          <div class="control-group name">
+            <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
           </div>
-        {% elif message.message == 'missing_name' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            Du må legge inn navnet ditt!
+
+          <div class="control-group email">
+            <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
           </div>
-        {% elif message.message == 'invalid_email' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
+
+          <div class="control-group text">
+            <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea><br>
           </div>
-        {% elif message.message == 'missing_text' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            Du må da skrive litt i svaret til annonsøren!
-          </div>
-        {% endif %}
-      {% endfor %}
 
-      <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
-        {% csrf_token %}
+          <button type="submit" class="btn btn-success">Send</button>
+        </form>
 
-        <div class="control-group name">
-          <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
-        </div>
-
-        <div class="control-group email">
-          <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
-        </div>
-
-        <div class="control-group text">
-          <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea><br>
-        </div>
-
-        <button type="submit" class="btn btn-success">Send</button>
-      </form>
+      {% endif %}
 
     {% else %}
 
