@@ -19,6 +19,16 @@
     <div class="fjelltreffen-list">
       <h2>Mine annonser</h2>
 
+      {% for message in messages %}
+        {% if message.message == 'max_one_active_annonse' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Du kan ikke ha mer enn én synlig annonse!</strong><br>
+            Annonsen du valgte er blitt synlig, men den som var synlig sist er nå blitt skjult. Kun én annonse kan være synlig om gangen, så du må velge hvilken du vil vise.
+          </div>
+        {% endif %}
+      {% endfor %}
+
       {% if annonser.active|length > 0 or annonser.expired|length > 0 %}
 
         <table class="table table-hover list-mine">

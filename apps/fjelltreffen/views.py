@@ -275,7 +275,9 @@ def mine(request):
 @user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
 def show_mine(request, id):
     # Hide all other annonser that belongs to this user first
-    Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
+    hidden = Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
+    if hidden > 0:
+        messages.info(request, 'max_one_active_annonse')
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = False
     annonse.save()
