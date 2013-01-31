@@ -30,29 +30,25 @@
       </div>
     {% endif %}
 
-    {% for message in messages %}
-      {% if message.message == 'missing_title' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          Du må fylle inn en tittel på annonsen!
-        </div>
-      {% elif message.message == 'invalid_email' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          Du må fylle inn en gyldig e-postadresse! Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.
-        </div>
-      {% elif message.message == 'missing_text' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.
-        </div>
-      {% elif message.message == 'showing_when_not_payed' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.
-        </div>
-      {% endif %}
-    {% endfor %}
+    {% if messages %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong>Vennligst rett følgende feil i annonsen:</strong>
+        <ul>
+          {% for message in messages %}
+            {% if message.message == 'missing_title' %}
+              <li>Du må fylle inn en tittel på annonsen!</li>
+            {% elif message.message == 'invalid_email' %}
+              <li>Du må fylle inn en gyldig e-postadresse! Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.</li>
+            {% elif message.message == 'missing_text' %}
+              <li>Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.</li>
+            {% elif message.message == 'showing_when_not_payed' %}
+              <li>Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
     <form action="{% url fjelltreffen.views.save %}" method="post" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
