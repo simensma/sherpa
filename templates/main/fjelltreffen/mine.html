@@ -26,6 +26,12 @@
             <strong>Du kan ikke ha mer enn én synlig annonse!</strong><br>
             Annonsen du valgte er blitt synlig, men den som var synlig sist er nå blitt skjult. Kun én annonse kan være synlig om gangen, så du må velge hvilken du vil vise.
           </div>
+        {% elif message.message == 'membership_not_payed' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Du kan ikke publisere en ny annonse fordi du har ikke betalt medlemskontingenten.</strong><br>
+            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem. Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
+          </div>
         {% endif %}
       {% endfor %}
 

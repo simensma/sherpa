@@ -281,6 +281,10 @@ def mine(request):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 @user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def show_mine(request, id):
+    if not request.user.get_profile().get_actor().get_balance().is_payed():
+        messages.error(request, 'membership_not_payed')
+        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+
     # Hide all other annonser that belongs to this user first
     hidden = Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
     if hidden > 0:
