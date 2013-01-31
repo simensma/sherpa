@@ -82,7 +82,7 @@ class Annonse(models.Model):
         all_candidates = Annonse.get_active()
         if county != '':
             all_candidates = all_candidates.filter(county__code=county)
-        all_candidates = all_candidates.order_by('-date')[start_index:]
+        all_candidates = all_candidates.order_by('-date', 'title')[start_index:]
 
         annonse_matches = []
         next_start_index = start_index
