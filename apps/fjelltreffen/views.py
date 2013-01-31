@@ -26,9 +26,6 @@ from user.models import Profile
 
 logger = logging.getLogger('sherpa')
 
-#number of active annonser a user is allowed to have
-ANNONSELIMIT = 5
-
 #
 # Public views
 #
@@ -140,14 +137,14 @@ def new(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
-    if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
-        context = {'active_annonse_limit': ANNONSELIMIT}
+    if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
+        context = {'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT}
         return render(request, 'main/fjelltreffen/too_many_active_annonser.html', context)
 
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': ANNONSELIMIT,
+        'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
@@ -166,7 +163,7 @@ def edit(request, id):
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'active_annonse_limit': ANNONSELIMIT,
+        'active_annonse_limit': settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
@@ -229,7 +226,7 @@ def save(request):
     redirect_back = False
 
     # Hide the annonse if user has more active annonser than the limit
-    if not hidden and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= ANNONSELIMIT:
+    if not hidden and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
         messages.error(request, 'too_many_active_annonser')
         annonse.hidden = True
         redirect_back = True
