@@ -261,3 +261,21 @@ def mine(request):
         'annonser': annonser,
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/mine.html', context)
+
+@login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+def show_mine(request, id):
+    # Hide all other annonser that belongs to this user first
+    Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
+    annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
+    annonse.hidden = False
+    annonse.save()
+    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+
+@login_required
+@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+def hide_mine(request, id):
+    annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
+    annonse.hidden = True
+    annonse.save()
+    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))

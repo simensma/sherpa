@@ -35,7 +35,8 @@
                   </div>
                 </td>
                 <td class="status">
-                  <span class="label label-success">Synlig</span>
+                  <span class="label label-success">Synlig</span><br>
+                  <a href="{% url fjelltreffen.views.hide_mine annonse.id %}">Skjul</a>
                 </td>
               </tr>
             {% endfor %}
@@ -53,7 +54,8 @@
                   </div>
                 </td>
                 <td class="status">
-                  <span class="label label-warning">Skjult</span>
+                  <span class="label label-warning">Skjult</span><br>
+                  <a href="{% url fjelltreffen.views.show_mine annonse.id %}">Vis</a>
                 </td>
               </tr>
             {% endfor %}

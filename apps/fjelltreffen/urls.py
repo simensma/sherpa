@@ -10,4 +10,6 @@ urlpatterns = patterns('fjelltreffen.views',
     url(r'^lagre/$', 'save'),
     url(r'^svar/(?P<id>\d+)/$', 'reply'),
     url(r'^slett/(?P<id>\d+)/$', 'delete'),
+    url(r'^mine/vis/(?P<id>\d+)/$', 'show_mine'),
+    url(r'^mine/skjul/(?P<id>\d+)/$', 'hide_mine'),
 )
