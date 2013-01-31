@@ -1,0 +1,27 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em>Aldersgrense</em>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Fjelltreffen har {{ age_limit }} års aldersgrense</h2>
+
+    <p>Beklager, du må være minst {{ age_limit }} år for å legge ut annonse på Fjelltreffen. Smør deg med tålmodighet, og kom tilbake om {{ remaining_years }} år!</p>
+
+    <p>Kanskje <a href="http://www.dntung.no/activity.php?ac_cat=basecamp&amp;fo_id=30">BaseCamp</a> heller kan være noe for deg?</p>
+
+  </div>
+
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+  </div>
+
+</div>
+
+{% endblock %}
