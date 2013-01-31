@@ -137,13 +137,12 @@ def new(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
-    if Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
-        return render(request, 'main/fjelltreffen/too_many_active_annonser.html')
-
+    other_active_annonse_exists = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
+        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age()),
+        'other_active_annonse_exists': other_active_annonse_exists}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -157,11 +156,13 @@ def edit(request, id):
     except Annonse.DoesNotExist:
         return render(request, 'main/fjelltreffen/edit_not_found.html')
 
+    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT
     context = {
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
-        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age())}
+        'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age()),
+        'other_active_annonse_exists': other_active_annonse_exists}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
@@ -205,11 +206,20 @@ def save(request):
         else:
             return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
 
-    # Override any attempt to show a hidden annonse when the user hasn't payed
-    if annonse.hidden and not request.user.get_profile().get_actor().get_balance().is_payed():
-        hidden = True
+    hidden = request.POST.get('hidden', '') == 'on'
+
+    # Don't allow showing an already hidden annonse when you haven't payed
+    if request.POST['id'] != '':
+        if annonse.hidden and not request.user.get_profile().get_actor().get_balance().is_payed():
+            hidden = True
+
+    # Don't create new annonser if you already have an active annonse
+    if request.POST['id'] == '':
+        annonser_to_check = Annonse.get_active()
     else:
-        hidden = request.POST.get('hidden', '') == 'on'
+        annonser_to_check = Annonse.get_active().exclude(id=request.POST['id'])
+    if annonser_to_check.filter(profile=request.user.get_profile()).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
+        hidden = True
 
     annonse.county = County.objects.get(code=request.POST['county'])
     annonse.email = request.POST['email']
@@ -218,27 +228,8 @@ def save(request):
     annonse.text = request.POST['text']
     annonse.hidden = hidden
     annonse.hideage = request.POST['hideage'] == 'hide'
-
-    # Post-save validations, to potentially keep some of the input
-    redirect_back = False
-
-    # Hide the annonse if user has more active annonser than the limit
-    if not hidden and Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
-        messages.error(request, 'too_many_active_annonser')
-        annonse.hidden = True
-        redirect_back = True
-
     annonse.save()
-
-    if redirect_back:
-        if request.POST['id'] == '':
-            # Note: The user doesn't get access to the 'new' view, so this shouldn't happen, but potentially, the user
-            # can make POST requests to *this* view, so just handle the case anyway.
-            return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
-        else:
-            return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
-    else:
-        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
 @user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
