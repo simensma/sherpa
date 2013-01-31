@@ -137,7 +137,7 @@ def new(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
-    other_active_annonse_exists = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT
+    other_active_annonse_exists = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).exists()
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
@@ -156,7 +156,7 @@ def edit(request, id):
     except Annonse.DoesNotExist:
         return render(request, 'main/fjelltreffen/edit_not_found.html')
 
-    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT
+    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False).exists()
     context = {
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
@@ -218,7 +218,7 @@ def save(request):
         annonser_to_check = Annonse.get_active()
     else:
         annonser_to_check = Annonse.get_active().exclude(id=request.POST['id'])
-    if annonser_to_check.filter(profile=request.user.get_profile()).count() >= settings.FJELLTREFFEN_ACTIVE_ANNONSE_LIMIT:
+    if annonser_to_check.filter(profile=request.user.get_profile()).exists():
         hidden = True
 
     annonse.county = County.objects.get(code=request.POST['county'])
