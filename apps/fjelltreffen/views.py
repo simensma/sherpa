@@ -17,7 +17,7 @@ import json
 import sys
 import logging
 
-from fjelltreffen.models import Annonse, get_annonser_by_filter
+from fjelltreffen.models import Annonse
 from core import validator
 from sherpa25.models import Classified
 from core.models import County
@@ -31,7 +31,7 @@ logger = logging.getLogger('sherpa')
 #
 
 def index(request):
-    annonser, start_index, end = get_annonser_by_filter(request.session.get('fjelltreffen.filter', {}))
+    annonser, start_index, end = Annonse.get_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
         'annonser':annonser,
         'start_index': start_index,
@@ -54,7 +54,7 @@ def load(request, start_index):
             'gender': annonsefilter['gender'], # Empty gender means both genders
             'county': annonsefilter['county']}
 
-    annonser, start_index, end = get_annonser_by_filter(request.session['fjelltreffen.filter'], int(start_index))
+    annonser, start_index, end = Annonse.get_by_filter(request.session['fjelltreffen.filter'], int(start_index))
 
     context = RequestContext(request)
     context['annonser'] = annonser

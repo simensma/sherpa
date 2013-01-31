@@ -44,64 +44,65 @@ class Annonse(models.Model):
     def expires_in(self):
         return ((self.date + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
+    #
+    # Utility methods
+    #
+
     @staticmethod
     def obscure_age(age):
         lower = max(settings.FJELLTREFFEN_AGE_LIMITS[0], int(age/5) * 5)
         upper = max(settings.FJELLTREFFEN_AGE_LIMITS[1], (int((age+5)/5) * 5) - 1)
         return '%s-%s' % (lower, upper)
 
-#
-# Utility methods
-#
+    @staticmethod
+    def get_by_filter(filter, start_index=0):
+        # Use provided filter, or default values if none provided
+        minage = filter.get('minage', default_min_age)
+        maxage = filter.get('maxage', default_max_age)
+        county = filter.get('county', default_county)
+        gender = filter.get('gender', default_gender)
 
-def get_annonser_by_filter(filter, start_index=0):
-    # Use provided filter, or default values if none provided
-    minage = filter.get('minage', default_min_age)
-    maxage = filter.get('maxage', default_max_age)
-    county = filter.get('county', default_county)
-    gender = filter.get('gender', default_gender)
+        # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
+        # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
+        minage = min((abs(int(minage) - i), i) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
+        if maxage != '':
+            maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
 
-    # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
-    # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
-    minage = min((abs(int(minage) - i), i) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
-    if maxage != '':
-        maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
+        active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
-    active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+        # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
+        # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
+        # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
+        # have, at least for now.
 
-    # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
-    # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
-    # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
-    # have, at least for now.
+        all_candidates = Annonse.objects.filter(hidden=False, date__gte=active_period)
+        if county != '':
+            all_candidates = all_candidates.filter(county__code=county)
+        all_candidates = all_candidates.order_by('-date')[start_index:]
 
-    all_candidates = Annonse.objects.filter(hidden=False, date__gte=active_period)
-    if county != '':
-        all_candidates = all_candidates.filter(county__code=county)
-    all_candidates = all_candidates.order_by('-date')[start_index:]
+        annonse_matches = []
+        next_start_index = start_index
+        for a in all_candidates:
+            next_start_index += 1
 
-    annonse_matches = []
-    next_start_index = start_index
-    for a in all_candidates:
-        next_start_index += 1
+            # Note - we don't account for 'hideage' when checking ages, because minage/maxage are filtered to ranges automatically.
+            # If they weren't, a search where e.g. both min/max is 47, would have to match ages 45 through 49 for a user that
+            # is within that range AND has hideage=True on their ad.
 
-        # Note - we don't account for 'hideage' when checking ages, because minage/maxage are filtered to ranges automatically.
-        # If they weren't, a search where e.g. both min/max is 47, would have to match ages 45 through 49 for a user that
-        # is within that range AND has hideage=True on their ad.
+            if a.profile.get_actor().get_age() < minage:
+                continue
 
-        if a.profile.get_actor().get_age() < minage:
-            continue
+            if maxage != '' and a.profile.get_actor().get_age() > maxage:
+                continue
 
-        if maxage != '' and a.profile.get_actor().get_age() > maxage:
-            continue
+            if gender != '' and a.profile.get_actor().get_gender() != gender:
+                continue
 
-        if gender != '' and a.profile.get_actor().get_gender() != gender:
-            continue
+            annonse_matches.append(a)
 
-        annonse_matches.append(a)
+            if len(annonse_matches) >= BULKLOADNUM:
+                # We now have the amount of results we want
+                break
 
-        if len(annonse_matches) >= BULKLOADNUM:
-            # We now have the amount of results we want
-            break
-
-    end = len(all_candidates) <= BULKLOADNUM
-    return (annonse_matches, next_start_index, end)
+        end = len(all_candidates) <= BULKLOADNUM
+        return (annonse_matches, next_start_index, end)
