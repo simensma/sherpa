@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -17,6 +17,7 @@ import json
 import sys
 import logging
 
+from sherpa.decorators import user_requires
 from fjelltreffen.models import Annonse
 from core import validator
 from sherpa25.models import Classified
@@ -141,7 +142,7 @@ def show_reply_sent(request, id):
 #
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def new(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
@@ -155,7 +156,7 @@ def new(request):
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -175,7 +176,7 @@ def edit(request, id):
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def save(request):
     if request.user.get_profile().get_actor() == None:
         raise PermissionDenied
@@ -241,7 +242,7 @@ def save(request):
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def delete(request, id):
     try:
         annonse = Annonse.objects.get(id=id);
@@ -256,7 +257,7 @@ def delete(request, id):
         return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def mine(request):
     #all annonser that belongs to the current user
     mine = Annonse.objects.filter(profile=request.user.get_profile())
@@ -272,7 +273,7 @@ def mine(request):
     return render(request, 'main/fjelltreffen/mine.html', context)
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def show_mine(request, id):
     # Hide all other annonser that belongs to this user first
     hidden = Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
@@ -284,7 +285,7 @@ def show_mine(request, id):
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
 @login_required
-@user_passes_test(lambda u: u.get_profile().memberid is not None, login_url='/minside/registrer-medlemskap/')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def hide_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = True
