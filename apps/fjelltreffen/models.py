@@ -55,6 +55,11 @@ class Annonse(models.Model):
         return '%s-%s' % (lower, upper)
 
     @staticmethod
+    def get_active():
+        active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+        return Annonse.objects.filter(hidden=False, date__gte=active_period)
+
+    @staticmethod
     def get_by_filter(filter, start_index=0):
         # Use provided filter, or default values if none provided
         minage = filter.get('minage', default_min_age)
@@ -68,14 +73,13 @@ class Annonse(models.Model):
         if maxage != '':
             maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
 
-        active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
         # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
         # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
         # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
         # have, at least for now.
 
-        all_candidates = Annonse.objects.filter(hidden=False, date__gte=active_period)
+        all_candidates = Annonse.get_active()
         if county != '':
             all_candidates = all_candidates.filter(county__code=county)
         all_candidates = all_candidates.order_by('-date')[start_index:]
