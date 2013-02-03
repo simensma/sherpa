@@ -1,219 +1,220 @@
 /* Promo widget - this sheet isn't very nice, fix sometime */
 
 div.widget.promo {
+
   margin-bottom: 30px;
-}
 
-div.widget.promo div.wrapper {
-  position: relative;
-}
-
-/* Background-image and menu */
-
-div.widget.promo img.background-image {
-  width: 50%;
-}
-
-div.widget.promo div.menu {
-  font-family: "DTL Nobel";
-  position: absolute;
-  top: 20px;
-  font-size: 15px;
-}
-
-div.widget.promo div.menu ul {
-  margin: 0;
-  list-style: none;
-}
-
-div.widget.promo div.menu li:first-of-type {
-  border-top: none;
-}
-
-div.widget.promo div.menu li {
-  padding: 5px 20px 5px 10px;
-  background-color: white;
-  border-top: 1px solid rgb(210, 210, 210);
-  font-family: "DTL Nobel" !important;
-  font-size: 15px !important;
-  line-height: 18px;
-}
-
-div.widget.promo div.menu li.active {
-  background-color: @profile-red;
-  color: white;
-}
-
-div.widget.promo div.menu li:not(.active):hover {
-  background-color: rgb(150, 150, 150);
-  cursor: pointer;
-}
-
-div.widget.promo div.menu li a {
-  color: rgb(80, 80, 80);
-}
-
-div.widget.promo div.menu li.active a {
-  color: white;
-}
-
-div.widget.promo div.menu li:not(.active):hover a {
-  color: white;
-  text-decoration: underline;
-}
-
-/* Right side */
-
-div.widget.promo div.right {
-  color: white;
-  float: right;
-  width: 46%;
-  padding: 15px 2% 15px 2%;
-}
-
-div.widget.promo div.right h1 {
-  border-bottom: none;
-}
-
-div.widget.promo div.right h1.lede {
-  margin-bottom: 0;
-}
-
-div.widget.promo div.right p.lede {
-  font-size: 18px;
-  font-weight: bold;
-  font-variant: small-caps;
-  margin-bottom: 20px;
-}
-
-div.widget.promo div.right p.button {
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
-div.widget.promo div.right p.sponsor {
-  font-size: 14px;
-  font-style: italic;
-  text-align: right;
-  margin-top: 25px;
-  padding-left: 60px;
-}
-
-div.widget.promo div.right p.sponsor a {
-  float: right;
-}
-
-div.widget.promo div.right p.sponsor a.kvikk-lunsj {
-  width: 80px;
-}
-
-div.widget.promo div.right img {
-  margin-left: 15px;
-}
-
-/* Centered promos */
-
-div.widget.promo div.wrapper.centered div.right {
-  text-align: center;
-}
-
-/* Specific styles for the different sections (mainly main) */
-
-div.widget.promo div.wrapper.main {
-  h1 {
-    font-size: 50px;
-    margin-top: 30px;
-    padding-left: 20px;
-    padding-right: 20px;
+  div.wrapper {
+    position: relative;
   }
 
-  p.info {
-    font-size: 20px;
+  /* Background-image and menu */
+
+  img.background-image {
+    width: 50%;
+  }
+
+  div.menu {
+    font-family: "DTL Nobel";
+    position: absolute;
+    top: 20px;
+    font-size: 15px;
+  }
+
+  div.menu ul {
+    margin: 0;
+    list-style: none;
+  }
+
+  div.menu li:first-of-type {
+    border-top: none;
+  }
+
+  div.menu li {
+    padding: 5px 20px 5px 10px;
+    background-color: white;
+    border-top: 1px solid rgb(210, 210, 210);
+    font-family: "DTL Nobel" !important;
+    font-size: 15px !important;
+    line-height: 18px;
+  }
+
+  div.menu li.active {
+    background-color: @profile-red;
+    color: white;
+  }
+
+  div.menu li:not(.active):hover {
+    background-color: rgb(150, 150, 150);
+    cursor: pointer;
+  }
+
+  div.menu li a {
+    color: rgb(80, 80, 80);
+  }
+
+  div.menu li.active a {
+    color: white;
+  }
+
+  div.menu li:not(.active):hover a {
+    color: white;
+    text-decoration: underline;
+  }
+
+  /* Right side */
+
+  div.right {
+    color: white;
+    float: right;
+    width: 46%;
+    padding: 15px 2% 15px 2%;
+  }
+
+  div.right h1 {
+    border-bottom: none;
+  }
+
+  div.right h1.lede {
+    margin-bottom: 0;
+  }
+
+  div.right p.lede {
+    font-size: 18px;
     font-weight: bold;
-    font-family: 'DTL Nobel' !important;
-    text-transform: uppercase;
+    font-variant: small-caps;
+    margin-bottom: 20px;
   }
 
-  p.content {
-    font-size: 20px;
-    font-family: 'DTL Nobel' !important;
-    padding-left: 50px;
-    padding-right: 50px;
+  div.right p.button {
+    margin-top: 25px;
+    margin-bottom: 25px;
   }
 
-  div.sponsors {
-    margin-top: 15px;
-    text-align: center;
+  div.right p.sponsor {
     font-size: 14px;
     font-style: italic;
+    text-align: right;
+    margin-top: 25px;
+    padding-left: 60px;
   }
-}
 
-/* Colors for the different sections */
+  div.right p.sponsor a {
+    float: right;
+  }
 
-div.widget.promo div.wrapper.main {
-  background-color: @profile-red;
-}
+  div.right p.sponsor a.kvikk-lunsj {
+    width: 80px;
+  }
 
-div.widget.promo div.wrapper.main a.white-link {
-  color: rgb(255, 255, 255);
-  text-decoration: underline;
-}
+  div.right img {
+    margin-left: 15px;
+  }
 
-div.widget.promo div.wrapper.main a.white-link:hover {
-  color: rgb(78, 71, 179);
-}
+  /* Centered promos */
 
-div.widget.promo div.wrapper.medlem {
-  background-color: @profile-red;
-}
+  div.wrapper.centered div.right {
+    text-align: center;
+  }
 
-div.widget.promo div.wrapper.fellesturer {
-  background-color: rgb(19, 42, 86);
-}
+  /* Specific styles for the different sections (mainly main) */
 
-div.widget.promo div.wrapper.hytter {
-  background-color: rgb(58, 81, 40);
-}
+  div.wrapper.main {
+    h1 {
+      font-size: 50px;
+      margin-top: 30px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
 
-div.widget.promo div.wrapper.barn {
-  background-color: rgb(206, 86, 0);
-}
+    p.info {
+      font-size: 20px;
+      font-weight: bold;
+      font-family: 'DTL Nobel' !important;
+      text-transform: uppercase;
+    }
 
-div.widget.promo div.wrapper.ung {
-  background-color: rgb(36, 49, 83);
-}
+    p.content {
+      font-size: 20px;
+      font-family: 'DTL Nobel' !important;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
 
-div.widget.promo div.wrapper.fjellsport {
-  background-color: rgb(172, 195, 213);
-}
+    div.sponsors {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      font-style: italic;
+    }
+  }
 
-div.widget.promo div.wrapper.fjellsport div.right {
-  color: black;
-}
+  /* Colors for the different sections */
 
-div.widget.promo div.wrapper.senior {
-  background-color: rgb(232, 232, 232);
-}
+  div.wrapper.main {
+    background-color: @profile-red;
+  }
 
-div.widget.promo div.wrapper.senior div.right {
-  color: black;
-}
+  div.wrapper.main a.white-link {
+    color: rgb(255, 255, 255);
+    text-decoration: underline;
+  }
 
-div.widget.promo div.wrapper.skole {
-  background-color: rgb(178, 210, 238);
-}
+  div.wrapper.main a.white-link:hover {
+    color: rgb(78, 71, 179);
+  }
 
-div.widget.promo div.wrapper.skole div.right {
-  color: black;
-}
+  div.wrapper.medlem {
+    background-color: @profile-red;
+  }
 
-div.widget.promo div.wrapper.kurs {
-  background-color: rgb(204, 54, 2);
-}
+  div.wrapper.fellesturer {
+    background-color: rgb(19, 42, 86);
+  }
 
-div.widget.promo div.wrapper.tur-for-alle {
-  background-color: rgb(38, 53, 26);
+  div.wrapper.hytter {
+    background-color: rgb(58, 81, 40);
+  }
+
+  div.wrapper.barn {
+    background-color: rgb(206, 86, 0);
+  }
+
+  div.wrapper.ung {
+    background-color: rgb(36, 49, 83);
+  }
+
+  div.wrapper.fjellsport {
+    background-color: rgb(172, 195, 213);
+  }
+
+  div.wrapper.fjellsport div.right {
+    color: black;
+  }
+
+  div.wrapper.senior {
+    background-color: rgb(232, 232, 232);
+  }
+
+  div.wrapper.senior div.right {
+    color: black;
+  }
+
+  div.wrapper.skole {
+    background-color: rgb(178, 210, 238);
+  }
+
+  div.wrapper.skole div.right {
+    color: black;
+  }
+
+  div.wrapper.kurs {
+    background-color: rgb(204, 54, 2);
+  }
+
+  div.wrapper.tur-for-alle {
+    background-color: rgb(38, 53, 26);
+  }
 }
 
 /* Small-screen layout */
