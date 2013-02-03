@@ -114,7 +114,7 @@ def widget_admin_context():
 def get_static_promo_context(path):
     context = {}
     promos = [
-        {'name': 'Kom deg ut', 'url': '/', 'template': 'main'},
+        {'name': 'UT.no', 'url': '/', 'template': 'ut'},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
@@ -124,7 +124,6 @@ def get_static_promo_context(path):
         {'name': 'Skole', 'url': '/skole/', 'template': 'skole'},
         {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs'},
         {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle'},
-        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut'},
         ]
 
     for promo in promos:
