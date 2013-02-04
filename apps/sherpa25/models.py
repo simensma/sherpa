@@ -94,11 +94,11 @@ def import_fjelltreffen_annonser(profile):
             else:
                 # Unknown path, or known unusable path - ignore this image.
                 old_annonse_imageurl = ''
-        except (Link.DoesNotExist, ClassifiedImage.DoesNotExist) as e:
+        except (Link.DoesNotExist, ClassifiedImage.DoesNotExist):
             old_annonse_imageurl = ''
         try:
             old_annonse = Classified.objects.get(id=link.toid)
-        except Classified.DoesNotExist as e:
+        except Classified.DoesNotExist:
             continue
 
         annonse = Annonse()
