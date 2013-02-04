@@ -24,7 +24,7 @@
 
       {% include 'main/fjelltreffen/filter.html' %}
 
-      <div class="annonse-list-wrapper">
+      <table class="table table-hover list-public">
         {% if annonser %}
           {% include 'main/fjelltreffen/annonselist.html' %}
         {% else %}
@@ -33,7 +33,7 @@
             Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">skrive den første annonsen</a>?
           </p>
         {% endif %}
-      </div>
+      </table>
 
       <div class="load-more">
         <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">

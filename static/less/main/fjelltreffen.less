@@ -1,35 +1,38 @@
 div.fjelltreffen-list {
-  div.annonse {
-    margin-top: 15px;
 
-    h3 {
-      margin-bottom: 0;
-    }
-
-    p.details {
-      margin-bottom: 0;
-      margin-top: 0px;
-      font-style: italic;
-      font-size: 14px;
+  table.list-public {
+    tr:first-of-type td {
+      border-top: none !important;
     }
   }
 
   table.list-mine {
-    div.annonse {
-      margin-top: 0;
-      margin-bottom: 0;
+    td.status {
+      text-align: center;
+
+      a {
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  table.list-public, table.list-mine {
+    tr td {
+      padding-top: 20px;
+      padding-bottom: 20px;
+
+      h3 {
+        margin-bottom: 0;
+      }
 
       p {
         margin-top: 0;
         margin-bottom: 0;
       }
-    }
 
-    tr td.status {
-      text-align: center;
-
-      a {
-        font-size: 14px !important;
+      p.details {
+        font-style: italic;
+        font-size: 14px;
       }
     }
   }

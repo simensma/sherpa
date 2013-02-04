@@ -5,7 +5,7 @@ $(document).ready(function() {
     var complete = false;
 
     var wrapper = $("div.fjelltreffen-list");
-    var listwrapper = $("div.annonse-list-wrapper");
+    var listwrapper = wrapper.find("table.list-public");
 
     var lowerageselect = $("select.lowerage");
     var upperageselect = $("select.upperage");
@@ -73,9 +73,10 @@ $(document).ready(function() {
                 }
                 complete = true;
             } else {
-                new_items.hide();
+                // Hide/show the cell elements - fade won't work on table rows
+                new_items.find("td").hide();
                 listwrapper.append(new_items);
-                new_items.fadeIn();
+                new_items.find("td").fadeIn();
                 if(!result.end) {
                     button_trigger.show();
                 } else {

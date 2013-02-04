@@ -1,9 +1,12 @@
 {% load gender %}
 
+
 {% for annonse in annonser %}
-  <div class="annonse">
-    <h3><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></h3>
-    <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
-    <p>{{ annonse.text|truncatechars:100 }}</p>
-  </div>
+  <tr>
+    <td>
+      <h3><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></h3>
+      <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}</p>
+      <p>{{ annonse.text|truncatechars:100 }}</p>
+    </td>
+  </tr>
 {% endfor %}
