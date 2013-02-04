@@ -28,8 +28,10 @@
         {% if annonser %}
           {% include 'main/fjelltreffen/annonselist.html' %}
         {% else %}
-          <p>Det er ikke lagt ut noen annonser de siste {{ annonse_retention_days }} dagene.<br>
-          Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge inn en annonse</a>?</p>
+          <p>
+            Det er ikke lagt ut noen annonser de siste {{ annonse_retention_days }} dagene.<br>
+            Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge inn en annonse</a>?
+          </p>
         {% endif %}
       </div>
 
