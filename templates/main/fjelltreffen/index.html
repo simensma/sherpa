@@ -30,7 +30,7 @@
         {% else %}
           <p>
             Det er ikke lagt ut noen annonser de siste {{ annonse_retention_days }} dagene.<br>
-            Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge inn en annonse</a>?
+            Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">skrive den første annonsen</a>?
           </p>
         {% endif %}
       </div>
@@ -44,7 +44,7 @@
         Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
       </div>
 
-      <div class="no-further-matches alert alert-error{% if not end %} hide{% endif %}">
+      <div class="no-further-matches alert alert-error hide">
         Dette var alle annonsene som matchet søket ditt.
       </div>
     </div>
