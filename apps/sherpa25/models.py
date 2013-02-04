@@ -121,7 +121,7 @@ def import_fjelltreffen_annonser(profile):
 
         newcounty = old_annonse.county
         if newcounty < 10:
-            newcounty = '0'+str(newcounty)
+            newcounty = '0%s' % newcounty
         else:
             newcounty = str(newcounty)
         try:
