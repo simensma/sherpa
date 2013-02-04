@@ -97,7 +97,7 @@ def reply(request, id):
                 'email': request.POST['email'],
                 'text': request.POST['text']}
             })
-        content = render_to_string('main/fjelltreffen/replay_email.txt', context)
+        content = render_to_string('main/fjelltreffen/reply_email.txt', context)
 
         send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
         messages.info(request, 'success')
