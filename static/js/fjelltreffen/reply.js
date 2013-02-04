@@ -27,4 +27,14 @@ $(document).ready(function() {
         Validator.trigger();
     }
 
+    // Response
+
+    var response_wrapper = $("div.fjelltreffen-response");
+
+    response_wrapper.find("ul.response a").click(function() {
+        var response = $(this).attr("data-response");
+        $(this).parent().remove();
+        response_wrapper.find("div." + response).slideDown();
+    });
+
 });
