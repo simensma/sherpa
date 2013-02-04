@@ -46,41 +46,65 @@
 
         <div class="fjelltreffen-response">
 
-          <ul class="response">
-            <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
-          </ul>
+          {% for message in messages %}
+            {% if message.message == 'email_failure' %}
+              <div class="alert alert-error">
+                <a class="close">x</a>
+                <p><strong>Teknisk feil!</strong></p>
+                <p>
+                  Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+                </p>
+                <p>
+                  Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
+                </p>
+              </div>
+            {% elif message.message == 'email_report_failure' %}
+              <div class="alert alert-error">
+                <a class="close">x</a>
+                <p><strong>Teknisk feil!</strong></p>
+                <p>
+                  Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+                </p>
+                <p>
+                  Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
+                </p>
+              </div>
+            {% elif message.message == 'missing_name' %}
+              <div class="alert alert-error">
+                <a class="close">x</a>
+                Du må legge inn navnet ditt!
+              </div>
+            {% elif message.message == 'invalid_email' %}
+              <div class="alert alert-error">
+                <a class="close">x</a>
+                Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
+              </div>
+            {% elif message.message == 'missing_text' %}
+              <div class="alert alert-error">
+                <a class="close">x</a>
+                Du må da skrive litt i svaret til annonsøren!
+              </div>
+            {% endif %}
+          {% endfor %}
 
-          <div class="reply hide">
+          {% if messages|length == 0 %}
 
-            {% for message in messages %}
-              {% if message.message == 'email_failure' %}
-                <div class="alert alert-error">
-                  <a class="close">x</a>
-                  <p><strong>Teknisk feil!</strong></p>
-                  <p>
-                    Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
-                  </p>
-                  <p>
-                    Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
-                  </p>
-                </div>
-              {% elif message.message == 'missing_name' %}
-                <div class="alert alert-error">
-                  <a class="close">x</a>
-                  Du må legge inn navnet ditt!
-                </div>
-              {% elif message.message == 'invalid_email' %}
-                <div class="alert alert-error">
-                  <a class="close">x</a>
-                  Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
-                </div>
-              {% elif message.message == 'missing_text' %}
-                <div class="alert alert-error">
-                  <a class="close">x</a>
-                  Du må da skrive litt i svaret til annonsøren!
-                </div>
-              {% endif %}
-            {% endfor %}
+            <ul class="response">
+              <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
+              <li>
+                Opplever du annonsen som støtende eller upassende?
+                {% if user.is_authenticated %}
+                  <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
+                {% else %}
+                  {# You must be logged in to report annonser - just link directly to the login page #}
+                  <a href="{% url user.login.views.login %}?next={% url fjelltreffen.views.show annonse.id %}">Gi oss beskjed!</a>
+                {% endif %}
+              </li>
+            </ul>
+
+          {% endif %}
+
+          <div class="reply{% if messages|length == 0 or not reply %} hide{% endif %}">
 
             <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
               {% csrf_token %}
@@ -100,6 +124,23 @@
               <button type="submit" class="btn btn-success">Send</button>
             </form>
 
+          </div>
+
+          <div class="report{% if messages|length == 0 or not report %} hide{% endif %}">
+
+            <p>
+              <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
+            </p>
+
+            <form action="{% url fjelltreffen.views.report annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
+              {% csrf_token %}
+
+              <div class="control-group text">
+                <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report }}</textarea>
+              </div>
+
+              <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>
+            </form>
           </div>
 
         </div>

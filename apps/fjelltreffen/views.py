@@ -110,6 +110,29 @@ def reply(request, id):
         )
     return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
+@login_required
+def report(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id)
+        request.session['fjelltreffen.report'] = request.POST['reason']
+
+        context = RequestContext(request, {
+            'annonse': annonse,
+            'notifier': request.user.get_profile(),
+            'reason': request.POST['reason']})
+        content = render_to_string('main/fjelltreffen/report_email.txt', context)
+
+        send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
+        messages.info(request, 'success')
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show_report_sent', args=[annonse.id]))
+    except Exception:
+        messages.error(request, 'email_report_failure')
+        logger.error(u"Klarte ikke å sende Fjelltreffen rapporteringsepost",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+    return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
+
 def show(request, id):
     try:
         annonse = Annonse.objects.get(id=id, hidden=False)
@@ -121,10 +144,16 @@ def show(request, id):
         reply = request.session['fjelltreffen.reply']
         del request.session['fjelltreffen.reply']
 
+    report = ''
+    if 'fjelltreffen.report' in request.session:
+        report = request.session['fjelltreffen.report']
+        del request.session['fjelltreffen.report']
+
     context = {
         'annonse': annonse,
         'requestedid': id,
-        'reply': reply}
+        'reply': reply,
+        'report': report}
     return render(request, 'main/fjelltreffen/show.html', context)
 
 def show_reply_sent(request, id):
@@ -136,6 +165,16 @@ def show_reply_sent(request, id):
         'reply': request.session['fjelltreffen.reply']}
     del request.session['fjelltreffen.reply']
     return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
+
+def show_report_sent(request, id):
+    if not 'fjelltreffen.report' in request.session:
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+    annonse = Annonse.objects.get(id=id, hidden=False)
+    context = {
+        'annonse': annonse,
+        'reason': request.session['fjelltreffen.report']}
+    del request.session['fjelltreffen.report']
+    return render(request, 'main/fjelltreffen/show_report_sent.html', context)
 
 #
 # Actions for logged-in users (crud)

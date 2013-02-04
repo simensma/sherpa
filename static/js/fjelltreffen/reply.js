@@ -31,9 +31,9 @@ $(document).ready(function() {
 
     var response_wrapper = $("div.fjelltreffen-response");
 
-    response_wrapper.find("ul.response a").click(function() {
+    response_wrapper.find("ul.response a[data-response]").click(function() {
         var response = $(this).attr("data-response");
-        $(this).parent().remove();
+        $(this).parents("ul").remove();
         response_wrapper.find("div." + response).slideDown();
     });
 

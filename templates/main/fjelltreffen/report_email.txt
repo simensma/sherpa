@@ -1,0 +1,14 @@
+Hei, vi har mottatt melding om en upassende annonse i Fjelltreffen.
+
+Annonsen det gjelder:
+Tittel: {{ annonse.title }}
+Annonsør: {{ annonse.profile.get_full_name }} <{{ annonse.profile.get_email }}>, medlemsnr. {{ annonse.profile.memberid }}
+Link: https://{{ site.domain }}{% url fjelltreffen.views.show annonse.id %}
+
+Rapportert av:
+{{ notifier.get_full_name }} <{{ notifier.get_email }}>, medlemsnr. {{ notifier.memberid }}
+{% if reason|length == 0 %}Ingen begrunnelse ble oppgitt.{% else %}
+Begrunnelse:
+------------------------------------------------------------------------------
+{{ reason }}
+------------------------------------------------------------------------------{% endif %}
