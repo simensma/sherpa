@@ -1,7 +1,7 @@
 <tr>
   <td>
     {% if association.url %}<a class="logo-url" href="{{ association.url }}">{% endif %}
-      <div class="association-logo right">
+      <div class="association-logo{% if association.name == 'DNT ung' %} jubilee{% endif %} right">
         {{ association.name }}
       </div>
     {% if association.url %}</a>{% endif %}
