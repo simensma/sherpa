@@ -61,7 +61,7 @@ $(document).ready(function() {
             data: {filter: JSON.stringify(filter)}
         }).done(function(result) {
             result = JSON.parse(result);
-            var new_items = $(result.html).filter(function() { return this.nodeType != 3; });
+            var new_items = $(result.html).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
 
             if(new_items.length == 0) {
                 // No results
@@ -73,7 +73,6 @@ $(document).ready(function() {
                 }
                 complete = true;
             } else {
-                // Filter out text nodes
                 new_items.hide();
                 listwrapper.append(new_items);
                 new_items.fadeIn();
