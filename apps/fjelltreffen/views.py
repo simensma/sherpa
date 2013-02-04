@@ -102,7 +102,7 @@ def reply(request, id):
         send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
         messages.info(request, 'success')
         return HttpResponseRedirect(reverse('fjelltreffen.views.show_reply_sent', args=[annonse.id]))
-    except Exception as e:
+    except Exception:
         messages.error(request, 'email_failure')
         logger.error(u"Klarte ikke å sende Fjelltreffen-epost",
             exc_info=sys.exc_info(),
