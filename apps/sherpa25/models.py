@@ -132,10 +132,18 @@ def import_fjelltreffen_annonser(profile):
         annonse.image = old_annonse_imageurl
         annonse.text = old_annonse.content
         annonse.isold = True
-        annonse.hidden = False
+        annonse.hidden = True
         annonse.hideage = True
 
         #hax to prevent autoadd now
         annonse.save()
         annonse.date = old_annonse.authorized
         annonse.save()
+
+    # After adding all of them, make sure the newest one (and only the newest one) is visible
+    try:
+        newest = Annonse.objects.filter(profile=profile).order_by('-date')[0]
+        newest.hidden = False
+        newest.save()
+    except IndexError:
+        pass
