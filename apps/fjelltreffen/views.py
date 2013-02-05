@@ -53,7 +53,8 @@ def load(request, start_index):
             'minage': annonsefilter['minage'],
             'maxage': annonsefilter['maxage'],
             'gender': annonsefilter['gender'], # Empty gender means both genders
-            'county': annonsefilter['county']}
+            'county': annonsefilter['county'],
+            'text': annonsefilter['text']}
 
     annonser, start_index, end = Annonse.get_by_filter(request.session['fjelltreffen.filter'], int(start_index))
 

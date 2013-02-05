@@ -11,6 +11,7 @@ $(document).ready(function() {
     var upperageselect = $("select.upperage");
     var genderselect = $("select.gender");
     var countyselect = $("select.county");
+    var input_text = $("input[name='text']");
 
     var button_trigger = wrapper.find("button.load");
     var loader = wrapper.find("img.ajaxloader");
@@ -21,6 +22,12 @@ $(document).ready(function() {
     upperageselect.change(filterChanged);
     genderselect.change(filterChanged);
     countyselect.change(filterChanged);
+    input_text.keyup(function() {
+        clearTimeout(text_trigger_timeout_id);
+        text_trigger_timeout_id = setTimeout(filterChanged, text_trigger_timeout);
+    });
+    var text_trigger_timeout_id;
+    var text_trigger_timeout = 800; // Milliseconds
 
     start_index = wrapper.attr('data-start-index');
     button_trigger.click(loadAnnonser);
@@ -53,7 +60,8 @@ $(document).ready(function() {
             maxage: upperageselect.val(),
             gender: genderselect.val(),
             //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
-            county: countyselect.attr("value")
+            county: countyselect.attr("value"),
+            text: input_text.val()
         };
 
         $.ajaxQueue({

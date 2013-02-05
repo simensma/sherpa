@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 
 from datetime import date, timedelta
 
@@ -12,6 +13,7 @@ default_min_age = '18'
 default_max_age = '' # No limit - empty string is also used in the select box
 default_county = ''  # All counties - empty string is also used in the select box
 default_gender = ''  # All genders - empty string is also used in the select box
+default_text = ''    # Text search, empty means no constraints
 
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile')
@@ -66,6 +68,7 @@ class Annonse(models.Model):
         maxage = filter.get('maxage', default_max_age)
         county = filter.get('county', default_county)
         gender = filter.get('gender', default_gender)
+        text = filter.get('text', default_text)
 
         # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
         # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
@@ -82,6 +85,11 @@ class Annonse(models.Model):
         all_candidates = Annonse.get_active()
         if county != '':
             all_candidates = all_candidates.filter(county__code=county)
+        if text != '':
+            for word in text.split():
+                all_candidates = all_candidates.filter(
+                    Q(title__icontains=word) |
+                    Q(text__icontains=word))
         all_candidates = all_candidates.order_by('-date', 'title')[start_index:]
 
         annonse_matches = []
