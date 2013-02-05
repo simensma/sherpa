@@ -69,8 +69,8 @@ def load(request, start_index):
 def show(request, id):
     try:
         annonse = Annonse.objects.get(id=id, hidden=False)
-    except (Annonse.DoesNotExist):
-        annonse = None
+    except Annonse.DoesNotExist:
+        return render(request, 'main/fjelltreffen/show_not_found.html')
 
     reply = None
     if 'fjelltreffen.reply' in request.session:
@@ -84,7 +84,6 @@ def show(request, id):
 
     context = {
         'annonse': annonse,
-        'requestedid': id,
         'reply': reply,
         'report': report}
     return render(request, 'main/fjelltreffen/show.html', context)

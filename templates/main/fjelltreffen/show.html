@@ -4,11 +4,7 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-{% if annonse %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show requestedid %}">{{ annonse.title }}</a></em>
-{% else %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show requestedid %}">Ikke Funnet</a></em>
-{% endif %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></em>
 {% endblock %}
 
 {% block extra_js %}
@@ -20,137 +16,128 @@
 <div class="row">
   <div class="span9">
 
-    {% if annonse %}
-
-      <div class="fjelltreffen-annonse">
-        <h2>{{ annonse.title }}</h2>
-        {% if annonse.image %}
-          <div class="pull-right image-container">
-            <img src="{{ annonse.get_image_url }}" alt="{{ annonse.title }}">
-          </div>
-        {% endif %}
-        <p class="details">
-          {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}
-        </p>
-
-        <p>{{ annonse.text|linebreaksbr }}</p>
-      </div>
-
-      <hr>
-
-      {% if annonse.profile == user.get_profile %}
-
-        <p><em>Dette er din annonse. Du kan <a href="{% url fjelltreffen.views.edit annonse.id %}">redigere den her</a>.</em></p>
-
-      {% else %}
-
-        <div class="fjelltreffen-response">
-
-          {% for message in messages %}
-            {% if message.message == 'email_failure' %}
-              <div class="alert alert-error">
-                <a class="close">x</a>
-                <p><strong>Teknisk feil!</strong></p>
-                <p>
-                  Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
-                </p>
-                <p>
-                  Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
-                </p>
-              </div>
-            {% elif message.message == 'email_report_failure' %}
-              <div class="alert alert-error">
-                <a class="close">x</a>
-                <p><strong>Teknisk feil!</strong></p>
-                <p>
-                  Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
-                </p>
-                <p>
-                  Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
-                </p>
-              </div>
-            {% elif message.message == 'missing_name' %}
-              <div class="alert alert-error">
-                <a class="close">x</a>
-                Du må legge inn navnet ditt!
-              </div>
-            {% elif message.message == 'invalid_email' %}
-              <div class="alert alert-error">
-                <a class="close">x</a>
-                Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
-              </div>
-            {% elif message.message == 'missing_text' %}
-              <div class="alert alert-error">
-                <a class="close">x</a>
-                Du må da skrive litt i svaret til annonsøren!
-              </div>
-            {% endif %}
-          {% endfor %}
-
-          {% if messages|length == 0 %}
-
-            <ul class="response">
-              <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
-              <li>
-                Opplever du annonsen som støtende eller upassende?
-                {% if user.is_authenticated %}
-                  <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
-                {% else %}
-                  {# You must be logged in to report annonser - just link directly to the login page #}
-                  <a href="{% url user.login.views.login %}?next={% url fjelltreffen.views.show annonse.id %}">Gi oss beskjed!</a>
-                {% endif %}
-              </li>
-            </ul>
-
-          {% endif %}
-
-          <div class="reply{% if messages|length == 0 or not reply %} hide{% endif %}">
-
-            <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
-              {% csrf_token %}
-
-              <div class="control-group name">
-                <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
-              </div>
-
-              <div class="control-group email">
-                <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
-              </div>
-
-              <div class="control-group text">
-                <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea>
-              </div>
-
-              <button type="submit" class="btn btn-success">Send</button>
-            </form>
-
-          </div>
-
-          <div class="report{% if messages|length == 0 or not report %} hide{% endif %}">
-
-            <p>
-              <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
-            </p>
-
-            <form action="{% url fjelltreffen.views.report annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
-              {% csrf_token %}
-
-              <div class="control-group text">
-                <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report }}</textarea>
-              </div>
-
-              <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>
-            </form>
-          </div>
-
+    <div class="fjelltreffen-annonse">
+      <h2>{{ annonse.title }}</h2>
+      {% if annonse.image %}
+        <div class="pull-right image-container">
+          <img src="{{ annonse.get_image_url }}" alt="{{ annonse.title }}">
         </div>
-
       {% endif %}
+      <p class="details">
+        {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}
+      </p>
+
+      <p>{{ annonse.text|linebreaksbr }}</p>
+    </div>
+
+    <hr>
+
+    {% if annonse.profile == user.get_profile %}
+
+      <p><em>Dette er din annonse. Du kan <a href="{% url fjelltreffen.views.edit annonse.id %}">redigere den her</a>.</em></p>
 
     {% else %}
 
-      <h2>Ikke funnet</h2>
-      <p>Annonsen du leter etter ble ikke funnet. Den kan ha gått ut på dato, eller blitt slettet av annonsøren.</p>
+      <div class="fjelltreffen-response">
+
+        {% for message in messages %}
+          {% if message.message == 'email_failure' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <p><strong>Teknisk feil!</strong></p>
+              <p>
+                Vi beklager, det oppstod en teknisk feil ved sending av svaret ditt. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+              </p>
+              <p>
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
+              </p>
+            </div>
+          {% elif message.message == 'email_report_failure' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <p><strong>Teknisk feil!</strong></p>
+              <p>
+                Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+              </p>
+              <p>
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
+              </p>
+            </div>
+          {% elif message.message == 'missing_name' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må legge inn navnet ditt!
+            </div>
+          {% elif message.message == 'invalid_email' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
+            </div>
+          {% elif message.message == 'missing_text' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              Du må da skrive litt i svaret til annonsøren!
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% if messages|length == 0 %}
+
+          <ul class="response">
+            <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
+            <li>
+              Opplever du annonsen som støtende eller upassende?
+              {% if user.is_authenticated %}
+                <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
+              {% else %}
+                {# You must be logged in to report annonser - just link directly to the login page #}
+                <a href="{% url user.login.views.login %}?next={% url fjelltreffen.views.show annonse.id %}">Gi oss beskjed!</a>
+              {% endif %}
+            </li>
+          </ul>
+
+        {% endif %}
+
+        <div class="reply{% if messages|length == 0 or not reply %} hide{% endif %}">
+
+          <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
+            {% csrf_token %}
+
+            <div class="control-group name">
+              <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
+            </div>
+
+            <div class="control-group email">
+              <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
+            </div>
+
+            <div class="control-group text">
+              <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Send</button>
+          </form>
+
+        </div>
+
+        <div class="report{% if messages|length == 0 or not report %} hide{% endif %}">
+
+          <p>
+            <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
+          </p>
+
+          <form action="{% url fjelltreffen.views.report annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
+            {% csrf_token %}
+
+            <div class="control-group text">
+              <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>
+          </form>
+        </div>
+
+      </div>
 
     {% endif %}
 

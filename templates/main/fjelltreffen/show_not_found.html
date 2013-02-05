@@ -1,0 +1,24 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+{% block breadcrumb %}
+  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em>Ikke Funnet</em>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Ikke funnet</h2>
+    <p>Annonsen du leter etter ble ikke funnet. Den kan ha gått ut på dato, eller blitt slettet av annonsøren.</p>
+
+  </div>
+
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='None' %}
+  </div>
+
+</div>
+
+{% endblock %}
