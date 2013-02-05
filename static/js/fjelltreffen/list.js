@@ -7,10 +7,10 @@ $(document).ready(function() {
     var wrapper = $("div.fjelltreffen-list");
     var listwrapper = wrapper.find("table.list-public");
 
-    var lowerageselect = $("select.lowerage");
-    var upperageselect = $("select.upperage");
-    var genderselect = $("select.gender");
-    var countyselect = $("select.county");
+    var input_min_age = $("select[name='min_age']");
+    var input_max_age = $("select[name='max_age']");
+    var input_gender = $("select[name='gender']");
+    var input_county = $("select[name='county']");
     var input_text = $("input[name='text']");
 
     var button_trigger = wrapper.find("button.load");
@@ -18,10 +18,10 @@ $(document).ready(function() {
     var no_matches = wrapper.find("div.no-matches");
     var no_further_matches = wrapper.find("div.no-further-matches");
 
-    lowerageselect.change(filterChanged);
-    upperageselect.change(filterChanged);
-    genderselect.change(filterChanged);
-    countyselect.change(filterChanged);
+    input_min_age.change(filterChanged);
+    input_max_age.change(filterChanged);
+    input_gender.change(filterChanged);
+    input_county.change(filterChanged);
     input_text.keyup(function() {
         clearTimeout(text_trigger_timeout_id);
         text_trigger_timeout_id = setTimeout(filterChanged, text_trigger_timeout);
@@ -33,7 +33,7 @@ $(document).ready(function() {
     button_trigger.click(loadAnnonser);
 
     function filterChanged(){
-        if(upperageselect.val() != '' && lowerageselect.val() > upperageselect.val()) {
+        if(input_max_age.val() != '' && input_min_age.val() > input_max_age.val()) {
             alert("Du kan ikke søke fra en høyere alder til en lavere alder! Det får du ingen treff på. Velg en annen aldersgruppe.");
             return;
         }
@@ -56,11 +56,11 @@ $(document).ready(function() {
         loader.show();
 
         var filter = {
-            minage: lowerageselect.val(),
-            maxage: upperageselect.val(),
-            gender: genderselect.val(),
+            minage: input_min_age.val(),
+            maxage: input_max_age.val(),
+            gender: input_gender.val(),
             //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
-            county: countyselect.attr("value"),
+            county: input_county.attr("value"),
             text: input_text.val()
         };
 

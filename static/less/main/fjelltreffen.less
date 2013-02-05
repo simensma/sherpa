@@ -89,20 +89,27 @@ div.fjelltreffen-annonse {
 }
 
 div.fjelltreffen-filters {
-  select.gender {
-    width: 120px;
-  }
+  table {
 
-  select.lowerage {
-    width: 80px;
-  }
+    width: 100%;
 
-  select.upperage {
-    width: 80px;
-  }
+    th {
+      font-family: "DTL Nobel" !important;
+      text-align: left;
+      font-weight: normal;
+    }
 
-  select.county {
-    width: 160px;
+    select[name='gender'], select[name='county'] {
+      width: 180px;
+    }
+
+    select[name='min_age'], select[name='max_age'] {
+      width: 70px;
+    }
+
+    input[name='text'] {
+      width: 100%;
+    }
   }
 }
 
