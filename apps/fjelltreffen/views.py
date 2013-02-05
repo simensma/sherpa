@@ -66,6 +66,29 @@ def load(request, start_index):
         'start_index': start_index,
         'end': end}))
 
+def show(request, id):
+    try:
+        annonse = Annonse.objects.get(id=id, hidden=False)
+    except (Annonse.DoesNotExist):
+        annonse = None
+
+    reply = None
+    if 'fjelltreffen.reply' in request.session:
+        reply = request.session['fjelltreffen.reply']
+        del request.session['fjelltreffen.reply']
+
+    report = ''
+    if 'fjelltreffen.report' in request.session:
+        report = request.session['fjelltreffen.report']
+        del request.session['fjelltreffen.report']
+
+    context = {
+        'annonse': annonse,
+        'requestedid': id,
+        'reply': reply,
+        'report': report}
+    return render(request, 'main/fjelltreffen/show.html', context)
+
 def reply(request, id):
     annonse = Annonse.objects.get(id=id)
     errors = False
@@ -111,6 +134,16 @@ def reply(request, id):
         )
     return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
+def show_reply_sent(request, id):
+    if not 'fjelltreffen.reply' in request.session:
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+    annonse = Annonse.objects.get(id=id, hidden=False)
+    context = {
+        'annonse': annonse,
+        'reply': request.session['fjelltreffen.reply']}
+    del request.session['fjelltreffen.reply']
+    return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
+
 @login_required
 def report(request, id):
     try:
@@ -133,39 +166,6 @@ def report(request, id):
             extra={'request': request}
         )
     return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
-
-def show(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id, hidden=False)
-    except (Annonse.DoesNotExist):
-        annonse = None
-
-    reply = None
-    if 'fjelltreffen.reply' in request.session:
-        reply = request.session['fjelltreffen.reply']
-        del request.session['fjelltreffen.reply']
-
-    report = ''
-    if 'fjelltreffen.report' in request.session:
-        report = request.session['fjelltreffen.report']
-        del request.session['fjelltreffen.report']
-
-    context = {
-        'annonse': annonse,
-        'requestedid': id,
-        'reply': reply,
-        'report': report}
-    return render(request, 'main/fjelltreffen/show.html', context)
-
-def show_reply_sent(request, id):
-    if not 'fjelltreffen.reply' in request.session:
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
-    annonse = Annonse.objects.get(id=id, hidden=False)
-    context = {
-        'annonse': annonse,
-        'reply': request.session['fjelltreffen.reply']}
-    del request.session['fjelltreffen.reply']
-    return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
 
 def show_report_sent(request, id):
     if not 'fjelltreffen.report' in request.session:
