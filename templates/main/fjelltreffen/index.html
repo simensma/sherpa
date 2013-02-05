@@ -25,16 +25,7 @@
       {% include 'main/fjelltreffen/filter.html' %}
 
       <table class="table table-hover list-public">
-        {% if annonser %}
-          {% include 'main/fjelltreffen/annonselist.html' %}
-        {% else %}
-          <tr>
-            <td>
-              Det er ikke lagt ut noen annonser de siste {{ annonse_retention_days }} dagene.<br>
-              Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">skrive den første annonsen</a>?
-            </td>
-          </tr>
-        {% endif %}
+        {% include 'main/fjelltreffen/annonselist.html' %}
       </table>
 
       <div class="load-more">
@@ -42,7 +33,7 @@
         <button class="btn btn-large load{% if end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
       </div>
 
-      <div class="no-matches alert alert-error hide">
+      <div class="no-matches alert alert-error{% if not end %} hide{% endif %}">
         Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
       </div>
 
