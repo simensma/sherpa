@@ -71,6 +71,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'raven.contrib.django', # Error logging
+    'captcha', # django-simple-captcha
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
