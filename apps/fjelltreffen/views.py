@@ -30,7 +30,7 @@ logger = logging.getLogger('sherpa')
 def index(request):
     annonser, start_index, end = Annonse.get_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
-        'annonser':annonser,
+        'annonser': annonser,
         'start_index': start_index,
         'end': end,
         'counties':County.typical_objects().order_by('name'),
