@@ -12,18 +12,14 @@
 <div class="row">
   <div class="span9">
 
-    {% for message in messages %}
-      {% if message.message == 'success' %}
-        <div class="alert alert-success">
-          <strong>Anmeldelsen er mottatt.</strong><br>
-          Takk for at du hjelper oss med å passe på at Fjelltreffen forblir et hyggelig møtested.
-        </div>
-      {% endif %}
-    {% endfor %}
+    <div class="alert alert-success">
+      <strong>Anmeldelsen er mottatt.</strong><br>
+      Takk for at du hjelper oss med å passe på at Fjelltreffen forblir et hyggelig møtested.
+    </div>
 
-    {% if reason|length > 0 %}
+    {% if report.reason|length > 0 %}
       <h3>Din begrunnelse:</h3>
-      <pre>{{ reason|linebreaksbr }}</pre>
+      <pre>{{ report.reason|linebreaksbr }}</pre>
     {% endif %}
 
     <p><a href="{% url fjelltreffen.views.index %}">Tilbake til forsiden</a></p>

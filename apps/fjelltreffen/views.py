@@ -19,6 +19,7 @@ import logging
 
 from sherpa.decorators import user_requires
 from fjelltreffen.models import Annonse
+from fjelltreffen.forms import ReplyForm
 from core import validator
 from sherpa25.models import Classified
 from core.models import County
@@ -72,66 +73,52 @@ def show(request, id):
     except Annonse.DoesNotExist:
         return render(request, 'main/fjelltreffen/show_not_found.html')
 
-    reply = None
-    if 'fjelltreffen.reply' in request.session:
-        reply = request.session['fjelltreffen.reply']
-        del request.session['fjelltreffen.reply']
+    context = {}
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            try:
+                # Send the reply-email
+                email_context = RequestContext(request, {
+                    'annonse': annonse,
+                    'reply': {
+                        'name': request.POST['name'],
+                        'email': request.POST['email'],
+                        'text': request.POST['text']}
+                    })
+                content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
+                send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
+                request.session['fjelltreffen.reply'] = {
+                    'name': form.cleaned_data['name'],
+                    'email': form.cleaned_data['email'],
+                    'text': form.cleaned_data['text']
+                }
+                return HttpResponseRedirect(reverse('fjelltreffen.views.show_reply_sent', args=[annonse.id]))
+            except Exception:
+                # Use both a message (for consistency with the report-failure)
+                # and context to be able to manipulate the template based on message info
+                messages.error(request, 'email_reply_failure')
+                context.update({'email_reply_failure': True})
+                logger.error(u"Klarte ikke å sende Fjelltreffen-epost",
+                    exc_info=sys.exc_info(),
+                    extra={'request': request}
+                )
+    else:
+        form = ReplyForm(initial={
+            'name': request.user.get_profile().get_full_name(),
+            'email': request.user.get_profile().get_email()
+            })
 
     report = ''
     if 'fjelltreffen.report' in request.session:
         report = request.session['fjelltreffen.report']
         del request.session['fjelltreffen.report']
 
-    context = {
+    context.update({
         'annonse': annonse,
-        'reply': reply,
-        'report': report}
+        'form': form,
+        'report': report})
     return render(request, 'main/fjelltreffen/show.html', context)
-
-def reply(request, id):
-    annonse = Annonse.objects.get(id=id)
-    errors = False
-    request.session['fjelltreffen.reply'] = {
-        'name': request.POST['name'],
-        'email': request.POST['email'],
-        'text': request.POST['text']
-    }
-
-    if not validator.name(request.POST['name']):
-        messages.error(request, 'missing_name')
-        errors = True
-
-    if not validator.email(request.POST['email']):
-        messages.error(request, 'invalid_email')
-        errors = True
-
-    if request.POST['text'] == '':
-        messages.error(request, 'missing_text')
-        errors = True
-
-    if errors:
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
-
-    try:
-        context = RequestContext(request, {
-            'annonse': annonse,
-            'reply': {
-                'name': request.POST['name'],
-                'email': request.POST['email'],
-                'text': request.POST['text']}
-            })
-        content = render_to_string('main/fjelltreffen/reply_email.txt', context)
-
-        send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
-        messages.info(request, 'success')
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show_reply_sent', args=[annonse.id]))
-    except Exception:
-        messages.error(request, 'email_failure')
-        logger.error(u"Klarte ikke å sende Fjelltreffen-epost",
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
-    return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
 def show_reply_sent(request, id):
     if not 'fjelltreffen.reply' in request.session:
@@ -147,7 +134,7 @@ def show_reply_sent(request, id):
 def report(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
-        request.session['fjelltreffen.report'] = request.POST['reason']
+        request.session['fjelltreffen.report'] = {'reason': request.POST['reason']}
 
         context = RequestContext(request, {
             'annonse': annonse,
@@ -156,7 +143,6 @@ def report(request, id):
         content = render_to_string('main/fjelltreffen/report_email.txt', context)
 
         send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
-        messages.info(request, 'success')
         return HttpResponseRedirect(reverse('fjelltreffen.views.show_report_sent', args=[annonse.id]))
     except Exception:
         messages.error(request, 'email_report_failure')
@@ -172,7 +158,7 @@ def show_report_sent(request, id):
     annonse = Annonse.objects.get(id=id, hidden=False)
     context = {
         'annonse': annonse,
-        'reason': request.session['fjelltreffen.report']}
+        'report': request.session['fjelltreffen.report']}
     del request.session['fjelltreffen.report']
     return render(request, 'main/fjelltreffen/show_report_sent.html', context)
 

@@ -12,30 +12,24 @@
 <div class="row">
   <div class="span9">
 
-    {% for message in messages %}
-      {% if message.message == 'success' %}
-        <div class="alert alert-success">
-          <strong>Svaret ditt er sendt til annonsøren.</strong><br>
-          {% if annonse.profile.get_actor.get_gender|gender == 'mann' %}Han{% else %}Hun{% endif %} vil motta en e-post med ditt svar. Eventuell videre korrespondanse foregår direkte via e-post eller på annen ønsket måte.
-        </div>
-      {% endif %}
-    {% endfor %}
+    <div class="alert alert-success">
+      <strong>Svaret ditt er sendt til annonsøren.</strong><br>
+      {% if annonse.profile.get_actor.get_gender|gender == 'mann' %}Han{% else %}Hun{% endif %} vil motta en e-post med ditt svar. Eventuell videre korrespondanse foregår direkte via e-post eller på annen ønsket måte.
+    </div>
 
-    {% if reply %}
+    <div class="fjelltreffen-reply">
 
-      <div class="fjelltreffen-reply">
+      <h2>Ditt svar:</h2>
 
-        <h2>Ditt svar:</h2>
+      <p class="details">
+        Fra: {{ reply.name }} &lt;<a href="mailto:{{ reply.email }}">{{ reply.email }}</a>&gt;<br>
+        Re: {{ annonse.title }}
+      </p>
 
-        <p class="details">
-          Fra: {{ reply.name }} &lt;<a href="mailto:{{ reply.email }}">{{ reply.email }}</a>&gt;<br>
-          Re: {{ annonse.title }}
-        </p>
+      <pre>{{ reply.text }}</pre>
+    </div>
 
-        <pre>{{ reply.text }}</pre>
-      </div>
-
-    {% endif %}
+    <p><a href="{% url fjelltreffen.views.index %}">Tilbake til forsiden</a></p>
 
     <hr>
 

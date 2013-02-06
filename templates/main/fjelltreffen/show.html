@@ -40,8 +40,9 @@
 
       <div class="fjelltreffen-response">
 
+        {# Messages are technical errors when delivering email, both reply and report #}
         {% for message in messages %}
-          {% if message.message == 'email_failure' %}
+          {% if message.message == 'email_reply_failure' %}
             <div class="alert alert-error">
               <a class="close">x</a>
               <p><strong>Teknisk feil!</strong></p>
@@ -63,26 +64,26 @@
                 Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
               </p>
             </div>
-          {% elif message.message == 'missing_name' %}
-            <div class="alert alert-error">
-              <a class="close">x</a>
-              Du må legge inn navnet ditt!
-            </div>
-          {% elif message.message == 'invalid_email' %}
-            <div class="alert alert-error">
-              <a class="close">x</a>
-              Du må skrive inn din e-postadresse, uten denne kan ikke annonsøren svare deg!
-            </div>
-          {% elif message.message == 'missing_text' %}
-            <div class="alert alert-error">
-              <a class="close">x</a>
-              Du må da skrive litt i svaret til annonsøren!
-            </div>
           {% endif %}
         {% endfor %}
 
-        {% if messages|length == 0 %}
+        {# Form errors (for replies) #}
+        {% if form.errors %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Vennligst rett følgende feil i skjemaet:</strong>
+            <ul>
+              {% for errors in form.errors.values %}
+                {% for error in errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
 
+        {# Anchors for slidedown - hide if errors are present #}
+        {% if messages|length == 0 and not form.errors %}
           <ul class="response">
             <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
             <li>
@@ -95,24 +96,24 @@
               {% endif %}
             </li>
           </ul>
-
         {% endif %}
 
-        <div class="reply{% if messages|length == 0 or not reply %} hide{% endif %}">
+        {# Replies - show if already filled and there were errors #}
+        <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
 
-          <form action="{% url fjelltreffen.views.reply annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
+          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
             {% csrf_token %}
 
             <div class="control-group name">
-              <input type="text" name="name" placeholder="Ditt navn..." value="{% firstof reply.name user.get_profile.get_full_name %}" class="input-xlarge"> <span class="asterisk red">*</span>
+              {{ form.name }} <span class="asterisk red">*</span>
             </div>
 
             <div class="control-group email">
-              <input type="text" name="email" placeholder="Din e-postadresse..." value="{% firstof reply.email user.get_profile.get_email %}" class="input-xlarge"> <span class="asterisk red">*</span>
+              {{ form.email }} <span class="asterisk red">*</span>
             </div>
 
             <div class="control-group text">
-              <textarea name="text" placeholder="Skriv svaret ditt her...">{{ reply.text }}</textarea>
+              {{ form.text }}
             </div>
 
             <button type="submit" class="btn btn-success">Send</button>
@@ -120,6 +121,7 @@
 
         </div>
 
+        {# Report - show if filled and technical error #}
         <div class="report{% if messages|length == 0 or not report %} hide{% endif %}">
 
           <p>
@@ -130,7 +132,7 @@
             {% csrf_token %}
 
             <div class="control-group text">
-              <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report }}</textarea>
+              <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report.reason }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>
