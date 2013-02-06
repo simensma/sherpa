@@ -219,7 +219,7 @@ def save(request):
         annonse = Annonse()
         annonse.profile = request.user.get_profile()
     else:
-        annonse = Annonse.objects.get(id=request.POST['id']);
+        annonse = Annonse.objects.get(id=request.POST['id'])
         if annonse.profile != request.user.get_profile():
             #someone is trying to edit an annonse that dosent belong to them
             raise PermissionDenied
@@ -272,7 +272,7 @@ def save(request):
 @user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def delete(request, id):
     try:
-        annonse = Annonse.objects.get(id=id);
+        annonse = Annonse.objects.get(id=id)
         if annonse.profile != request.user.get_profile():
             #someone is trying to delete an annonse that dosent belong to them
             raise PermissionDenied
