@@ -104,10 +104,13 @@ def show(request, id):
                     extra={'request': request}
                 )
     else:
-        form = ReplyForm(initial={
-            'name': request.user.get_profile().get_full_name(),
-            'email': request.user.get_profile().get_email()
+        initial = {}
+        if request.user.is_authenticated():
+            initial.update({
+                'name': request.user.get_profile().get_full_name(),
+                'email': request.user.get_profile().get_email()
             })
+        form = ReplyForm(initial=initial)
 
     report = ''
     if 'fjelltreffen.report' in request.session:
