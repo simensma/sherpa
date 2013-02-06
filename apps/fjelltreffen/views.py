@@ -4,15 +4,13 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 from datetime import date, timedelta
-from smtplib import SMTPException
 import json
 import sys
 import logging
@@ -21,10 +19,7 @@ from sherpa.decorators import user_requires
 from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator
-from sherpa25.models import Classified
 from core.models import County
-from focus.models import Actor
-from user.models import Profile
 
 logger = logging.getLogger('sherpa')
 
