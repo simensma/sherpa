@@ -89,7 +89,7 @@ def update_placement(request):
     return HttpResponseRedirect(reverse('admin.ads.views.list'))
 
 def upload(file):
-    # Consider streaming the file instead of reading everything into memory first.
+    # TODO: Consider streaming the file instead of reading everything into memory first.
     # See simples3/htstream.py
     data = file.read()
 

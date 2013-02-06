@@ -422,7 +422,7 @@ def parse_image(file):
         # were to close in on the amount of available keys.
         key = generate_random_image_key()
 
-    # Consider streaming the file instead of reading everything into memory first.
+    # TODO: Consider streaming the file instead of reading everything into memory first.
     # See simples3/htstream.py
     data = file.read()
 
