@@ -19,7 +19,7 @@ import logging
 
 from sherpa.decorators import user_requires
 from fjelltreffen.models import Annonse
-from fjelltreffen.forms import ReplyForm
+from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator
 from sherpa25.models import Classified
 from core.models import County
@@ -75,7 +75,7 @@ def show(request, id):
 
     context = {}
     if request.method == 'POST':
-        form = ReplyForm(request.POST)
+        form = ReplyForm(request.POST) if request.user.is_authenticated() else ReplyAnonForm(request.POST)
         if form.is_valid():
             try:
                 # Send the reply-email
@@ -104,13 +104,13 @@ def show(request, id):
                     extra={'request': request}
                 )
     else:
-        initial = {}
         if request.user.is_authenticated():
-            initial.update({
+            form = ReplyForm(initial={
                 'name': request.user.get_profile().get_full_name(),
                 'email': request.user.get_profile().get_email()
             })
-        form = ReplyForm(initial=initial)
+        else:
+            form = ReplyAnonForm()
 
     report = ''
     if 'fjelltreffen.report' in request.session:

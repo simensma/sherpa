@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django import forms
 from django.forms.widgets import Textarea
+from captcha.fields import CaptchaField
 
 class ReplyForm(forms.Form):
 
@@ -33,3 +34,14 @@ class ReplyForm(forms.Form):
 
         self.fields['text'].error_messages = {
             'required': 'Du må da skrive litt i svaret til annonsøren!'}
+
+# Anonymous users must also fill a Captcha
+class ReplyAnonForm(ReplyForm):
+
+    captcha = CaptchaField()
+
+    def __init__(self, *args, **kwargs):
+        super(ReplyAnonForm, self).__init__(*args, **kwargs)
+        self.fields['captcha'].error_messages = {
+            'required': 'Du må fylle inn captcha-feltet.',
+            'invalid': 'Du har oppgitt feil captcha-kode, vennligst prøv igjen.'}

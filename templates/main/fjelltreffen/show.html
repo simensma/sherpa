@@ -116,6 +116,13 @@
               {{ form.text }}
             </div>
 
+            {% if form.captcha %}
+              {# Will only be required for anonymous users #}
+              <div class="control-group captcha">
+                {{ form.captcha }}
+              </div>
+            {% endif %}
+
             <button type="submit" class="btn btn-success">Send</button>
           </form>
 
