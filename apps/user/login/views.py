@@ -50,6 +50,12 @@ def login(request):
                 user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
+
+                # Update the email on this actor, in case it were to differ from the sherpa2 email
+                actor = profile.get_actor()
+                actor.email = request.POST['email']
+                actor.save()
+
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
             else:
