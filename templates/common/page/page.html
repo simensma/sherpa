@@ -6,8 +6,8 @@
 
 {# Temporary hardcoded promo-box #}
 {% if promo %}
-<div class="widget promo">
-  {% include promo %}
+<div class="widget promo {{ promo.type }}">
+  {% include promo.template %}
 </div>
 {% endif %}
 
