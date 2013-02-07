@@ -286,3 +286,82 @@ div.widget.promo p.display-promo-menu a:hover {
     margin-bottom: 12px !important;
   }
 }
+
+/**
+ * New type of promo: 'cover', covers the entire block
+ * Note that this does also inherit styles from the default promo layout
+ */
+
+div.widget.cover {
+
+  div.wrapper {
+    height: 480px;
+    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
+
+    div.content {
+      @size: 400px;
+      @padding-right: 65px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 60px;
+      padding-right: @padding-right;
+      color: white;
+      text-align: center;
+
+      h1 {
+        border-bottom: none;
+        font-size: 36px;
+      }
+
+      p {
+        font-family: "DTL Nobel" !important;
+        font-size: 20px;
+        line-height: normal;
+        margin-bottom: 30px;
+      }
+
+      p.button {
+        a.full {
+          display: inline;
+        }
+
+        a.small {
+          display: none;
+        }
+      }
+    }
+  }
+
+  /* Small-screen layouts */
+
+  @media(max-width: 767px) {
+    div.wrapper {
+      height: auto;
+      background-image: none;
+      background-color: @profile-red;
+
+      div.content {
+        padding: 15px;
+        width: auto;
+
+        h1 {
+          font-size: 28px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+
+        p.button {
+          a.full {
+            display: none;
+          }
+
+          a.small {
+            display: inline;
+          }
+        }
+      }
+    }
+  }
+}
