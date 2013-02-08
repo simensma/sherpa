@@ -4,313 +4,297 @@ div.widget.promo {
 
   margin-bottom: 30px;
 
-  div.wrapper {
-    position: relative;
-  }
-
-  /* Background-image and menu */
-
-  img.background-image {
-    width: 50%;
-  }
+  /* The menu */
 
   div.menu {
     font-family: "DTL Nobel";
     position: absolute;
     top: 20px;
     font-size: 15px;
+
+    ul {
+      margin: 0;
+      list-style: none;
+
+      li:first-of-type {
+        border-top: none;
+      }
+
+      li {
+        padding: 5px 20px 5px 10px;
+        background-color: white;
+        border-top: 1px solid rgb(210, 210, 210);
+        font-family: "DTL Nobel" !important;
+        font-size: 15px !important;
+        line-height: 18px;
+      }
+
+      li.active {
+        background-color: @profile-red;
+        color: white;
+      }
+
+      li:not(.active):hover {
+        background-color: rgb(150, 150, 150);
+        cursor: pointer;
+      }
+
+      li a {
+        color: rgb(80, 80, 80);
+      }
+
+      li.active a {
+        color: white;
+      }
+
+      li:not(.active):hover a {
+        color: white;
+        text-decoration: underline;
+      }
+    }
   }
 
-  div.menu ul {
-    margin: 0;
-    list-style: none;
+  /* Hide menu by default on small screens */
+  @media (max-width: 767px) {
+    div.menu {
+      display: none;
+      position: static;
+      background-color: white;
+      padding-bottom: 20px;
+    }
   }
 
-  div.menu li:first-of-type {
-    border-top: none;
+
+  /* Set all of the layouts relative, for the menu */
+  div.default, div.cover {
+    position: relative;
   }
 
-  div.menu li {
-    padding: 5px 20px 5px 10px;
-    background-color: white;
-    border-top: 1px solid rgb(210, 210, 210);
-    font-family: "DTL Nobel" !important;
-    font-size: 15px !important;
-    line-height: 18px;
-  }
+  /**
+   * The default promo layout
+   */
 
-  div.menu li.active {
-    background-color: @profile-red;
-    color: white;
-  }
+  div.default {
 
-  div.menu li:not(.active):hover {
-    background-color: rgb(150, 150, 150);
-    cursor: pointer;
-  }
+    /* Background-image and menu */
 
-  div.menu li a {
-    color: rgb(80, 80, 80);
-  }
-
-  div.menu li.active a {
-    color: white;
-  }
-
-  div.menu li:not(.active):hover a {
-    color: white;
-    text-decoration: underline;
-  }
-
-  /* Right side */
-
-  div.right {
-    color: white;
-    float: right;
-    width: 46%;
-    padding: 15px 2% 15px 2%;
-  }
-
-  div.right h1 {
-    border-bottom: none;
-  }
-
-  div.right h1.lede {
-    margin-bottom: 0;
-  }
-
-  div.right p.lede {
-    font-size: 18px;
-    font-weight: bold;
-    font-variant: small-caps;
-    margin-bottom: 20px;
-  }
-
-  div.right p.button {
-    margin-top: 25px;
-    margin-bottom: 25px;
-  }
-
-  div.right p.sponsor {
-    font-size: 14px;
-    font-style: italic;
-    text-align: right;
-    margin-top: 25px;
-    padding-left: 60px;
-  }
-
-  div.right p.sponsor a {
-    float: right;
-  }
-
-  div.right p.sponsor a.kvikk-lunsj {
-    width: 80px;
-  }
-
-  div.right img {
-    margin-left: 15px;
-  }
-
-  /* Centered promos */
-
-  div.wrapper.centered div.right {
-    text-align: center;
-  }
-
-  /* Specific styles for the different sections (mainly main) */
-
-  div.wrapper.main {
-    h1 {
-      font-size: 50px;
-      margin-top: 30px;
-      padding-left: 20px;
-      padding-right: 20px;
+    img.background-image {
+      width: 50%;
     }
 
-    p.info {
-      font-size: 20px;
+    /* Right side */
+
+    div.right {
+      color: white;
+      float: right;
+      width: 46%;
+      padding: 15px 2% 15px 2%;
+    }
+
+    div.right h1 {
+      border-bottom: none;
+    }
+
+    div.right h1.lede {
+      margin-bottom: 0;
+    }
+
+    div.right p.lede {
+      font-size: 18px;
       font-weight: bold;
-      font-family: 'DTL Nobel' !important;
-      text-transform: uppercase;
+      font-variant: small-caps;
+      margin-bottom: 20px;
     }
 
-    p.content {
-      font-size: 20px;
-      font-family: 'DTL Nobel' !important;
-      padding-left: 50px;
-      padding-right: 50px;
+    div.right p.button {
+      margin-top: 25px;
+      margin-bottom: 25px;
     }
 
-    div.sponsors {
-      margin-top: 15px;
-      text-align: center;
+    div.right p.sponsor {
       font-size: 14px;
       font-style: italic;
+      text-align: right;
+      margin-top: 25px;
+      padding-left: 60px;
+    }
+
+    div.right p.sponsor a {
+      float: right;
+    }
+
+    div.right p.sponsor a.kvikk-lunsj {
+      width: 80px;
+    }
+
+    div.right img {
+      margin-left: 15px;
+    }
+
+    /* Centered promos */
+
+    div.wrapper.centered div.right {
+      text-align: center;
+    }
+
+    /* Specific styles for the different sections (mainly main) */
+
+    div.wrapper.main {
+      h1 {
+        font-size: 50px;
+        margin-top: 30px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      p.info {
+        font-size: 20px;
+        font-weight: bold;
+        font-family: 'DTL Nobel' !important;
+        text-transform: uppercase;
+      }
+
+      p.content {
+        font-size: 20px;
+        font-family: 'DTL Nobel' !important;
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+
+      div.sponsors {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+        font-style: italic;
+      }
+    }
+
+    div.wrapper.ut {
+      h1 {
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Colors for the different sections */
+
+    div.wrapper.main {
+      background-color: @profile-red;
+    }
+
+    div.wrapper.main a.white-link {
+      color: rgb(255, 255, 255);
+      text-decoration: underline;
+    }
+
+    div.wrapper.main a.white-link:hover {
+      color: rgb(78, 71, 179);
+    }
+
+    div.wrapper.ut {
+      background-color: @profile-red;
+    }
+
+    div.wrapper.ut a.white-link {
+      color: rgb(255, 255, 255);
+      text-decoration: underline;
+    }
+
+    div.wrapper.ut a.white-link:hover {
+      color: rgb(78, 71, 179);
+    }
+
+    div.wrapper.medlem {
+      background-color: @profile-red;
+    }
+
+    div.wrapper.fellesturer {
+      background-color: rgb(19, 42, 86);
+    }
+
+    div.wrapper.hytter {
+      background-color: rgb(58, 81, 40);
+    }
+
+    div.wrapper.barn {
+      background-color: rgb(206, 86, 0);
+    }
+
+    div.wrapper.ung {
+      background-color: rgb(36, 49, 83);
+    }
+
+    div.wrapper.fjellsport {
+      background-color: rgb(172, 195, 213);
+    }
+
+    div.wrapper.fjellsport div.right {
+      color: black;
+    }
+
+    div.wrapper.senior {
+      background-color: rgb(232, 232, 232);
+    }
+
+    div.wrapper.senior div.right {
+      color: black;
+    }
+
+    div.wrapper.skole {
+      background-color: rgb(178, 210, 238);
+    }
+
+    div.wrapper.skole div.right {
+      color: black;
+    }
+
+    div.wrapper.kurs {
+      background-color: rgb(204, 54, 2);
+    }
+
+    div.wrapper.tur-for-alle {
+      background-color: rgb(38, 53, 26);
+    }
+
+    /* Small-screen layout */
+
+    @media (max-width: 767px) {
+      img.background-image {
+        display: none;
+      }
+
+      div.right {
+        float: none;
+        width: auto;
+        padding: 10px;
+        margin-left: 6px;
+      }
+
+      div.right h1 {
+        font-size: 28px !important;
+        margin-bottom: 12px !important;
+      }
     }
   }
 
-  div.wrapper.ut {
-    h1 {
-      margin-bottom: 10px;
-    }
-  }
 
-  /* Colors for the different sections */
-
-  div.wrapper.main {
-    background-color: @profile-red;
-  }
-
-  div.wrapper.main a.white-link {
-    color: rgb(255, 255, 255);
-    text-decoration: underline;
-  }
-
-  div.wrapper.main a.white-link:hover {
-    color: rgb(78, 71, 179);
-  }
-
-  div.wrapper.ut {
-    background-color: @profile-red;
-  }
-
-  div.wrapper.ut a.white-link {
-    color: rgb(255, 255, 255);
-    text-decoration: underline;
-  }
-
-  div.wrapper.ut a.white-link:hover {
-    color: rgb(78, 71, 179);
-  }
-
-  div.wrapper.medlem {
-    background-color: @profile-red;
-  }
-
-  div.wrapper.fellesturer {
-    background-color: rgb(19, 42, 86);
-  }
-
-  div.wrapper.hytter {
-    background-color: rgb(58, 81, 40);
-  }
-
-  div.wrapper.barn {
-    background-color: rgb(206, 86, 0);
-  }
-
-  div.wrapper.ung {
-    background-color: rgb(36, 49, 83);
-  }
-
-  div.wrapper.fjellsport {
-    background-color: rgb(172, 195, 213);
-  }
-
-  div.wrapper.fjellsport div.right {
-    color: black;
-  }
-
-  div.wrapper.senior {
-    background-color: rgb(232, 232, 232);
-  }
-
-  div.wrapper.senior div.right {
-    color: black;
-  }
-
-  div.wrapper.skole {
-    background-color: rgb(178, 210, 238);
-  }
-
-  div.wrapper.skole div.right {
-    color: black;
-  }
-
-  div.wrapper.kurs {
-    background-color: rgb(204, 54, 2);
-  }
-
-  div.wrapper.tur-for-alle {
-    background-color: rgb(38, 53, 26);
-  }
-}
-
-/* Small-screen layout */
-
-div.widget.promo p.display-promo-menu {
-  display: none;
-  padding: 5px 20px 5px 10px;
-  background-color: white;
-  font-family: "DTL Nobel" !important;
-  font-size: 16px !important;
-  margin-bottom: 0;
-}
-
-div.widget.promo p.display-promo-menu a {
-  color: rgb(30, 30, 30);
-}
-
-div.widget.promo p.display-promo-menu a:hover {
-  color: rgb(180, 180, 180);
-  background-color: rgb(250, 250, 250);
-  text-decoration: none;
-}
-
-@media (max-width: 767px) {
-  div.widget.promo img.background-image {
-    display: none;
-  }
+  /**
+   * New type of promo layout: 'cover', covers the entire block
+   */
 
 
-  div.widget.promo p.display-promo-menu {
-    display: block;
-  }
+  /* Generic (more or less) */
 
-  div.widget.promo div.menu {
-    display: none;
-    position: static;
-    background-color: white;
-    padding-bottom: 20px;
-  }
-
-  div.widget.promo div.right {
-    float: none;
-    width: auto;
-    padding: 10px;
-    margin-left: 6px;
-  }
-
-  div.widget.promo div.right h1 {
-    font-size: 28px !important;
-    margin-bottom: 12px !important;
-  }
-}
-
-/**
- * New type of promo: 'cover', covers the entire block
- * Note that this does also inherit styles from the default promo layout
- */
-
-div.widget.cover {
-
-  div.wrapper {
+  div.cover {
     height: 480px;
-    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
 
     div.content {
-      @size: 400px;
-      @padding-right: 65px;
-      width: @size;
-      padding-left: 940px - @size - @padding-right;
-      padding-top: 60px;
-      padding-right: @padding-right;
       color: white;
       text-align: center;
 
       h1 {
         border-bottom: none;
         font-size: 36px;
+        margin-bottom: 25px;
       }
 
       p {
@@ -332,33 +316,87 @@ div.widget.cover {
     }
   }
 
+  div.cover.main {
+    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
+
+    div.content {
+      @size: 400px;
+      @padding-right: 65px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 60px;
+      padding-right: @padding-right;
+      color: white;
+      text-align: center;
+
+      p.button {
+        a.full {
+          display: inline;
+        }
+
+        a.small {
+          display: none;
+        }
+      }
+    }
+  }
+
+  div.cover.ung {
+    background: url('/static/img/widgets/promo/ung_jubileum.png') top left no-repeat;
+
+    div.content {
+      @size: 380px;
+      @padding-right: 70px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 150px;
+      padding-right: @padding-right;
+      color: white;
+      text-align: center;
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 25px;
+      }
+
+      p.more a {
+        font-size: 14px;
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+
   /* Small-screen layouts */
 
   @media(max-width: 767px) {
-    div.wrapper {
-      height: auto;
-      background-image: none;
-      background-color: @profile-red;
+    div.cover {
+      height: auto !important;
+      background-image: none !important;
+      background-color: @profile-red !important;
 
       div.content {
-        padding: 15px;
-        width: auto;
+        padding: 15px !important;
+        width: auto !important;
 
         h1 {
-          font-size: 28px;
+          font-size: 28px !important;
         }
 
         p {
-          font-size: 16px;
+          font-size: 16px !important;
         }
 
         p.button {
           a.full {
-            display: none;
+            display: none !important;
           }
 
           a.small {
-            display: inline;
+            display: inline !important;
           }
         }
       }

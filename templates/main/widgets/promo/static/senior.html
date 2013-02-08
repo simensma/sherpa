@@ -1,29 +1,31 @@
 <div class="row">
   <div class="span12">
-    <div class="wrapper senior">
-      {% include 'main/widgets/promo/static/menu.html' %}
+    <div class="{{ promo.type }}">
+      <div class="wrapper senior">
+        {% include 'main/widgets/promo/static/menu.html' %}
 
-      <div class="right">
-        <h1>DNT Senior</h1>
+        <div class="right">
+          <h1>DNT Senior</h1>
 
-        <p>
-          Savner du noen å gå på tur med? DNT Senior er vårt tilbud til godt voksne i alderen 60 år og oppover.
-        </p>
+          <p>
+            Savner du noen å gå på tur med? DNT Senior er vårt tilbud til godt voksne i alderen 60 år og oppover.
+          </p>
 
-        <p>
-          DNTs seniorgrupper over hele landet arrangerer aktiviteter fra enkle turer i nærområdet til overnattingsturer på fjellet.
-        </p>
+          <p>
+            DNTs seniorgrupper over hele landet arrangerer aktiviteter fra enkle turer i nærområdet til overnattingsturer på fjellet.
+          </p>
 
-        <p>
-          De aller fleste seniorturene er lette og passer alle, uansett ferdighetsnivå eller alder. Turene ledes av andre seniorer og er ofte en kombinasjon av fysisk aktivitet, sosialt fellesskap og natur- og kulturformidling.
-        </p>
+          <p>
+            De aller fleste seniorturene er lette og passer alle, uansett ferdighetsnivå eller alder. Turene ledes av andre seniorer og er ofte en kombinasjon av fysisk aktivitet, sosialt fellesskap og natur- og kulturformidling.
+          </p>
 
-        <p class="button">
-          <a class="btn btn-danger btn-large" href="http://{{ old_site }}/activity.php?fo_id=2513&amp;search_string=&amp;action=S%F8k&amp;ac_extra%5B%5D=Tl_senior">Finn turer for seniorer</a>
-        </p>
+          <p class="button">
+            <a class="btn btn-danger btn-large" href="http://{{ old_site }}/activity.php?fo_id=2513&amp;search_string=&amp;action=S%F8k&amp;ac_extra%5B%5D=Tl_senior">Finn turer for seniorer</a>
+          </p>
+        </div>
+        <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/senior.png" alt="DNT Senior">
+        <div style="clear: both;"></div>
       </div>
-      <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/senior.png" alt="DNT Senior">
-      <div style="clear: both;"></div>
     </div>
   </div>
 </div>

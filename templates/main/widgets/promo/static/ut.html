@@ -1,40 +1,42 @@
 <div class="row">
   <div class="span12">
-    <div class="wrapper ut">
-      {% include 'main/widgets/promo/static/menu.html' %}
+    <div class="{{ promo.type }}">
+      <div class="wrapper ut">
+        {% include 'main/widgets/promo/static/menu.html' %}
 
-      <div class="right">
-        <h1>
-          <a href="http://ut.no/" class="noexternal white-link">UT.no</a>
-        </h1>
+        <div class="right">
+          <h1>
+            <a href="http://ut.no/" class="noexternal white-link">UT.no</a>
+          </h1>
 
-        <p>
-          <strong>Start turen på UT.no - hele Norges turplanlegger</strong>
-        </p>
+          <p>
+            <strong>Start turen på UT.no - hele Norges turplanlegger</strong>
+          </p>
 
-        <p>
-          På UT.no finner du blant annet:
-        </p>
+          <p>
+            På UT.no finner du blant annet:
+          </p>
 
-        <ul>
-          <li>oversikt over turområder</li>
-          <li>alle turistforeningshyttene</li>
-          <li>tusenvis av rutebeskrivelser og turforslag</li>
-          <li>gode tips og råd</li>
-          <li>digitale kart</li>
-        </ul>
+          <ul>
+            <li>oversikt over turområder</li>
+            <li>alle turistforeningshyttene</li>
+            <li>tusenvis av rutebeskrivelser og turforslag</li>
+            <li>gode tips og råd</li>
+            <li>digitale kart</li>
+          </ul>
 
-        <p>
-          Du kan også ta med deg UT på tur. Last ned vår app til <a class="noexternal white-link" href="http://itunes.apple.com/no/app/ut.no-turguide/id510575024?mt=8">Iphone</a> og <a class="noexternal white-link" href="https://play.google.com/store/apps/details?id=no.bouvet.nrkut&amp;feature=search_result#?t=W251bGwsMSwyLDEsIm5vLmJvdXZldC5ucmt1dCJd">Android</a>.
-        </p>
+          <p>
+            Du kan også ta med deg UT på tur. Last ned vår app til <a class="noexternal white-link" href="http://itunes.apple.com/no/app/ut.no-turguide/id510575024?mt=8">Iphone</a> og <a class="noexternal white-link" href="https://play.google.com/store/apps/details?id=no.bouvet.nrkut&amp;feature=search_result#?t=W251bGwsMSwyLDEsIm5vLmJvdXZldC5ucmt1dCJd">Android</a>.
+          </p>
 
-        <p class="button" style="margin-bottom: 15px">
-          <a class="btn btn-large" href="http://ut.no/">Planlegg turen på UT.no</a>
-        </p>
+          <p class="button" style="margin-bottom: 15px">
+            <a class="btn btn-large" href="http://ut.no/">Planlegg turen på UT.no</a>
+          </p>
 
+        </div>
+        <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/ut.jpg" alt="UT.no">
+        <div style="clear: both;"></div>
       </div>
-      <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/ut.jpg" alt="UT.no">
-      <div style="clear: both;"></div>
     </div>
   </div>
 </div>

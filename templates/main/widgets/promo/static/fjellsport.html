@@ -1,36 +1,38 @@
 <div class="row">
   <div class="span12">
-    <div class="wrapper fjellsport">
-      {% include 'main/widgets/promo/static/menu.html' %}
+    <div class="{{ promo.type }}">
+      <div class="wrapper fjellsport">
+        {% include 'main/widgets/promo/static/menu.html' %}
 
-      <div class="right">
-        <h1>DNT fjellsport</h1>
+        <div class="right">
+          <h1>DNT fjellsport</h1>
 
-        <p>
-          Brevandring, klatring, grotting, tinderangling, kiting, padling og skiturer - DNT fjellsport er et sosialt turfelleskap for deg som vil utfordre og mestre naturen sammen med andre.
-        </p>
+          <p>
+            Brevandring, klatring, grotting, tinderangling, kiting, padling og skiturer - DNT fjellsport er et sosialt turfelleskap for deg som vil utfordre og mestre naturen sammen med andre.
+          </p>
 
-        <p>
-          DNT fjellsport tilbyr også kurs og utdanning fra nybegynnernivå og opp til instruktørutdanning. Vi er en av Norges største arrangører av klatre- og brekurs.
-        </p>
+          <p>
+            DNT fjellsport tilbyr også kurs og utdanning fra nybegynnernivå og opp til instruktørutdanning. Vi er en av Norges største arrangører av klatre- og brekurs.
+          </p>
 
-        <p>
-          Alle fjellsportinteresserte medlemmer i DNT kan være med på turer og kurs i regi av lokale fjellsportgrupper over hele landet.
-        </p>
+          <p>
+            Alle fjellsportinteresserte medlemmer i DNT kan være med på turer og kurs i regi av lokale fjellsportgrupper over hele landet.
+          </p>
 
-        <p class="button">
-          <a class="btn btn-danger btn-large" href="http://www.dntfjellsport.no/activity.php?fo_id=82">Finn turer og kurs for fjellsportinteresserte</a>
-        </p>
+          <p class="button">
+            <a class="btn btn-danger btn-large" href="http://www.dntfjellsport.no/activity.php?fo_id=82">Finn turer og kurs for fjellsportinteresserte</a>
+          </p>
 
-        <p class="sponsor">
-          Bergans støtter DNT fjellsport
-          <a href="http://www.bergans.no/">
-            <img src="{{ STATIC_URL }}img/widgets/promo/bergans.png" alt="Vår turpartner Bergans støtter DNT fjellsport">
-          </a>
-        </p>
+          <p class="sponsor">
+            Bergans støtter DNT fjellsport
+            <a href="http://www.bergans.no/">
+              <img src="{{ STATIC_URL }}img/widgets/promo/bergans.png" alt="Vår turpartner Bergans støtter DNT fjellsport">
+            </a>
+          </p>
+        </div>
+        <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/fjellsport.png" alt="DNT fjellsport">
+        <div style="clear: both;"></div>
       </div>
-      <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/fjellsport.png" alt="DNT fjellsport">
-      <div style="clear: both;"></div>
     </div>
   </div>
 </div>
