@@ -1,30 +1,23 @@
 <div class="row">
   <div class="span12">
-    <div class="{{ promo.type }}">
-      <div class="wrapper ung">
-        {% include 'main/widgets/promo/static/menu.html' %}
+    <div class="{{ promo.type }} ung">
+      {% include 'main/widgets/promo/static/menu.html' %}
 
-        <div class="right">
-          <h1>DNT ung</h1>
+      <div class="content">
+        <h1>Gratis<br>overnatting</h1>
 
-          <p>
-            DNT ung er vårt tilbud til ungdom mellom 13 og 26 år. Over hele landet finnes lokale ungdomsgrupper som arrangerer turer og aktiviteter for og av ungdom.
-          </p>
+        <p>
+          DNT ung er 25 år og feirer med å gi bort gavekort på én gratis hytteovernatting til alle ungdomsmedlemmer i 2013.
+        </p>
 
-          <p>
-            Kunne du tenke deg å teste ut aktiviteter som kiting, topptur, telttur, kajakk eller hyttetur? Eller liker du å være ute i naturen og bare ha det gøy?
-          </p>
+        <p class="button">
+          <a class="btn btn-large btn-danger full" href="/ung/gratis-overnatting/?utm_source=DNTung&amp;utm_campaign=Gratisovernatting">Slik får du gratis overnatting</a>
+          <a class="btn btn-large small" href="/ung/gratis-overnatting/?utm_source=DNTung&amp;utm_campaign=Gratisovernatting">Slik får du gratis overnatting</a>
+        </p>
 
-          <p>
-            DNT ung tilbyr et variert friluftsliv, og kan garantere deg ekte opplevelser ute i naturen.
-          </p>
-
-          <p class="button">
-            <a class="btn btn-danger btn-large" href="http://www.dntung.no/activity.php?fo_id=53">Finn turer og aktiviter for ungdom</a>
-          </p>
-        </div>
-        <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/ung.png" alt="DNT ung">
-        <div style="clear: both;"></div>
+        <p class="more">
+          <a href="/ung/jubileum/">Mer om DNT ungs 25-årsjubileum</a>
+        </p>
       </div>
     </div>
   </div>

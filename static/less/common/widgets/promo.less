@@ -281,23 +281,20 @@ div.widget.promo {
    * New type of promo layout: 'cover', covers the entire block
    */
 
+
+  /* Generic (more or less) */
+
   div.cover {
     height: 480px;
-    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
 
     div.content {
-      @size: 400px;
-      @padding-right: 65px;
-      width: @size;
-      padding-left: 940px - @size - @padding-right;
-      padding-top: 60px;
-      padding-right: @padding-right;
       color: white;
       text-align: center;
 
       h1 {
         border-bottom: none;
         font-size: 36px;
+        margin-bottom: 25px;
       }
 
       p {
@@ -319,33 +316,87 @@ div.widget.promo {
     }
   }
 
+  div.cover.main {
+    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
+
+    div.content {
+      @size: 400px;
+      @padding-right: 65px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 60px;
+      padding-right: @padding-right;
+      color: white;
+      text-align: center;
+
+      p.button {
+        a.full {
+          display: inline;
+        }
+
+        a.small {
+          display: none;
+        }
+      }
+    }
+  }
+
+  div.cover.ung {
+    background: url('/static/img/widgets/promo/ung_jubileum.png') top left no-repeat;
+
+    div.content {
+      @size: 380px;
+      @padding-right: 70px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 150px;
+      padding-right: @padding-right;
+      color: white;
+      text-align: center;
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 25px;
+      }
+
+      p.more a {
+        font-size: 14px;
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+
   /* Small-screen layouts */
 
   @media(max-width: 767px) {
     div.cover {
-      height: auto;
-      background-image: none;
-      background-color: @profile-red;
+      height: auto !important;
+      background-image: none !important;
+      background-color: @profile-red !important;
 
       div.content {
-        padding: 15px;
-        width: auto;
+        padding: 15px !important;
+        width: auto !important;
 
         h1 {
-          font-size: 28px;
+          font-size: 28px !important;
         }
 
         p {
-          font-size: 16px;
+          font-size: 16px !important;
         }
 
         p.button {
           a.full {
-            display: none;
+            display: none !important;
           }
 
           a.small {
-            display: inline;
+            display: inline !important;
           }
         }
       }
