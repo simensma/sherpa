@@ -3,10 +3,10 @@ from django.utils.decorators import available_attrs
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-def user_requires(test_func, redirect_to):
+def user_requires(test_func, redirect_to='user.login.views.login'):
     """
     Decorator that is very similar to Djangos 'user_passes_test', but differs
-    in that it simply redirects the user to the given view and doesn't expect
+    in that it simply redirects the user to the given view and doesn't require
     it to be a login view.
     """
 
