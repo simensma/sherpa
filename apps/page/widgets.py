@@ -115,16 +115,16 @@ def get_static_promo_context(path):
     context = {}
     promos = [
         {'name': 'Vintereventyr', 'url': '/', 'template': 'main', 'type': 'cover'},
-        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer'},
-        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter'},
-        {'name': 'Barn', 'url': '/barn/', 'template': 'barn'},
-        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung'},
-        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport'},
-        {'name': 'Senior', 'url': '/senior/', 'template': 'senior'},
-        {'name': 'Skole', 'url': '/skole/', 'template': 'skole'},
-        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs'},
-        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle'},
-        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut'},
+        {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
+        {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
+        {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
+        {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung', 'type': 'default'},
+        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport', 'type': 'default'},
+        {'name': 'Senior', 'url': '/senior/', 'template': 'senior', 'type': 'default'},
+        {'name': 'Skole', 'url': '/skole/', 'template': 'skole', 'type': 'default'},
+        {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'type': 'default'},
+        {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'type': 'default'},
+        {'name': 'UT.no', 'url': '/utno/', 'template': 'ut', 'type': 'default'},
         ]
 
     for promo in promos:
