@@ -33,7 +33,7 @@
         <button class="btn btn-large load{% if end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
       </div>
 
-      <div class="no-matches alert alert-error{% if not end %} hide{% endif %}">
+      <div class="no-matches alert alert-error{% if annonser|length > 0 %} hide{% endif %}">
         Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
       </div>
 
