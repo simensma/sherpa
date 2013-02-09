@@ -66,7 +66,8 @@
         <label class="control-label" for="email">E-postadresse</label>
         <div class="controls">
           <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="input-xlarge">
-          <span class="asterisk red">*</span> (vises ikke)
+          <span class="asterisk red">*</span><br>
+          <em>Svar blir sendt til denne adressen, men den vises ikke i annonsen.</em>
         </div>
       </div>
 
