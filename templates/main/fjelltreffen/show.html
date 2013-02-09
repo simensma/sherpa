@@ -91,8 +91,8 @@
               {% if user.is_authenticated %}
                 <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
               {% else %}
-                {# You must be logged in to report annonser - just link directly to the login page #}
-                <a href="{% url user.login.views.login %}?next={% url fjelltreffen.views.show annonse.id %}">Gi oss beskjed!</a>
+                {# You must be logged in to report annonser - link to the report view, which will redirect back here #}
+                <a href="{% url fjelltreffen.views.report annonse.id %}">Gi oss beskjed!</a>
               {% endif %}
             </li>
           </ul>

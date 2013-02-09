@@ -127,27 +127,31 @@ def show_reply_sent(request, id):
     del request.session['fjelltreffen.reply']
     return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
 
-@user_requires_login
+@user_requires_login(message='fjelltreffen_login_required_for_report')
 def report(request, id):
-    try:
-        annonse = Annonse.objects.get(id=id, hidden=False)
-        request.session['fjelltreffen.report'] = {'reason': request.POST['reason']}
+    if request.method == 'GET':
+        # This route will be used when redirecting to login page with 'next' and the user logs in
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+    elif request.method == 'POST':
+        try:
+            annonse = Annonse.objects.get(id=id, hidden=False)
+            request.session['fjelltreffen.report'] = {'reason': request.POST['reason']}
 
-        context = RequestContext(request, {
-            'annonse': annonse,
-            'notifier': request.user.get_profile(),
-            'reason': request.POST['reason']})
-        content = render_to_string('main/fjelltreffen/report_email.txt', context)
+            context = RequestContext(request, {
+                'annonse': annonse,
+                'notifier': request.user.get_profile(),
+                'reason': request.POST['reason']})
+            content = render_to_string('main/fjelltreffen/report_email.txt', context)
 
-        send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show_report_sent', args=[annonse.id]))
-    except Exception:
-        messages.error(request, 'email_report_failure')
-        logger.error(u"Klarte ikke å sende Fjelltreffen rapporteringsepost",
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
-    return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
+            send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
+            return HttpResponseRedirect(reverse('fjelltreffen.views.show_report_sent', args=[annonse.id]))
+        except Exception:
+            messages.error(request, 'email_report_failure')
+            logger.error(u"Klarte ikke å sende Fjelltreffen rapporteringsepost",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
 
 def show_report_sent(request, id):
     if not 'fjelltreffen.report' in request.session:
