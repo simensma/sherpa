@@ -101,7 +101,7 @@
         {# Replies - show if already filled and there were errors #}
         <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
 
-          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply"{% if reply %} data-prefilled{% endif %}>
+          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">

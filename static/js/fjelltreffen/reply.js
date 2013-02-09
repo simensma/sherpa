@@ -23,10 +23,6 @@ $(document).ready(function() {
         req: true
     });
 
-    if(form.is("[data-prefilled]")) {
-        Validator.trigger();
-    }
-
     // Response
 
     var response_wrapper = $("div.fjelltreffen-response");
