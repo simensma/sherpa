@@ -101,29 +101,47 @@
         {# Replies - show if already filled and there were errors #}
         <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
 
-          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default fjelltreffen-annonse-reply">
+          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
-              {{ form.name }} <span class="asterisk red">*</span>
+              <label class="control-label" for="name">Ditt navn</label>
+              <div class="controls">
+                {{ form.name }} <span class="asterisk red">*</span>
+              </div>
             </div>
 
             <div class="control-group email">
-              {{ form.email }} <span class="asterisk red">*</span>
+              <label class="control-label" for="name">Din e-postadresse</label>
+              <div class="controls">
+                {{ form.email }} <span class="asterisk red">*</span>
+              </div>
             </div>
 
             <div class="control-group text">
-              {{ form.text }}
+              <label class="control-label" for="name">Svar til annonsøren</label>
+              <div class="controls">
+                {{ form.text }}
+              </div>
             </div>
 
             {% if form.captcha %}
               {# Will only be required for anonymous users #}
               <div class="control-group captcha">
-                {{ form.captcha }}
+                <label class="control-label" for="name">Skriv inn bokstavene i bildet</label>
+                <div class="controls">
+                  {{ form.captcha }}
+                </div>
               </div>
             {% endif %}
 
-            <button type="submit" class="btn btn-success">Send</button>
+
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-success">Send</button>
+              </div>
+            </div>
+
           </form>
 
         </div>

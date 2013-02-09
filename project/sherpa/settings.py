@@ -40,6 +40,7 @@ FJELLTREFFEN_AGE_LIMIT = min(FJELLTREFFEN_AGE_LIMITS)
 FJELLTREFFEN_REPORT_EMAIL = 'DNT medlemsservice <medlem@turistforeningen.no>'
 CAPTCHA_FLITE_PATH = '/usr/bin/flite'
 CAPTCHA_FONT_SIZE = 50
+CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
 
 
 
