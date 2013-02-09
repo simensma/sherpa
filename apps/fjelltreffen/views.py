@@ -130,7 +130,7 @@ def show_reply_sent(request, id):
 @user_requires_login
 def report(request, id):
     try:
-        annonse = Annonse.objects.get(id=id)
+        annonse = Annonse.objects.get(id=id, hidden=False)
         request.session['fjelltreffen.report'] = {'reason': request.POST['reason']}
 
         context = RequestContext(request, {
