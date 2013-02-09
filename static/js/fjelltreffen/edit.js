@@ -2,7 +2,6 @@ $(document).ready(function() {
 
     var form = $("form.fjelltreffen-annonse-edit");
 
-    form.find("div.control-group.hide-annonse").tooltip();
     form.find("div.control-group.hideage div.controls").tooltip({placement: 'left'});
     form.find("a.delete").click(function() {
         return confirm("Er du sikker på at du vil slette denne annonsen?");

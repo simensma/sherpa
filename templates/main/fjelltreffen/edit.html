@@ -122,11 +122,9 @@
           </div>
         {% elif other_active_annonse_exists %}
           {# User already has an active one #}
-          <div class="control-group hide-annonse" title="Du har allerede en annen synlig annonse, derfor kan du ikke vise denne. Du kan bytte synlig annonse etterpå, under 'Mine annonser'.">
-            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+          <div class="control-group hide-annonse">
             <div class="controls">
-              <input type="checkbox" name="hidden" checked disabled>
-              Ingen kan se eller svare på annonsen mens den er skjult.
+              Du har allerede en annen synlig annonse, derfor blir denne skjult når du lagrer den. Du kan bytte synlig annonse etterpå, under <a href="{% url fjelltreffen.views.mine %}">Mine annonser</a>.
             </div>
           </div>
         {% else %}
