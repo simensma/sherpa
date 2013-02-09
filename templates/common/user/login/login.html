@@ -10,6 +10,16 @@
 
       <h2>Logg inn til Min side</h2>
 
+      {# Messages sent from views that redirect to login #}
+      {% for message in messages %}
+        {% if message.message == 'fjelltreffen_login_required' %}
+          <div class="alert alert-error">
+            Du må være pålogget for å legge ut annonser på Fjelltreffen.<br>
+            Alle DNT-medlemmer kan enkelt registrere en Min side-bruker her.
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <div class="form-border">
         <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal">
           {% csrf_token %}
