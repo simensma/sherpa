@@ -14,7 +14,7 @@ import json
 import sys
 import logging
 
-from sherpa.decorators import user_requires
+from sherpa.decorators import user_requires, user_requires_login
 from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator
@@ -127,7 +127,7 @@ def show_reply_sent(request, id):
     del request.session['fjelltreffen.reply']
     return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
 
-@user_requires(lambda u: u.is_authenticated())
+@user_requires_login
 def report(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -163,9 +163,9 @@ def show_report_sent(request, id):
 # Actions for logged-in users (crud)
 #
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def new(request):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
@@ -178,9 +178,9 @@ def new(request):
         'other_active_annonse_exists': other_active_annonse_exists}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def edit(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -199,9 +199,9 @@ def edit(request, id):
         'other_active_annonse_exists': other_active_annonse_exists}
     return render(request, 'main/fjelltreffen/edit.html', context)
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def save(request):
     if request.user.get_profile().get_actor() == None:
         raise PermissionDenied
@@ -266,9 +266,9 @@ def save(request):
     annonse.save()
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def delete(request, id):
     try:
         annonse = Annonse.objects.get(id=id)
@@ -282,9 +282,9 @@ def delete(request, id):
         # Ignore - maybe a double-request, or something. They can try again if something failed.
         return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def mine(request):
     #all annonser that belongs to the current user
     mine = Annonse.objects.filter(profile=request.user.get_profile())
@@ -299,9 +299,9 @@ def mine(request):
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
     return render(request, 'main/fjelltreffen/mine.html', context)
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def show_mine(request, id):
     if not request.user.get_profile().get_actor().get_balance().is_payed():
         messages.error(request, 'membership_not_payed')
@@ -316,9 +316,9 @@ def show_mine(request, id):
     annonse.save()
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
-@user_requires(lambda u: u.is_authenticated(), message='fjelltreffen_login_required')
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
-@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def hide_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = True
@@ -329,8 +329,8 @@ def hide_mine(request, id):
 # View for a user that doesn't pass the age test
 #
 
-@user_requires(lambda u: u.is_authenticated())
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member', include_next=False)
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 def too_young(request):
     context = {
         'age_limit': settings.FJELLTREFFEN_AGE_LIMIT,
