@@ -52,8 +52,8 @@ class Annonse(models.Model):
 
     @staticmethod
     def obscure_age(age):
-        lower = max(settings.FJELLTREFFEN_AGE_LIMITS[0], int(age/5) * 5)
-        upper = max(settings.FJELLTREFFEN_AGE_LIMITS[1], (int((age+5)/5) * 5) - 1)
+        lower = max(settings.FJELLTREFFEN_AGE_LIMITS[0], int(age / 5) * 5)
+        upper = max(settings.FJELLTREFFEN_AGE_LIMITS[1], (int((age + 5) / 5) * 5) - 1)
         return '%s-%s' % (lower, upper)
 
     @staticmethod
@@ -74,7 +74,7 @@ class Annonse(models.Model):
         # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
         minage = min((abs(int(minage) - i), i) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
         if maxage != '':
-            maxage = min((abs(int(maxage) - (i-1)), (i-1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
+            maxage = min((abs(int(maxage) - (i - 1)), (i - 1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
 
 
         # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
