@@ -17,7 +17,7 @@ class Annonse(models.Model):
     date_renewed = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    county = models.ForeignKey('core.County')
+    county = models.ForeignKey('core.County', null=True) # Null means international.
     image = models.CharField(max_length=2048)
     text = models.TextField()
     hidden = models.BooleanField()
@@ -79,7 +79,12 @@ class Annonse(models.Model):
         # have, at least for now.
 
         all_candidates = Annonse.get_active()
-        if county != '':
+        if county == 'all':
+            # Search only national annonser - this means that the default search will not display international ones.
+            all_candidates = all_candidates.filter(county__isnull=False)
+        elif county == 'international':
+            all_candidates = all_candidates.filter(county__isnull=True)
+        else:
             all_candidates = all_candidates.filter(county__id=county)
         if text != '':
             for word in text.split():
