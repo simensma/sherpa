@@ -80,7 +80,7 @@ class Annonse(models.Model):
 
         all_candidates = Annonse.get_active()
         if county != '':
-            all_candidates = all_candidates.filter(county__code=county)
+            all_candidates = all_candidates.filter(county__id=county)
         if text != '':
             for word in text.split():
                 all_candidates = all_candidates.filter(

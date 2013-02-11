@@ -260,7 +260,7 @@ def save(request):
     if annonser_to_check.filter(profile=request.user.get_profile()).exists():
         hidden = True
 
-    annonse.county = County.objects.get(code=request.POST['county'])
+    annonse.county = County.objects.get(id=request.POST['county'])
     annonse.email = request.POST['email']
     annonse.title = request.POST['title']
     annonse.image = request.POST.get('image', '')
