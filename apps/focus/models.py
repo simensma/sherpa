@@ -212,6 +212,9 @@ class Actor(models.Model):
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
+    def has_payed(self):
+        return self.get_balance().is_payed()
+
     def get_balance(self):
         balance = cache.get('actor.balance.%s' % self.memberid)
         if balance is None:

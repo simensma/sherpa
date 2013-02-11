@@ -171,7 +171,7 @@ def show_report_sent(request, id):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 @user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def new(request):
-    if not request.user.get_profile().get_actor().get_balance().is_payed():
+    if not request.user.get_profile().get_actor().has_payed():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
     other_active_annonse_exists = Annonse.objects.filter(profile=request.user.get_profile(), hidden=False).exists()
@@ -211,7 +211,7 @@ def save(request):
         raise PermissionDenied
 
     # If user hasn't payed, allow editing, but not creating new annonser
-    if not request.user.get_profile().get_actor().get_balance().is_payed() and request.POST['id'] == '':
+    if not request.user.get_profile().get_actor().has_payed() and request.POST['id'] == '':
         raise PermissionDenied
 
     # Pre-save validations
@@ -249,7 +249,7 @@ def save(request):
 
     # Don't allow showing an already hidden annonse when you haven't payed
     if request.POST['id'] != '':
-        if annonse.hidden and not request.user.get_profile().get_actor().get_balance().is_payed():
+        if annonse.hidden and not request.user.get_profile().get_actor().has_payed():
             hidden = True
 
     # Don't create new annonser if you already have an active annonse
@@ -309,7 +309,7 @@ def mine(request):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
 @user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def show_mine(request, id):
-    if not request.user.get_profile().get_actor().get_balance().is_payed():
+    if not request.user.get_profile().get_actor().has_payed():
         messages.error(request, 'membership_not_payed')
         return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
