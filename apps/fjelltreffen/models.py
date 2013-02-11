@@ -4,9 +4,6 @@ from django.db.models import Q
 
 from datetime import date, timedelta
 
-#annonser to load when a user requests more
-BULKLOADNUM = 20
-
 # Default annonse-filters
 default_min_age = '18'
 default_max_age = '' # No limit - empty string is also used in the select box
@@ -110,9 +107,9 @@ class Annonse(models.Model):
 
             annonse_matches.append(a)
 
-            if len(annonse_matches) >= BULKLOADNUM:
+            if len(annonse_matches) >= settings.FJELLTREFFEN_BULKLOADNUM:
                 # We now have the amount of results we want
                 break
 
-        end = len(all_candidates) <= BULKLOADNUM
+        end = len(all_candidates) <= settings.FJELLTREFFEN_BULKLOADNUM
         return (annonse_matches, next_start_index, end)
