@@ -293,10 +293,12 @@ def mine(request):
     #all annonser that belongs to the current user
     mine = Annonse.objects.filter(profile=request.user.get_profile())
     active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
-    annonser = {
-        'active': mine.filter(date__gte=active_period, hidden=False).order_by('-date', 'title'),
-        'hidden': mine.filter(date__gte=active_period, hidden=True).order_by('-date', 'title'),
-        'expired': mine.filter(date__lt=active_period).order_by('-date', 'title')}
+
+    active = mine.filter(date__gte=active_period, hidden=False).order_by('-date', 'title')
+    hidden = mine.filter(date__gte=active_period, hidden=True).order_by('-date', 'title')
+    expired = mine.filter(date__lt=active_period).order_by('-date', 'title')
+
+    annonser = list(active) + list(hidden) + list(expired)
 
     context = {
         'annonser': annonser,
