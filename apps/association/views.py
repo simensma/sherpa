@@ -21,7 +21,7 @@ def get_categories():
         {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
-    counties = County.objects.exclude(sherpa_id=None).order_by('code')
+    counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
     categories = get_categories()
 
     for category in categories:
