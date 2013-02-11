@@ -32,6 +32,7 @@ class Association(models.Model):
     facebook = models.TextField(db_column='gr_facebook', blank=True)
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
     map = models.TextField(db_column='gr_map', blank=True)
+
     class Meta:
         db_table = u'groups'
 
@@ -103,6 +104,7 @@ class Cabin(models.Model):
     booking_url = models.TextField(db_column=u'ca_booking_url', blank=True)
     url_ut = models.TextField(db_column=u'ca_url_ut', blank=True)
     the_geom = models.TextField(blank=True) # This field type is a guess.
+
     class Meta:
         db_table = u'cabin2'
 
@@ -124,6 +126,7 @@ class Article(models.Model):
     rel_locations = models.TextField(db_column='ar_rel_locations', blank=True)
     priority = models.IntegerField(db_column='ar_priority', null=True, blank=True)
     folders = models.ManyToManyField('sherpa2.Folder', related_name='articles', through='FolderArticle')
+
     class Meta:
         db_table = u'article'
 
@@ -142,6 +145,7 @@ class Folder(models.Model):
     online = models.IntegerField(db_column='fo_online', null=True, blank=True)
     show_rel_articles = models.IntegerField(db_column='fo_show_rel_articles')
     cols = models.IntegerField(db_column='fo_cols', null=True, blank=True)
+
     class Meta:
         db_table = u'folder'
 
@@ -149,5 +153,6 @@ class FolderArticle(models.Model):
     folder = models.ForeignKey('sherpa2.Folder', db_column='fo_id')
     article = models.ForeignKey('sherpa2.Article', db_column='ar_id')
     status = models.CharField(db_column='fa_status', max_length=20, blank=True)
+
     class Meta:
         db_table = u'folder_article'
