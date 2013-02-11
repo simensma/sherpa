@@ -1,7 +1,5 @@
 from django.db import models
-from django.conf import settings
 
-from user.models import Profile
 from core.models import County
 from fjelltreffen.models import Annonse
 
