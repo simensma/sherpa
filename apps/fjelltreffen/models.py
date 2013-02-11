@@ -80,8 +80,8 @@ class Annonse(models.Model):
 
         all_candidates = Annonse.get_active()
         if county == 'all':
-            # Search only national annonser - this means that the default search will not display international ones.
-            all_candidates = all_candidates.filter(county__isnull=False)
+            # Note that this includes international annonser even though the wording says "Hele landet"
+            pass
         elif county == 'international':
             all_candidates = all_candidates.filter(county__isnull=True)
         else:
