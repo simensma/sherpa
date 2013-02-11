@@ -32,7 +32,7 @@ def index(request):
         'annonser': annonser,
         'start_index': start_index,
         'end': end,
-        'counties':County.typical_objects().order_by('name'),
+        'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'age_limits': settings.FJELLTREFFEN_AGE_LIMITS,
         'filter': request.session.get('fjelltreffen.filter')}
