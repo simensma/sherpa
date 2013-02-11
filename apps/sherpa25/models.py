@@ -2,6 +2,7 @@ from django.db import models
 
 from core.models import County
 from fjelltreffen.models import Annonse
+from sherpa2.models import SHERPA2_COUNTIES_SET2 as SHERPA2_COUNTIES
 
 #this table links other tabels
 class Link(models.Model):
@@ -116,15 +117,18 @@ def import_fjelltreffen_annonser(profile):
         else:
             annonse.email = old_member.email
 
-        newcounty = old_annonse.county
-        if newcounty < 10:
-            newcounty = '0%s' % newcounty
-        else:
-            newcounty = str(newcounty)
         try:
-            annonse.county = County.objects.get(code=newcounty)
-        except County.DoesNotExist:
-            annonse.county = profile.get_actor().get_county()
+            annonse.county = County.objects.get(code=SHERPA2_COUNTIES[old_annonse.county])
+        except KeyError:
+            if old_annonse.county == 0:
+                # The entire country is no longer applicable - set it to the Actor's county
+                annonse.county = profile.get_actor().get_county()
+            elif old_annonse.county == 2:
+                # Both Oslo and Akershus - set it to the Actor's county, which hopefully is one of those
+                annonse.county = profile.get_actor().get_county()
+            elif old_annonse.county == 99:
+                # International annonse - defined with 'NULL'
+                annonse.county = None
 
         annonse.image = old_annonse_imageurl
         annonse.text = old_annonse.content
