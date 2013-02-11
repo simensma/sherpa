@@ -21,7 +21,7 @@ class ZipcodeState(models.Model):
     last_update = models.DateTimeField()
 
 class County(models.Model):
-    code = models.CharField(max_length=2)
+    code = models.CharField(max_length=2) # Corresponds to ISO 3166-2:NO (https://no.wikipedia.org/wiki/ISO_3166-2:NO)
     sherpa_id = models.IntegerField(null=True)
     name = models.CharField(max_length=100)
 
