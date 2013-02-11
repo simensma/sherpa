@@ -29,7 +29,7 @@ class Annonse(models.Model):
 
     def get_image_url(self):
         if self.isold:
-            return "http://%s/%s" % (settings.OLD_SITE, self.image);
+            return "http://%s/%s" % (settings.OLD_SITE, self.image)
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
