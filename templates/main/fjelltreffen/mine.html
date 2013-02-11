@@ -45,7 +45,7 @@
                 <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
                 <p class="details">
                   {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}<br>
-                  Annonsen vil ligge ute i {{ annonse.expires_in }} dager.
+                  Annonsen vil ligge ute i {{ annonse.expires_in_days }} dager.
                 </p>
                 <p>{{ annonse.text|truncatechars:100 }}</p>
               </td>
@@ -62,7 +62,7 @@
                 <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
                 <p class="details">
                   {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}<br>
-                  Annonsen vil ligge ute i {{ annonse.expires_in }} dager.
+                  Annonsen vil ligge ute i {{ annonse.expires_in_days }} dager.
                 </p>
                 <p>{{ annonse.text|truncatechars:100 }}</p>
               </td>

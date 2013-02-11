@@ -42,7 +42,7 @@ class Annonse(models.Model):
     def is_expired(self):
         return self.date < (date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
 
-    def expires_in(self):
+    def expires_in_days(self):
         return ((self.date + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
     #
