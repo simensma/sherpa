@@ -194,8 +194,7 @@ def edit(request, id):
     except Annonse.DoesNotExist:
         return render(request, 'main/fjelltreffen/edit_not_found.html')
 
-    active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
-    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False, date_renewed__gte=active_period).exists()
+    other_active_annonse_exists = Annonse.get_active().exclude(id=annonse.id).filter(profile=request.user.get_profile()).exists()
     context = {
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
