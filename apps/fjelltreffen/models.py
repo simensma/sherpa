@@ -13,7 +13,8 @@ default_text = ''    # Text search, empty means no constraints
 
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile')
-    date = models.DateField(auto_now_add=True)
+    date_added = models.DateField(auto_now_add=True)
+    date_renewed = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     county = models.ForeignKey('core.County')
@@ -37,10 +38,10 @@ class Annonse(models.Model):
             return age
 
     def is_expired(self):
-        return self.date < (date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
+        return self.date_renewed < (date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS))
 
     def expires_in_days(self):
-        return ((self.date + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
+        return ((self.date_renewed + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
     #
     # Utility methods
@@ -55,7 +56,7 @@ class Annonse(models.Model):
     @staticmethod
     def get_active():
         active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
-        return Annonse.objects.filter(hidden=False, date__gte=active_period)
+        return Annonse.objects.filter(hidden=False, date_renewed__gte=active_period)
 
     @staticmethod
     def get_by_filter(filter, start_index=0):
@@ -85,7 +86,7 @@ class Annonse(models.Model):
                 all_candidates = all_candidates.filter(
                     Q(title__icontains=word) |
                     Q(text__icontains=word))
-        all_candidates = all_candidates.order_by('-date', 'title')[start_index:]
+        all_candidates = all_candidates.order_by('-date_added', 'title')[start_index:]
 
         annonse_matches = []
         next_start_index = start_index

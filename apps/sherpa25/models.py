@@ -103,7 +103,6 @@ def import_fjelltreffen_annonser(profile):
 
         annonse = Annonse()
         annonse.profile = profile
-        annonse.date = old_annonse.authorized
         annonse.title = old_annonse.title
 
         # Email is required, so make sure we find one for the old user
@@ -137,12 +136,13 @@ def import_fjelltreffen_annonser(profile):
 
         #hax to prevent autoadd now
         annonse.save()
-        annonse.date = old_annonse.authorized
+        annonse.date_added = old_annonse.authorized
+        annonse.date_renewed = old_annonse.authorized
         annonse.save()
 
     # After adding all of them, make sure the newest one (and only the newest one) is visible
     try:
-        newest = Annonse.objects.filter(profile=profile).order_by('-date')[0]
+        newest = Annonse.objects.filter(profile=profile).order_by('-date_added')[0]
         newest.hidden = False
         newest.save()
     except IndexError:

@@ -195,7 +195,7 @@ def edit(request, id):
         return render(request, 'main/fjelltreffen/edit_not_found.html')
 
     active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
-    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False, date__gte=active_period).exists()
+    other_active_annonse_exists = Annonse.objects.exclude(id=annonse.id).filter(profile=request.user.get_profile(), hidden=False, date_renewed__gte=active_period).exists()
     context = {
         'annonse': annonse,
         'counties': County.typical_objects().order_by('name'),
@@ -295,9 +295,9 @@ def mine(request):
     mine = Annonse.objects.filter(profile=request.user.get_profile())
     active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
 
-    active = mine.filter(date__gte=active_period, hidden=False).order_by('-date', 'title')
-    hidden = mine.filter(date__gte=active_period, hidden=True).order_by('-date', 'title')
-    expired = mine.filter(date__lt=active_period).order_by('-date', 'title')
+    active = mine.filter(date_renewed__gte=active_period, hidden=False).order_by('-date_added', 'title')
+    hidden = mine.filter(date_renewed__gte=active_period, hidden=True).order_by('-date_added', 'title')
+    expired = mine.filter(date_renewed__lt=active_period).order_by('-date_added', 'title')
 
     annonser = list(active) + list(hidden) + list(expired)
 
@@ -329,6 +329,15 @@ def show_mine(request, id):
 def hide_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = True
+    annonse.save()
+    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
+def renew_mine(request, id):
+    annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
+    annonse.date_renewed = date.today()
     annonse.save()
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 

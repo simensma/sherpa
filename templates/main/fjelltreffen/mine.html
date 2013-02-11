@@ -44,7 +44,7 @@
               <td>
                 <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
                 <p class="details">
-                  {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date|date:"j. F Y" }}<br>
+                  {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name }}, {{ annonse.date_added|date:"j. F Y" }}<br>
                   {% if not annonse.is_expired %}
                     Annonsen vil ligge ute i {{ annonse.expires_in_days }} dager.
                   {% endif %}
@@ -58,8 +58,16 @@
                 {% elif annonse.hidden and not annonse.is_expired %}
                   <span class="label label-warning">Skjult</span><br>
                   <a href="{% url fjelltreffen.views.show_mine annonse.id %}">Vis</a>
-                {% elif annonse.is_expired %}
-                  <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span>
+                {% endif %}
+              </td>
+              <td class="expiration">
+                {% if not annonse.is_expired %}
+                  <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span><br>
+                {% else %}
+                  <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span><br>
+                {% endif %}
+                {% if annonse.expires_in_days < annonse_retention_days %}
+                  <a href="{% url fjelltreffen.views.renew_mine annonse.id %}">Forny</a>
                 {% endif %}
               </td>
             </tr>
