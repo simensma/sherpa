@@ -1,5 +1,7 @@
 from django.db import models
 
+from core.models import County
+
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
@@ -156,3 +158,30 @@ class FolderArticle(models.Model):
 
     class Meta:
         db_table = u'folder_article'
+
+# The counties are defined in sherpa2/langs/nor_public.php in $lang['lists']['counties'].
+# This array converts those that can be converted directly to our County entries.
+SHERPA2_COUNTIES = {
+     1: County.objects.get(code='01'),
+     3: County.objects.get(code='04'),
+     4: County.objects.get(code='05'),
+     5: County.objects.get(code='06'),
+     6: County.objects.get(code='07'),
+     7: County.objects.get(code='08'),
+     8: County.objects.get(code='09'),
+     9: County.objects.get(code='10'),
+    10: County.objects.get(code='11'),
+    11: County.objects.get(code='12'),
+    12: County.objects.get(code='14'),
+    13: County.objects.get(code='15'),
+    14: County.objects.get(code='16'),
+    15: County.objects.get(code='17'),
+    16: County.objects.get(code='18'),
+    17: County.objects.get(code='19'),
+    18: County.objects.get(code='20'),
+
+    # The following keys have special meanings and will raise a KeyError:
+    #  0: The entire country
+    #  2: Defined as both Oslo and Akershus
+    # 99: International
+}
