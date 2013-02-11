@@ -276,19 +276,34 @@ class ActorAddress(models.Model):
     def get_country(self):
         return FocusCountry.objects.get(code=self.country)
 
+# The Zipcode table connects zipcodes to counties and associations.
 class FocusZipcode(models.Model):
+
+    # Zipcode + Area
     zipcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
-    postarea = models.CharField(max_length=40, db_column=u'PostArea')
-    county1no = models.CharField(max_length=10, db_column=u'County1No')
-    county1name = models.CharField(max_length=40, db_column=u'County1Name')
-    county2no = models.CharField(max_length=10, db_column=u'County2No')
-    county2name = models.CharField(max_length=40, db_column=u'County2Name')
+    area = models.CharField(max_length=40, db_column=u'PostArea')
+
+    # City code/name
+    city_code = models.CharField(max_length=10, db_column=u'County2No')
+    city_name = models.CharField(max_length=40, db_column=u'County2Name')
+
+    # The county code, actually corresponding to ISO 3166-2:NO (https://no.wikipedia.org/wiki/ISO_3166-2:NO)
+    # Plus the code '99' which in Focus means international
+    county_code = models.CharField(max_length=10, db_column=u'County1No')
+    county_name = models.CharField(max_length=40, db_column=u'County1Name')
+
+    # Conncetions to associations.
+    # The main id corresponds to the 'focus_id' field in the Association model.
+    # The local id is in practice not (yet) used/connected to their associations.
     main_association_id = models.IntegerField(null=True, db_column=u'District1')
     local_association_id = models.IntegerField(null=True, db_column=u'District2')
+
+    # Other stuff
     crby = models.CharField(max_length=25, db_column=u'CrBy')
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
+
     class Meta:
         db_table = u'PostalCode'
 

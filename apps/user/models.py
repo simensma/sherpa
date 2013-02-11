@@ -31,7 +31,7 @@ class Profile(models.Model):
         code = cache.get(cachekey)
         if code == None:
             zipcode = ActorAddress.objects.get(actor=self.get_actor()).zipcode
-            code = FocusZipcode.objects.get(zipcode=zipcode).county1no
+            code = FocusZipcode.objects.get(zipcode=zipcode).county_code
             cache.set(cachekey, code, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return code
 
