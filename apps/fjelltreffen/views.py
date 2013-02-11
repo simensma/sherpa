@@ -42,14 +42,14 @@ def load(request, start_index):
     if not request.is_ajax() or request.method != 'POST':
         raise PermissionDenied
 
-    annonsefilter = json.loads(request.POST['filter'])
+    filter = json.loads(request.POST['filter'])
 
     request.session['fjelltreffen.filter'] = {
-            'minage': annonsefilter['minage'],
-            'maxage': annonsefilter['maxage'],
-            'gender': annonsefilter['gender'], # Empty gender means both genders
-            'county': annonsefilter['county'],
-            'text': annonsefilter['text']}
+            'minage': filter['minage'],
+            'maxage': filter['maxage'],
+            'gender': filter['gender'], # Empty gender means both genders
+            'county': filter['county'],
+            'text': filter['text']}
 
     annonser, start_index, end = Annonse.get_by_filter(request.session['fjelltreffen.filter'], int(start_index))
 
