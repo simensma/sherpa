@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.cache import cache
 
-from focus.models import Actor, ActorAddress, FocusZipcode
+from focus.models import Actor
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -24,16 +24,6 @@ class Profile(models.Model):
             actor = Actor.objects.get(memberid=self.memberid)
             cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
-
-    #gets the county code for this user, cached because why not
-    def get_county(self):
-        cachekey = 'actorcounty.%s' % self.memberid
-        code = cache.get(cachekey)
-        if code == None:
-            zipcode = ActorAddress.objects.get(actor=self.get_actor()).zipcode
-            code = FocusZipcode.objects.get(zipcode=zipcode).county_code
-            cache.set(cachekey, code, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return code
 
     def get_first_name(self):
         if self.memberid is None:

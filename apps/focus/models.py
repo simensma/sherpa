@@ -8,7 +8,7 @@ from django.conf import settings
 from datetime import datetime
 
 from association.models import Association
-from core.models import FocusCountry
+from core.models import County, FocusCountry
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -218,6 +218,15 @@ class Actor(models.Model):
             balance = self.balance
             cache.set('actor.balance.%s' % self.memberid, balance, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return balance
+
+    # Get the local County object based on the Actor's zipcode
+    def get_county(self):
+        key = 'actor.%s.county' % self.memberid
+        county = cache.get(key)
+        if county == None:
+            county = County.objects.get(code=FocusZipcode.objects.get(zipcode=self.address.zipcode).county_code)
+            cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return county
 
     class Meta:
         db_table = u'Actor'

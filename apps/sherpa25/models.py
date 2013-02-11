@@ -126,7 +126,7 @@ def import_fjelltreffen_annonser(profile):
         try:
             annonse.county = County.objects.get(code=newcounty)
         except County.DoesNotExist:
-            annonse.county = County.objects.get(code=annonse.profile.get_county())
+            annonse.county = profile.get_actor().get_county()
 
         annonse.image = old_annonse_imageurl
         annonse.text = old_annonse.content
