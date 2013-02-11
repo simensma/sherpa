@@ -227,7 +227,12 @@ class Actor(models.Model):
         key = 'actor.%s.county' % self.memberid
         county = cache.get(key)
         if county == None:
-            county = County.objects.get(code=FocusZipcode.objects.get(zipcode=self.address.zipcode).county_code)
+            code = FocusZipcode.objects.get(zipcode=self.address.zipcode).county_code
+            if code == '99':
+                # International addresses have county code 99 in Focus. Define this as None for now.
+                county = None
+            else:
+                county = County.objects.get(code=code)
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 

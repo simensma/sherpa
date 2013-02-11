@@ -83,6 +83,7 @@
                 <option{% if user.get_profile.get_actor.get_county == county %} selected="selected"{% endif %} value="{{ county.id }}">{{ county.name }}</option>
               {% endif %}
             {% endfor %}
+            <option value="international"{% if annonse and not annonse.county %} selected{% elif not annonse and not user.get_profile.get_actor.get_county %} selected{% endif %}>Utlandet</option>
           </select>
         </div>
       </div>
