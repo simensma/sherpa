@@ -159,29 +159,68 @@ class FolderArticle(models.Model):
     class Meta:
         db_table = u'folder_article'
 
-# The counties are defined in sherpa2/langs/nor_public.php in $lang['lists']['counties'].
-# This array converts those that can be converted directly to our County entries.
-SHERPA2_COUNTIES = {
-     1: County.objects.get(code='01'),
-     3: County.objects.get(code='04'),
-     4: County.objects.get(code='05'),
-     5: County.objects.get(code='06'),
-     6: County.objects.get(code='07'),
-     7: County.objects.get(code='08'),
-     8: County.objects.get(code='09'),
-     9: County.objects.get(code='10'),
-    10: County.objects.get(code='11'),
-    11: County.objects.get(code='12'),
-    12: County.objects.get(code='14'),
-    13: County.objects.get(code='15'),
-    14: County.objects.get(code='16'),
-    15: County.objects.get(code='17'),
-    16: County.objects.get(code='18'),
-    17: County.objects.get(code='19'),
-    18: County.objects.get(code='20'),
 
-    # The following keys have special meanings and will raise a KeyError:
-    #  0: The entire country
-    #  2: Defined as both Oslo and Akershus
-    # 99: International
+# We will now define two sets of sherpa2-county mappings.
+# Both are defined in sherpa2/langs/nor_public.php, but they differ slightly
+# in that the second set combines the two counties 'Oslo' and 'Akershus' into one.
+# The mappings will look up county code based on sherpa2 id.
+# The reverse mappings will look up sherpa2 id based on county code.
+
+# This first set is defined in $lang['activity']['counties'] and known usages are:
+# - Activities
+# - Associations
+# - Probably more, add them here if you find any.
+SHERPA2_COUNTIES_SET1 = {
+     1: '01',
+     2: '03',
+     3: '04',
+     4: '05',
+     5: '06',
+     6: '07',
+     7: '08',
+     8: '09',
+     9: '10',
+    10: '11',
+    11: '12',
+    12: '14',
+    13: '15',
+    14: '16',
+    15: '17',
+    16: '18',
+    17: '19',
+    18: '20',
+    19: '02',
 }
+# The reverse mapping - looks up sherpa2 id based on county code
+COUNTIES_SHERPA2_SET1 = {v: k for k, v in SHERPA2_COUNTIES_SET1.iteritems()}
+
+# This second set is defined in in $lang['lists']['counties'] and known usages are:
+# - Fjelltreffen-annonser.
+# - Maybe more, add them here if you find any.
+#
+# Also note: The following sherpa2 keys have special meanings and will raise a KeyError:
+#  0: The entire country
+#  2: Defined as both Oslo and Akershus
+# 99: International
+# This means that the reverse mapping for counties '02/Akershus' and '03/Oslo' also will give KeyError.
+SHERPA2_COUNTIES_SET2 = {
+     1: '01',
+     3: '04',
+     4: '05',
+     5: '06',
+     6: '07',
+     7: '08',
+     8: '09',
+     9: '10',
+    10: '11',
+    11: '12',
+    12: '14',
+    13: '15',
+    14: '16',
+    15: '17',
+    16: '18',
+    17: '19',
+    18: '20',
+}
+# The reverse mapping - looks up sherpa2 id based on county code
+COUNTIES_SHERPA2_SET2 = {v: k for k, v in SHERPA2_COUNTIES_SET2.iteritems()}
