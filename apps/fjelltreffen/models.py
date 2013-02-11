@@ -76,7 +76,6 @@ class Annonse(models.Model):
         if maxage != '':
             maxage = min((abs(int(maxage) - (i - 1)), (i - 1)) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
 
-
         # Since we have to filter based on a cross-db relation, we'll have to be creative. Fetch the expected count - filter
         # over cross-db data in code - and repeat until we have the expected count or until there are none left. This is
         # absolutely not very fast, but with caching, especially of Focus Actors, it works for the amount of data/traffic we
