@@ -62,7 +62,7 @@ $(document).ready(function() {
         }
 
         var url = $(this).attr("data-href");
-        $(this).parent().hide();
+        modal.find("p.delete").hide();
         modal.find("p.modal-close").hide();
         modal.find("p.loading").show();
 
@@ -74,6 +74,9 @@ $(document).ready(function() {
             alert("Bildet har blitt slettet.");
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi prøvde å slette bildet. Vennligst prøv igjen senere.");
+            modal.find("p.delete").show();
+            modal.find("p.modal-close").show();
+            modal.find("p.loading").hide();
         }).always(function(result) {
             modal.modal('hide');
         });
