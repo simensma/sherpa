@@ -38,6 +38,12 @@ class Annonse(models.Model):
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
+    def get_image_thumb_url(self):
+        if self.isold:
+            return self.get_image_url()
+        else:
+            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
+
     def get_age(self):
         age = self.profile.get_actor().get_age()
         if self.hideage:

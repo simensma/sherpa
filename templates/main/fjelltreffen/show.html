@@ -20,7 +20,9 @@
       <h2>{{ annonse.title }}</h2>
       {% if annonse.image %}
         <div class="pull-right image-container">
-          <img src="{{ annonse.get_image_url }}" alt="{{ annonse.title }}">
+          <a href="{{ annonse.get_image_url }}">
+            <img src="{{ annonse.get_image_thumb_url }}" alt="{{ annonse.title }}">
+          </a>
         </div>
       {% endif %}
       <p class="details">
@@ -29,6 +31,8 @@
 
       <p>{{ annonse.text|linebreaksbr }}</p>
     </div>
+
+    <div style="clear: both;"></div>
 
     <hr>
 

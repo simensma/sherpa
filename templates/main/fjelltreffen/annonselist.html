@@ -4,6 +4,13 @@
 {% for annonse in annonser %}
   <tr>
     <td>
+      {% if annonse.image %}
+        <p class="pull-right">
+          <a href="{% url fjelltreffen.views.show annonse.id %}">
+            <img src="{{ annonse.get_image_thumb_url }}" alt="{{ annonse.title }}">
+          </a>
+        </p>
+      {% endif %}
       <h3><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></h3>
       <p class="details">{{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name|default:"Utlandet" }}, {{ annonse.date_added|date:"j. F Y" }}</p>
       <p>{{ annonse.text|truncatechars:100 }}</p>
