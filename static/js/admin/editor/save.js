@@ -36,7 +36,7 @@ $(document).ready(function() {
 
     window.save = save;
     function save(done, fail) {
-        clearInterval(updateSaveCountID);
+        clearTimeout(updateSaveCountID);
         var saveButton = $("div.editor-header button.save");
         saveButton.attr('disabled', true);
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
