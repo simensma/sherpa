@@ -164,7 +164,7 @@ def update_images(request):
             # No images to edit, not sure why, just redirect them to origin or home.
             # TODO: Should maybe log an error here in case this was our fault.
             if request.GET.get('origin', '') != '':
-                return HttpResponseRedirect(origin)
+                return HttpResponseRedirect(request.GET['origin'])
             else:
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
