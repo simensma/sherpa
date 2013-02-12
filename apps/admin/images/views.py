@@ -226,7 +226,7 @@ def upload_image(request):
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
-    except Exception as e:
+    except Exception:
         logger.error(u"Uventet exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
