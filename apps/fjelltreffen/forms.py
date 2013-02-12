@@ -44,4 +44,4 @@ class ReplyAnonForm(ReplyForm):
         super(ReplyAnonForm, self).__init__(*args, **kwargs)
         self.fields['captcha'].error_messages = {
             'required': 'Du må fylle inn bokstavene i bildet.',
-            'invalid': 'Du skrev bokstavene som stod i bildet riktig, vennligst prøv igjen.'}
+            'invalid': 'Du skrev ikke bokstavene som stod i bildet riktig, vennligst prøv igjen.'}
