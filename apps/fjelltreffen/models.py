@@ -19,6 +19,7 @@ class Annonse(models.Model):
     email = models.CharField(max_length=255)
     county = models.ForeignKey('core.County', null=True) # Null means international.
     image = models.CharField(max_length=2048)
+    image_thumb = models.CharField(max_length=2048)
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
