@@ -244,54 +244,62 @@ def save(request):
         errors = True
 
     if 'image' in request.FILES:
-        # Uploading image, delete any existing image
-        if annonse.image != '':
-            annonse.delete_image()
+        try:
+            # Uploading image, delete any existing image
+            if annonse.image != '':
+                annonse.delete_image()
 
-        # TODO: Consider streaming the file instead of reading everything into memory first.
-        # See simples3/htstream.py
-        file = request.FILES['image']
-        data = file.read()
-        extension = file.name.split(".")[-1].lower()
+            # TODO: Consider streaming the file instead of reading everything into memory first.
+            # See simples3/htstream.py
+            file = request.FILES['image']
+            data = file.read()
+            extension = file.name.split(".")[-1].lower()
 
-        # Calculate the sha1-hash
-        sha1 = hashlib.sha1()
-        sha1.update(data)
-        hash = sha1.hexdigest()
+            # Calculate the sha1-hash
+            sha1 = hashlib.sha1()
+            sha1.update(data)
+            hash = sha1.hexdigest()
 
-        # Setup AWS connection
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+            # Setup AWS connection
+            s3 = simples3.S3Bucket(
+                settings.AWS_BUCKET,
+                settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY,
+                'https://%s' % settings.AWS_BUCKET)
 
-        # Upload the original image to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension),
-            data,
-            acl='public-read',
-            mimetype=file.content_type)
+            # Upload the original image to AWS
+            s3.put(
+                "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension),
+                data,
+                acl='public-read',
+                mimetype=file.content_type)
 
-        # Create the thumbnail
-        thumb = pil.open(StringIO(data)).copy()
-        fp = StringIO()
-        thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
-        # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
-        thumb.save(fp, "jpeg" if extension == "jpg" else extension)
-        data = fp.getvalue()
+            # Create the thumbnail
+            thumb = pil.open(StringIO(data)).copy()
+            fp = StringIO()
+            thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
+            # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
+            thumb.save(fp, "jpeg" if extension == "jpg" else extension)
+            data = fp.getvalue()
 
-        # Calculate the thumbs' sha1-hash
-        sha1 = hashlib.sha1()
-        sha1.update(data)
-        thumb_hash = sha1.hexdigest()
+            # Calculate the thumbs' sha1-hash
+            sha1 = hashlib.sha1()
+            sha1.update(data)
+            thumb_hash = sha1.hexdigest()
 
-        # Upload the thumbnail to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension),
-            data,
-            acl='public-read',
-            mimetype=file.content_type)
+            # Upload the thumbnail to AWS
+            s3.put(
+                "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension),
+                data,
+                acl='public-read',
+                mimetype=file.content_type)
+        except Exception:
+            logger.error(u"Kunne ikke laste opp Fjelltreffen-bilde",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            messages.error(request, 'image_upload_error')
+            errors = True
 
     if errors:
         if request.POST['id'] == '':

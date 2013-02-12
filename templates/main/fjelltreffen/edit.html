@@ -30,25 +30,32 @@
       </div>
     {% endif %}
 
-    {% if messages %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong>Vennligst rett følgende feil i annonsen:</strong>
-        <ul>
-          {% for message in messages %}
-            {% if message.message == 'missing_title' %}
-              <li>Du må fylle inn en tittel på annonsen!</li>
-            {% elif message.message == 'invalid_email' %}
-              <li>Du må fylle inn en gyldig e-postadresse! Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.</li>
-            {% elif message.message == 'missing_text' %}
-              <li>Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.</li>
-            {% elif message.message == 'showing_when_not_payed' %}
-              <li>Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.</li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+    {# Note: We'd prefer an unordered list instead of many boxes but we don't use that because the image_upload_error doesn't belog in that box and it's hard to separate them. #}
+    {# Besides, these checks are performed client-side, so they'll rarely be shown anyway. #}
+    {% for message in messages %}
+      {% if message.message == 'missing_title' %}
+        <div class="alert alert-error">
+          Du må fylle inn en tittel på annonsen!
+        </div>
+      {% elif message.message == 'invalid_email' %}
+        <div class="alert alert-error">
+          Du må fylle inn en gyldig e-postadresse! Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.
+        </div>
+      {% elif message.message == 'missing_text' %}
+        <div class="alert alert-error">
+          Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.
+        </div>
+      {% elif message.message == 'showing_when_not_payed' %}
+        <div class="alert alert-error">
+          Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.
+        </div>
+      {% elif message.message == 'image_upload_error' %}
+        <div class="alert alert-error">
+          <strong>Beklager, det oppstod en feil ved opplasting av bilde.</strong><br>
+          Er du sikker på at du prøvde å laste opp en gyldig bildefil? Vennligst prøv igjen. Hvis feilen oppstår igjen, bør du kanskje prøve med et annet bilde.
+        </div>
+      {% endif %}
+    {% endfor %}
 
     <form action="{% url fjelltreffen.views.save %}" method="post" enctype="multipart/form-data" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
