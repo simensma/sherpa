@@ -244,8 +244,9 @@ def save(request):
         errors = True
 
     if 'image' in request.FILES:
-
-        # TODO: DELETE EXISTING IMAGE, IF OVERWRITING
+        # Uploading image, delete any existing image
+        if annonse.image != '':
+            annonse.delete_image()
 
         # TODO: Consider streaming the file instead of reading everything into memory first.
         # See simples3/htstream.py
