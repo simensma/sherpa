@@ -50,7 +50,7 @@
       </div>
     {% endif %}
 
-    <form action="{% url fjelltreffen.views.save %}" method="post" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
+    <form action="{% url fjelltreffen.views.save %}" method="post" enctype="multipart/form-data" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ annonse.id }}">
 
@@ -85,6 +85,14 @@
             {% endfor %}
             <option value="international"{% if annonse and not annonse.county %} selected{% elif not annonse and not user.get_profile.get_actor.get_county %} selected{% endif %}>Utlandet</option>
           </select>
+        </div>
+      </div>
+
+      <div class="control-group image">
+        <label class="control-label" for="image">Last opp bilde</label>
+        <div class="controls">
+          <input type="file" name="image"><br>
+          <em>Bilde er valgfritt og vil vises i annonselistingen.</em>
         </div>
       </div>
 

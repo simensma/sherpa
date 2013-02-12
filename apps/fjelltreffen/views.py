@@ -13,6 +13,10 @@ from datetime import date, timedelta
 import json
 import sys
 import logging
+import Image as pil
+from cStringIO import StringIO
+import hashlib
+import simples3
 
 from sherpa.decorators import user_requires, user_requires_login
 from fjelltreffen.models import Annonse
@@ -239,6 +243,55 @@ def save(request):
         messages.error(request, 'missing_text')
         errors = True
 
+    if 'image' in request.FILES:
+
+        # TODO: DELETE EXISTING IMAGE, IF OVERWRITING
+
+        # TODO: Consider streaming the file instead of reading everything into memory first.
+        # See simples3/htstream.py
+        file = request.FILES['image']
+        data = file.read()
+        extension = file.name.split(".")[-1].lower()
+
+        # Calculate the sha1-hash
+        sha1 = hashlib.sha1()
+        sha1.update(data)
+        hash = sha1.hexdigest()
+
+        # Setup AWS connection
+        s3 = simples3.S3Bucket(
+            settings.AWS_BUCKET,
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY,
+            'https://%s' % settings.AWS_BUCKET)
+
+        # Upload the original image to AWS
+        s3.put(
+            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension),
+            data,
+            acl='public-read',
+            mimetype=file.content_type)
+
+        # Create the thumbnail
+        thumb = pil.open(StringIO(data)).copy()
+        fp = StringIO()
+        thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
+        # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
+        thumb.save(fp, "jpeg" if extension == "jpg" else extension)
+        data = fp.getvalue()
+
+        # Calculate the thumbs' sha1-hash
+        sha1 = hashlib.sha1()
+        sha1.update(data)
+        thumb_hash = sha1.hexdigest()
+
+        # Upload the thumbnail to AWS
+        s3.put(
+            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension),
+            data,
+            acl='public-read',
+            mimetype=file.content_type)
+
     if errors:
         if request.POST['id'] == '':
             return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
@@ -266,7 +319,9 @@ def save(request):
         annonse.county = County.objects.get(id=request.POST['county'])
     annonse.email = request.POST['email']
     annonse.title = request.POST['title']
-    annonse.image = request.POST.get('image', '')
+    if 'image' in request.FILES:
+        annonse.image = "%s.%s" % (hash, extension)
+        annonse.image_thumb = "%s.%s" % (thumb_hash, extension)
     annonse.text = request.POST['text']
     annonse.hidden = hidden
     annonse.hideage = request.POST['hideage'] == 'hide'
