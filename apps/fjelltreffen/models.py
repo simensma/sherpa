@@ -1,8 +1,11 @@
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 from django.db.models import Q
 
 from datetime import date, timedelta
+import simples3
 
 # Default annonse-filters
 default_min_age = '18'
@@ -120,3 +123,21 @@ class Annonse(models.Model):
 
         end = len(all_candidates) <= settings.FJELLTREFFEN_BULKLOADNUM
         return (annonse_matches, next_start_index, end)
+
+# Upon deletion, delete any stored images from S3
+@receiver(post_delete, sender=Annonse, dispatch_uid="fjelltreffen.models")
+def delete_image(sender, **kwargs):
+    if kwargs['instance'].image == '' and kwargs['instance'].image_thumb == '':
+        return
+
+    s3 = simples3.S3Bucket(
+        settings.AWS_BUCKET,
+        settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY,
+        'https://%s' % settings.AWS_BUCKET)
+
+    if kwargs['instance'].image != '':
+        s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, kwargs['instance'].image))
+
+    if kwargs['instance'].image_thumb != '':
+        s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, kwargs['instance'].image_thumb))
