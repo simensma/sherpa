@@ -6,10 +6,10 @@ from datetime import date, timedelta
 
 # Default annonse-filters
 default_min_age = '18'
-default_max_age = '' # No limit - empty string is also used in the select box
-default_county = ''  # All counties - empty string is also used in the select box
-default_gender = ''  # All genders - empty string is also used in the select box
-default_text = ''    # Text search, empty means no constraints
+default_max_age = ''    # No limit - empty string is also used in the select box
+default_county = 'all'  # All counties
+default_gender = ''     # All genders - empty string is also used in the select box
+default_text = ''       # Text search, empty means no constraints
 
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile')
