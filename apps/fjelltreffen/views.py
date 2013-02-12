@@ -398,6 +398,14 @@ def renew_mine(request, id):
     annonse.save()
     return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
 
+@user_requires_login(message='fjelltreffen_login_required')
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.become_member')
+@user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
+def delete_image(request, id):
+    annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
+    annonse.delete_image()
+    return HttpResponse()
+
 #
 # View for a user that doesn't pass the age test
 #

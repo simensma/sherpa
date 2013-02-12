@@ -54,4 +54,29 @@ $(document).ready(function() {
         }
     });
 
+    var modal = $("div.annonse-image-modal");
+
+    modal.find("button.delete-image").click(function() {
+        if(!confirm("Er du sikker på at du vil slette bildet fra annonsen?")) {
+            return $(this);
+        }
+
+        var url = $(this).attr("data-href");
+        $(this).parent().hide();
+        modal.find("p.modal-close").hide();
+        modal.find("p.loading").show();
+
+        $.ajaxQueue({
+            url: url
+        }).done(function(result) {
+            form.find("span.existing-image-label").hide();
+            form.find("span.default-image-label").show();
+            alert("Bildet har blitt slettet.");
+        }).fail(function(result) {
+            alert("Beklager, det oppstod en feil når vi prøvde å slette bildet. Vennligst prøv igjen senere.");
+        }).always(function(result) {
+            modal.modal('hide');
+        });
+    });
+
 });

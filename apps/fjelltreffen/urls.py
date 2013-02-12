@@ -15,5 +15,6 @@ urlpatterns = patterns('fjelltreffen.views',
     url(r'^mine/vis/(?P<id>\d+)/$', 'show_mine'),
     url(r'^mine/skjul/(?P<id>\d+)/$', 'hide_mine'),
     url(r'^mine/forny/(?P<id>\d+)/$', 'renew_mine'),
+    url(r'^mine/slett-bilde/(?P<id>\d+)/$', 'delete_image'),
     url(r'^aldersgrense/$', 'too_young'),
 )

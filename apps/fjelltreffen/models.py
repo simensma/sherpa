@@ -1,4 +1,4 @@
-from django.db.models.signals import post_delete
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
@@ -50,6 +50,23 @@ class Annonse(models.Model):
 
     def expires_in_days(self):
         return ((self.date_renewed + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
+
+    def delete_image(self):
+        s3 = simples3.S3Bucket(
+            settings.AWS_BUCKET,
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY,
+            'https://%s' % settings.AWS_BUCKET)
+
+        if self.image != '':
+            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+            self.image = ''
+
+        if self.image_thumb != '':
+            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+            self.image_thumb = ''
+
+        self.save()
 
     #
     # Utility methods
@@ -129,19 +146,7 @@ class Annonse(models.Model):
         return (annonse_matches, next_start_index, end)
 
 # Upon deletion, delete any stored images from S3
-@receiver(post_delete, sender=Annonse, dispatch_uid="fjelltreffen.models")
+@receiver(pre_delete, sender=Annonse, dispatch_uid="fjelltreffen.models")
 def delete_image(sender, **kwargs):
-    if kwargs['instance'].image == '' and kwargs['instance'].image_thumb == '':
-        return
-
-    s3 = simples3.S3Bucket(
-        settings.AWS_BUCKET,
-        settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY,
-        'https://%s' % settings.AWS_BUCKET)
-
-    if kwargs['instance'].image != '':
-        s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, kwargs['instance'].image))
-
-    if kwargs['instance'].image_thumb != '':
-        s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, kwargs['instance'].image_thumb))
+    if kwargs['instance'].image != '' or kwargs['instance'].image_thumb != '':
+        kwargs['instance'].delete_image()

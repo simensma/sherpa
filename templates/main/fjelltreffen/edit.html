@@ -92,7 +92,17 @@
         <label class="control-label" for="image">Last opp bilde</label>
         <div class="controls">
           <input type="file" name="image"><br>
-          <em>Bilde er valgfritt og vil vises i annonselistingen.</em>
+          <em>
+            {% if annonse.image %}
+              <span class="existing-image-label">
+                Du har lastet opp <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">dette</a> bildet. Hvis du laster opp nytt blir det gamle overskrevet.<br>
+              </span>
+            {% endif %}
+            {# We're using a span and hide here, because we'll want to show this text if the user deletes the image with AJAX. #}
+            <span class="default-image-label{% if annonse.image %} hide{% endif %}">
+              Bilde er valgfritt og vil vises i annonselistingen.
+            </span>
+          </em>
         </div>
       </div>
 
@@ -174,5 +184,30 @@
     {% endif %}
   </div>
 </div>
+
+{% if annonse.image %}
+  <div class="modal annonse-image-modal hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Annonsebilde</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        <img src="{{ annonse.get_image_url }}" alt="Annonsebilde">
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p class="pull-left">
+        <button class="btn btn-danger delete-image" data-href="{% url fjelltreffen.views.delete_image annonse.id %}"><i class="icon-remove"></i> Slett bildet fra annonsen</button>
+      </p>
+      <p class="loading hide">
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+      </p>
+      <p class="modal-close">
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}
