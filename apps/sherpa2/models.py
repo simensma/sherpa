@@ -175,6 +175,21 @@ class FolderArticle(models.Model):
     class Meta:
         db_table = u'folder_article'
 
+class Condition(models.Model):
+    id = models.IntegerField(db_column='co_id', primary_key=True)
+    lo_id = models.CharField(db_column='co_lo_id', max_length=200, blank=True)
+    content = models.TextField(db_column='co_content', blank=True)
+    date_created = models.CharField(db_column='co_date_created', max_length=14)
+    date_changed = models.CharField(db_column='co_date_changed', max_length=14)
+    date_observed = models.CharField(db_column='co_date_observed', max_length=8)
+    author_name = models.CharField(db_column='co_author_name', max_length=200, blank=True)
+    author_email = models.CharField(db_column='co_author_email', max_length=200, blank=True)
+    gr_id = models.IntegerField(db_column='co_gr_id', null=True, blank=True)
+    online = models.IntegerField(db_column='co_online', null=True, blank=True)
+    deleted = models.IntegerField(db_column='co_deleted')
+
+    class Meta:
+        db_table = u'conditions'
 
 # We will now define two sets of sherpa2-county mappings.
 # Both are defined in sherpa2/langs/nor_public.php, but they differ slightly
