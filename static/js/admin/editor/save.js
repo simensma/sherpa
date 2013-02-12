@@ -51,7 +51,7 @@ $(document).ready(function() {
         var content_elements = column_elements.children("div.content");
 
         // Rows
-        var rows = []
+        var rows = [];
         row_elements.each(function() {
             rows.push({
                 id: $(this).attr('data-id'),
@@ -83,7 +83,7 @@ $(document).ready(function() {
             var content = {
                 column: $(this).parents('div.column').attr('data-id'),
                 order: $(this).prevAll().length
-            }
+            };
 
             // Check if this is a new or existing element
             if($(this).is('[data-id]')) {
