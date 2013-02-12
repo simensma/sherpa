@@ -1,10 +1,12 @@
 <tr>
   <td>
-    {% if association.url %}<a class="logo-url" href="{{ association.url }}">{% endif %}
-      <div class="association-logo{% if association.name == 'DNT ung' %} jubilee{% endif %} right">
+    <div class="association-logo{% if association.name == 'DNT ung' %} jubilee{% endif %} right">
+      {% if association.url %}<a class="logo-url" href="{{ association.url }}">{% else %}<span>{% endif %}
+
         {{ association.name }}
-      </div>
-    {% if association.url %}</a>{% endif %}
+
+      {% if association.url %}</a>{% else %}</span>{% endif %}
+    </div>
     <h2>{{ association.name }}</h2>
     {% if association.url %}
       <p><a href="{{ association.url }}">{{ association.url }}</a></p>

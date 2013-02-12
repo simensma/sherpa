@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+  <!--[if IE 7]><link rel="stylesheet" href="{{ STATIC_URL }}css/ie7.css"><![endif]-->
   {% block extra_css %}{% endblock %}
 
   {# Set rendered JS globals before anything else #}
@@ -45,11 +46,11 @@
 <header>
   <div class="row">
     <div class="span6">
-      <a href="{% url page.views.page %}">
-        <div class="association-logo left">
+      <div class="association-logo left">
+        <a href="{% url page.views.page %}">
           {{ site.association.name }}
-        </div>
-      </a>
+        </a>
+      </div>
     </div>
     <div class="span6 search">
       <form action="{% url page.views.search %}" method="get" class="form-search">

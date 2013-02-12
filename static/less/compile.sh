@@ -1,6 +1,6 @@
 #!/bin/bash
 
-targets="main admin print 500"
+targets="main admin print 500 ie7"
 
 dir=$(dirname $0)/..
 mkdir -p $dir/css/
