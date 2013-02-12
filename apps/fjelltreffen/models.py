@@ -21,8 +21,12 @@ class Annonse(models.Model):
     title = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     county = models.ForeignKey('core.County', null=True) # Null means international.
+
+    # Note that we don't enforce image uniqueness. This means that if 2 users upload the same image,
+    # and one of them deletes their annonse, an invalid image reference will exist in the DB for the new one.
     image = models.CharField(max_length=2048)
     image_thumb = models.CharField(max_length=2048)
+
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
