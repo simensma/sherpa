@@ -1,9 +1,7 @@
 # encoding: utf-8
 from django.db import models
 
-from core.models import County
-
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
@@ -202,6 +200,13 @@ class Condition(models.Model):
     @staticmethod
     def get_all():
         return Condition.objects.filter(online=1, deleted=0)
+
+    @staticmethod
+    def get_ordered_recent():
+        # We've defined 'recent' as up to 2 weeks old
+        two_weeks_ago = date.today() - timedelta(days=14)
+        # Note that the ordering works even though the date is stored as a CharField.
+        return [c for c in Condition.get_all().order_by('-date_observed') if c.get_date_observed() >= two_weeks_ago]
 
     class Meta:
         db_table = u'conditions'

@@ -4,7 +4,7 @@ from sherpa2.models import Condition
 
 
 def index(request):
-    conditions = Condition.get_all().order_by('-date_observed')[:10]
+    conditions = Condition.get_ordered_recent()
     context = {
         'conditions': conditions}
     return render(request, 'main/conditions/index.html', context)
