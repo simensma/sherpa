@@ -8,10 +8,23 @@
 <div class="row">
   <div class="span12">
 
-    <h1>Føremeldinger</h1>
+      <h1>Føremeldinger</h1>
 
-    <p>TBD.</p>
+      {% for condition in conditions %}
 
+        <div class="conditions">
+
+          <p class="date pull-right">{{ condition.get_date_observed }}</p>
+          <h2>{{ condition.get_comma_separated_locations }}</h2>
+          <p>
+            {{ condition.content|safe }}
+          </p>
+
+        </div>
+
+      {% endfor %}
+
+    </div>
   </div>
 </div>
 
