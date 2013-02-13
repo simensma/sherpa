@@ -1,5 +1,6 @@
 # encoding: utf-8
 from django.db import models
+from django.core.cache import cache
 
 from datetime import datetime, date, timedelta
 import json
@@ -193,7 +194,11 @@ class Condition(models.Model):
         return datetime.strptime(self.date_observed, "%Y%m%d").date()
 
     def get_locations(self):
-        return set([Location.objects.get(code=l) for l in self.locations.split('|') if l != ''])
+        locations = cache.get('conditions.locations.%s' % self.id)
+        if locations is None:
+            locations = set([Location.objects.get(code=l) for l in self.locations.split('|') if l != ''])
+            cache.set('conditions.locations.%s' % self.id, locations, 60 * 60 * 12)
+        return locations
 
     def get_comma_separated_locations(self):
         return ', '.join([l.name for l in self.get_locations()])
