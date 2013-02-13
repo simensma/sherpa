@@ -20,6 +20,13 @@
             {{ condition.content|safe }}
           </p>
 
+          <p class="author">
+            <span class="author-label">
+              Lagt inn av:
+            </span>
+            <a href="mailto:{{ condition.author_email }}">{{ condition.author_name.strip }}</a>, {{ condition.get_date_observed }}
+          </p>
+
         </div>
 
       {% endfor %}
