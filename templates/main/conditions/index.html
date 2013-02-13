@@ -2,6 +2,9 @@
 
 {% block title %}Føremeldinger{% endblock %}
 {% block breadcrumb %}<em><a href="{% url conditions.views.index %}">Føremeldinger</a></em>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/conditions.js"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -10,9 +13,19 @@
 
       <h1>Føremeldinger</h1>
 
+      <p>
+        Finn føremelding fra:
+        <select name="conditions-filter" data-placeholder="Alle områder">
+          <option value=""></option>
+          {% for location in available_locations %}
+            <option value="{{ location.id }}">{{ location.name }}</option>
+          {% endfor %}
+        </select>
+      </p>
+
       {% for condition in conditions %}
 
-        <div class="conditions">
+        <div class="conditions" data-locations="{{ condition.get_location_ids_json }}">
 
           <p class="date pull-right">{{ condition.get_date_observed }}</p>
           <h2>{{ condition.get_comma_separated_locations }}</h2>

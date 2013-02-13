@@ -2,6 +2,7 @@
 from django.db import models
 
 from datetime import datetime, date, timedelta
+import json
 
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
@@ -196,6 +197,9 @@ class Condition(models.Model):
 
     def get_comma_separated_locations(self):
         return ', '.join([l.name for l in self.get_locations()])
+
+    def get_location_ids_json(self):
+        return json.dumps(["%s" % l.id for l in self.get_locations()])
 
     @staticmethod
     def get_all():
