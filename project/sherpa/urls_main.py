@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^medlemsservice/', 'membership.views.service'),
     url(r'^instagram/', include('instagram.urls')),
     url(r'^fjelltreffen/', include('fjelltreffen.urls')),
-    url(r'^foremelding/', include('conditions.urls')),
+    url(r'^foremeldinger/', include('conditions.urls')),
 
     url(r'^', include('sherpa.urls_redirects')),
     url(r'^', include('sherpa.urls_common_post')),
