@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.db import models
 
 from core.models import County
@@ -47,18 +48,18 @@ class Cabin(models.Model):
 
     # service er "tjenestegrad", betjent/ubetjent/etc
     # B - Betjent
-    # C
-    # D
-    # N
-    # S
-    # U
-    # X
+    # S - Selvbetjent
+    # U - Ubetjent
+    # C - Servering
+    # D - Dagshytte
+    # N - Nødsbu
+    # X - Stengt
     service = models.TextField(db_column=u'ca_service', blank=True)
 
     # type er om det er DNT-hytte eller privateid hytte
     # D - DNT-hytte
     # P - Privat
-    # R - ?
+    # R - Privat rabatthytte
     type = models.TextField(db_column=u'ca_type', blank=True)
 
     built = models.TextField(db_column=u'ca_built', blank=True)
