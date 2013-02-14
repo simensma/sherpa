@@ -1,0 +1,52 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Fjelltreffen{% endblock %}
+
+{% block breadcrumb %}
+  <em><a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a></em>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/fjelltreffen/list.js"></script>
+{% endblock%}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <div class="fjelltreffen-list" data-start-index="{{ start_index }}">
+      <h2>Fjelltreffen</h2>
+
+      <p>
+        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.
+      </p>
+
+      {% include 'main/fjelltreffen/filter.html' %}
+
+      <table class="table table-hover list-public">
+        {% include 'main/fjelltreffen/annonselist.html' %}
+      </table>
+
+      <div class="load-more">
+        <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+        <button class="btn btn-large load{% if end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
+      </div>
+
+      <div class="no-matches alert alert-error{% if annonser|length > 0 %} hide{% endif %}">
+        Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
+      </div>
+
+      <div class="no-further-matches alert alert-error hide">
+        Dette var alle annonsene som matchet søket ditt.
+      </div>
+    </div>
+  </div>
+
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='index' %}
+  </div>
+
+</div>
+
+{% endblock %}

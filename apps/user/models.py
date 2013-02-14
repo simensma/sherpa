@@ -16,7 +16,7 @@ class Profile(models.Model):
     ### Focus-related ###
 
     # Return this users' Actor (cached), or None
-    def actor(self):
+    def get_actor(self):
         if self.memberid is None:
             return None
         actor = cache.get('actor.%s' % self.memberid)
@@ -29,25 +29,25 @@ class Profile(models.Model):
         if self.memberid is None:
             return self.user.first_name
         else:
-            return self.actor().first_name
+            return self.get_actor().first_name
 
     def get_last_name(self):
         if self.memberid is None:
             return self.user.last_name
         else:
-            return self.actor().last_name
+            return self.get_actor().last_name
 
     def get_full_name(self):
         if self.memberid is None:
             return self.user.get_full_name()
         else:
-            return "%s %s" % (self.actor().first_name, self.actor().last_name)
+            return "%s %s" % (self.get_actor().first_name, self.get_actor().last_name)
 
     def get_email(self):
         if self.memberid is None:
             return self.user.email
         else:
-            return self.actor().email
+            return self.get_actor().email
 
     def get_sherpa_email(self):
         if self.sherpa_email != '':

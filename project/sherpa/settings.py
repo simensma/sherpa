@@ -14,6 +14,7 @@ LOGIN_URL = '/minside/logg-inn/'
 
 AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
+AWS_FJELLTREFFEN_IMAGES_PREFIX = 'fjelltreffen'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
@@ -33,6 +34,17 @@ RESTORE_PASSWORD_VALIDITY = 12 # Hours
 MEMBERID_LOOKUPS_LIMIT = 15 # Amount of allowed memberid + zipcode lookups when registering for user page
 MEMBERID_LOOKUPS_BAN = 60 * 60 * 4 # Amount of seconds the ban should last when exceeding lookup limit
 FOCUS_MEMBER_CACHE_PERIOD = 60 * 60 # Caching of memberdata (Actor, Services)
+FJELLTREFFEN_ANNONSE_RETENTION_DAYS = 90 # How long fjelltreffen-annonser are shown after creation
+FJELLTREFFEN_AGE_LIMITS = [18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80] # Age queries are rounded to these values
+FJELLTREFFEN_AGE_LIMIT = min(FJELLTREFFEN_AGE_LIMITS)
+FJELLTREFFEN_REPORT_EMAIL = 'DNT medlemsservice <medlem@turistforeningen.no>'
+FJELLTREFFEN_BULKLOADNUM = 20 #annonser to load when a user requests more
+FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
+CAPTCHA_FLITE_PATH = '/usr/bin/flite'
+CAPTCHA_FONT_SIZE = 50
+CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
+
+
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -63,6 +75,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'raven.contrib.django', # Error logging
+    'captcha', # django-simple-captcha
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
@@ -77,6 +90,7 @@ INSTALLED_APPS = (
     'association',
     'membership',
     'instagram',
+    'fjelltreffen',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

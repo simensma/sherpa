@@ -16,8 +16,8 @@ import json, re
 from user.models import Profile
 from focus.models import Actor
 from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
-
 from core import validator
+from sherpa25.models import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
@@ -55,6 +55,9 @@ def login(request):
                 actor = profile.get_actor()
                 actor.email = request.POST['email']
                 actor.save()
+
+                # Import any fjelltreffen-annonser from the old system
+                import_fjelltreffen_annonser(user.get_profile())
 
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))

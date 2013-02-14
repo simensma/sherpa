@@ -108,7 +108,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_profile().actor().address.country == 'NO':
+            if request.user.get_profile().get_actor().address.country == 'NO':
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -134,7 +134,7 @@ def update_account(request):
                 profile.sherpa_email = request.POST['sherpa-email']
                 profile.save()
 
-            actor = request.user.get_profile().actor()
+            actor = request.user.get_profile().get_actor()
             name_split = request.POST['name'].split(' ')
 
             actor.first_name = name_split[0]
@@ -226,13 +226,18 @@ def become_member(request):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.become_member'))
 
+# This view should keep track of all cache keys related to an actor, and delete them.
+# So whenever you add a new actor-related key to the cache, remember to delete it here!
+# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
 @login_required
 def delete_actor_cache(request):
     cache.delete('actor.%s' % request.user.get_profile().memberid)
     cache.delete('actor.services.%s' % request.user.get_profile().memberid)
     cache.delete('actor.children.%s' % request.user.get_profile().memberid)
-    for child in request.user.get_profile().actor().get_children():
+    cache.delete('actor.balance.%s' % request.user.get_profile().memberid)
+    for child in request.user.get_profile().get_actor().get_children():
         cache.delete('actor.%s' % child.memberid)
         cache.delete('actor.services.%s' % child.memberid)
+        cache.delete('actor.balance.%s' % child.memberid)
     messages.info(request, 'synchronization_success')
     return HttpResponse()

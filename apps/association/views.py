@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from sherpa2.models import Association
+from sherpa2.models import Association, COUNTIES_SHERPA2_SET1 as COUNTIES_SHERPA2
 from core.models import County, Zipcode
 
 import json
@@ -21,7 +21,10 @@ def get_categories():
         {'name': 'Andre turgrupper', 'db': 'Annen'}]
 
 def index(request):
-    counties = County.objects.exclude(sherpa_id=None).order_by('code')
+    counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
+    # Assign corresponding sherpa-id to the counties, which will be used for filtering
+    for county in counties:
+        county.sherpa_id = COUNTIES_SHERPA2[county.code]
     categories = get_categories()
 
     for category in categories:

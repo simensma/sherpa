@@ -1,5 +1,7 @@
 from django.db import models
 
+from core.models import County
+
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
@@ -32,6 +34,7 @@ class Association(models.Model):
     facebook = models.TextField(db_column='gr_facebook', blank=True)
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
     map = models.TextField(db_column='gr_map', blank=True)
+
     class Meta:
         db_table = u'groups'
 
@@ -118,6 +121,7 @@ class Cabin(models.Model):
     booking_url = models.TextField(db_column=u'ca_booking_url', blank=True)
     url_ut = models.TextField(db_column=u'ca_url_ut', blank=True)
     the_geom = models.TextField(blank=True) # This field type is a guess.
+
     class Meta:
         db_table = u'cabin2'
 
@@ -139,6 +143,7 @@ class Article(models.Model):
     rel_locations = models.TextField(db_column='ar_rel_locations', blank=True)
     priority = models.IntegerField(db_column='ar_priority', null=True, blank=True)
     folders = models.ManyToManyField('sherpa2.Folder', related_name='articles', through='FolderArticle')
+
     class Meta:
         db_table = u'article'
 
@@ -157,6 +162,7 @@ class Folder(models.Model):
     online = models.IntegerField(db_column='fo_online', null=True, blank=True)
     show_rel_articles = models.IntegerField(db_column='fo_show_rel_articles')
     cols = models.IntegerField(db_column='fo_cols', null=True, blank=True)
+
     class Meta:
         db_table = u'folder'
 
@@ -164,5 +170,72 @@ class FolderArticle(models.Model):
     folder = models.ForeignKey('sherpa2.Folder', db_column='fo_id')
     article = models.ForeignKey('sherpa2.Article', db_column='ar_id')
     status = models.CharField(db_column='fa_status', max_length=20, blank=True)
+
     class Meta:
         db_table = u'folder_article'
+
+
+# We will now define two sets of sherpa2-county mappings.
+# Both are defined in sherpa2/langs/nor_public.php, but they differ slightly
+# in that the second set combines the two counties 'Oslo' and 'Akershus' into one.
+# The mappings will look up county code based on sherpa2 id.
+# The reverse mappings will look up sherpa2 id based on county code.
+
+# This first set is defined in $lang['activity']['counties'] and known usages are:
+# - Activities
+# - Associations
+# - Probably more, add them here if you find any.
+SHERPA2_COUNTIES_SET1 = {
+     1: '01',
+     2: '03',
+     3: '04',
+     4: '05',
+     5: '06',
+     6: '07',
+     7: '08',
+     8: '09',
+     9: '10',
+    10: '11',
+    11: '12',
+    12: '14',
+    13: '15',
+    14: '16',
+    15: '17',
+    16: '18',
+    17: '19',
+    18: '20',
+    19: '02',
+}
+# The reverse mapping - looks up sherpa2 id based on county code
+COUNTIES_SHERPA2_SET1 = {v: k for k, v in SHERPA2_COUNTIES_SET1.iteritems()}
+
+# This second set is defined in in $lang['lists']['counties'] and known usages are:
+# - Fjelltreffen-annonser.
+# - Maybe more, add them here if you find any.
+#
+# Also note: The following sherpa2 keys have special meanings and will raise a KeyError:
+#  0: The entire country
+#  2: Defined as both Oslo and Akershus
+# 99: International
+# This means that the reverse mapping for counties '02/Akershus' and '03/Oslo' also will give KeyError.
+SHERPA2_COUNTIES_SET2 = {
+     1: '01',
+     3: '04',
+     4: '05',
+     5: '06',
+     6: '07',
+     7: '08',
+     8: '09',
+     9: '10',
+    10: '11',
+    11: '12',
+    12: '14',
+    13: '15',
+    14: '16',
+    15: '17',
+    16: '18',
+    17: '19',
+    18: '20',
+}
+# The reverse mapping - looks up sherpa2 id based on county code
+COUNTIES_SHERPA2_SET2 = {v: k for k, v in SHERPA2_COUNTIES_SET2.iteritems()}

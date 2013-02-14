@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.conf import settings
@@ -165,7 +164,7 @@ def update_images(request):
             # No images to edit, not sure why, just redirect them to origin or home.
             # TODO: Should maybe log an error here in case this was our fault.
             if request.GET.get('origin', '') != '':
-                return HttpResponseRedirect(origin)
+                return HttpResponseRedirect(request.GET['origin'])
             else:
                 return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
     elif request.method == 'POST':
@@ -223,7 +222,7 @@ def upload_image(request):
             stored_image = store_image(image, album, request.user)
             ids.append(stored_image['id'])
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
-    except Exception as e:
+    except Exception:
         logger.error(u"Uventet exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
@@ -411,7 +410,7 @@ def parse_image(file):
         # were to close in on the amount of available keys.
         key = generate_random_image_key()
 
-    # Consider streaming the file instead of reading everything into memory first.
+    # TODO: Consider streaming the file instead of reading everything into memory first.
     # See simples3/htstream.py
     data = file.read()
 

@@ -5,8 +5,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
+from datetime import datetime
+
 from association.models import Association
-from core.models import FocusCountry
+from core.models import County, FocusCountry
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -51,7 +53,7 @@ class Actor(models.Model):
     first_name = models.CharField(max_length=50, db_column=u'FiNm')
     last_name = models.CharField(max_length=50, db_column=u'Nm')
     birth_date = models.DateTimeField(null=True, db_column=u'BDt')
-    sex = models.CharField(max_length=1, db_column=u'Sex')
+    gender = models.CharField(max_length=1, db_column=u'Sex')
     email = models.CharField(max_length=250, db_column=u'EMail')
     phone_home = models.CharField(max_length=50, db_column=u'Ph')
     phone_mobile = models.CharField(max_length=50, db_column=u'MobPh')
@@ -181,6 +183,17 @@ class Actor(models.Model):
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
 
+    def get_age(self):
+        return (datetime.now() - self.birth_date).days / 365
+
+    def get_gender(self):
+        if self.gender.lower() == 'm':
+            return 'm'
+        elif self.gender.lower() == 'k':
+            return 'f'
+        else:
+            return None
+
     def get_parent(self):
         parent = self.parent
         if parent == 0 or parent == self.memberid:
@@ -198,6 +211,30 @@ class Actor(models.Model):
             children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
+
+    def has_payed(self):
+        return self.get_balance().is_payed()
+
+    def get_balance(self):
+        balance = cache.get('actor.balance.%s' % self.memberid)
+        if balance is None:
+            balance = self.balance
+            cache.set('actor.balance.%s' % self.memberid, balance, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return balance
+
+    # Get the local County object based on the Actor's zipcode
+    def get_county(self):
+        key = 'actor.%s.county' % self.memberid
+        county = cache.get(key)
+        if county == None:
+            code = FocusZipcode.objects.get(zipcode=self.address.zipcode).county_code
+            if code == '99':
+                # International addresses have county code 99 in Focus. Define this as None for now.
+                county = None
+            else:
+                county = County.objects.get(code=code)
+            cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return county
 
     class Meta:
         db_table = u'Actor'
@@ -256,19 +293,34 @@ class ActorAddress(models.Model):
     def get_country(self):
         return FocusCountry.objects.get(code=self.country)
 
+# The Zipcode table connects zipcodes to counties and associations.
 class FocusZipcode(models.Model):
+
+    # Zipcode + Area
     zipcode = models.CharField(max_length=9, primary_key=True, db_column=u'PostCode')
-    postarea = models.CharField(max_length=40, db_column=u'PostArea')
-    county1no = models.CharField(max_length=10, db_column=u'County1No')
-    county1name = models.CharField(max_length=40, db_column=u'County1Name')
-    county2no = models.CharField(max_length=10, db_column=u'County2No')
-    county2name = models.CharField(max_length=40, db_column=u'County2Name')
+    area = models.CharField(max_length=40, db_column=u'PostArea')
+
+    # City code/name
+    city_code = models.CharField(max_length=10, db_column=u'County2No')
+    city_name = models.CharField(max_length=40, db_column=u'County2Name')
+
+    # The county code, actually corresponding to ISO 3166-2:NO (https://no.wikipedia.org/wiki/ISO_3166-2:NO)
+    # Plus the code '99' which in Focus means international
+    county_code = models.CharField(max_length=10, db_column=u'County1No')
+    county_name = models.CharField(max_length=40, db_column=u'County1Name')
+
+    # Conncetions to associations.
+    # The main id corresponds to the 'focus_id' field in the Association model.
+    # The local id is in practice not (yet) used/connected to their associations.
     main_association_id = models.IntegerField(null=True, db_column=u'District1')
     local_association_id = models.IntegerField(null=True, db_column=u'District2')
+
+    # Other stuff
     crby = models.CharField(max_length=25, db_column=u'CrBy')
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
+
     class Meta:
         db_table = u'PostalCode'
 

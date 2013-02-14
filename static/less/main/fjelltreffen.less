@@ -1,0 +1,142 @@
+div.fjelltreffen-list {
+
+  table.list-public {
+    tr:first-of-type td {
+      border-top: none !important;
+    }
+  }
+
+  table.list-mine {
+    td.status, td.expiration {
+      text-align: center;
+
+      a {
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  table.list-public, table.list-mine {
+    tr td {
+      padding-top: 20px;
+      padding-bottom: 20px;
+
+      h3 {
+        margin-bottom: 0;
+      }
+
+      p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      p.details {
+        font-style: italic;
+        font-size: 14px;
+      }
+    }
+  }
+
+  div.load-more {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+}
+
+div.fjelltreffen-response {
+  ul.response li {
+    font-style: italic;
+  }
+}
+
+form.fjelltreffen-annonse-edit {
+  div.control-group.hideage a.hideage-info {
+    font-size: 14px;
+  }
+
+  div.controls {
+    font-family: "DTL Nobel" !important;
+  }
+
+  select[name='county'] {
+    width: 225px;
+  }
+
+  textarea[name='text'] {
+    width: 98%;
+    height: 200px;
+    margin-right: 2%;
+  }
+}
+
+div.annonse-image-modal p.loading {
+  text-align: center;
+}
+
+form.fjelltreffen-annonse-reply {
+  textarea[name='text'] {
+    width: 500px;
+    height: 200px;
+  }
+}
+
+form.fjelltreffen-annonse-report {
+  textarea[name='reason'] {
+    width: 500px;
+    height: 120px;
+  }
+}
+
+div.fjelltreffen-annonse {
+  p.details {
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  div.image-container {
+    margin-left: 15px;
+    margin-bottom: 5px;
+  }
+}
+
+div.fjelltreffen-filters {
+  table {
+
+    width: 100%;
+
+    th {
+      font-family: "DTL Nobel" !important;
+      text-align: left;
+      font-weight: normal;
+    }
+
+    select[name='gender'], select[name='county'] {
+      width: 180px;
+    }
+
+    select[name='min_age'], select[name='max_age'] {
+      width: 80px;
+    }
+
+    input[name='text'] {
+      width: 100%;
+    }
+  }
+}
+
+div.fjelltreffen-reply p.details {
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Smalls screens */
+
+@media (max-width: 767px) {
+  form.fjelltreffen-annonse-reply, form.fjelltreffen-annonse-report, form.fjelltreffen-annonse-edit {
+    textarea {
+      max-width: 98%;
+      margin-right: 2%;
+    }
+  }
+}
