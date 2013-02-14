@@ -5,7 +5,7 @@
     <li><a href="{% url 'user.views.home' %}">Gamle Min side</a></li>
     <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url 'user.views.account' %}">Dine opplysninger</a></li>
     {% if not user.get_profile.get_actor %}
-      <li{% if active == 'become_member' %} class="active"{% endif %}><a href="{% url 'user.views.become_member' %}">Registrer medlemskap</a></li>
+      <li{% if active == 'register_membership' %} class="active"{% endif %}><a href="{% url user.views.register_membership %}">Registrer medlemskap</a></li>
     {% endif %}
     {% if perms.user.sherpa %}
       <li><a href="{% url 'admin.views.index' %}">Sherpa</a></li>

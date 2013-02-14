@@ -165,19 +165,19 @@ def update_account_password(request):
         return HttpResponseRedirect(reverse('user.views.account'))
 
 @login_required
-def become_member(request):
+def register_membership(request):
     if request.user.get_profile().memberid is not None:
         return HttpResponseRedirect(reverse('user.views.home_new'))
 
     if request.method == 'GET':
         context = {'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
-        return render(request, 'common/user/account/become_member.html', context)
+        return render(request, 'common/user/account/register_membership.html', context)
     else:
         try:
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
-                return HttpResponseRedirect(reverse('user.views.become_member'))
+                return HttpResponseRedirect(reverse('user.views.register_membership'))
             actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             if request.POST['email-equal'] == 'true':
@@ -191,7 +191,7 @@ def become_member(request):
                 # Check that the email address is valid
                 if not validator.email(request.POST['email']):
                     messages.error(request, 'invalid_email')
-                    return HttpResponseRedirect(reverse('user.views.become_member'))
+                    return HttpResponseRedirect(reverse('user.views.register_membership'))
                 chosen_email = request.POST['email']
             else:
                 raise Exception("Missing email-equal / email-choise-parameters")
@@ -199,13 +199,13 @@ def become_member(request):
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.views.become_member'))
+                return HttpResponseRedirect(reverse('user.views.register_membership'))
 
             # Check that the email address isn't in use
             if User.objects.filter(username=username(chosen_email)).exclude(id=request.user.id).exists():
                 # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
                 messages.error(request, 'email_exists')
-                return HttpResponseRedirect(reverse('user.views.become_member'))
+                return HttpResponseRedirect(reverse('user.views.register_membership'))
 
             # Store focus-user and remove sherpa-stored data
             profile = request.user.get_profile()
@@ -224,7 +224,7 @@ def become_member(request):
             return HttpResponseRedirect(reverse('user.views.home_new'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
-            return HttpResponseRedirect(reverse('user.views.become_member'))
+            return HttpResponseRedirect(reverse('user.views.register_membership'))
 
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!

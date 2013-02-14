@@ -1,9 +1,9 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url 'user.views.home_new' %}">Min side</a> / <em><a href="{% url 'user.views.become_member' %}">Registrer medlemskap</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.register_membership %}">Registrer medlemskap</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/become_member.js"></script>
+  <script src="{{ STATIC_URL }}js/user/register_membership.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -17,7 +17,7 @@
       Hvis du er medlem i DNT bør du koble profilen din til medlemssystemet.
     </p>
 
-    <form action="{% url 'user.views.become_member' %}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url user.views.register_membership %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
       <input type="hidden" name="email-equal" value="">
 
@@ -125,7 +125,7 @@
   </div>
 
   <div class="span3">
-    {% include 'common/user/navigation.html' with active='become_member' %}
+    {% include 'common/user/navigation.html' with active='register_membership' %}
   </div>
 </div>
 
