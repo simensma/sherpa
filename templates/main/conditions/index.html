@@ -14,14 +14,23 @@
       <h1>Føremeldinger</h1>
 
       <p>
-        Finn føremelding for:
+        Føremeldingene beskriver forholdene i utvalgte fjell- og turområder i Norge. Informasjonen er hentet fra hyttebestyrere, fjelloppsyn og andre lokale kilder. Merk at det kan være store lokale variasjoner og at forholdene i fjellet kan skifte rask.
+      </p>
+
+      <p>
+        Planlegg turen din på <a href="http://ut.no/">UT.no</a>. Sjekk også været på <a href="http://www.yr.no/">yr.no</a> og eventuell skredfare på <a href="http://www.varsom.no/">varsom.no</a>.<br>
+        Har du nettopp vært på tur? Del gjerne bilder og førerapport med andre på vår <a href="http://www.facebook.com/turistforeningen">Facebook-side</a>.
+      </p>
+
+      <div class="conditions-search form-border">
+        <span class="filter-label">Finn føremelding for:</span>
         <select name="conditions-filter" data-placeholder="Alle områder">
           <option value=""></option>
           {% for location in available_locations %}
             <option value="{{ location.id }}">{{ location.name }}</option>
           {% endfor %}
         </select>
-      </p>
+      </div>
 
       {% for condition in conditions %}
 
