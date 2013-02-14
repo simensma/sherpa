@@ -37,7 +37,7 @@
             <span class="author-label">
               Lagt inn av:
             </span>
-            <a href="mailto:{{ condition.author_email }}">{{ condition.author_name.strip }}</a>, {{ condition.get_date_observed }}
+            {{ condition.author_name.strip }} (<a href="mailto:{{ condition.author_email }}">{{ condition.author_email }}</a>), {{ condition.get_date_observed }}
           </p>
 
         </div>
