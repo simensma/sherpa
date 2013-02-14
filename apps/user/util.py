@@ -2,7 +2,8 @@
 from django.core.cache import cache
 from django.conf import settings
 
-import md5, hashlib
+import md5
+import hashlib
 
 from sherpa25.models import Member
 
