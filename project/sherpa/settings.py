@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'membership',
     'instagram',
     'fjelltreffen',
+    'conditions',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

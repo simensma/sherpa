@@ -1,7 +1,9 @@
 # encoding: utf-8
 from django.db import models
+from django.core.cache import cache
 
-from core.models import County
+from datetime import datetime, date, timedelta
+import json
 
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
@@ -175,6 +177,80 @@ class FolderArticle(models.Model):
     class Meta:
         db_table = u'folder_article'
 
+class Condition(models.Model):
+    id = models.IntegerField(db_column='co_id', primary_key=True)
+    locations = models.CharField(db_column='co_lo_id', max_length=200, blank=True)
+    content = models.TextField(db_column='co_content', blank=True)
+    date_created = models.CharField(db_column='co_date_created', max_length=14)
+    date_changed = models.CharField(db_column='co_date_changed', max_length=14)
+    date_observed = models.CharField(db_column='co_date_observed', max_length=8)
+    author_name = models.CharField(db_column='co_author_name', max_length=200, blank=True)
+    author_email = models.CharField(db_column='co_author_email', max_length=200, blank=True)
+    gr_id = models.IntegerField(db_column='co_gr_id', null=True, blank=True)
+    online = models.IntegerField(db_column='co_online', null=True, blank=True)
+    deleted = models.IntegerField(db_column='co_deleted')
+
+    def get_date_observed(self):
+        return datetime.strptime(self.date_observed, "%Y%m%d").date()
+
+    def get_locations(self):
+        locations = cache.get('conditions.locations.%s' % self.id)
+        if locations is None:
+            locations = set([Location.objects.get(code=l) for l in self.locations.split('|') if l != ''])
+            cache.set('conditions.locations.%s' % self.id, locations, 60 * 60 * 12)
+        return locations
+
+    def get_comma_separated_locations(self):
+        return ', '.join([l.name for l in self.get_locations()])
+
+    def get_location_ids_json(self):
+        return json.dumps(["%s" % l.id for l in self.get_locations()])
+
+    @staticmethod
+    def get_all():
+        return Condition.objects.filter(online=1, deleted=0)
+
+    @staticmethod
+    def get_ordered_recent():
+        # We've defined 'recent' as up to 2 weeks old
+        two_weeks_ago = date.today() - timedelta(days=14)
+        # Note that the ordering works even though the date is stored as a CharField.
+        return [c for c in Condition.get_all().order_by('-date_observed') if c.get_date_observed() >= two_weeks_ago]
+
+    class Meta:
+        db_table = u'conditions'
+
+class Location(models.Model):
+    id = models.IntegerField(db_column='lo_id', primary_key=True)
+    name = models.TextField(db_column='lo_name')
+    code = models.TextField(db_column='lo_code')
+    alias = models.TextField(db_column='lo_alias')
+    album = models.TextField(db_column='lo_album')
+    maintainer = models.TextField(db_column='lo_maintainer')
+    mapshop = models.TextField(db_column='lo_mapshop')
+    online = models.IntegerField(db_column='lo_online', null=True)
+    county = models.TextField(db_column='lo_county')
+    municipality = models.TextField(db_column='lo_municipality')
+    terrain = models.TextField(db_column='lo_terrain')
+    maps = models.TextField(db_column='lo_maps')
+    coordinates = models.TextField(db_column='lo_coordinates') # This field type is a guess.
+    content_nor = models.TextField(db_column='lo_content_nor')
+    content_nno = models.TextField(db_column='lo_content_nno')
+    content_eng = models.TextField(db_column='lo_content_eng')
+    content_ger = models.TextField(db_column='lo_content_ger')
+    content_fre = models.TextField(db_column='lo_content_fre')
+    modified = models.DateTimeField(db_column='lo_modified', null=True)
+    modified_by = models.IntegerField(db_column='lo_modified_by', null=True)
+    created = models.DateTimeField(db_column='lo_created', null=True)
+    created_by = models.IntegerField(db_column='lo_created_by', null=True)
+    order = models.IntegerField(db_column='lo_order', null=True)
+    parent = models.TextField(db_column='lo_parent')
+    yr_url = models.TextField(db_column='lo_yr_url')
+    meta = models.IntegerField(db_column='lo_meta', null=True)
+    the_geom = models.TextField(blank=True) # This field type is a guess.
+
+    class Meta:
+        db_table = u'location2'
 
 # We will now define two sets of sherpa2-county mappings.
 # Both are defined in sherpa2/langs/nor_public.php, but they differ slightly
