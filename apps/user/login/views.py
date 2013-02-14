@@ -11,7 +11,7 @@ from django.template import RequestContext, loader
 from django.utils import crypto
 
 from datetime import datetime, timedelta
-import json, re
+import json
 
 from user.models import Profile
 from focus.models import Actor
