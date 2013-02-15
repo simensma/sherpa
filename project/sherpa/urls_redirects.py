@@ -43,6 +43,9 @@ urlpatterns = patterns('',
     # Old dynamic content - special case for cabins; redirect to UT
     url(r'^cabin.php$', 'page.views.redirect_cabin'),
 
+    # Old content that exists here and has new URLs
+    url(r'^conditions.php$', 'page.views.redirect', kwargs={'url': '/foremeldinger/', 'permanent': True, 'include_params': False}),
+
     # Old XML feeds
     url(r'^xml_activity_ut2.php$', 'page.views.redirect', kwargs={'url': 'http://%s/xml_activity_ut2.php' % settings.OLD_SITE}),
     url(r'^xml_activity_ut.php$', 'page.views.redirect', kwargs={'url': 'http://%s/xml_activity_ut.php' % settings.OLD_SITE}),

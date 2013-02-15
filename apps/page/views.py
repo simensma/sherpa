@@ -170,13 +170,16 @@ def match_user(request, page):
             return variant
     return None
 
-def redirect(request, url, slug="", params={}, permanent=False):
+def redirect(request, url, slug="", params={}, permanent=False, include_params=True):
     param_str = request.GET.copy()
     param_str.update(params)
     param_str = param_str.urlencode()
     if param_str != '':
         param_str = "?%s" % param_str
-    uri = "%s%s%s" % (url, slug, param_str)
+    if include_params:
+        uri = "%s%s%s" % (url, slug, param_str)
+    else:
+        uri = "%s%s" % (url, slug)
     if permanent: return HttpResponsePermanentRedirect(uri)
     else:         return HttpResponseRedirect(uri)
 
