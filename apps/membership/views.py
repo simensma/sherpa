@@ -12,7 +12,9 @@ from core.models import Zipcode
 from enrollment.models import State
 
 from datetime import datetime
-import json, logging, sys
+import json
+import logging
+import sys
 
 logger = logging.getLogger('sherpa')
 
