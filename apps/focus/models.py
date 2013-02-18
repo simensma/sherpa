@@ -351,9 +351,13 @@ class BalanceHistory(models.Model):
     # Would be if _either_ the current_year or last_year balance was <= 0.
 
     def is_payed(self):
-        # This will be incorrect in the period between "årskrav" processing and year end.
-        # The user might have paid for the current year, and the membership *should* be valid
-        # for the remainder, but Focus will regard 'current year' as next year from this point.
+        # This will be incorrect in the period between "årskrav" processing and year end,
+        # but only for those who haven't paid for the *next* year.
+        # The user might have paid for the current year, and the membership is valid for the
+        # remainder of the year, but Focus treats this 'current year'-field as the next year.
+        # So it will be correct for those who have paid for next year.
+        # Note that since Focus treats it this way, so do we in our code, based on the current
+        # date compared to the month in settings.MEMBERSHIP_YEAR_START.
         return self.current_year <= 0
 
     class Meta:
