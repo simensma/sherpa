@@ -12,6 +12,7 @@ from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
 from core.models import Zipcode
 from enrollment.models import State
+from membership.models import SMSServiceRequest
 
 from datetime import datetime, timedelta
 import json
@@ -107,6 +108,13 @@ def memberid_sms(request):
     # We are currently relying on the SMS service to fail if a bogus number
     # happens to fall through.
 
+    # Start recording this request - details will be filled underway
+    sms_request = SMSServiceRequest()
+    sms_request.phone_number_input = request.GET['phone_mobile']
+    sms_request.ip = request.META['REMOTE_ADDR']
+    if request.user.is_authenticated():
+        sms_request.profile = request.user.get_profile()
+
     # Simple security - if the same person sends > 10 requests within 30 minutes, we'll suspect
     # something's up.
     if not 'memberservice_memberid_sms' in request.session:
@@ -115,29 +123,38 @@ def memberid_sms(request):
             'count': 0}
     request.session['memberservice_memberid_sms']['count'] += 1
     request.session.modified = True
+    sms_request.count = request.session['memberservice_memberid_sms']['count']
     if request.session['memberservice_memberid_sms']['count'] > 10:
         thirty_minutes_ago = datetime.now() - timedelta(minutes=30)
         if request.session['memberservice_memberid_sms']['date'] >= thirty_minutes_ago:
             # Busted
+            sms_request.blocked = True
+            sms_request.save()
             return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
         else:
             # A lot of SMSes, but time limit has passed, so just reset it
             request.session['memberservice_memberid_sms'] = {
                 'date': datetime.now(),
                 'count': 1}
+    # Set count again, in case it was changed
+    sms_request.count = request.session['memberservice_memberid_sms']['count']
 
     number = re.sub('\s', '', request.GET['phone_mobile'])
     if number == '':
+        sms_request.save()
         return HttpResponse(json.dumps('no_match'))
     actors = Actor.objects.raw(
         "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])
     actors = list(actors) # Make sure the query has been performed
     if len(actors) == 0:
+        sms_request.save()
         return HttpResponse(json.dumps('no_match'))
     elif len(actors) > 1:
         # TODO: More than one hits, ignore for now - what should we do here?
         pass
     actor = actors[0]
+    sms_request.memberid = actor.memberid
+    sms_request.save()
 
     try:
         context = RequestContext(request, {
