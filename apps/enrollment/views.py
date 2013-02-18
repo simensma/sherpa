@@ -674,7 +674,7 @@ def sms(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    t = loader.get_template('main/enrollment/result/sms.html')
+    t = loader.get_template('main/enrollment/result/sms.txt')
     c = Context({'year': year, 'next_year': next_year,
         'users': request.session['enrollment']['users']})
     sms_message = t.render(c).encode('utf-8')
