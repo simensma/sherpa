@@ -71,9 +71,12 @@ def zipcode_search(request):
     except FocusZipcode.DoesNotExist:
         # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
         if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
-            logger.error(u"Postnummer '%s' finnes i Zipcode, men ikke i Focus!" % request.POST['zipcode'],
+            logger.error(u"Postnummer finnes i Zipcode, men ikke i Focus!",
                 exc_info=sys.exc_info(),
-                extra={'request': request}
+                extra={
+                    'request': request,
+                    'postnummer': request.POST['zipcode']
+                }
             )
             return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
         else:

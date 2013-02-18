@@ -183,9 +183,12 @@ def household(request):
                     return HttpResponseRedirect(reverse('enrollment.views.verification'))
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
-                    logger.error(u"Postnummer '%s' finnes i Zipcode, men ikke i Focus!" % request.session['enrollment']['location']['zipcode'],
+                    logger.error(u"Postnummer finnes i Zipcode, men ikke i Focus!",
                         exc_info=sys.exc_info(),
-                        extra={'request': request}
+                        extra={
+                            'request': request,
+                            'postnummer': request.session['enrollment']['location']['zipcode']
+                        }
                     )
                     messages.error(request, 'focus_zipcode_missing')
                 except Association.DoesNotExist:
