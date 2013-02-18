@@ -22,6 +22,9 @@ BLOG_URL = 'blogg.turistforeningen.no'
 BLOG_CATEGORY_API = 'api/get_category_index/'
 INSTAGRAM_CLIENT_ID = '9f849b1f6e97480ea58ee989159a597a'
 
+# Our SMS-service endpoint
+SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
+
 # NETS URLs used for payment
 NETS_REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 NETS_TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"

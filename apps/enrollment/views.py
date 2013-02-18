@@ -33,7 +33,6 @@ FOREIGN_SHIPMENT_PRICE = 100
 invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 
-SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
@@ -682,7 +681,7 @@ def sms(request):
 
     # Send the message
     try:
-        r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+        r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         # Check and return status
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
