@@ -1,5 +1,11 @@
-Ditt medlemsnummer i Den Norske Turistforening er: {{ actor.memberid }}
+Medlemsnummer for:
 
-Mvh
+{{ actor.get_full_name }}: {{ actor.memberid }}, årskontingent {% if actor.has_payed %}betalt for {% if next_year %}{{ year|add:"1" }}, samt ut {{ year }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year }} og {{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+
+{% for child in actor.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, årskontingent {% if child.has_payed %}betalt for {% if next_year %}{{ year|add:"1" }}, samt ut {{ year }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year }} og {{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+
+{% endfor %}{% if not all_payed %}Kontakt oss for å fornye medlemskapet.
+
+{% endif %}Mvh
 DNT Medlemsservice
 Tlf: 40001870
