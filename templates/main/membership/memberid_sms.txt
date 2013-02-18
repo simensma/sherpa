@@ -1,0 +1,5 @@
+Ditt medlemsnummer i Den Norske Turistforening er: {{ actor.memberid }}
+
+Mvh
+DNT Medlemsservice
+Tlf: 40001870

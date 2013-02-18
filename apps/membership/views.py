@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.core.cache import cache
 from django.conf import settings
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
@@ -16,6 +18,8 @@ import json
 import logging
 import sys
 import re
+import requests
+from urllib import quote_plus
 
 logger = logging.getLogger('sherpa')
 
@@ -97,12 +101,55 @@ def service(request):
     return render(request, 'main/membership/service.html')
 
 def memberid_sms(request):
+    # This is a membership service that lets you get your memberid by providing your phone number.
+    # Note that a lot of phone number entries in Focus are bogus (email, date of birth, or
+    # poorly formatted) and some are also foreign, which we allow for now.
+    # We are currently relying on the SMS service to fail if a bogus number
+    # happens to fall through.
+
     number = re.sub('\s', '', request.GET['phone_mobile'])
     if number == '':
         return HttpResponse(json.dumps('no_match'))
-    try:
-        a = Actor.objects.raw(
-            "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])[0]
-        return HttpResponse(json.dumps("%s" % a.memberid))
-    except IndexError:
+    actors = Actor.objects.raw(
+        "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])
+    actors = list(actors) # Make sure the query has been performed
+    if len(actors) == 0:
         return HttpResponse(json.dumps('no_match'))
+    elif len(actors) > 1:
+        # TODO: More than one hits, ignore for now - what should we do here?
+        pass
+    actor = actors[0]
+
+    try:
+        context = RequestContext(request, {
+            'actor': actor
+        })
+        sms_message = render_to_string('main/membership/memberid_sms.txt', context)
+        r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+        status = re.findall('Status: .*', r.text)
+        if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+            logger.error(u"Kunne ikke sende medlemsnummer på SMS: Ukjent status",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'number': number,
+                    'response_status': r.text,
+                    'sms_response_object': r
+                }
+            )
+            return HttpResponse(json.dumps({
+                'status': 'service_fail',
+                'message': status[0][8:]}
+            ))
+        return HttpResponse(json.dumps({'status': 'ok'}))
+    except requests.ConnectionError:
+        logger.error(u"Kunne ikke sende medlemsnummer på SMS: requests.ConnectionError",
+            exc_info=sys.exc_info(),
+            extra={
+                'request': request,
+                'number': number
+            }
+        )
+        return HttpResponse(json.dumps({
+            'status': 'connection_error'}
+        ))
