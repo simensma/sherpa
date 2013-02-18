@@ -13,7 +13,7 @@ from focus.models import FocusZipcode, Price, Actor
 from core.models import Zipcode
 from enrollment.models import State
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import logging
 import sys
@@ -106,6 +106,25 @@ def memberid_sms(request):
     # poorly formatted) and some are also foreign, which we allow for now.
     # We are currently relying on the SMS service to fail if a bogus number
     # happens to fall through.
+
+    # Simple security - if the same person sends > 10 requests within 30 minutes, we'll suspect
+    # something's up.
+    if not 'memberservice_memberid_sms' in request.session:
+        request.session['memberservice_memberid_sms'] = {
+            'date': datetime.now(),
+            'count': 0}
+    request.session['memberservice_memberid_sms']['count'] += 1
+    request.session.modified = True
+    if request.session['memberservice_memberid_sms']['count'] > 10:
+        thirty_minutes_ago = datetime.now() - timedelta(minutes=30)
+        if request.session['memberservice_memberid_sms']['date'] >= thirty_minutes_ago:
+            # Busted
+            return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
+        else:
+            # A lot of SMSes, but time limit has passed, so just reset it
+            request.session['memberservice_memberid_sms'] = {
+                'date': datetime.now(),
+                'count': 1}
 
     number = re.sub('\s', '', request.GET['phone_mobile'])
     if number == '':
