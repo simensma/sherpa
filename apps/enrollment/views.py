@@ -685,11 +685,23 @@ def sms(request):
         # Check and return status
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+            logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: Ukjent status",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'response_status': r.text,
+                    'sms_response_object': r
+                }
+            )
             return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
         request.session['enrollment']['users'][index]['sms_sent'] = True
         request.session.modified = True
         return HttpResponse(json.dumps({'error': 'none'}))
     except requests.ConnectionError:
+        logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: requests.ConnectionError",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
