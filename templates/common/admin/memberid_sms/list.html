@@ -1,0 +1,55 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <h2>Bruk av SMS-tjenesten</h2>
+
+    <p>
+      "Antall" er antall noterte requests siste 30 min - resettes etter de 30 minuttene.<br>
+      "Blokkert" skjer når man får mer enn 10 requests på de 30 minuttene.<br>
+      Totalt {{ sms_requests|length }} forespørsler hvorav {{ total_sent }} ble sendt, gitt en SMS-pris på kr. {{ sms_price }} blir det totalt kr. {{ total_cost }}.
+    </p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Minside-profil</th>
+          <th>IP</th>
+          <th>Forespurt tlf.nr.</th>
+          <th>Matchende medlemsnummer</th>
+          <th>Antall</th>
+          <th>Når</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in sms_requests %}
+          <tr>
+            <td>
+              {% if request.profile %}
+                {{ request.profile.get_full_name }} ({{ request.profile.memberid }})
+              {% else %}
+                Ikke pålogget
+              {% endif %}
+            </td>
+            <td>{{ request.ip }}</td>
+            <td>{{ request.phone_number_input }}</td>
+            <td>
+              {% if not request.blocked %}
+                {{ request.memberid|default:"Ingen match på tlf." }}
+              {% else %}
+                N/A (blokkert)
+              {% endif %}
+            </td>
+            <td>{{ request.count }}{% if request.blocked %} - Blokkert!{% endif %}</td>
+            <td>{{ request.date|date:"d.m.Y H:i" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

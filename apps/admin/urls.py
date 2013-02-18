@@ -11,4 +11,5 @@ urlpatterns = patterns('admin.views',
     url(r'^annonser/', include('admin.ads.urls')),
     url(r'^cache/', include('admin.cache.urls')),
     url(r'^innmelding/', include('admin.enrollment.urls')),
+    url(r'^medlemsnummer-sms/', include('admin.memberid_sms.urls')),
 )
