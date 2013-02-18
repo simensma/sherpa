@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 from sherpa2.models import Association
-from focus.models import FocusZipcode, Price
+from focus.models import FocusZipcode, Price, Actor
 from core.models import Zipcode
 from enrollment.models import State
 
@@ -15,6 +15,7 @@ from datetime import datetime
 import json
 import logging
 import sys
+import re
 
 logger = logging.getLogger('sherpa')
 
@@ -94,3 +95,14 @@ def zipcode_search(request):
 
 def service(request):
     return render(request, 'main/membership/service.html')
+
+def memberid_sms(request):
+    number = re.sub('\s', '', request.GET['phone_mobile'])
+    if number == '':
+        return HttpResponse(json.dumps('no_match'))
+    try:
+        a = Actor.objects.raw(
+            "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])[0]
+        return HttpResponse(json.dumps("%s" % a.memberid))
+    except IndexError:
+        return HttpResponse(json.dumps('no_match'))
