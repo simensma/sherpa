@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     $("button.zipcode-search").click(function() {
         var button = $(this);
-        var loader = $(this).siblings('img.ajaxloader');
+        var loader = $(this).siblings('img.ajaxloader.zipcode-search');
         button.hide();
         loader.show();
         var zipcode = $("input[name='zipcode']").val();

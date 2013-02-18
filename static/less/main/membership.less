@@ -268,6 +268,25 @@ div#faq {
   }
 }
 
+/* Memberservice - memberid SMS service */
+
+div.memberid-sms {
+  div.results {
+    font-style: italic;
+    p.ok {
+      color: rgb(45, 140, 32);
+    }
+
+    p.no-match, p.service-fail, p.technical-fail, p.too-high-frequency {
+      color: @profile-red;
+    }
+
+    span.number {
+      font-weight: bold;
+    }
+  }
+}
+
 /* Box for promoting a new benefit */
 
 div.new-membership-benefit {

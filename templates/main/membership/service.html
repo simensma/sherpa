@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/membership/membership.js"></script>
+  <script src="{{ STATIC_URL }}js/membership/memberservice.js"></script>
 {% endblock %}
 
 {% block title %}Medlemsservice{% endblock %}
@@ -128,7 +129,7 @@
       <h3>Medlemsfordeler og priser</h3>
       <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
       <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
-      <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
       <br>
       <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
       </form>
@@ -145,6 +146,30 @@
       </p>
       <p>
         Ta gjerne kontakt med oss via <a href="http://www.facebook.com/turistforeningen">Facebook</a> eller <a href="https://twitter.com/turistforening">Twitter</a>.
+      </p>
+    </div>
+
+    <div class="well memberid-sms">
+      <h3>Glemt ditt medlemsnummer?</h3>
+
+      <p>
+        Skriv inn ditt mobilnummer og få medlemsnummeret gratis tilsendt på SMS.
+      </p>
+
+      <input type="text" name="phone_mobile" class="input-medium" placeholder="12345678...">
+      <button class="btn input-button-align" data-href="{% url membership.views.memberid_sms %}">OK</button>
+      <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+      <div class="results">
+        <p class="hide ok">SMS har blitt sendt til <span class="number"></span>.</p>
+        <p class="hide no-match">Nummer <span class="number"></span> er ikke registrert på noen av våre medlemmer.</p>
+        <p class="hide service-fail">Beklager, det oppstod en feil ved kontakt med vår SMS-leverandør. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice dersom feilen vedvarer.</p>
+        <p class="hide technical-fail">Beklager, det oppstod en teknisk feil! Vennligst prøv igjen senere, eller ta kontakt med medlemsservice dersom feilen vedvarer.</p>
+        <p class="hide too-high-frequency">Du har sendt alt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.</p>
+      </div>
+
+      <p>
+        SMSen er gyldig som kvittering på betalt årskontingent.
       </p>
     </div>
   </div>

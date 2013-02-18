@@ -110,7 +110,7 @@ def memberid_sms(request):
 
     # Start recording this request - details will be filled underway
     sms_request = SMSServiceRequest()
-    sms_request.phone_number_input = request.GET['phone_mobile']
+    sms_request.phone_number_input = request.POST['phone_mobile']
     sms_request.ip = request.META['REMOTE_ADDR']
     if request.user.is_authenticated():
         sms_request.profile = request.user.get_profile()
@@ -139,16 +139,16 @@ def memberid_sms(request):
     # Set count again, in case it was changed
     sms_request.count = request.session['memberservice_memberid_sms']['count']
 
-    number = re.sub('\s', '', request.GET['phone_mobile'])
+    number = re.sub('\s', '', request.POST['phone_mobile'])
     if number == '':
         sms_request.save()
-        return HttpResponse(json.dumps('no_match'))
+        return HttpResponse(json.dumps({'status': 'no_match'}))
     actors = Actor.objects.raw(
         "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])
     actors = list(actors) # Make sure the query has been performed
     if len(actors) == 0:
         sms_request.save()
-        return HttpResponse(json.dumps('no_match'))
+        return HttpResponse(json.dumps({'status': 'no_match'}))
     elif len(actors) > 1:
         # TODO: More than one hits, ignore for now - what should we do here?
         pass
@@ -177,8 +177,7 @@ def memberid_sms(request):
                 }
             )
             return HttpResponse(json.dumps({
-                'status': 'service_fail',
-                'message': status[0][8:]}
+                'status': 'service_fail'}
             ))
         return HttpResponse(json.dumps({'status': 'ok'}))
     except requests.ConnectionError:
