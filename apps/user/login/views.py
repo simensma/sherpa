@@ -298,7 +298,7 @@ def restore_password(request, key):
             'password_length': settings.USER_PASSWORD_LENGTH}
         return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
-        if request.POST['password'] != request.POST['password-duplicate'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+        if request.POST['password'] != request.POST['password-repeat'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
             context = {
                 'ready': True,
                 'key': key,
