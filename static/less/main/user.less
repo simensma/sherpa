@@ -36,8 +36,12 @@ div.forgot-password {
     color: rgb(45, 140, 32);
   }
 
-  p.info.unknown, p.info.invalid, p.info.error {
+  p.info.unknown, p.info.invalid, p.info.unregistered, p.info.error {
     color: @profile-red;
+
+    a {
+      text-decoration: underline;
+    }
   }
 }
 

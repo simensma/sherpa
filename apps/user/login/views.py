@@ -246,9 +246,8 @@ def send_restore_password_email(request):
     if len(local_match) == 0 and len(focus_matches) == 0:
         # No email-address matches.
         if Actor.objects.exclude(memberid__in=local_members).filter(email=request.POST['email']).exists():
-            # Oh, the email address exists in Focus, but the user isn't in our user-base.
-            # TODO: Inform the user about this
-            return HttpResponse(json.dumps({'status': 'unknown_email'}))
+            # Oh, the email address exists in Focus, but the user isn't in our user-base. Let them know.
+            return HttpResponse(json.dumps({'status': 'unregistered_email'}))
         else:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
 

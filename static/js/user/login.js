@@ -36,6 +36,9 @@ $(document).ready(function() {
             } else if(result.status == 'invalid_email') {
                 forgot_password.find("p.info.invalid").show();
                 button.removeAttr('disabled');
+            } else if(result.status == 'unregistered_email') {
+                forgot_password.find("p.info.unregistered").show();
+                button.removeAttr('disabled');
             } else if(result.status == 'success') {
                 forgot_password.find("p.info.success").show();
             }
