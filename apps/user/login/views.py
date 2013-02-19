@@ -12,6 +12,7 @@ from django.utils import crypto
 
 from datetime import datetime, timedelta
 import json
+import logging
 
 from user.models import Profile
 from focus.models import Actor
@@ -21,6 +22,8 @@ from sherpa25.models import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
+
+logger = logging.getLogger('sherpa')
 
 def login(request):
     if 'authenticated_profiles' in request.session:
@@ -234,61 +237,82 @@ def verify_memberid(request):
 def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
-    try:
-        # Try users that aren't members first - this won't be many
-        profile = User.objects.get(email=request.POST['email']).get_profile()
-    except User.DoesNotExist:
-        try:
-            actor = Actor.objects.get(email=request.POST['email'])
-            profile = Profile.objects.get(memberid=actor.memberid)
-        except Actor.DoesNotExist:
+
+    # The address will match only one non-member, but may match several members
+    local_match = User.objects.filter(email=request.POST['email'])
+    local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
+    focus_matches = Actor.objects.filter(memberid__in=local_members, email=request.POST['email'])
+
+    if len(local_match) == 0 and len(focus_matches) == 0:
+        # No email-address matches.
+        if Actor.objects.exclude(memberid__in=local_members).filter(email=request.POST['email']).exists():
+            # Oh, the email address exists in Focus, but the user isn't in our user-base.
+            # TODO: Inform the user about this
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
-        except Profile.DoesNotExist:
-            # This means the email exists in Focus, but the user isn't in our user-base.
-            # Maybe we should inform them that they're not registered, or something?
+        else:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
-        except Actor.MultipleObjectsReturned:
-            # TODO: Multiple email-hits will need to be handled differently soon
-            return HttpResponse(json.dumps({'status': 'multiple_hits'}))
-    except KeyError:
-        return HttpResponse(json.dumps({'status': 'unknown_email'}))
+
     key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-    profile.password_restore_key = key
-    profile.password_restore_date = datetime.now()
-    profile.save()
+    while Profile.objects.filter(password_restore_key=key).exists():
+        # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+        # ~238 bits of entropy which means that this will never ever happen, ever.
+        # You will win the lottery before this happens. And I want to know if it does, so log it.
+        logger.error(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+            exc_info=sys.exc_info(),
+            extra={
+                'request': request,
+                'should_you_play_the_lottery': True,
+                'key': key
+        })
+        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+
+    all_matches = [u.get_profile() for u in local_match] + [Profile.objects.get(memberid=a.memberid) for a in focus_matches]
+    for profile in all_matches:
+        profile.password_restore_key = key
+        profile.password_restore_date = datetime.now()
+        profile.save()
+
     t = loader.get_template('common/user/login/restore-password-email.txt')
     c = RequestContext(request, {
        'found_user': profile.user,
        'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
+    send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    try:
-        profile = Profile.objects.get(password_restore_key=key)
-    except Profile.DoesNotExist:
+    profiles = Profile.objects.filter(password_restore_key=key)
+    if len(profiles) == 0:
         context = {'no_such_key': True}
         return render(request, 'common/user/login/restore-password.html', context)
-    deadline = profile.password_restore_date + timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
-    if datetime.now() > deadline:
+
+    date_limit = datetime.now() - timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
+    if any([p.password_restore_date < date_limit for p in profiles]):
         # We've passed the deadline for key validity
         context = {'key_expired': True, 'validity_period': settings.RESTORE_PASSWORD_VALIDITY}
         return render(request, 'common/user/login/restore-password.html', context)
 
     # Passed all tests, looks like we're ready to reset the password
     if request.method == 'GET':
-        context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH}
+        context = {
+            'ready': True,
+            'key': key,
+            'password_length': settings.USER_PASSWORD_LENGTH}
         return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
         if request.POST['password'] != request.POST['password-duplicate'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH,
+            context = {
+                'ready': True,
+                'key': key,
+                'password_length': settings.USER_PASSWORD_LENGTH,
                 'unacceptable_password': True}
             return render(request, 'common/user/login/restore-password.html', context)
+
         # Everything is in order. Reset the password.
-        profile.user.set_password(request.POST['password'])
-        profile.user.save()
-        profile.password_restore_key = None
-        profile.password_restore_date = None
-        profile.save()
+        for profile in profiles:
+            profile.user.set_password(request.POST['password'])
+            profile.user.save()
+            profile.password_restore_key = None
+            profile.password_restore_date = None
+            profile.save()
         context = {'success': True}
         return render(request, 'common/user/login/restore-password.html', context)

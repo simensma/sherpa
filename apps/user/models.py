@@ -7,7 +7,7 @@ from focus.models import Actor
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True, unique=True)
+    password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     memberid = models.IntegerField(null=True, unique=True)

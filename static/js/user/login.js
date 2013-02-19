@@ -36,9 +36,6 @@ $(document).ready(function() {
             } else if(result.status == 'invalid_email') {
                 forgot_password.find("p.info.invalid").show();
                 button.removeAttr('disabled');
-            } else if(result.status == 'multiple_hits') {
-                forgot_password.find("p.info.multiple").show();
-                button.removeAttr('disabled');
             } else if(result.status == 'success') {
                 forgot_password.find("p.info.success").show();
             }
