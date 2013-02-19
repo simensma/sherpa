@@ -107,11 +107,6 @@
               <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
               Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
             </div>
-          {% elif message.message == 'email_exists' %}
-            <div class="error">
-              <strong>E-postadressen du valgte er allerede i bruk!</strong><br>
-              Er du sikker på at du skrev rett adresse? Det finnes allerede noen andre som bruker adressen du prøvde å registrere.
-            </div>
           {% elif message.message == 'invalid_email' %}
             <div class="error">
               <strong>E-postadressen din er ikke gyldig!</strong><br>

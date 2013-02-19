@@ -48,11 +48,6 @@
                 Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din nye e-postadresse.<br>
                 Hvis du har glemt passordet, klikk på "Glemt passord"-lenken under.
               </div>
-            {% elif message.message == 'old_memberid_but_email_exists' %}
-              <div class="alert alert-error">
-                <strong>E-postadressen er allerede i bruk</strong><br>
-                Vi fant din gamle Min side-bruker, men når vi prøvde å flytte deg over til nye Min side, så vi at det allerede finnes en bruker med samme e-postadresse. Den brukeren har imidlertid ikke samme medlemsnummer, så er du sikker på at du har angitt rett e-postadresse?
-              </div>
             {% endif %}
           {% endfor %}
 

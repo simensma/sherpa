@@ -132,11 +132,6 @@
                   <strong>Du har allerede en Min Side-bruker!</strong><br>
                   Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
                 </div>
-              {% elif message.message == 'email_exists' %}
-                <div class="error">
-                  <strong>E-postadressen din er allerede i bruk!</strong><br>
-                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
-                </div>
               {% elif message.message == 'invalid_email' %}
                 <div class="error">
                   <strong>E-postadressen din er ikke gyldig!</strong><br>

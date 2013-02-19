@@ -119,10 +119,6 @@ def update_account(request):
                     messages.error(request, 'invalid_zipcode')
                     errors = True
 
-            if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
-                messages.error(request, 'duplicate_email_address')
-                errors = True
-
             if errors:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
 
@@ -199,12 +195,6 @@ def register_membership(request):
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.views.register_membership'))
-
-            # Check that the email address isn't in use
-            if User.objects.filter(username=username(chosen_email)).exclude(id=request.user.id).exists():
-                # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
-                messages.error(request, 'email_exists')
                 return HttpResponseRedirect(reverse('user.views.register_membership'))
 
             # Store focus-user and remove sherpa-stored data

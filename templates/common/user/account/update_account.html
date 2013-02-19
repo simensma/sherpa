@@ -51,11 +51,6 @@
             <div class="hint error">
               <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
             </div>
-          {% elif message.message == 'duplicate_email_address' %}
-            <div class="hint error">
-              <strong>E-postadressen er allerede i bruk!</strong><br>
-              Er du sikker på at det ikke finnes en <strong>annen</strong> bruker som har denne e-postadressen?
-            </div>
           {% elif message.message == 'password_too_short' %}
             <div class="hint error">
               <strong>Du må fylle inn et passord på minst {{ user_password_length }} tegn.</strong>

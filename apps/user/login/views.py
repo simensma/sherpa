@@ -60,10 +60,6 @@ def login(request):
                     messages.error(request, 'old_memberid_but_memberid_exists')
                     return render(request, 'common/user/login/login.html')
 
-                if User.objects.filter(username=username(request.POST['email'])):
-                    messages.error(request, 'old_memberid_but_email_exists')
-                    return render(request, 'common/user/login/login.html')
-
                 # Create the new user
                 user = User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
@@ -149,12 +145,6 @@ def register(request):
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
-
-            # Check that the email address isn't in use
-            if User.objects.filter(username=username(request.POST['email'])).exists():
-                # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
-                messages.error(request, 'email_exists')
                 return HttpResponseRedirect(reverse('user.login.views.register'))
 
             actor.email = request.POST['email']
