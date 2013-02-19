@@ -61,7 +61,7 @@ def login(request):
                     return render(request, 'common/user/login/login.html')
 
                 # Create the new user
-                user = User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
+                user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
 
@@ -149,7 +149,7 @@ def register(request):
 
             actor.email = request.POST['email']
             actor.save()
-            user = User.objects.create_user(username(actor.email), password=request.POST['password'])
+            user = User.objects.create_user(actor.memberid, password=request.POST['password'])
             profile = Profile(user=user, memberid=actor.memberid)
             profile.save()
             log_user_in(request, authenticate(username=user.username, password=request.POST['password']))

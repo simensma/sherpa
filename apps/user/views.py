@@ -122,9 +122,6 @@ def update_account(request):
             if errors:
                 return HttpResponseRedirect(reverse('user.views.update_account'))
 
-            request.user.username = username(request.POST['email'])
-            request.user.save()
-
             if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
                 profile = request.user.get_profile()
                 profile.sherpa_email = request.POST['sherpa-email']
@@ -205,7 +202,7 @@ def register_membership(request):
             actor.email = chosen_email
             actor.save()
 
-            request.user.username = username(chosen_email)
+            request.user.username = request.POST['memberid']
             request.user.first_name = ''
             request.user.last_name = ''
             request.user.email = ''
