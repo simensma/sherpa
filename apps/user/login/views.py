@@ -15,7 +15,7 @@ import json, re
 
 from user.models import Profile
 from focus.models import Actor
-from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
+from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
 from core import validator
 from sherpa25.models import import_fjelltreffen_annonser
 
@@ -23,20 +23,39 @@ EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
 
 def login(request):
+    if 'authenticated_profiles' in request.session:
+        del request.session['authenticated_profiles']
+
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
         context = {'next': request.GET.get('next')}
         return render(request, 'common/user/login/login.html', context)
+
     elif request.method == 'POST':
-        user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
-        if user is not None:
+        matches = authenticate_users(request.POST['email'], request.POST['password'])
+
+        if len(matches) == 1:
+            # Exactly one match, cool, just authenticate the user
+            user = authenticate(user=matches[0].user)
             log_user_in(request, user)
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
-        else:
+
+        elif len(matches) > 1:
+            # Multiple matches, offer a choice between all matches
+            request.session['authenticated_profiles'] = [p.id for p in matches]
+            if 'next' in request.GET:
+                return HttpResponseRedirect("%s?next=%s" %
+                    (reverse('user.login.views.choose_authenticated_user'), request.GET['next']))
+            else:
+                return HttpResponseRedirect(reverse('user.login.views.choose_authenticated_user'))
+
+        elif len(matches) == 0:
+            # Incorrect credentials. Check if this is a user from the old userpage system
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
             if old_member is not None:
+                # Actually, it is! Let's try to import them.
                 if Profile.objects.filter(memberid=old_member.memberid).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
                     return render(request, 'common/user/login/login.html')
@@ -45,9 +64,8 @@ def login(request):
                     messages.error(request, 'old_memberid_but_email_exists')
                     return render(request, 'common/user/login/login.html')
 
-                # Authenticated old user, create a new one
-                User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
-                user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
+                # Create the new user
+                user = User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
 
@@ -59,12 +77,45 @@ def login(request):
                 # Import any fjelltreffen-annonser from the old system
                 import_fjelltreffen_annonser(user.get_profile())
 
+                authenticate(user=user)
                 log_user_in(request, user)
                 return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+
             else:
+                # No luck, just provide the error message
                 messages.error(request, 'invalid_credentials')
                 context = {'next': request.GET.get('next')}
                 return render(request, 'common/user/login/login.html', context)
+
+def choose_authenticated_user(request):
+    if not 'authenticated_profiles' in request.session:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    profiles = Profile.objects.filter(id__in=request.session['authenticated_profiles'])
+    context = {
+        'profiles': sorted(profiles, key=lambda p: p.get_first_name()),
+        'next': request.GET.get('next')}
+    return render(request, 'common/user/login/choose_authenticated_user.html', context)
+
+def login_chosen_user(request):
+    if not 'authenticated_profiles' in request.session:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    if not 'profile' in request.POST:
+        del request.session['authenticated_profiles']
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    # Verify that the user authenticated for this user
+    if not int(request.POST['profile']) in request.session['authenticated_profiles']:
+        del request.session['authenticated_profiles']
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    # All is swell, log the user in
+    profile = Profile.objects.get(id=request.POST['profile'])
+    user = authenticate(user=profile.user)
+    log_user_in(request, user)
+    del request.session['authenticated_profiles']
+    return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
 
 def logout(request):
     log_user_out(request)

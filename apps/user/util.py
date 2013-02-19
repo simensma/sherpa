@@ -1,4 +1,5 @@
 # encoding: utf-8
+from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.conf import settings
 
@@ -6,6 +7,8 @@ import md5
 import hashlib
 
 from sherpa25.models import Member
+from user.models import Profile
+from focus.models import Actor
 
 # This returns a username value based on the email address.
 # Define it as the first 30 hex-characters of the MD5 hash of the stripped, lowercase email.
@@ -32,6 +35,26 @@ def memberid_lookups_exceeded(ip_address):
         else:
             return True
     return False
+
+# Yup, this is a 'util' method instead of a proper authentication backend.
+# The reason for this is that as our membersystem allows duplicate email fields, a user can
+# potentially authenticate herself for multiple accounts, and the Django auth backend system
+# doesn't account for that (it returns exactly one user, or None).
+def authenticate_users(email, password):
+    # First add matching local users that aren't members
+    matches = [u.get_profile() for u in User.objects.filter(email=email) if u.check_password(password)]
+
+    # Then add matching members in Focus that have local accounts
+    # This large local-members lookup might become slow when the DB grows
+    local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
+    focus_candidates = Actor.objects.filter(memberid__in=local_members, email=email)
+    for a in focus_candidates:
+        p = Profile.objects.get(memberid=a.memberid)
+        if p.user.check_password(password):
+            matches.append(p)
+
+    # And just return these matches
+    return matches
 
 def authenticate_sherpa2_user(email, password):
     sha1 = hashlib.sha1()

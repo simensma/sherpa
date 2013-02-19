@@ -70,6 +70,7 @@ USE_L10N = True
 STATIC_URL = '/static/'
 
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
+AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
