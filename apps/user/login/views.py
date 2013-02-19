@@ -256,7 +256,7 @@ def send_restore_password_email(request):
     profile.password_restore_key = key
     profile.password_restore_date = datetime.now()
     profile.save()
-    t = loader.get_template('common/user/login/restore-password-email.html')
+    t = loader.get_template('common/user/login/restore-password-email.txt')
     c = RequestContext(request, {
        'found_user': profile.user,
        'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
