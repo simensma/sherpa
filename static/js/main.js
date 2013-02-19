@@ -42,4 +42,4 @@ var MobileMenu = function(control, mainMenu, widgetMenu, search) {
         self.widgetMenu.slideUp('slow');
         self.search.slideToggle('slow');
     });
-}
+};
