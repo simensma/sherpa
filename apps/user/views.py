@@ -172,7 +172,7 @@ def register_membership(request):
     if request.method == 'GET':
         context = {'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
         return render(request, 'common/user/account/register_membership.html', context)
-    else:
+    elif request.method == 'POST':
         try:
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
