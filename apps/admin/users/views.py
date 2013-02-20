@@ -3,18 +3,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.context_processors import PermWrapper
-from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
-import re
-
 from association.models import Association
-from user.models import Profile, AssociationRole
-from user.views import username
+from user.models import AssociationRole
 
 def index(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
