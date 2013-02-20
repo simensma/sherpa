@@ -15,6 +15,7 @@ from core.models import Zipcode
 from focus.models import Actor
 
 from user.util import username, memberid_lookups_exceeded
+from sherpa.decorators import user_requires
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -205,6 +206,11 @@ def register_membership(request):
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.register_membership'))
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def reservations(request):
+    return render(request, 'common/user/account/reservations.html')
 
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!

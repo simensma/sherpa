@@ -1,0 +1,47 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Reservasjoner — Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em>Reservasjoner</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Medlemsfordeler fra DNTs samarbeidspartnere</h2>
+
+    <p>
+      Flere av våre samarbeidspartnere tilbyr gode medlemsfordeler til DNTs medlemmer. Vi jobber stadig for å skaffe enda bedre tilbud til deg som medlem. For at du skal få maksimal utbytte av disse medlemsfordelene, kan det være aktuelt for noen av våre samarbeidspartnere å ta kontakt med deg via telefon, e-post eller vanlig post.
+    </p>
+
+    <p>
+      Ja, jeg ønsker å motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere<br>
+      Nei, jeg vil reservere meg mot medlemsfordeler fra DNTs samarbeidspartnere
+    </p>
+
+    <h2>Hvordan ønsker du å lese Fjell og Vidde og årboken?</h2>
+
+    <p>
+      Her kan du velge å lese Fjell og Vidde og årboken på nett i stedet for å få det tilsendt.
+    </p>
+
+
+    <h3>Fjell og Vidde:</h3>
+
+    <p>
+      Jeg ønsker ikke Fjell og Vidde tilsendt, men leser det på nett<br>
+      Jeg ønsker Fjell og Vidde tilsendt hjem til meg
+    </p>
+
+    <h3>Årbok:</h3>
+
+    <p>
+      Jeg ønsker ikke årboken tilsendt, men leser den på nett<br>
+      Jeg ønsker årboken tilsendt hjem til meg
+    </p>
+  </div>
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='reservations' %}
+  </div>
+</div>
+
+{% endblock %}
