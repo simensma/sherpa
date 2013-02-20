@@ -37,15 +37,21 @@ def show(request, user):
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
-    local_profiles = Profile.objects.filter(
-        Q(user__first_name__icontains=request.POST['q']) |
-        Q(user__last_name__icontains=request.POST['q'])
-        ).order_by('user__first_name')
-    actors = Actor.objects.filter(
-        Q(first_name__icontains=request.POST['q']) |
-        Q(last_name__icontains=request.POST['q']) |
-        Q(memberid__icontains=request.POST['q'])
-        ).order_by('first_name')
+    local_profiles = Profile.objects.all()
+    for word in request.POST['q'].split():
+        local_profiles = local_profiles.filter(
+            Q(user__first_name__icontains=word) |
+            Q(user__last_name__icontains=word))
+    local_profiles = local_profiles.order_by('user__first_name')
+
+    actors = Actor.objects.all()
+    for word in request.POST['q'].split():
+        actors = actors.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word))
+    actors = actors.order_by('first_name')
+
     profiles = list(local_profiles) + list(Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True))))
     context = RequestContext(request, {'profiles': profiles})
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
