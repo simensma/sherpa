@@ -2,6 +2,16 @@
   <tr class="result">
     <td><a href="{% url admin.users.views.show profile.user.id %}">{{ profile.get_full_name }}</a></td>
     <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
+    <td>Ja</td>
     <td>{% if profile.perms.user.sherpa %}Ja{% else %}Nei{% endif %}</td>
+  </tr>
+{% endfor %}
+
+{% for actor in actors_without_profile %}
+  <tr class="result">
+    <td>{{ actor.get_full_name }}</td>
+    <td>{{ actor.memberid }}</td>
+    <td>Nei</td>
+    <td>Nei</td>
   </tr>
 {% endfor %}
