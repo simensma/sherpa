@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.cache import cache
+from django.contrib.auth.context_processors import PermWrapper
 
 from focus.models import Actor
 
@@ -12,6 +13,10 @@ class Profile(models.Model):
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
     memberid = models.IntegerField(null=True, unique=True)
     sherpa_email = models.EmailField()
+
+    # Shortcut for templates to get any user perms via Profile
+    def perms(self):
+        return PermWrapper(self.user)
 
     ### Focus-related ###
 
