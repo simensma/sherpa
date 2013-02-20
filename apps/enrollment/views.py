@@ -519,16 +519,14 @@ def payment(request):
     # Infer order details based on (poor) conventions.
     if main is not None:
         order_number = 'I_%s' % main['id']
-        first_name = main['name'].split(' ')[0]
-        last_name = main['name'].split(' ')[1:]
+        first_name, last_name = main['name'].rsplit(' ', 1)
         email = main['email']
     else:
         found = False
         for user in request.session['enrollment']['users']:
             if user['age'] >= AGE_YOUTH:
                 order_number = 'I_%s' % user['id']
-                first_name = user['name'].split(' ')[0]
-                last_name = user['name'].split(' ')[1:]
+                first_name, last_name = user['name'].rsplit(' ', 1)
                 email = user['email']
                 found = True
                 break
@@ -537,8 +535,7 @@ def payment(request):
             for user in request.session['enrollment']['users']:
                 order_number += '_%s' % user['id']
             # Just use the name of the first user.
-            first_name = request.session['enrollment']['users'][0]['name'].split(' ')[0]
-            last_name = request.session['enrollment']['users'][0]['name'].split(' ')[1:]
+            first_name, last_name = request.session['enrollment']['users'][0]['name'].rsplit(' ', 1)
             email = request.session['enrollment']['users'][0]['email']
 
     context = Context({'year': year, 'next_year': next_year})
@@ -957,8 +954,7 @@ def polite_title(str):
         return str
 
 def add_focus_user(name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
-    first_name = ' '.join(name.split(' ')[:-1])
-    last_name = name.split(' ')[-1]
+    first_name, last_name = name.rsplit(' ', 1)
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to is not None)

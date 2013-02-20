@@ -68,13 +68,9 @@ def update_account(request):
                 profile.sherpa_email = request.POST['sherpa-email']
                 profile.save()
 
-            split = request.POST['name'].split(' ')
-            first_name = split[0]
-            last_name = ' '.join(split[1:])
             request.user.username = username(request.POST['email'])
             request.user.email = request.POST['email']
-            request.user.first_name = first_name
-            request.user.last_name = last_name
+            request.user.first_name, request.user.last_name = request.POST['name'].rsplit(' ', 1)
             request.user.save()
             messages.info(request, 'update_success')
             return HttpResponseRedirect(reverse('user.views.account'))
@@ -128,10 +124,7 @@ def update_account(request):
                 profile.save()
 
             actor = request.user.get_profile().get_actor()
-            name_split = request.POST['name'].split(' ')
-
-            actor.first_name = name_split[0]
-            actor.last_name = ' '.join(name_split[1:])
+            actor.first_name, actor.last_name = request.POST['name'].rsplit(' ', 1)
             actor.email = request.POST['email']
             actor.phone_home = request.POST['phone_home']
             actor.phone_mobile = request.POST['phone_mobile']

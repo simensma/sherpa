@@ -210,8 +210,7 @@ def register_nonmember(request):
             username(request.POST['email']),
             email=request.POST['email'],
             password=request.POST['password'])
-        user.first_name = ' '.join(request.POST['name'].split(' ')[:-1])
-        user.last_name = request.POST['name'].split(' ')[-1]
+        user.first_name, user.last_name = request.POST['name'].rsplit(' ', 1)
         user.save()
         profile = Profile(user=user)
         profile.save()
