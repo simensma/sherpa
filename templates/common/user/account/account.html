@@ -156,7 +156,7 @@
         </tr>
         <tr>
           <th>Medlemstype</th>
-          <td>{{ user.get_profile.get_actor.membership_type }}</td>
+          <td>{{ user.get_profile.get_actor.membership_type.name }}</td>
         </tr>
         {% if user.get_profile.get_actor.get_parent %}
           <tr>

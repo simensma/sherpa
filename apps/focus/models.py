@@ -155,7 +155,18 @@ class Actor(models.Model):
 
     def membership_type(self):
         # Supposedly, there should only be one service in this range
-        return self.membership_type_name(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+        code = self.get_services().get(code__gt=100, code__lt=110).code.strip()
+        # This list should be moved to some kind of "Focus utility" module and
+        # merged with the functionality currently found in enrollment/views
+        if   code == u'101': return {'code': code, 'name': u'Hovedmedlem'}
+        elif code == u'102': return {'code': code, 'name': u'Ungdomsmedlem'}
+        elif code == u'103': return {'code': code, 'name': u'Honnørmedlem'}
+        elif code == u'104': return {'code': code, 'name': u'Livsvarig medlem'}
+        elif code == u'105': return {'code': code, 'name': u'Barnemedlem'}
+        elif code == u'106': return {'code': code, 'name': u'Skoleungdomsmedlem'}
+        elif code == u'107': return {'code': code, 'name': u'Husstandsmedlem'}
+        elif code == u'108': return {'code': code, 'name': u'Husstandsmedlem'}
+        elif code == u'109': return {'code': code, 'name': u'Livsvarig husstandsmedlem'}
 
     def get_services(self):
         services = cache.get('actor.services.%s' % self.memberid)
@@ -177,19 +188,6 @@ class Actor(models.Model):
             return 'efaktura'
         else:
             return ''
-
-    def membership_type_name(self, code):
-        # Should be moved to some kind of "Focus utility" module and merged with the
-        # functionality currently found in enrollment/views
-        if   code == u'101': return u'Hovedmedlem'
-        elif code == u'102': return u'Ungdomsmedlem'
-        elif code == u'103': return u'Honnørmedlem'
-        elif code == u'104': return u'Livsvarig medlem'
-        elif code == u'105': return u'Barnemedlem'
-        elif code == u'106': return u'Skoleungdomsmedlem'
-        elif code == u'107': return u'Husstandsmedlem'
-        elif code == u'108': return u'Husstandsmedlem'
-        elif code == u'109': return u'Livsvarig husstandsmedlem'
 
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
