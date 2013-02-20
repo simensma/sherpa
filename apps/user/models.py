@@ -57,16 +57,21 @@ class Profile(models.Model):
 
     # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
+        # If role is set, we only want the associations we have that role for, not any other ones.
         from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):
             if not role or role == 'admin':
+                # Sherpa admins are admins on all associations
                 return Association.objects.all()
             else:
+                # Sherpa admins are not any other role than admin on any associations
                 return Association.objects.none()
         else:
             if role:
+                # Filter on the role we're looking for
                 return self.associations.filter(associationrole__role=role)
             else:
+                # No specific role, return all our connected associations
                 return self.associations.all()
 
     class Meta:
