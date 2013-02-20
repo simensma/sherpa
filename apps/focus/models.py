@@ -267,9 +267,9 @@ class Actor(models.Model):
     def set_reserved_against_yearbook(self, reserved):
         service = self.get_services().get(code__in=YEARBOOK_SERVICE_CODES)
         if reserved:
-            note = u'Ønsker ikke tilsendt Årbok (aktivert gjennom Min Side).'
+            note = u'Ønsker ikke tilsendt årbok (aktivert gjennom Min Side).'
         else:
-            note = u'Ønsker tilsendt Årbok(aktivert gjennom Min Side).'
+            note = u'Ønsker tilsendt årbok(aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
 
     def set_service_status(self, service, enable, note=None):
