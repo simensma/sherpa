@@ -16,6 +16,11 @@ ACTOR_ENDCODE_DUBLETT = 21
 FJELLOGVIDDE_SERVICE_CODE = 151
 YEARBOOK_SERVICE_CODES = [152, 153, 154]
 
+# Merge these mappings with the same functionality in enrollment.views :/
+# And also Actor.membership_type() down below
+MEMBERSHIP_CODE_HOUSEHOLD = u'107'
+MEMBERSHIP_CODE_LIFELONG = u'109'
+
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
     member_id = models.IntegerField(db_column=u'memberID', primary_key=True)

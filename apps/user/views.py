@@ -17,6 +17,7 @@ from focus.models import Actor
 
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
+from focus.models import MEMBERSHIP_CODE_HOUSEHOLD, MEMBERSHIP_CODE_LIFELONG
 
 def home(request):
     return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
@@ -211,7 +212,10 @@ def register_membership(request):
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def reservations(request):
-    return render(request, 'common/user/account/reservations.html')
+    context = {
+        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
+        'membership_code_yearbook': MEMBERSHIP_CODE_LIFELONG}
+    return render(request, 'common/user/account/reservations.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
@@ -223,6 +227,8 @@ def reserve_sponsors(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
 def reserve_fjellogvidde(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
@@ -231,6 +237,8 @@ def reserve_fjellogvidde(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
 def reserve_yearbook(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
