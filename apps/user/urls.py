@@ -10,5 +10,6 @@ urlpatterns = patterns('user.views',
     url(r'^registrer-medlemskap/$', 'register_membership'),
     url(r'^reservasjoner/$', 'reservations'),
     url(r'^reservasjon-mot-sponsorinfo/$', 'reserve_sponsors'),
+    url(r'^reservasjon-mot-fjell-og-vidde/$', 'reserve_fjellogvidde'),
     url(r'', include('user.login.urls')),
 )

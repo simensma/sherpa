@@ -13,6 +13,8 @@ from core.models import County, FocusCountry
 # Actor endcodes - not really properly documented yet, to resolve codes/reasons consult Focus.
 ACTOR_ENDCODE_DUBLETT = 21
 
+FJELLOGVIDDE_SERVICE_CODE = 151
+
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
     member_id = models.IntegerField(db_column=u'memberID', primary_key=True)
@@ -46,6 +48,7 @@ class Enrollment(models.Model):
     submitted_by = models.CharField(db_column=u'SubmittedBy', max_length=255, null=True, default=None)
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
+
     class Meta:
         db_table = u'CustTurist_members'
 
@@ -244,6 +247,27 @@ class Actor(models.Model):
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 
+    def get_reserved_against_fjellogvidde(self):
+        return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is not None
+
+    def set_reserved_against_fjellogvidde(self, reserved):
+        service = self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE)
+        if reserved:
+            service.stop_date = datetime.now()
+            service.save()
+            note = u'Ønsker ikke Fjell og Vidde (aktivert gjennom Min Side).'
+        else:
+            service.stop_date = None
+            service.save()
+            note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
+        text = ActorText(
+            actor=self,
+            memberid=self.memberid,
+            text=note,
+            created_by=self.memberid,
+            created_date=datetime.now())
+        text.save()
+
     class Meta:
         db_table = u'Actor'
 
@@ -255,13 +279,15 @@ class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
     actor = models.ForeignKey(Actor, related_name='services', db_column=u'ActSeqNo')
     memberid = models.IntegerField(null=True, db_column=u'ActNo')
+
     code = models.CharField(max_length=25, db_column=u'ArticleNo')
+    start_date = models.DateTimeField(null=True, db_column=u'StartDt')
+    end_date = models.DateTimeField(null=True, db_column=u'EndDt')
+    stop_date = models.DateTimeField(null=True, db_column=u'StopDt')
+
     actpayno = models.IntegerField(null=True, db_column=u'ActPayNo')
     invoicetype = models.IntegerField(null=True, db_column=u'InvType')
     invprinttype = models.IntegerField(null=True, db_column=u'InvPrintType')
-    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
-    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
-    stopdt = models.DateTimeField(null=True, db_column=u'StopDt')
     newstartdt = models.DateTimeField(null=True, db_column=u'NewStartDt')
     previousinvoicedt = models.DateTimeField(null=True, db_column=u'PreviousInvoiceDt')
     invoicefreq = models.IntegerField(null=True, db_column=u'InvoiceFreq')
@@ -275,6 +301,7 @@ class ActorService(models.Model):
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     invdate = models.DateTimeField(null=True, db_column=u'InvDate')
+
     class Meta:
         db_table = u'ActService'
 
@@ -295,11 +322,29 @@ class ActorAddress(models.Model):
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     crby = models.CharField(max_length=50, db_column=u'CrBy')
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
+
     class Meta:
         db_table = u'ActAd'
 
     def get_country(self):
         return FocusCountry.objects.get(code=self.country)
+
+class ActorText(models.Model):
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor = models.ForeignKey(Actor, unique=True, related_name='text', db_column=u'ActSeqNo')
+    memberid = models.IntegerField(null=True, db_column=u'ActNo')
+
+    type = models.CharField(max_length=50, db_column=u'TxtType')
+    name = models.CharField(max_length=50, db_column=u'TxtNm')
+    text = models.TextField(db_column=u'Description')
+
+    created_by = models.CharField(max_length=25, db_column=u'CrBy')
+    created_date = models.DateTimeField(null=True, db_column=u'CrDt')
+    changed_by = models.CharField(max_length=25, db_column=u'ChBy')
+    changed_date = models.DateTimeField(null=True, db_column=u'ChDt')
+
+    class Meta:
+        db_table = u'ActText'
 
 # The Zipcode table connects zipcodes to counties and associations.
 class FocusZipcode(models.Model):

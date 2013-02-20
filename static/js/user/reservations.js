@@ -17,7 +17,7 @@ $(document).ready(function() {
     });
 
     table.find("input[type='radio']").change(setActive);
-    table.find("input[type='radio'][name='sponsors']").change(function() {
+    table.find("input[type='radio']").change(function() {
         var this_table = $(this).parents("table");
         this_table.find("tr.status").hide();
         this_table.find("tr.loading").show();
