@@ -10,7 +10,8 @@ from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
 from association.models import Association
-from user.models import AssociationRole
+from user.models import Profile, AssociationRole
+from focus.models import Actor
 
 def index(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
@@ -36,12 +37,17 @@ def show(request, user):
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
-    # Todo: Search for membernr.
-    users = User.objects.filter(
+    local_profiles = Profile.objects.filter(
+        Q(user__first_name__icontains=request.POST['q']) |
+        Q(user__last_name__icontains=request.POST['q'])
+        ).order_by('user__first_name')
+    actors = Actor.objects.filter(
         Q(first_name__icontains=request.POST['q']) |
-        Q(last_name__icontains=request.POST['q'])
+        Q(last_name__icontains=request.POST['q']) |
+        Q(memberid__icontains=request.POST['q'])
         ).order_by('first_name')
-    context = RequestContext(request, {'users': users})
+    profiles = list(local_profiles) + list(Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True))))
+    context = RequestContext(request, {'profiles': profiles})
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
