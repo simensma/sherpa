@@ -49,3 +49,32 @@ form.restore-password div.password-hint {
   font-family: "DTL Nobel" !important;
   color: @profile-red;
 }
+
+/* Reservations */
+
+table.user-reservations {
+  td {
+    padding: 3px 5px;
+    vertical-align: middle;
+    font-family: "DTL Nobel" !important;
+    color: rgb(100, 100, 100);
+  }
+
+  tr.choice td:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  tr.active td {
+    color: @profile-red;
+  }
+
+  tr.loading td {
+    padding-top: 20px;
+    text-align: center;
+  }
+
+  tr.success td {
+    color: rgb(60, 180, 60);
+  }
+}

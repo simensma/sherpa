@@ -73,6 +73,9 @@ class Actor(models.Model):
     end_date = models.DateTimeField(null=True, db_column=u'EndDt')
     end_code = models.CharField(max_length=5, db_column=u'EndCd')
 
+    # Other relevant stuff
+    reserved_against_partneroffers = models.BooleanField(db_column=u'OptBit3')
+
     orgno = models.CharField(max_length=50, db_column=u'OrgNo')
     fax = models.CharField(max_length=50, db_column=u'Fax')
     web = models.CharField(max_length=250, db_column=u'Web')
@@ -105,7 +108,6 @@ class Actor(models.Model):
     optchar9 = models.CharField(max_length=10, db_column=u'OptChar9')
     optbit1 = models.BooleanField(db_column=u'OptBit1')
     optbit2 = models.BooleanField(db_column=u'OptBit2')
-    optbit3 = models.BooleanField(db_column=u'OptBit3')
     optbit4 = models.BooleanField(db_column=u'OptBit4')
     optbit5 = models.BooleanField(db_column=u'OptBit5')
     optbit6 = models.BooleanField(db_column=u'OptBit6')

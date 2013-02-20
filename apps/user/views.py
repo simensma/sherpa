@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.cache import cache
 
 from datetime import datetime
+import json
 
 from user.models import Profile
 from core import validator
@@ -211,6 +212,14 @@ def register_membership(request):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def reservations(request):
     return render(request, 'common/user/account/reservations.html')
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def reserve_sponsors(request):
+    actor = request.user.get_profile().get_actor()
+    actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
+    actor.save()
+    return HttpResponse()
 
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!
