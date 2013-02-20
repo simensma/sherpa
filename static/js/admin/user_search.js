@@ -26,7 +26,7 @@ $(document).ready(function() {
                 url: '/sherpa/brukere/søk/',
                 data: { q: query }
             }).done(function(result) {
-                if(result.trim() == '') {
+                if(result.trim() === '') {
                     result_mirror.text(query);
                     no_hits.show();
                 } else {
