@@ -14,6 +14,7 @@ from core.models import County, FocusCountry
 ACTOR_ENDCODE_DUBLETT = 21
 
 FJELLOGVIDDE_SERVICE_CODE = 151
+YEARBOOK_SERVICE_CODES = [152, 153, 154]
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -253,20 +254,39 @@ class Actor(models.Model):
     def set_reserved_against_fjellogvidde(self, reserved):
         service = self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE)
         if reserved:
-            service.stop_date = datetime.now()
-            service.save()
             note = u'Ønsker ikke Fjell og Vidde (aktivert gjennom Min Side).'
         else:
+            note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
+        self.set_service_status(service, not reserved, note)
+
+    # Note: Assuming that all Actors only have ONE of the yearbook services.
+    # This might be incorrect, Focus never fails to surprise.
+    def get_reserved_against_yearbook(self):
+        return self.get_services().get(code__in=YEARBOOK_SERVICE_CODES).stop_date is not None
+
+    def set_reserved_against_yearbook(self, reserved):
+        service = self.get_services().get(code__in=YEARBOOK_SERVICE_CODES)
+        if reserved:
+            note = u'Ønsker ikke tilsendt Årbok (aktivert gjennom Min Side).'
+        else:
+            note = u'Ønsker tilsendt Årbok(aktivert gjennom Min Side).'
+        self.set_service_status(service, not reserved, note)
+
+    def set_service_status(self, service, enable, note=None):
+        if enable:
             service.stop_date = None
             service.save()
-            note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
-        text = ActorText(
-            actor=self,
-            memberid=self.memberid,
-            text=note,
-            created_by=self.memberid,
-            created_date=datetime.now())
-        text.save()
+        else:
+            service.stop_date = datetime.now()
+            service.save()
+        if note is not None:
+            text = ActorText(
+                actor=self,
+                memberid=self.memberid,
+                text=note,
+                created_by=self.memberid,
+                created_date=datetime.now())
+            text.save()
 
     class Meta:
         db_table = u'Actor'

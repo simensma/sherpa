@@ -107,6 +107,47 @@
           </td>
         </tr>
       </table>
+
+      <h3>Årboken</h3>
+      <table class="user-reservations yearbook" data-url="{% url user.views.reserve_yearbook %}">
+        <tr class="choice">
+          <td>
+            <input type="radio" name="yearbook" value="allow"{% if not user.get_profile.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker årboken tilsendt hjem til meg
+          </td>
+        </tr>
+        <tr class="choice">
+          <td>
+            <input type="radio" name="yearbook" value="reserve"{% if user.get_profile.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker ikke årboken tilsendt, men leser den på nett
+          </td>
+        </tr>
+
+        <tr class="status loading hide">
+          <td colspan="2">
+            Lagrer ditt valg, vennligst vent...<br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="status success hide">
+          <td colspan="2">
+            Oppdateringen er registrert.
+            <span class="success reserve">Du vil nå <strong>ikke</strong> motta årboken.</span>
+            <span class="success allow">Du vil nå motta årboken.</span>
+          </td>
+        </tr>
+        <tr class="status error hide">
+          <td colspan="2">
+            <div class="alert alert-error">
+              Oppdateringen feilet! Vennligst prøv igjen om et par minutter, eller ring medlemsservice hvis problemet vedvarer.
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
   <div class="span3">

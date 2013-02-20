@@ -229,6 +229,14 @@ def reserve_fjellogvidde(request):
     actor.save()
     return HttpResponse()
 
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def reserve_yearbook(request):
+    actor = request.user.get_profile().get_actor()
+    actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
+    actor.save()
+    return HttpResponse()
+
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!
 # Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
