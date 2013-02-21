@@ -66,3 +66,14 @@ class Album(models.Model):
 def delete_album(sender, **kwargs):
     Album.objects.filter(parent=kwargs['instance']).delete()
     Image.objects.filter(album=kwargs['instance']).delete()
+
+class Publication(models.Model):
+    association = models.ForeignKey('association.Association')
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=1023)
+    pub_date = models.DateTimeField()
+    LICENSE_CHOICES = (
+        ('all_rights_reserved', 'Alle rettigheter reservert'),
+        ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
+    license = models.CharField(max_length=255, choices=LICENSE_CHOICES)
+    tags = models.ManyToManyField('core.Tag', related_name='publications')
