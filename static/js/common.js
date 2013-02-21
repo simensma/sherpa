@@ -60,6 +60,9 @@ $(document).ready(function() {
         window.location = $(this).attr('data-href');
     });
 
+    /* Enable self-declared chosen selects */
+    $("select[data-chosen]").chosen();
+
 });
 
 $.fn.enableDialog = function() {
