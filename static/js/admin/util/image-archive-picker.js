@@ -16,8 +16,7 @@ $(document).ready(function() {
 
     $("div.image-archive-picker button.image-search").click(doSearch);
     $("div.image-archive-picker input[name='search']").keydown(function(e) {
-        if(e.which == 13) {
-            // 13 is the Enter key
+        if(e.which == 13) { // Enter
             doSearch();
         }
     });
