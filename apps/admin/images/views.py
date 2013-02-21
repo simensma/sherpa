@@ -405,7 +405,7 @@ def store_image(image, album, user):
         obj, created = Tag.objects.get_or_create(name=tag)
         image.tags.add(obj)
 
-    return {'url':url, 'id':image.id};
+    return {'url':url, 'id':image.id}
 
 def parse_image(file):
     key = generate_random_image_key()
