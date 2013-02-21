@@ -1,0 +1,13 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <p>Publikasjoner</p>
+  </div>
+</div>
+
+{% endblock %}

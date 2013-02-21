@@ -12,4 +12,5 @@ urlpatterns = patterns('admin.views',
     url(r'^cache/', include('admin.cache.urls')),
     url(r'^innmelding/', include('admin.enrollment.urls')),
     url(r'^medlemsnummer-sms/', include('admin.memberid_sms.urls')),
+    url(r'^publikasjoner/', include('admin.publications.urls')),
 )
