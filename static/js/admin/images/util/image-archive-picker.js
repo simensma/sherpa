@@ -23,18 +23,6 @@ $(document).ready(function() {
             search(query);
         }
     }
-
-    $("div.image-details input[name='photographer']").typeahead({
-        minLength: 3,
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: '/sherpa/bildearkiv/fotograf/',
-                data: { name: query }
-            }).done(function(result) {
-                process(JSON.parse(result));
-            });
-        }
-    });
 });
 
 function chooseImagefromArchive(callback){

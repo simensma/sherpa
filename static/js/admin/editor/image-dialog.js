@@ -125,6 +125,18 @@
         imageDialog.find("input[name='ratio']").change(function() {
             setImageRatio(true);
         });
+
+        imageDialog.find("div.image-details input[name='photographer']").typeahead({
+            minLength: 3,
+            source: function(query, process) {
+                $.ajaxQueue({
+                    url: '/sherpa/bildearkiv/fotograf/',
+                    data: { name: query }
+                }).done(function(result) {
+                    process(JSON.parse(result));
+                });
+            }
+        });
     });
 
     ImageDialog.openImageDialog = function(opts) {
