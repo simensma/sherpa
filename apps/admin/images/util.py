@@ -48,7 +48,8 @@ def search_dialog(request):
         'albums': objects['albums'],
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
-        'list_status': 'search'
+        'list_status': 'search',
+        'search_query': request.POST['query']
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 

@@ -62,12 +62,14 @@
 </ul>
 
 {% if albums|length == 0 and images|length == 0 %}
-  <div class="alert alert-info span4">
+  <div class="alert alert-info">
     <a class="close">x</a>
     {% if list_status == 'album' or list_status == 'root_album' %}
-      <strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.
+      <strong>Her var det tomt!</strong><br>
+      Det er ingen album eller bilder i dette albumet.
     {% elif list_status == 'search' %}
-      <strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-(
+      <strong>Beklager!</strong><br>
+      Det finnes dessverre ingen album eller bilder som inneholder noe med <strong>{{ search_query }}</strong>.
     {% endif %}
   </div>
 {% endif %}
