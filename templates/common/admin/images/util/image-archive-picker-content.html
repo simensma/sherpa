@@ -6,7 +6,7 @@
   {% endfor %}
 </div>
 
-<div id="contentlist">
+<div class="albums">
   {% for album in albums %}
     <div class="album">
       <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
@@ -17,7 +17,7 @@
   {% endfor %}
 </div>
 
-<ul id="images">
+<ul class="images">
   {% for image in images %}
     <li data-path="{{ image.key }}.{{ image.extension }}" data-description="{{ image.description }}" data-photographer="{{ image.photographer }}">
       <p>
