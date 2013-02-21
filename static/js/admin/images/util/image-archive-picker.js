@@ -3,7 +3,6 @@ var archiveCallback;
 $(document).ready(function() {
 
     showFolder('');
-    $("div.image-archive-picker div.too-few-chars").hide();
 
     $("div.image-archive-picker button.cancel-chooser").click(function() {
         $("div.image-archive-picker").modal('hide');
