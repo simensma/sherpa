@@ -37,22 +37,12 @@ def content_dialog(request):
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
 def search_dialog(request):
-    images = []
-    if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
-        # TODO: Should search (programmatically) for uploader name/email
-        # These might be in our DB or in Focus.
-        for word in request.POST['query'].split(' '):
-            images += Image.objects.filter(
-                Q(description__icontains=word) |
-                Q(album__name__icontains=word) |
-                Q(photographer__icontains=word) |
-                Q(credits__icontains=word) |
-                Q(licence__icontains=word) |
-                Q(exif__icontains=word) |
-                Q(tags__name__icontains=word)
-        )
-    objects = parse_objects([], [], images)
-
+    if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
+        albums = Album.objects.none()
+        images = Image.objects.none()
+    else:
+        albums, images = full_archive_search(request.POST['query'])
+    objects = parse_objects([], albums, images)
     context = RequestContext(request, {
         'parents': objects['parents'],
         'albums': objects['albums'],
