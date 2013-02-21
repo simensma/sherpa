@@ -1,7 +1,5 @@
-from django.core.urlresolvers import resolve
 from django.conf import settings
 from django.core.cache import cache
-from django.db.models import Q
 
 from page.models import Menu
 from association.models import Association
