@@ -2,12 +2,102 @@
 {% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/publications/edit.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
   <div class="span12">
 
+    {% for message in messages %}
+      {% if message.message == 'publication_info_saved' %}
+        <div class="alert alert-success">
+          <strong>Publikasjonen har blitt lagret.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <h2>{{ publication.title }}</h2>
+
+    <form action="{% url admin.publications.views.edit publication.id %}" method="post" class="form-default form-border form-horizontal edit-publication">
+      {% csrf_token %}
+
+      <div class="control-group title">
+        <label class="control-label" for="title">Navn:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="title" value="{{ publication.title }}">
+        </div>
+      </div>
+
+      <div class="control-group association">
+        <label class="control-label" for="association">Tilhører:</label>
+        <div class="controls">
+          <select name="association" data-chosen data-placeholder="Velg tilhørende forening...">
+            <option value=""></option>
+            {% if user.get_profile.all_associations_sorted.central|length > 0 %}
+              <optgroup label="Sentralt/nasjonalt">
+                {% for association in user.get_profile.all_associations_sorted.central %}
+                  <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.get_profile.all_associations_sorted.associations|length > 0 %}
+              <optgroup label="Medlemsforeninger">
+                {% for association in user.get_profile.all_associations_sorted.associations %}
+                  <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.get_profile.all_associations_sorted.small_associations|length > 0 %}
+              <optgroup label="Lokale turlag">
+                {% for association in user.get_profile.all_associations_sorted.small_associations %}
+                  <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
+              <optgroup label="Turgrupper">
+                {% for association in user.get_profile.all_associations_sorted.hike_groups %}
+                  <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group cover">
+        <label class="control-label" for="cover">Coverbilde:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="cover" value="{{ publication.cover }}">
+        </div>
+      </div>
+
+      <div class="control-group license">
+        <label class="control-label" for="license">Lisens:</label>
+        <div class="controls">
+          <label for="all_rights_reserved" class="radio">
+            <input type="radio" name="license" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' %} checked {% endif %}>
+            Alle rettigheter reservert
+          </label>
+          <label for="cc-by-nc-nd" class="radio">
+            <input type="radio" name="license" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked {% endif %}>
+            <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no">Creative Commons (CC BY-NC-ND 3.0)</a>
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i> Lagre publikasjonsinfo</button>
+        </div>
+      </div>
+    </form>
+
+    <h2>Utgivelser</h2>
+
 
   </div>
 </div>
