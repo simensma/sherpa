@@ -58,6 +58,10 @@
 {% if albums|length == 0 and images|length == 0 %}
   <div class="alert alert-info span4">
     <a class="close">x</a>
-    {{ no_results_message|safe }}
+    {% if list_status == 'album' %}
+      <strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.
+    {% elif list_status == 'search' %}
+      <strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-(
+    {% endif %}
   </div>
 {% endif %}
