@@ -23,7 +23,10 @@ $(document).ready(function() {
             var ajaxLoader = hideContent();
             $.ajax({
                 url: $("div.image-archive-picker").attr("data-search-url"),
-                data: { query: query }
+                data: {
+                    query: JSON.stringify(query),
+                    include_meta: JSON.stringify($("input[name='include_meta']:checked").length == 1)
+                }
             }).done(function(result) {
                 result = JSON.parse(result);
                 $("div.image-archive-picker div.content").append(result.html);
@@ -54,7 +57,10 @@ function showFolder(album) {
     var ajaxLoader = hideContent();
     $.ajax({
         url: $("div.image-archive-picker").attr("data-album-url"),
-        data: { album: album }
+        data: {
+            album: JSON.stringify(album),
+            include_meta: JSON.stringify($("input[name='include_meta']:checked").length == 1)
+        }
     }).done(function(result) {
         result = JSON.parse(result);
         $("div.image-archive-picker div.content").append(result.html);

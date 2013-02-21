@@ -18,7 +18,7 @@ from hashlib import sha1
 import simples3
 
 def content_dialog(request):
-    album = request.POST['album']
+    album = json.loads(request.POST['album'])
     if album == '':
         objects = parse_objects([], Album.objects.filter(parent=None).order_by('name'), [])
     else:
@@ -32,16 +32,18 @@ def content_dialog(request):
         'albums': objects['albums'],
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
-        'list_status': 'album' if album != '' else 'root_album'
+        'list_status': 'album' if album != '' else 'root_album',
+        'include_meta': json.loads(request.POST['include_meta'])
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
 def search_dialog(request):
-    if len(request.POST['query']) < settings.IMAGE_SEARCH_LENGTH:
+    query = json.loads(request.POST['query'])
+    if len(query) < settings.IMAGE_SEARCH_LENGTH:
         albums = Album.objects.none()
         images = Image.objects.none()
     else:
-        albums, images = full_archive_search(request.POST['query'])
+        albums, images = full_archive_search(query)
     objects = parse_objects([], albums, images)
     context = RequestContext(request, {
         'parents': objects['parents'],
@@ -49,7 +51,8 @@ def search_dialog(request):
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
         'list_status': 'search',
-        'search_query': request.POST['query']
+        'search_query': query,
+        'include_meta': json.loads(request.POST['include_meta'])
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 

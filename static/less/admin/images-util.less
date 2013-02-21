@@ -8,6 +8,11 @@ div.image-archive-picker {
     border-color: rgb(220, 220, 220) !important;
   }
 
+  label.radio {
+    font-family: "DTL Nobel" !important;
+    display: inline;
+  }
+
   div.content {
     div.albums {
       div.album {
@@ -56,6 +61,37 @@ div.image-archive-picker {
 
       li:hover {
         background-color: rgb(235, 235, 235);
+      }
+    }
+
+    ul.images-simple {
+      li {
+        @image-height: 120px;
+        @image-width: 150px;
+
+        display: block;
+        font-family: "DTL Nobel" !important;
+        float: left;
+        height: @image-height;
+        margin: 2px;
+        text-align: center;
+        cursor: pointer;
+
+        img {
+          height: @image-height;
+        }
+      }
+
+      li.clickable-album {
+        color: @profile-red;
+        img {
+          height: 90px;
+        }
+      }
+
+      li:hover {
+        opacity: 0.7;
+        filter: alpha(opacity=70);
       }
     }
   }
