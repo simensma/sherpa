@@ -301,7 +301,7 @@ def search(request):
         })
         return render(request, 'common/admin/images/search.html', context)
     images = []
-    for word in request.GET['q'].split(' '):
+    for word in request.GET['q'].split():
         images.extend(Image.objects.filter(
             Q(description__icontains=word) |
             Q(album__name__icontains=word) |
@@ -309,7 +309,7 @@ def search(request):
             Q(credits__icontains=word) |
             Q(licence__icontains=word) |
             Q(tags__name__icontains=word)).distinct().values())
-    for word in request.GET['q'].split(' '):
+    for word in request.GET['q'].split():
         albums = Album.objects.filter(name__icontains=word).distinct()
     context.update({
         'albums': albums,
