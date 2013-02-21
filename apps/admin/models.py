@@ -71,9 +71,9 @@ class Publication(models.Model):
     association = models.ForeignKey('association.Association')
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=1023)
-    pub_date = models.DateTimeField()
+    pub_date = models.DateTimeField(auto_now_add=True)
     LICENSE_CHOICES = (
         ('all_rights_reserved', 'Alle rettigheter reservert'),
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
-    license = models.CharField(max_length=255, choices=LICENSE_CHOICES)
+    license = models.CharField(max_length=255, choices=LICENSE_CHOICES, default=LICENSE_CHOICES[0][0])
     tags = models.ManyToManyField('core.Tag', related_name='publications')
