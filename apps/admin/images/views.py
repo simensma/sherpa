@@ -2,13 +2,12 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.conf import settings
-from django.db.models import Q
 
 from core.models import Tag
 from admin.models import Image, Album
 from user.models import Profile
 
-from admin.images.util import parse_objects, list_parents, list_parents_values, parse_image, store_image
+from admin.images.util import parse_objects, list_parents, list_parents_values, parse_image, store_image, full_archive_search
 
 import json
 import logging
@@ -300,17 +299,7 @@ def search(request):
             'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         })
         return render(request, 'common/admin/images/search.html', context)
-    images = []
-    for word in request.GET['q'].split():
-        images.extend(Image.objects.filter(
-            Q(description__icontains=word) |
-            Q(album__name__icontains=word) |
-            Q(photographer__icontains=word) |
-            Q(credits__icontains=word) |
-            Q(licence__icontains=word) |
-            Q(tags__name__icontains=word)).distinct().values())
-    for word in request.GET['q'].split():
-        albums = Album.objects.filter(name__icontains=word).distinct()
+    albums, images = full_archive_search(request.GET['q'])
     context.update({
         'albums': albums,
         'images': images,

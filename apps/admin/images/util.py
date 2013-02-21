@@ -66,6 +66,20 @@ def search_dialog(request):
 # Actual utilities
 #
 
+def full_archive_search(query):
+    images = []
+    for word in query.split():
+        images.extend(Image.objects.filter(
+            Q(description__icontains=word) |
+            Q(album__name__icontains=word) |
+            Q(photographer__icontains=word) |
+            Q(credits__icontains=word) |
+            Q(licence__icontains=word) |
+            Q(tags__name__icontains=word)).distinct().values())
+    for word in query.split():
+        albums = Album.objects.filter(name__icontains=word).distinct()
+    return albums, images
+
 # Lol, I bet there's a much easier way to do this, but whatever, this works for now.
 def divide_for_three_columns(albums):
     bulk = len(albums) / 3
