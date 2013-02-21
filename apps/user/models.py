@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.contrib.auth.context_processors import PermWrapper
 
 from focus.models import Actor
+from association.models import Association
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -63,7 +64,6 @@ class Profile(models.Model):
     # Returns associations this user hs access to based on permissions
     def all_associations(self, role=None):
         # If role is set, we only want the associations we have that role for, not any other ones.
-        from association.models import Association
         if self.user.has_perm('user.sherpa_admin'):
             if not role or role == 'admin':
                 # Sherpa admins are admins on all associations
