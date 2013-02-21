@@ -6,45 +6,52 @@
   {% endfor %}
 </div>
 
-<div class="albums">
-  <div class="row-fluid">
-    <div class="span4">
-      {% for album in albums_divided.0 %}
-        <div class="album">
-          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
-          </a>
-        </div>
-        <div style="clear: both;"></div>
-      {% endfor %}
-
-    </div>
-    <div class="span4">
-      {% for album in albums_divided.1 %}
-        <div class="album">
-          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
-          </a>
-        </div>
-        <div style="clear: both;"></div>
-      {% endfor %}
-
-    </div>
-    <div class="span4">
-      {% for album in albums_divided.2 %}
-        <div class="album">
-          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
-          </a>
-        </div>
-        <div style="clear: both;"></div>
-      {% endfor %}
-
+{% if list_status == 'root_album' %}
+  <div class="albums">
+    <div class="row-fluid">
+      <div class="span4">
+        {% for album in albums_divided.0 %}
+          <div class="album">
+            <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+            </a>
+          </div>
+          <div style="clear: both;"></div>
+        {% endfor %}
+      </div>
+      <div class="span4">
+        {% for album in albums_divided.1 %}
+          <div class="album">
+            <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+            </a>
+          </div>
+          <div style="clear: both;"></div>
+        {% endfor %}
+      </div>
+      <div class="span4">
+        {% for album in albums_divided.2 %}
+          <div class="album">
+            <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+            </a>
+          </div>
+          <div style="clear: both;"></div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
+{% endif %}
 
 <ul class="images">
+  {% if list_status != 'root_album' %}
+    {% for album in albums %}
+      <li class="clickable-album" data-id="{{ album.id }}">
+        <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class=""><br>
+        {{ album.name }}
+      </li>
+    {% endfor %}
+  {% endif %}
   {% for image in images %}
     <li data-path="{{ image.key }}.{{ image.extension }}" data-description="{{ image.description }}" data-photographer="{{ image.photographer }}">
       <img class="clickable-image" src="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail"><br>
@@ -57,7 +64,7 @@
 {% if albums|length == 0 and images|length == 0 %}
   <div class="alert alert-info span4">
     <a class="close">x</a>
-    {% if list_status == 'album' %}
+    {% if list_status == 'album' or list_status == 'root_album' %}
       <strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.
     {% elif list_status == 'search' %}
       <strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-(

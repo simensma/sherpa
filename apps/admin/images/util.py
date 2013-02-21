@@ -32,7 +32,7 @@ def content_dialog(request):
         'albums': objects['albums'],
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
-        'list_status': 'album'
+        'list_status': 'album' if album != '' else 'root_album'
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 

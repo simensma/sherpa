@@ -65,7 +65,7 @@ function showFolder(album) {
     });
 }
 
-$(document).on('click', 'div.image-archive-picker a.clickable-album', function() {
+$(document).on('click', 'div.image-archive-picker .clickable-album', function() {
     showFolder($(this).attr('data-id'));
 });
 
