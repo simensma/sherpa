@@ -13,7 +13,10 @@ from PIL import Image as pil
 import random
 from cStringIO import StringIO
 from hashlib import sha1
-import json, simples3, logging, sys
+import json
+import simples3
+import logging
+import sys
 from datetime import datetime
 
 logger = logging.getLogger('sherpa')
