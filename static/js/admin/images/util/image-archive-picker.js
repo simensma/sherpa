@@ -55,8 +55,14 @@ function hideContent() {
 
 function showFolder(album) {
     var ajaxLoader = hideContent();
+    var url;
+    if(album == 'mine') {
+        url = $("div.image-archive-picker").attr("data-mine-url");
+    } else {
+        url = $("div.image-archive-picker").attr("data-album-url");
+    }
     $.ajax({
-        url: $("div.image-archive-picker").attr("data-album-url"),
+        url: url,
         data: {
             album: JSON.stringify(album),
             include_meta: JSON.stringify($("input[name='include_meta']:checked").length == 1)
@@ -73,6 +79,10 @@ function showFolder(album) {
 
 $(document).on('click', 'div.image-archive-picker .clickable-album', function() {
     showFolder($(this).attr('data-id'));
+});
+
+$(document).on('click', 'div.image-archive-picker .clickable-mine', function() {
+    showFolder('mine');
 });
 
 $(document).on('click', 'div.image-archive-picker .clickable-image', function() {

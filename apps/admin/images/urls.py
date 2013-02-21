@@ -32,5 +32,6 @@ urlpatterns = patterns('admin.images.views',
 
 urlpatterns += patterns('admin.images.util',
     url(r'^dialog/album/$', 'content_dialog'),
+    url(r'^dialog/mine/$', 'mine_dialog'),
     url(ur'^dialog/søk/$', 'search_dialog')
 )

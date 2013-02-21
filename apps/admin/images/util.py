@@ -37,6 +37,16 @@ def content_dialog(request):
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
+def mine_dialog(request):
+    images = Image.objects.filter(uploader=request.user.get_profile())
+
+    context = RequestContext(request, {
+        'images': images,
+        'list_status': 'album',
+        'include_meta': json.loads(request.POST['include_meta'])
+        })
+    return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
+
 def search_dialog(request):
     query = json.loads(request.POST['query'])
     if len(query) < settings.IMAGE_SEARCH_LENGTH:
