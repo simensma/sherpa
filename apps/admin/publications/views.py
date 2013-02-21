@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from admin.models import Publication
 
 def index(request):
-    context = {}
+    publications = Publication.objects.all().order_by('title')
+    context = {'publications': publications}
     return render(request, 'common/admin/publications/index.html', context)
 
 def create(request):

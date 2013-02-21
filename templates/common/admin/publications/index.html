@@ -11,6 +11,19 @@
 <div class="row">
   <div class="span12">
 
+    <table class="table">
+      <tr>
+        <th>Publikasjon</th>
+        <th>Forening</th>
+      </tr>
+      {% for publication in publications %}
+        <tr>
+          <td><a href="{% url admin.publications.views.edit publication.id %}">{{ publication.title }}</a></td>
+          <td>{{ publication.association.name }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
     <button class="btn btn-large create">Opprett ny publikasjon</button>
     <form action="{% url admin.publications.views.create %}" method="post" class="create form-default form-border form-horizontal hide">
       {% csrf_token %}
