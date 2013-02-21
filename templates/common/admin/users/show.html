@@ -40,7 +40,7 @@
       <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
     {% elif other_user_perms.user.sherpa %}
 
-      {% if other_user_associations.central|length == 0 and other_user_associations.associations|length == 0 and other_user_associations.small_associations|length == 0 and other_user_associations.hike_groups|length == 0 %}
+      {% if other_user.get_profile.all_associations|length == 0 %}
         <div class="alert alert-error">
           <strong>{{ other_user.get_profile.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
           Gi ham/henne tilgang til minst én forening, ellers gir det ikke mening at han/henne har tilgang til Sherpa.
@@ -48,11 +48,11 @@
       {% else %}
 
         <table class="table user-permissions">
-          {% if other_user_associations.central|length > 0 %}
+          {% if other_user.get_profile.all_associations_sorted.central|length > 0 %}
             <tr>
               <td colspan="2" class="group">Sentralt</td>
             </tr>
-            {% for association in other_user_associations.central %}
+            {% for association in other_user.get_profile.all_associations_sorted.central %}
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
@@ -64,11 +64,11 @@
             {% endfor %}
           {% endif %}
 
-          {% if other_user_associations.associations|length > 0 %}
+          {% if other_user.get_profile.all_associations_sorted.associations|length > 0 %}
             <tr>
               <td colspan="2" class="group">Foreninger</td>
             </tr>
-            {% for association in other_user_associations.associations %}
+            {% for association in other_user.get_profile.all_associations_sorted.associations %}
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
@@ -80,11 +80,11 @@
             {% endfor %}
           {% endif %}
 
-          {% if other_user_associations.small_associations|length > 0 %}
+          {% if other_user.get_profile.all_associations_sorted.small_associations|length > 0 %}
             <tr>
               <td colspan="2" class="group">Turlag</td>
             </tr>
-            {% for association in other_user_associations.small_associations %}
+            {% for association in other_user.get_profile.all_associations_sorted.small_associations %}
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
@@ -96,11 +96,11 @@
             {% endfor %}
           {% endif %}
 
-          {% if other_user_associations.hike_groups|length > 0 %}
+          {% if other_user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
             <tr>
               <td colspan="2" class="group">Turgrupper</td>
             </tr>
-            {% for association in other_user_associations.hike_groups %}
+            {% for association in other_user.get_profile.all_associations_sorted.hike_groups %}
               <tr>
                 <td>{{ association.name }}</td>
                 <td>

@@ -2,7 +2,6 @@ from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
-from association.models import Association
 
 import re
 
@@ -30,9 +29,7 @@ def current_site(request):
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
 
-def admin_user_associations(request):
+def admin_active_association(request):
     if request.user.is_authenticated() and request.user.has_perm('user.sherpa') and request.path.startswith('/sherpa/'):
-        return {
-            'user_associations': Association.sort_and_apply_roles(request.user.get_profile().all_associations(), request.user),
-            'active_association': request.session.get('active_association', '')}
+        return {'active_association': request.session.get('active_association', '')}
     return {}

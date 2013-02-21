@@ -5,9 +5,9 @@
 <div class="row">
   <div class="span12">
 
-    {% if not perms.user.sherpa_admin and user_associations.central|length == 0 and user_associations.associations|length == 0 and user_associations.small_associations|length == 0 and user_associations.hike_groups|length == 0 %}
+    {% if user.get_profile.all_associations|length == 0 %}
 
-      {# Has sherpa access, but no associations (and isn't sherpa admin) #}
+      {# Has sherpa access, but no associations #}
 
       <div class="alert alert-error">
         <strong>Du har tilgang til Sherpa, men ikke til noen foreninger!</strong><br>
@@ -25,34 +25,34 @@
         Du kan endre aktiv forening når som helst i lista oppe til høyre, under navnet ditt.
       </div>
 
-      {% if user_associations.central|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.central|length > 0 %}
         <h2>Sentralt/nasjonalt</h2>
         <ul class="active-association-list">
-        {% for association in user_associations.central %}
+        {% for association in user.get_profile.all_associations_sorted.central %}
           <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user_associations.associations|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.associations|length > 0 %}
         <h2>Medlemsforeninger</h2>
         <ul class="active-association-list">
-        {% for association in user_associations.associations %}
+        {% for association in user.get_profile.all_associations_sorted.associations %}
           <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user_associations.small_associations|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.small_associations|length > 0 %}
         <h2>Lokale turlag</h2>
         <ul class="active-association-list">
-        {% for association in user_associations.small_associations %}
+        {% for association in user.get_profile.all_associations_sorted.small_associations %}
           <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user_associations.hike_groups|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
         <h2>Turgrupper</h2>
         <ul class="active-association-list">
-        {% for association in user_associations.hike_groups %}
+        {% for association in user.get_profile.all_associations_sorted.hike_groups %}
           <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
         {% endfor %}
         </ul>

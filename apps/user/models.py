@@ -61,7 +61,9 @@ class Profile(models.Model):
         else:
             return self.get_email()
 
-    # Returns associations this user hs access to based on permissions
+    # Returns associations this user has access to
+    # Note that this also takes permissions into account, so this will always return
+    # all associations for sherpa admins (given that role is 'admin' or not specified)
     def all_associations(self, role=None):
         # If role is set, we only want the associations we have that role for, not any other ones.
         if self.user.has_perm('user.sherpa_admin'):
@@ -78,6 +80,9 @@ class Profile(models.Model):
             else:
                 # No specific role, return all our connected associations
                 return self.associations.all()
+
+    def all_associations_sorted(self):
+        return Association.sort_and_apply_roles(self.all_associations(), self.user)
 
     class Meta:
         permissions = [

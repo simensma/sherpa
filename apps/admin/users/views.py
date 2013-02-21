@@ -31,7 +31,6 @@ def show(request, user):
     context = {
         'other_user': user,
         'other_user_perms': PermWrapper(user),
-        'other_user_associations': Association.sort_and_apply_roles(user.get_profile().all_associations(), user),
         'revokable_associations': Association.sort(revokable_associations),
         'assignable_associations': Association.sort_and_apply_roles(assignable_associations, request.user)}
     return render(request, 'common/admin/users/show.html', context)
