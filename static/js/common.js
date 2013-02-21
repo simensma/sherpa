@@ -71,7 +71,7 @@ $.fn.enableDialog = function() {
             width: $(this).attr('data-width')
         }).hide();
     });
-}
+};
 
 $.fn.enableDialogButton = function() {
     return this.each(function() {
@@ -79,7 +79,7 @@ $.fn.enableDialogButton = function() {
             $($(this).attr('data-dialog')).dialog('open');
         });
     });
-}
+};
 
 // The escape key seems to only work for IE, not Opera or Firefox, so simulate
 // the modal close upon escape keypress.
