@@ -35,7 +35,7 @@ $(document).ready(function() {
             return $(this);
         }
         var hostname = $(this).get(0).hostname;
-        if(hostname != '' && hostname != location.hostname) {
+        if(hostname !== '' && hostname != location.hostname) {
             $(this).addClass('external');
         }
     });
