@@ -67,17 +67,22 @@ def search_dialog(request):
 #
 
 def full_archive_search(query):
-    images = []
+    images = Image.objects.all()
     for word in query.split():
-        images.extend(Image.objects.filter(
+        images = images.filter(
             Q(description__icontains=word) |
             Q(album__name__icontains=word) |
             Q(photographer__icontains=word) |
             Q(credits__icontains=word) |
             Q(licence__icontains=word) |
-            Q(tags__name__icontains=word)).distinct().values())
+            Q(tags__name__icontains=word))
+    images = images.distinct()
+
+    albums = Album.objects.all()
     for word in query.split():
-        albums = Album.objects.filter(name__icontains=word).distinct()
+        albums = albums.filter(name__icontains=word)
+    albums = albums.distinct()
+
     return albums, images
 
 # Lol, I bet there's a much easier way to do this, but whatever, this works for now.
