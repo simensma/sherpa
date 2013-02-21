@@ -47,10 +47,9 @@
 <ul class="images">
   {% for image in images %}
     <li data-path="{{ image.key }}.{{ image.extension }}" data-description="{{ image.description }}" data-photographer="{{ image.photographer }}">
-      <p>
-        <img class="clickable-image" src="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail">
-      </p>
-    {{ image.width }} x {{ image.height }}<br>{{ image.photographer }}
+      <img class="clickable-image" src="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail"><br>
+      {{ image.width }} x {{ image.height }}<br>
+      {{ image.photographer }}
     </li>
   {% endfor %}
 </ul>
