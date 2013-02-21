@@ -1,10 +1,10 @@
-<ul class="breadcrumb">
-  <li><a href="javascript:undefined" class="clickable-album" data-id="">Bildearkiv</a></li>
+<div class="albumpath">
+  <a href="javascript:undefined" class="clickable-album" data-id="">Bildearkiv</a>
   {% for parent in parents %}
-    <span class="divider">→</span>
-    <li><a href="javascript:undefined" class="clickable-album" data-id="{{ parent.id }}">{{ parent.name }}</a></li>
+    /
+    <a href="javascript:undefined" class="clickable-album" data-id="{{ parent.id }}">{{ parent.name }}</a>
   {% endfor %}
-</ul>
+</div>
 
 <div id="contentlist">
   {% for album in albums %}
