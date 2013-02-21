@@ -24,6 +24,7 @@ def content_dialog(request):
     context = RequestContext(request, {
         'parents': objects['parents'],
         'albums': objects['albums'],
+        'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
         'no_results_message': '<strong>Her var det tomt!</strong><br>Det er ingen album eller bilder i dette albumet.'
         })
@@ -49,7 +50,26 @@ def search_dialog(request):
     context = RequestContext(request, {
         'parents': objects['parents'],
         'albums': objects['albums'],
+        'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
         'no_results_message': '<strong>Beklager!</strong><br>Vi fant ingen bilder tilsvarende søket ditt :-('
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
+
+# Lol, I bet there's a much easier way to do this, but whatever, this works for now.
+def divide_for_three_columns(albums):
+    bulk = len(albums) / 3
+    rest = len(albums) % 3
+
+    if rest > 0:
+        first = bulk + 1
+        rest -= 1
+    else:
+        first = bulk
+
+    if rest > 0:
+        second = first + bulk + 1
+    else:
+        second = first + bulk
+
+    return [albums[:first], albums[first:second], albums[second:]]

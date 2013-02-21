@@ -7,14 +7,41 @@
 </div>
 
 <div class="albums">
-  {% for album in albums %}
-    <div class="album">
-      <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-        <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
-      </a>
+  <div class="row-fluid">
+    <div class="span4">
+      {% for album in albums_divided.0 %}
+        <div class="album">
+          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+          </a>
+        </div>
+        <div style="clear: both;"></div>
+      {% endfor %}
+
     </div>
-    <div style="clear: both;"></div>
-  {% endfor %}
+    <div class="span4">
+      {% for album in albums_divided.1 %}
+        <div class="album">
+          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+          </a>
+        </div>
+        <div style="clear: both;"></div>
+      {% endfor %}
+
+    </div>
+    <div class="span4">
+      {% for album in albums_divided.2 %}
+        <div class="album">
+          <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+            <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+          </a>
+        </div>
+        <div style="clear: both;"></div>
+      {% endfor %}
+
+    </div>
+  </div>
 </div>
 
 <ul class="images">
