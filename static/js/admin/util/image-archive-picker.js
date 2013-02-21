@@ -5,17 +5,17 @@ var archiveCallback;
 
 $(document).ready(function() {
 
-    bcList = $("div.image-archive-chooser div#imagearchive ul.breadcrumb");
+    bcList = $("div.image-archive-picker div#imagearchive ul.breadcrumb");
     showFolder('');
-    $("div.image-archive-chooser div.too-few-chars").hide();
-    $("div.image-archive-chooser div.empty-src").hide();
+    $("div.image-archive-picker div.too-few-chars").hide();
+    $("div.image-archive-picker div.empty-src").hide();
 
-    $("div.image-archive-chooser button.cancel-chooser").click(function() {
-        $("div.image-archive-chooser").modal('hide');
+    $("div.image-archive-picker button.cancel-chooser").click(function() {
+        $("div.image-archive-picker").modal('hide');
     });
 
-    $("div.image-archive-chooser button.image-search").click(doSearch);
-    $("div.image-archive-chooser input[name='search']").keydown(function(e) {
+    $("div.image-archive-picker button.image-search").click(doSearch);
+    $("div.image-archive-picker input[name='search']").keydown(function(e) {
         if(e.which == 13) {
             // 13 is the Enter key
             doSearch();
@@ -23,9 +23,9 @@ $(document).ready(function() {
     });
 
     function doSearch() {
-        var query = $("div.image-archive-chooser input[name='search']").val();
+        var query = $("div.image-archive-picker input[name='search']").val();
         if(query.length < IMAGE_SEARCH_LENGTH) {
-            $("div.image-archive-chooser div.too-few-chars").show();
+            $("div.image-archive-picker div.too-few-chars").show();
         } else {
             search(query);
         }
@@ -46,14 +46,14 @@ $(document).ready(function() {
 
 function chooseImagefromArchive(callback){
     archiveCallback = callback;
-    $("div.image-archive-chooser").modal();
+    $("div.image-archive-picker").modal();
 }
 
 function hideContent() {
-    $("div.image-archive-chooser div.too-few-chars").hide();
-    $("div.image-archive-chooser div#imagearchive ul#images").children().remove();
+    $("div.image-archive-picker div.too-few-chars").hide();
+    $("div.image-archive-picker div#imagearchive ul#images").children().remove();
     var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
-    var list = $("div.image-archive-chooser div#imagearchive div#contentlist");
+    var list = $("div.image-archive-picker div#imagearchive div#contentlist");
     list.contents().remove();
     list.append(ajaxLoader);
     return ajaxLoader;
@@ -112,7 +112,7 @@ function updateContents(parents, albums, images, emptyText) {
         item.find("a").click(function() {
             showFolder($(this).attr('data-id'));
         });
-        $("div.image-archive-chooser div#imagearchive div#contentlist").append(item);
+        $("div.image-archive-picker div#imagearchive div#contentlist").append(item);
     }
 
     // Add images
@@ -124,16 +124,16 @@ function updateContents(parents, albums, images, emptyText) {
             var description = $(this).attr('data-description');
             var photographer = $(this).attr('data-photographer');
 
-            $("div.image-archive-chooser").modal('hide');
+            $("div.image-archive-picker").modal('hide');
             archiveCallback(url.trim(), description.trim(), photographer.trim());
         });
-        $("div.image-archive-chooser div#imagearchive ul#images").append(item);
+        $("div.image-archive-picker div#imagearchive ul#images").append(item);
     }
 
     // No albums and no images
     if(albums.length == 0 && images.length == 0) {
         var sorry = $('<div class="alert alert-info span4"><a class="close">x</a>' + emptyText + '</div>');
         sorry.find("a").click(function() { $(this).parent().remove(); });
-        $("div.image-archive-chooser div#imagearchive div#contentlist").append(sorry);
+        $("div.image-archive-picker div#imagearchive div#contentlist").append(sorry);
     }
 }
