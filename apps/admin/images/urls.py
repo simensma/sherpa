@@ -30,7 +30,7 @@ urlpatterns = patterns('admin.images.views',
     url(r'^bilde/fort/nytt/$', 'fast_upload'),
 )
 
-urlpatterns += patterns('admin.images.util.views',
+urlpatterns += patterns('admin.images.util',
     url(r'^dialog/album/$', 'content_dialog'),
     url(ur'^dialog/søk/$', 'search_dialog')
 )
