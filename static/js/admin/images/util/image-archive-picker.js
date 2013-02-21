@@ -8,19 +8,30 @@ $(document).ready(function() {
         $("div.image-archive-picker").modal('hide');
     });
 
-    $("div.image-archive-picker button.image-search").click(doSearch);
+    $("div.image-archive-picker button.image-search").click(search);
     $("div.image-archive-picker input[name='search']").keydown(function(e) {
         if(e.which == 13) { // Enter
-            doSearch();
+            search();
         }
     });
 
-    function doSearch() {
+    function search() {
         var query = $("div.image-archive-picker input[name='search']").val();
         if(query.length < IMAGE_SEARCH_LENGTH) {
             $("div.image-archive-picker div.too-few-chars").show();
         } else {
-            search(query);
+            var ajaxLoader = hideContent();
+            $.ajax({
+                url: $("div.image-archive-picker").attr("data-search-url"),
+                data: { query: query }
+            }).done(function(result) {
+                result = JSON.parse(result);
+                $("div.image-archive-picker div.content").append(result.html);
+            }).fail(function(result) {
+                // Todo
+            }).always(function(result) {
+                ajaxLoader.remove();
+            });
         }
     }
 });
@@ -37,21 +48,6 @@ function hideContent() {
     var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
     content.append(ajaxLoader);
     return ajaxLoader;
-}
-
-function search(phrase) {
-    var ajaxLoader = hideContent();
-    $.ajax({
-        url: $("div.image-archive-picker").attr("data-search-url"),
-        data: { query: phrase }
-    }).done(function(result) {
-        result = JSON.parse(result);
-        $("div.image-archive-picker div.content").append(result.html);
-    }).fail(function(result) {
-        // Todo
-    }).always(function(result) {
-        ajaxLoader.remove();
-    });
 }
 
 function showFolder(album) {
