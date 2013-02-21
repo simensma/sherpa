@@ -322,24 +322,6 @@ def search(request):
         'search_query': request.GET['q']})
     return render(request, 'common/admin/images/search.html', context)
 
-def search_json(request):
-    images = []
-    if len(request.POST['query']) >= settings.IMAGE_SEARCH_LENGTH:
-        # TODO: Should search (programmatically) for uploader name/email
-        # These might be in our DB or in Focus.
-        for word in request.POST['query'].split(' '):
-            images += Image.objects.filter(
-                Q(description__icontains=word) |
-                Q(album__name__icontains=word) |
-                Q(photographer__icontains=word) |
-                Q(credits__icontains=word) |
-                Q(licence__icontains=word) |
-                Q(exif__icontains=word) |
-                Q(tags__name__icontains=word)
-        )
-    objects = parse_objects([], [], images)
-    return HttpResponse(json.dumps(objects))
-
 def photographer(request):
     images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
     photographers = []

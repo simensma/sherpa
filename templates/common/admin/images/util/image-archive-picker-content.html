@@ -1,0 +1,36 @@
+<ul class="breadcrumb">
+  <li><a href="javascript:undefined" class="clickable-album" data-id="">Bildearkiv</a></li>
+  {% for parent in parents %}
+    <span class="divider">→</span>
+    <li><a href="javascript:undefined" class="clickable-album" data-id="{{ parent.id }}">{{ parent.name }}</a></li>
+  {% endfor %}
+</ul>
+
+<div id="contentlist">
+  {% for album in albums %}
+    <div class="album">
+      <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
+        <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+      </a>
+    </div>
+    <div style="clear: both;"></div>
+  {% endfor %}
+</div>
+
+<ul id="images">
+  {% for image in images %}
+    <li data-path="{{ image.key }}.{{ image.extension }}" data-description="{{ image.description }}" data-photographer="{{ image.photographer }}">
+      <p>
+        <img class="clickable-image" src="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail">
+      </p>
+    {{ image.width }} x {{ image.height }}<br>{{ image.photographer }}
+    </li>
+  {% endfor %}
+</ul>
+
+{% if albums|length == 0 and images|length == 0 %}
+  <div class="alert alert-info span4">
+    <a class="close">x</a>
+    {{ no_results_message|safe }}
+  </div>
+{% endif %}
