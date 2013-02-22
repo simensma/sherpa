@@ -17,7 +17,9 @@ $(document).ready(function() {
 
     function search() {
         var query = $("div.image-archive-picker input[name='search']").val();
-        if(query.length < IMAGE_SEARCH_LENGTH) {
+        // Setting a default hardcoded search length here, in case we forgot
+        // to provide it with js_globals - which we should rather do
+        if(query.length < (window.IMAGE_SEARCH_LENGTH || 3)) {
             $("div.image-archive-picker div.too-few-chars").show();
         } else {
             var ajaxLoader = hideContent();
