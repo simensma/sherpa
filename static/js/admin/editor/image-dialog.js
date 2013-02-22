@@ -30,7 +30,7 @@
         imageDialog.find("div#ratio-radio").append(getRatioRadioButtons());
 
         imageDialog.find("button.choose-image").click(function() {
-            chooseImagefromArchive(inputDataFromSource);
+            ImageArchivePicker.pick(inputDataFromSource);
         });
         imageDialog.find("button.upload-image").click(function() {
             openImageUpload(inputDataFromSource);

@@ -211,7 +211,7 @@
 
         //choose clicked
         widget_editor.find("button[name='choose']").click(function(){
-            chooseImagefromArchive(chooseFromSpurce);
+            ImageArchivePicker.pick(chooseFromSpurce);
         });
 
         //upload clicked
