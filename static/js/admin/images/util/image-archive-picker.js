@@ -18,17 +18,21 @@
 
 
         // The initial search
-        lookupAlbum('');
+        performLookup(picker.attr("data-album-url"), { album: JSON.stringify('') });
     });
 
     /* Events on DOM elements that come and go */
 
     $(document).on('click', 'div.image-archive-picker .clickable-album', function() {
-        lookupAlbum($(this).attr('data-id'));
+        var url = $("div.image-archive-picker").attr("data-album-url");
+        var data = { album: JSON.stringify($(this).attr('data-id')) };
+        performLookup(url, data);
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-mine', function() {
-        lookupAlbum('mine');
+        var url = $("div.image-archive-picker").attr("data-mine-url");
+        var data = { album: JSON.stringify('mine') };
+        performLookup(url, data);
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-image', function() {
@@ -70,17 +74,6 @@
             var data = { query: JSON.stringify(query) };
             performLookup(url, data);
         }
-    }
-
-    function lookupAlbum(album) {
-        var url;
-        if(album == 'mine') {
-            url = $("div.image-archive-picker").attr("data-mine-url");
-        } else {
-            url = $("div.image-archive-picker").attr("data-album-url");
-        }
-        var data = { album: JSON.stringify(album) };
-        performLookup(url, data);
     }
 
     function performLookup(url, data) {
