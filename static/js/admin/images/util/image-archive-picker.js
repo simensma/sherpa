@@ -66,44 +66,36 @@
         if(query.length < (window.IMAGE_SEARCH_LENGTH || 3)) {
             $("div.image-archive-picker div.too-few-chars").show();
         } else {
-            var ajaxLoader = hideContent();
-            $.ajax({
-                url: $("div.image-archive-picker").attr("data-search-url"),
-                data: { query: JSON.stringify(query) }
-            }).done(function(result) {
-                result = JSON.parse(result);
-                $("div.image-archive-picker div.content").append(result.html);
-            }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                ajaxLoader.remove();
-            });
+            var url = picker.attr("data-search-url");
+            var data = { query: JSON.stringify(query) };
+            performLookup(url, data);
         }
     }
 
-    function hideContent() {
-        $("div.image-archive-picker div.too-few-chars").hide();
-        var content = $("div.image-archive-picker div.content");
-        content.empty();
-        var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
-        content.append(ajaxLoader);
-        return ajaxLoader;
-    }
-
     function showFolder(album) {
-        var ajaxLoader = hideContent();
         var url;
         if(album == 'mine') {
             url = $("div.image-archive-picker").attr("data-mine-url");
         } else {
             url = $("div.image-archive-picker").attr("data-album-url");
         }
+        var data = { album: JSON.stringify(album) };
+        performLookup(url, data);
+    }
+
+    function performLookup(url, data) {
+        $("div.image-archive-picker div.too-few-chars").hide();
+        var content = $("div.image-archive-picker div.content");
+        content.empty();
+        var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
+        content.append(ajaxLoader);
+
         $.ajax({
             url: url,
-            data: { album: JSON.stringify(album) }
+            data: data
         }).done(function(result) {
             result = JSON.parse(result);
-            $("div.image-archive-picker div.content").append(result.html);
+            picker.find("div.content").append(result.html);
         }).fail(function(result) {
             // Todo
         }).always(function(result) {
