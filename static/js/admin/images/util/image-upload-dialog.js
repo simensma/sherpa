@@ -25,8 +25,8 @@ $(document).ready(function() {
 
     var uploadCompleteCallback;
 
-    window.uploadComplete = uploadComplete;
-    function uploadComplete(status, url){
+    window.iframeUploadComplete = iframeUploadComplete;
+    function iframeUploadComplete(status, url){
         if(status === "no_files"){
             uploader.find("input[type='submit']").removeAttr('disabled');
             uploader.find("div.upload-no-files").show();

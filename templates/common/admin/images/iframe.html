@@ -1,4 +1,4 @@
-{# This iframe will be rendered when an image upload process is complete. It will not be displayed, but it calls the 'uploadComplete' function with the appropriate result. #}
+{# This iframe will be rendered when an image upload process is complete. It will not be displayed, but it calls the 'iframeUploadComplete' function with the appropriate result. #}
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,9 +7,9 @@
     <script>
     {# the fast uploader rqueiers the url #}
     {% if url %}
-      window.top.window.uploadComplete('{{ result }}', '{{ url }}');
+      window.top.window.iframeUploadComplete('{{ result }}', '{{ url }}');
     {% else %}
-      window.top.window.uploadComplete('{{ result }}', '{{ ids }}');
+      window.top.window.iframeUploadComplete('{{ result }}', '{{ ids }}');
     {% endif %}
     </script>
   </head>

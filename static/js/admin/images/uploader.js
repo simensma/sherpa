@@ -64,7 +64,7 @@ $(document).ready(function() {
     });
 });
 
-function uploadComplete(result, ids) {
+function iframeUploadComplete(result, ids) {
     $("div.uploading").hide();
     if(result == 'success') {
         $("div.upload-complete").show();
