@@ -1,16 +1,17 @@
 $(document).ready(function() {
 
-    var tagger = new TypicalTagger($("div.image-upload-dialog form.image-uploader input[name='tags']"), $("div.image-upload-dialog div.tag-box"));
+    var uploader = $("div.image-upload-dialog");
+    var tagger = new TypicalTagger(uploader.find("form.image-uploader input[name='tags']"), uploader.find("div.tag-box"));
 
-    $("div.image-upload-dialog form").submit(function(e) {
-        $("div.image-upload-dialog div.uploading").show();
+    uploader.find("form").submit(function(e) {
+        uploader.find("div.uploading").show();
         var tags = JSON.stringify(tagger.tags);
-        $("div.image-upload-dialog form.image-uploader input[name='tags-serialized']").val(tags);
-        $("div.image-upload-dialog input[type='submit']").attr('disabled', 'disabled');
-        $("div.image-upload-dialog input[type='reset']").attr('disabled', 'disabled');
+        uploader.find("form.image-uploader input[name='tags-serialized']").val(tags);
+        uploader.find("input[type='submit']").attr('disabled', 'disabled');
+        uploader.find("input[type='reset']").attr('disabled', 'disabled');
     });
 
-    $("div.image-upload-dialog form input[name='photographer']").typeahead({
+    uploader.find("form input[name='photographer']").typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
@@ -22,53 +23,55 @@ $(document).ready(function() {
         }
     });
 
-    $("div.image-upload-dialog button.cancel-upload").click(function(e) {
+    uploader.find("button.cancel-upload").click(function(e) {
         uploadCancelled = false;
         $("div.image-upload-dialog").modal('hide');
     });
-});
 
-var uploadCompleteCallback;
-var uploadCancelled = false;
+    var uploadCompleteCallback;
+    var uploadCancelled = false;
 
-function uploadComplete(status, url){
-    if(!uploadCancelled){
-        if(status === "no_files"){
-            $("div.image-upload-dialog input[type='submit']").removeAttr('disabled');
-            $("div.image-upload-dialog input[type='reset']").removeAttr('disabled');
-            $("div.image-upload-dialog div.upload-no-files").show();
-            $("div.image-upload-dialog div.uploading").hide();
-        } else if(status === "success"){
-            var description = $("div.image-upload-dialog input[name='credits']").val();
-            var photographer = $("div.image-upload-dialog input[name='photographer']").val();
-            $("div.image-upload-dialog div.uploading").hide();
-            $("div.image-upload-dialog").modal('hide');
-            uploadCompleteCallback(url, description, photographer);
-        } else {//parse error or unexpected reply
-            $("div.image-upload-dialog input[type='submit']").removeAttr('disabled');
-            $("div.image-upload-dialog input[type='reset']").removeAttr('disabled');
-            $("div.image-upload-dialog div.upload-failed").show();
-            $("div.image-upload-dialog div.uploading").hide();
+    window.uploadComplete = uploadComplete;
+    function uploadComplete(status, url){
+        if(!uploadCancelled){
+            if(status === "no_files"){
+                uploader.find("input[type='submit']").removeAttr('disabled');
+                uploader.find("input[type='reset']").removeAttr('disabled');
+                uploader.find("div.upload-no-files").show();
+                uploader.find("div.uploading").hide();
+            } else if(status === "success"){
+                var description = uploader.find("input[name='credits']").val();
+                var photographer = uploader.find("input[name='photographer']").val();
+                uploader.find("div.uploading").hide();
+                $("div.image-upload-dialog").modal('hide');
+                uploadCompleteCallback(url, description, photographer);
+            } else {//parse error or unexpected reply
+                uploader.find("input[type='submit']").removeAttr('disabled');
+                uploader.find("input[type='reset']").removeAttr('disabled');
+                uploader.find("div.upload-failed").show();
+                uploader.find("div.uploading").hide();
+            }
         }
     }
-}
 
-function openImageUpload(callback){
-    uploadCancelled = false;
-    uploadCompleteCallback = callback;
+    window.openImageUpload = openImageUpload;
+    function openImageUpload(callback){
+        uploadCancelled = false;
+        uploadCompleteCallback = callback;
 
-    $("div.image-upload-dialog").modal();
-    $("div.image-upload-dialog input[type='submit']").removeAttr('disabled');
-    $("div.image-upload-dialog input[type='reset']").removeAttr('disabled');
-    resetImageUpload();
-}
+        $("div.image-upload-dialog").modal();
+        uploader.find("input[type='submit']").removeAttr('disabled');
+        uploader.find("input[type='reset']").removeAttr('disabled');
+        resetImageUpload();
+    }
 
-function resetImageUpload(){
-    $("div.image-upload-dialog input[type='reset']").click();
-    $("div.image-upload-dialog input[name='tags-serialized']").val("");
-    $("div.image-upload-dialog div.tag-box").empty();
+    function resetImageUpload(){
+        uploader.find("input[type='reset']").click();
+        uploader.find("input[name='tags-serialized']").val("");
+        uploader.find("div.tag-box").empty();
 
-    $("div.image-upload-dialog div.uploading").hide();
-    $("div.image-upload-dialog div.upload-failed").hide();
-    $("div.image-upload-dialog div.upload-no-files").hide();
-}
+        uploader.find("div.uploading").hide();
+        uploader.find("div.upload-failed").hide();
+        uploader.find("div.upload-no-files").hide();
+    }
+});
