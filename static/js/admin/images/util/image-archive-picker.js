@@ -3,8 +3,10 @@
     /* Pick up DOM elements and bind events */
 
     var picker;
+    var ajaxloader;
     $(document).ready(function() {
         picker = $("div.image-archive-picker");
+        ajaxloader = picker.find("img.ajaxloader");
 
         // Bind events to functionality
 
@@ -79,8 +81,7 @@
         picker.find("div.too-few-chars").hide();
         var content = picker.find("div.content");
         content.empty();
-        var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
-        content.append(ajaxLoader);
+        ajaxloader.show();
 
         $.ajax({
             url: url,
@@ -91,7 +92,7 @@
         }).fail(function(result) {
             // Todo
         }).always(function(result) {
-            ajaxLoader.remove();
+            ajaxloader.hide();
         });
     }
 
