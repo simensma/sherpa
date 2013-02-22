@@ -16,7 +16,7 @@ $(document).ready(function() {
             allow_root: false,
             allow_deselect: true,
             picked: function(album) {
-                if(album.name == '') {
+                if(album.name === '') {
                     album.name = "(Legges ikke i album)";
                 }
                 var form = $("form.upload-image-details");
