@@ -78,11 +78,11 @@ function uploadComplete(result, ids) {
         $("div.image-details").hide();
         $("form.image-uploader").show();
     } else if(result == 'no_files') {
-        $("div.upload-no-files").show()
+        $("div.upload-no-files").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
     } else if(result == 'unknown_exception') {
-        $("div.upload-unknown-exception").show()
+        $("div.upload-unknown-exception").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
     }
