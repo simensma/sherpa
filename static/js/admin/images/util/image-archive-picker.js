@@ -18,17 +18,17 @@
 
 
         // The initial search
-        showFolder('');
+        lookupAlbum('');
     });
 
     /* Events on DOM elements that come and go */
 
     $(document).on('click', 'div.image-archive-picker .clickable-album', function() {
-        showFolder($(this).attr('data-id'));
+        lookupAlbum($(this).attr('data-id'));
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-mine', function() {
-        showFolder('mine');
+        lookupAlbum('mine');
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-image', function() {
@@ -72,7 +72,7 @@
         }
     }
 
-    function showFolder(album) {
+    function lookupAlbum(album) {
         var url;
         if(album == 'mine') {
             url = $("div.image-archive-picker").attr("data-mine-url");
