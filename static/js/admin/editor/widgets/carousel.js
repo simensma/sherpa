@@ -216,7 +216,7 @@
 
         //upload clicked
         widget_editor.find("button[name='upload']").click(function(){
-            openImageUpload(chooseFromSpurce);
+            ImageUploadDialog.open(chooseFromSpurce);
         });
 
         //updating data in "model" on key up
