@@ -8,7 +8,6 @@ $(document).ready(function() {
         var tags = JSON.stringify(tagger.tags);
         uploader.find("form.image-uploader input[name='tags-serialized']").val(tags);
         uploader.find("input[type='submit']").attr('disabled', 'disabled');
-        uploader.find("input[type='reset']").attr('disabled', 'disabled');
     });
 
     uploader.find("form input[name='photographer']").typeahead({
@@ -29,7 +28,6 @@ $(document).ready(function() {
     function uploadComplete(status, url){
         if(status === "no_files"){
             uploader.find("input[type='submit']").removeAttr('disabled');
-            uploader.find("input[type='reset']").removeAttr('disabled');
             uploader.find("div.upload-no-files").show();
             uploader.find("div.uploading").hide();
         } else if(status === "success"){
@@ -40,7 +38,6 @@ $(document).ready(function() {
             uploadCompleteCallback(url, description, photographer);
         } else {//parse error or unexpected reply
             uploader.find("input[type='submit']").removeAttr('disabled');
-            uploader.find("input[type='reset']").removeAttr('disabled');
             uploader.find("div.upload-failed").show();
             uploader.find("div.uploading").hide();
         }
@@ -52,12 +49,10 @@ $(document).ready(function() {
 
         $("div.image-upload-dialog").modal();
         uploader.find("input[type='submit']").removeAttr('disabled');
-        uploader.find("input[type='reset']").removeAttr('disabled');
         resetImageUpload();
     }
 
     function resetImageUpload(){
-        uploader.find("input[type='reset']").click();
         uploader.find("input[name='tags-serialized']").val("");
         uploader.find("div.tag-box").empty();
 
