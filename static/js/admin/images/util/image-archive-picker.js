@@ -4,10 +4,6 @@ $(document).ready(function() {
 
     showFolder('');
 
-    $("div.image-archive-picker button.cancel-chooser").click(function() {
-        $("div.image-archive-picker").modal('hide');
-    });
-
     $("div.image-archive-picker button.image-search").click(search);
     $("div.image-archive-picker input[name='search']").keydown(function(e) {
         if(e.which == 13) { // Enter
