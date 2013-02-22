@@ -23,40 +23,31 @@ $(document).ready(function() {
         }
     });
 
-    uploader.find("button.cancel-upload").click(function(e) {
-        uploadCancelled = false;
-        $("div.image-upload-dialog").modal('hide');
-    });
-
     var uploadCompleteCallback;
-    var uploadCancelled = false;
 
     window.uploadComplete = uploadComplete;
     function uploadComplete(status, url){
-        if(!uploadCancelled){
-            if(status === "no_files"){
-                uploader.find("input[type='submit']").removeAttr('disabled');
-                uploader.find("input[type='reset']").removeAttr('disabled');
-                uploader.find("div.upload-no-files").show();
-                uploader.find("div.uploading").hide();
-            } else if(status === "success"){
-                var description = uploader.find("input[name='credits']").val();
-                var photographer = uploader.find("input[name='photographer']").val();
-                uploader.find("div.uploading").hide();
-                $("div.image-upload-dialog").modal('hide');
-                uploadCompleteCallback(url, description, photographer);
-            } else {//parse error or unexpected reply
-                uploader.find("input[type='submit']").removeAttr('disabled');
-                uploader.find("input[type='reset']").removeAttr('disabled');
-                uploader.find("div.upload-failed").show();
-                uploader.find("div.uploading").hide();
-            }
+        if(status === "no_files"){
+            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("input[type='reset']").removeAttr('disabled');
+            uploader.find("div.upload-no-files").show();
+            uploader.find("div.uploading").hide();
+        } else if(status === "success"){
+            var description = uploader.find("input[name='credits']").val();
+            var photographer = uploader.find("input[name='photographer']").val();
+            uploader.find("div.uploading").hide();
+            $("div.image-upload-dialog").modal('hide');
+            uploadCompleteCallback(url, description, photographer);
+        } else {//parse error or unexpected reply
+            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("input[type='reset']").removeAttr('disabled');
+            uploader.find("div.upload-failed").show();
+            uploader.find("div.uploading").hide();
         }
     }
 
     window.openImageUpload = openImageUpload;
     function openImageUpload(callback){
-        uploadCancelled = false;
         uploadCompleteCallback = callback;
 
         $("div.image-upload-dialog").modal();
