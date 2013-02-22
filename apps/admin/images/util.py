@@ -32,8 +32,7 @@ def content_dialog(request):
         'albums': objects['albums'],
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
-        'list_status': 'album' if album != '' else 'root_album',
-        'include_meta': json.loads(request.POST['include_meta'])
+        'list_status': 'album' if album != '' else 'root_album'
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
@@ -42,8 +41,7 @@ def mine_dialog(request):
 
     context = RequestContext(request, {
         'images': images,
-        'list_status': 'album',
-        'include_meta': json.loads(request.POST['include_meta'])
+        'list_status': 'album'
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
@@ -61,8 +59,7 @@ def search_dialog(request):
         'albums_divided': divide_for_three_columns(objects['albums']),
         'images': objects['images'],
         'list_status': 'search',
-        'search_query': query,
-        'include_meta': json.loads(request.POST['include_meta'])
+        'search_query': query
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 

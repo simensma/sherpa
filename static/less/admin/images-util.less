@@ -69,33 +69,36 @@ div.image-archive-picker {
         background-color: rgb(235, 235, 235);
       }
     }
+  }
 
-    ul.images-simple {
+  div.content.simple-display {
+    ul.images {
       li {
         @image-height: 120px;
-        @image-width: 150px;
-
-        display: block;
-        font-family: "DTL Nobel" !important;
-        float: left;
         height: @image-height;
         margin: 2px;
-        text-align: center;
-        cursor: pointer;
+        padding: 0;
+        width: auto;
+        border: none;
 
         img {
           height: @image-height;
+          margin-bottom: 2px;
+        }
+
+        span.meta {
+          display: none;
         }
       }
 
       li.clickable-album {
-        color: @profile-red;
         img {
           height: 90px;
         }
       }
 
       li:hover {
+        background-color: transparent;
         opacity: 0.7;
         filter: alpha(opacity=70);
       }

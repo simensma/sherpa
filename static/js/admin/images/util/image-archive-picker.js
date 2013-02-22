@@ -23,10 +23,7 @@ $(document).ready(function() {
             var ajaxLoader = hideContent();
             $.ajax({
                 url: $("div.image-archive-picker").attr("data-search-url"),
-                data: {
-                    query: JSON.stringify(query),
-                    include_meta: JSON.stringify($("input[name='include_meta']:checked").length == 1)
-                }
+                data: { query: JSON.stringify(query) }
             }).done(function(result) {
                 result = JSON.parse(result);
                 $("div.image-archive-picker div.content").append(result.html);
@@ -37,6 +34,14 @@ $(document).ready(function() {
             });
         }
     }
+
+    $("input[name='include_meta']").change(function() {
+        if($(this).is(":checked")) {
+            $("div.image-archive-picker div.content").removeClass('simple-display');
+        } else {
+            $("div.image-archive-picker div.content").addClass('simple-display');
+        }
+    });
 });
 
 function chooseImagefromArchive(callback){
@@ -63,10 +68,7 @@ function showFolder(album) {
     }
     $.ajax({
         url: url,
-        data: {
-            album: JSON.stringify(album),
-            include_meta: JSON.stringify($("input[name='include_meta']:checked").length == 1)
-        }
+        data: { album: JSON.stringify(album) }
     }).done(function(result) {
         result = JSON.parse(result);
         $("div.image-archive-picker div.content").append(result.html);
