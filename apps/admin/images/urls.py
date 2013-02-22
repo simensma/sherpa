@@ -26,12 +26,11 @@ urlpatterns = patterns('admin.images.views',
     url(ur'^innhold/album/søk/$', 'album_search_json'),
     url(ur'^søk/$', 'search'),
     url(r'^fotograf/$', 'photographer'),
-
-    url(r'^bilde/fort/nytt/$', 'fast_upload'),
 )
 
 urlpatterns += patterns('admin.images.util',
     url(r'^dialog/album/$', 'content_dialog'),
     url(r'^dialog/mine/$', 'mine_dialog'),
-    url(ur'^dialog/søk/$', 'search_dialog')
+    url(ur'^dialog/søk/$', 'search_dialog'),
+    url(r'^dialog/last-opp/$', 'image_upload_dialog'),
 )

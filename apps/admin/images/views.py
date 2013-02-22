@@ -228,37 +228,6 @@ def upload_image(request):
         )
         return render(request, 'common/admin/images/iframe.html', {'result': 'unknown_exception'})
 
-def fast_upload(request):
-    try:
-        file = request.FILES['file']
-    except KeyError:
-        return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
-
-    #parse file
-    try:
-        parsed_image = parse_image(file)
-    except(IOError, KeyError):
-        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
-
-    #store stuff on s3 and in db
-    stored_image = store_image(parsed_image, None, request.user)
-
-    #add info to image
-    image = Image.objects.get(id=stored_image['id'])
-    tags = json.loads(request.POST['tags-serialized'])
-
-    if request.POST['description'] != "":  image.description = request.POST['description']
-    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
-    if request.POST['credits'] != "":      image.credits = request.POST['credits']
-    if request.POST['licence'] != "":      image.licence = request.POST['licence']
-    image.save()
-
-    for tag in [tag.lower() for tag in tags]:
-        obj, created = Tag.objects.get_or_create(name=tag)
-        image.tags.add(obj)
-
-    return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
-
 def content_json(request, album):
     if album is not None:
         current_album = Album.objects.get(id=album)

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.shortcuts import render
 
 import json
 
@@ -62,6 +63,38 @@ def search_dialog(request):
         'search_query': query
         })
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
+
+def image_upload_dialog(request):
+    try:
+        file = request.FILES['file']
+    except KeyError:
+        return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
+
+    #parse file
+    try:
+        parsed_image = parse_image(file)
+    except(IOError, KeyError):
+        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
+
+    #store stuff on s3 and in db
+    stored_image = store_image(parsed_image, None, request.user)
+
+    #add info to image
+    image = Image.objects.get(id=stored_image['id'])
+    tags = json.loads(request.POST['tags-serialized'])
+
+    if request.POST['description'] != "":  image.description = request.POST['description']
+    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
+    if request.POST['credits'] != "":      image.credits = request.POST['credits']
+    if request.POST['licence'] != "":      image.licence = request.POST['licence']
+    image.save()
+
+    for tag in [tag.lower() for tag in tags]:
+        obj, created = Tag.objects.get_or_create(name=tag)
+        image.tags.add(obj)
+
+    return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
+
 
 #
 # Actual utilities

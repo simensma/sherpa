@@ -15,7 +15,7 @@
       Du må velge et bilde å laste opp!<a class="close">x</a>
     </div>
 
-    <form action="{% url admin.images.views.fast_upload %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
+    <form action="{% url admin.images.util.image_upload_dialog %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
       {% csrf_token %}
 
       <div class="control-group">
