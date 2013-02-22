@@ -1,16 +1,17 @@
 $(document).ready(function() {
 
     var uploader = $("div.image-upload-dialog");
-    var tagger = new TypicalTagger(uploader.find("form.image-uploader input[name='tags']"), uploader.find("div.tag-box"));
+    var form = uploader.find("form");
+    var tagger = new TypicalTagger(form.find("input[name='tags']"), uploader.find("div.tag-box"));
 
     uploader.find("form").submit(function(e) {
         uploader.find("div.uploading").show();
         var tags = JSON.stringify(tagger.tags);
-        uploader.find("form.image-uploader input[name='tags-serialized']").val(tags);
+        form.find("input[name='tags-serialized']").val(tags);
         uploader.find("input[type='submit']").attr('disabled', 'disabled');
     });
 
-    uploader.find("form input[name='photographer']").typeahead({
+    form.find("input[name='photographer']").typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
