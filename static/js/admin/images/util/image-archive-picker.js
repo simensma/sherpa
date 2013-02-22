@@ -8,8 +8,6 @@
         picker = $("div.image-archive-picker");
         ajaxloader = picker.find("img.ajaxloader");
 
-        // Bind events to functionality
-
         picker.find("input[name='include_meta']").change(setDisplayStatus);
         picker.find("button.image-search").click(search);
         picker.find("input[name='search']").keydown(function(e) {
