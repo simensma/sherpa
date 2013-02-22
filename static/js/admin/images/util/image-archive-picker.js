@@ -16,7 +16,6 @@
             }
         });
 
-
         // The initial search
         performLookup(picker.attr("data-album-url"), { album: JSON.stringify('') });
     });
