@@ -57,9 +57,9 @@
     // Set include_meta status with a class on the content div wrapper
     function setDisplayStatus() {
         if($(this).is(":checked")) {
-            $("div.image-archive-picker div.content").removeClass('simple-display');
+            picker.find("div.content").removeClass('simple-display');
         } else {
-            $("div.image-archive-picker div.content").addClass('simple-display');
+            picker.find("div.content").addClass('simple-display');
         }
     }
 
@@ -68,7 +68,7 @@
         // Setting a default hardcoded search length here, in case we forgot
         // to provide it with js_globals - which we should rather do
         if(query.length < (window.IMAGE_SEARCH_LENGTH || 3)) {
-            $("div.image-archive-picker div.too-few-chars").show();
+            picker.find("div.too-few-chars").show();
         } else {
             var url = picker.attr("data-search-url");
             var data = { query: JSON.stringify(query) };
@@ -77,8 +77,8 @@
     }
 
     function performLookup(url, data) {
-        $("div.image-archive-picker div.too-few-chars").hide();
-        var content = $("div.image-archive-picker div.content");
+        picker.find("div.too-few-chars").hide();
+        var content = picker.find("div.content");
         content.empty();
         var ajaxLoader = $('<img class="ajaxloader" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">');
         content.append(ajaxLoader);
