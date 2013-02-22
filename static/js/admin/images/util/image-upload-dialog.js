@@ -23,7 +23,7 @@ $(document).ready(function() {
     });
 
     $("div.image-fast-upload button.cancel-upload").click(function(e) {
-        uploadCancelled = false
+        uploadCancelled = false;
         $("div.image-fast-upload").modal('hide');
     });
 });
