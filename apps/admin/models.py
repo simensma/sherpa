@@ -70,6 +70,7 @@ def delete_album(sender, **kwargs):
 class Publication(models.Model):
     association = models.ForeignKey('association.Association')
     title = models.CharField(max_length=255)
+    logo = models.CharField(max_length=2048)
     LICENSE_CHOICES = (
         ('all_rights_reserved', 'Alle rettigheter reservert'),
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)

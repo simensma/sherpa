@@ -30,6 +30,7 @@ def edit(request, publication):
             publication.association = association
         if request.POST['license'] in [l[0] for l in Publication.LICENSE_CHOICES]:
             publication.license = request.POST['license']
+        publication.logo = request.POST['logo']
         publication.save()
         messages.info(request, 'publication_info_saved')
         return HttpResponseRedirect(reverse('admin.publications.views.edit', args=[publication.id]))
