@@ -45,12 +45,12 @@
     };
 
     window.iframeUploadComplete = iframeUploadComplete;
-    function iframeUploadComplete(status, url){
-        if(status === "no_files"){
+    function iframeUploadComplete(status, url) {
+        if(status === "no_files") {
             uploader.find("input[type='submit']").removeAttr('disabled');
             uploader.find("div.upload-no-files").show();
             uploader.find("div.uploading").hide();
-        } else if(status === "success"){
+        } else if(status === "success") {
             var description = uploader.find("input[name='credits']").val();
             var photographer = uploader.find("input[name='photographer']").val();
             uploader.find("div.uploading").hide();
