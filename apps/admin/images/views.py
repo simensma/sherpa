@@ -262,7 +262,7 @@ def upload_image(request):
     except(IOError, KeyError):
         return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
     except Exception:
-        logger.error(u"Uventet exception ved bildeopplasting",
+        logger.error(u"Ukjent exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
