@@ -33,7 +33,7 @@
     ImageUploadDialog.open = function(callback) {
         ImageUploadDialog.callback = callback;
 
-        $("div.image-upload-dialog").modal();
+        uploader.modal();
         uploader.find("input[type='submit']").removeAttr('disabled');
 
         uploader.find("input[name='tags-serialized']").val("");
@@ -54,7 +54,7 @@
             var description = uploader.find("input[name='credits']").val();
             var photographer = uploader.find("input[name='photographer']").val();
             uploader.find("div.uploading").hide();
-            $("div.image-upload-dialog").modal('hide');
+            uploader.modal('hide');
             ImageUploadDialog.callback(url, description, photographer);
         } else {//parse error or unexpected reply
             uploader.find("input[type='submit']").removeAttr('disabled');
