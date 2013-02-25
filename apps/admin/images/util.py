@@ -175,6 +175,14 @@ def generate_random_image_key():
         else        : return chr(r + 61)
     return random_alphanumeric() + random_alphanumeric() + '/' + random_alphanumeric() + random_alphanumeric() + '/' + random_alphanumeric() + random_alphanumeric()
 
+def generate_unique_random_image_key():
+    key = generate_random_image_key()
+    while Image.objects.filter(key=key).exists():
+        # Potential weak spot here if the amount of objects
+        # were to close in on the amount of available keys.
+        key = generate_random_image_key()
+    return key
+
 def store_image(image, album, user):
     url = 'http://' + settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image['key'] + '.' + image['ext']
 
@@ -210,15 +218,10 @@ def store_image(image, album, user):
     return {'url': url, 'id': image.id}
 
 def parse_image(file):
-    key = generate_random_image_key()
-    while Image.objects.filter(key=key).exists():
-        # Potential weak spot here if the amount of objects
-        # were to close in on the amount of available keys.
-        key = generate_random_image_key()
-
     # TODO: Consider streaming the file instead of reading everything into memory first.
     # See simples3/htstream.py
     data = file.read()
+    key = generate_unique_random_image_key
 
     img = pil.open(StringIO(data))
     exif = {}
