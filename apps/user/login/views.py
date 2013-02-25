@@ -257,7 +257,7 @@ def send_restore_password_email(request):
         # Ensure that the key isn't already in use. With the current key length of 40, we'll have
         # ~238 bits of entropy which means that this will never ever happen, ever.
         # You will win the lottery before this happens. And I want to know if it does, so log it.
-        logger.error(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+        logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
             exc_info=sys.exc_info(),
             extra={
                 'request': request,

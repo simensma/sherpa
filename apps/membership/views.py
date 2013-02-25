@@ -85,7 +85,7 @@ def zipcode_search(request):
     except FocusZipcode.DoesNotExist:
         # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
         if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
-            logger.error(u"Postnummer finnes i Zipcode, men ikke i Focus!",
+            logger.warning(u"Postnummer finnes i Zipcode, men ikke i Focus!",
                 exc_info=sys.exc_info(),
                 extra={
                     'request': request,
@@ -98,7 +98,7 @@ def zipcode_search(request):
             return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
 
     except Association.DoesNotExist:
-        logger.error(u"Focus-postnummer mangler foreningstilknytning!",
+        logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
