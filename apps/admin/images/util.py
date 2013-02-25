@@ -174,7 +174,7 @@ def generate_random_image_key():
         if  (r < 10): return chr(r + 48)
         elif(r < 36): return chr(r + 55)
         else        : return chr(r + 61)
-    return random_alphanumeric() + random_alphanumeric() + '/' + random_alphanumeric() + random_alphanumeric() + '/' + random_alphanumeric() + random_alphanumeric()
+    return "%s%s/%s%s/%s%s" % (random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric())
 
 def generate_unique_random_image_key():
     key = generate_random_image_key()
@@ -185,7 +185,7 @@ def generate_unique_random_image_key():
     return key
 
 def store_image(image, album, user):
-    url = 'http://' + settings.AWS_BUCKET + '/' + settings.AWS_IMAGEGALLERY_PREFIX + image['key'] + '.' + image['ext']
+    url = 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext'])
 
     s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
         settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
