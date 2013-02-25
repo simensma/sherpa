@@ -46,16 +46,16 @@
 
     window.iframeUploadComplete = iframeUploadComplete;
     function iframeUploadComplete(result) {
-        if(result.status === "no_files") {
-            uploader.find("input[type='submit']").removeAttr('disabled');
-            uploader.find("div.upload-no-files").show();
-            uploader.find("div.uploading").hide();
-        } else if(result.status === "success") {
+        if(result.status === "success") {
             var description = uploader.find("input[name='credits']").val();
             var photographer = uploader.find("input[name='photographer']").val();
             uploader.find("div.uploading").hide();
             uploader.modal('hide');
             ImageUploadDialog.callback(result.url, description, photographer);
+        } else if(result.status === "no_files") {
+            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("div.upload-no-files").show();
+            uploader.find("div.uploading").hide();
         } else {//parse error or unexpected reply
             uploader.find("input[type='submit']").removeAttr('disabled');
             uploader.find("div.upload-failed").show();

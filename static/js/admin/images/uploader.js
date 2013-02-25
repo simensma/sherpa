@@ -73,12 +73,12 @@ function iframeUploadComplete(result) {
         if(userReady) {
             $("div.image-details form").trigger('submit');
         }
-    } else if(result.status == 'parse_error') {
-        $("div.upload-failed").show();
-        $("div.image-details").hide();
-        $("form.image-uploader").show();
     } else if(result.status == 'no_files') {
         $("div.upload-no-files").show();
+        $("div.image-details").hide();
+        $("form.image-uploader").show();
+    } else if(result.status == 'parse_error') {
+        $("div.upload-failed").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
     } else if(result.status == 'unknown_exception') {
