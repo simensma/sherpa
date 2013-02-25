@@ -123,6 +123,10 @@ def image_upload_dialog(request):
         url = 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, key, ext)
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': url, })
     except(IOError, KeyError):
+        logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
     except Exception:
         logger.error(u"Ukjent exception ved bildeopplasting",

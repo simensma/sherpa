@@ -260,6 +260,10 @@ def upload_image(request):
             ids.append(image.id)
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
     except(IOError, KeyError):
+        logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
     except Exception:
         logger.error(u"Ukjent exception ved bildeopplasting",
