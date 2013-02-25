@@ -80,11 +80,8 @@ class Publication(models.Model):
     def releases_ordered(self):
         return self.releases.all().order_by('-pub_date')
 
-    def get_logo(self):
-        return use_image_thumb(self.logo, 500)
-
 class Release(models.Model):
-    publication = models.ForeignKey(Publication)
+    publication = models.ForeignKey(Publication, related_name='releases')
     title = models.CharField(max_length=255)
     cover_photo = models.CharField(max_length=2048)
     description = models.TextField()

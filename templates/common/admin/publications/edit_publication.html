@@ -132,7 +132,7 @@
           </h3>
           <p>
             <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
-              <img src="{% firstof release.get_cover_photo publication.get_logo %}" alt="{{ release.title }}"><br>
+              <img src="{% firstof release.cover_photo publication.logo %}" alt="{{ release.title }}"><br>
             </a>
           </p>
         </div>
