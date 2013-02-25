@@ -181,15 +181,27 @@ def store_image(image, album, user):
     s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
         settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
     s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
-        image['data'], acl='public-read', mimetype=image['content_type'])
+        image['data'],
+        acl='public-read',
+        mimetype=image['content_type'])
     for thumb in image['thumbs']:
         s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
-            thumb['data'], acl='public-read', mimetype=image['content_type'])
+            thumb['data'],
+            acl='public-read',
+            mimetype=image['content_type'])
     tags = image['tags']
-    image = Image(key=image['key'], extension=image['ext'], hash=image['hash'],
-      description='', album=album, photographer='', credits='', licence='',
-      exif=image['exif'], uploader=user.get_profile(), width=image['width'],
-      height=image['height'])
+    image = Image(key=image['key'],
+        extension=image['ext'],
+        hash=image['hash'],
+        description='',
+        album=album,
+        photographer='',
+        credits='',
+        licence='',
+        exif=image['exif'],
+        uploader=user.get_profile(),
+        width=image['width'],
+        height=image['height'])
     image.save()
     for tag in [tag.lower() for tag in tags]:
         obj, created = Tag.objects.get_or_create(name=tag)
@@ -239,7 +251,14 @@ def parse_image(file):
         img_copy.save(fp, "jpeg" if ext == "jpg" else ext)
         thumbs.append({'size': size, 'data': fp.getvalue()})
 
-    return {'key': key, 'ext': ext, 'hash': sha1(data).hexdigest(),
-      'width': img.size[0], 'height': img.size[1], 'content_type': file.content_type,
-      'data': data, 'thumbs': thumbs, 'exif': json.dumps(exif),
-      'tags': keywords}
+    return {
+        'key': key,
+        'ext': ext,
+        'hash': sha1(data).hexdigest(),
+        'width': img.size[0],
+        'height': img.size[1],
+        'content_type': file.content_type,
+        'data': data,
+        'thumbs': thumbs,
+        'exif': json.dumps(exif),
+        'tags': keywords}
