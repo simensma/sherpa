@@ -20,4 +20,5 @@ $(document).ready(function() {
             input_logo.change();
         });
     });
+
 });

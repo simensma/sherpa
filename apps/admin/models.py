@@ -75,3 +75,11 @@ class Publication(models.Model):
         ('all_rights_reserved', 'Alle rettigheter reservert'),
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
     license = models.CharField(max_length=255, choices=LICENSE_CHOICES, default=LICENSE_CHOICES[0][0])
+
+class Release(models.Model):
+    publication = models.ForeignKey(Publication)
+    title = models.CharField(max_length=255)
+    cover_photo = models.CharField(max_length=2048)
+    description = models.TextField()
+    pub_date = models.DateTimeField()
+    tags = models.ManyToManyField('core.Tag', related_name='releases')

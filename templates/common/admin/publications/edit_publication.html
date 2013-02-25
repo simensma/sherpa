@@ -6,7 +6,7 @@
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/publications/edit.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_publication.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -18,6 +18,10 @@
       {% if message.message == 'publication_info_saved' %}
         <div class="alert alert-success">
           <strong>Publikasjonen har blitt lagret.</strong>
+        </div>
+      {% elif message.message == 'release_info_saved' %}
+        <div class="alert alert-success">
+          <strong>Utgivelsen har blitt lagret.</strong>
         </div>
       {% endif %}
     {% endfor %}
@@ -112,6 +116,11 @@
 
     <h2>Utgivelser</h2>
 
+    <p>
+      <a href="{% url admin.publications.views.edit_release publication.id %}" class="btn btn-large">
+        Legg inn ny utgivelse
+      </a>
+    </p>
 
   </div>
 </div>
