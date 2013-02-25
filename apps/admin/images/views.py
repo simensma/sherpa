@@ -7,12 +7,17 @@ from core.models import Tag
 from admin.models import Image, Album
 from user.models import Profile
 
-from admin.images.util import parse_objects, list_parents, list_parents_values, parse_image, store_image, full_archive_search
+from core import xmp
+from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
 
+import Image as pil
+from cStringIO import StringIO
 import json
 import logging
 import sys
 from datetime import datetime
+import simples3
+from hashlib import sha1
 
 logger = logging.getLogger('sherpa')
 
@@ -206,21 +211,56 @@ def upload_image(request):
         if len(request.FILES.getlist('files')) == 0:
             return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
-        #parsing
-        parsed_images = []
-        for file in request.FILES.getlist('files'):
-            try:
-                parsed_images.append(parse_image(file))
-            except(IOError, KeyError):
-                return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
+        s3 = simples3.S3Bucket(
+            settings.AWS_BUCKET,
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY,
+            'https://%s' % settings.AWS_BUCKET)
 
-        #storing
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
-        for image in parsed_images:
-            stored_image = store_image(image, album, request.user)
-            ids.append(stored_image['id'])
+        for image in request.FILES.getlist('files'):
+            key = generate_unique_random_image_key()
+            data = image.read()
+            ext = image.name.split(".")[-1].lower()
+            pil_image = pil.open(StringIO(data))
+            exif_json = json.dumps(get_exif_tags(pil_image))
+            tags = xmp.find_keywords(data)
+            thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
+
+            s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
+                data,
+                acl='public-read',
+                mimetype=image.content_type)
+            for thumb in thumbs:
+                s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
+                    thumb['data'],
+                    acl='public-read',
+                    mimetype=image.content_type)
+
+            image = Image(
+                key=key,
+                extension=ext,
+                hash=sha1(data).hexdigest(),
+                description='',
+                album=album,
+                photographer='',
+                credits='',
+                licence='',
+                exif=exif_json,
+                uploader=request.user.get_profile(),
+                width=pil_image.size[0],
+                height=pil_image.size[1])
+            image.save()
+
+            for tag in [tag.lower() for tag in tags]:
+                obj, created = Tag.objects.get_or_create(name=tag)
+                image.tags.add(obj)
+
+            ids.append(image.id)
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+    except(IOError, KeyError):
+        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
     except Exception:
         logger.error(u"Uventet exception ved bildeopplasting",
             exc_info=sys.exc_info(),

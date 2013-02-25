@@ -67,34 +67,59 @@ def search_dialog(request):
 
 def image_upload_dialog(request):
     try:
-        file = request.FILES['file']
+        image = request.FILES['file']
     except KeyError:
         return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
 
-    #parse file
     try:
-        parsed_image = parse_image(file)
+        s3 = simples3.S3Bucket(
+            settings.AWS_BUCKET,
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY,
+            'https://%s' % settings.AWS_BUCKET)
+
+        key = generate_unique_random_image_key()
+        data = image.read()
+        ext = image.name.split(".")[-1].lower()
+        pil_image = pil.open(StringIO(data))
+        exif_json = json.dumps(get_exif_tags(pil_image))
+        image_file_tags = xmp.find_keywords(data)
+        user_provided_tags = json.loads(request.POST['tags-serialized'])
+        thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
+
+        s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
+            data,
+            acl='public-read',
+            mimetype=image.content_type)
+        for thumb in thumbs:
+            s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
+                thumb['data'],
+                acl='public-read',
+                mimetype=image.content_type)
+
+        image = Image(
+            key=key,
+            extension=ext,
+            hash=sha1(data).hexdigest(),
+            description=request.POST['description'],
+            album=None,
+            photographer=request.POST['photographer'],
+            credits=request.POST['credits'],
+            licence=request.POST['licence'],
+            exif=exif_json,
+            uploader=request.user.get_profile(),
+            width=pil_image.size[0],
+            height=pil_image.size[1])
+        image.save()
+
+        for tag in [tag.lower() for tag in image_file_tags + user_provided_tags]:
+            obj, created = Tag.objects.get_or_create(name=tag)
+            image.tags.add(obj)
+
+        url = 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, key, ext)
+        return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': url, })
     except(IOError, KeyError):
         return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
-
-    #store stuff on s3 and in db
-    stored_image = store_image(parsed_image, None, request.user)
-
-    #add info to image
-    image = Image.objects.get(id=stored_image['id'])
-    tags = json.loads(request.POST['tags-serialized'])
-
-    if request.POST['description'] != "":  image.description = request.POST['description']
-    if request.POST['photographer'] != "": image.photographer = request.POST['photographer']
-    if request.POST['credits'] != "":      image.credits = request.POST['credits']
-    if request.POST['licence'] != "":      image.licence = request.POST['licence']
-    image.save()
-
-    for tag in [tag.lower() for tag in tags]:
-        obj, created = Tag.objects.get_or_create(name=tag)
-        image.tags.add(obj)
-
-    return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': stored_image['url'], })
 
 
 #
@@ -184,50 +209,10 @@ def generate_unique_random_image_key():
         key = generate_random_image_key()
     return key
 
-def store_image(image, album, user):
-    url = 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext'])
-
-    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
-    s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], image['ext']),
-        image['data'],
-        acl='public-read',
-        mimetype=image['content_type'])
-    for thumb in image['thumbs']:
-        s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image['key'], thumb['size'], image['ext']),
-            thumb['data'],
-            acl='public-read',
-            mimetype=image['content_type'])
-    tags = image['tags']
-    image = Image(key=image['key'],
-        extension=image['ext'],
-        hash=image['hash'],
-        description='',
-        album=album,
-        photographer='',
-        credits='',
-        licence='',
-        exif=image['exif'],
-        uploader=user.get_profile(),
-        width=image['width'],
-        height=image['height'])
-    image.save()
-    for tag in [tag.lower() for tag in tags]:
-        obj, created = Tag.objects.get_or_create(name=tag)
-        image.tags.add(obj)
-
-    return {'url': url, 'id': image.id}
-
-def parse_image(file):
-    # TODO: Consider streaming the file instead of reading everything into memory first.
-    # See simples3/htstream.py
-    data = file.read()
-    key = generate_unique_random_image_key
-
-    img = pil.open(StringIO(data))
+def get_exif_tags(pil_image):
     exif = {}
-    if hasattr(img, '_getexif') and img._getexif() is not None:
-        for tag, value in img._getexif().items():
+    if hasattr(pil_image, '_getexif') and pil_image._getexif() is not None:
+        for tag, value in pil_image._getexif().items():
             if tag == 37500:
                 # MakerNote data, see: https://en.wikipedia.org/wiki/Exchangeable_image_file_format#MakerNote_data
                 continue
@@ -240,27 +225,12 @@ def parse_image(file):
                 continue
             exif[TAGS.get(tag, tag)] = value
 
-    # Parse XMP-keywords
-    keywords = xmp.find_keywords(data)
-
-    thumbs = []
-    ext = file.name.split(".")[-1].lower()
-    for size in settings.THUMB_SIZES:
-        fp = StringIO()
-        img_copy = img.copy()
-        img_copy.thumbnail([size, size], pil.ANTIALIAS)
-        # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
-        img_copy.save(fp, "jpeg" if ext == "jpg" else ext)
-        thumbs.append({'size': size, 'data': fp.getvalue()})
-
-    return {
-        'key': key,
-        'ext': ext,
-        'hash': sha1(data).hexdigest(),
-        'width': img.size[0],
-        'height': img.size[1],
-        'content_type': file.content_type,
-        'data': data,
-        'thumbs': thumbs,
-        'exif': json.dumps(exif),
-        'tags': keywords}
+def create_thumb(pil_image, extension, size):
+    fp = StringIO()
+    img_copy = pil_image.copy()
+    img_copy.thumbnail([size, size], pil.ANTIALIAS)
+    # Actually, the caller should make the extension lowercase, but let's not trust them
+    extension = extension.lower()
+    # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
+    img_copy.save(fp, "jpeg" if extension == "jpg" else extension)
+    return fp.getvalue()
