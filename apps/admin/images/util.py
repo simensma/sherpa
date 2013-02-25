@@ -10,6 +10,7 @@ import json
 
 from core.models import Tag
 from admin.models import Image, Album
+from core import xmp
 
 from PIL.ExifTags import TAGS
 import random
@@ -240,9 +241,7 @@ def parse_image(file):
             exif[TAGS.get(tag, tag)] = value
 
     # Parse XMP-keywords
-    from core import xmp
-    xmp_dict = xmp.parse_xmp(data)
-    keywords = xmp.keywords(xmp_dict) if xmp_dict is not None else []
+    keywords = xmp.find_keywords(data)
 
     thumbs = []
     ext = file.name.split(".")[-1].lower()
