@@ -24,7 +24,7 @@
 
     <h2>{{ publication.title }}</h2>
 
-    <form action="{% url admin.publications.views.edit publication.id %}" method="post" class="form-default form-border form-horizontal edit-publication">
+    <form action="{% url admin.publications.views.edit_publication publication.id %}" method="post" class="form-default form-border form-horizontal edit-publication">
       {% csrf_token %}
 
       <div class="control-group title">

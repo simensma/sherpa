@@ -18,14 +18,14 @@
       </tr>
       {% for publication in publications %}
         <tr>
-          <td><a href="{% url admin.publications.views.edit publication.id %}">{{ publication.title }}</a></td>
+          <td><a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a></td>
           <td>{{ publication.association.name }}</td>
         </tr>
       {% endfor %}
     </table>
 
     <button class="btn btn-large create">Opprett ny publikasjon</button>
-    <form action="{% url admin.publications.views.create %}" method="post" class="create form-default form-border form-horizontal hide">
+    <form action="{% url admin.publications.views.create_publication %}" method="post" class="create form-default form-border form-horizontal hide">
       {% csrf_token %}
 
       <div class="control-group title">

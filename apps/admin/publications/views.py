@@ -4,21 +4,21 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 from association.models import Association
-from admin.models import Publication
+from admin.models import Publication, Release
 
 def index(request):
     publications = Publication.objects.all().order_by('title')
     context = {'publications': publications}
     return render(request, 'common/admin/publications/index.html', context)
 
-def create(request):
+def create_publication(request):
     publication = Publication(
         title=request.POST['title'],
         association=request.session['active_association'])
     publication.save()
-    return HttpResponseRedirect(reverse('admin.publications.views.edit', args=[publication.id]))
+    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
 
-def edit(request, publication):
+def edit_publication(request, publication):
     publication = Publication.objects.get(id=publication)
     if request.method == 'GET':
         context = {'publication': publication}
@@ -33,4 +33,4 @@ def edit(request, publication):
         publication.logo = request.POST['logo']
         publication.save()
         messages.info(request, 'publication_info_saved')
-        return HttpResponseRedirect(reverse('admin.publications.views.edit', args=[publication.id]))
+        return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
