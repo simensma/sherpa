@@ -18,6 +18,10 @@ import Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
 import simples3
+import logging
+import sys
+
+logger = logging.getLogger('sherpa')
 
 def content_dialog(request):
     album = json.loads(request.POST['album'])
@@ -120,6 +124,12 @@ def image_upload_dialog(request):
         return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'url': url, })
     except(IOError, KeyError):
         return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
+    except Exception:
+        logger.error(u"Uventet exception ved bildeopplasting",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        return render(request, 'common/admin/images/iframe.html', {'result': 'unknown_exception'})
 
 
 #
