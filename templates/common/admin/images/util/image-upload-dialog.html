@@ -6,13 +6,20 @@
 
   <div class="modal-body">
     <div class="alert alert-info uploading hide">
-      Vent mens bildet lastes opp...<a class="close">x</a>
-    </div>
-    <div class="alert alert-error upload-failed hide">
-      Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!<a class="close">x</a>
+      <a class="close">x</a>
+      Vent mens bildet lastes opp...
     </div>
     <div class="alert alert-error upload-no-files hide">
-      Du må velge et bilde å laste opp!<a class="close">x</a>
+      <a class="close">x</a>
+      Du må velge et bilde å laste opp!
+    </div>
+    <div class="alert alert-error parse-error hide">
+      <a class="close">x</a>
+      Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!
+    </div>
+    <div class="alert alert-error unknown-exception hide">
+      <a class="close">x</a>
+      Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
     <form action="{% url admin.images.util.image_upload_dialog %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">

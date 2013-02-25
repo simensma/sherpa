@@ -39,9 +39,7 @@
         uploader.find("input[name='tags-serialized']").val("");
         uploader.find("div.tag-box").empty();
 
-        uploader.find("div.uploading").hide();
-        uploader.find("div.upload-failed").hide();
-        uploader.find("div.upload-no-files").hide();
+        uploader.find("div.alert").hide();
     };
 
     window.iframeUploadComplete = iframeUploadComplete;
@@ -56,9 +54,13 @@
             uploader.find("input[type='submit']").removeAttr('disabled');
             uploader.find("div.upload-no-files").show();
             uploader.find("div.uploading").hide();
-        } else {//parse error or unexpected reply
+        } else if(result.status == 'parse_error') {
             uploader.find("input[type='submit']").removeAttr('disabled');
-            uploader.find("div.upload-failed").show();
+            uploader.find("div.parse-error").show();
+            uploader.find("div.uploading").hide();
+        } else if(result.status == 'unknown_exception') {
+            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("div.unknown-exception").show();
             uploader.find("div.uploading").hide();
         }
     }
