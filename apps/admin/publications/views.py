@@ -45,7 +45,8 @@ def edit_release(request, publication, release):
         release = Release.objects.get(id=release) if release is not None else None
         context = {
             'publication': publication,
-            'release': release}
+            'release': release,
+            'now': datetime.now()}
         return render(request, 'common/admin/publications/edit_release.html', context)
     elif request.method == 'POST':
         publication = Publication.objects.get(id=publication)

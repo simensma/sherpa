@@ -66,7 +66,7 @@
         <label class="control-label" for="pub_date">Publisert:</label>
         <div class="controls">
           <div class="input-append date pub_date-wrapper">
-            <input type="text" class="input-medium" name="pub_date" value="{{ release.pub_date|date:"d.m.Y" }}">
+            <input type="text" class="input-medium" name="pub_date" value="{% firstof release.pub_date|date:"d.m.Y" now|date:"d.m.Y" %}">
             <span class="add-on"><i class="icon-th"></i></span>
           </div>
         </div>
