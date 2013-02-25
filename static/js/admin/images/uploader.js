@@ -64,24 +64,24 @@ $(document).ready(function() {
     });
 });
 
-function iframeUploadComplete(result, ids) {
+function iframeUploadComplete(result) {
     $("div.uploading").hide();
-    if(result == 'success') {
+    if(result.status == 'success') {
         $("div.upload-complete").show();
-        $("div.image-details input[name='ids']").val(ids);
+        $("div.image-details input[name='ids']").val(JSON.stringify(result.ids));
         uploadReady = true;
         if(userReady) {
             $("div.image-details form").trigger('submit');
         }
-    } else if(result == 'parse_error') {
+    } else if(result.status == 'parse_error') {
         $("div.upload-failed").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
-    } else if(result == 'no_files') {
+    } else if(result.status == 'no_files') {
         $("div.upload-no-files").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
-    } else if(result == 'unknown_exception') {
+    } else if(result.status == 'unknown_exception') {
         $("div.upload-unknown-exception").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();

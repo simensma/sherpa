@@ -5,12 +5,7 @@
     <meta charset="UTF-8">
     <title></title>
     <script>
-    {# the fast uploader rqueiers the url #}
-    {% if url %}
-      window.top.window.iframeUploadComplete('{{ result }}', '{{ url }}');
-    {% else %}
-      window.top.window.iframeUploadComplete('{{ result }}', '{{ ids }}');
-    {% endif %}
+      window.top.window.iframeUploadComplete(JSON.parse("{{ result|escapejs }}"));
     </script>
   </head>
   <body></body>

@@ -209,7 +209,8 @@ def update_images(request):
 def upload_image(request):
     try:
         if len(request.FILES.getlist('files')) == 0:
-            return render(request, 'common/admin/images/iframe.html', {'result': 'no_files'})
+            result = json.dumps({'status': 'no_files'})
+            return render(request, 'common/admin/images/iframe.html', {'result': result})
 
         s3 = simples3.S3Bucket(
             settings.AWS_BUCKET,
@@ -258,19 +259,24 @@ def upload_image(request):
                 image.tags.add(obj)
 
             ids.append(image.id)
-        return render(request, 'common/admin/images/iframe.html', {'result': 'success', 'ids': json.dumps(ids)})
+        result = json.dumps({
+            'status': 'success',
+            'ids': json.dumps(ids)})
+        return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
         logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
-        return render(request, 'common/admin/images/iframe.html', {'result': 'parse_error'})
+        result = json.dumps({'status': 'parse_error'})
+        return render(request, 'common/admin/images/iframe.html', {'result': result})
     except Exception:
         logger.error(u"Ukjent exception ved bildeopplasting",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
-        return render(request, 'common/admin/images/iframe.html', {'result': 'unknown_exception'})
+        result = json.dumps({'status': 'unknown_exception'})
+        return render(request, 'common/admin/images/iframe.html', {'result': result})
 
 def content_json(request, album):
     if album is not None:
