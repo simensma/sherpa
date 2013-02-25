@@ -25,7 +25,6 @@ $(document).ready(function() {
     form.find("div.pub_date-wrapper").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
-        startView: 'decade',
         autoclose: true,
         language: 'nb'
     });
