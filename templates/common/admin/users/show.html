@@ -184,14 +184,14 @@
           {% endif %}
           {% if assignable_associations.small_associations|length > 0 %}
             <optgroup label="Lokale turlag">
-            {% for association in assignable_associations.small_associations %}
+              {% for association in assignable_associations.small_associations %}
                 <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
           {% if assignable_associations.hike_groups|length > 0 %}
             <optgroup label="Turgrupper">
-            {% for association in assignable_associations.hike_groups %}
+              {% for association in assignable_associations.hike_groups %}
                 <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
@@ -249,14 +249,14 @@
             {% endif %}
             {% if revokable_associations.small_associations|length > 0 %}
               <optgroup label="Lokale turlag">
-              {% for association in revokable_associations.small_associations %}
+                {% for association in revokable_associations.small_associations %}
                   <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
             {% if revokable_associations.hike_groups|length > 0 %}
               <optgroup label="Turgrupper">
-              {% for association in revokable_associations.hike_groups %}
+                {% for association in revokable_associations.hike_groups %}
                   <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
