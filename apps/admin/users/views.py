@@ -17,20 +17,20 @@ def index(request):
     context = {'password_length': settings.USER_PASSWORD_LENGTH}
     return render(request, 'common/admin/users/index.html', context)
 
-def show(request, user):
-    user = User.objects.get(id=user)
+def show(request, other_user):
+    other_user = User.objects.get(id=other_user)
 
     # Admins can assign user/admin, users can assign users
     assignable_admin = request.user.get_profile().associations_with_role('admin')
-    assignable_user = request.user.get_profile().associations_with_role('user').exclude(associationrole__profile=user.get_profile())
+    assignable_user = request.user.get_profile().associations_with_role('user').exclude(associationrole__profile=other_user.get_profile())
     assignable_associations = assignable_admin | assignable_user
 
     # Only admins can revoke association relation
-    revokable_associations = user.get_profile().all_associations() & request.user.get_profile().associations_with_role('admin')
+    revokable_associations = other_user.get_profile().all_associations() & request.user.get_profile().associations_with_role('admin')
 
     context = {
-        'other_user': user,
-        'other_user_perms': PermWrapper(user),
+        'other_user': other_user,
+        'other_user_perms': PermWrapper(other_user),
         'revokable_associations': Association.sort(revokable_associations),
         'assignable_associations': Association.sort(assignable_associations)}
     return render(request, 'common/admin/users/show.html', context)
