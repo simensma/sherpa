@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 import requests, re, json, logging, sys
 from lxml import etree
 from urllib import quote_plus
-from smtplib import SMTPDataError
+from smtplib import SMTPException
 
 logger = logging.getLogger('sherpa')
 
@@ -712,7 +712,7 @@ def prepare_and_send_email(request, users, association, location, payment_method
     message = t.render(c)
     try:
         send_mail(subject, message, EMAIL_FROM, email_recipients)
-    except SMTPDataError:
+    except SMTPException:
         # Silently log and ignore this error. The user will have to do without email receipt.
         logger.error(u"Klarte ikke å sende innmeldingskvitteringepost",
             exc_info=sys.exc_info(),
