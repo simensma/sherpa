@@ -88,7 +88,7 @@ class Profile(models.Model):
             return self.associations.all()
 
     def all_associations_sorted(self):
-        return Association.sort_and_apply_roles(self.all_associations(), self.user)
+        return Association.sort(self.all_associations())
 
     class Meta:
         permissions = [

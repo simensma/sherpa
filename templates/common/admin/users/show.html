@@ -6,6 +6,7 @@
   <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
 {% endblock %}
 
+{% load association_role %}
 {% load friendlyrole %}
 
 {% block body %}
@@ -56,9 +57,9 @@
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
-                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
-                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
-                  {{ association.role|friendlyrole }}
+                  {% if association|role:other_user.get_profile == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association|role:other_user.get_profile == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association|role:other_user.get_profile|friendlyrole }}
                 </td>
               </tr>
             {% endfor %}
@@ -72,9 +73,9 @@
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
-                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
-                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
-                  {{ association.role|friendlyrole }}
+                  {% if association|role:other_user.get_profile == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association|role:other_user.get_profile == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association|role:other_user.get_profile|friendlyrole }}
                 </td>
               </tr>
             {% endfor %}
@@ -88,9 +89,9 @@
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
-                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
-                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
-                  {{ association.role|friendlyrole }}
+                  {% if association|role:other_user.get_profile == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association|role:other_user.get_profile == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association|role:other_user.get_profile|friendlyrole }}
                 </td>
               </tr>
             {% endfor %}
@@ -104,9 +105,9 @@
               <tr>
                 <td>{{ association.name }}</td>
                 <td>
-                  {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
-                  {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
-                  {{ association.role|friendlyrole }}
+                  {% if association|role:other_user.get_profile == 'user' %}<i class="icon-user"></i>{% endif %}
+                  {% if association|role:other_user.get_profile == 'admin' %}<i class="icon-star"></i>{% endif %}
+                  {{ association|role:other_user.get_profile|friendlyrole }}
                 </td>
               </tr>
             {% endfor %}
@@ -171,28 +172,28 @@
           {% if assignable_associations.central|length > 0 %}
             <optgroup label="Sentralt/nasjonalt">
               {% for association in assignable_associations.central %}
-                <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
           {% if assignable_associations.associations|length > 0 %}
             <optgroup label="Medlemsforeninger">
               {% for association in assignable_associations.associations %}
-                <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
           {% if assignable_associations.small_associations|length > 0 %}
             <optgroup label="Lokale turlag">
               {% for association in assignable_associations.small_associations %}
-                <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
           {% if assignable_associations.hike_groups|length > 0 %}
             <optgroup label="Turgrupper">
               {% for association in assignable_associations.hike_groups %}
-                <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
@@ -236,28 +237,28 @@
             {% if revokable_associations.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">
                 {% for association in revokable_associations.central %}
-                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                  <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
             {% if revokable_associations.associations|length > 0 %}
               <optgroup label="Medlemsforeninger">
                 {% for association in revokable_associations.associations %}
-                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                  <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
             {% if revokable_associations.small_associations|length > 0 %}
               <optgroup label="Lokale turlag">
                 {% for association in revokable_associations.small_associations %}
-                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                  <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
             {% if revokable_associations.hike_groups|length > 0 %}
               <optgroup label="Turgrupper">
                 {% for association in revokable_associations.hike_groups %}
-                  <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+                  <option value="{{ association.id }}" data-role="{{ association|role:user.get_profile }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}

@@ -32,7 +32,7 @@ def show(request, user):
         'other_user': user,
         'other_user_perms': PermWrapper(user),
         'revokable_associations': Association.sort(revokable_associations),
-        'assignable_associations': Association.sort_and_apply_roles(assignable_associations, request.user)}
+        'assignable_associations': Association.sort(assignable_associations)}
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):

@@ -35,14 +35,6 @@ class Association(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
-    role = None # Can be set to contain a M2M-field for a user instance
-    def apply_role(self, user):
-        if user.has_perm('user.sherpa_admin'):
-            self.role = 'admin'
-        else:
-            from user.models import AssociationRole
-            self.role = AssociationRole.objects.get(profile=user.get_profile(), association=self).role
-
     @staticmethod
     def sort(associations):
         associations = associations.order_by('name')
@@ -52,11 +44,3 @@ class Association(models.Model):
             'small_associations': associations.filter(type='turlag'),
             'hike_groups': associations.filter(type='turgruppe'),
         }
-
-    @staticmethod
-    def sort_and_apply_roles(associations, user):
-        associations = Association.sort(associations)
-        for list in associations.values():
-            for association in list:
-                association.apply_role(user)
-        return associations
