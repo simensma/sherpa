@@ -6,6 +6,7 @@ from django.conf import settings
 import simples3
 
 from page.models import *
+from core.util import use_image_thumb
 
 class Image(models.Model):
     key = models.CharField(max_length=8)
@@ -76,6 +77,12 @@ class Publication(models.Model):
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
     license = models.CharField(max_length=255, choices=LICENSE_CHOICES, default=LICENSE_CHOICES[0][0])
 
+    def releases_ordered(self):
+        return self.releases.all().order_by('-pub_date')
+
+    def get_logo(self):
+        return use_image_thumb(self.logo, 500)
+
 class Release(models.Model):
     publication = models.ForeignKey(Publication)
     title = models.CharField(max_length=255)
@@ -83,3 +90,6 @@ class Release(models.Model):
     description = models.TextField()
     pub_date = models.DateTimeField()
     tags = models.ManyToManyField('core.Tag', related_name='releases')
+
+    def get_cover_photo(self):
+        return use_image_thumb(self.cover_photo, 500)

@@ -80,7 +80,7 @@
         <div class="controls">
           <div class="row-fluid">
             <div class="span3">
-              <img src="{{ publication.logo }}" alt="{{ publication.title }}" class="logo">
+              <img src="{{ publication.get_logo }}" alt="{{ publication.title }}" class="logo">
             </div>
             <div class="span9">
               <input type="text" class="input-xxlarge" name="logo" value="{{ publication.logo }}">
@@ -121,6 +121,27 @@
         Legg inn ny utgivelse
       </a>
     </p>
+
+    <div class="row-fluid">
+      {% for release in publication.releases_ordered %}
+        <div class="span3">
+          <h3>
+            <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
+              {{ release.title }}
+            </a>
+          </h3>
+          <p>
+            <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
+              <img src="{% firstof release.get_cover_photo publication.get_logo %}" alt="{{ release.title }}"><br>
+            </a>
+          </p>
+        </div>
+
+        {% if not forloop.last and forloop.counter|divisibleby:"4" %}
+          </div><div class="row">
+        {% endif %}
+      {% endfor %}
+    </div>
 
   </div>
 </div>

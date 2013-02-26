@@ -42,7 +42,7 @@
         <div class="controls">
           <div class="row-fluid">
             <div class="span3">
-              <img src="{% firstof release.cover_photo publication.logo %}" alt="{{ release.title }}" class="cover_photo">
+              <img src="{% firstof release.get_cover_photo publication.get_logo %}" alt="{{ release.title }}" class="cover_photo">
             </div>
             <div class="span9">
               <input type="text" class="input-xxlarge" name="cover_photo" value="{{ release.cover_photo }}">
