@@ -88,12 +88,7 @@ def add_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
     association = Association.objects.get(id=request.POST['association'])
 
-    role_valid = False
-    for role in AssociationRole.ROLE_CHOICES:
-        if role[0] == request.POST['role']:
-            role_valid = True
-            break
-    if not role_valid:
+    if not request.POST['role'] in [role[0] for role in AssociationRole.ROLE_CHOICES]:
         raise PermissionDenied
 
     # Verify that the user performing this action has the required permissions
