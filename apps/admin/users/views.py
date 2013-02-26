@@ -21,12 +21,12 @@ def show(request, user):
     user = User.objects.get(id=user)
 
     # Admins can assign user/admin, users can assign users
-    assignable_admin = request.user.get_profile().all_associations('admin')
-    assignable_user = request.user.get_profile().all_associations('user').exclude(associationrole__profile=user.get_profile())
+    assignable_admin = request.user.get_profile().associations_with_role('admin')
+    assignable_user = request.user.get_profile().associations_with_role('user').exclude(associationrole__profile=user.get_profile())
     assignable_associations = assignable_admin | assignable_user
 
     # Only admins can revoke association relation
-    revokable_associations = user.get_profile().all_associations() & request.user.get_profile().all_associations('admin')
+    revokable_associations = user.get_profile().all_associations() & request.user.get_profile().associations_with_role('admin')
 
     context = {
         'other_user': user,

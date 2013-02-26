@@ -61,25 +61,31 @@ class Profile(models.Model):
         else:
             return self.get_email()
 
-    # Returns associations this user has access to
-    # Note that this also takes permissions into account, so this will always return
-    # all associations for sherpa admins (given that role is 'admin' or not specified)
-    def all_associations(self, role=None):
-        # If role is set, we only want the associations we have that role for, not any other ones.
+    # Returns associations this user has the given role on, and not any other ones
+    # Note that this also takes permissions into account, e.g. sherpa admins will have
+    # all associations for 'admin' and none for 'user'
+    def associations_with_role(self, role):
         if self.user.has_perm('user.sherpa_admin'):
-            if not role or role == 'admin':
+            if role == 'admin':
                 # Sherpa admins are admins on all associations
                 return Association.objects.all()
             else:
                 # Sherpa admins are not any other role than admin on any associations
                 return Association.objects.none()
         else:
-            if role:
-                # Filter on the role we're looking for
-                return self.associations.filter(associationrole__role=role)
-            else:
-                # No specific role, return all our connected associations
-                return self.associations.all()
+            # Filter on the role we're looking for
+            return self.associations.filter(associationrole__role=role)
+
+    # Returns associations this user has access to.
+    # Note that this also takes permissions into account, e.g. sherpa admins will
+    # have access to all associations
+    def all_associations(self):
+        if self.user.has_perm('user.sherpa_admin'):
+            # Sherpa admins have access to all associations
+            return Association.objects.all()
+        else:
+            # A normal user, return all connected associations
+            return self.associations.all()
 
     def all_associations_sorted(self):
         return Association.sort_and_apply_roles(self.all_associations(), self.user)
