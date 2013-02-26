@@ -80,7 +80,7 @@
         <div class="controls">
           <div class="row-fluid">
             <div class="span3">
-              <img src="{{ publication.get_logo }}" alt="{{ publication.title }}" class="logo">
+              <img src="{% firstof publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}" class="logo">
             </div>
             <div class="span9">
               <input type="text" class="input-xxlarge" name="logo" value="{{ publication.logo }}">
@@ -132,7 +132,7 @@
           </h3>
           <p>
             <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
-              <img src="{% firstof release.cover_photo publication.logo %}" alt="{{ release.title }}"><br>
+              <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}"><br>
             </a>
           </p>
         </div>
