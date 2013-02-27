@@ -1,8 +1,8 @@
 <div class="well memberid-sms">
-  <h3>Glemt ditt medlemsnummer?</h3>
+  <h3>Glemt medlemsnummeret?</h3>
 
   <p>
-    Skriv inn ditt mobilnummer og få medlemsnummeret gratis tilsendt på SMS.
+    Få medlemsnummeret tilsendt gratis på SMS.
   </p>
 
   <input type="text" name="phone_mobile" class="input-medium" placeholder="12345678...">
@@ -10,10 +10,17 @@
   <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
   <div class="results">
-    <p class="hide ok">SMS har blitt sendt til <span class="number"></span>.</p>
-    <p class="hide no-match">Nummer <span class="number"></span> er ikke registrert på noen av våre medlemmer.</p>
-    <p class="hide service-fail">Beklager, det oppstod en feil ved kontakt med vår SMS-leverandør. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice dersom feilen vedvarer.</p>
-    <p class="hide technical-fail">Beklager, det oppstod en teknisk feil! Vennligst prøv igjen senere, eller ta kontakt med medlemsservice dersom feilen vedvarer.</p>
-    <p class="hide too-high-frequency">Du har sendt alt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.</p>
+    <p class="hide ok">
+      SMS med ditt medlemsnummer har blitt sendt til <span class="number"></span>.
+    </p>
+    <p class="hide no-match">
+      Vi fant ikke mobilnummer <span class="number"></span> i vårt medlemssystem. Vennligst kontakt DNTs medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> for å registrere ditt mobilnummer.
+    </p>
+    <p class="hide error">
+      Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
+    </p>
+    <p class="hide too-high-frequency">
+      Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.
+    </p>
   </div>
 </div>

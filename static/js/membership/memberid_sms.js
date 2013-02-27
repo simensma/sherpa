@@ -6,8 +6,7 @@ $(document).ready(function() {
     var results = wrapper.find("div.results").children();
     var ok = results.filter("p.ok");
     var no_match = results.filter("p.no-match");
-    var service_fail = results.filter("p.service-fail");
-    var technical_fail = results.filter("p.technical-fail");
+    var error = results.filter("p.error");
     var too_high_frequency = results.filter("p.too-high-frequency");
 
     input.keyup(function(e) {
@@ -31,14 +30,14 @@ $(document).ready(function() {
                 ok.show();
                 input.val(''); // Clear the input, so clicking 'OK' again isn't that tempting.
             } else if(result.status == 'service_fail') {
-                service_fail.show();
+                error.show();
             } else if(result.status == 'no_match') {
                 no_match.show();
             } else if(result.status == 'too_high_frequency') {
                 too_high_frequency.show();
             }
         }).fail(function(result) {
-            technical_fail.show();
+            error.show();
         }).always(function(result) {
             button.show();
             loader.hide();

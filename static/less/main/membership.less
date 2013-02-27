@@ -274,13 +274,17 @@ div.memberid-sms {
   div.results {
     p {
       font-family: "DTL Nobel" !important;
+
+      a {
+        text-decoration: underline;
+      }
     }
 
     p.ok {
       color: rgb(56, 147, 44);
     }
 
-    p.no-match, p.service-fail, p.technical-fail, p.too-high-frequency {
+    p.no-match, p.error, p.too-high-frequency {
       color: @profile-red;
     }
 
