@@ -7,6 +7,8 @@ from django.contrib.auth.context_processors import PermWrapper
 from focus.models import Actor
 from association.models import Association
 
+from itertools import groupby
+
 class Profile(models.Model):
     user = models.OneToOneField(User)
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
@@ -61,21 +63,6 @@ class Profile(models.Model):
         else:
             return self.get_email()
 
-    # Returns associations this user has the given role on, and not any other ones
-    # Note that this also takes permissions into account, e.g. sherpa admins will have
-    # all associations for 'admin' and none for 'user'
-    def associations_with_role(self, role):
-        if self.user.has_perm('user.sherpa_admin'):
-            if role == 'admin':
-                # Sherpa admins are admins on all associations
-                return Association.objects.all()
-            else:
-                # Sherpa admins are not any other role than admin on any associations
-                return Association.objects.none()
-        else:
-            # Filter on the role we're looking for
-            return self.associations.filter(associationrole__role=role)
-
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
     # have access to all associations
@@ -84,8 +71,36 @@ class Profile(models.Model):
             # Sherpa admins have access to all associations
             return Association.objects.all()
         else:
-            # A normal user, return all connected associations
-            return self.associations.all()
+            # A normal user, return all connected associations, including
+            # children-associations where role is admin.
+            associations = []
+            for association in self.associations.all():
+                role = AssociationRole.objects.get(association=association, profile=self).role
+                if role == 'admin':
+                    # Add this one and all its children
+                    for association in association.get_with_children():
+                        association.role = 'admin'
+                        associations.append(association)
+                elif role == 'user':
+                    # Just add this one
+                    association.role = 'user'
+                    associations.append(association)
+
+            # Since this will add duplicates if any of the related associations
+            # are child/parent-related with each other, remove the one with lowest role
+            def pick_dupe(associations):
+                # This defines role priority
+                # Pick the dupe with role admin if existing, if not, just pick any dupe.
+                admins = [a for a in associations if a.role == 'admin']
+                if len(admins) > 0:
+                    return admins[0]
+                else:
+                    return associations[0]
+
+            ## Sort and group by association id, and remove dupes
+            sorted_associations = sorted(associations, key=lambda a: a.id)
+            grouped_associations = groupby(sorted_associations, key=lambda a: a.id)
+            return [pick_dupe(list(group)) for key, group in grouped_associations]
 
     def all_associations_sorted(self):
         return Association.sort(self.all_associations())

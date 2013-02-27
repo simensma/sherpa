@@ -2,6 +2,8 @@
 
 from django.conf import settings
 
+from user.models import AssociationRole
+
 import re
 
 def use_image_thumb(url, preferred_size):
@@ -23,3 +25,19 @@ def use_image_thumb(url, preferred_size):
     else:
         appropriate_size = min(larger_than_preferred)
     return "%s-%s.%s" % (pre, appropriate_size, post)
+
+def association_profile_role(association, profile):
+    try:
+        return AssociationRole.objects.get(association=association, profile=profile).role
+    except AssociationRole.DoesNotExist:
+        # This might be a related association where we're admin beacuse we're admin for a parent. Check it
+        role = AssociationRole.objects.filter(association=association, profile=profile)
+        while not role.exists() or role[0].role != 'admin':
+            association = association.parent
+            if association is None:
+                raise NoRoleRelationException
+            role = AssociationRole.objects.filter(association=association, profile=profile)
+        return role[0].role
+
+class NoRoleRelationException(Exception):
+    """Raised when the Association does not have a related role"""

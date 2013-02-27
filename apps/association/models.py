@@ -35,12 +35,18 @@ class Association(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    def get_with_children(self):
+        associations = [self]
+        for children in self.children.all():
+            associations += children.get_with_children()
+        return associations
+
     @staticmethod
     def sort(associations):
-        associations = associations.order_by('name')
+        associations = sorted(associations, key=lambda a: a.name)
         return {
-            'central': associations.filter(type='sentral'),
-            'associations': associations.filter(type='forening'),
-            'small_associations': associations.filter(type='turlag'),
-            'hike_groups': associations.filter(type='turgruppe'),
+            'central': [a for a in associations if a.type == 'sentral'],
+            'associations': [a for a in associations if a.type == 'forening'],
+            'small_associations': [a for a in associations if a.type == 'turlag'],
+            'hike_groups': [a for a in associations if a.type == 'turgruppe'],
         }

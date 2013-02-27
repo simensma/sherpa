@@ -21,12 +21,18 @@ def show(request, other_user):
     other_user = User.objects.get(id=other_user)
 
     # Admins can assign user/admin, users can assign users
-    assignable_admin = request.user.get_profile().associations_with_role('admin')
-    assignable_user = request.user.get_profile().associations_with_role('user').exclude(associationrole__profile=other_user.get_profile())
-    assignable_associations = assignable_admin | assignable_user
+    assignable_admin = [a for a in request.user.get_profile().all_associations() if a.role == 'admin']
+    assignable_user = [a for a in request.user.get_profile().all_associations() if a.role == 'user']
+    # Don't let users assign new permissions for those that already have user status
+    # Use AssociationRole for other_user, because we can't set permissions for associations that are
+    # based on parent associations (to remove access to a child, you have to remove admin-permission
+    # to the parent)
+    other_user_associations = Association.objects.filter(associationrole__profile=other_user.get_profile())
+    assignable_user = [a for a in assignable_user if not a in other_user_associations]
+    assignable_associations = assignable_admin + assignable_user
 
     # Only admins can revoke association relation
-    revokable_associations = other_user.get_profile().all_associations() & request.user.get_profile().associations_with_role('admin')
+    revokable_associations = [a for a in assignable_admin if a in other_user_associations]
 
     context = {
         'other_user': other_user,
@@ -92,12 +98,14 @@ def add_association_permission(request):
         raise PermissionDenied
 
     # Verify that the user performing this action has the required permissions
-    if not request.user.has_perm('user.sherpa_admin'):
-        try:
-            role = AssociationRole.objects.get(profile=request.user.get_profile(), association=association)
-            if role.role == 'user' and request.POST['role'] == 'admin':
-                raise PermissionDenied
-        except AssociationRole.DoesNotExist:
+    all_associations = request.user.get_profile().all_associations()
+    if role == 'admin':
+        # Setting admin requires admin
+        if not association in [a for a in all_associations if a.role == 'admin']:
+            raise PermissionDenied
+    elif role == 'user':
+        # Any role can set user
+        if not association in all_associations:
             raise PermissionDenied
 
     try:
@@ -115,12 +123,9 @@ def revoke_association_permission(request):
     association = Association.objects.get(id=request.POST['association'])
 
     # Verify that the user performing this action has the required permissions
-    if not request.user.has_perm('user.sherpa_admin'):
-        try:
-            if AssociationRole.objects.get(profile=request.user.get_profile(), association=association).role != 'admin':
-                raise PermissionDenied
-        except AssociationRole.DoesNotExist:
-            raise PermissionDenied
+    admin_associations = [a for a in request.user.get_profile().all_associations() if a.role == 'admin']
+    if not association in admin_associations:
+        raise PermissionDenied
 
     role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
     role.delete()
