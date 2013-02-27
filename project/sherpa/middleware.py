@@ -251,7 +251,6 @@ class CheckSherpaPermissions(object):
                 request.path.startswith('/sherpa/nyheter/') or
                 request.path.startswith('/sherpa/annonser/') or
                 request.path.startswith(u'/sherpa/analyse/søk/')):
-                messages.error(request, 'no_association_site')
                 return render(request, 'common/admin/no_association_site.html')
 
 class DeactivatedEnrollment():
