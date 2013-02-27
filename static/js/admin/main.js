@@ -13,7 +13,7 @@ $(document).ready(function() {
 
 function slugify(string) {
     string = string.toLowerCase().trim();
-    string = string.replace(/[^a-zæøåÆØÅ0-9-_\ ]/g, '')
-    string = string.replace(/\ +/g, '-')
+    string = string.replace(/[^a-zæøåÆØÅ0-9-_\ ]/g, '');
+    string = string.replace(/\ +/g, '-');
     return string.toLowerCase().trim();
 }
