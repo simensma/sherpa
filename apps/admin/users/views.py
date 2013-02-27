@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.context_processors import PermWrapper
 from django.conf import settings
@@ -86,8 +87,10 @@ def make_sherpa_admin(request, user):
     if not request.user.has_perm('user.sherpa_admin'):
         raise PermissionDenied
 
+    user = User.objects.get(id=user)
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
-    User.objects.get(id=user).user_permissions.add(permission)
+    user.user_permissions.add(permission)
+    cache.delete('profile.%s.all_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
 
 def add_association_permission(request):
@@ -116,6 +119,7 @@ def add_association_permission(request):
         role = AssociationRole(profile=user.get_profile(), association=association, role=request.POST['role'])
         role.save()
 
+    cache.delete('profile.%s.all_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
 
 def revoke_association_permission(request):
@@ -129,4 +133,5 @@ def revoke_association_permission(request):
 
     role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
     role.delete()
+    cache.delete('profile.%s.all_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
