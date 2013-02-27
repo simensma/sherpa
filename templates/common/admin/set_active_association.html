@@ -29,7 +29,7 @@
         <h2>Sentralt/nasjonalt</h2>
         <ul class="active-association-list">
         {% for association in user.get_profile.all_associations_sorted.central %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
+          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
@@ -37,7 +37,7 @@
         <h2>Medlemsforeninger</h2>
         <ul class="active-association-list">
         {% for association in user.get_profile.all_associations_sorted.associations %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
+          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
@@ -45,7 +45,7 @@
         <h2>Lokale turlag</h2>
         <ul class="active-association-list">
         {% for association in user.get_profile.all_associations_sorted.small_associations %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
+          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
@@ -53,7 +53,7 @@
         <h2>Turgrupper</h2>
         <ul class="active-association-list">
         {% for association in user.get_profile.all_associations_sorted.hike_groups %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/">{{ association.name }}</a></li>
+          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
