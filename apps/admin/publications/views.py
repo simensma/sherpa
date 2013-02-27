@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 from association.models import Association
@@ -11,7 +12,7 @@ from datetime import datetime
 import json
 
 def index(request):
-    publications = Publication.objects.all().order_by('title')
+    publications = Publication.objects.filter(association__in=request.user.get_profile().all_associations()).order_by('title')
     context = {'publications': publications}
     return render(request, 'common/admin/publications/index.html', context)
 
@@ -24,6 +25,8 @@ def create_publication(request):
 
 def edit_publication(request, publication):
     publication = Publication.objects.get(id=publication)
+    if publication.association not in request.user.get_profile().all_associations():
+        raise PermissionDenied
     if request.method == 'GET':
         context = {'publication': publication}
         return render(request, 'common/admin/publications/edit_publication.html', context)
@@ -40,8 +43,11 @@ def edit_publication(request, publication):
         return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
 
 def edit_release(request, publication, release):
+    publication = Publication.objects.get(id=publication)
+    if publication.association not in request.user.get_profile().all_associations():
+        raise PermissionDenied
+
     if request.method == 'GET':
-        publication = Publication.objects.get(id=publication)
         release = Release.objects.get(id=release) if release is not None else None
         context = {
             'publication': publication,
@@ -49,7 +55,6 @@ def edit_release(request, publication, release):
             'now': datetime.now()}
         return render(request, 'common/admin/publications/edit_release.html', context)
     elif request.method == 'POST':
-        publication = Publication.objects.get(id=publication)
         if release is None:
             release = Release(publication=publication)
         else:
