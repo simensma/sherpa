@@ -40,7 +40,6 @@ div#membership-box {
 
       button.zipcode-search {
         height: 40px;
-        margin-bottom: 10px;
       }
     }
   }
@@ -269,8 +268,30 @@ div#faq {
   }
 }
 
-button.zipcode-search {
-  margin-bottom: 10px;
+/* Memberservice - memberid SMS service */
+
+div.memberid-sms {
+  div.results {
+    p {
+      font-family: "DTL Nobel" !important;
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.ok {
+      color: rgb(56, 147, 44);
+    }
+
+    p.no-match, p.error, p.too-high-frequency {
+      color: @profile-red;
+    }
+
+    span.number {
+      font-weight: bold;
+    }
+  }
 }
 
 /* Box for promoting a new benefit */

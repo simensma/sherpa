@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/membership.js"></script>
+  <script src="{{ STATIC_URL }}js/membership/membership.js"></script>
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
 {% endblock %}
 
 {% block title %}Medlemsservice{% endblock %}
@@ -125,16 +126,6 @@
 
   <div class="span4">
     <div class="well">
-      <h3>Medlemsfordeler og priser</h3>
-      <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search">OK</button>
-      <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-      <br>
-      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
-      </form>
-    </div>
-
-    <div class="well">
       <h3>Kontakt oss</h3>
 
       <p>
@@ -146,6 +137,18 @@
       <p>
         Ta gjerne kontakt med oss via <a href="http://www.facebook.com/turistforeningen">Facebook</a> eller <a href="https://twitter.com/turistforening">Twitter</a>.
       </p>
+    </div>
+
+    {% include 'main/membership/memberid_sms.html' %}
+
+    <div class="well">
+      <h3>Medlemsfordeler og priser</h3>
+      <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
+      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
+      <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      <br>
+      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+      </form>
     </div>
   </div>
 </div>

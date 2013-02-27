@@ -33,7 +33,6 @@ FOREIGN_SHIPMENT_PRICE = 100
 invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 
-SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
@@ -675,22 +674,34 @@ def sms(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    t = loader.get_template('main/enrollment/result/sms.html')
+    t = loader.get_template('main/enrollment/result/sms.txt')
     c = Context({'year': year, 'next_year': next_year,
         'users': request.session['enrollment']['users']})
     sms_message = t.render(c).encode('utf-8')
 
     # Send the message
     try:
-        r = requests.get(SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+        r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         # Check and return status
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+            logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: Ukjent status",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'response_status': r.text,
+                    'sms_response_object': r
+                }
+            )
             return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
         request.session['enrollment']['users'][index]['sms_sent'] = True
         request.session.modified = True
         return HttpResponse(json.dumps({'error': 'none'}))
     except requests.ConnectionError:
+        logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: requests.ConnectionError",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
