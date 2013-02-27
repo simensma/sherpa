@@ -126,16 +126,6 @@
 
   <div class="span4">
     <div class="well">
-      <h3>Medlemsfordeler og priser</h3>
-      <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
-      <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-      <br>
-      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
-      </form>
-    </div>
-
-    <div class="well">
       <h3>Kontakt oss</h3>
 
       <p>
@@ -150,6 +140,16 @@
     </div>
 
     {% include 'main/membership/memberid_sms.html' %}
+
+    <div class="well">
+      <h3>Medlemsfordeler og priser</h3>
+      <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
+      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
+      <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      <br>
+      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+      </form>
+    </div>
   </div>
 </div>
 
