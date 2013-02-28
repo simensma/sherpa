@@ -10,6 +10,9 @@ from datetime import datetime
 from association.models import Association
 from core.models import County, FocusCountry
 
+# Actor endcodes - not really properly documented yet, to resolve codes/reasons consult Focus.
+ACTOR_ENDCODE_DUBLETT = 21
+
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
     member_id = models.IntegerField(db_column=u'memberID', primary_key=True)
@@ -64,6 +67,12 @@ class Actor(models.Model):
     main_association_id = models.IntegerField(db_column=u'ActRel4')
     local_association_id = models.IntegerField(db_column=u'ActRel5')
 
+    # Enrollment/resignation date and reason
+    start_date = models.DateTimeField(null=True, db_column=u'StartDt')
+    start_code = models.CharField(max_length=5, db_column=u'StartCd')
+    end_date = models.DateTimeField(null=True, db_column=u'EndDt')
+    end_code = models.CharField(max_length=5, db_column=u'EndCd')
+
     orgno = models.CharField(max_length=50, db_column=u'OrgNo')
     fax = models.CharField(max_length=50, db_column=u'Fax')
     web = models.CharField(max_length=250, db_column=u'Web')
@@ -72,10 +81,6 @@ class Actor(models.Model):
     adtype = models.CharField(max_length=3, db_column=u'AdType')
     note1 = models.TextField(db_column=u'Note1')
     note2 = models.TextField(db_column=u'Note2')
-    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
-    startcd = models.CharField(max_length=5, db_column=u'StartCd')
-    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
-    endcd = models.CharField(max_length=5, db_column=u'EndCd')
     payterm = models.IntegerField(db_column=u'PayTerm')
     accno = models.CharField(max_length=50, db_column=u'AccNo')
     disc = models.SmallIntegerField(null=True, db_column=u'Disc')

@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from sherpa2.models import Association
-from focus.models import FocusZipcode, Price, Actor
+from focus.models import FocusZipcode, Price, Actor, ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
@@ -137,8 +137,9 @@ def memberid_sms(request):
     if number == '':
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
+    # Note that we're excluding Actors with end_code 'dublett' manually here
     actors = Actor.objects.raw(
-        "select * from Actor where REPLACE(MobPh, ' ', '') = %s;", [number])
+        "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;", [number, ACTOR_ENDCODE_DUBLETT])
     actors = list(actors) # Make sure the query has been performed
     if len(actors) == 0:
         sms_request.save()
