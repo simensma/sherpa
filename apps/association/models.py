@@ -43,7 +43,7 @@ class Association(models.Model):
 
     @staticmethod
     def sort(associations):
-        associations = sorted(associations, key=lambda a: a.name)
+        associations = sorted(associations, key=lambda a: a.name.lower())
         return {
             'central': [a for a in associations if a.type == 'sentral'],
             'associations': [a for a in associations if a.type == 'forening'],
