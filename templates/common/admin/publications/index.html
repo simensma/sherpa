@@ -11,18 +11,24 @@
 <div class="row">
   <div class="span12">
 
-    <table class="table">
-      <tr>
-        <th>Publikasjon</th>
-        <th>Forening</th>
-      </tr>
-      {% for publication in publications %}
+    {% if publications|length > 0 %}
+      <table class="table">
         <tr>
-          <td><a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a></td>
-          <td>{{ publication.association.name }}</td>
+          <th>Publikasjon</th>
+          <th>Forening</th>
         </tr>
-      {% endfor %}
-    </table>
+        {% for publication in publications %}
+          <tr>
+            <td><a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a></td>
+            <td>{{ publication.association.name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="alert alert-info">
+        Din forening har ikke lagt ut noen publikasjoner.
+      </div>
+    {% endif %}
 
     <button class="btn btn-large create">Opprett ny publikasjon</button>
     <form action="{% url admin.publications.views.create_publication %}" method="post" class="create form-default form-border form-horizontal hide">
