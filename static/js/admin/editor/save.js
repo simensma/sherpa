@@ -110,7 +110,7 @@ $(document).ready(function() {
                 }
             } else if($(this).is('.image')) {
                 var anchor;
-                if($(this).find('a').length == 0) {
+                if($(this).find('a').length === 0) {
                     anchor = null;
                 } else {
                     anchor = $(this).find('a').attr('href');
