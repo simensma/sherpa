@@ -10,7 +10,7 @@ $(document).ready(function() {
     var insertable;
     setEmpties();
     enableEditing();
-    disableIframes($("article div.widget"));
+    disableIframes($("article div.content.widget"));
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
@@ -44,13 +44,13 @@ $(document).ready(function() {
     }
 
     /* Highlight empty html contents */
-    $(document).on('click', 'article div.html[data-placeholder], article div.lede[data-placeholder]', function() {
+    $(document).on('click', 'article div.content.html[data-placeholder], article div.content.lede[data-placeholder]', function() {
         $(this).removeAttr('data-placeholder');
         $(this).text('');
         $(this).attr('contenteditable', true);
         $(this).focus();
     });
-    $(document).on('focusout', 'article div.html, article div.lede', function() {
+    $(document).on('focusout', 'article div.content.html, article div.content.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
             $(this).addClass('empty');
             $(this).focus(function() {
@@ -65,10 +65,10 @@ $(document).ready(function() {
             }
         }
     });
-    $("article div.html, article div.lede").focusout();
+    $("article div.content.html, article div.content.lede").focusout();
 
     /* Hide completely empty image descriptions */
-    $("article div.image").each(function() {
+    $("article div.content.image").each(function() {
         var content = $(this);
         hidePictureText(content);
     });
@@ -225,17 +225,17 @@ $(document).ready(function() {
     // Remove content (text/image/widget)
     $("#toolbar button.remove-content").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'div.html, div.widget, div.image');
+            $(document).off('mouseenter mouseleave click', 'article div.content.html, article div.content.widget, article div.content.image');
             enableEditing();
             enableToolbar();
         }
         disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'div.html, div.widget, div.image', function() {
+        $(document).on('mouseenter', 'article div.content.html, article div.content.widget, article div.content.image', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'div.html, div.widget, div.image', function() {
+        }).on('mouseleave', 'article div.content.html, article div.content.widget, article div.content.image', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'div.html, div.widget, div.image', function() {
+        }).on('click', 'article div.content.html, article div.content.widget, article div.content.image', function() {
             doneRemoving();
             var content = $(this);
             content.hide();
@@ -512,16 +512,16 @@ $(document).ready(function() {
     window.disableEditing = disableEditing;
     function disableEditing() {
         $("article div.editable").removeAttr('contenteditable');
-        $(document).off('click', 'div.image');
-        $(document).off('click', 'div.widget');
+        $(document).off('click', 'article div.content.image');
+        $(document).off('click', 'article div.content.widget');
     }
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.editable").attr('contenteditable', 'true');
-        $(document).on('click', 'div.widget', function() {
+        $(document).on('click', 'article div.content.widget', function() {
             $(this).trigger('widget.edit');
         });
-        $(document).on('click', 'div.image', changeImage);
+        $(document).on('click', 'article div.content.image', changeImage);
     }
 
     /* Divs for inserting widgets/images/text */
