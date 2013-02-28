@@ -21,13 +21,21 @@
 <div class="row">
   <div class="span12">
 
+    {% for message in messages %}
+      {% if message.message == 'incorrect_file_format' %}
+        <div class="alert alert-error">
+          <strong>Du kan kun laste opp filer i PDF-format.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <h2>
       {{ release.title|default:"Ny utgivelse" }}
       (<a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a>)
     </h2>
 
     {# A little too much logic here because if release isn't set (for new releases), we can't include the id as an empty parameter; the reverse lookup will fail. #}
-    <form action="{% if release %}{% url admin.publications.views.edit_release publication.id release.id %}{% else %}{% url admin.publications.views.edit_release publication.id %}{% endif %}" method="post" class="form-default form-border form-horizontal edit-release">
+    <form action="{% if release %}{% url admin.publications.views.edit_release publication.id release.id %}{% else %}{% url admin.publications.views.edit_release publication.id %}{% endif %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
       {% csrf_token %}
 
       <div class="control-group title">
@@ -85,6 +93,31 @@
               </div>
             {% endfor %}
           </div>
+        </div>
+      </div>
+
+      <div class="control-group pdf">
+        <label class="control-label" for="pdf">Last opp PDF:</label>
+        <div class="controls">
+          <input type="file" class="input-xlarge" name="pdf">
+          <p class="info">
+            PDF-magasin som medlemmer kan laste ned.
+            {% if release.pdf_hash != '' %}
+            <br>
+            <a href="{{ release.get_pdf_url }}">Denne</a> er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="control-group online_view">
+        <label class="control-label" for="online_view">Lenke til online visning:</label>
+        <div class="controls">
+          <input type="text" class="input-xxlarge" name="online_view" value="{{ release.online_view }}">
+          <p class="info">
+            Dette kan være en online visningstjeneste som f.eks. <a href="http://www.calameo.com/">Calameo</a>.<br>
+            Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.
+          </p>
         </div>
       </div>
 

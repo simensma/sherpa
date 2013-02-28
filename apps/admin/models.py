@@ -85,8 +85,13 @@ class Release(models.Model):
     title = models.CharField(max_length=255)
     cover_photo = models.CharField(max_length=2048)
     description = models.TextField()
+    pdf_hash = models.CharField(max_length=40)
+    online_view = models.CharField(max_length=2048)
     pub_date = models.DateTimeField()
     tags = models.ManyToManyField('core.Tag', related_name='releases')
 
     def get_cover_photo(self):
         return use_image_thumb(self.cover_photo, 500)
+
+    def get_pdf_url(self):
+        return "http://%s/%s/%s.pdf" % (settings.AWS_BUCKET, settings.AWS_PUBLICATIONS_PREFIX, self.pdf_hash)

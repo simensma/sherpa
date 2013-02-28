@@ -138,6 +138,19 @@
                   <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}"><br>
                 </a>
               </p>
+              <p class="download">
+                {% if release.pdf_hash != '' and release.online_view != '' %}
+                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a> eller <a href="{{ release.online_view }}">les online</a>
+                {% elif release.pdf_hash != '' %}
+                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a>
+                {% elif release.online_view != '' %}
+                  <a href="{{ release.online_view }}">Les online</a>
+                {% else %}
+                  <span class="no-content-warning">
+                    Innholdet for denne publikasjonen er ikke lagt ut!
+                  </span>
+                {% endif %}
+              </p>
               <p class="description">
                 {{ release.description|linebreaksbr }}
               </p>
