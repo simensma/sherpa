@@ -39,7 +39,8 @@
         uploader.find("input[name='tags-serialized']").val("");
         uploader.find("div.tag-box").empty();
 
-        uploader.find("div.alert").hide();
+        // Hide that which should be hidden by default
+        uploader.find("div.hide").hide();
     };
 
     window.iframeUploadComplete = iframeUploadComplete;
