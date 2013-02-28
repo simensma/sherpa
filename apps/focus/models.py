@@ -213,14 +213,15 @@ class Actor(models.Model):
         return children
 
     def has_payed(self):
-        return self.get_balance().is_payed()
-
-    def get_balance(self):
-        balance = cache.get('actor.balance.%s' % self.memberid)
-        if balance is None:
-            balance = self.balance
-            cache.set('actor.balance.%s' % self.memberid, balance, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return balance
+        has_payed = cache.get('actor.has_payed.%s' % self.memberid)
+        if has_payed is None:
+            try:
+                has_payed = self.balance.is_payed()
+            except BalanceHistory.DoesNotExist:
+                # Not-existing balance for this year means that they haven't payed
+                has_payed = False
+            cache.set('actor.has_payed.%s' % self.memberid, has_payed, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return has_payed
 
     # Get the local County object based on the Actor's zipcode
     def get_county(self):
