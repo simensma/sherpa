@@ -9,6 +9,15 @@
 
     <h2>{{ publication.title }}</h2>
 
+    {% if publication.releases_ordered|length == 0 %}
+      <p>
+        Vi har dessverre ikke fått publisert noen utgivelser av {{ publication.title }} her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
+      </p>
+      <p>
+        <a href="{% url user.views.publications %}">Tilbake til publikasjoner</a>
+      </p>
+    {% endif %}
+
     <div class="publications">
       <div class="row-fluid">
         {% for release in publication.releases_ordered %}
