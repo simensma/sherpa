@@ -254,7 +254,10 @@ def publications(request):
     publications_user = Publication.objects.filter(
         Q(association__type='sentral') |
         Q(association__in=accessible_associations))
-    publications_other = Publication.objects.exclude(association__in=accessible_associations).filter(access='all')
+    publications_other = Publication.objects.exclude(
+        Q(association__in=accessible_associations) |
+        Q(association__type='sentral')
+    ).filter(access='all')
     context = {
         'publications_user': publications_user,
         'publications_other': publications_other}
