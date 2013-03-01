@@ -41,6 +41,12 @@ class Association(models.Model):
             associations += children.get_with_children()
         return associations
 
+    def get_main_association(self):
+        if self.type == 'sentral' or self.type == 'forening':
+            return self
+        else:
+            return self.parent.get_main_association()
+
     @staticmethod
     def sort(associations):
         associations = sorted(associations, key=lambda a: a.name.lower())

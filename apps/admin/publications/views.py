@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 from django.conf import settings
 from django.contrib import messages
 
@@ -31,7 +32,13 @@ def edit_publication(request, publication):
     if publication.association not in request.user.get_profile().all_associations():
         raise PermissionDenied
     if request.method == 'GET':
-        context = {'publication': publication}
+        association_main_mappings = cache.get('association_main_mappings')
+        if association_main_mappings is None:
+            association_main_mappings = {a.id: a.get_main_association().name for a in Association.objects.all()}
+            cache.set('association_main_mappings', association_main_mappings, 60 * 60 * 24)
+        context = {
+            'publication': publication,
+            'association_main_mappings': json.dumps(association_main_mappings)}
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':
         publication.title = request.POST['title']

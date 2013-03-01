@@ -10,7 +10,8 @@ $(document).ready(function() {
     });
 
     association_select.change(function() {
-        access_association_name.text($(this).find("option:selected").text());
+        var name = window.association_main_mappings[$(this).find("option:selected").val()];
+        access_association_name.text(name);
     });
 
     form.find("div.control-group.logo a.pick-from-image-archive").click(function() {
