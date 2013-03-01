@@ -9,6 +9,12 @@
 
     <h2>Publikasjoner</h2>
 
+    {% if publications_user|length == 0 and publications_other|length == 0 %}
+      <p>
+        Vi har dessverre ikke fått lagt ut noen publikasjoner her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
+      </p>
+    {% endif %}
+
     <div class="publications">
       <div class="row-fluid">
         {% for publication in publications_user %}
@@ -35,6 +41,7 @@
     </div>
 
     {% if publications_other|length > 0 %}
+      {# This phrasing might seem weird if someone has "other" publications but no "user" publications. However that's probably not the case for anyone. #}
       <h3>Andre publikasjoner</h3>
 
       <table class="table">
