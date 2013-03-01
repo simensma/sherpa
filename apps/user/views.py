@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.cache import cache
+from django.db.models import Q
 
 from datetime import datetime
 import json
@@ -14,6 +15,7 @@ from user.models import Profile
 from core import validator
 from core.models import Zipcode
 from focus.models import Actor
+from admin.models import Publication
 
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
@@ -248,7 +250,28 @@ def reserve_yearbook(request):
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def publications(request):
-    return render(request, 'common/user/publications.html')
+    accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
+    publications_user = Publication.objects.filter(
+        Q(association__type='sentral') |
+        Q(association__in=accessible_associations))
+    publications_other = Publication.objects.exclude(association__in=accessible_associations).filter(access='all')
+    context = {
+        'publications_user': publications_user,
+        'publications_other': publications_other}
+    return render(request, 'common/user/publications.html', context)
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def publication(request, publication):
+    accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
+    publication = Publication.objects.filter(
+        # Verify that the user has access to this publication
+        Q(association__type='sentral') |
+        Q(access='all') |
+        Q(association__in=accessible_associations)
+    ).get(id=publication)
+    context = {'publication': publication}
+    return render(request, 'common/user/publication.html', context)
 
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!

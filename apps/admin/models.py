@@ -99,3 +99,14 @@ class Release(models.Model):
 
     def get_pdf_url(self):
         return "http://%s/%s/%s.pdf" % (settings.AWS_BUCKET, settings.AWS_PUBLICATIONS_PREFIX, self.pdf_hash)
+
+    def get_default_release(self):
+        if self.pdf_hash != '':
+            return self.get_pdf_url()
+        elif self.online_view != '':
+            return self.online_view
+        else:
+            return ''
+
+    def is_released(self):
+        return self.pdf_hash != '' or self.online_view != ''

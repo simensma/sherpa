@@ -13,5 +13,6 @@ urlpatterns = patterns('user.views',
     url(r'^reservasjon-mot-fjell-og-vidde/$', 'reserve_fjellogvidde'),
     url(r'^reservasjon-mot-aarbok/$', 'reserve_yearbook'),
     url(r'^publikasjoner/$', 'publications'),
+    url(r'^publikasjon/(?P<publication>\d+)/$', 'publication'),
     url(r'', include('user.login.urls')),
 )

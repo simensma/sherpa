@@ -1,0 +1,66 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Publikasjoner &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <a href="{% url user.views.publications %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>{{ publication.title }}</h2>
+
+    <div class="publications">
+      <div class="row-fluid">
+        {% for release in publication.releases_ordered %}
+          <div class="span4">
+            <div class="release">
+              <h3 class="title">
+                {% if release.is_released %}
+                  <a href="{{ release.get_default_release }}" class="noexternal">
+                {% endif %}
+                  {{ release.title }}
+                {% if release.is_released %}
+                  </a>
+                {% endif %}
+              </h3>
+              <p class="date">{{ release.pub_date|date:"j. F Y" }}</p>
+              <p>
+                {% if release.is_released %}
+                  <a href="{% if release.pdf_hash != '' %}{{ release.get_pdf_url }}{% else %}{{ release.online_view }}{% endif %}">
+                {% endif %}
+                    <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
+                {% if release.is_released %}
+                  </a>
+                {% endif %}
+              </p>
+              {% if release.is_released %}
+                <p class="download">
+                  {% if release.pdf_hash != '' and release.online_view != '' %}
+                    <a href="{{ release.get_pdf_url }}">Last ned PDF</a> eller <a href="{{ release.online_view }}">les online</a>
+                  {% elif release.pdf_hash != '' %}
+                    <a href="{{ release.get_pdf_url }}">Last ned PDF</a>
+                  {% elif release.online_view != '' %}
+                    <a href="{{ release.online_view }}">Les online</a>
+                  {% endif %}
+                </p>
+              {% endif %}
+              <p class="description">
+                {{ release.description|linebreaksbr }}
+              </p>
+            </div>
+          </div>
+
+          {% if not forloop.last and forloop.counter|divisibleby:"3" %}
+            </div><div class="row-fluid">
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='publications' %}
+  </div>
+</div>
+
+{% endblock %}
