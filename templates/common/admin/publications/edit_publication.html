@@ -93,6 +93,20 @@
         </div>
       </div>
 
+      <div class="control-group access">
+        <label class="control-label" for="access">Tilgjengelig for:</label>
+        <div class="controls">
+          <label for="all" class="radio">
+            <input type="radio" name="access" value="all" {% if publication.access == 'all' %} checked {% endif %}>
+            Alle DNTs medlemmer
+          </label>
+          <label for="association" class="radio">
+            <input type="radio" name="access" value="association" {% if publication.access == 'association' %} checked {% endif %}>
+            Kun medlemmer i <span class="association-name">{{ publication.association.name }}</span> eller undergrupper
+          </label>
+        </div>
+      </div>
+
       <div class="control-group license">
         <label class="control-label" for="license">Lisens:</label>
         <div class="controls">

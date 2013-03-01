@@ -72,6 +72,10 @@ class Publication(models.Model):
     association = models.ForeignKey('association.Association')
     title = models.CharField(max_length=255)
     logo = models.CharField(max_length=2048)
+    ACCESS_CHOICES = (
+        ('all', 'Alle medlemmer'),
+        ('association', 'Medlemmer i foreningen eller underforeninger'),)
+    access = models.CharField(max_length=255, choices=ACCESS_CHOICES, default=ACCESS_CHOICES[0][0])
     LICENSE_CHOICES = (
         ('all_rights_reserved', 'Alle rettigheter reservert'),
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
