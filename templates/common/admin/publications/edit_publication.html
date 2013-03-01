@@ -52,7 +52,7 @@
             {% if user.get_profile.all_associations_sorted.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">
                 {% for association in user.get_profile.all_associations_sorted.central %}
-                  <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
+                  <option value="{{ association.id }}" data-type="sentral"{% if publication.association == association %} selected{% endif %}>{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
@@ -99,7 +99,7 @@
         </div>
       </div>
 
-      <div class="control-group access">
+      <div class="control-group access{% if publication.association.type == 'sentral' %} hide{% endif %}">
         <label class="control-label" for="access">Tilgjengelig for:</label>
         <div class="controls">
           <label for="all" class="radio">
