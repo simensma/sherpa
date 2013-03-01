@@ -155,7 +155,7 @@
               <p class="date">{{ release.pub_date|date:"j. F Y" }}</p>
               <p>
                 <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
-                  <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}"><br>
+                  <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
                 </a>
               </p>
               <p class="download">
