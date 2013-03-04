@@ -27,7 +27,7 @@
               </h3>
               <p>
                 <a href="{% url user.views.publication publication.id %}">
-                  <img src="{% firstof publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}">
+                  <img src="{% firstof publication.get_latest_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}">
                 </a>
               </p>
             </div>

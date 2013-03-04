@@ -37,7 +37,7 @@
                 {% if release.is_released %}
                   <a href="{% if release.pdf_hash != '' %}{{ release.get_pdf_url }}{% else %}{{ release.online_view }}{% endif %}">
                 {% endif %}
-                    <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
+                    <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
                 {% if release.is_released %}
                   </a>
                 {% endif %}
