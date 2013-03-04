@@ -2,6 +2,11 @@
 {% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
+  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
+{% endblock %}
+
 {% block js_globals %}
   <script>
     window.association_main_mappings = JSON.parse("{{ association_main_mappings|escapejs }}");
@@ -9,8 +14,14 @@
 {% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/publications/edit_publication.js"></script>
   <script src="{{ STATIC_URL }}js/admin/publications/edit_publication_form.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_release_form.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -35,7 +46,7 @@
         <i class="icon-pencil"></i> Endre generell informasjon for publikasjonen
         <br>
       </a>
-      <a href="{% url admin.publications.views.edit_release publication.id %}">
+      <a href="javascript:undefined" class="create-release">
         <i class="icon-plus"></i> Legg ut ny utgivelse
       </a>
     </p>
@@ -45,6 +56,22 @@
     <div style="clear: both;"></div>
 
     {% include 'common/admin/publications/edit_publication_form.html' %}
+
+    {% for message in messages %}
+      {% if message.message == 'incorrect_file_format' %}
+        <div class="alert alert-error">
+          <strong>Du kan kun laste opp filer i PDF-format.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% include 'common/admin/publications/edit_release_form.html' %}
+
+    {% if publication.releases_ordered|length == 0 %}
+      <p class="initial-publication-info">
+        Klikk på <a href="javascript:undefined">Legg ut ny utgivelse</a> her eller oppe til høyre for å legge ut en ny utgivelse av {{ publication.title }}.
+      </p>
+    {% endif %}
 
     <div class="publications list-publication-releases">
       <div class="row-fluid">

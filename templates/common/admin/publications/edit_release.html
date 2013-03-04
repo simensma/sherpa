@@ -13,7 +13,7 @@
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/publications/edit_release.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_release_form.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -33,106 +33,7 @@
       <a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a> / {{ release.title|default:"Ny utgivelse" }}
     </h2>
 
-    {# A little too much logic here because if release isn't set (for new releases), we can't include the id as an empty parameter; the reverse lookup will fail. #}
-    <form action="{% if release %}{% url admin.publications.views.edit_release publication.id release.id %}{% else %}{% url admin.publications.views.edit_release publication.id %}{% endif %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
-      {% csrf_token %}
-
-      <div class="control-group title">
-        <label class="control-label" for="title">Tittel:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="title" value="{{ release.title }}">
-        </div>
-      </div>
-
-      <div class="control-group cover_photo">
-        <label class="control-label" for="cover_photo">Forsidebilde:</label>
-        <div class="controls">
-          <div class="row-fluid">
-            <div class="span3">
-              <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}" class="cover_photo">
-            </div>
-            <div class="span9">
-              <input type="text" class="input-xxlarge" name="cover_photo" value="{{ release.cover_photo }}">
-              <p>
-                <a href="javascript:undefined" class="btn pick-from-image-archive">Hent fra bildearkivet</a>
-                <a href="javascript:undefined" class="btn upload-new-image">Last opp nytt</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="control-group description">
-        <label class="control-label" for="description">Oppsummering/beskrivelse:</label>
-        <div class="controls">
-          <textarea name="description" rows="5" class="input-xlarge">{{ release.description }}</textarea>
-        </div>
-      </div>
-
-      <div class="control-group pub_date">
-        <label class="control-label" for="pub_date">Publisert:</label>
-        <div class="controls">
-          <div class="input-append date pub_date-wrapper">
-            <input type="text" class="input-medium" name="pub_date" value="{% firstof release.pub_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-            <span class="add-on"><i class="icon-th"></i></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="control-group tags">
-        <label class="control-label" for="tags">Nøkkelord:</label>
-        <div class="controls">
-          <input type="hidden" name="tags-serialized">
-          <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
-          <div class="tag-box">
-            {% for tag in release.tags.all %}
-              <div class="tag">
-                <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
-                {{ tag.name }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="control-group pdf">
-        <label class="control-label" for="pdf">Last opp PDF:</label>
-        <div class="controls">
-          <input type="file" class="input-xlarge" name="pdf">
-          <p class="info">
-            PDF-magasin som medlemmer kan laste ned.
-            {% if release.pdf_hash != '' %}
-            <br>
-            <a href="{{ release.get_pdf_url }}">Denne</a> er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
-            {% endif %}
-          </p>
-        </div>
-      </div>
-
-      <div class="control-group online_view">
-        <label class="control-label" for="online_view">Lenke til online visning:</label>
-        <div class="controls">
-          <input type="text" class="input-xxlarge" name="online_view" value="{{ release.online_view }}">
-          <p class="info">
-            Dette kan være en online visningstjeneste som f.eks. <a href="http://www.calameo.com/">Calameo</a>.<br>
-            Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.
-          </p>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i>
-            {% if not release %}
-              Opprett ny utgivelse
-            {% else %}
-              Lagre utgivelsen
-            {% endif %}
-          </button>
-        </div>
-      </div>
-
-    </form>
+    {% include 'common/admin/publications/edit_release_form.html' %}
 
   </div>
 </div>

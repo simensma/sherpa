@@ -34,7 +34,8 @@ def edit_publication(request, publication):
     if request.method == 'GET':
         context = {
             'publication': publication,
-            'association_main_mappings': json.dumps(get_association_main_mappings())}
+            'association_main_mappings': json.dumps(get_association_main_mappings()),
+            'now': datetime.now()}
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':
         publication.title = request.POST['title']
@@ -57,7 +58,7 @@ def edit_release(request, publication, release):
         raise PermissionDenied
 
     if request.method == 'GET':
-        release = Release.objects.get(id=release) if release is not None else None
+        release = Release.objects.get(id=release)
         context = {
             'publication': publication,
             'release': release,
@@ -70,6 +71,8 @@ def edit_release(request, publication, release):
             release = Release.objects.get(id=release)
 
         release.title = request.POST['title']
+        if release.title == '':
+            release.title = '(Uten navn)'
         release.cover_photo = request.POST['cover_photo']
         release.description = request.POST['description']
         release.online_view = request.POST['online_view']
