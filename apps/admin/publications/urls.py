@@ -8,5 +8,6 @@ urlpatterns = patterns('admin.publications.views',
     url(r'^rediger/publikasjon/(?P<publication>\d+)/$', 'edit_publication'),
     url(r'^rediger/utgivelse/(?P<publication>\d+)/$', 'edit_release', {'release': None}),
     url(r'^rediger/utgivelse/(?P<publication>\d+)/(?P<release>\d+)/$', 'edit_release'),
+    url(r'^slett/utgivelse/(?P<release>\d+)/$', 'delete_release'),
 
 )

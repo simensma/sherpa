@@ -115,3 +115,15 @@ class Release(models.Model):
 
     def is_released(self):
         return self.pdf_hash != '' or self.online_view != ''
+
+# Upon image delete, delete the corresponding object from S3
+@receiver(post_delete, sender=Release, dispatch_uid="admin.models")
+def delete_release_pdf(sender, **kwargs):
+    s3 = simples3.S3Bucket(
+        settings.AWS_BUCKET,
+        settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY,
+        'https://%s' % settings.AWS_BUCKET)
+
+    if kwargs['instance'].pdf_hash != '':
+        s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))

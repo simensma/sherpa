@@ -123,6 +123,14 @@ def edit_release(request, publication, release):
             release.tags.add(obj)
         return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
 
+def delete_release(request, release):
+    release = Release.objects.get(id=release)
+    if release.publication.association not in request.user.get_profile().all_associations():
+        raise PermissionDenied
+
+    release.delete()
+    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[release.publication.id]))
+
 def get_association_main_mappings():
     association_main_mappings = cache.get('association_main_mappings')
     if association_main_mappings is None:
