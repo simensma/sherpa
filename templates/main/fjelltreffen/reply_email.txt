@@ -9,3 +9,5 @@ Her kommer svaret:
 {{ reply.text }}
 
 -----------------------------------------------------------------------------------------
+
+Husk at du kan ikke svare direkte på denne e-posten! Du må sende svaret til: {{ reply.email }}

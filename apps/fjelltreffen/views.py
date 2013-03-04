@@ -88,7 +88,7 @@ def show(request, id):
                         'text': request.POST['text']}
                     })
                 content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
-                send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, request.POST['email'], [annonse.email], fail_silently=False)
+                send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
                 request.session['fjelltreffen.reply'] = {
                     'name': form.cleaned_data['name'],
                     'email': form.cleaned_data['email'],
