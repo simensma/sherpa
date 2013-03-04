@@ -20,6 +20,7 @@
       <div class="row-fluid">
         <div class="span3">
           <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}" class="cover_photo">
+          <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
         </div>
         <div class="span9">
           <input type="text" class="input-xxlarge" name="cover_photo" value="{{ release.cover_photo }}">
