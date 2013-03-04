@@ -533,18 +533,26 @@ def payment(request):
     desc = t.render(c)
 
     # Send the transaction registration to Nets
-    r = requests.get(settings.NETS_REGISTER_URL, params={
-        'merchantId': settings.NETS_MERCHANT_ID,
-        'token': settings.NETS_TOKEN,
-        'orderNumber': order_number,
-        'customerFirstName': first_name,
-        'customerLastName': last_name,
-        'customerEmail': email,
-        'currencyCode': 'NOK',
-        'amount': request.session['enrollment']['price_sum'] * 100,
-        'orderDescription': desc,
-        'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
-    })
+    try:
+        r = requests.get(settings.NETS_REGISTER_URL, params={
+            'merchantId': settings.NETS_MERCHANT_ID,
+            'token': settings.NETS_TOKEN,
+            'orderNumber': order_number,
+            'customerFirstName': first_name,
+            'customerLastName': last_name,
+            'customerEmail': email,
+            'currencyCode': 'NOK',
+            'amount': request.session['enrollment']['price_sum'] * 100,
+            'orderDescription': desc,
+            'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
+        })
+    except requests.ConnectionError as e:
+        logger.warning(u"(Håndtert) %s" % e.message,
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'nets_register_connection_error')
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
 
     # Sweet, almost done, now just send the user to complete the transaction
     request.session['enrollment']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
