@@ -533,18 +533,26 @@ def payment(request):
     desc = t.render(c)
 
     # Send the transaction registration to Nets
-    r = requests.get(settings.NETS_REGISTER_URL, params={
-        'merchantId': settings.NETS_MERCHANT_ID,
-        'token': settings.NETS_TOKEN,
-        'orderNumber': order_number,
-        'customerFirstName': first_name,
-        'customerLastName': last_name,
-        'customerEmail': email,
-        'currencyCode': 'NOK',
-        'amount': request.session['enrollment']['price_sum'] * 100,
-        'orderDescription': desc,
-        'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
-    })
+    try:
+        r = requests.get(settings.NETS_REGISTER_URL, params={
+            'merchantId': settings.NETS_MERCHANT_ID,
+            'token': settings.NETS_TOKEN,
+            'orderNumber': order_number,
+            'customerFirstName': first_name,
+            'customerLastName': last_name,
+            'customerEmail': email,
+            'currencyCode': 'NOK',
+            'amount': request.session['enrollment']['price_sum'] * 100,
+            'orderDescription': desc,
+            'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
+        })
+    except requests.ConnectionError as e:
+        logger.warning(u"(Håndtert) %s" % e.message,
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'nets_register_connection_error')
+        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
 
     # Sweet, almost done, now just send the user to complete the transaction
     request.session['enrollment']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
@@ -596,29 +604,38 @@ def process_card(request):
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
     if request.GET['responseCode'] == 'OK':
-        r = requests.get(settings.NETS_PROCESS_URL, params={
-            'merchantId': settings.NETS_MERCHANT_ID,
-            'token': settings.NETS_TOKEN,
-            'operation': 'SALE',
-            'transactionId': request.session['enrollment']['transaction_id']
-        })
-        dom = etree.fromstring(r.text)
-        code = dom.find(".//ResponseCode").text
-        if code == 'OK':
-            # Register the payment in focus
-            for user in request.session['enrollment']['users']:
-                focus_user = Enrollment.objects.get(member_id=user['id'])
-                focus_user.payed = True
-                focus_user.save()
-            prepare_and_send_email(
-                request,
-                request.session['enrollment']['users'],
-                request.session['enrollment']['association'],
-                request.session['enrollment']['location'], 'card',
-                request.session['enrollment']['price_sum'])
-            request.session['enrollment']['result'] = 'success'
-        else:
-            request.session['enrollment']['result'] = 'fail'
+        try:
+            r = requests.get(settings.NETS_PROCESS_URL, params={
+                'merchantId': settings.NETS_MERCHANT_ID,
+                'token': settings.NETS_TOKEN,
+                'operation': 'SALE',
+                'transactionId': request.session['enrollment']['transaction_id']
+            })
+            dom = etree.fromstring(r.text)
+            code = dom.find(".//ResponseCode").text
+            if code == 'OK':
+                # Register the payment in focus
+                for user in request.session['enrollment']['users']:
+                    focus_user = Enrollment.objects.get(member_id=user['id'])
+                    focus_user.payed = True
+                    focus_user.save()
+                prepare_and_send_email(
+                    request,
+                    request.session['enrollment']['users'],
+                    request.session['enrollment']['association'],
+                    request.session['enrollment']['location'], 'card',
+                    request.session['enrollment']['price_sum'])
+                request.session['enrollment']['result'] = 'success'
+            else:
+                request.session['enrollment']['result'] = 'fail'
+        except requests.ConnectionError as e:
+            logger.error(u"(Håndtert, men bør sjekkes) %s" % e.message,
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            request.session['enrollment']['state'] = 'payment'
+            return render(request, 'main/enrollment/payment-process-error.html')
+
     else:
         request.session['enrollment']['state'] = 'registration'
         request.session['enrollment']['result'] = 'cancel'

@@ -1,0 +1,60 @@
+{% extends 'main/enrollment/index.html' %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/enrollment/payment_error.js"></script>
+{% endblock %}
+
+{% block enrollment %}
+
+<div class="row">
+  <div class="span8">
+
+    {% include 'main/enrollment/progress.html' with step=4 %}
+
+    <div class="payment-error">
+      <div class="alert alert-error">
+        <strong>Teknisk feil ved nettbetaling</strong><br>
+          Det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør for å bekrefte at betalingen har gått gjennom.<br><br>
+
+        <strong>Viktig:</strong> Vi har <em>ikke</em> registrert at betalingen din har gått gjennom, selv om den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir ikke medlemskapet ditt registrert som betalt i vårt system.
+      </div>
+
+      <p>
+        <a href="javascript:undefined" class="btn btn-large refresh">Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!</a>
+      </p>
+
+      <p class="help-action what-to-do">
+        <a href="javascript:undefined">
+          <i class="icon-question-sign"></i> Hva gjør jeg hvis feilen ikke går bort?
+        </a>
+      </p>
+
+      <div class="alert alert-info what-to-do hide">
+        Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med medlemsservice - se boksen til høyre.<br><br>
+
+        Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi har logget detaljene rundt feilen i våre systemer og kan spore opp betalingen manuelt.
+      </div>
+
+      <p class="help-action more-information">
+        <a href="javascript:undefined">
+          <i class="icon-info-sign"></i> Mer informasjon om hva som har skjedd
+        </a>
+      </p>
+
+      <div class="alert alert-info more-information hide">
+        Når du har gjennomført din betaling i nettbanken, må vi kontakte vår betalingsleverandør for å bekrefte at betalingen var vellykket. Når vi forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt system, i løsningen til vår betalingsleverandør, eller i eventuelle tredjepartssystemer.<br><br>
+
+        Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, men går bort av seg selv etter kort tid.
+      </div>
+
+      <p class="sorry">Vi beklager virkelig dette, og ulempene det medfører!</p>
+
+    </div>
+  </div>
+
+  <div class="span4">
+    {% include 'main/membership/infobox.html' %}
+  </div>
+</div>
+
+{% endblock %}

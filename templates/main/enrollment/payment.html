@@ -17,6 +17,12 @@
           <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
           Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
         </div>
+      {% elif message.message == 'nets_register_connection_error' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong>Teknisk feil ved nettbetaling</strong><br>
+          Beklager, det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i stedet.
+        </div>
       {% endif %}
     {% endfor %}
 
