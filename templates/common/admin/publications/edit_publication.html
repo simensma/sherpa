@@ -48,6 +48,10 @@
       </a>
       <a href="javascript:undefined" class="create-release">
         <i class="icon-plus"></i> Legg ut ny utgivelse
+        <br>
+      </a>
+      <a href="javascript:undefined" class="delete-publication">
+        <i class="icon-remove"></i> Slett hele publikasjonen
       </a>
     </p>
 
@@ -56,6 +60,34 @@
     <div style="clear: both;"></div>
 
     {% include 'common/admin/publications/edit_publication_form.html' %}
+
+    <div class="alert alert-error delete-publication-confirm hide">
+      <p>
+        <strong>Er du sikker på at du vil slette {{ publication.title }}{% if publication.releases_ordered|length > 0 %}, med sine {{ publication.releases_ordered|length }} utgivelser{% endif %}?</strong><br>
+        {% if publication.releases_ordered|length > 0 %}
+          Alle PDF-filene som er lastet opp for utgivelsene vil også slettes. Forsidebildene vil bli liggende i bildearkivet, hvis du vil slette dem også må du gå til bildearkivet og gjøre det selv. Følgende utgivelser blir også slettet:
+        {% endif %}
+      </p>
+
+      {% if publication.releases_ordered|length > 0 %}
+        <ul>
+          {% for release in publication.releases_ordered %}
+            <li>{{ release.title }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <p>
+        <a href="{% url admin.publications.views.delete_publication publication.id %}" class="btn btn-danger delete-publication-final">
+          <i class="icon-remove"></i>
+          {% if publication.releases_ordered|length > 0 %}
+            Ja, jeg skjønner. Slett publikasjonen og alle utgivelsene for godt.
+          {% else %}
+            Ja, slett publikasjonen for godt.
+          {% endif %}
+        </a>
+      </p>
+    </div>
 
     {% for message in messages %}
       {% if message.message == 'incorrect_file_format' %}
