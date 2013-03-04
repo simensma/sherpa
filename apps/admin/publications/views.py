@@ -17,38 +17,36 @@ import simples3
 
 def index(request):
     publications = Publication.objects.filter(association__in=request.user.get_profile().all_associations()).order_by('title')
-    context = {'publications': publications}
+    context = {
+        'publications': publications,
+        'association_main_mappings': json.dumps(get_association_main_mappings())}
     return render(request, 'common/admin/publications/index.html', context)
 
-def create_publication(request):
-    publication = Publication(
-        title=request.POST['title'],
-        association=request.session['active_association'])
-    publication.save()
-    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
-
 def edit_publication(request, publication):
-    publication = Publication.objects.get(id=publication)
+    if publication is None:
+        publication = Publication(association=request.session['active_association'])
+    else:
+        publication = Publication.objects.get(id=publication)
+
     if publication.association not in request.user.get_profile().all_associations():
         raise PermissionDenied
+
     if request.method == 'GET':
-        association_main_mappings = cache.get('association_main_mappings')
-        if association_main_mappings is None:
-            association_main_mappings = {a.id: a.get_main_association().name for a in Association.objects.all()}
-            cache.set('association_main_mappings', association_main_mappings, 60 * 60 * 24)
         context = {
             'publication': publication,
-            'association_main_mappings': json.dumps(association_main_mappings)}
+            'association_main_mappings': json.dumps(get_association_main_mappings())}
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':
         publication.title = request.POST['title']
+        if publication.title == '':
+            publication.title = '(Uten navn)'
         association = Association.objects.get(id=request.POST['association'])
         if association in request.user.get_profile().all_associations():
             publication.association = association
-        if request.POST['access'] in [l[0] for l in Publication.ACCESS_CHOICES]:
-            publication.access = request.POST['access']
-        if request.POST['license'] in [l[0] for l in Publication.LICENSE_CHOICES]:
-            publication.license = request.POST['license']
+        if 'access' in request.POST and request.POST['access'] in [l[0] for l in Publication.ACCESS_CHOICES]:
+                publication.access = request.POST['access']
+        if 'license' in request.POST and request.POST['license'] in [l[0] for l in Publication.LICENSE_CHOICES]:
+                publication.license = request.POST['license']
         publication.save()
         messages.info(request, 'publication_info_saved')
         return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
@@ -121,3 +119,10 @@ def edit_release(request, publication, release):
             obj, created = Tag.objects.get_or_create(name=tag)
             release.tags.add(obj)
         return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
+
+def get_association_main_mappings():
+    association_main_mappings = cache.get('association_main_mappings')
+    if association_main_mappings is None:
+        association_main_mappings = {a.id: a.get_main_association().name for a in Association.objects.all()}
+        cache.set('association_main_mappings', association_main_mappings, 60 * 60 * 24)
+    return association_main_mappings

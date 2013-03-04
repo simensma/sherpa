@@ -1,0 +1,93 @@
+{# This may be a 'create' or an 'edit' form #}
+{% if publication %}
+  <form action="{% url admin.publications.views.edit_publication publication.id %}" method="post" class="form-default form-border form-horizontal edit-publication hide">
+{% else %}
+  <form action="{% url admin.publications.views.edit_publication %}" method="post" class="form-default form-border form-horizontal edit-publication hide">
+{% endif %}
+
+  {% csrf_token %}
+
+  {% if not publication %}
+    <div class="alert alert-info">
+      Her legger du inn generell info som er felles for alle utgivelser av publikasjonen. På neste side kan du laste opp PDF eller lenke til online visning for en eller flere utgivelser.
+    </div>
+  {% endif %}
+
+  <div class="control-group title">
+    <label class="control-label" for="title">Navn:</label>
+    <div class="controls">
+      <input type="text" class="input-xlarge" name="title" value="{{ publication.title }}">
+    </div>
+  </div>
+
+  <div class="control-group association">
+    <label class="control-label" for="association">Tilhører:</label>
+    <div class="controls">
+      <select name="association" data-chosen data-placeholder="Velg tilhørende forening...">
+        <option value=""></option>
+        {% if user.get_profile.all_associations_sorted.central|length > 0 %}
+          <optgroup label="Sentralt/nasjonalt">
+            {% for association in user.get_profile.all_associations_sorted.central %}
+              <option value="{{ association.id }}" data-type="sentral"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.all_associations_sorted.associations|length > 0 %}
+          <optgroup label="Medlemsforeninger">
+            {% for association in user.get_profile.all_associations_sorted.associations %}
+              <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.all_associations_sorted.small_associations|length > 0 %}
+          <optgroup label="Lokale turlag">
+            {% for association in user.get_profile.all_associations_sorted.small_associations %}
+              <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
+          <optgroup label="Turgrupper">
+            {% for association in user.get_profile.all_associations_sorted.hike_groups %}
+              <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group access{% if publication and publication.association.type == 'sentral' or active_association.type == 'sentral' %} hide{% endif %}">
+    <label class="control-label" for="access">Tilgjengelig for:</label>
+    <div class="controls">
+      <label for="all" class="radio">
+        <input type="radio" name="access" value="all" {% if publication.access == 'all' %} checked {% endif %}>
+        Alle DNTs medlemmer
+      </label>
+      <label for="association" class="radio">
+        <input type="radio" name="access" value="association" {% if publication.access == 'association' %} checked {% endif %}>
+        Kun medlemmer i <span class="association-name">{% firstof publication.association.get_main_association.name active_association.get_main_association.name %}</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="control-group license">
+    <label class="control-label" for="license">Lisens:</label>
+    <div class="controls">
+      <label for="all_rights_reserved" class="radio">
+        <input type="radio" name="license" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' %} checked {% endif %}>
+        Alle rettigheter reservert
+      </label>
+      <label for="cc-by-nc-nd" class="radio">
+        <input type="radio" name="license" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked {% endif %}>
+        <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no">Creative Commons (CC BY-NC-ND 3.0)</a>
+      </label>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i> Lagre publikasjonsinfo</button>
+    </div>
+  </div>
+</form>

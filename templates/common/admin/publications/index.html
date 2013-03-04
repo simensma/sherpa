@@ -2,8 +2,15 @@
 {% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
 
+{% block js_globals %}
+  <script>
+    window.association_main_mappings = JSON.parse("{{ association_main_mappings|escapejs }}");
+  </script>
+{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/publications/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_publication_form.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -30,24 +37,8 @@
       </div>
     {% endif %}
 
-    <button class="btn btn-large create">Opprett ny publikasjon</button>
-    <form action="{% url admin.publications.views.create_publication %}" method="post" class="create form-default form-border form-horizontal hide">
-      {% csrf_token %}
-
-      <div class="control-group title">
-        <label class="control-label" for="title">Navn på publikasjonen:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="title">
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i> Opprett</button>
-        </div>
-      </div>
-
-    </form>
+    <button class="btn btn-large create-publication">Opprett ny publikasjon</button>
+    {% include 'common/admin/publications/edit_publication_form.html' %}
 
   </div>
 </div>

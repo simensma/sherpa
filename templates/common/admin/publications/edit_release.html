@@ -30,8 +30,7 @@
     {% endfor %}
 
     <h2>
-      {{ release.title|default:"Ny utgivelse" }}
-      (<a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a>)
+      <a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a> / {{ release.title|default:"Ny utgivelse" }}
     </h2>
 
     {# A little too much logic here because if release isn't set (for new releases), we can't include the id as an empty parameter; the reverse lookup will fail. #}

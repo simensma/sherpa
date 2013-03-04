@@ -1,6 +1,11 @@
 $(document).ready(function() {
-    $("button.create").click(function() {
+
+    var button = $("button.create-publication");
+    var form = $("form.edit-publication");
+
+    button.click(function() {
         $(this).hide();
-        $("form.create").slideDown();
+        form.slideDown();
     });
+
 });
