@@ -7,7 +7,7 @@ def list(request):
     if not request.user.has_perm('user.sherpa_admin'):
         raise PermissionDenied
     sms_requests = SMSServiceRequest.objects.all()
-    total_sent = len(sms_requests.filter(blocked=False))
+    total_sent = len(sms_requests.filter(memberid__isnull=False, blocked=False))
     sms_requests = sms_requests.order_by('-date')
     sms_price = 0.39
     total_cost = sms_price * total_sent
