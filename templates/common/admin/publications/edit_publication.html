@@ -10,8 +10,6 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/publications/edit_publication.js"></script>
 {% endblock %}
 
@@ -81,24 +79,6 @@
         </div>
       </div>
 
-      <div class="control-group logo">
-        <label class="control-label" for="logo">Logo:</label>
-        <div class="controls">
-          <div class="row-fluid">
-            <div class="span3">
-              <img src="{% firstof publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}" class="logo">
-            </div>
-            <div class="span9">
-              <input type="text" class="input-xxlarge" name="logo" value="{{ publication.logo }}">
-              <p>
-                <a href="javascript:undefined" class="btn pick-from-image-archive">Hent fra bildearkivet</a>
-                <a href="javascript:undefined" class="btn upload-new-image">Last opp ny logo</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="control-group access{% if publication.association.type == 'sentral' %} hide{% endif %}">
         <label class="control-label" for="access">Tilgjengelig for:</label>
         <div class="controls">
@@ -155,7 +135,7 @@
               <p class="date">{{ release.pub_date|date:"j. F Y" }}</p>
               <p>
                 <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
-                  <img src="{% firstof release.get_cover_photo publication.get_logo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
+                  <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
                 </a>
               </p>
               <p class="download">

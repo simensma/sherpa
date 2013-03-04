@@ -49,7 +49,6 @@ def edit_publication(request, publication):
             publication.access = request.POST['access']
         if request.POST['license'] in [l[0] for l in Publication.LICENSE_CHOICES]:
             publication.license = request.POST['license']
-        publication.logo = request.POST['logo']
         publication.save()
         messages.info(request, 'publication_info_saved')
         return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))

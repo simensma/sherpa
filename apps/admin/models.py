@@ -71,7 +71,6 @@ def delete_album(sender, **kwargs):
 class Publication(models.Model):
     association = models.ForeignKey('association.Association')
     title = models.CharField(max_length=255)
-    logo = models.CharField(max_length=2048)
     ACCESS_CHOICES = (
         ('all', 'Alle medlemmer'),
         ('association', 'Medlemmer i foreningen eller underforeninger'),)
@@ -83,6 +82,12 @@ class Publication(models.Model):
 
     def releases_ordered(self):
         return self.releases.all().order_by('-pub_date')
+
+    def get_logo(self):
+        try:
+            return self.releases_ordered()[0].get_cover_photo()
+        except IndexError:
+            return ''
 
 class Release(models.Model):
     publication = models.ForeignKey(Publication, related_name='releases')
