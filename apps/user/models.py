@@ -72,6 +72,8 @@ class Profile(models.Model):
             if self.user.has_perm('user.sherpa_admin'):
                 # Sherpa admins have access to all associations
                 associations = Association.objects.all()
+                for association in associations:
+                    association.role = 'admin'
             else:
                 # A normal user, return all connected associations, including
                 # children-associations where role is admin.
