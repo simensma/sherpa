@@ -2,8 +2,7 @@ $(document).ready(function() {
     var edit_publication_form = $("form.edit-publication");
     var edit_release_form = $("form.edit-release");
     var publication_anchor = $("p.publication-actions a.edit-publication");
-    var release_anchor = $("p.publication-actions a.create-release");
-    var initial_publication_info = $("p.initial-publication-info");
+    var release_button = $("button.create-release");
     var delete_anchor = $("p.publication-actions a.delete-publication");
     var delete_confirm = $("div.delete-publication-confirm");
     var delete_final = $("a.delete-publication-final");
@@ -13,14 +12,10 @@ $(document).ready(function() {
         edit_publication_form.slideDown();
     });
 
-    release_anchor.click(create_release);
-    initial_publication_info.find("a").click(create_release);
-
-    function create_release() {
-        release_anchor.hide();
-        initial_publication_info.hide();
+    release_button.click(function() {
+        release_button.hide();
         edit_release_form.slideDown();
-    }
+    });
 
     delete_anchor.click(function() {
         $(this).hide();

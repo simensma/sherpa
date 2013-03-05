@@ -46,10 +46,6 @@
         <i class="icon-pencil"></i> Endre generell informasjon
         <br>
       </a>
-      <a href="javascript:undefined" class="create-release">
-        <i class="icon-plus"></i> Legg ut ny utgivelse
-        <br>
-      </a>
       <a href="javascript:undefined" class="delete-publication">
         <i class="icon-remove"></i> Slett hele publikasjonen
       </a>
@@ -99,11 +95,11 @@
 
     {% include 'common/admin/publications/edit_release_form.html' %}
 
-    {% if publication.releases_ordered|length == 0 %}
-      <p class="initial-publication-info">
-        Klikk på <a href="javascript:undefined">Legg ut ny utgivelse</a> her eller oppe til høyre for å legge ut en ny utgivelse av {{ publication.title }}.
-      </p>
-    {% endif %}
+    <p>
+      <button class="btn btn-large create-release">
+        <i class="icon-plus"></i> Legg ut ny utgivelse av {{ publication.title }}
+      </button>
+    </p>
 
     <div class="publications">
       <div class="row-fluid">
