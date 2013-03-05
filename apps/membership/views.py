@@ -1,6 +1,6 @@
 # encoding: utf-8
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.core.cache import cache
@@ -107,6 +107,10 @@ def memberid_sms(request):
     # poorly formatted) and some are also foreign, which we allow for now.
     # We are currently relying on the SMS service to fail if a bogus number
     # happens to fall through.
+
+    # Robots etc, just redirect them
+    if not 'phone_mobile' in request.POST:
+        return HttpResponseRedirect(reverse('membership.views.service'))
 
     # Use the local cache to count requests, identify on IP
     def memberid_sms_count(ip_address):
