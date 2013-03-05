@@ -7,6 +7,7 @@ $(document).ready(function() {
         var loader = table.find("tr.loader");
         var initial = table.find("tr.initial");
         var no_hits = table.find("tr.no-hits");
+        var short_query = table.find("tr.short_query");
         var error = table.find("tr.error");
         var result_mirror = no_hits.find("span.result-mirror");
 
@@ -21,9 +22,15 @@ $(document).ready(function() {
             loader.show();
             no_hits.hide();
             initial.hide();
+            short_query.hide();
             error.hide();
             table.find("tr.result").remove();
             var query = search_input.val();
+            if(query.length < admin_user_search_char_length) {
+                short_query.show();
+                loader.hide();
+                return;
+            }
             $.ajaxQueue({
                 url: '/sherpa/brukere/søk/',
                 data: { q: query }

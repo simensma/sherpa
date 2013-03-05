@@ -14,8 +14,12 @@ from association.models import Association
 from user.models import Profile, AssociationRole
 from focus.models import Actor
 
+ADMIN_USER_SEARCH_CHAR_LENGTH = 4
+
 def index(request):
-    context = {'password_length': settings.USER_PASSWORD_LENGTH}
+    context = {
+        'password_length': settings.USER_PASSWORD_LENGTH,
+        'admin_user_search_char_length': ADMIN_USER_SEARCH_CHAR_LENGTH}
     return render(request, 'common/admin/users/index.html', context)
 
 def show(request, other_user):
@@ -43,6 +47,9 @@ def show(request, other_user):
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
+    if len(request.POST['q']) < ADMIN_USER_SEARCH_CHAR_LENGTH:
+        raise PermissionDenied
+
     local_profiles = Profile.objects.all()
     for word in request.POST['q'].split():
         local_profiles = local_profiles.filter(
