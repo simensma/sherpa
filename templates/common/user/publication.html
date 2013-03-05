@@ -12,8 +12,17 @@
     {% if publication.description %}
       <p>
         {{ publication.description|linebreaksbr }}
+
       </p>
     {% endif %}
+
+    <p class="publication-license">
+      {% if publication.license == 'all_rights_reserved' %}
+        Alle rettigheter reserveres {{ publication.association.name }}.
+      {% elif publication.license == 'cc-by-nc-nd' %}
+        {{ publication.title }} er utgitt under <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no" class="noexternal">Creative Commons BY-NC-ND-lisensen</a>.
+      {% endif %}
+    </p>
 
     {% if publication.releases_ordered|length == 0 %}
       <p>
@@ -70,14 +79,6 @@
           {% endif %}
         {% endfor %}
       </div>
-
-      <p class="license">
-        {% if publication.license == 'all_rights_reserved' %}
-          Alle rettigheter reserveres {{ publication.association.name }}.
-        {% elif publication.license == 'cc-by-nc-nd' %}
-          {{ publication.title }} er utgitt under <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no" class="noexternal">Creative Commons BY-NC-ND-lisensen</a>.
-        {% endif %}
-      </p>
 
     </div>
   </div>
