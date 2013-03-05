@@ -134,11 +134,18 @@
           <td>
             {% if user.get_profile.get_actor.has_payed %}
               Betalt for
-              {% if next_year %}{{ year|add:"1" }}, samt ut {{ year }}{% else %}{{ year }}{% endif %}
+              {% if next_year %}
+                {{ year|add:"1" }}
+              {% else %}
+                {{ year }}
+              {% endif %}
             {% else %}
               Ikke betalt for
-              {# Todo: Is the next_year clause wrong? Based on the Focus model, we shouldn't know if the user paid for the remainder of this year, only if they already paid for the next year. #}
-              {% if next_year %}{{ year }} og {{ year|add:"1" }}{% else %}{{ year }}{% endif %}
+              {% if next_year %}
+                {{ year|add:"1" }}
+              {% else %}
+                {{ year }}
+              {% endif %}
             {% endif %}
           </td>
         </tr>

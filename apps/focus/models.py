@@ -434,6 +434,10 @@ class BalanceHistory(models.Model):
         # So it will be correct for those who have paid for next year.
         # Note that since Focus treats it this way, so do we in our code, based on the current
         # date compared to the month in settings.MEMBERSHIP_YEAR_START.
+        # This means that we DON'T KNOW what the membership status for the current year is
+        # after the "årskrav" month, and can't inform about it, e.g. on the account page.
+        # This should be fixed. If it is, refactor all usages of this method and rephrase
+        # the info presented to the user.
         return self.current_year <= 0
 
     class Meta:
