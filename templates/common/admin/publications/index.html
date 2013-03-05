@@ -22,11 +22,19 @@
       <table class="table">
         <tr>
           <th>Publikasjon</th>
+          <th>Utgivelser</th>
           <th>Forening</th>
         </tr>
         {% for publication in publications %}
           <tr>
             <td><a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a></td>
+            <td>
+              {% if publication.releases.all|length > 0 %}
+                {{ publication.releases.all|length }}
+              {% else %}
+                Ingen!
+              {% endif %}
+            </td>
             <td>{{ publication.association.name }}</td>
           </tr>
         {% endfor %}
