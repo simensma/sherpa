@@ -9,6 +9,12 @@
 
     <h2>{{ publication.title }}</h2>
 
+    {% if publication.description %}
+      <p>
+        {{ publication.description|linebreaksbr }}
+      </p>
+    {% endif %}
+
     {% if publication.releases_ordered|length == 0 %}
       <p>
         Vi har dessverre ikke fått publisert noen utgivelser av {{ publication.title }} her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
