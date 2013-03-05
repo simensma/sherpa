@@ -39,6 +39,7 @@ def edit_publication(request, publication):
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':
         publication.title = request.POST['title']
+        publication.description = request.POST['description']
         if publication.title == '':
             publication.title = '(Uten navn)'
         association = Association.objects.get(id=request.POST['association'])

@@ -71,6 +71,7 @@ def delete_album(sender, **kwargs):
 class Publication(models.Model):
     association = models.ForeignKey('association.Association')
     title = models.CharField(max_length=255)
+    description = models.TextField()
     ACCESS_CHOICES = (
         ('all', 'Alle medlemmer'),
         ('association', 'Medlemmer i foreningen eller underforeninger'),)
