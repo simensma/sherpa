@@ -41,17 +41,20 @@
       {% endif %}
     {% endfor %}
 
-    <p class="pull-right publication-actions">
-      <a href="javascript:undefined" class="edit-publication">
-        <i class="icon-pencil"></i> Endre generell informasjon
-        <br>
-      </a>
-      <a href="javascript:undefined" class="delete-publication">
-        <i class="icon-remove"></i> Slett hele publikasjonen
-      </a>
-    </p>
+    <div class="publication-action-header">
+      <p class="pull-right publication-actions">
+        <a href="javascript:undefined" class="edit-publication">
+          <i class="icon-pencil"></i> Endre generell informasjon
+          <br>
+        </a>
+        <a href="javascript:undefined" class="delete-publication">
+          <i class="icon-remove"></i> Slett hele publikasjonen
+        </a>
+      </p>
 
-    <h2>{{ publication.title }}</h2>
+      <h2>{{ publication.title }}</h2>
+      <div style="clear: both;"></div>
+    </div>
 
     <div style="clear: both;"></div>
 
