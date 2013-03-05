@@ -38,7 +38,7 @@
         }
         widget_editor.find("input[name='ratio']").each(function(){
             if($(this).val() == imageList[currentIndex].ratio){
-                $(this).attr("checked", "checked");
+                $(this).prop("checked", true);
             }
         });
 

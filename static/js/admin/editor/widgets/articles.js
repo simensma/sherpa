@@ -18,7 +18,7 @@
         widget_editor.find("input[name='title']").val(widget.title);
         widget_editor.find("input[name='count']").val(widget.count);
         if(widget.tag_link == null) {
-            widget_editor.find("input[name='set-tag-link']").removeAttr('checked');
+            widget_editor.find("input[name='set-tag-link']").prop('checked', false);
             widget_editor.find("input[name='tag-link']").attr('disabled', true).val("");
         }
         article_widget_tagger.tags = widget.tags;
@@ -29,10 +29,10 @@
             box.append(tag);
         }
         if(widget.tags.length > 0) {
-            widget_editor.find("input[name='enable-tags']").attr('checked', true);
+            widget_editor.find("input[name='enable-tags']").prop('checked', true);
             widget_editor.find("input[name='tags']").removeAttr('disabled');
         } else {
-            widget_editor.find("input[name='enable-tags']").removeAttr('checked');
+            widget_editor.find("input[name='enable-tags']").prop('checked', false);
             widget_editor.find("input[name='tags']").attr('disabled', true);
         }
     });

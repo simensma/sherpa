@@ -175,11 +175,11 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
         var chosenRatio = ratioW + ":" + ratioH;
         dialog.find("input[name='ratio']").each(function(){
             if($(this).val() == chosenRatio){
-                $(this).attr("checked", "checked");
+                $(this).prop("checked", true);
             }
         });
     }else{
-        dialog.find("input[name='ratio'][value='" + DEFAULT_CROP_RATIO +"']").attr("checked", "checked");
+        dialog.find("input[name='ratio'][value='" + DEFAULT_CROP_RATIO +"']").prop("checked", true);
     }
 
     dialog.imagesLoaded(function(){
