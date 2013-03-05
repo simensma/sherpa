@@ -61,11 +61,11 @@
     <label class="control-label" for="access">Tilgjengelig for:</label>
     <div class="controls">
       <label for="all" class="radio">
-        <input type="radio" name="access" value="all" {% if publication.access == 'all' %} checked {% endif %}>
+        <input type="radio" name="access" value="all" {% if publication.access == 'all' or not publication %} checked{% endif %}>
         Alle DNTs medlemmer
       </label>
       <label for="association" class="radio">
-        <input type="radio" name="access" value="association" {% if publication.access == 'association' %} checked {% endif %}>
+        <input type="radio" name="access" value="association" {% if publication.access == 'association' %} checked{% endif %}>
         Kun medlemmer i <span class="association-name">{% firstof publication.association.get_main_association.name active_association.get_main_association.name %}</span>
       </label>
     </div>
@@ -75,11 +75,11 @@
     <label class="control-label" for="license">Lisens:</label>
     <div class="controls">
       <label for="all_rights_reserved" class="radio">
-        <input type="radio" name="license" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' %} checked {% endif %}>
+        <input type="radio" name="license" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' or not publication %} checked{% endif %}>
         Alle rettigheter reservert
       </label>
       <label for="cc-by-nc-nd" class="radio">
-        <input type="radio" name="license" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked {% endif %}>
+        <input type="radio" name="license" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked{% endif %}>
         <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no">Creative Commons (CC BY-NC-ND 3.0)</a>
       </label>
     </div>
