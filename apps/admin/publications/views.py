@@ -97,7 +97,10 @@ def edit_release(request, publication, release):
             # as it's currently assumed to be pdf.
             if file.content_type != 'application/pdf' or extension != 'pdf':
                 messages.error(request, 'incorrect_file_format')
-                return HttpResponseRedirect(reverse('admin.publications.views.edit_release', args=[publication.id, release.id]))
+                if release.id is None:
+                    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
+                else:
+                    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id, release.id]))
 
             # Upload to AWS
             s3 = simples3.S3Bucket(
