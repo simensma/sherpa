@@ -38,7 +38,7 @@
                   </a>
                 {% endif %}
               </h3>
-              <p class="date">{{ release.pub_date|date:"j. F Y" }}</p>
+              <p class="meta">{{ release.pub_date|date:"j. F Y" }}</p>
               <p>
                 {% if release.is_released %}
                   <a href="{% if release.pdf_hash != '' %}{{ release.get_pdf_url }}{% else %}{{ release.online_view }}{% endif %}">

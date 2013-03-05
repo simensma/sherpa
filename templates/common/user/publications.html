@@ -25,6 +25,11 @@
                   {{ publication.title }}
                 </a>
               </h3>
+              {% if publication.releases.all|length > 0 %}
+                <p class="meta">
+                  Siste: {{ publication.get_latest_release.pub_date|date:"j. F Y" }}
+                </p>
+              {% endif %}
               <p>
                 <a href="{% url user.views.publication publication.id %}">
                   <img src="{% firstof publication.get_latest_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}">

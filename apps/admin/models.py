@@ -84,6 +84,12 @@ class Publication(models.Model):
     def releases_ordered(self):
         return self.releases.all().order_by('-pub_date')
 
+    def get_latest_release(self):
+        try:
+            return self.releases_ordered()[0]
+        except IndexError:
+            return ''
+
     def get_latest_cover_photo(self):
         try:
             return self.releases_ordered()[0].get_cover_photo()

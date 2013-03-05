@@ -115,7 +115,7 @@
                   {{ release.title }}
                 </a>
               </h3>
-              <p class="date">{{ release.pub_date|date:"j. F Y" }}</p>
+              <p class="meta">{{ release.pub_date|date:"j. F Y" }}</p>
               <p>
                 <a href="{% url admin.publications.views.edit_release publication.id release.id %}">
                   <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
