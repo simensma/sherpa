@@ -40,7 +40,7 @@
             <div class="release">
               <h3 class="title">
                 {% if release.is_released %}
-                  <a href="{{ release.get_default_release }}" class="noexternal">
+                  <a href="{{ release.get_default_release }}" class="noexternal"{% if release.get_default_release_type == 'pdf' %} title="Last ned PDF"{% else %} title="Les online"{% endif %}>
                 {% endif %}
                   {{ release.title }}
                 {% if release.is_released %}
@@ -50,7 +50,7 @@
               <p class="meta">{{ release.pub_date|date:"j. F Y" }}</p>
               <p>
                 {% if release.is_released %}
-                  <a href="{% if release.pdf_hash != '' %}{{ release.get_pdf_url }}{% else %}{{ release.online_view }}{% endif %}">
+                  <a href="{% if release.pdf_hash != '' %}{{ release.get_pdf_url }}{% else %}{{ release.online_view }}{% endif %}"{% if release.get_default_release_type == 'pdf' %} title="Last ned PDF"{% else %} title="Les online"{% endif %}>
                 {% endif %}
                     <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}">
                 {% if release.is_released %}

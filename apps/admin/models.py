@@ -120,6 +120,14 @@ class Release(models.Model):
         else:
             return ''
 
+    def get_default_release_type(self):
+        if self.pdf_hash != '':
+            return 'pdf'
+        elif self.online_view != '':
+            return 'online_view'
+        else:
+            return ''
+
     def is_released(self):
         return self.pdf_hash != '' or self.online_view != ''
 
