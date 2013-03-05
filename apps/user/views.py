@@ -251,15 +251,14 @@ def reserve_yearbook(request):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
-    publications_user = Publication.objects.filter(
-        Q(association__type='sentral') |
-        Q(association__in=accessible_associations))
+    publications_user_central = Publication.objects.filter(association__type='sentral')
+    publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
     publications_other = Publication.objects.exclude(
         Q(association__in=accessible_associations) |
         Q(association__type='sentral')
     ).filter(access='all')
     context = {
-        'publications_user': publications_user,
+        'publications_user': list(publications_user_central) + list(publications_user_accessible),
         'publications_other': publications_other}
     return render(request, 'common/user/publications.html', context)
 
