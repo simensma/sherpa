@@ -6,7 +6,8 @@ from django.contrib.auth.context_processors import PermWrapper
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
-from django.template import RequestContext, loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
 import re
@@ -44,9 +45,8 @@ def search(request):
         Q(first_name__icontains=request.POST['q']) |
         Q(last_name__icontains=request.POST['q'])
         ).order_by('first_name')
-    t = loader.get_template('common/admin/users/user_results.html')
-    c = RequestContext(request, {'users': users})
-    return HttpResponse(t.render(c))
+    context = RequestContext(request, {'users': users})
+    return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
     if not request.user.has_perm('user.sherpa'):

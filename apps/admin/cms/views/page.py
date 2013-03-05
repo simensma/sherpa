@@ -5,7 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
-from django.template import RequestContext, loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.core.cache import cache
 
 from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
@@ -32,9 +33,8 @@ def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
-    t = loader.get_template('common/admin/pages/result.html')
-    c = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
-    return HttpResponse(t.render(c))
+    context = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
+    return HttpResponse(render_to_string('common/admin/pages/result.html', context))
 
 def new(request):
     if not slug_is_unique(request.POST['slug']):

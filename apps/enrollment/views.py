@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
-from django.template import Context, loader
+from django.template import Context
+from django.template.loader import render_to_string
 from django.core.cache import cache
 from django.db import transaction, connections
 from django.contrib import messages
@@ -528,9 +529,8 @@ def payment(request):
             last_name = request.session['enrollment']['users'][0]['name'].split(' ')[1:]
             email = request.session['enrollment']['users'][0]['email']
 
-    t = loader.get_template('main/enrollment/payment-terminal.html')
-    c = Context({'year': year, 'next_year': next_year})
-    desc = t.render(c)
+    context = Context({'year': year, 'next_year': next_year})
+    desc = render_to_string('main/enrollment/payment-terminal.html', context)
 
     # Send the transaction registration to Nets
     try:
@@ -691,10 +691,11 @@ def sms(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    t = loader.get_template('main/enrollment/result/sms.txt')
-    c = Context({'year': year, 'next_year': next_year,
+    context = Context({
+        'year': year,
+        'next_year': next_year,
         'users': request.session['enrollment']['users']})
-    sms_message = t.render(c).encode('utf-8')
+    sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
 
     # Send the message
     try:
@@ -734,10 +735,13 @@ def prepare_and_send_email(request, users, association, location, payment_method
         template = 'email-%s-multiple.html' % payment_method
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    t = loader.get_template('main/enrollment/result/%s' % template)
-    c = Context({'users': users, 'association': association, 'location': location,
-        'proof_validity_end': proof_validity_end, 'price_sum': price_sum})
-    message = t.render(c)
+    context = Context({
+        'users': users,
+        'association': association,
+        'location': location,
+        'proof_validity_end': proof_validity_end,
+        'price_sum': price_sum})
+    message = render_to_string('main/enrollment/result/%s' % template, context)
     try:
         send_mail(subject, message, EMAIL_FROM, email_recipients)
     except SMTPException:

@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.template import RequestContext, loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from articles.models import Article, OldArticle
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
@@ -51,9 +52,8 @@ def more(request):
         ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
-        t = loader.get_template('common/page/article-list-item.html')
-        c = RequestContext(request, {'version': version})
-        response.append(t.render(c))
+        context = RequestContext(request, {'version': version})
+        response.append(render_to_string('common/page/article-list-item.html', context))
     return HttpResponse(json.dumps(response))
 
 def more_old(request):
@@ -63,9 +63,8 @@ def more_old(request):
     response = []
     articles = OldArticle.objects.all().order_by('-date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for article in articles:
-        t = loader.get_template('common/page/article-list-old-item.html')
-        c = RequestContext(request, {'article': article})
-        response.append(t.render(c))
+        context = RequestContext(request, {'article': article})
+        response.append(render_to_string('common/page/article-list-old-item.html', context))
     return HttpResponse(json.dumps(response))
 
 def show(request, article, text):

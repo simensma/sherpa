@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 from django.http import HttpResponse
-from django.template import RequestContext, loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from page.models import Page, Version, Row, Column, Content
 from page.widgets import parse_widget
@@ -13,9 +14,8 @@ import json
 
 def render_widget(request):
     widget = parse_widget(request, json.loads(request.POST['content']))
-    t = loader.get_template(widget['template'])
-    c = RequestContext(request, {'widget': widget})
-    return HttpResponse(t.render(c))
+    context = RequestContext(request, {'widget': widget})
+    return HttpResponse(render_to_string(widget['template'], context))
 
 def save(request, version):
     version = Version.objects.get(id=version)
