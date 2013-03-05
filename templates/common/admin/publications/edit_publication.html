@@ -123,7 +123,8 @@
               </p>
               <p class="download">
                 {% if release.pdf_hash != '' and release.online_view != '' %}
-                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a> eller <a href="{{ release.online_view }}">les online</a>
+                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a><br>
+                  <a href="{{ release.online_view }}">Les online</a>
                 {% elif release.pdf_hash != '' %}
                   <a href="{{ release.get_pdf_url }}">Last ned PDF</a>
                 {% elif release.online_view != '' %}
