@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <div class="control-group access{% if publication and publication.association.type == 'sentral' or active_association.type == 'sentral' %} hide{% endif %}">
+  <div class="control-group access{% if publication and publication.association.type == 'sentral' or not publication and active_association.type == 'sentral' %} hide{% endif %}">
     <label class="control-label" for="access">Tilgjengelig for:</label>
     <div class="controls">
       <label for="all" class="radio">
