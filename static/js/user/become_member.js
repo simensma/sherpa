@@ -34,8 +34,10 @@ $(document).ready(function() {
         form.find("img.ajaxloader.submit").show();
         $.ajax({
             url: '/minside/sjekk-medlemsnummer/',
-            data: 'memberid=' + encodeURIComponent(form.find("input[name='memberid']").val()) +
-                  '&zipcode=' + encodeURIComponent(form.find("input[name='zipcode']").val())
+            data: {
+                memberid: form.find("input[name='memberid']").val(),
+                zipcode: form.find("input[name='zipcode']").val()
+            }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {

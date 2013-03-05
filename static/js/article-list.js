@@ -26,7 +26,7 @@ $(window).load(function() {
     function loadNewArticles() {
         $.ajaxQueue({
             url: '/nyheter/flere/',
-            data: 'current=' + encodeURIComponent(list.data('current'))
+            data: { current: list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.length == 0) {
@@ -63,7 +63,7 @@ $(window).load(function() {
     function loadOldArticles() {
         $.ajaxQueue({
             url: '/nyhetsarkiv/flere/',
-            data: 'current=' + encodeURIComponent(old_list.data('current'))
+            data: { current: old_list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.length == 0) {

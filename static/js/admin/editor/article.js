@@ -61,7 +61,7 @@ $(document).ready(function() {
     function saveImage() {
         $.ajax({
             url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/',
-            data: 'thumbnail=' + encodeURIComponent($("div.editor-header img.article-thumbnail").attr('src'))
+            data: { thumbnail: $("div.editor-header img.article-thumbnail").attr('src') }
         });
     }
 

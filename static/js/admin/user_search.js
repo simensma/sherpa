@@ -33,7 +33,7 @@ $(document).ready(function() {
             var query = search_input.val();
             $.ajaxQueue({
                 url: '/sherpa/brukere/søk/',
-                data: 'q=' + encodeURIComponent(query)
+                data: { q: query }
             }).done(function(result) {
                 if(result.trim() == '') {
                     result_mirror.text(query);

@@ -48,7 +48,7 @@ $(document).ready(function() {
         }
         $.ajax({
             url: '/medlem/postnummer/',
-            data: 'zipcode=' + encodeURIComponent(zipcode)
+            data: { zipcode: zipcode }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.url !== undefined) {

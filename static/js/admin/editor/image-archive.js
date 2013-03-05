@@ -36,7 +36,7 @@ $(document).ready(function() {
         source: function(query, process) {
             $.ajaxQueue({
                 url: '/sherpa/bildearkiv/fotograf/',
-                data: 'name=' + encodeURIComponent(query)
+                data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));
             });
@@ -63,7 +63,7 @@ function search(phrase) {
     var ajaxLoader = hideContent();
     $.ajax({
         url: '/sherpa/bildearkiv/søk/json/',
-        data: "query=" + encodeURIComponent(phrase)
+        data: { query: phrase }
     }).done(function(result) {
         result = JSON.parse(result);
         updateContents(result.parents, result.albums, result.images,

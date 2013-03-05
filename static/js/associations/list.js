@@ -56,8 +56,10 @@ $(document).ready(function() {
         $("div.syntaxerror").hide();
         $.ajaxQueue({
             url: '/foreninger/filtrer/',
-            data: 'category=' + encodeURIComponent(category) +
-                  '&county=' + encodeURIComponent(county)
+            data: {
+                category: category,
+                county: county
+            }
         }).fail(function(result) {
             $("div.syntaxerror").show();
         }).done(function(result) {

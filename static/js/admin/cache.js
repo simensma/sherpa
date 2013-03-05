@@ -49,7 +49,10 @@ $(document).ready(function() {
         button.siblings("img.loader").show();
         $.ajaxQueue({
             url: '/sherpa/cache/slett/',
-            data: 'key=' + encodeURIComponent(key) + '&id=' + encodeURIComponent(id)
+            data: {
+                key: key,
+                id: id
+            }
         }).done(function() {
             var success = $("div.delete-success");
             if(success.is(":hidden")) {

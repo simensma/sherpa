@@ -49,7 +49,7 @@
             source: function(query, process) {
                 $.ajaxQueue({
                     url: '/tags/filter/',
-                    data: 'name=' + encodeURIComponent(query)
+                    data: { name: query }
                 }).done(function(result) {
                     process(JSON.parse(result));
                 });

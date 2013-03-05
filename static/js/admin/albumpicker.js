@@ -128,7 +128,7 @@ $(document).ready(function() {
 
             $.ajaxQueue({
                 url: '/sherpa/bildearkiv/innhold/album/søk/',
-                data: 'query=' + encodeURIComponent(query)
+                data: { query: query }
             }).done(function(result) {
                 result = JSON.parse(result);
 

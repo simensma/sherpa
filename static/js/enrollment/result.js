@@ -8,7 +8,7 @@ $(document).ready(function() {
         var number = $(this).attr('data-number');
         $.ajax({
             url: '/innmelding/sms/',
-            data: 'index=' + encodeURIComponent(index)
+            data: { index: index }
         }).done(function(result) {
             result = JSON.parse(result);
             var memberserviceBackup = 'Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS.';

@@ -96,7 +96,7 @@ $(document).ready(function() {
         $("div.existing-result span.result").removeClass('success error');
         $.ajax({
             url: '/innmelding/eksisterende/',
-            data: 'data=' + encodeURIComponent(JSON.stringify(data))
+            data: { data: JSON.stringify(data) }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.error == 'bad_zipcode') {

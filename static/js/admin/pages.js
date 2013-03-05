@@ -132,7 +132,7 @@ $(document).ready(function() {
             $(this).parents("tr").after(loader);
             $.ajax({
                 url: '/sherpa/cms/side/barn/' + id + '/',
-                data: 'level='+ encodeURIComponent(level)
+                data: { level: level }
             }).done(function(result) {
                 $("table.pages tr.loader").remove();
                 tr.after(result);
@@ -207,7 +207,7 @@ $(document).ready(function() {
             });
             $.ajax({
                 url: '/sherpa/cms/meny/sorter/',
-                data: 'menus=' + encodeURIComponent(JSON.stringify(items))
+                data: { menus: JSON.stringify(items) }
             }).fail(function(result) {
                 // Todo
             }).always(function(result) {
@@ -230,8 +230,10 @@ $(document).ready(function() {
         }
         $.ajax({
             url: '/sherpa/cms/meny/' + ajaxUrl,
-            data: 'name=' + encodeURIComponent(name) +
-                  '&url=' + encodeURIComponent(url)
+            data: {
+                name: name,
+                url: url
+            }
         }).done(function(result) {
             if(activeMenu === undefined) {
                 result = JSON.parse(result);

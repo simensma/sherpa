@@ -39,7 +39,7 @@ $(document).ready(function() {
         source: function(query, process) {
             $.ajaxQueue({
                 url: '/sherpa/bildearkiv/fotograf/',
-                data: 'name=' + encodeURIComponent(query)
+                data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));
             });

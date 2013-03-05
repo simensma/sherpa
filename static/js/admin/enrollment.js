@@ -3,7 +3,7 @@ $(document).ready(function() {
         $("p.ajaxloader.state").show();
         $.ajaxQueue({
             url: '/sherpa/innmelding/aktiver/innmelding/',
-            data: 'active=' + encodeURIComponent(JSON.stringify(state))
+            data: { active: JSON.stringify(state) }
         }).done(function() {
             $("div.active.state").toggle();
             $("div.inactive.state").toggle();
@@ -18,7 +18,7 @@ $(document).ready(function() {
         $("p.ajaxloader.card").show();
         $.ajaxQueue({
             url: '/sherpa/innmelding/aktiver/kort/',
-            data: 'card=' + encodeURIComponent(JSON.stringify(state))
+            data: { card: JSON.stringify(state) }
         }).done(function() {
             $("div.active.card").toggle();
             $("div.inactive.card").toggle();
