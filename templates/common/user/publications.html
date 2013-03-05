@@ -42,12 +42,11 @@
 
     {% if publications_other|length > 0 %}
       {# This phrasing might seem weird if someone has "other" publications but no "user" publications. However that's probably not the case for anyone. #}
-      <h3>Andre publikasjoner</h3>
 
-      <table class="table">
+      <table class="table other-publications">
         <tr>
-          <th>Tittel</th>
-          <th>Forening</th>
+          <th>Andre publikasjoner</th>
+          <th>Utgis av</th>
         </tr>
         {% for publication in publications_other %}
           <tr>
