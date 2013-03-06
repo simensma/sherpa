@@ -79,7 +79,7 @@ $(document).ready(function() {
 
         var hints = $("div.form-hints");
         hints.find("div.step2 span.name").text(result.name);
-        if(result.email != '') {
+        if(result.email !== '') {
             hints.find("div.step2 p.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
         } else {
             hints.find("div.step2 p.email-not-found").show();
