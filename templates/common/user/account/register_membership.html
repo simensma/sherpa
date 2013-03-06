@@ -88,7 +88,7 @@
 
         <div class="hide profile-exists error">
           <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
-          Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
+          Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a> (da må du logge ut først).
         </div>
 
         {% for message in messages %}
@@ -105,7 +105,7 @@
           {% elif message.message == 'profile_exists' %}
             <div class="error">
               <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
-              Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
+              Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a> (da må du <a href="{% url user.login.views.logout %}">logge ut</a> først).
             </div>
           {% elif message.message == 'invalid_email' %}
             <div class="error">
