@@ -74,7 +74,7 @@
 
             <div class="hide profile-exists">
               <strong>Du har allerede en Min side-bruker!</strong>
-              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
+              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
             </div>
 
           </div>
@@ -130,7 +130,7 @@
               {% elif message.message == 'profile_exists' %}
                 <div class="error">
                   <strong>Du har allerede en Min Side-bruker!</strong><br>
-                  Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
+                  Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
                 </div>
               {% elif message.message == 'invalid_email' %}
                 <div class="error">

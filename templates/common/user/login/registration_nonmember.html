@@ -93,7 +93,7 @@
               {% elif message.message == 'email_exists' %}
                 <div class="error">
                   <strong>E-postadressen din er allerede i bruk!</strong><br>
-                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
+                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
                 </div>
               {% elif message.message == 'too_short_password' %}
                 <div class="error">
