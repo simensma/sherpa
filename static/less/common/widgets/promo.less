@@ -370,6 +370,39 @@ div.widget.promo {
     }
   }
 
+  div.cover.fjellsport {
+    background: url('/static/img/widgets/promo/fjellsport-cover.jpg') top left no-repeat;
+
+    div.content {
+      @size: 400px;
+      @padding-right: 50px;
+      width: @size;
+      padding-left: 940px - @size - @padding-right;
+      padding-top: 70px;
+      padding-right: @padding-right;
+      color: black;
+      text-align: center;
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 25px;
+      }
+
+      p.button {
+        a.full {
+          display: inline;
+        }
+
+        a.small {
+          display: none;
+        }
+      }
+    }
+  }
+
   /* Small-screen layouts */
 
   @media(max-width: 767px) {
@@ -402,4 +435,13 @@ div.widget.promo {
       }
     }
   }
+
+  @media(max-width: 767px) {
+    div.cover {
+      div.content {
+        color: white !important;
+      }
+    }
+  }
+
 }

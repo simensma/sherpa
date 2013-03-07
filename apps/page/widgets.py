@@ -119,7 +119,7 @@ def get_static_promo_context(path):
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
         {'name': 'Ungdom', 'url': '/ung/', 'template': 'ung', 'type': 'cover'},
-        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport', 'type': 'default'},
+        {'name': 'Fjellsport', 'url': '/fjellsport/', 'template': 'fjellsport', 'type': 'cover'},
         {'name': 'Senior', 'url': '/senior/', 'template': 'senior', 'type': 'default'},
         {'name': 'Skole', 'url': '/skole/', 'template': 'skole', 'type': 'default'},
         {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'type': 'default'},
