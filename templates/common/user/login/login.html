@@ -29,6 +29,7 @@
         {% endif %}
       {% endfor %}
 
+      <h3>Logg inn <span style="font-weight: normal">eller</span> <a href="{% url user.login.views.register %}">opprett din brukerkonto</a></h3>
 
       <div class="row-fluid">
         <div class="span7">
@@ -48,7 +49,6 @@
             {% endif %}
           {% endfor %}
 
-          <h3>Logg inn <span style="font-weight: normal">eller</span> <a href="{% url user.login.views.register %}">opprett din brukerkonto</a></h3>
           <div class="form-border">
 
             <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal">
