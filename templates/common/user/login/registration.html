@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
-{% block title %}Registrer deg{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'user.login.views.register' %}">Registrer deg</a></em>{% endblock %}
+{% block title %}Opprett bruker{% endblock %}
+{% block breadcrumb %}<em><a href="{% url user.login.views.register %}">Opprett bruker</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -16,7 +16,7 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Registrer deg</h2>
+    <h2>Opprett bruker på Min side</h2>
 
     <form action="{% url 'user.login.views.register' %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
