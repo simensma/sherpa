@@ -22,3 +22,20 @@ form.form-default {
      but when they do, this aligns them with the corresponding label. */
   padding-top: 5px;
 }
+
+.form-hints {
+  color: rgb(120, 120, 120);
+  font-size: 14px !important;
+}
+
+form.form-default div.control-group div.controls div.hints:first-of-type {
+  margin-top: 5px;
+}
+
+form.form-default div.control-group div.controls div.hints {
+  .form-hints;
+}
+
+form.form-default div.control-group div.controls div.hints.error {
+  color: @profile-red; // This should actually be a "form-hint-error" variable which is set to profile-red.
+}

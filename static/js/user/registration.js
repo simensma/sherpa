@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+    var memberid_accepted = false;
+    var no_memberid_match = $("div.form-hints div.no-memberid-match");
+    var form = $("form");
+
     Validator.validate({
         method: 'email',
         control_group: $("div.control-group.email"),
@@ -12,7 +16,7 @@ $(document).ready(function() {
         pass1: $("input[name='password']"),
         pass2: $("input[name='password-repeat']"),
         min_length: user_password_length,
-        hints: $("div.form-hints div.password-hint")
+        hints: form.find("div.control-group.password div.controls div.hints.validator")
     });
 
     Validator.validate({
@@ -29,16 +33,14 @@ $(document).ready(function() {
         $("img.ajaxloader.zipcode")
     );
 
-    var memberid_accepted = false;
-    var no_memberid_match = $("div.form-hints div.no-memberid-match");
-    $("form").submit(function(e) {
+    form.submit(function(e) {
         if(memberid_accepted) {
             return $(this);
         }
         no_memberid_match.hide();
         e.preventDefault();
         var form = $(this);
-        form.find("button.step1").hide();
+        step1.find("button[type='submit']").hide();
         form.find("img.ajaxloader.submit").show();
         $.ajax({
             url: '/minside/sjekk-medlemsnummer/',
@@ -49,11 +51,11 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-                $("img.ajaxloader.submit").hide();
                 if(!result.profile_exists) {
                     enableStep2(result);
                 } else {
-                    $("div.form-elements div.profile-exists").slideDown();
+                    $("img.ajaxloader.submit").hide();
+                    $("div.profile-exists").slideDown();
                 }
             } else if(result.memberid_lookups_exceeded) {
                 form.find("img.ajaxloader.submit").hide();
@@ -62,33 +64,33 @@ $(document).ready(function() {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());
                 no_memberid_match.slideDown();
-                form.find("button.step1").show();
+                step1.find("button[type='submit']").show();
                 form.find("img.ajaxloader.submit").hide();
             }
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
-            form.find("button.step1").show();
+            step1.find("button[type='submit']").show();
             form.find("img.ajaxloader.submit").hide();
         });
     });
 
+    var step1 = form.find("div.step1");
+    var step2 = form.find("div.step2");
+
     function enableStep2(result) {
         memberid_accepted = true;
-        $("div.form-elements div.step1 input").attr('readonly', true);
-        $("div.form-elements div.step2").slideDown();
 
-        var hints = $("div.form-hints");
-        hints.find("div.step2 span.name").text(result.name);
+        step2.find("span.name").text(result.name);
         if(result.email !== '') {
-            hints.find("div.step2 p.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
+            step2.find("div.hints.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
+            step2.find("input[name='email']").val(result.email);
         } else {
-            hints.find("div.step2 p.email-not-found").show();
+            step2.find("div.hints.email-not-found").show();
         }
-        $("div.form-elements div.step2 input[name='email']").val(result.email);
-        $("button.step2").show();
-        hints.find("div.step1").fadeOut(function() {
+
+        step1.fadeOut(function() {
             // Wait for fadeOut to complete before fadeIn
-            hints.find("div.step2").fadeIn();
+            step2.fadeIn();
         });
     }
 
