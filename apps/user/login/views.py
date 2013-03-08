@@ -317,5 +317,9 @@ def restore_password(request, key):
             profile.password_restore_key = None
             profile.password_restore_date = None
             profile.save()
-        context = {'success': True}
-        return render(request, 'common/user/login/restore-password.html', context)
+
+        # Log the user in automatically
+        user = authenticate(user=profile.user)
+        log_user_in(request, user)
+        messages.info(request, 'password_reset_success')
+        return HttpResponseRedirect(reverse('user.views.home_new'))

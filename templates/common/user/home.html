@@ -9,6 +9,13 @@
 
     <h2>Min side — {{ user.get_profile.get_full_name }}</h2>
 
+    {% for message in messages %}
+      {% if message.message == 'password_reset_success' %}
+        <div class="alert alert-info">
+          Velkommen tilbake {{ user.get_profile.get_full_name }}, passordet ditt har blitt endret og du er nå innlogget.
+        </div>
+      {% endif %}
+    {% endfor %}
     <p>
       Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
     </p>
