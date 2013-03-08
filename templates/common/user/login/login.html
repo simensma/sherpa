@@ -32,7 +32,7 @@
       <h3>Logg inn <span style="font-weight: normal">eller</span> <a href="{% url user.login.views.register %}">opprett din brukerkonto</a></h3>
 
       <div class="row-fluid">
-        <div class="span7">
+        <div class="span6">
 
           {% for message in messages %}
             {% if message.message == 'invalid_credentials' %}
@@ -49,55 +49,51 @@
             {% endif %}
           {% endfor %}
 
-          <div class="form-border">
+          <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-border form-horizontal login-form">
+            {% csrf_token %}
 
-            <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal">
-              {% csrf_token %}
-
-              <div class="control-group email">
-                <label class="control-label" for="email">E-postadresse:</label>
-                <div class="controls">
-                  <input type="text" name="email" value="{{ email }}" class="input-xlarge">
-                </div>
+            <div class="control-group email">
+              <label class="control-label" for="email">E-postadresse:</label>
+              <div class="controls">
+                <input type="text" name="email" value="{{ email }}" class="input-xlarge">
               </div>
+            </div>
 
-              <div class="control-group password">
-                <label class="control-label" for="password">Passord:</label>
-                <div class="controls">
-                  <input type="password" name="password" class="input-large">
-                </div>
+            <div class="control-group password">
+              <label class="control-label" for="password">Passord:</label>
+              <div class="controls">
+                <input type="password" name="password" class="input-large">
               </div>
+            </div>
 
-              <div class="control-group">
-                <div class="controls">
-                  <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
-                </div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
               </div>
-            </form>
+            </div>
 
-            <div class="form-horizontal forgot-password-container">
-              <div class="control-group">
-                <div class="controls">
-                  <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-                  <div class="forgot-password hide">
-                    <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
-                    <p class="actions">
-                      <button class="btn restore-password">Gjenopprett passord</button>
-                      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
-                    </p>
-                    <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
-                    <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
-                    <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="{% url user.login.views.register %}">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
-                    <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
-                  </div>
+            <div class="control-group">
+              <div class="controls">
+                <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
+                <div class="forgot-password hide">
+                  <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
+                  <p class="actions">
+                    <button class="btn restore-password">Gjenopprett passord</button>
+                    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
+                  </p>
+                  <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
+                  <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
+                  <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="{% url user.login.views.register %}">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
+                  <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
                 </div>
               </div>
             </div>
 
-          </div>
+          </form>
+
         </div>
 
-        <div class="span5">
+        <div class="span6">
 
           <div class="usersite-benefits">
 

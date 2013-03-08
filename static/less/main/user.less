@@ -38,6 +38,27 @@ div.forgot-password-container {
 
 /* Login page */
 
+// Use bootstrap form-horizontal, just smaller
+form.login-form {
+  label.control-label {
+    width: 100px;
+  }
+
+  div.controls {
+    margin-left: 120px;
+  }
+
+  @media (max-width: 767px) {
+    label.control-label {
+      width: auto;
+    }
+
+    div.controls {
+      margin-left: auto;
+    }
+  }
+}
+
 div.forgot-password {
   button.restore-password {
     margin-bottom: 10px;
