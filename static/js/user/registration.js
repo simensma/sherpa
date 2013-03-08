@@ -38,7 +38,7 @@ $(document).ready(function() {
         no_memberid_match.hide();
         e.preventDefault();
         var form = $(this);
-        form.find("button[type='submit']").hide();
+        form.find("button.step1").hide();
         form.find("img.ajaxloader.submit").show();
         $.ajax({
             url: '/minside/sjekk-medlemsnummer/',
@@ -67,7 +67,7 @@ $(document).ready(function() {
             }
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
-            form.find("button[type='submit']").show();
+            form.find("button.step1").show();
             form.find("img.ajaxloader.submit").hide();
         });
     });
