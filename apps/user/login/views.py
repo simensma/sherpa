@@ -61,7 +61,8 @@ def login(request):
                 # Actually, it is! Let's try to import them.
                 if Profile.objects.filter(memberid=old_member.memberid).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
-                    return render(request, 'common/user/login/login.html')
+                    context = {'email': request.POST['email']}
+                    return render(request, 'common/user/login/login.html', context)
 
                 # Create the new user
                 user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
@@ -83,7 +84,9 @@ def login(request):
             else:
                 # No luck, just provide the error message
                 messages.error(request, 'invalid_credentials')
-                context = {'next': request.GET.get('next')}
+                context = {
+                    'next': request.GET.get('next'),
+                    'email': request.POST['email']}
                 return render(request, 'common/user/login/login.html', context)
 
 def choose_authenticated_user(request):
