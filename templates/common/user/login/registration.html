@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
   <script src="{{ STATIC_URL }}js/user/registration.js"></script>
 {% endblock %}
 
@@ -19,7 +20,7 @@
     <h2>Opprett bruker på Min side</h2>
 
     <div class="row-fluid">
-      <div class="span12">
+      <div class="span8">
 
         <form action="{% url user.login.views.register %}" method="post" class="form-default form-border form-horizontal">
           {% csrf_token %}
@@ -152,6 +153,11 @@
         </form>
 
       </div>
+
+      <div class="span4">
+        {% include 'main/membership/memberid_sms.html' %}
+      </div>
+
     </div>
 
   </div>
