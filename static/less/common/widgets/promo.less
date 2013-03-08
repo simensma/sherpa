@@ -274,6 +274,7 @@ div.widget.promo {
 
   div.cover {
     height: 480px;
+    background-position: top left no-repeat;
 
     div.content {
       color: white;
@@ -292,7 +293,7 @@ div.widget.promo {
         margin-bottom: 30px;
       }
 
-      p.button {
+      p.double-button-hack {
         a.full {
           display: inline;
         }
@@ -305,42 +306,33 @@ div.widget.promo {
   }
 
   div.cover.main {
-    background: url('/static/img/widgets/promo/vinter.png') top left no-repeat;
+    background-image: url('/static/img/widgets/promo/vinter.png');
 
     div.content {
-      @size: 400px;
+      @width: 400px;
       @padding-right: 65px;
-      width: @size;
-      padding-left: 940px - @size - @padding-right;
+      padding-left: 940px - @width - @padding-right;
       padding-top: 60px;
+      width: @width;
       padding-right: @padding-right;
+
       color: white;
-      text-align: center;
-
-      p.button {
-        a.full {
-          display: inline;
-        }
-
-        a.small {
-          display: none;
-        }
-      }
     }
   }
 
   div.cover.ung {
-    background: url('/static/img/widgets/promo/ung_jubileum.png') top left no-repeat;
+    background-image: url('/static/img/widgets/promo/ung_jubileum.png');
 
     div.content {
-      @size: 380px;
+      @width: 380px;
       @padding-right: 70px;
-      width: @size;
-      padding-left: 940px - @size - @padding-right;
+      padding-left: 940px - @width - @padding-right;
       padding-top: 150px;
+
+      width: @width;
       padding-right: @padding-right;
+
       color: white;
-      text-align: center;
 
       h1 {
         margin-bottom: 20px;
@@ -359,17 +351,17 @@ div.widget.promo {
   }
 
   div.cover.fjellsport {
-    background: url('/static/img/widgets/promo/fjellsport-cover.jpg') top left no-repeat;
+    background-image: url('/static/img/widgets/promo/fjellsport-cover.jpg');
 
     div.content {
-      @size: 400px;
+      @width: 400px;
       @padding-right: 50px;
-      width: @size;
-      padding-left: 940px - @size - @padding-right;
+      padding-left: 940px - @width - @padding-right;
       padding-top: 65px;
       padding-right: @padding-right;
+      width: @width;
+
       color: black;
-      text-align: center;
 
       h1 {
         margin-bottom: 20px;
@@ -377,16 +369,6 @@ div.widget.promo {
 
       p {
         margin-bottom: 25px;
-      }
-
-      p.button {
-        a.full {
-          display: inline;
-        }
-
-        a.small {
-          display: none;
-        }
       }
     }
   }
@@ -402,6 +384,7 @@ div.widget.promo {
       div.content {
         padding: 15px !important;
         width: auto !important;
+        color: white !important;
 
         h1 {
           font-size: 28px !important;
@@ -411,7 +394,7 @@ div.widget.promo {
           font-size: 16px !important;
         }
 
-        p.button {
+        p.double-button-hack {
           a.full {
             display: none !important;
           }
@@ -423,13 +406,4 @@ div.widget.promo {
       }
     }
   }
-
-  @media(max-width: 767px) {
-    div.cover {
-      div.content {
-        color: white !important;
-      }
-    }
-  }
-
 }
