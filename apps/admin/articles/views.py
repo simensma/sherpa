@@ -71,7 +71,11 @@ def confirm_delete(request, article):
     return render(request, 'common/admin/articles/confirm-delete.html', context)
 
 def delete(request, article):
-    Article.objects.get(id=article).delete()
+    try:
+        Article.objects.get(id=article).delete()
+    except Article.DoesNotExist:
+        # Probably not a code error but a double-click or something, ignore
+        pass
     return HttpResponseRedirect(reverse('admin.articles.views.list'))
 
 def edit_version(request, version):
