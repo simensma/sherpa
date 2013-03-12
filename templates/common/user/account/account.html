@@ -75,7 +75,7 @@
         </tr>
         <tr>
           <th>Epost</th>
-          <td>{{ user.get_profile.get_actor.email }}</td>
+          <td>{{ user.get_profile.get_actor.email|default:"" }}</td>
         </tr>
         {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
           <tr>
@@ -89,7 +89,7 @@
         </tr>
         <tr>
           <th>Mobiltelefon</th>
-          <td>{{ user.get_profile.get_actor.phone_mobile }}</td>
+          <td>{{ user.get_profile.get_actor.phone_mobile|default:"" }}</td>
         </tr>
         <tr>
           <th>Født</th>
