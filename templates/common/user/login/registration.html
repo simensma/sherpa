@@ -36,7 +36,7 @@
               <div class="controls">
                 <input type="text" class="input-xlarge" name="memberid">
                 <div class="hints">
-                  Dette står på medlemskortet ditt, på giroen fra forrige årskontingent, eller bruk boksen til høyre.
+                  Dette står <a href="javascript:undefined" class="trigger-memberid-hint" title="Klikk for å se hvor på medlemskortet du finner medlemsnummeret. Du forlater ikke denne siden.">på medlemskortet ditt</a>, på giroen fra forrige årskontingent, eller bruk boksen til høyre.
                 </div>
               </div>
             </div>
@@ -163,6 +163,19 @@
 
     </div>
 
+  </div>
+</div>
+
+<div class="modal memberid-hint-modal hide">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Medlemsnummeret står på medlemskortet ditt</h3>
+  </div>
+  <div class="modal-body">
+    <img src="{{ STATIC_URL }}img/medlemsnummer-hint-foto.jpg" alt="Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet">
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
 

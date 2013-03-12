@@ -94,4 +94,8 @@ $(document).ready(function() {
         });
     }
 
+    $("a.trigger-memberid-hint").click(function() {
+        $("div.memberid-hint-modal").modal();
+    });
+
 });
