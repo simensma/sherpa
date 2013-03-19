@@ -723,10 +723,7 @@ def sms(request):
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
-    email_recipients = []
-    for user in users:
-        if user['email'] != '':
-            email_recipients.append(user['email'])
+    email_recipients = [u['email'] for u in users if u['email'] != '']
     if len(users) == 1:
         subject = EMAIL_SUBJECT_SINGLE
         template = 'email-%s-single.html' % payment_method
