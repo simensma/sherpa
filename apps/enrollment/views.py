@@ -612,8 +612,20 @@ def process_card(request):
                 'transactionId': request.session['enrollment']['transaction_id']
             })
             dom = etree.fromstring(r.text)
-            code = dom.find(".//ResponseCode").text
-            if code == 'OK':
+            response_code = dom.find(".//ResponseCode")
+            if response_code is None:
+                # Crap, we didn't get the expected response from Nets.
+                # This has happened a few times before. We'll have to handle it ourselves.
+                logger.error(u"Mangler 'ResponseCode' element fra Nets",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'nets_response': r.text
+                    }
+                )
+                request.session['enrollment']['state'] = 'payment'
+                return render(request, 'main/enrollment/payment-process-error.html')
+            if response_code.text == 'OK':
                 # Register the payment in focus
                 for user in request.session['enrollment']['users']:
                     focus_user = Enrollment.objects.get(member_id=user['id'])
