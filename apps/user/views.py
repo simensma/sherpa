@@ -216,7 +216,7 @@ def register_membership(request):
 def reservations(request):
     context = {
         'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
-        'membership_code_yearbook': MEMBERSHIP_CODE_LIFELONG}
+        'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG}
     return render(request, 'common/user/account/reservations.html', context)
 
 @login_required
