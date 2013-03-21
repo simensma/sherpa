@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="span12">
 
     <h2>Min side — {{ user.get_profile.get_full_name }}</h2>
 
@@ -21,13 +21,64 @@
         </div>
       {% endif %}
     {% endfor %}
-    <p>
-      Her kan du finne informasjon om ditt medlemskap, endre dine kontaktopplysninger, samt få tilgang til innhold og tjenester som kun er tilgjengelige for DNTs medlemmer. Se menyen til høyre.
-    </p>
-  </div>
 
-  <div class="span3">
-    {% include 'common/user/navigation.html' with active='home' %}
+    <div class="user-home-account">
+      {% if not user.get_profile.get_actor %}
+        <p><a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a></p>
+      {% endif %}
+    </div>
+
+    <div class="user-home-navigation">
+      <div class="row-fluid">
+        <div class="span4">
+          <div class="element">
+            <p><a href="{% url user.views.account %}">Endre dine opplysninger</a></p>
+            <p>
+              Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            </p>
+          </div>
+        </div>
+        <div class="span4">
+          <div class="element">
+            <p><a href="{% url user.views.account_password %}">Endre ditt passord</a></p>
+            <p>
+              Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            </p>
+          </div>
+        </div>
+        <div class="span4">
+          <div class="element">
+            <p><a href="{% url user.views.publications %}">Les Fjell og Vidde, Årbok, UT, m.m.</a></p>
+            <p>
+              Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span4">
+          <div class="element">
+            <p><a href="{% url user.views.reservations %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></p>
+            <p>
+              Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            </p>
+          </div>
+        </div>
+        {% if perms.user.sherpa %}
+          <div class="span4">
+            <div class="element">
+              <p><a href="{% url admin.views.index %}">Gå til Sherpa</a></p>
+              <p>
+                Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+              </p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
   </div>
 </div>
 
