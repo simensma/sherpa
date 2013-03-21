@@ -12,7 +12,7 @@ $(document).ready(function() {
     var button = forgot_password.find("button.restore-password");
     var loader = forgot_password.find("img.ajaxloader");
 
-    $("div#login a.forgot").click(function() {
+    $("a.forgot").click(function() {
         $(this).parent().hide();
         forgot_password.slideDown();
     });

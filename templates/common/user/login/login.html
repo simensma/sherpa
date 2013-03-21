@@ -8,9 +8,10 @@
 
 {% block body %}
 
-<div id="login">
-  <div class="row">
-    <div class="span12">
+<div class="row">
+  <div class="span12">
+
+    <div class="loginpage-wrapper">
 
       <h2>Min side</h2>
 
@@ -29,8 +30,8 @@
         {% endif %}
       {% endfor %}
 
-      <p class="lede" style="margin-bottom: 20px">
-        Få mer ut av medlemskapet! Logg inn eller <a href="{% url user.login.views.register %}">opprett bruker</a> på Min side.
+      <p class="lede">
+        Få mer ut av medlemskapet! Logg inn eller opprett bruker på Min side.
       </p>
 
       <div class="row-fluid">
@@ -51,51 +52,63 @@
             {% endif %}
           {% endfor %}
 
-          <div class="login-form-wrapper form-border">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
+            <li><a href="#register" data-toggle="tab">Opprett ny bruker</a></li>
+          </ul>
 
-            <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
-              {% csrf_token %}
+          <div class="tab-content">
+            <div class="login-form-wrapper form-border tab-pane active" id="login">
 
-              <div class="control-group email">
-                <label class="control-label" for="email">E-postadresse:</label>
-                <div class="controls">
-                  <input type="text" name="email" value="{{ email }}" class="input-xlarge">
+              <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+                {% csrf_token %}
+
+                <div class="control-group email">
+                  <label class="control-label" for="email">E-postadresse:</label>
+                  <div class="controls">
+                    <input type="text" name="email" value="{{ email }}" class="input-xlarge">
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group password">
-                <label class="control-label" for="password">Passord:</label>
-                <div class="controls">
-                  <input type="password" name="password" class="input-large">
+                <div class="control-group password">
+                  <label class="control-label" for="password">Passord:</label>
+                  <div class="controls">
+                    <input type="password" name="password" class="input-large">
+                  </div>
                 </div>
-              </div>
+
+                <div class="control-group">
+                  <div class="controls">
+                    <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
+                  </div>
+                </div>
+              </form>
 
               <div class="control-group">
                 <div class="controls">
-                  <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
+                  <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
+                  <div class="forgot-password hide">
+                    <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
+                    <p class="actions">
+                      <button class="btn restore-password">Gjenopprett passord</button>
+                      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
+                    </p>
+                    <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
+                    <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
+                    <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="{% url user.login.views.register %}">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
+                    <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
+                  </div>
                 </div>
               </div>
 
-            </form>
-
-            <div class="control-group">
-              <div class="controls">
-                <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-                <div class="forgot-password hide">
-                  <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
-                  <p class="actions">
-                    <button class="btn restore-password">Gjenopprett passord</button>
-                    <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
-                  </p>
-                  <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
-                  <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
-                  <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="{% url user.login.views.register %}">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
-                  <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
-                </div>
-              </div>
             </div>
+            <div class="tab-pane" id="register">
 
+              TODO
+
+            </div>
           </div>
+
         </div>
 
         <div class="span5">
@@ -119,10 +132,6 @@
                 Legge ut annonser på Fjelltreffen
               </li>
             </ul>
-
-            <p>
-              <a href="{% url user.login.views.register %}" class="btn btn-danger">Opprett brukerkonto</a>
-            </p>
 
           </div>
         </div>

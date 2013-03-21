@@ -18,66 +18,88 @@ form.account-info div.control-group:hover div.controls {
   }
 }
 
-div.usersite-benefits {
-  padding: 15px 20px;
-  background-color: rgb(240, 240, 240);
-}
-
-div.forgot-password-container {
-  p.actions {
-    padding-top: 0 !important;
-    margin-bottom: 0;
-  }
-
-  p.info {
-    font-family: "DTL Nobel" !important;
-  }
-}
-
 /* Login page */
 
-// Use bootstrap form-horizontal, just smaller
-div.login-form-wrapper {
-  label.control-label {
-    width: 100px;
+div.loginpage-wrapper {
+
+  p.lede {
+    margin-bottom: 20px;
   }
 
-  div.controls {
-    margin-left: 120px;
+  ul.nav.nav-tabs {
+    // Align the tabs with the tab-content borders
+    margin-bottom: 0;
+
+    li a {
+      // Custom nav-styling, maybe this should be site-wide?
+      font-family: "DTL Nobel" !important;
+    }
+  }
+  div.tab-content div.login-form-wrapper {
+    // Remove the top border, ul.nav will take care of that
+    border-top: none;
   }
 
-  @media (max-width: 767px) {
+  div.usersite-benefits {
+    margin-top: 38px; // Kind of hackish, this is the current calculated height of the nearby ul.nav-element
+    padding: 15px 20px;
+    background-color: rgb(240, 240, 240);
+  }
+
+  div.forgot-password-container {
+    p.actions {
+      padding-top: 0 !important;
+      margin-bottom: 0;
+    }
+
+    p.info {
+      font-family: "DTL Nobel" !important;
+    }
+  }
+
+  // Use bootstrap form-horizontal, just smaller
+  div.login-form-wrapper {
     label.control-label {
-      width: auto;
+      width: 100px;
     }
 
     div.controls {
-      margin-left: auto;
+      margin-left: 120px;
+    }
+
+    @media (max-width: 767px) {
+      label.control-label {
+        width: auto;
+      }
+
+      div.controls {
+        margin-left: auto;
+      }
     }
   }
-}
 
-div.forgot-password {
-  button.restore-password {
-    margin-bottom: 10px;
+  div.forgot-password {
+    button.restore-password {
+      margin-bottom: 10px;
+    }
+
+    p.info.success {
+      color: rgb(45, 140, 32);
+    }
+
+    p.info.unknown, p.info.invalid, p.info.unregistered, p.info.error {
+      color: @profile-red;
+
+      a {
+        text-decoration: underline;
+      }
+    }
   }
 
-  p.info.success {
-    color: rgb(45, 140, 32);
-  }
-
-  p.info.unknown, p.info.invalid, p.info.unregistered, p.info.error {
+  form.restore-password div.password-hint {
+    font-family: "DTL Nobel" !important;
     color: @profile-red;
-
-    a {
-      text-decoration: underline;
-    }
   }
-}
-
-form.restore-password div.password-hint {
-  font-family: "DTL Nobel" !important;
-  color: @profile-red;
 }
 
 /* Reservations */
