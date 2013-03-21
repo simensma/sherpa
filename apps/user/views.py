@@ -231,26 +231,6 @@ def reserve_sponsors(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
-def reserve_fjellogvidde(request):
-    actor = request.user.get_profile().get_actor()
-    actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
-    actor.save()
-    return HttpResponse()
-
-@login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
-def reserve_yearbook(request):
-    actor = request.user.get_profile().get_actor()
-    actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
-    actor.save()
-    return HttpResponse()
-
-@login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
@@ -276,6 +256,31 @@ def publication(request, publication):
     ).get(id=publication)
     context = {'publication': publication}
     return render(request, 'common/user/publication.html', context)
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def reserve_publications(request):
+    return render(request, 'common/user/account/reserve_publications.html')
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
+def reserve_fjellogvidde(request):
+    actor = request.user.get_profile().get_actor()
+    actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
+    actor.save()
+    return HttpResponse()
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
+def reserve_yearbook(request):
+    actor = request.user.get_profile().get_actor()
+    actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
+    actor.save()
+    return HttpResponse()
 
 # This view should keep track of all cache keys related to an actor, and delete them.
 # So whenever you add a new actor-related key to the cache, remember to delete it here!
