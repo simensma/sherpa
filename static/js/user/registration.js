@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     var memberid_accepted = false;
-    var no_memberid_match = $("div.form-hints div.no-memberid-match");
+    var no_memberid_match = $("div.no-memberid-match");
     var form = $("form");
 
     Validator.validate({
@@ -59,7 +59,7 @@ $(document).ready(function() {
                 }
             } else if(result.memberid_lookups_exceeded) {
                 form.find("img.ajaxloader.submit").hide();
-                $("div.form-hints div.memberid-lookups-exceeded").slideDown();
+                $("div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.find("span.memberid").text(form.find("input[name='memberid']").val());
                 no_memberid_match.find("span.zipcode").text(form.find("input[name='zipcode']").val());

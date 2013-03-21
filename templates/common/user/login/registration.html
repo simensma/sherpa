@@ -106,56 +106,52 @@
             </div>
           </div>
 
-          <div class="form-hints">
-            <div class="hide error profile-exists">
-              <strong>Du har allerede en Min side-bruker!</strong>
-              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
-            </div>
-
-            <div class="hide error no-memberid-match">
-              <strong>Feil medlemsnummer eller postnummer</strong><br>
-              Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
-            </div>
-
-            <div class="hide error memberid-lookups-exceeded">
-              <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
-            </div>
-
-            {% for message in messages %}
-              {% if message.message == 'invalid_memberid' %}
-                {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
-                <div class="error">
-                  <strong>Feil medlemsnummer eller postnummer</strong><br>
-                  Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
-                </div>
-              {% elif message.message == 'memberid_lookups_exceeded' %}
-                <div class="error">
-                  <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-                  Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
-                </div>
-              {% elif message.message == 'too_short_password' %}
-                <div class="error">
-                  <strong>For kort passord</strong><br>
-                  Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
-                </div>
-              {% elif message.message == 'profile_exists' %}
-                <div class="error">
-                  <strong>Du har allerede en Min Side-bruker!</strong><br>
-                  Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
-                </div>
-              {% elif message.message == 'invalid_email' %}
-                <div class="error">
-                  <strong>E-postadressen din er ikke gyldig!</strong><br>
-                  Vennligst oppgi en gyldig e-postadresse.
-                </div>
-              {% endif %}
-            {% endfor %}
+          <div class="hide alert alert-error profile-exists">
+            <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
+            Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
           </div>
 
-        </form>
+          <div class="hide alert alert-error no-memberid-match">
+            <strong>Feil medlemsnummer eller postnummer!</strong><br>
+            Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+          </div>
 
-      </div>
+          <div class="hide alert alert-error memberid-lookups-exceeded">
+            <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+          </div>
+
+          {% for message in messages %}
+            {% if message.message == 'invalid_memberid' %}
+              {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
+              <div class="alert alert-error">
+                <strong>Feil medlemsnummer eller postnummer</strong><br>
+                Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+              </div>
+            {% elif message.message == 'memberid_lookups_exceeded' %}
+              <div class="alert alert-error">
+                <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+                Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+              </div>
+            {% elif message.message == 'too_short_password' %}
+              <div class="alert alert-error">
+                <strong>For kort passord</strong><br>
+                Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
+              </div>
+            {% elif message.message == 'profile_exists' %}
+              <div class="alert alert-error">
+                <strong>Du har allerede en Min Side-bruker!</strong><br>
+                Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
+              </div>
+            {% elif message.message == 'invalid_email' %}
+              <div class="alert alert-error">
+                <strong>E-postadressen din er ikke gyldig!</strong><br>
+                Vennligst oppgi en gyldig e-postadresse.
+              </div>
+            {% endif %}
+          {% endfor %}
+
+        </form>
 
       <div class="span4">
         {% include 'main/membership/memberid_sms.html' %}
