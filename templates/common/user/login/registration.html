@@ -20,23 +20,18 @@
     <h2>Opprett bruker på Min side</h2>
 
     <div class="row-fluid">
-      <div class="span8">
+      <div class="span12">
 
         <form action="{% url user.login.views.register %}" method="post" class="form-default form-border form-horizontal">
           {% csrf_token %}
 
           <div class="step1">
-            <div class="control-group">
-                For å opprette din bruker må vi først vite hvem du er. Hva er medlemsnummeret ditt, og postnummeret du er registrert med?<br><br>
-                Hvis du ikke er medlem kan du <a href="{% url membership.views.benefits %}">melde deg inn her</a>.
-            </div>
-
             <div class="control-group memberid">
               <label class="control-label" for="memberid">Medlemsnummer:</label>
               <div class="controls">
                 <input type="text" class="input-xlarge" name="memberid">
                 <div class="hints">
-                  Finn det <a href="javascript:undefined" class="trigger-memberid-hint" title="Klikk for å se hvor på medlemskortet du finner medlemsnummeret. Du forlater ikke denne siden.">på medlemskortet ditt</a>, på giroen fra forrige årskontingent, eller send det på SMS i boksen til høyre.
+                  <a href="javascript:undefined" class="trigger-memberid-hint">Glemt medlemsnummeret?</a>
                 </div>
               </div>
             </div>
@@ -153,8 +148,6 @@
 
         </form>
 
-      <div class="span4">
-        {% include 'main/membership/memberid_sms.html' %}
       </div>
 
     </div>
@@ -165,10 +158,14 @@
 <div class="modal memberid-hint-modal hide">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Medlemsnummeret står på medlemskortet ditt</h3>
+    <h3>&nbsp;</h3>
   </div>
   <div class="modal-body">
-    <img src="{{ STATIC_URL }}img/medlemsnummer-hint.jpg" alt="Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet">
+    {% include 'main/membership/memberid_sms.html' %}
+    <p>
+      Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:
+    </p>
+    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet">
   </div>
   <div class="modal-footer">
     <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
