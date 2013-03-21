@@ -29,10 +29,12 @@
         {% endif %}
       {% endfor %}
 
-      <h3>Logg inn <span style="font-weight: normal">eller</span> <a href="{% url user.login.views.register %}">opprett din brukerkonto</a></h3>
+      <p class="lede" style="margin-bottom: 20px">
+        Få mer ut av medlemskapet! Logg inn eller <a href="{% url user.login.views.register %}">opprett bruker</a> på Min side.
+      </p>
 
       <div class="row-fluid">
-        <div class="span6">
+        <div class="span7">
 
           {% for message in messages %}
             {% if message.message == 'invalid_credentials' %}
@@ -96,34 +98,33 @@
           </div>
         </div>
 
-        <div class="span6">
-
+        <div class="span5">
           <div class="usersite-benefits">
 
             <p>
-              Er du medlem i DNT kan du <a href="{% url user.login.views.register %}">opprette en brukerkonto</a> og få tilgang til Min side. Der kan du...
+              <strong>På Min side kan du:</strong>
             </p>
 
             <ul>
               <li>
-                <i class="icon-heart"></i> Se status på medlemskap
+                Se status på medlemskap
               </li>
               <li>
-                <i class="icon-film"></i> Endre dine kontaktopplysninger
+                Endre kontaktopplysninger
               </li>
               <li>
-                <i class="icon-signal"></i> Finne elektronisk arkiv for Fjell og Vidde, UT og årboken
+                Lese Fjell og Vidde, UT og årboken
               </li>
               <li>
-                <i class="icon-road"></i> Og mye mer...
+                Legge ut annonser på Fjelltreffen
               </li>
             </ul>
 
             <p>
-              <a href="{% url user.login.views.register %}" class="btn btn-large btn-danger">Opprett brukerkonto</a>
+              <a href="{% url user.login.views.register %}" class="btn btn-danger">Opprett brukerkonto</a>
             </p>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
