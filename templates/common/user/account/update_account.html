@@ -5,12 +5,6 @@
   <script src="{{ STATIC_URL }}js/user/update_account.js"></script>
 {% endblock %}
 
-{% block js_globals %}
-  <script>
-    var user_password_length = {{ user_password_length }};
-  </script>
-{% endblock %}
-
 {% block body %}
 
 <div class="row">
@@ -50,10 +44,6 @@
           {% elif message.message == 'invalid_zipcode' %}
             <div class="hint error">
               <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
-            </div>
-          {% elif message.message == 'password_too_short' %}
-            <div class="hint error">
-              <strong>Du må fylle inn et passord på minst {{ user_password_length }} tegn.</strong>
             </div>
           {% endif %}
         {% endfor %}
@@ -142,32 +132,6 @@
         <div class="controls">
           <button type="submit" class="btn"><i class="icon-ok"></i> Oppdater opplysningene</button>
         </div>
-      </div>
-    </form>
-
-    <h2>Endre passord</h2>
-    <form action="{% url 'user.views.update_account_password' %}" method="post" class="form-border form-horizontal form-default">
-      {% csrf_token %}
-      <div class="control-group password">
-        <label class="control-label" for="password">Passord</label>
-        <div class="controls">
-          <input type="password" class="input-large" name="password">
-        </div>
-      </div>
-      <div class="control-group password-repeat">
-        <label class="control-label" for="password-repeat">Gjenta passord</label>
-        <div class="controls">
-          <input type="password" class="input-large" name="password-repeat">
-        </div>
-      </div>
-      <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn"><i class="icon-ok"></i> Endre passord</button>
-        </div>
-      </div>
-      <div class="form-hints">
-        <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
-        <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
       </div>
     </form>
   </div>

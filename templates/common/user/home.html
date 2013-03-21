@@ -14,6 +14,11 @@
         <div class="alert alert-info">
           Velkommen tilbake {{ user.get_profile.get_full_name }}, passordet ditt har blitt endret og du er nå innlogget.
         </div>
+      {% elif message.message == 'password_update_success' %}
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Passordet ditt har blitt endret.</strong>
+        </div>
       {% endif %}
     {% endfor %}
     <p>

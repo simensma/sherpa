@@ -11,27 +11,20 @@
 <div class="row">
   <div class="span9">
 
-    <div class="info-area">
-      {% for message in messages %}
-        {% if message.message == 'update_success' %}
-          <div class="alert alert-success">
-            <a class="close">x</a>
-            <strong>Opplysningene dine har blitt oppdatert.</strong>
-          </div>
-        {% elif message.message == 'password_update_success' %}
-          <div class="alert alert-success">
-            <a class="close">x</a>
-            <strong>Passordet ditt har blitt endret.</strong>
-          </div>
-        {% elif message.message == 'synchronization_success' %}
-          <div class="alert alert-success">
-            <a class="close">x</a>
-            <strong>Dine medlemsopplysninger har blitt oppdatert.</strong><br>
-            Hvis noe skulle være feil, vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.</strong>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    {% for message in messages %}
+      {% if message.message == 'update_success' %}
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Opplysningene dine har blitt oppdatert.</strong>
+        </div>
+      {% elif message.message == 'synchronization_success' %}
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Dine medlemsopplysninger har blitt oppdatert.</strong><br>
+          Hvis noe skulle være feil, vennligst ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a>.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
 
     {% if not user.get_profile.get_actor %}
 

@@ -81,10 +81,7 @@ def update_account(request):
             return HttpResponseRedirect(reverse('user.views.account'))
     else:
         if request.method == 'GET':
-            context = {
-                'user_password_length': settings.USER_PASSWORD_LENGTH
-            }
-            return render(request, 'common/user/account/update_account.html', context)
+            return render(request, 'common/user/account/update_account.html')
 
         elif request.method == 'POST':
             errors = False
@@ -145,15 +142,20 @@ def update_account(request):
             return HttpResponseRedirect(reverse('user.views.account'))
 
 @login_required
+def account_password(request):
+    context = {'user_password_length': settings.USER_PASSWORD_LENGTH}
+    return render(request, 'common/user/account/update_account_password.html', context)
+
+@login_required
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
-        return HttpResponseRedirect(reverse('user.views.update_account'))
+        return HttpResponseRedirect(reverse('user.views.account_password'))
     else:
         request.user.set_password(request.POST['password'])
         request.user.save()
         messages.info(request, 'password_update_success')
-        return HttpResponseRedirect(reverse('user.views.account'))
+        return HttpResponseRedirect(reverse('user.views.home_new'))
 
 @login_required
 def register_membership(request):
