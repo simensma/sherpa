@@ -11,7 +11,7 @@
 <div class="row">
   <div class="span12">
 
-    <h2>Min side — {{ user.get_profile.get_full_name }}</h2>
+    <h2>Min side</h2>
 
     {% for message in messages %}
       {% if message.message == 'password_reset_success' %}
@@ -26,10 +26,46 @@
       {% endif %}
     {% endfor %}
 
-    <div class="user-home-account">
-      {% if not user.get_profile.get_actor %}
-        <p><a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a></p>
-      {% endif %}
+    <div class="user-home-account form-border form-horizontal">
+
+      <table>
+        <tr>
+          <th>Deg:</th>
+          <td>{{ user.get_profile.get_full_name }}</td>
+        </tr>
+        <tr>
+          <th>Medlemsnummer:</th>
+          <td>{{ user.get_profile.memberid|default:"Du er ikke DNT-medlem." }}</td>
+        </tr>
+        <tr>
+          <th>Ditt medlemskap:</th>
+          <td>
+            {% if user.get_profile.get_actor %}
+
+              {% if user.get_profile.get_actor.has_payed %}
+                Betalt for
+                {% if next_year %}
+                  {{ year|add:"1" }}
+                {% else %}
+                  {{ year }}
+                {% endif %}
+              {% else %}
+                Ikke betalt for
+                {% if next_year %}
+                  {{ year|add:"1" }}
+                {% else %}
+                  {{ year }}
+                {% endif %}
+              {% endif %}
+
+            {% else %}
+
+              Du er ikke DNT-medlem. <a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a>
+
+            {% endif %}
+          </td>
+        </tr>
+      </table>
     </div>
 
     <div class="user-home-navigation">
