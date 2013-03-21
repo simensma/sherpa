@@ -29,11 +29,15 @@ def login(request):
     if 'authenticated_profiles' in request.session:
         del request.session['authenticated_profiles']
 
+    context = {
+        'user_password_length': settings.USER_PASSWORD_LENGTH,
+        'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
+
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
             return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
-        context = {'next': request.GET.get('next')}
+        context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
 
     elif request.method == 'POST':
@@ -61,7 +65,7 @@ def login(request):
                 # Actually, it is! Let's try to import them.
                 if Profile.objects.filter(memberid=old_member.memberid).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
-                    context = {'email': request.POST['email']}
+                    context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
 
                 # Create the new user
@@ -84,9 +88,8 @@ def login(request):
             else:
                 # No luck, just provide the error message
                 messages.error(request, 'invalid_credentials')
-                context = {
-                    'next': request.GET.get('next'),
-                    'email': request.POST['email']}
+                context['next'] = request.GET.get('next')
+                context['email'] = request.POST['email']
                 return render(request, 'common/user/login/login.html', context)
 
 def choose_authenticated_user(request):
@@ -124,34 +127,28 @@ def logout(request):
     return HttpResponseRedirect(reverse('page.views.page'))
 
 def register(request):
-    if request.method == 'GET':
-        context = {
-            'user_password_length': settings.USER_PASSWORD_LENGTH,
-            'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT
-        }
-        return render(request, 'common/user/login/registration.html', context)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         try:
             # Check that the password is long enough
             if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 messages.error(request, 'too_short_password')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the email address is valid
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
             actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             actor.email = request.POST['email']
             actor.save()
@@ -166,7 +163,7 @@ def register(request):
             return HttpResponseRedirect(reverse('user.views.home_new'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
-            return HttpResponseRedirect(reverse('user.login.views.register'))
+            return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
 def register_nonmember(request):
     if request.method == 'GET':
