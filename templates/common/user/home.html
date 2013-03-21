@@ -2,6 +2,10 @@
 {% block title %}Min side{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'user.views.home_new' %}">Min side</a></em>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -79,6 +83,12 @@
 
     </div>
 
+  </div>
+</div>
+
+<div class="row">
+  <div class="span4">
+    {% include 'main/membership/memberid_sms.html' %}
   </div>
 </div>
 
