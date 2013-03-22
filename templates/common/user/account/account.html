@@ -185,16 +185,29 @@
           <th>Fjell og Vidde</th>
           <td>
             {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
-              <p>Du er husstandsmedlem og kan ikke velge. Kontakt ditt hovedmedlem. TODO.</p>
-            {% elif user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
-              <p>Livsvarig medlem - TODO.</p>
+
+              {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                Din husstand mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
+              {% else %}
+                Din husstand mottar Fjell og Vidde i posten.
+              {% endif %}
+
+              <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+
             {% else %}
+
               {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
                 Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
               {% else %}
                 Du mottar Fjell og Vidde i posten.
               {% endif %}
-            <a href="{% url user.views.reserve_publications %}">Endre</a>
+
+              {% if user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
+                <em>Du kan ikke endre dette her. Kontakt medlemsservice.</em>
+              {% else %}
+                <a href="{% url user.views.reserve_publications %}">Endre</a>
+              {% endif %}
+
             {% endif %}
           </td>
         </tr>
@@ -202,16 +215,29 @@
           <th>Årboken</th>
           <td>
             {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
-              <p>Du er husstandsmedlem og kan ikke velge. Kontakt ditt hovedmedlem. TODO.</p>
-            {% elif user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
-              <p>Livsvarig medlem - TODO.</p>
+
+              {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                Din husstand mottar ikke årboken i posten, men kan lese den på nett.
+              {% else %}
+                Din husstand mottar årboken i posten.
+              {% endif %}
+
+              <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+
             {% else %}
+
               {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
                 Du mottar ikke årboken i posten, men kan lese den på nett.
               {% else %}
                 Du mottar årboken i posten.
               {% endif %}
-            <a href="{% url user.views.reserve_publications %}">Endre</a>
+
+              {% if user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
+                <em>Du kan ikke endre dette her. Kontakt medlemsservice.</em>
+              {% else %}
+                <a href="{% url user.views.reserve_publications %}">Endre</a>
+              {% endif %}
+
             {% endif %}
           </td>
         </tr>

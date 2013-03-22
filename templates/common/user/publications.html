@@ -10,11 +10,13 @@
     <h2>Publikasjoner</h2>
 
     {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
-      <p>Du er husstandsmedlem og kan derfor ikke velge å kun lese Fjell og Vidde og årboken på nett. Kontakt ditt hovedmedlem. TODO.</p>
+      {# Don't say anything, just let the account page inform about this. #}
     {% elif user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
-      <p>Livsvarig medlem - TODO.</p>
+      {# Don't say anything, just let the account page inform about this. #}
     {% else %}
-      <p><a href="{% url user.views.reserve_publications %}">Velg hvordan du vil lese Fjell og Vidde og årboken.</a></p>
+      <p>
+        <a href="{% url user.views.reserve_publications %}">Velg hvordan du vil lese Fjell og Vidde og årboken.</a>
+      </p>
     {% endif %}
 
     {% if publications_user|length == 0 and publications_other|length == 0 %}

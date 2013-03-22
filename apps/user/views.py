@@ -38,7 +38,9 @@ def account(request):
     now = datetime.now()
     context = {
         'year': now.year,
-        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START
+        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START,
+        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
+        'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG
     }
     return render(request, 'common/user/account/account.html', context)
 
@@ -259,7 +261,9 @@ def publications(request):
     ).filter(access='all')
     context = {
         'publications_user': list(publications_user_central) + list(publications_user_accessible),
-        'publications_other': publications_other}
+        'publications_other': publications_other,
+        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
+        'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG}
     return render(request, 'common/user/publications.html', context)
 
 @login_required
@@ -277,6 +281,8 @@ def publication(request, publication):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
