@@ -214,6 +214,17 @@
             {% endif %}
           </td>
         </tr>
+        <tr>
+          <th>Partnertilbud</th>
+          <td>
+            {% if user.get_profile.get_actor.reserved_against_partneroffers %}
+              Du har reservert deg mot medlemsfordeler fra DNTs samarbeidspartnere.
+            {% else %}
+              Du vil motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere.
+            {% endif %}
+            <a href="{% url user.views.reservations %}">Endre</a>
+          </td>
+        </tr>
       </table>
 
     {% endif %}
