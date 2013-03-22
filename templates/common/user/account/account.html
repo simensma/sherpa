@@ -215,6 +215,17 @@
           </td>
         </tr>
         <tr>
+          <th>Motta e-post</th>
+          <td>
+            {% if user.get_profile.get_actor.receive_email %}
+              Du vil motta medlemsinformasjon fra DNT på e-post.
+            {% else %}
+              Du vil ikke motta medlemsinformasjon fra DNT på e-post.
+            {% endif %}
+            <a href="{% url user.views.receive_email %}">Endre</a>
+          </td>
+        </tr>
+        <tr>
           <th>Partnertilbud</th>
           <td>
             {% if user.get_profile.get_actor.reserved_against_partneroffers %}

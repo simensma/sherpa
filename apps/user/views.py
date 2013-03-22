@@ -236,6 +236,19 @@ def partneroffers_reserve(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def receive_email(request):
+    return render(request, 'common/user/account/receive_email.html')
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+def receive_email_set(request):
+    actor = request.user.get_profile().get_actor()
+    actor.receive_email = not json.loads(request.POST['reserve'])
+    actor.save()
+    return HttpResponse()
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
