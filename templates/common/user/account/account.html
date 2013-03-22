@@ -206,9 +206,9 @@
               <p>Livsvarig medlem - TODO.</p>
             {% else %}
               {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
-                Du mottar ikke Årboken i posten, men kan lese den på nett.
+                Du mottar ikke årboken i posten, men kan lese den på nett.
               {% else %}
-                Du mottar Årboken i posten.
+                Du mottar årboken i posten.
               {% endif %}
             <a href="{% url user.views.reserve_publications %}">Endre</a>
             {% endif %}
