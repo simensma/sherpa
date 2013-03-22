@@ -5,7 +5,7 @@ $(document).ready(function() {
         pass1: $("input[name='password']"),
         pass2: $("input[name='password-repeat']"),
         min_length: user_password_length,
-        hints: $("div.form-hints div.password-hint")
+        hints: $("div.control-group.password div.hints.validator")
     });
 
     // Trigger all validations
