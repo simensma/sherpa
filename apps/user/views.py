@@ -286,19 +286,3 @@ def reserve_yearbook(request):
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
     actor.save()
     return HttpResponse()
-
-# This view should keep track of all cache keys related to an actor, and delete them.
-# So whenever you add a new actor-related key to the cache, remember to delete it here!
-# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
-@login_required
-def delete_actor_cache(request):
-    cache.delete('actor.%s' % request.user.get_profile().memberid)
-    cache.delete('actor.services.%s' % request.user.get_profile().memberid)
-    cache.delete('actor.children.%s' % request.user.get_profile().memberid)
-    cache.delete('actor.has_payed.%s' % request.user.get_profile().memberid)
-    for child in request.user.get_profile().get_actor().get_children():
-        cache.delete('actor.%s' % child.memberid)
-        cache.delete('actor.services.%s' % child.memberid)
-        cache.delete('actor.has_payed.%s' % child.memberid)
-    messages.info(request, 'synchronization_success')
-    return HttpResponse()

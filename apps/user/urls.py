@@ -3,7 +3,6 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('user.views',
     url(r'^$', 'home'),
     url(r'^midlertidig/$', 'home_new'),
-    url(r'^synkroniser/$', 'delete_actor_cache'),
     url(r'^konto/$', 'account'),
     url(r'^konto/passord/$', 'account_password'),
     url(r'^konto/oppdater/$', 'update_account'),
