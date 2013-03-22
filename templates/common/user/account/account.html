@@ -181,7 +181,7 @@
           </td>
         </tr>
         <tr>
-          <th>Motta Fjell og Vidde i posten</th>
+          <th>Fjell og Vidde</th>
           <td>
             {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
               <p>Du er husstandsmedlem og kan ikke velge. Kontakt ditt hovedmedlem. TODO.</p>
@@ -189,16 +189,16 @@
               <p>Livsvarig medlem - TODO.</p>
             {% else %}
               {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
-                Nei, jeg leser det kun på nett.
+                Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
               {% else %}
-                Ja.
+                Du mottar Fjell og Vidde i posten.
               {% endif %}
             <a href="{% url user.views.reserve_publications %}">Endre</a>
             {% endif %}
           </td>
         </tr>
         <tr>
-          <th>Motta Årboken i posten</th>
+          <th>Årboken</th>
           <td>
             {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
               <p>Du er husstandsmedlem og kan ikke velge. Kontakt ditt hovedmedlem. TODO.</p>
@@ -206,9 +206,9 @@
               <p>Livsvarig medlem - TODO.</p>
             {% else %}
               {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
-                Nei, jeg leser det kun på nett.
+                Du mottar ikke Årboken i posten, men kan lese den på nett.
               {% else %}
-                Ja.
+                Du mottar Årboken i posten.
               {% endif %}
             <a href="{% url user.views.reserve_publications %}">Endre</a>
             {% endif %}
