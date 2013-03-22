@@ -294,9 +294,19 @@ class Actor(models.Model):
     class Meta:
         db_table = u'Actor'
 
+# This receiver should keep track of all cache keys related to an actor, and delete them.
+# So whenever you add a new actor-related key to the cache, remember to delete it here!
+# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
 @receiver(post_save, sender=Actor, dispatch_uid="focus.models")
 def delete_actor_cache(sender, **kwargs):
     cache.delete('actor.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.services.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.children.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.has_payed.%s' % kwargs['instance'].memberid)
+    for child in kwargs['instance'].get_children():
+        cache.delete('actor.%s' % child.memberid)
+        cache.delete('actor.services.%s' % child.memberid)
+        cache.delete('actor.has_payed.%s' % child.memberid)
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
