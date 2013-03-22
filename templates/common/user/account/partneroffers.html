@@ -18,7 +18,7 @@
     </p>
 
     <div class="form-border user-reservations">
-      <table class="user-reservations sponsors" data-url="{% url user.views.reserve_sponsors %}">
+      <table class="user-reservations sponsors" data-url="{% url user.views.partneroffers_reserve %}">
         <tr class="choice">
           <td>
             <input type="radio" name="sponsors" value="allow"{% if not user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>

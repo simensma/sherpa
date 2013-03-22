@@ -228,7 +228,7 @@ def partneroffers(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-def reserve_sponsors(request):
+def partneroffers_reserve(request):
     actor = request.user.get_profile().get_actor()
     actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
     actor.save()
