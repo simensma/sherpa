@@ -6,7 +6,7 @@
     <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url user.views.account %}">Dine opplysninger</a></li>
     <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url user.views.account_password %}">Endre passord</a></li>
     <li{% if active == 'publications' %} class="active"{% endif %}><a href="{% url user.views.publications %}">Publikasjoner</a></li>
-    <li{% if active == 'reservations' %} class="active"{% endif %}><a href="{% url user.views.reservations %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></li>
+    <li{% if active == 'reservations' %} class="active"{% endif %}><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></li>
     {% if not user.get_profile.get_actor %}
       <li{% if active == 'register_membership' %} class="active"{% endif %}><a href="{% url user.views.register_membership %}">Registrer medlemskap</a></li>
     {% endif %}

@@ -220,11 +220,11 @@ def register_membership(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-def reservations(request):
+def partneroffers(request):
     context = {
         'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
         'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG}
-    return render(request, 'common/user/account/reservations.html', context)
+    return render(request, 'common/user/account/partneroffers.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
