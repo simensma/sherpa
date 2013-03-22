@@ -28,7 +28,7 @@
     <div class="publications">
       <div class="row-fluid">
         {% for publication in publications_user %}
-          <div class="span4">
+          <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
             <div class="publication">
               <h3 class="title">
                 <a href="{% url user.views.publication publication.id %}">
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          {% if not forloop.last and forloop.counter|divisibleby:"3" %}
+          {% if not forloop.last and forloop.counter|divisibleby:"2" %}
             </div><div class="row-fluid">
           {% endif %}
         {% endfor %}
