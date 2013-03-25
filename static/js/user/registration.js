@@ -72,8 +72,6 @@ $(document).ready(function() {
                 registration_form.find("img.ajaxloader.submit").hide();
                 $("div.memberid-lookups-exceeded").slideDown();
             } else {
-                no_memberid_match.find("span.memberid").text(registration_form.find("input[name='memberid']").val());
-                no_memberid_match.find("span.zipcode").text(registration_form.find("input[name='zipcode']").val());
                 no_memberid_match.slideDown();
                 step1.find("button[type='submit']").show();
                 registration_form.find("img.ajaxloader.submit").hide();

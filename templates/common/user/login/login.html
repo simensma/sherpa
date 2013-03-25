@@ -217,8 +217,8 @@
           </div>
 
           <div class="hide alert alert-error no-memberid-match">
-            <strong>Feil medlemsnummer eller postnummer!</strong><br>
-            Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+            <strong>Ukjent bruker</strong><br>
+            Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
           </div>
 
           <div class="hide alert alert-error memberid-lookups-exceeded">
@@ -230,8 +230,8 @@
             {% if message.message == 'invalid_memberid' %}
               {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
               <div class="alert alert-error">
-                <strong>Feil medlemsnummer eller postnummer</strong><br>
-                Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+                <strong>Ukjent bruker</strong><br>
+                Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
               </div>
             {% elif message.message == 'memberid_lookups_exceeded' %}
               <div class="alert alert-error">
