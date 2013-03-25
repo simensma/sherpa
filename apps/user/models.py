@@ -134,6 +134,24 @@ class Profile(models.Model):
     def norway_bus_tickets_offer_has_expired(self):
         return self.get_actor().start_date.year < datetime.now().year
 
+    def show_norway_bus_tickets_menu_item(self):
+        # Kind of complicated method, it's used in menus/navigation to show the link to
+        # the order page - show it if the offer hasn't expired, but also if they have ordered before
+        # even if it is expired.
+        if not self.norway_bus_tickets_offer_has_expired():
+            # Offer hasn't expired - show the item regardless of anything
+            return True
+        else:
+            # Offer has expired - showing is only applicable if we HAVE made an order
+            if NorwayBusTicket.objects.filter(profile=self).exists():
+                return True
+
+            if NorwayBusTicketOld.objects.filter(memberid=self.memberid).exists():
+                return True
+
+            # No orders, and offer expired - hide the item
+            return False
+
     class Meta:
         permissions = [
             ("sherpa_admin", "Sherpa-administrator - global access"),

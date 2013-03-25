@@ -111,7 +111,7 @@
 
     {# TODO: Conditional columns need to be 'iterated' somehow #}
 
-    {% if not user.get_profile.norway_bus_tickets_offer_has_expired %}
+    {% if user.get_profile.show_norway_bus_tickets_menu_item %}
       <div class="span4">
         <div class="element">
           <p><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></p>
