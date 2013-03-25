@@ -56,6 +56,7 @@ $(document).ready(function() {
             url: '/minside/sjekk-medlemsnummer/',
             data: {
                 memberid: registration_form.find("input[name='memberid']").val(),
+                country: country_select.val(),
                 zipcode: registration_form.find("input[name='zipcode']").val()
             }
         }).done(function(result) {

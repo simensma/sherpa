@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
+from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, timedelta
 import json
@@ -153,7 +154,14 @@ def register(request):
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
                 return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
-            actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+            if not FocusCountry.objects.filter(code=request.POST['country']).exists():
+                raise PermissionDenied
+            actor = Actor.objects.filter(
+                memberid=request.POST['memberid'],
+                address__country=request.POST['country'])
+            if request.POST['country'] == 'NO':
+                actor = actor.filter(address__zipcode=request.POST['zipcode'])
+            actor = actor.get()
 
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
@@ -235,8 +243,15 @@ def register_nonmember(request):
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
         return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
+    if not FocusCountry.objects.filter(code=request.POST['country']).exists():
+        raise PermissionDenied
     try:
-        actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+        actor = Actor.objects.filter(
+            memberid=request.POST['memberid'],
+            address__country=request.POST['country'])
+        if request.POST['country'] == 'NO':
+            actor = actor.filter(address__zipcode=request.POST['zipcode'])
+        actor = actor.get()
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
