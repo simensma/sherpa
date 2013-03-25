@@ -17,257 +17,257 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<div class="loginpage-wrapper">
 
-    <div class="loginpage-wrapper">
+  <div class="row">
+    <div class="span12">
 
-      <h2>Min side</h2>
+        <h2>Min side</h2>
 
-      {# Messages sent from views that redirect to login #}
-      {% for message in messages %}
-        {% if message.message == 'fjelltreffen_login_required' %}
-          <div class="alert alert-error">
-            Du må være pålogget for å legge ut annonser på Fjelltreffen.<br>
-            Alle DNT-medlemmer kan enkelt registrere en Min side-bruker her.
+        {# Messages sent from views that redirect to login #}
+        {% for message in messages %}
+          {% if message.message == 'fjelltreffen_login_required' %}
+            <div class="alert alert-error">
+              Du må være pålogget for å legge ut annonser på Fjelltreffen.<br>
+              Alle DNT-medlemmer kan enkelt registrere en Min side-bruker her.
+            </div>
+          {% elif message.message == 'fjelltreffen_login_required_for_report' %}
+            <div class="alert alert-error">
+              Du må være pålogget for å rapportere annonser på Fjelltreffen. Dette er for å unngå misbruk av rapporteringstjenesten.<br>
+              Alle DNT-medlemmer kan enkelt registrere en Min side-bruker her.
+            </div>
+          {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span7">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
+        <li><a href="#registration" data-toggle="tab">Opprett ny bruker</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="login-form-wrapper form-border tab-pane active" id="login">
+
+          {% for message in messages %}
+            {% if message.message == 'invalid_credentials' %}
+              <div class="alert alert-error">
+                <strong>Feil e-postadresse eller passord</strong><br>
+                Har du ikke Min side-konto? <a href="javascript:undefined" class="toggle-registration-tab">Opprett din bruker her!</a>
+              </div>
+            {% elif message.message == 'old_memberid_but_memberid_exists' %}
+              <div class="alert alert-error">
+                <strong>Feil e-postadresse eller passord</strong><br>
+                Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din nye e-postadresse.<br>
+                Hvis du har glemt passordet, klikk på "Glemt passord"-lenken under.
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+            {% csrf_token %}
+
+            <div class="control-group email">
+              <label class="control-label" for="email">E-post:</label>
+              <div class="controls">
+                <input type="text" name="email" value="{{ email }}" class="input-xlarge">
+              </div>
+            </div>
+
+            <div class="control-group password">
+              <label class="control-label" for="password">Passord:</label>
+              <div class="controls">
+                <input type="password" name="password" class="input-large">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="control-group">
+            <div class="controls">
+              <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
+              <div class="forgot-password hide">
+                <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
+                <p class="actions">
+                  <button class="btn restore-password">Gjenopprett passord</button>
+                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
+                </p>
+                <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
+                <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
+                <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="javascript:undefined" class="toggle-register-tab">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
+                <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
+              </div>
+            </div>
           </div>
-        {% elif message.message == 'fjelltreffen_login_required_for_report' %}
-          <div class="alert alert-error">
-            Du må være pålogget for å rapportere annonser på Fjelltreffen. Dette er for å unngå misbruk av rapporteringstjenesten.<br>
-            Alle DNT-medlemmer kan enkelt registrere en Min side-bruker her.
-          </div>
-        {% endif %}
-      {% endfor %}
 
-      <div class="row-fluid">
-        <div class="span7">
+        </div>
+        <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
-            <li><a href="#registration" data-toggle="tab">Opprett ny bruker</a></li>
-          </ul>
+          <form action="{% url user.login.views.register %}" method="post" class="form-default form-horizontal">
+            {% csrf_token %}
 
-          <div class="tab-content">
-            <div class="login-form-wrapper form-border tab-pane active" id="login">
-
-              {% for message in messages %}
-                {% if message.message == 'invalid_credentials' %}
-                  <div class="alert alert-error">
-                    <strong>Feil e-postadresse eller passord</strong><br>
-                    Har du ikke Min side-konto? <a href="javascript:undefined" class="toggle-registration-tab">Opprett din bruker her!</a>
-                  </div>
-                {% elif message.message == 'old_memberid_but_memberid_exists' %}
-                  <div class="alert alert-error">
-                    <strong>Feil e-postadresse eller passord</strong><br>
-                    Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din nye e-postadresse.<br>
-                    Hvis du har glemt passordet, klikk på "Glemt passord"-lenken under.
-                  </div>
-                {% endif %}
-              {% endfor %}
-
-              <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
-                {% csrf_token %}
-
-                <div class="control-group email">
-                  <label class="control-label" for="email">E-post:</label>
-                  <div class="controls">
-                    <input type="text" name="email" value="{{ email }}" class="input-xlarge">
+            <div class="step1">
+              <div class="control-group memberid">
+                <label class="control-label" for="memberid">Medlemsnummer:</label>
+                <div class="controls">
+                  <input type="text" class="input-xlarge" name="memberid">
+                  <div class="hints">
+                    <a href="javascript:undefined" class="trigger-memberid-hint">Glemt medlemsnummeret?</a>
                   </div>
                 </div>
+              </div>
 
-                <div class="control-group password">
-                  <label class="control-label" for="password">Passord:</label>
-                  <div class="controls">
-                    <input type="password" name="password" class="input-large">
-                  </div>
+              <div class="control-group zipcode">
+                <label class="control-label" for="zipcode">Postnummer:</label>
+                <div class="controls">
+                  <input type="text" class="input-small" name="zipcode" maxlength="4">
+                  <input type="text" class="input-medium" name="area" disabled>
+                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
                 </div>
-
-                <div class="control-group">
-                  <div class="controls">
-                    <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
-                  </div>
-                </div>
-              </form>
+              </div>
 
               <div class="control-group">
                 <div class="controls">
-                  <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-                  <div class="forgot-password hide">
-                    <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
-                    <p class="actions">
-                      <button class="btn restore-password">Gjenopprett passord</button>
-                      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
-                    </p>
-                    <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
-                    <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
-                    <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="javascript:undefined" class="toggle-register-tab">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
-                    <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
-                  </div>
+                  <button type="submit" class="btn btn-danger">Gå videre <i class="icon-arrow-right icon-white"></i></button>
+                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
                 </div>
               </div>
-
             </div>
-            <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-              <form action="{% url user.login.views.register %}" method="post" class="form-default form-horizontal">
-                {% csrf_token %}
-
-                <div class="step1">
-                  <div class="control-group memberid">
-                    <label class="control-label" for="memberid">Medlemsnummer:</label>
-                    <div class="controls">
-                      <input type="text" class="input-xlarge" name="memberid">
-                      <div class="hints">
-                        <a href="javascript:undefined" class="trigger-memberid-hint">Glemt medlemsnummeret?</a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="control-group zipcode">
-                    <label class="control-label" for="zipcode">Postnummer:</label>
-                    <div class="controls">
-                      <input type="text" class="input-small" name="zipcode" maxlength="4">
-                      <input type="text" class="input-medium" name="area" disabled>
-                      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
-                    </div>
-                  </div>
-
-                  <div class="control-group">
-                    <div class="controls">
-                      <button type="submit" class="btn btn-danger">Gå videre <i class="icon-arrow-right icon-white"></i></button>
-                      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="step2 hide">
-                  <div class="control-group">
-                    <p>Velkommen, <span class="name"></span>! Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert.</p>
-                  </div>
-
-                  <div class="control-group email">
-                    <label class="control-label" for="email">E-post:</label>
-                    <div class="controls">
-                      <input type="text" class="input-xlarge" name="email">
-                      <div class="hints email-found hide">
-                        Er din e-postadresse <a class="email" href=""></a>? Hvis ikke kan du endre den i feltet over.
-                      </div>
-                      <div class="hints email-not-found hide">
-                        Her må du oppgi e-postadressen din.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="control-group password">
-                    <label class="control-label" for="password">Passord:</label>
-                    <div class="controls">
-                      <input type="password" class="input-xlarge" name="password">
-                      <div class="hints">
-                        Her må du velge et passord på minst {{ user_password_length }} tegn.
-                      </div>
-                      <div class="hints error validator short hide">
-                        Passordet er for kort, det må være minst {{ user_password_length }} tegn.
-                      </div>
-                      <div class="hints error validator unequal hide">
-                        Passordene er ikke like, har du skrevet feil?
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="control-group password-repeat">
-                    <label class="control-label" for="password-repeat">Gjenta passord:</label>
-                    <div class="controls">
-                      <input type="password" class="input-xlarge" name="password-repeat">
-                    </div>
-                  </div>
-
-                  <div class="control-group">
-                    <div class="controls">
-                      <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-                    </div>
-                  </div>
-                </div>
-
-              </form>
-
-              <div class="hide alert alert-error profile-exists">
-                <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-                <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+            <div class="step2 hide">
+              <div class="control-group">
+                <p>Velkommen, <span class="name"></span>! Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert.</p>
               </div>
 
-              <div class="hide alert alert-error no-memberid-match">
-                <strong>Feil medlemsnummer eller postnummer!</strong><br>
-                Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+              <div class="control-group email">
+                <label class="control-label" for="email">E-post:</label>
+                <div class="controls">
+                  <input type="text" class="input-xlarge" name="email">
+                  <div class="hints email-found hide">
+                    Er din e-postadresse <a class="email" href=""></a>? Hvis ikke kan du endre den i feltet over.
+                  </div>
+                  <div class="hints email-not-found hide">
+                    Her må du oppgi e-postadressen din.
+                  </div>
+                </div>
               </div>
 
-              <div class="hide alert alert-error memberid-lookups-exceeded">
+              <div class="control-group password">
+                <label class="control-label" for="password">Passord:</label>
+                <div class="controls">
+                  <input type="password" class="input-xlarge" name="password">
+                  <div class="hints">
+                    Her må du velge et passord på minst {{ user_password_length }} tegn.
+                  </div>
+                  <div class="hints error validator short hide">
+                    Passordet er for kort, det må være minst {{ user_password_length }} tegn.
+                  </div>
+                  <div class="hints error validator unequal hide">
+                    Passordene er ikke like, har du skrevet feil?
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group password-repeat">
+                <label class="control-label" for="password-repeat">Gjenta passord:</label>
+                <div class="controls">
+                  <input type="password" class="input-xlarge" name="password-repeat">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="controls">
+                  <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+
+          <div class="hide alert alert-error profile-exists">
+            <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
+            <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+          </div>
+
+          <div class="hide alert alert-error no-memberid-match">
+            <strong>Feil medlemsnummer eller postnummer!</strong><br>
+            Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+          </div>
+
+          <div class="hide alert alert-error memberid-lookups-exceeded">
+            <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+          </div>
+
+          {% for message in messages %}
+            {% if message.message == 'invalid_memberid' %}
+              {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
+              <div class="alert alert-error">
+                <strong>Feil medlemsnummer eller postnummer</strong><br>
+                Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+              </div>
+            {% elif message.message == 'memberid_lookups_exceeded' %}
+              <div class="alert alert-error">
                 <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
                 Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
               </div>
-
-              {% for message in messages %}
-                {% if message.message == 'invalid_memberid' %}
-                  {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
-                  <div class="alert alert-error">
-                    <strong>Feil medlemsnummer eller postnummer</strong><br>
-                    Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
-                  </div>
-                {% elif message.message == 'memberid_lookups_exceeded' %}
-                  <div class="alert alert-error">
-                    <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-                    Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
-                  </div>
-                {% elif message.message == 'too_short_password' %}
-                  <div class="alert alert-error">
-                    <strong>For kort passord</strong><br>
-                    Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
-                  </div>
-                {% elif message.message == 'profile_exists' %}
-                  <div class="alert alert-error">
-                    <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-                    <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
-                  </div>
-                {% elif message.message == 'invalid_email' %}
-                  <div class="alert alert-error">
-                    <strong>E-postadressen din er ikke gyldig!</strong><br>
-                    Vennligst oppgi en gyldig e-postadresse.
-                  </div>
-                {% endif %}
-              {% endfor %}
-
-            </div>
-          </div>
+            {% elif message.message == 'too_short_password' %}
+              <div class="alert alert-error">
+                <strong>For kort passord</strong><br>
+                Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
+              </div>
+            {% elif message.message == 'profile_exists' %}
+              <div class="alert alert-error">
+                <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
+                <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+              </div>
+            {% elif message.message == 'invalid_email' %}
+              <div class="alert alert-error">
+                <strong>E-postadressen din er ikke gyldig!</strong><br>
+                Vennligst oppgi en gyldig e-postadresse.
+              </div>
+            {% endif %}
+          {% endfor %}
 
         </div>
+      </div>
 
-        <div class="span5">
-          <div class="usersite-benefits">
+    </div>
 
-            <p>
-              <strong>Få mer ut av medlemskapet!</strong><br>
-              På Min side kan du:
-            </p>
+    <div class="span5">
+      <div class="usersite-benefits">
 
-            <ul>
-              <li>
-                Se status på medlemskap
-              </li>
-              <li>
-                Endre kontaktopplysninger
-              </li>
-              <li>
-                Lese Fjell og Vidde, UT og årboken
-              </li>
-              <li>
-                Legge ut annonser på Fjelltreffen
-              </li>
-            </ul>
+        <p>
+          <strong>Få mer ut av medlemskapet!</strong><br>
+          På Min side kan du:
+        </p>
 
-          </div>
-        </div>
+        <ul>
+          <li>
+            Se status på medlemskap
+          </li>
+          <li>
+            Endre kontaktopplysninger
+          </li>
+          <li>
+            Lese Fjell og Vidde, UT og årboken
+          </li>
+          <li>
+            Legge ut annonser på Fjelltreffen
+          </li>
+        </ul>
+
       </div>
     </div>
   </div>
+
 </div>
 
 <div class="modal memberid-hint-modal hide">
