@@ -17,7 +17,7 @@ from smtplib import SMTPException
 import logging
 import sys
 
-from user.models import Profile, NorwayBusTicket
+from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
 from core.models import Zipcode
 from focus.models import Actor
@@ -289,9 +289,26 @@ def publication(request, publication):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
 def norway_bus_tickets(request):
-    context = {'now': datetime.now()}
+    now = datetime.now()
+
+    try:
+        new_ticket = NorwayBusTicket.objects.get(profile=request.user.get_profile())
+    except NorwayBusTicket.DoesNotExist:
+        new_ticket = None
+
+    try:
+        old_ticket = NorwayBusTicketOld.objects.get(memberid=request.user.get_profile().memberid)
+    except NorwayBusTicketOld.DoesNotExist:
+        old_ticket = None
+
+    offer_expired = request.user.get_profile().get_actor().start_date.year < now.year
+
+    context = {
+        'now': now,
+        'new_ticket': new_ticket,
+        'old_ticket': old_ticket,
+        'offer_expired': offer_expired}
     return render(request, 'common/user/norway_bus_tickets.html', context)
 
 @login_required
