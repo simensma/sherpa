@@ -13,6 +13,7 @@ class Link(models.Model):
     toid = models.IntegerField(db_column='toId')
     role = models.IntegerField()
     priority = models.IntegerField(null=True, blank=True)
+
     class Meta:
         db_table = u'Link'
 
@@ -26,6 +27,7 @@ class Classified(models.Model):
     authorized = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
+
     class Meta:
         db_table = u'Classified'
 
@@ -36,6 +38,7 @@ class ClassifiedImage(models.Model):
     modified = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
+
     class Meta:
         db_table = u'ClassifiedImage'
 
@@ -73,6 +76,7 @@ class Member(models.Model):
     modified = models.DateTimeField(null=True)
     status = models.IntegerField(null=True)
     online = models.BooleanField()
+
     class Meta:
         db_table = u'Member'
 
