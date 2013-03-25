@@ -211,7 +211,7 @@ def edit(request, id):
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_profile().get_actor().get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def save(request):
-    if request.user.get_profile().get_actor() == None:
+    if request.user.get_profile().get_actor() is None:
         raise PermissionDenied
 
     # If user hasn't payed, allow editing, but not creating new annonser
