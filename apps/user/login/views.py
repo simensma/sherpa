@@ -19,6 +19,7 @@ from user.models import Profile
 from focus.models import Actor
 from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
 from core import validator
+from core.models import FocusCountry
 from sherpa25.models import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
@@ -30,9 +31,17 @@ def login(request):
     if 'authenticated_profiles' in request.session:
         del request.session['authenticated_profiles']
 
+    countries = FocusCountry.objects.all()
+    countries = {
+        'norway': countries.get(code='NO'),
+        'scandinavia': countries.filter(scandinavian=True).exclude(code='NO'),
+        'other': countries.filter(scandinavian=False)
+    }
+
     context = {
         'user_password_length': settings.USER_PASSWORD_LENGTH,
-        'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
+        'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT,
+        'countries': countries}
 
     if request.method == 'GET':
         if request.user.is_authenticated():

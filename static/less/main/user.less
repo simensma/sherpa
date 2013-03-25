@@ -73,6 +73,18 @@ div.loginpage-wrapper {
     border-top: none;
   }
 
+  div.tab-content {
+    // Bootstrap sets overflow: auto; by default. This yields scrollbars when used with
+    // a chosen select box, so reset it to visible in this case.
+    overflow: visible;
+  }
+
+  div.registration-form-wrapper {
+    select[name='country'] {
+      width: 280px;
+    }
+  }
+
   div.usersite-benefits {
     margin-top: 38px; // Kind of hackish, this is the current calculated height of the nearby ul.nav-element
     .square-well;

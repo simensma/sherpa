@@ -3,6 +3,8 @@ $(document).ready(function() {
     var memberid_accepted = false;
     var no_memberid_match = $("div.no-memberid-match");
     var registration_form = $("div.registration-form-wrapper form");
+    var country_select = registration_form.find("select[name='country']");
+    var zipcode_control_group = registration_form.find("div.control-group.zipcode");
 
     Validator.validate({
         method: 'email',
@@ -32,6 +34,15 @@ $(document).ready(function() {
         $("input[name='area']"),
         $("img.ajaxloader.zipcode")
     );
+
+    country_select.chosen();
+    country_select.change(function() {
+        if($(this).find("option:selected").val() == 'NO') {
+            zipcode_control_group.show();
+        } else {
+            zipcode_control_group.hide();
+        }
+    });
 
     registration_form.submit(function(e) {
         if(memberid_accepted) {
