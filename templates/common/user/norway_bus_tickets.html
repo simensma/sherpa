@@ -66,6 +66,8 @@
 
     {% elif user.get_profile.norway_bus_tickets_offer_has_expired %}
 
+      {# Note that since the menus don't link to this page in this case, this text will only be read if someone somehow navigates to this URL manually. #}
+
       <h3>Tilbudet har utgått</h3>
 
       <p>
