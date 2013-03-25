@@ -30,9 +30,6 @@ logger = logging.getLogger('sherpa')
 # Public views
 #
 
-def redirect(request):
-    return HttpResponseRedirect('https://www2.turistforeningen.no/fjelltreffen')
-
 def index(request):
     annonser, start_index, end = Annonse.get_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
