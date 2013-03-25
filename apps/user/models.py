@@ -113,16 +113,16 @@ class Profile(models.Model):
         return Association.sort(self.all_associations())
 
     def is_eligible_for_norway_bus_tickets(self):
-        if self.get_actor().start_date.year < datetime.now().year:
-            # The offer applies only the same year as membership enrollment
-            return False
-
         if NorwayBusTicket.objects.filter(profile=self).exists():
             # Only one order per member
             return False
 
         if NorwayBusTicketOld.objects.filter(memberid=self.memberid).exists():
             # Old, imported order. Still only one order per member
+            return False
+
+        if self.get_actor().start_date.year < datetime.now().year:
+            # The offer applies only the same year as membership enrollment
             return False
 
         return True
