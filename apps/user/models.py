@@ -125,6 +125,10 @@ class Profile(models.Model):
             # The offer applies only the same year as membership enrollment
             return False
 
+        if not self.get_actor().has_payed():
+            # The offer applies only to active memberships
+            return False
+
         return True
 
     def norway_bus_tickets_offer_has_expired(self):

@@ -72,6 +72,18 @@
         Beklager &mdash; dette tilbudet gjelder kun for nye medlemmer, og må benyttes innen utgangen av det året du melder deg inn.
       </p>
 
+    {% elif not user.get_profile.get_actor.has_payed %}
+
+      <h3>Ubetalt årskontingent</h3>
+
+      <p>
+        For å benytte deg av tilbudet må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.
+      </p>
+
+      <div class="alert alert-info">
+        <i class="icon-info-sign"></i> Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til billettbestillingen — vær tålmodig!
+      </div>
+
     {% else %}
 
       <form action="{% url user.views.norway_bus_tickets_order %}" method="post" class="form-border form-horizontal form-default">
