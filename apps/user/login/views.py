@@ -275,8 +275,8 @@ def send_restore_password_email(request):
 
     t = loader.get_template('common/user/login/restore-password-email.txt')
     c = RequestContext(request, {
-       'found_user': profile.user,
-       'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
+        'found_user': profile.user,
+        'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
     send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
