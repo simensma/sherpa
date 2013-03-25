@@ -36,7 +36,7 @@ def login(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
         context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
 
@@ -47,7 +47,7 @@ def login(request):
             # Exactly one match, cool, just authenticate the user
             user = authenticate(user=matches[0].user)
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
 
         elif len(matches) > 1:
             # Multiple matches, offer a choice between all matches
@@ -83,7 +83,7 @@ def login(request):
 
                 authenticate(user=user)
                 log_user_in(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
 
             else:
                 # No luck, just provide the error message
@@ -120,7 +120,7 @@ def login_chosen_user(request):
     user = authenticate(user=profile.user)
     log_user_in(request, user)
     del request.session['authenticated_profiles']
-    return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+    return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
 
 def logout(request):
     log_user_out(request)
@@ -160,7 +160,7 @@ def register(request):
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-            return HttpResponseRedirect(reverse('user.views.home_new'))
+            return HttpResponseRedirect(reverse('user.views.home'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
@@ -220,7 +220,7 @@ def register_nonmember(request):
         t = loader.get_template('common/user/login/registered_nonmember_email.html')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-        return HttpResponseRedirect(reverse('user.views.home_new'))
+        return HttpResponseRedirect(reverse('user.views.home'))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
@@ -319,4 +319,4 @@ def restore_password(request, key):
         user = authenticate(user=profile.user)
         log_user_in(request, user)
         messages.info(request, 'password_reset_success')
-        return HttpResponseRedirect(reverse('user.views.home_new'))
+        return HttpResponseRedirect(reverse('user.views.home'))

@@ -20,11 +20,8 @@ from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
 from focus.models import MEMBERSHIP_CODE_HOUSEHOLD, MEMBERSHIP_CODE_LIFELONG
 
-def home(request):
-    return HttpResponseRedirect('https://%s/minside/' % settings.OLD_SITE)
-
 @login_required
-def home_new(request):
+def home(request):
     now = datetime.now()
     context = {
         'year': now.year,
@@ -161,12 +158,12 @@ def update_account_password(request):
         request.user.set_password(request.POST['password'])
         request.user.save()
         messages.info(request, 'password_update_success')
-        return HttpResponseRedirect(reverse('user.views.home_new'))
+        return HttpResponseRedirect(reverse('user.views.home'))
 
 @login_required
 def register_membership(request):
     if request.user.get_profile().memberid is not None:
-        return HttpResponseRedirect(reverse('user.views.home_new'))
+        return HttpResponseRedirect(reverse('user.views.home'))
 
     if request.method == 'GET':
         context = {'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
@@ -214,7 +211,7 @@ def register_membership(request):
             request.user.email = ''
             request.user.save()
 
-            return HttpResponseRedirect(reverse('user.views.home_new'))
+            return HttpResponseRedirect(reverse('user.views.home'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.register_membership'))
@@ -280,15 +277,15 @@ def publication(request, publication):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
@@ -297,8 +294,8 @@ def reserve_fjellogvidde(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home_new')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home_new')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_yearbook(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))

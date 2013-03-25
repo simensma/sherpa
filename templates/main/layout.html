@@ -102,9 +102,9 @@
     <div class="span3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
-          {% if perms.user.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
-          <a href="{% url 'user.views.home_new' %}">Min side</a>
-          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
+          {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
+          <a href="{% url user.views.home %}">Min side</a>
+          <a href="{% url user.login.views.logout %}">Logg ut</a>
         {% else %}
           <a href="{% url 'user.views.home' %}">Min side</a>
         {% endif %}
