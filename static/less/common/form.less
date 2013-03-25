@@ -36,6 +36,16 @@ form.form-default div.control-group div.controls div.hints {
   .form-hints;
 }
 
+form.form-default div.control-group div.controls div.control-as-text {
+  /* Preliminary wrapper for when we want to use text directly in the controls
+     Note that the ".form-horizontal .control-group .controls p" selector
+     above achieves the same label-offset, such paragraphs should be replaced with
+     this DOM element. */
+  font-family: "DTL Nobel" !important;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
 form.form-default div.control-group div.controls div.hints.error {
   color: @profile-red; // This should actually be a "form-hint-error" variable which is set to profile-red.
 }

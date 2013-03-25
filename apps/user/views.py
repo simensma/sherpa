@@ -1,16 +1,23 @@
+# encoding: utf-8
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render
+from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
-from datetime import datetime
+from datetime import datetime, date
 import json
+from smtplib import SMTPException
+import logging
+import sys
 
-from user.models import Profile
+from user.models import Profile, NorwayBusTicket
 from core import validator
 from core.models import Zipcode
 from focus.models import Actor
@@ -19,6 +26,11 @@ from admin.models import Publication
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
 from focus.models import MEMBERSHIP_CODE_HOUSEHOLD, MEMBERSHIP_CODE_LIFELONG
+
+logger = logging.getLogger('sherpa')
+
+NORWAY_EMAIL_FROM = 'Den Norske Turistforening <webmaster@turistforeningen.no>'
+NORWAY_EMAIL_RECIPIENT = 'NOR-WAY Bussekspress AS <post@nor-way.no>'
 
 @login_required
 def home(request):
@@ -274,6 +286,69 @@ def publication(request, publication):
     ).get(id=publication)
     context = {'publication': publication}
     return render(request, 'common/user/publication.html', context)
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
+def norway_bus_tickets(request):
+    context = {'now': datetime.now()}
+    return render(request, 'common/user/norway_bus_tickets.html', context)
+
+@login_required
+@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
+def norway_bus_tickets_order(request):
+    errors = False
+
+    try:
+        travel_date = datetime.strptime(request.POST['date'], "%d.%m.%Y").date()
+        today = date.today()
+        if travel_date < today or travel_date.year != today.year:
+            errors = True
+            messages.error(request, 'invalid_date')
+    except ValueError:
+        errors = True
+        messages.error(request, 'invalid_date')
+
+    distance = request.POST['route'].strip()
+    if len(distance) == 0:
+        errors = True
+        messages.error(request, 'missing_distance')
+
+    if errors:
+        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
+
+    ticket = NorwayBusTicket(
+        profile=request.user.get_profile(),
+        date_trip=travel_date,
+        distance=distance)
+    ticket.save()
+
+    try:
+        context = RequestContext(request, {'ticket': ticket})
+        message = render_to_string('common/user/norway_bus_tickets_email.txt', context)
+        send_mail(
+            "Billettbestilling fra DNT",
+            message,
+            NORWAY_EMAIL_FROM,
+            [NORWAY_EMAIL_RECIPIENT])
+        messages.info(request, 'order_success')
+        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
+    except SMTPException:
+        logger.warning(u"(Håndtert) Mail til NOR-WAY Bussekspress failet",
+            exc_info=sys.exc_info(),
+            extra={
+                'request': request,
+                'profile.id': ticket.profile.id,
+                'date_trip': ticket.date_trip,
+                'distance': ticket.distance
+            }
+        )
+        # Delete the erroneous order - yields loss of information, but the above logging
+        # should provide the info we need. Otherwise, we'd need a way to mark the order as erroneous.
+        ticket.delete()
+        messages.error(request, 'email_failure')
+        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')

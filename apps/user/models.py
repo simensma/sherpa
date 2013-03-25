@@ -8,6 +8,7 @@ from focus.models import Actor
 from association.models import Association
 
 from itertools import groupby
+from datetime import datetime
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -111,6 +112,17 @@ class Profile(models.Model):
     def all_associations_sorted(self):
         return Association.sort(self.all_associations())
 
+    def is_eligible_for_norway_bus_tickets(self):
+        if self.get_actor().start_date.year < datetime.now().year:
+            # The offer applies only the same year as membership enrollment
+            return False
+
+        if NorwayBusTicket.objects.filter(profile=self).exists():
+            # Only one order per member
+            return False
+
+        return True
+
     class Meta:
         permissions = [
             ("sherpa_admin", "Sherpa-administrator - global access"),
@@ -129,3 +141,9 @@ class AssociationRole(models.Model):
     def friendly_role(role):
         # Assumes that 'role' exists in the tuple and is unique
         return [c[1] for c in AssociationRole.ROLE_CHOICES if c[0] == role][0]
+
+class NorwayBusTicket(models.Model):
+    profile = models.OneToOneField(Profile, related_name='norway_bus_ticket')
+    date_placed = models.DateTimeField(auto_now_add=True)
+    date_trip = models.DateTimeField()
+    distance = models.CharField(max_length=1024)

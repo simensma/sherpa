@@ -16,5 +16,7 @@ urlpatterns = patterns('user.views',
     url(r'^publikasjoner/les-pa-nett/fjell-og-vidde/$', 'reserve_fjellogvidde'),
     url(r'^publikasjoner/les-pa-nett/aarbok/$', 'reserve_yearbook'),
     url(r'^publikasjon/(?P<publication>\d+)/$', 'publication'),
+    url(r'^bussbilletter/$', 'norway_bus_tickets'),
+    url(r'^bussbilletter/bestill/$', 'norway_bus_tickets_order'),
     url(r'', include('user.login.urls')),
 )

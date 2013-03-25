@@ -1,0 +1,124 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}NOR-WAY Bussbilletter &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>NOR-WAY Bussbilletter</em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/norway_bus_tickets.js"></script>
+{% endblock %}
+
+{% load actoraddress %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Bestilling av billett med 50% rabatt fra NOR-WAY Bussekspress</h2>
+
+    <form action="{% url user.views.norway_bus_tickets_order %}" method="post" class="form-border form-horizontal form-default">
+      {% csrf_token %}
+
+      {% for message in messages %}
+        {% if message.message == 'order_success' %}
+          <div class="alert alert-success">
+            <strong>Bestillingen har blitt sendt!</strong><br>
+            Billetten blir utsendt fortløpende pr post (mandag - fredag), regn derfor med 4-5 dagers behandlingstid/postgang før du mottar billetten.
+          </div>
+        {% elif message.message == 'invalid_date' %}
+          <div class="alert alert-error">
+            <strong>Ugyldig dato!</strong><br>
+            Du må velge en dato mellom i dag og 31. desember {{ now|date:"Y" }}.
+          </div>
+        {% elif message.message == 'missing_distance' %}
+          <div class="alert alert-error">
+            <strong>Du må legge inn reisestrekningen!</strong><br>
+            Finn strekningen på <a href="http://www.nor-way.no/">NOR-WAY Bussekspress</a>.
+          </div>
+        {% elif message.message == 'email_failure' %}
+          <div class="alert alert-error">
+            <strong>Bestillingen har ikke blitt sendt!</strong><br>
+            Vi beklager, det oppstod en feil når vi skulle sende bestillingen til NOR-WAY Bussekspress. Bestillingen har <strong>ikke</strong> blitt sendt - vennligst prøv igjen litt senere. Kontakt <a href="{% url membership.views.service %}">medlemsservice</a> dersom feilen ikke går bort.
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <div class="control-group date">
+        <label class="control-label" for="date">Reisedato:</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="date" placeholder="dd.mm.åååå">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group route">
+        <label class="control-label" for="route">Strekning:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="route" placeholder="Eks: Oslo-Fagernes">
+          <div class="hints">
+            Finn strekningen på <a href="http://www.nor-way.no/">NOR-WAY Bussekspress</a>.
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Billetten blir sendt til:</label>
+        <div class="controls">
+          <div class="control-as-text">
+            {{ user.get_profile.get_actor|actoraddress }}
+          </div>
+          <div class="hints">
+            Feil adresse? <a href="{% url user.views.update_account %}">Endre den her</a> FØR du bestiller!
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i> Send bestilling</button>
+        </div>
+      </div>
+
+    </form>
+
+    <p>
+      Billetten blir utsendt fortløpende pr post (mandag - fredag), regn derfor med <strong>4-5 dagers behandlingstid/postgang</strong> før du mottar billetten.
+    </p>
+
+    <h3>Reisebetingelser:</h3>
+
+    <ul>
+      <li>Gjelder kun nye DNT-medlemmer i {{ now|date:"Y" }}.</li>
+      <li>Billetten må benyttes innen 31. desember {{ now|date:"Y" }}.</li>
+      <li>Billetten leveres sjåføren ved påstigning. Gyldig DNTs medlemskort for inngått medlemsskap i {{ now|date:"Y" }} skal kunne fremvises på forespørsel.</li>
+      <li>
+        Billetten er personlig og gjelder enveisreise på en reisestrekning (ingen overgang) på NOR-WAY Bussekspress' rutenett.<br>
+        <strong>Eksempel Valdresekspressen:</strong> På reisestrekningen Oslo - Gjendesheim (kun sommer) gjelder billetten strekningen Oslo - Fagernes (hvor det er bussbytte). Billetten gjelder på enkelte avganger som kjøres direkte Oslo - Beitostølen.
+      </li>
+    </ul>
+
+    <h3>Ruteinformasjon</h3>
+    <p>
+      Se oversikt over alle ruter og strekninger på <a href="http://www.nor-way.no/">www.nor-way.no</a> eller ta kontakt med NOR-WAY Bussekspress' Kundesenter på telefon 815 44 444 eller e-post <a href="mailto:ruteinformasjon@nor-way.no">ruteinformasjon@nor-way.no</a><br>
+    </p>
+
+    <p>
+      Åpningstider: <br>
+      Mandag - fredag: kl. 0800 - 1800<br>
+      Lørdag: kl. 0800 - 1500 <br>
+      Søndag: kl. 0800 - 1800
+    </p>
+
+    <p>
+      <img src="{{ STATIC_URL }}img/nor-way_footer.gif">
+    </p>
+
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='norway_bus_tickets' %}
+  </div>
+</div>
+
+{% endblock %}
