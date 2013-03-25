@@ -302,13 +302,10 @@ def norway_bus_tickets(request):
     except NorwayBusTicketOld.DoesNotExist:
         old_ticket = None
 
-    offer_expired = request.user.get_profile().get_actor().start_date.year < now.year
-
     context = {
         'now': now,
         'new_ticket': new_ticket,
-        'old_ticket': old_ticket,
-        'offer_expired': offer_expired}
+        'old_ticket': old_ticket}
     return render(request, 'common/user/norway_bus_tickets.html', context)
 
 @login_required

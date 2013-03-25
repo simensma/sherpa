@@ -109,16 +109,18 @@
       </div>
     </div>
 
-    <div class="span4">
-      <div class="element">
-        <p><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></p>
-        <p>
-          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
-        </p>
-      </div>
-    </div>
-
     {# TODO: Conditional columns need to be 'iterated' somehow #}
+
+    {% if not user.get_profile.norway_bus_tickets_offer_has_expired %}
+      <div class="span4">
+        <div class="element">
+          <p><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></p>
+          <p>
+            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+          </p>
+        </div>
+      </div>
+    {% endif %}
 
     {% if perms.user.sherpa %}
       <div class="span4">

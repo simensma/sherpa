@@ -121,11 +121,14 @@ class Profile(models.Model):
             # Old, imported order. Still only one order per member
             return False
 
-        if self.get_actor().start_date.year < datetime.now().year:
+        if self.norway_bus_tickets_offer_has_expired():
             # The offer applies only the same year as membership enrollment
             return False
 
         return True
+
+    def norway_bus_tickets_offer_has_expired(self):
+        return self.get_actor().start_date.year < datetime.now().year
 
     class Meta:
         permissions = [

@@ -6,7 +6,9 @@
     <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url user.views.account_password %}">Endre passord</a></li>
     <li{% if active == 'publications' %} class="active"{% endif %}><a href="{% url user.views.publications %}">Publikasjoner</a></li>
     <li{% if active == 'reservations' %} class="active"{% endif %}><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></li>
-    <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></li>
+    {% if not user.get_profile.norway_bus_tickets_offer_has_expired %}
+      <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></li>
+    {% endif %}
     {% if not user.get_profile.get_actor %}
       <li{% if active == 'register_membership' %} class="active"{% endif %}><a href="{% url user.views.register_membership %}">Registrer medlemskap</a></li>
     {% endif %}
