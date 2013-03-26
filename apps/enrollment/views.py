@@ -17,7 +17,11 @@ from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from enrollment.models import State
 
 from datetime import datetime, timedelta
-import requests, re, json, logging, sys
+import requests
+import re
+import json
+import logging
+import sys
 from lxml import etree
 from urllib import quote_plus
 from smtplib import SMTPException
@@ -594,7 +598,7 @@ def process_invoice(request):
         request.session['enrollment']['location'], 'invoice',
         request.session['enrollment']['price_sum'])
 
-    request.session['enrollment']['result'] = 'invoice'
+    request.session['enrollment']['result'] = 'success_invoice'
     return HttpResponseRedirect(reverse('enrollment.views.result'))
 
 def process_card(request):
@@ -652,7 +656,7 @@ def process_card(request):
                     request.session['enrollment']['association'],
                     request.session['enrollment']['location'], 'card',
                     request.session['enrollment']['price_sum'])
-                request.session['enrollment']['result'] = 'success'
+                request.session['enrollment']['result'] = 'success_card'
             else:
                 request.session['enrollment']['result'] = 'fail'
         except requests.ConnectionError as e:
@@ -691,7 +695,7 @@ def result(request):
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
-    skip_header = request.session['enrollment']['result'] == 'invoice' or request.session['enrollment']['result'] == 'success'
+    skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {'users': request.session['enrollment']['users'], 'skip_header': skip_header,
         'association': request.session['enrollment']['association'], 'proof_validity_end': proof_validity_end,

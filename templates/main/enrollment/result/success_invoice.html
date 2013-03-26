@@ -1,9 +1,9 @@
-{% extends 'main/enrollment/result/index.html' %}
+{% extends 'main/enrollment/index.html' %}
 
-{% block result %}
+{% block enrollment %}
 
 <div class="row">
-  <div id="result" class="span12">
+  <div class="span12">
     <h2>Velkommen som medlem{% if users|length == 1 %}, {{ users.0.name }}{% else %}mer{% endif %}!</h2>
   </div>
 </div>
