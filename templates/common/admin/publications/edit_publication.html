@@ -122,16 +122,16 @@
               </p>
               <p class="content">
                 {% if release.pdf_hash != '' and release.online_view != '' %}
-                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a><br>
-                  <a href="{{ release.online_view }}">Lenke til online visning</a>
+                  <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a><br>
+                  <a href="{{ release.online_view }}">Se les på nett-lenke</a>
                 {% elif release.pdf_hash != '' %}
-                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a>
+                  <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a>
                 {% elif release.online_view != '' %}
-                  <a href="{{ release.online_view }}">Lenke til online visning</a>
+                  <a href="{{ release.online_view }}">Se les på nett-lenke</a>
                 {% else %}
                   <div class="alert alert-error">
                     <strong>Utgivelsen mangler innhold!</strong><br>
-                    Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til online visning.
+                    Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til hvor den kan leses på nett.
                   </div>
                 {% endif %}
               </p>
