@@ -18,7 +18,6 @@ YEARBOOK_SERVICE_CODES = [152, 153, 154]
 
 # Merge these mappings with the same functionality in enrollment.views :/
 # And also Actor.membership_type() down below
-MEMBERSHIP_CODE_HOUSEHOLD = u'107'
 MEMBERSHIP_CODE_LIFELONG = u'109'
 
 class Enrollment(models.Model):
@@ -210,13 +209,15 @@ class Actor(models.Model):
 
     def get_parent(self):
         parent = self.parent
+        if not self.is_household_member():
+            return None
         if parent == 0 or parent == self.memberid:
             return None
         else:
-            actor = cache.get('actor.%s' % parent)
+            actor = cache.get('actor.%s' % self.parent)
             if actor is None:
-                actor = Actor.objects.get(memberid=parent)
-                cache.set('actor.%s' % parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+                actor = Actor.objects.get(memberid=self.parent)
+                cache.set('actor.%s' % self.parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
             return actor
 
     def get_children(self):
@@ -225,6 +226,15 @@ class Actor(models.Model):
             children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
+
+    def is_household_member(self):
+        # Note that the definition of a household member is vague; membership type codes
+        # (defined by Focus services) include "household member" but it is only used when
+        # the member is an adult - if it is a child, a "child member" service is used instead,
+        # even though they do have a parent (and hence is a household member).
+        # This method defines *having a separate parent* as being a household member and should
+        # be considered canonical.
+        return self.parent != 0 and self.parent != self.memberid
 
     def has_payed(self):
         has_payed = cache.get('actor.has_payed.%s' % self.memberid)

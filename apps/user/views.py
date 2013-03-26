@@ -25,7 +25,7 @@ from admin.models import Publication
 
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
-from focus.models import MEMBERSHIP_CODE_HOUSEHOLD, MEMBERSHIP_CODE_LIFELONG
+from focus.models import MEMBERSHIP_CODE_LIFELONG
 
 logger = logging.getLogger('sherpa')
 
@@ -47,7 +47,6 @@ def account(request):
     context = {
         'year': now.year,
         'next_year': now.month >= settings.MEMBERSHIP_YEAR_START,
-        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
         'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG
     }
     return render(request, 'common/user/account/account.html', context)
@@ -231,10 +230,7 @@ def register_membership(request):
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
 def partneroffers(request):
-    context = {
-        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
-        'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG}
-    return render(request, 'common/user/account/partneroffers.html', context)
+    return render(request, 'common/user/account/partneroffers.html')
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
@@ -270,7 +266,6 @@ def publications(request):
     context = {
         'publications_user': list(publications_user_central) + list(publications_user_accessible),
         'publications_other': publications_other,
-        'membership_code_household': MEMBERSHIP_CODE_HOUSEHOLD,
         'membership_code_lifelong': MEMBERSHIP_CODE_LIFELONG}
     return render(request, 'common/user/publications.html', context)
 
@@ -366,14 +361,14 @@ def norway_bus_tickets_order(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
     actor = request.user.get_profile().get_actor()
@@ -383,7 +378,7 @@ def reserve_fjellogvidde(request):
 
 @login_required
 @user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_HOUSEHOLD, redirect_to='user.views.home')
+@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: u.get_profile().get_actor().membership_type()['code'] != MEMBERSHIP_CODE_LIFELONG, redirect_to='user.views.home')
 def reserve_yearbook(request):
     actor = request.user.get_profile().get_actor()

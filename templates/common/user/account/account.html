@@ -184,7 +184,7 @@
         <tr>
           <th>Fjell og Vidde</th>
           <td>
-            {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
+            {% if user.get_profile.get_actor.is_household_member %}
 
               {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
                 Din husstand mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
@@ -214,7 +214,7 @@
         <tr>
           <th>Årboken</th>
           <td>
-            {% if user.get_profile.get_actor.membership_type.code == membership_code_household %}
+            {% if user.get_profile.get_actor.is_household_member %}
 
               {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
                 Din husstand mottar ikke årboken i posten, men kan lese den på nett.
