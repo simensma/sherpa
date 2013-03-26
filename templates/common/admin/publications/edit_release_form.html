@@ -70,13 +70,13 @@
     <label class="control-label" for="pdf">Last opp PDF:</label>
     <div class="controls">
       <input type="file" class="input-xlarge" name="pdf" accept="application/pdf">
-      <p class="info">
+      <div class="hints">
         PDF-magasin som medlemmer kan laste ned.
         {% if release and release.pdf_hash != '' %}
         <br>
         <a href="{{ release.get_pdf_url }}">Denne</a> er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
         {% endif %}
-      </p>
+      </div>
     </div>
   </div>
 
@@ -84,10 +84,10 @@
     <label class="control-label" for="online_view">Lenke til online visning:</label>
     <div class="controls">
       <input type="text" class="input-xxlarge" name="online_view" value="{% firstof release.online_view 'http://' %}">
-      <p class="info">
+      <div class="hints">
         Dette kan være en online visningstjeneste som f.eks. <a href="http://www.calameo.com/">Calameo</a>.<br>
         Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.
-      </p>
+      </div>
     </div>
   </div>
 
