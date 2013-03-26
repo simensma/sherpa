@@ -105,6 +105,7 @@ class Release(models.Model):
     cover_photo = models.CharField(max_length=2048)
     description = models.TextField()
     pdf_hash = models.CharField(max_length=40)
+    pdf_file_size = models.IntegerField(null=True, default=None)
     online_view = models.CharField(max_length=2048)
     pub_date = models.DateTimeField()
     tags = models.ManyToManyField('core.Tag', related_name='releases')

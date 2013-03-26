@@ -118,6 +118,7 @@ def edit_release(request, publication, release):
                 acl='public-read',
                 mimetype=file.content_type)
             release.pdf_hash = hash
+            release.pdf_file_size = file.size
 
         release.save()
 

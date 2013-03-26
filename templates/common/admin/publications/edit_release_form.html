@@ -74,7 +74,7 @@
         PDF-magasin som medlemmer kan laste ned.
         {% if release and release.pdf_hash != '' %}
         <br>
-        <a href="{{ release.get_pdf_url }}">Denne</a> er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
+        <a href="{{ release.get_pdf_url }}">Denne</a> ({{ release.pdf_file_size|filesizeformat }}) er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
         {% endif %}
       </div>
     </div>

@@ -60,7 +60,8 @@
                   {% if release.pdf_hash != '' %}
                     <a href="{{ release.get_pdf_url }}" class="cta download">
                       <div class="action-label">
-                        Last ned .PDF
+                        Last ned .PDF<br>
+                        ({{ release.pdf_file_size|filesizeformat }})
                       </div>
                     </a>
                   {% endif %}

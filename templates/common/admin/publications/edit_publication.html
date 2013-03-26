@@ -122,10 +122,10 @@
               </p>
               <p class="download">
                 {% if release.pdf_hash != '' and release.online_view != '' %}
-                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF</a><br>
+                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a><br>
                   <a href="{{ release.online_view }}">Lenke til online visning</a>
                 {% elif release.pdf_hash != '' %}
-                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF</a>
+                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a>
                 {% elif release.online_view != '' %}
                   <a href="{{ release.online_view }}">Lenke til online visning</a>
                 {% else %}
