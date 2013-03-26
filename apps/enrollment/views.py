@@ -359,20 +359,29 @@ def verification(request):
     keyprice = keycount * KEY_PRICE
     multiple_main = youth_or_older_count > 1
     updateIndices(request.session)
-    context = {'users': request.session['enrollment']['users'],
+    context = {
+        'users': request.session['enrollment']['users'],
         'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
         'location': request.session['enrollment']['location'],
         'association': request.session['enrollment']['association'],
-        'existing': request.session['enrollment']['existing'], 'existing_name': existing_name,
-        'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main, 'year': year, 'next_year': next_year,
+        'existing': request.session['enrollment']['existing'],
+        'existing_name': existing_name,
+        'keycount': keycount,
+        'keyprice': keyprice,
+        'multiple_main': multiple_main,
+        'main': main,
+        'year': year,
+        'next_year': next_year,
         'price': request.session['enrollment']['price'],
-        'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_youth': AGE_YOUTH,
+        'age_senior': AGE_SENIOR,
+        'age_main': AGE_MAIN,
+        'age_youth': AGE_YOUTH,
         'age_school': AGE_SCHOOL,
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'now': now, 'new_membership_year': new_membership_year}
+        'now': now,
+        'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
