@@ -704,8 +704,20 @@ def sms(request):
     if not request.is_ajax():
         return HttpResponseRedirect(reverse('enrollment.views.result'))
 
+    if request.method == 'GET':
+        # This shouldn't happen, but already did happen twice (according to error logs).
+        # We're setting type: POST with ajaxSetup in common.js, so I really have no idea why
+        # we sometimes receive GET requests, but since it is reoccuring AND I can't recreate
+        # it locally, just account for it so the user actually gets their SMS.
+        logger.warning(u"(Håndtert) Fikk GET-request på innmeldings-SMS, forventet POST",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        index = int(request.GET['index'])
+    else:
+        index = int(request.POST['index'])
+
     # Verify that this is a valid SMS request
-    index = int(request.POST['index'])
     if request.session['enrollment']['state'] != 'complete':
         return HttpResponse(json.dumps({'error': 'enrollment_uncompleted'}))
     if request.session['enrollment']['location']['country'] != 'NO':
