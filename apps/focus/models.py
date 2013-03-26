@@ -9,16 +9,13 @@ from datetime import datetime
 
 from association.models import Association
 from core.models import County, FocusCountry
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename
 
 # Actor endcodes - not really properly documented yet, to resolve codes/reasons consult Focus.
 ACTOR_ENDCODE_DUBLETT = 21
 
 FJELLOGVIDDE_SERVICE_CODE = 151
 YEARBOOK_SERVICE_CODES = [152, 153, 154]
-
-# Merge these mappings with the same functionality in enrollment.views :/
-# And also Actor.membership_type() down below
-MEMBERSHIP_CODE_LIFELONG = u'109'
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -159,18 +156,13 @@ class Actor(models.Model):
 
     def membership_type(self):
         # Supposedly, there should only be one service in this range
-        code = self.get_services().get(code__gt=100, code__lt=110).code.strip()
-        # This list should be moved to some kind of "Focus utility" module and
-        # merged with the functionality currently found in enrollment/views
-        if   code == u'101': return {'code': code, 'name': u'Hovedmedlem'}
-        elif code == u'102': return {'code': code, 'name': u'Ungdomsmedlem'}
-        elif code == u'103': return {'code': code, 'name': u'Honnørmedlem'}
-        elif code == u'104': return {'code': code, 'name': u'Livsvarig medlem'}
-        elif code == u'105': return {'code': code, 'name': u'Barnemedlem'}
-        elif code == u'106': return {'code': code, 'name': u'Skoleungdomsmedlem'}
-        elif code == u'107': return {'code': code, 'name': u'Husstandsmedlem'}
-        elif code == u'108': return {'code': code, 'name': u'Husstandsmedlem'}
-        elif code == u'109': return {'code': code, 'name': u'Livsvarig husstandsmedlem'}
+        code = int(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+        return get_membership_type_by_code(code)
+
+    def has_membership_type(self, codename):
+        # Note that you shouldn't use this to check for the 'household' membership type,
+        # use is_household_member() -- se the docs on that method for more info.
+        return self.membership_type() == get_membership_type_by_codename(codename)
 
     def get_services(self):
         services = cache.get('actor.services.%s' % self.memberid)

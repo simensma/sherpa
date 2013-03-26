@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/user/account.js"></script>
 {% endblock %}
 
+{% load has_membership_type %}
+
 {% block body %}
 
 <div class="row">
@@ -202,7 +204,7 @@
                 Du mottar Fjell og Vidde i posten.
               {% endif %}
 
-              {% if user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
+              {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
                 <em>Du kan ikke endre dette her. Kontakt medlemsservice.</em>
               {% else %}
                 <a href="{% url user.views.reserve_publications %}">Endre</a>

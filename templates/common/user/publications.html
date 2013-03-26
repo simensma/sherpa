@@ -11,7 +11,7 @@
 
     {% if user.get_profile.get_actor.is_household_member %}
       {# Don't say anything, just let the account page inform about this. #}
-    {% elif user.get_profile.get_actor.membership_type.code == membership_code_lifelong %}
+    {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
       {# Don't say anything, just let the account page inform about this. #}
     {% else %}
       <p>

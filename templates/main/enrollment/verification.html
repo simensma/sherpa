@@ -18,6 +18,14 @@
     var age_main = {{ age_main }};
     var age_youth = {{ age_youth }};
     var age_school = {{ age_school }};
+
+    var membership_type_names = {
+      senior: "{{ membership_type_names.senior|escapejs }}",
+      main: "{{ membership_type_names.main|escapejs }}",
+      youth: "{{ membership_type_names.youth|escapejs }}",
+      school: "{{ membership_type_names.school|escapejs }}",
+      household: "{{ membership_type_names.household|escapejs }}"
+    };
   </script>
 {% endblock %}
 

@@ -14,6 +14,7 @@ from core import validator
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
+from focus.util import get_membership_type_by_codename
 from enrollment.models import State
 
 from datetime import datetime, timedelta
@@ -377,6 +378,13 @@ def verification(request):
         'age_main': AGE_MAIN,
         'age_youth': AGE_YOUTH,
         'age_school': AGE_SCHOOL,
+        'membership_type_names': {
+            'senior': get_membership_type_by_codename('senior')['name'],
+            'main': get_membership_type_by_codename('main')['name'],
+            'youth': get_membership_type_by_codename('youth')['name'],
+            'school': get_membership_type_by_codename('school')['name'],
+            'household': get_membership_type_by_codename('household')['name'],
+        },
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
@@ -947,12 +955,18 @@ def price_of_age(age, price):
     else:                    return price.child
 
 def type_of(age, household):
-    if household and age >= AGE_YOUTH:   return 'Husstandsmedlem'
-    elif age >= AGE_SENIOR:              return 'Honnørmedlem'
-    elif age >= AGE_MAIN:                return 'Hovedmedlem'
-    elif age >= AGE_YOUTH:               return 'Ungdomsmedlem'
-    elif age >= AGE_SCHOOL:              return 'Skoleungdomsmedlem'
-    else:                                return 'Barnemedlem'
+    if household and age >= AGE_YOUTH:
+        return get_membership_type_by_codename('household')['name']
+    elif age >= AGE_SENIOR:
+        return get_membership_type_by_codename('senior')['name']
+    elif age >= AGE_MAIN:
+        return get_membership_type_by_codename('main')['name']
+    elif age >= AGE_YOUTH:
+        return get_membership_type_by_codename('youth')['name']
+    elif age >= AGE_SCHOOL:
+        return get_membership_type_by_codename('school')['name']
+    else:
+        return get_membership_type_by_codename('child')['name']
 
 def polite_title(str):
     # If the string is all lowercase or uppercase, apply titling for it
@@ -1022,15 +1036,17 @@ def focus_payment_method_code(method):
 
 def focus_type_of(age, household):
     if household and age >= AGE_YOUTH:
-                             return 107
-    elif age >= AGE_SENIOR:  return 103
-    elif age >= AGE_MAIN:    return 101
-    elif age >= AGE_YOUTH:   return 102
-    elif age >= AGE_SCHOOL:  return 106
-    else:                    return 105
-    # 104 = Lifelong member
-    # 108 = Old household entries, being phased out (use 107)
-    # 109 = Lifelong household member
+        return get_membership_type_by_codename('household')['code']
+    elif age >= AGE_SENIOR:
+        return get_membership_type_by_codename('senior')['code']
+    elif age >= AGE_MAIN:
+        return get_membership_type_by_codename('main')['code']
+    elif age >= AGE_YOUTH:
+        return get_membership_type_by_codename('youth')['code']
+    elif age >= AGE_SCHOOL:
+        return get_membership_type_by_codename('school')['code']
+    else:
+        return get_membership_type_by_codename('child')['code']
 
 def focus_receive_yearbook(age, linked_to):
     if linked_to != '':
