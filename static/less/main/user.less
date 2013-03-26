@@ -71,6 +71,51 @@ table.norway-busticket-order {
   }
 }
 
+div.publications {
+  div.content-wrapper {
+    div.hover-content {
+      position: absolute;
+      padding: 15px;
+      opacity: 0.95;
+      filter: alpha(opacity=95);
+      font-family: "DTL Nobel" !important;
+      font-size: 20px;
+      text-align: center;
+      color: rgb(0, 0, 0);
+      background-color: rgb(255, 255, 255);
+
+      a.cta {
+        display: inline-block;
+        width: 100%;
+        margin-top: 40px;
+        text-align: center;
+        background-position: top center;
+        background-repeat: no-repeat;
+
+        div.action-label {
+          padding-top: 60px;
+        }
+      }
+
+      a.cta.download {
+        background-image: url('/static/img/icons/nounproject/464-download.png');
+      }
+
+      a:hover.cta.download {
+        background-image: url('/static/img/icons/nounproject/464-download-red.png');
+      }
+
+      a.cta.view-online {
+        background-image: url('/static/img/icons/nounproject/6918-view-online.png');
+      }
+
+      a:hover.cta.view-online {
+        background-image: url('/static/img/icons/nounproject/6918-view-online-red.png');
+      }
+    }
+  }
+}
+
 /* Login page */
 
 div.loginpage-wrapper {
