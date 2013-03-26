@@ -554,8 +554,11 @@ def payment(request):
         messages.error(request, 'nets_register_connection_error')
         return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
 
+    # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
+    response = r.text.encode('utf-8')
+
     # Sweet, almost done, now just send the user to complete the transaction
-    request.session['enrollment']['transaction_id'] = etree.fromstring(r.text).find("TransactionId").text
+    request.session['enrollment']['transaction_id'] = etree.fromstring(response).find("TransactionId").text
 
     return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
         settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
@@ -611,7 +614,11 @@ def process_card(request):
                 'operation': 'SALE',
                 'transactionId': request.session['enrollment']['transaction_id']
             })
-            dom = etree.fromstring(r.text)
+
+            # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
+            response = r.text.encode('utf-8')
+
+            dom = etree.fromstring(response)
             response_code = dom.find(".//ResponseCode")
             if response_code is None:
                 # Crap, we didn't get the expected response from Nets.
@@ -620,7 +627,7 @@ def process_card(request):
                     exc_info=sys.exc_info(),
                     extra={
                         'request': request,
-                        'nets_response': r.text
+                        'nets_response': response
                     }
                 )
                 request.session['enrollment']['state'] = 'payment'
