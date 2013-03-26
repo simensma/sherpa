@@ -83,7 +83,7 @@
   <div class="control-group online_view">
     <label class="control-label" for="online_view">Lenke til online visning:</label>
     <div class="controls">
-      <input type="text" class="input-xxlarge" name="online_view" value="{{ release.online_view }}">
+      <input type="text" class="input-xxlarge" name="online_view" value="{% firstof release.online_view 'http://' %}">
       <p class="info">
         Dette kan være en online visningstjeneste som f.eks. <a href="http://www.calameo.com/">Calameo</a>.<br>
         Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.

@@ -76,7 +76,7 @@ def edit_release(request, publication, release):
             release.title = '(Uten navn)'
         release.cover_photo = request.POST['cover_photo']
         release.description = request.POST['description']
-        release.online_view = request.POST['online_view']
+        release.online_view = request.POST['online_view'] if request.POST['online_view'] != 'http://' else ''
         release.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y")
 
         if 'pdf' in request.FILES:
