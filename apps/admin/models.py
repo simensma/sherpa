@@ -84,6 +84,9 @@ class Publication(models.Model):
     def releases_ordered(self):
         return self.releases.all().order_by('-pub_date')
 
+    def released_releases_ordered(self):
+        return [r for r in self.releases_ordered() if r.is_released()]
+
     def get_latest_release(self):
         try:
             return self.releases_ordered()[0]

@@ -122,16 +122,17 @@
               </p>
               <p class="download">
                 {% if release.pdf_hash != '' and release.online_view != '' %}
-                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a><br>
-                  <a href="{{ release.online_view }}">Les online</a>
+                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF</a><br>
+                  <a href="{{ release.online_view }}">Lenke til online visning</a>
                 {% elif release.pdf_hash != '' %}
-                  <a href="{{ release.get_pdf_url }}">Last ned PDF</a>
+                  <a href="{{ release.get_pdf_url }}">Lenke til opplastet PDF</a>
                 {% elif release.online_view != '' %}
-                  <a href="{{ release.online_view }}">Les online</a>
+                  <a href="{{ release.online_view }}">Lenke til online visning</a>
                 {% else %}
-                  <span class="no-content-warning">
-                    Innholdet for denne publikasjonen er ikke lagt ut!
-                  </span>
+                  <div class="alert alert-error">
+                    <strong>Utgivelsen mangler innhold!</strong><br>
+                    Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til online visning.
+                  </div>
                 {% endif %}
               </p>
               <p class="description">

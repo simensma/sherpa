@@ -39,7 +39,7 @@
 
     <div class="publications">
       <div class="row-fluid">
-        {% for release in publication.releases_ordered %}
+        {% for release in publication.released_releases_ordered %}
           <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
             <div class="release">
               <h3 class="title">
