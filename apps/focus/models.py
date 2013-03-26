@@ -422,6 +422,7 @@ class Price(models.Model):
     school = models.IntegerField(null=True, db_column=u'C106')
     household = models.IntegerField(null=True, db_column=u'C107')
     unknown = models.IntegerField(null=True, db_column=u'C108')
+
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
 
