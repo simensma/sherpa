@@ -17,7 +17,11 @@ from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from enrollment.models import State
 
 from datetime import datetime, timedelta
-import requests, re, json, logging, sys
+import requests
+import re
+import json
+import logging
+import sys
 from lxml import etree
 from urllib import quote_plus
 from smtplib import SMTPException
