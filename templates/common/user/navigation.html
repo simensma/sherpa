@@ -5,7 +5,7 @@
     <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url user.views.account %}">Dine opplysninger</a></li>
     <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url user.views.account_password %}">Endre passord</a></li>
     <li{% if active == 'publications' %} class="active"{% endif %}><a href="{% url user.views.publications %}">Publikasjoner</a></li>
-    <li{% if active == 'reservations' %} class="active"{% endif %}><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></li>
+    <li{% if active == 'partneroffers' %} class="active"{% endif %}><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></li>
     {% if user.get_profile.show_norway_bus_tickets_menu_item %}
       <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></li>
     {% endif %}
