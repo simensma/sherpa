@@ -409,13 +409,21 @@ def payment(request):
         # All right, enter payment state
         request.session['enrollment']['state'] = 'payment'
     elif request.session['enrollment']['state'] == 'payment':
-        # Already in payment state, skip payment and redirect forwards to processing
+        # Already in payment state, redirect them forwards to processing
         if request.session['enrollment']['payment_method'] == 'invoice':
             return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
         elif request.session['enrollment']['payment_method'] == 'card':
-            return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
-                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
-            ))
+            # Let's check for a transaction id first
+            if 'transaction_id' in request.session['enrollment']:
+                # Yeah, it's there. Skip payment and redirect forwards to processing
+                return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+                    settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
+                ))
+            else:
+                # No transaction id - maybe a problem occured during payment.
+                # Assume payment failed and just redo it - if something failed, we'll know
+                # through logs and hopefully discover any double-payments
+                pass
     elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return HttpResponseRedirect(reverse('enrollment.views.result'))
