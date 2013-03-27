@@ -41,7 +41,9 @@ $(document).ready(function() {
     });
 
     /* Enable any popovers */
-    $("*[data-popover]").popover();
+    $("*[data-popover]").popover({
+        container: 'body'
+    });
 
     /* Enable any tooltips */
     $("*[data-tooltip]").hover(function(e) {
