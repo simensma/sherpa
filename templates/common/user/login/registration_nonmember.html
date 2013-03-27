@@ -71,38 +71,36 @@
         </div>
         <div class="span5">
 
-          <div class="form-hints">
-            <p>
-              Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn.
-            </p>
+          <p class="form-hints">
+            Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn.
+          </p>
 
-            <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
-            <div class="hide password-hint unequal error">Passordene er ikke like, har du skrevet feil?</div>
+          <div class="alert alert-error password-hint short hide">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
+          <div class="alert alert-error password-hint unequal hide">Passordene er ikke like, har du skrevet feil?</div>
 
-            {% for message in messages %}
-              {% if message.message == 'invalid_name' %}
-                <div class="error">
-                  <strong>Du har ikke oppgitt fullt navn!</strong><br>
-                  Vennligst oppgi navnet ditt, både fornavn og etternavn.
-                </div>
-              {% elif message.message == 'invalid_email' %}
-                <div class="error">
-                  <strong>E-postadressen din er ikke gyldig!</strong><br>
-                  Vennligst oppgi en gyldig e-postadresse.
-                </div>
-              {% elif message.message == 'email_exists' %}
-                <div class="error">
-                  <strong>E-postadressen din er allerede i bruk!</strong><br>
-                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
-                </div>
-              {% elif message.message == 'too_short_password' %}
-                <div class="error">
-                  <strong>For kort passord</strong><br>
-                  Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
+          {% for message in messages %}
+            {% if message.message == 'invalid_name' %}
+              <div class="alert alert-error">
+                <strong>Du har ikke oppgitt fullt navn!</strong><br>
+                Vennligst oppgi navnet ditt, både fornavn og etternavn.
+              </div>
+            {% elif message.message == 'invalid_email' %}
+              <div class="alert alert-error">
+                <strong>E-postadressen din er ikke gyldig!</strong><br>
+                Vennligst oppgi en gyldig e-postadresse.
+              </div>
+            {% elif message.message == 'email_exists' %}
+              <div class="alert alert-error">
+                <strong>E-postadressen din er allerede i bruk!</strong><br>
+                Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
+              </div>
+            {% elif message.message == 'too_short_password' %}
+              <div class="alert alert-error">
+                <strong>For kort passord</strong><br>
+                Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
+              </div>
+            {% endif %}
+          {% endfor %}
 
         </div>
       </div>

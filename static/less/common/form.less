@@ -17,35 +17,36 @@ form.form-default {
   }
 }
 
-.form-horizontal .control-group .controls p {
-  /* This section is not really supposed to contain paragraphs,
-     but when they do, this aligns them with the corresponding label. */
-  padding-top: 5px;
-}
+// The form-hints classes can be used directly where appropriate, but their main
+// usage is through the "form.form-default div.control-group div.controls div.hints"
+// selector which includes these as mixins.
 
 .form-hints {
   color: rgb(120, 120, 120);
   font-size: 14px !important;
 }
 
-form.form-default div.control-group div.controls div.hints:first-of-type {
-  margin-top: 5px;
+.form-hints-error {
+  color: @profile-red;
 }
 
-form.form-default div.control-group div.controls div.hints {
-  .form-hints;
-}
+form.form-default div.control-group div.controls {
+  div.hints:first-of-type {
+    margin-top: 5px;
+  }
 
-form.form-default div.control-group div.controls div.control-as-text {
-  /* Preliminary wrapper for when we want to use text directly in the controls
-     Note that the ".form-horizontal .control-group .controls p" selector
-     above achieves the same label-offset, such paragraphs should be replaced with
-     this DOM element. */
-  font-family: "DTL Nobel" !important;
-  margin-top: 5px;
-  font-weight: bold;
-}
+  div.hints {
+    .form-hints;
+  }
 
-form.form-default div.control-group div.controls div.hints.error {
-  color: @profile-red; // This should actually be a "form-hint-error" variable which is set to profile-red.
+  div.hints.error {
+    .form-hints-error;
+  }
+
+  div.control-as-text {
+    // Wrapper for displaying text directly in the controls
+    font-family: "DTL Nobel" !important;
+    margin-top: 5px;
+    font-weight: bold;
+  }
 }

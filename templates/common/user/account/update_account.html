@@ -15,39 +15,37 @@
     <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-horizontal form-default account-info">
       {% csrf_token %}
 
-      <div class="form-hints">
-        {% for message in messages %}
-          {% if message.message == 'no_name_provided' %}
-            <div class="hint error">
-              <strong>Du må fylle inn fullt navn.</strong>
-            </div>
-          {% elif message.message == 'invalid_email_address' %}
-            <div class="hint error">
-              <strong>Du må oppgi en gyldig e-post adresse.</strong>
-            </div>
-          {% elif message.message == 'invalid_sherpa_email_address' %}
-            <div class="hint error">
-              <strong>Du har angitt en ugyldig Sherpa-epostadresse. En slik adresse er valgfri, hvis du ikke vil ha den tar du bare bort krysset foran tekstfeltet.</strong>
-            </div>
-          {% elif message.message == 'invalid_phone_home' %}
-            <div class="hint error">
-              <strong>Du har ikke fylt inn et gyldig hjemtelefonnummer. Dette feltet er ikke påkrevd, du kan la det stå tomt om du ønsker.</strong>
-            </div>
-          {% elif message.message == 'invalid_phone_mobile' %}
-            <div class="hint error">
-              <strong>Du har ikke fylt inn et gyldig mobiltelefonnummer.</strong>
-            </div>
-          {% elif message.message == 'invalid_address' %}
-            <div class="hint error">
-              <strong>Du har ikke fylt inn en gyldig adresse.</strong>
-            </div>
-          {% elif message.message == 'invalid_zipcode' %}
-            <div class="hint error">
-              <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+      {% for message in messages %}
+        {% if message.message == 'no_name_provided' %}
+          <div class="alert alert-error">
+            <strong>Du må fylle inn fullt navn.</strong>
+          </div>
+        {% elif message.message == 'invalid_email_address' %}
+          <div class="alert alert-error">
+            <strong>Du må oppgi en gyldig e-post adresse.</strong>
+          </div>
+        {% elif message.message == 'invalid_sherpa_email_address' %}
+          <div class="alert alert-error">
+            <strong>Du har angitt en ugyldig Sherpa-epostadresse. En slik adresse er valgfri, hvis du ikke vil ha den tar du bare bort krysset foran tekstfeltet.</strong>
+          </div>
+        {% elif message.message == 'invalid_phone_home' %}
+          <div class="alert alert-error">
+            <strong>Du har ikke fylt inn et gyldig hjemtelefonnummer. Dette feltet er ikke påkrevd, du kan la det stå tomt om du ønsker.</strong>
+          </div>
+        {% elif message.message == 'invalid_phone_mobile' %}
+          <div class="alert alert-error">
+            <strong>Du har ikke fylt inn et gyldig mobiltelefonnummer.</strong>
+          </div>
+        {% elif message.message == 'invalid_address' %}
+          <div class="alert alert-error">
+            <strong>Du har ikke fylt inn en gyldig adresse.</strong>
+          </div>
+        {% elif message.message == 'invalid_zipcode' %}
+          <div class="alert alert-error">
+            <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
 
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>

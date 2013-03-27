@@ -171,12 +171,10 @@
 
       <div class="control-group">
         <div class="controls">
-          <p>
-            <button type="submit" class="btn btn-success">Lagre</button>
-            {% if annonse %}
-              <a class="btn btn-danger delete" href="{% url 'fjelltreffen.views.delete' annonse.id %}">Slett</a>
-            {% endif %}
-          </p>
+          <button type="submit" class="btn btn-success">Lagre</button>
+          {% if annonse %}
+            <a class="btn btn-danger delete" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
+          {% endif %}
         </div>
       </div>
 
