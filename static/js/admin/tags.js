@@ -88,7 +88,9 @@ var Tagger = function(el, newTag, existingTag) {
                 url: '/tags/filter/',
                 data: { name: query }
             }).done(function(result) {
-                process(JSON.parse(result));
+                tags = JSON.parse(result);
+                tags.unshift(query);
+                process(tags);
             });
         }
     });
