@@ -23,7 +23,7 @@ $(document).ready(function() {
     imageDialog.find("div#ratio-radio").append(getRatioRadioButtons());
 
     imageDialog.parent().find("a.ui-dialog-titlebar-close").click(function() {
-        if(firstOpen){
+        if(firstOpen) {
             currentCropperInstance.cancelSelection();
             imageRemovedCallback();
         }
@@ -36,7 +36,7 @@ $(document).ready(function() {
         openImageUpload(inputDataFromSource);
     });
 
-    function inputDataFromSource(url, description, photographer){
+    function inputDataFromSource(url, description, photographer) {
 
         imageDialog.find("div.preview-container").show();
 
@@ -46,7 +46,7 @@ $(document).ready(function() {
         imageDialog.find("img.preview").attr('src', addImageSizeToUrl(url, IMAGE_PPREVIEW_WIDTH));
 
         currentCropperInstance.cancelSelection();
-        imageDialog.imagesLoaded(function(){
+        imageDialog.imagesLoaded(function() {
             openImageCropper(imageDialog.find("img.preview"), imageDialog.find("div.modal-body"), undefined);
             setImageRatio(true);
         });
@@ -65,7 +65,7 @@ $(document).ready(function() {
 
         var dialog = $(this).parents("div.change-image");
         var src = dialog.find("input[name='src']").val();
-        if(src == "") {
+        if(src === "") {
             imageDialog.find("div.empty-src").show();
             return;
         }
@@ -73,19 +73,19 @@ $(document).ready(function() {
 
         var parentWidth = currentImage.parent().width();
 
-        addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
+        addCssCropping(parentWidth, function(cssMap, selection, parentHeight) {
             var image = currentImage;
             var wrapper = currentImage.parent();
 
-            var newurl = imageDialog.find("input[name='src']").val()
+            var newurl = imageDialog.find("input[name='src']").val();
 
-            if(cssMap != undefined){
+            if(cssMap !== undefined) {
                 src = addImageSizeToUrl(newurl, bestSizeForImage(parentWidth * (parseFloat(cssMap["width"].replace("%", ""))/100)));
                 image.css(cssMap);
                 image.attr("data-selection", JSON.stringify(selection));
                 image.attr("data-parentHeight", parentHeight);
                 wrapper.css("height", parentHeight+"px");
-            }else{
+            } else {
                 src = addImageSizeToUrl(newurl, bestSizeForImage(parentWidth));
                 image.removeAttr("style");
                 image.removeAttr("data-selection");
@@ -104,7 +104,7 @@ $(document).ready(function() {
         var anchor = dialog.find("input[name='anchor']");
         if(anchor.length > 0) {
             anchor = anchor.val().trim();
-            if(anchor.length != 0 && !anchor.match(/^https?:\/\//)) {
+            if(anchor.length !== 0 && !anchor.match(/^https?:\/\//)) {
                 anchor = "http://" + anchor;
             }
         } else {
@@ -122,7 +122,7 @@ $(document).ready(function() {
         imageRemovedCallback();
     });
 
-    imageDialog.find("input[name='ratio']").change(function(){
+    imageDialog.find("input[name='ratio']").change(function() {
         setImageRatio(true);
     });
 });
@@ -162,55 +162,55 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
     }
 
     var sel = image.attr("data-selection");
-    if(sel == undefined || sel == ""){
+    if(sel === undefined || sel === "") {
         sel = undefined;
-    }else{
+    } else {
         sel = JSON.parse(sel);
     }
 
     var ratioW = image.attr("data-ratio-width");
     var ratioH = image.attr("data-ratio-height");
-    if(ratioIsValid(ratioW, ratioH)){
+    if(ratioIsValid(ratioW, ratioH)) {
         //select correct ratiio-radio
         var chosenRatio = ratioW + ":" + ratioH;
-        dialog.find("input[name='ratio']").each(function(){
-            if($(this).val() == chosenRatio){
+        dialog.find("input[name='ratio']").each(function() {
+            if($(this).val() == chosenRatio) {
                 $(this).prop("checked", true);
             }
         });
-    }else{
+    } else {
         dialog.find("input[name='ratio'][value='" + DEFAULT_CROP_RATIO +"']").prop("checked", true);
     }
 
-    dialog.imagesLoaded(function(){
+    dialog.imagesLoaded(function() {
         openImageCropper(dialog.find("img.preview"), dialog.find("div.modal-body"), sel);
-        setImageRatio((sel == undefined));
-        if(src.trim().length < 1){
+        setImageRatio((sel === undefined));
+        if(src.trim().length < 1) {
             dialog.find("div.preview-container").hide();
             currentCropperInstance.cancelSelection();
         }
     });
 
     //hax for preventing saving of empty image and crash of database as result
-    if(src.trim().length < 1){
+    if(src.trim().length < 1) {
         firstOpen = true;
         imagePickedCallback("http://www.turistforeningen.no/static/img/placeholder.png", "", "", "");
     }
 }
 
-function setImageRatio(change){
-    try{
+function setImageRatio(change) {
+    try {
         var checked = $("div.change-image input[name='ratio']:checked").val().split(":");
-        imageCurrentRatioWidth = parseInt(checked[0])
+        imageCurrentRatioWidth = parseInt(checked[0]);
         imageCurrentRatioHeight = parseInt(checked[1]);
-    }catch(e){
+    } catch(e) {
         imageCurrentRatioWidth = 0;
         imageCurrentRatioHeight = 0;
     }
 
-    if(ratioIsValid(imageCurrentRatioWidth, imageCurrentRatioHeight)){
+    if(ratioIsValid(imageCurrentRatioWidth, imageCurrentRatioHeight)) {
         setImageCropperRatio(imageCurrentRatioWidth, imageCurrentRatioHeight, change);
-    }else{
+    } else {
         setImageCropperRatio(0, 0, change);
     }
 }
