@@ -13,11 +13,17 @@
         var imageDialog = $("div.change-image");
 
         // Ensure imgareaselect follows the bootstrap-modal scrolling
+        var updaterId;
         imageDialog.on('shown', function() {
             $("div.modal-scrollable").scroll(function() {
-                if(typeof currentCropperInstance !== 'undefined') {
-                    currentCropperInstance.update();
+                if(updaterId !== undefined) {
+                    clearTimeout(updaterId);
                 }
+                updaterId = setTimeout(function() {
+                    if(typeof currentCropperInstance !== 'undefined') {
+                        currentCropperInstance.update();
+                    }
+                }, 200);
             });
         });
 
