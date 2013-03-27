@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     $("div.editor-header img.article-thumbnail").click(function() {
         var image = $(this);
-        openImageDialog({
+        ImageDialog.openImageDialog({
             image: $(this),
             anchor: undefined,
             description: undefined,
