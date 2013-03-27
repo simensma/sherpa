@@ -32,10 +32,10 @@
 
             currentCropperInstance.cancelSelection();
             imageDialog.imagesLoaded(function() {
-                openImageCropper(imageDialog.find("img.preview"), imageDialog.find("div.modal-body"), undefined);
+                openImageCropper(imageDialog.find("img.preview"), imageDialog.find("div.modal-body div.preview-container"), undefined);
                 setImageRatio(true);
             });
-            openImageCropper(imageDialog.find("img.preview"), imageDialog.find("div.modal-body"), undefined);
+            openImageCropper(imageDialog.find("img.preview"), imageDialog.find("div.modal-body div.preview-container"), undefined);
             setImageRatio(true);
         }
 
@@ -168,7 +168,7 @@
         }
 
         dialog.imagesLoaded(function() {
-            openImageCropper(dialog.find("img.preview"), dialog.find("div.modal-body"), sel);
+            openImageCropper(dialog.find("img.preview"), dialog.find("div.modal-body div.preview-container"), sel);
             setImageRatio((sel === undefined));
             if(src.trim().length < 1) {
                 dialog.find("div.preview-container").hide();
