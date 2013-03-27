@@ -25,7 +25,7 @@ $(document).ready(function() {
 
     /* Prevent all anchor clicks within the article */
     $(document).on('click', 'a', function(e) {
-        if($(this).parents("article").length != 0) {
+        if($(this).parents("article").length !== 0) {
             e.preventDefault();
         }
     });
@@ -51,7 +51,7 @@ $(document).ready(function() {
         $(this).focus();
     });
     $(document).on('focusout', 'article div.content.html, article div.content.lede', function() {
-        if($(this).text().trim() === "" && $(this).children("hr").length == 0) {
+        if($(this).text().trim() === "" && $(this).children("hr").length === 0) {
             $(this).addClass('empty');
             $(this).focus(function() {
                 $(this).removeClass('empty');
@@ -77,19 +77,19 @@ $(document).ready(function() {
         var description = content.find("span.description").text();
         var photographer = content.find("span.photographer span.content").text();
 
-        if(description == '' && photographer == ''){
+        if(description === '' && photographer === ''){
             content.find("div.img-desc").hide();
         }else{
             content.find("div.img-desc").show();
         }
 
-        if(description == '') {
+        if(description === '') {
             content.find("span.description").hide();
         } else {
             content.find("span.description").show();
         }
 
-        if(photographer == '') {
+        if(photographer === '') {
             content.find("span.photographer").hide();
         } else {
             content.find("span.photographer").show();
@@ -109,7 +109,7 @@ $(document).ready(function() {
         }
         openImageDialog(currentImage, anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
 
-            if(anchor.length == 0) {
+            if(anchor.length === 0) {
                 // No link
                 if(currentImage.parent("a").length > 0) {
                     // *Was* link, but is now removed
@@ -145,7 +145,7 @@ $(document).ready(function() {
 
     // Add text
     $("#toolbar button.add-text").click(function() {
-        if($("article").children().length == 0) {
+        if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
         }
@@ -171,7 +171,7 @@ $(document).ready(function() {
 
     // Add image
     $("#toolbar a.button.image").click(function() {
-        if($("article").children().length == 0) {
+        if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
         }
@@ -196,7 +196,7 @@ $(document).ready(function() {
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
     $("#toolbar a.button.widget").click(function() {
-        if($("article").children().length == 0) {
+        if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
         }
@@ -258,7 +258,7 @@ $(document).ready(function() {
     // Actually remove the content from DOM
     window.removeContent = removeContent;
     function removeContent(content) {
-        if(content.siblings().length == 0) {
+        if(content.siblings().length === 0) {
             setEmpty(content.parent());
         }
         content.remove();
@@ -282,12 +282,12 @@ $(document).ready(function() {
     $("div.add-button button.insert").click(function() {
         var text = $("div.add-button input[name='text']").val();
         var url = $("div.add-button input[name='url']").val().trim();
-        if(text == "") {
+        if(text === "") {
             $("div.add-button div.alert").show();
             return;
         }
         var el;
-        if(url != "") {
+        if(url !== "") {
             if(!url.match(/^https?:\/\//)) {
                 url = "http://" + url;
             }
@@ -326,7 +326,7 @@ $(document).ready(function() {
     });
 
     function addColumns(choice) {
-        if(choice == 0) {
+        if(choice === 0) {
             columns = [{span: 12, offset: 0, order: 0}]
         } else if(choice == 1) {
             columns = [{span: 9, offset: 0, order: 0},
@@ -359,7 +359,7 @@ $(document).ready(function() {
                     columns[i].offset + '"></div>'));
             }
             var prev = insertable.prev();
-            if(prev.length == 0) {
+            if(prev.length === 0) {
                 insertable.parent().prepend(wrapper);
             } else {
                 prev.after(wrapper);
@@ -545,7 +545,7 @@ $(document).ready(function() {
     window.setEmpties = setEmpties;
     function setEmpties() {
         $("article .column").each(function() {
-            if($(this).children(":not(.insertable)").length == 0) {
+            if($(this).children(":not(.insertable)").length === 0) {
                 setEmpty($(this));
             }
         });
