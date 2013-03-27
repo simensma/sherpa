@@ -12,6 +12,15 @@
 
         var imageDialog = $("div.change-image");
 
+        // Ensure imgareaselect follows the bootstrap-modal scrolling
+        imageDialog.on('shown', function() {
+            $("div.modal-scrollable").scroll(function() {
+                if(typeof currentCropperInstance !== 'undefined') {
+                    currentCropperInstance.update();
+                }
+            });
+        });
+
         imageDialog.find("div#ratio-radio").append(getRatioRadioButtons());
 
         imageDialog.find("button.choose-image").click(function() {
