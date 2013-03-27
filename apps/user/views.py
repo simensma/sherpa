@@ -52,7 +52,7 @@ def account(request):
 
 @login_required
 def update_account(request):
-    if request.user.get_profile().memberid is None:
+    if not request.user.get_profile().is_member():
         if request.method == 'GET':
             context = {
                 'user_password_length': settings.USER_PASSWORD_LENGTH
@@ -172,7 +172,7 @@ def update_account_password(request):
 
 @login_required
 def register_membership(request):
-    if request.user.get_profile().memberid is not None:
+    if request.user.get_profile().is_member():
         return HttpResponseRedirect(reverse('user.views.home'))
 
     if request.method == 'GET':
@@ -227,12 +227,12 @@ def register_membership(request):
             return HttpResponseRedirect(reverse('user.views.register_membership'))
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def partneroffers(request):
     return render(request, 'common/user/account/partneroffers.html')
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
     actor = request.user.get_profile().get_actor()
     actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
@@ -240,12 +240,12 @@ def partneroffers_reserve(request):
     return HttpResponse()
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def receive_email(request):
     return render(request, 'common/user/account/receive_email.html')
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
     actor = request.user.get_profile().get_actor()
     actor.receive_email = not json.loads(request.POST['reserve'])
@@ -253,7 +253,7 @@ def receive_email_set(request):
     return HttpResponse()
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
@@ -268,7 +268,7 @@ def publications(request):
     return render(request, 'common/user/publications.html', context)
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
     publication = Publication.objects.filter(
@@ -281,7 +281,7 @@ def publication(request, publication):
     return render(request, 'common/user/publication.html', context)
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
     now = datetime.now()
 
@@ -302,7 +302,7 @@ def norway_bus_tickets(request):
     return render(request, 'common/user/norway_bus_tickets.html', context)
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
 def norway_bus_tickets_order(request):
     errors = False
@@ -358,14 +358,14 @@ def norway_bus_tickets_order(request):
         return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
@@ -375,7 +375,7 @@ def reserve_fjellogvidde(request):
     return HttpResponse()
 
 @login_required
-@user_requires(lambda u: u.get_profile().memberid is not None, redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
 def reserve_yearbook(request):

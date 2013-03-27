@@ -33,10 +33,12 @@
           <th>Deg:</th>
           <td>{{ user.get_profile.get_full_name }}</td>
         </tr>
-        <tr>
-          <th>Medlemsnummer:</th>
-          <td>{{ user.get_profile.memberid|default:"Du er ikke DNT-medlem." }}</td>
-        </tr>
+        {% if user.get_profile.is_member %}
+          <tr>
+            <th>Medlemsnummer:</th>
+            <td>{{ user.get_profile.memberid }}</td>
+          </tr>
+        {% endif %}
         <tr>
           <th>Ditt medlemskap:</th>
           <td>
@@ -60,7 +62,8 @@
 
             {% else %}
 
-              Du er ikke DNT-medlem. <a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a>
+              Du er ikke DNT-medlem.<br>
+              <a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a>
 
             {% endif %}
           </td>
@@ -71,6 +74,8 @@
 </div>
 
 <div class="user-home-navigation">
+
+  {# TODO: Conditional columns need to be 'iterated' somehow #}
 
   <div class="row">
     <div class="span4">
@@ -89,29 +94,31 @@
         </p>
       </div>
     </div>
-    <div class="span4">
-      <div class="element">
-        <p><a href="{% url user.views.publications %}">Les Fjell og Vidde, årboken, UT, m.m.</a></p>
-        <p>
-          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
-        </p>
+    {% if user.get_profile.is_member %}
+      <div class="span4">
+        <div class="element">
+          <p><a href="{% url user.views.publications %}">Les Fjell og Vidde, årboken, UT, m.m.</a></p>
+          <p>
+            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+          </p>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 
   <div class="row">
-    <div class="span4">
-      <div class="element">
-        <p><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></p>
-        <p>
-          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
-        </p>
+    {% if user.get_profile.is_member %}
+      <div class="span4">
+        <div class="element">
+          <p><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></p>
+          <p>
+            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+          </p>
+        </div>
       </div>
-    </div>
+    {% endif %}
 
-    {# TODO: Conditional columns need to be 'iterated' somehow #}
-
-    {% if user.get_profile.show_norway_bus_tickets_menu_item %}
+    {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
       <div class="span4">
         <div class="element">
           <p><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></p>

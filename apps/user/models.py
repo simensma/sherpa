@@ -26,7 +26,7 @@ class Profile(models.Model):
 
     # Return this users' Actor (cached), or None
     def get_actor(self):
-        if self.memberid is None:
+        if not self.is_member():
             return None
         actor = cache.get('actor.%s' % self.memberid)
         if actor is None:
@@ -34,26 +34,29 @@ class Profile(models.Model):
             cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
 
+    def is_member(self):
+        return self.memberid is not None
+
     def get_first_name(self):
-        if self.memberid is None:
+        if not self.is_member():
             return self.user.first_name
         else:
             return self.get_actor().first_name
 
     def get_last_name(self):
-        if self.memberid is None:
+        if not self.is_member():
             return self.user.last_name
         else:
             return self.get_actor().last_name
 
     def get_full_name(self):
-        if self.memberid is None:
+        if not self.is_member():
             return self.user.get_full_name()
         else:
             return "%s %s" % (self.get_actor().first_name, self.get_actor().last_name)
 
     def get_email(self):
-        if self.memberid is None:
+        if not self.is_member():
             return self.user.email
         else:
             return self.get_actor().email
