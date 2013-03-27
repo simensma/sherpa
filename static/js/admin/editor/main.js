@@ -107,35 +107,41 @@ $(document).ready(function() {
         if(anchor === undefined) {
             anchor = '';
         }
-        openImageDialog(currentImage, anchor, currentDescription.text(), currentPhotographer.text(), function(src, anchor, description, photographer) {
-
-            if(anchor.length === 0) {
-                // No link
-                if(currentImage.parent("a").length > 0) {
-                    // *Was* link, but is now removed
-                    currentImage.parent().before(currentImage).remove();
-                }
-            } else {
-                // Add link
-                if(currentImage.parent("a").length > 0) {
-                    // Link exists, update it
-                    currentImage.parent().attr('href', anchor);
+        openImageDialog({
+            image: currentImage,
+            anchor: anchor,
+            description: currentDescription.text(),
+            photographer: currentPhotographer.text(),
+            save: function(src, anchor, description, photographer) {
+                if(anchor.length === 0) {
+                    // No link
+                    if(currentImage.parent("a").length > 0) {
+                        // *Was* link, but is now removed
+                        currentImage.parent().before(currentImage).remove();
+                    }
                 } else {
-                    // No existing link, add it
-                    var anchorEl = $('<a href="' + anchor + '"></a>');
-                    currentImage.before(anchorEl).detach();
-                    anchorEl.prepend(currentImage);
+                    // Add link
+                    if(currentImage.parent("a").length > 0) {
+                        // Link exists, update it
+                        currentImage.parent().attr('href', anchor);
+                    } else {
+                        // No existing link, add it
+                        var anchorEl = $('<a href="' + anchor + '"></a>');
+                        currentImage.before(anchorEl).detach();
+                        anchorEl.prepend(currentImage);
+                    }
                 }
+                currentImage.attr('src', src);
+                currentImage.attr('alt', description);
+
+                currentDescription.text(description);
+                currentPhotographer.text(photographer);
+                hidePictureText(content);
+
+            },
+            remove: function() {
+                removeContent(content);
             }
-            currentImage.attr('src', src);
-            currentImage.attr('alt', description);
-
-            currentDescription.text(description);
-            currentPhotographer.text(photographer);
-            hidePictureText(content);
-
-        }, function() {
-            removeContent(content);
         });
     }
 

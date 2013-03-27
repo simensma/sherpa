@@ -67,11 +67,18 @@ $(document).ready(function() {
 
     $("div.editor-header img.article-thumbnail").click(function() {
         var image = $(this);
-        openImageDialog($(this), undefined, undefined, undefined, function(src, anchor, description, photographer) {
-            image.attr('src', src);
-            saveImage();
-        }, function() {
-            $("div.editor-header input[name='thumbnail'][value='none']").click();
+        openImageDialog({
+            image: $(this),
+            anchor: undefined,
+            description: undefined,
+            photographer: undefined,
+            save: function(src, anchor, description, photographer) {
+                image.attr('src', src);
+                saveImage();
+            },
+            remove: function() {
+                $("div.editor-header input[name='thumbnail'][value='none']").click();
+            }
         });
     });
 

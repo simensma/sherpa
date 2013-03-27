@@ -118,13 +118,13 @@ $(document).ready(function() {
     });
 });
 
-function openImageDialog(image, anchor, description, photographer, saveCallback, removeCallback) {
+function openImageDialog(opts) {
     firstOpen = false;
-    currentImage = image;
-    imagePickedCallback = saveCallback;
-    imageRemovedCallback = removeCallback;
+    currentImage = opts.image;
+    imagePickedCallback = opts.save;
+    imageRemovedCallback = opts.remove;
 
-    var src = removeImageSizeFromUrl(image.attr("src"));
+    var src = removeImageSizeFromUrl(opts.image.attr("src"));
 
     var dialog = $("div.change-image");
     dialog.find("div.image-details").show();
@@ -133,34 +133,34 @@ function openImageDialog(image, anchor, description, photographer, saveCallback,
     dialog.modal();
 
     dialog.find("input[name='src']").val(src);
-    if(anchor !== undefined) {
-        dialog.find("input[name='anchor']").val(anchor);
+    if(opts.anchor !== undefined) {
+        dialog.find("input[name='anchor']").val(opts.anchor);
         dialog.find("tr.anchor").show();
     } else {
         dialog.find("tr.anchor").hide();
     }
-    if(description !== undefined) {
-        dialog.find("input[name='description']").val(description);
+    if(opts.description !== undefined) {
+        dialog.find("input[name='description']").val(opts.description);
         dialog.find("tr.description").show();
     } else {
         dialog.find("tr.description").hide();
     }
-    if(photographer !== undefined) {
-        dialog.find("input[name='photographer']").val(photographer);
+    if(opts.photographer !== undefined) {
+        dialog.find("input[name='photographer']").val(opts.photographer);
         dialog.find("tr.photographer").show();
     } else {
         dialog.find("tr.photographer").hide();
     }
 
-    var sel = image.attr("data-selection");
+    var sel = opts.image.attr("data-selection");
     if(sel === undefined || sel === "") {
         sel = undefined;
     } else {
         sel = JSON.parse(sel);
     }
 
-    var ratioW = image.attr("data-ratio-width");
-    var ratioH = image.attr("data-ratio-height");
+    var ratioW = opts.image.attr("data-ratio-width");
+    var ratioH = opts.image.attr("data-ratio-height");
     if(ratioIsValid(ratioW, ratioH)) {
         //select correct ratiio-radio
         var chosenRatio = ratioW + ":" + ratioH;
