@@ -3,7 +3,7 @@ var TypicalTagger = function(input, tag_box) {
     var that = this;
 
     this.tagger = new Tagger(input, function(tag) {
-        var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
         tag_box.append(tag);
     }, function(tag) {
         tag_box.find("div.tag").each(function() {
@@ -33,7 +33,7 @@ var TypicalTagger = function(input, tag_box) {
     });
 
     return this.tagger;
-}
+};
 
 /* Core functionality */
 var Tagger = function(el, newTag, existingTag) {
@@ -92,13 +92,13 @@ var Tagger = function(el, newTag, existingTag) {
             });
         }
     });
-}
+};
 
 Tagger.prototype.parseTags = function() {
     vals = this.el.val().split(' ');
     for(var i=0; i<vals.length; i++) {
         // Drop empty tags
-        if(vals[i] == "") { continue; }
+        if(vals[i] === "") { continue; }
 
         //comma is commonly associated with seperation of tags and other stuff, they are very likely not supposed to be there
         vals[i] = vals[i].replace(/,/g, "");
@@ -123,7 +123,7 @@ Tagger.prototype.parseTags = function() {
         this.tags.push(vals[i]);
         this.newTag(vals[i]);
     }
-}
+};
 
 Tagger.prototype.removeTag = function(tag) {
     for(var i=0; i<this.tags.length; i++) {
@@ -131,4 +131,4 @@ Tagger.prototype.removeTag = function(tag) {
             this.tags.splice(i, 1);
         }
     }
-}
+};
