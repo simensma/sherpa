@@ -14,13 +14,6 @@
 
         imageDialog.find("div#ratio-radio").append(getRatioRadioButtons());
 
-        imageDialog.parent().find("a.ui-dialog-titlebar-close").click(function() {
-            if(firstOpen) {
-                currentCropperInstance.cancelSelection();
-                imageRemovedCallback();
-            }
-        });
-
         imageDialog.find("button.choose-image").click(function() {
             chooseImagefromArchive(inputDataFromSource);
         });
