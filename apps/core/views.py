@@ -15,7 +15,5 @@ def zipcode(request, zipcode):
 
 def filter_tags(request):
     tag_objects = Tag.objects.filter(name__icontains=request.POST['name'])
-    tags = []
-    for tag in tag_objects:
-        tags.append(tag.name)
+    tags = [tag.name for tag in tag_objects]
     return HttpResponse(json.dumps(tags))
