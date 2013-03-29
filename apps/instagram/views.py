@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import RequestContext, loader
 from django.core.cache import cache
@@ -18,6 +19,8 @@ def index(request):
     return render(request, 'main/instagram/index.html')
 
 def load(request):
+    if not 'instagram' in request.session:
+        return HttpResponseRedirect(reverse('instagram.views.index'))
     meta = {}
     item_lists = []
     for tag, next_url in request.session['instagram']['tags'].items():
