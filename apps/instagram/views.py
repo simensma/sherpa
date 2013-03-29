@@ -6,7 +6,8 @@ from django.template import RequestContext, loader
 from django.core.cache import cache
 
 from itertools import cycle, islice
-import requests, json
+import requests
+import json
 
 tags = ['turistforeningen', 'komdegut']
 initial_url = 'https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s'
