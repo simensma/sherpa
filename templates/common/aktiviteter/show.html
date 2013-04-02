@@ -7,17 +7,21 @@
 <div class="row">
   <div class="span12">
 
-    <h2>{{ aktivitet.title }}</h2>
+    <div class="aktivitet">
+      <h2>{{ aktivitet.title }}</h2>
 
-    <p>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</p>
+      <div class="meta square-well">
+        {{ aktivitet.start_date }} - {{ aktivitet.end_date }}
+      </div>
 
-    <pre>{{ aktivitet.description }}</pre>
+      <p>{{ aktivitet.description|linebreaksbr }}</p>
 
-    <h3>Nøkkelord:</h3>
-    <div class="tag-box">
-      {% for tag in aktivitet.tags.all %}
-        <div class="tag">{{ tag.name }}</div>
-      {% endfor %}
+      <h3>Nøkkelord:</h3>
+      <div class="tag-box">
+        {% for tag in aktivitet.tags.all %}
+          <div class="tag">{{ tag.name }}</div>
+        {% endfor %}
+      </div>
     </div>
 
   </div>
