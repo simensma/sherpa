@@ -4,17 +4,23 @@
 
 {% block body %}
 
-<h2>{{ aktivitet.title }}</h2>
+<div class="row">
+  <div class="span12">
 
-<p>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</p>
+    <h2>{{ aktivitet.title }}</h2>
 
-<pre>{{ aktivitet.description }}</pre>
+    <p>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</p>
 
-<h3>Nøkkelord:</h3>
-<div class="tag-box">
-  {% for tag in aktivitet.tags.all %}
-    <div class="tag">{{ tag.name }}</div>
-  {% endfor %}
+    <pre>{{ aktivitet.description }}</pre>
+
+    <h3>Nøkkelord:</h3>
+    <div class="tag-box">
+      {% for tag in aktivitet.tags.all %}
+        <div class="tag">{{ tag.name }}</div>
+      {% endfor %}
+    </div>
+
+  </div>
 </div>
 
 {% endblock %}
