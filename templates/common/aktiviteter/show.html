@@ -11,7 +11,12 @@
       <h2>{{ aktivitet.title }}</h2>
 
       <div class="meta square-well">
-        {{ aktivitet.start_date }} - {{ aktivitet.end_date }}
+        <table>
+          <tr>
+            <th>Dato:</th>
+            <td>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</td>
+          </tr>
+        </table>
       </div>
 
       <p>{{ aktivitet.description|linebreaksbr }}</p>
