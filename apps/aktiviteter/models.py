@@ -6,3 +6,4 @@ class Aktivitet(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
+    participants = models.ManyToManyField('user.Profile', related_name='aktiviteter')

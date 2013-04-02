@@ -11,6 +11,10 @@
       <h2>{{ aktivitet.title }}</h2>
 
       <div class="meta square-well">
+        <div class="pull-right">
+          <a href="{% url aktiviteter.views.join aktivitet.id %}" class="btn btn-danger">Meld deg på!</a>
+        </div>
+
         <table>
           <tr>
             <th>Dato:</th>

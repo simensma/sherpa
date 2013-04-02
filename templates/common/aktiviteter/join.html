@@ -1,0 +1,26 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}{{ aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a> / <a href="{% url aktiviteter.views.show aktivitet.id %}">{{ aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <div class="aktivitet">
+      <h2>Påmelding: {{ aktivitet.title }}</h2>
+
+      <p>
+        Er du sikker på at du vil melde deg på denne turen?
+      </p>
+
+      <p>
+        <a href="{% url aktiviteter.views.join_confirm aktivitet.id %}" class="btn btn-success">Ja, meld meg på</a>
+        <a href="{% url aktiviteter.views.show aktivitet.id %}">Nei, avbryt</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
