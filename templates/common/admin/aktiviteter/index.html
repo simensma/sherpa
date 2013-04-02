@@ -4,21 +4,27 @@
 
 {% block body %}
 
-<h2>Turer og aktiviteter</h2>
+<div class="row">
+  <div class="span12">
 
-<p>
-  <a href="{% url admin.aktiviteter.views.new %}">Opprett ny aktivitet</a>
-</p>
+    <h2>Turer og aktiviteter</h2>
 
-<table class="table table-striped">
-  {% for aktivitet in aktiviteter %}
-    <tr>
-      <td>
-        <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Ingen tittel)" }}</a>
-      </td>
-      <td>{{ aktivitet.start_date }}</td>
-    </tr>
-  {% endfor %}
-</table>
+    <p>
+      <a href="{% url admin.aktiviteter.views.new %}">Opprett ny aktivitet</a>
+    </p>
+
+    <table class="table table-striped">
+      {% for aktivitet in aktiviteter %}
+        <tr>
+          <td>
+            <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Ingen tittel)" }}</a>
+          </td>
+          <td>{{ aktivitet.start_date }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+</div>
 
 {% endblock %}
