@@ -1,0 +1,30 @@
+div.slider {
+  a.slider-bar {
+    display: block;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "DTL Nobel" !important;
+
+    div.button-border-wrapper {
+      // We're using a wrapper because we want the button to cover part of the border.
+      border-top: 1px solid rgb(216, 216, 216);
+
+      div.button {
+        position: relative;
+        top: -1px;
+        background-position: top center;
+        background-repeat: no-repeat;
+        height: 22px; // Depends on the image height
+      }
+
+      div.button.shower {
+        background-image: url('/static/img/membership/show.png');
+      }
+
+      div.button.hider {
+        background-image: url('/static/img/membership/hide.png');
+      }
+    }
+  }
+}

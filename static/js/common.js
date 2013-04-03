@@ -63,6 +63,17 @@ $(document).ready(function() {
     /* Enable self-declared chosen selects */
     $("select[data-chosen]").chosen();
 
+    /* Sliders */
+    $("div.slider").each(function() {
+        var content = $(this).find("div.slider-content");
+        var bar = $(this).find("a.slider-bar");
+
+        bar.click(function() {
+            content.slideToggle();
+            $(this).find("span.text,div.button").toggle();
+        });
+    });
+
 });
 
 $.fn.enableDialog = function() {

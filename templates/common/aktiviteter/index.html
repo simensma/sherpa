@@ -17,13 +17,8 @@
       DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
     </p>
 
-    <div class="form-border aktivitet-search-filters">
-      <h3>
-        <a href="javascript:undefined" class="toggle-search-filters">Finn en tur som passer for deg!</a>
-      </h3>
-
-      {# The div-wrap is only because slideDown doesn't work so well directly on the table. #}
-      <div class="filters hide">
+    <div class="slider aktivitet-search-filter-slider">
+      <div class="slider-content aktivitet-search-filters hide">
         <table class="table filters">
           <tr>
             <th>Hva slags tur?</th>
@@ -70,6 +65,15 @@
         </table>
       </div>
 
+      <a class="slider-bar" href="javascript:undefined">
+        <span class="text">Finn en tur som passer for deg</span>
+        <span class="text hide">Skjul søket</span>
+
+        <div class="button-border-wrapper">
+          <div class="button shower"></div>
+          <div class="button hider hide"></div>
+        </div>
+      </a>
     </div>
 
     <table class="table table-striped aktiviteter">
