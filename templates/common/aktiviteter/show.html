@@ -32,7 +32,13 @@
           {% endif %}
           <tr>
             <th>Påmeldte:</th>
-            <td>{{ aktivitet.participants.all|length }}</td>
+            <td>
+              {% if aktivitet.participants.all|length == 0 %}
+                Ingen
+              {% else %}
+                {{ aktivitet.participants.all|length }}
+              {% endif %}
+            </td>
           </tr>
         </table>
       </div>
