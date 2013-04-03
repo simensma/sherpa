@@ -4,21 +4,9 @@ $(document).ready(function() {
 
     var zipcode_button = $("button.zipcode-search");
 
-    $("div#benefits dl dd, div#faq dl dd").hide();
-    $("div#benefits dl dt, div#faq dl dt").click(function() {
+    $("div.benefits dl dd, div#faq dl dd").hide();
+    $("div.benefits dl dt, div#faq dl dt").click(function() {
         $(this).next().slideToggle(400);
-    });
-
-    var duration = 600;
-    $("div#benefits").hide();
-    $("div.benefits-toggle a.hider").hide();
-    $("div.benefits-toggle-buttons div.hide-button").hide();
-    $("div.benefits-toggle").click(function() {
-        $("div#benefits").toggle(duration);
-        $("div.benefits-toggle a.shower").toggle();
-        $("div.benefits-toggle a.hider").toggle();
-        $("div.benefits-toggle-buttons div.hide-button").toggle();
-        $("div.benefits-toggle-buttons div.show-button").toggle();
     });
 
     $("div.benefits-large").hover(function() {
