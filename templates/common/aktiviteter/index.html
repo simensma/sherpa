@@ -13,13 +13,20 @@
       DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
     </p>
 
-    <table class="table table-striped">
+    <table class="table table-striped aktiviteter">
       {% for aktivitet in aktiviteter %}
         <tr>
           <td>
-            <a href="{% url aktiviteter.views.show aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+            <h2>
+              <a href="{% url aktiviteter.views.show aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+            </h2>
+            <p class="date">
+              {{ aktivitet.start_date|date:"j. F Y" }}
+            </p>
+            <p>
+              {{ aktivitet.description|truncatewords:"65" }}
+            </p>
           </td>
-          <td>{{ aktivitet.start_date }}</td>
         </tr>
       {% endfor %}
     </table>
