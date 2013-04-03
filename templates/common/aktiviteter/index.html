@@ -2,6 +2,10 @@
 {% block title %}Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<em><a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a></em>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/aktiviteter.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -12,6 +16,61 @@
     <p class="lede">
       DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
     </p>
+
+    <div class="form-border aktivitet-search-filters">
+      <h3>
+        <a href="javascript:undefined" class="toggle-search-filters">Finn en tur som passer for deg!</a>
+      </h3>
+
+      {# The div-wrap is only because slideDown doesn't work so well directly on the table. #}
+      <div class="filters hide">
+        <table class="table filters">
+          <tr>
+            <th>Hva slags tur?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg turtype...">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Er turen for deg?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg målgruppe...">
+                <option value=""></option>
+              </select>
+              <br>
+              <select name="" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Hvor vil du gå?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg turområde...">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Når vil du tidligst dra?</th>
+            <td>
+              <input type="radio"> Når som helst<br>
+              <input type="radio"> Velg: <input type="text" class="input-small">
+            </td>
+          </tr>
+          <tr>
+            <th>Når vil du senest tilbake?</th>
+            <td>
+              <input type="radio"> Når som helst<br>
+              <input type="radio"> Velg: <input type="text" class="input-small">
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
 
     <table class="table table-striped aktiviteter">
       {% for aktivitet in aktiviteter %}
