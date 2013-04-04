@@ -3,7 +3,7 @@
 {% block breadcrumb %}<em><a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/aktiviteter.js"></script>
+  <script src="{{ STATIC_URL }}js/aktiviteter/index.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -77,17 +77,17 @@
     </div>
 
     <table class="table table-striped aktiviteter">
-      {% for aktivitet in aktiviteter %}
+      {% for date in aktivitet_dates %}
         <tr>
           <td>
             <h2>
-              <a href="{% url aktiviteter.views.show aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+              <a href="{% url aktiviteter.views.show date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
             </h2>
             <p class="date">
-              {{ aktivitet.start_date|date:"j. F Y" }}
+              {{ date.start_date|date:"j. F Y" }}
             </p>
             <p>
-              {{ aktivitet.description|truncatewords:"65" }}
+              {{ date.aktivitet.description|truncatewords:"65" }}
             </p>
           </td>
         </tr>

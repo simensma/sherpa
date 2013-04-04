@@ -1,6 +1,10 @@
 {% extends site.template.name|add:"/layout.html" %}
-{% block title %}{{ aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a> / <em><a href="{% url aktiviteter.views.show aktivitet.id %}">{{ aktivitet.title }}</a></em>{% endblock %}
+{% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a> / <em><a href="{% url aktiviteter.views.show aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a></em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/aktiviteter/show.js"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -8,29 +12,49 @@
   <div class="span12">
 
     <div class="aktivitet">
-      <h2>{{ aktivitet.title }}</h2>
+      <h2>{{ aktivitet_date.aktivitet.title }}</h2>
 
       <div class="meta square-well">
-        {% if aktivitet.accepts_signups %}
+        {% if aktivitet_date.accepts_signups %}
           <div class="pull-right">
-            <a href="{% url aktiviteter.views.join aktivitet.id %}" class="btn btn-danger">Meld deg på!</a>
+            <a href="{% url aktiviteter.views.join aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
           </div>
-        {% elif aktivitet.will_accept_signups %}
+        {% elif aktivitet_date.will_accept_signups %}
           <div class="pull-right signup-countdown">
-            Påmelding fra {{ aktivitet.signup_start|date:"j. F Y" }}
+            Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }}
           </div>
         {% endif %}
 
         <table>
           <tr>
             <th>Dato:</th>
-            <td>{{ aktivitet.start_date }} - {{ aktivitet.end_date }}</td>
+            <td>{{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}</td>
           </tr>
-          {% if aktivitet.tags.all|length > 0 %}
+          {% if aktivitet_date.other_dates|length > 0 %}
+          <tr>
+            <th>Alternative datoer</th>
+            <td>
+              {% if aktivitet_date.other_dates|length > 1 %}
+                <a href="javascript:undefined" class="show-alternative-dates">Vis {{ aktivitet_date.other_dates|length }} andre datoer</a>
+              {% endif %}
+              <div class="alternatives{% if aktivitet_date.other_dates|length > 1 %} hide{% endif %}">
+                {% for date in aktivitet_date.get_other_dates_ordered %}
+                  <a href="{% url aktiviteter.views.show date.id %}">
+                    {{ date.start_date|date:"j. F Y" }}
+                    til
+                    {{ date.end_date|date:"j. F Y" }}
+                  </a>
+                  {% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+          {% if aktivitet_date.aktivitet.tags.all|length > 0 %}
             <tr>
               <th>Nøkkelord:</th>
               <td>
-                {% for tag in aktivitet.tags.all %}
+                {% for tag in aktivitet_date.aktivitet.tags.all %}
                   {{ tag.name }}{% if not forloop.last %}, {% endif%}
                 {% endfor %}
               </td>
@@ -39,17 +63,17 @@
           <tr>
             <th>Påmeldte:</th>
             <td>
-              {% if aktivitet.participants.all|length == 0 %}
+              {% if aktivitet_date.participants.all|length == 0 %}
                 Ingen
               {% else %}
-                {{ aktivitet.participants.all|length }}
+                {{ aktivitet_date.participants.all|length }}
               {% endif %}
             </td>
           </tr>
         </table>
       </div>
 
-      <p>{{ aktivitet.description|linebreaksbr }}</p>
+      <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
     </div>
 
   </div>

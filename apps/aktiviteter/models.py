@@ -13,11 +13,6 @@ class Aktivitet(models.Model):
     def get_dates_ordered(self):
         return self.dates.all().order_by('-start_date')
 
-    @staticmethod
-    def get_published():
-        today = date.today()
-        return Aktivitet.objects.filter(pub_date__lte=today)
-
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
     start_date = models.DateTimeField()
@@ -38,3 +33,14 @@ class AktivitetDate(models.Model):
     def will_accept_signups(self):
         today = date.today()
         return self.signup_enabled and self.signup_start > today
+
+    def other_dates(self):
+        return self.aktivitet.dates.exclude(id=self.id)
+
+    def get_other_dates_ordered(self):
+        return self.other_dates().order_by('-start_date')
+
+    @staticmethod
+    def get_published():
+        today = date.today()
+        return AktivitetDate.objects.filter(aktivitet__pub_date__lte=today)
