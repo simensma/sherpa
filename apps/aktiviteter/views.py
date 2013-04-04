@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
-from sherpa.decorators import user_requires_login
 
+from sherpa.decorators import user_requires_login
 from aktiviteter.models import Aktivitet
 
 def index(request):
