@@ -22,7 +22,7 @@
     <h2>Rediger aktivitet</h2>
 
     {# TODO: Client-side validations #}
-    <form action="{% url admin.aktiviteter.views.edit aktivitet.id %}" method="post" class="edit-aktivitet form-border form-horizontal">
+    <form action="{% url admin.aktiviteter.views.edit aktivitet.id %}" method="post" class="edit-aktivitet form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="control-group">
