@@ -2,7 +2,14 @@
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
+  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
+{% endblock %}
+
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter.js"></script>
 {% endblock %}
@@ -35,7 +42,10 @@
       <div class="control-group start_date">
         <label class="control-label" for="start_date">Starter:</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="start_date" value="{{ aktivitet.start_date|date:"d.m.Y" }}">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="start_date" value="{{ aktivitet.start_date|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
           <input type="text" class="input-small" name="start_time" value="{{ aktivitet.start_date|date:"H:i" }}">
         </div>
       </div>
@@ -43,7 +53,10 @@
       <div class="control-group end_date">
         <label class="control-label" for="end_date">Slutter:</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="end_date" value="{{ aktivitet.end_date|date:"d.m.Y" }}">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="end_date" value="{{ aktivitet.end_date|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
           <input type="text" class="input-small" name="end_time" value="{{ aktivitet.end_date|date:"H:i" }}">
         </div>
       </div>

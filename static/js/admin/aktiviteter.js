@@ -3,6 +3,13 @@ $(document).ready(function() {
     var form = $("form.edit-aktivitet");
     var input = form.find("div.tags input[name='tags']");
 
+    form.find("div.control-group.start_date div.date,div.control-group.end_date div.date").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        language: 'nb'
+    });
+
     var tagger = new TypicalTagger(input, form.find("div.tag-box"));
 
     // Collect existing tags based on the DOM and layout
