@@ -7,7 +7,7 @@ $(document).ready(function() {
     var input = form.find("div.tags input[name='tags']");
 
     // Long selectors make you feel alive
-    form.find("div.control-group.start_date div.date,div.control-group.end_date div.date,div.control-group.signup_start div.date,div.control-group.signup_deadline div.date,div.control-group.signup_cancel_deadline div.date").datepicker({
+    form.find("div.control-group.start_date div.date,div.control-group.end_date div.date,div.control-group.signup_start div.date,div.control-group.signup_deadline div.date,div.control-group.signup_cancel_deadline div.date,div.control-group.pub_date div.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,

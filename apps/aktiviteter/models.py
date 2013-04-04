@@ -14,6 +14,7 @@ class Aktivitet(models.Model):
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
     participants = models.ManyToManyField('user.Profile', related_name='aktiviteter')
+    pub_date = models.DateField(auto_now_add=True)
     hidden = models.BooleanField(default=False)
 
     def get_signup_enabled_json(self):
