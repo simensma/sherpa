@@ -27,3 +27,8 @@ class Aktivitet(models.Model):
     def will_accept_signups(self):
         today = date.today()
         return self.signup_enabled and self.signup_start > today
+
+    @staticmethod
+    def get_published():
+        today = date.today()
+        return Aktivitet.objects.filter(pub_date__lte=today)
