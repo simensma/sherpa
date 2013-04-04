@@ -1,13 +1,32 @@
 $(document).ready(function() {
 
     var form = $("form.edit-aktivitet");
+    var signup_enabled = form.find("div.control-group.signup_enabled");
+    var signup_details = form.find("div.signup-details");
     var input = form.find("div.tags input[name='tags']");
 
-    form.find("div.control-group.start_date div.date,div.control-group.end_date div.date").datepicker({
+    // Long selectors make you feel alive
+    form.find("div.control-group.start_date div.date,div.control-group.end_date div.date,div.control-group.signup_start div.date,div.control-group.signup_deadline div.date,div.control-group.signup_cancel_deadline div.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
         language: 'nb'
+    });
+
+    // Hide signup-options if signup is disabled
+    signup_enabled.find("button").click(function() {
+        if($(this).is(".enable")) {
+            signup_details.slideDown();
+            signup_enabled.find("input[name='signup_enabled']").val(JSON.stringify(true));
+        } else if($(this).is(".disable")) {
+            signup_details.slideUp();
+            signup_enabled.find("input[name='signup_enabled']").val(JSON.stringify(false));
+        }
+    });
+
+    // Buttons in button-groups aren't submit-buttons
+    signup_enabled.find("div.btn-group button").click(function(e) {
+        e.preventDefault();
     });
 
     var tagger = new TypicalTagger(input, form.find("div.tag-box"));

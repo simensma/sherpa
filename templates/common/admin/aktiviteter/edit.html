@@ -25,6 +25,12 @@
     <form action="{% url admin.aktiviteter.views.edit aktivitet.id %}" method="post" class="edit-aktivitet form-border form-horizontal">
       {% csrf_token %}
 
+      <div class="control-group">
+        <div class="controls">
+          <h3>Turbeskrivelse</h3>
+        </div>
+      </div>
+
       <div class="control-group title">
         <label class="control-label" for="title">Tittel:</label>
         <div class="controls">
@@ -75,8 +81,56 @@
           </div>
         </div>
       </div>
-
       <div style="clear: both;"></div>
+
+      <div class="control-group">
+        <div class="controls">
+          <h3>Påmelding</h3>
+        </div>
+      </div>
+
+      <div class="control-group signup_enabled">
+        <label class="control-label" for="signup_enabled">Tillat påmelding:</label>
+        <div class="controls">
+          <input type="hidden" name="signup_enabled" value="{{ aktivitet.get_signup_enabled_json }}">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn enable{% if aktivitet.signup_enabled %} active{% endif %}">Ja</button>
+            <button class="btn disable{% if not aktivitet.signup_enabled %} active{% endif %}">Nei</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="signup-details{% if not aktivitet.signup_enabled %} hide{% endif %}">
+        <div class="control-group signup_start">
+          <label class="control-label" for="signup_start">Påmeldingsstart:</label>
+          <div class="controls">
+            <div class="input-append date">
+              <input type="text" class="input-medium" name="signup_start" value="{{ aktivitet.signup_start|date:"d.m.Y" }}">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group signup_deadline">
+          <label class="control-label" for="signup_deadline">Påmeldingsfrist:</label>
+          <div class="controls">
+            <div class="input-append date">
+              <input type="text" class="input-medium" name="signup_deadline" value="{{ aktivitet.signup_deadline|date:"d.m.Y" }}">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group signup_cancel_deadline">
+          <label class="control-label" for="signup_cancel_deadline">Avmeldingsfrist:</label>
+          <div class="controls">
+            <div class="input-append date">
+              <input type="text" class="input-medium" name="signup_cancel_deadline" value="{{ aktivitet.signup_cancel_deadline|date:"d.m.Y" }}">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="control-group">
         <div class="controls">
