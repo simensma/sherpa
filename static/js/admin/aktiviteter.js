@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     var form = $("form.edit-aktivitet");
     var signup_enabled = form.find("div.control-group.signup_enabled");
+    var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
     var signup_details = form.find("div.signup-details");
     var input = form.find("div.tags input[name='tags']");
 
@@ -25,7 +26,7 @@ $(document).ready(function() {
     });
 
     // Buttons in button-groups aren't submit-buttons
-    signup_enabled.find("div.btn-group button").click(function(e) {
+    form.find("div.btn-group button").click(function(e) {
         e.preventDefault();
     });
 
@@ -39,6 +40,8 @@ $(document).ready(function() {
     tagger.tags = tags;
 
     form.submit(function() {
+        var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
+        hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
         input.val(JSON.stringify(tagger.tags));
     });
 

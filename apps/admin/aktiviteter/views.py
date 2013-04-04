@@ -37,6 +37,7 @@ def edit(request, aktivitet):
             aktivitet.signup_start = datetime.strptime(request.POST['signup_start'], "%d.%m.%Y").date()
             aktivitet.signup_deadline = datetime.strptime(request.POST['signup_deadline'], "%d.%m.%Y").date()
             aktivitet.signup_cancel_deadline = datetime.strptime(request.POST['signup_cancel_deadline'], "%d.%m.%Y").date()
+        aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.save()
         aktivitet.tags.clear()
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:

@@ -134,6 +134,27 @@
 
       <div class="control-group">
         <div class="controls">
+          <h3>Synlighet</h3>
+        </div>
+      </div>
+
+      <div class="control-group hide_aktivitet">
+        <label class="control-label" for="hide_aktivitet">Tilgjengelighet:</label>
+        <div class="controls">
+          <input type="hidden" name="hidden">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
+            <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
+          </div>
+          <div class="hints">
+            En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees på følgende adresse:<br>
+            <a href="{% url aktiviteter.views.show aktivitet.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.id %}</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
           <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> Lagre aktivitet</button>
         </div>
       </div>
