@@ -21,3 +21,7 @@ class Aktivitet(models.Model):
     def accepts_signups(self):
         today = date.today()
         return self.signup_enabled and self.signup_start <= today and self.signup_deadline >= today
+
+    def will_accept_signups(self):
+        today = date.today()
+        return self.signup_enabled and self.signup_start > today
