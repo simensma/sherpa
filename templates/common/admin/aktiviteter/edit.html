@@ -160,7 +160,7 @@
             <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
           </div>
           <div class="hints">
-            En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees på følgende adresse:<br>
+            En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse:<br>
             <a href="{% url aktiviteter.views.show aktivitet.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.id %}</a>
           </div>
         </div>
