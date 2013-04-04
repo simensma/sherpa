@@ -19,8 +19,6 @@
           <td>
             <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
           </td>
-          <td>{{ aktivitet.start_date }}</td>
-          <td>{{ aktivitet.participants.all|length }} påmeldte</td>
         </tr>
       {% endfor %}
     </table>
