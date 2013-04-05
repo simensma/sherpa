@@ -21,7 +21,6 @@ from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
 from core.models import Zipcode
 from focus.models import Actor
-from focus.util import get_membership_type_by_codename
 from admin.models import Publication
 
 from user.util import username, memberid_lookups_exceeded
