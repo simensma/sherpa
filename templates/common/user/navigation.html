@@ -11,7 +11,9 @@
     {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
       <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></li>
     {% endif %}
-    <li{% if active == 'fotobok' %} class="active"{% endif %}><a href="{% url user.views.fotobok %}">Fotobok</a></li>
+    {% if user.get_profile.is_member %}
+      <li{% if active == 'fotobok' %} class="active"{% endif %}><a href="{% url user.views.fotobok %}">Fotobok</a></li>
+    {% endif %}
     {% if not user.get_profile.is_member %}
       <li{% if active == 'register_membership' %} class="active"{% endif %}><a href="{% url user.views.register_membership %}">Registrer medlemskap</a></li>
     {% endif %}
