@@ -129,6 +129,15 @@
       {% endcolumn %}
     {% endif %}
 
+    {% column %}
+      <div class="element">
+        <p><a href="{% url user.views.fotobok %}">Fotobok</a></p>
+        <p>
+          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+        </p>
+      </div>
+    {% endcolumn %}
+
     {% if perms.user.sherpa %}
       {% column %}
         <div class="element">

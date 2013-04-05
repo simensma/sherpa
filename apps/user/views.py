@@ -356,6 +356,9 @@ def norway_bus_tickets_order(request):
         messages.error(request, 'email_failure')
         return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
 
+def fotobok(request):
+    return render(request, 'common/user/fotobok.html')
+
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
