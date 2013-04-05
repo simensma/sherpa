@@ -11,11 +11,14 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+from collections import OrderedDict
 from datetime import datetime, date
 import json
 from smtplib import SMTPException
 import logging
 import sys
+import requests
+import hashlib
 
 from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
@@ -356,8 +359,83 @@ def norway_bus_tickets_order(request):
         messages.error(request, 'email_failure')
         return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
 
+@login_required
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def fotobok(request):
     return render(request, 'common/user/fotobok.html')
+
+@login_required
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+def fotobok_eurofoto_request(request):
+    profile = request.user.get_profile()
+
+    # Copied descriptions about the API payload from the old user page fotobok script:
+    # publickey  freetext, 36 chars UUID/KEY
+    # identifier freetext, 250 chars  <medlemsnummer@eurofoto.turistforeningen.no>
+    # firstname  freetext, 250 chars
+    # middlename freetext, 250 chars
+    # lastname   freetext, 250 chars
+    # address1   freetext, 250 chars
+    # address2   freetext, 250 chars
+    # zipcode    4-10 chars or empty
+    # city       freetext, 100 chars
+    # country    2 char or empty
+    # phonework  8-15 char or empty
+    # phonehome  8-15 char or empty
+    # phonecell  8-15 char or empty
+    # Note: birthdate and gender were commented out and not in use.
+    # birthdate  '22.03.1981', dd.mm.yyyy
+    # gender     m, f, male, female or blank
+
+    # This needs to be ordered so unpacking it to signature becomes correct
+    payload = OrderedDict([
+        ('publickey', settings.EUROFOTO_PUBLIC_KEY,),
+        ('identifier', '%s@eurofoto.turistforeningen.no' % profile.memberid,),
+        ('firstname', profile.get_first_name(),),
+        ('middlename', '',), # We could parse this out of 'lastname', but the old API didn't do that, so whatever
+        ('lastname', profile.get_last_name(),),
+        ('address1', profile.get_actor().address.a1 if profile.get_actor().address.a1 is not None else '',),
+        ('address2', profile.get_actor().address.a2 if profile.get_actor().address.a2 is not None else '',),
+        ('zipcode', profile.get_actor().address.zipcode,),
+        ('city', profile.get_actor().address.area,),
+        ('country', profile.get_actor().address.country,),
+        ('phonework', '',),
+        ('phonehome', profile.get_actor().phone_home if profile.get_actor().phone_home is not None else '',),
+        ('phonemobile', profile.get_actor().phone_mobile if profile.get_actor().phone_mobile is not None else '',),
+    ])
+    sha1 = hashlib.sha1()
+    sha1.update('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, ''.join(payload.values())))
+    payload['signature'] = sha1.hexdigest()
+
+    try:
+        r = requests.post(settings.EUROFOTO_SIGNUP_SERVICE, data=payload)
+        reply = json.loads(r.text)
+        if reply['result'] and reply['message'] == 'OK':
+            return HttpResponseRedirect(reply['url'])
+        else:
+            logger.error(u"Ukjent svar fra Eurofoto-API",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'reply': reply
+                }
+            )
+            messages.error(request, 'eurofoto_api_unparseable_reply')
+            return HttpResponseRedirect(reverse('user.views.fotobok'))
+    except requests.ConnectionError as e:
+        logger.warning(u"(Håndtert) %s" % e.message,
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'eurofoto_api_connection_error')
+        return HttpResponseRedirect(reverse('user.views.fotobok'))
+    except ValueError as e:
+        logger.error(e.message,
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'eurofoto_api_unparseable_reply')
+        return HttpResponseRedirect(reverse('user.views.fotobok'))
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
