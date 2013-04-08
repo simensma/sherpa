@@ -49,6 +49,18 @@
             </div>
           </div>
 
+          <div class="control-group difficulty">
+            <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
+            <div class="controls">
+              <select name="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+                <option value=""></option>
+                {% for difficulty in difficulties %}
+                  <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
           <div class="control-group tags">
             <label class="control-label" for="tags">Nøkkelord:</label>
             <div class="controls">

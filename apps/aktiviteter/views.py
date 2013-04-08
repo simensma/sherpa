@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 
 from sherpa.decorators import user_requires_login
-from aktiviteter.models import AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate
 
 def index(request):
     aktivitet_dates = AktivitetDate.get_published().exclude(
@@ -12,7 +12,10 @@ def index(request):
     ).order_by(
         '-start_date'
     )
-    context = {'aktivitet_dates': aktivitet_dates}
+    context = {
+        'aktivitet_dates': aktivitet_dates,
+        'difficulties': Aktivitet.DIFFICULTY_CHOICES
+    }
     return render(request, 'common/aktiviteter/index.html', context)
 
 def show(request, aktivitet_date):

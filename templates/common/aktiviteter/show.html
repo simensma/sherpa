@@ -50,6 +50,10 @@
             </td>
           </tr>
           {% endif %}
+          <tr>
+            <th>Vanskelighetsgrad:</th>
+            <td>{{ aktivitet_date.aktivitet.get_difficulty }}</td>
+          </tr>
           {% if aktivitet_date.aktivitet.tags.all|length > 0 %}
             <tr>
               <th>Nøkkelord:</th>

@@ -6,12 +6,21 @@ import json
 class Aktivitet(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
+    DIFFICULTY_CHOICES = (
+        ('easy', 'Enkel'),
+        ('medium', 'Middels'),
+        ('hard', 'Krevende'),
+        ('expert', 'Ekspert'),)
+    difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
     tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
     hidden = models.BooleanField(default=False)
 
     def get_dates_ordered(self):
         return self.dates.all().order_by('-start_date')
+
+    def get_difficulty(self):
+        return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
 
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')

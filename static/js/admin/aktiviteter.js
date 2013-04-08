@@ -4,6 +4,8 @@ $(document).ready(function() {
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
     var input = form.find("div.tags input[name='tags']");
 
+    form.find("div.control-group.difficulty select[name='difficulty']").chosen();
+
     function enableDatepicker(elements) {
         elements.datepicker({
             format: 'dd.mm.yyyy',

@@ -37,6 +37,9 @@
               <br>
               <select name="" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
                 <option value=""></option>
+                {% for difficulty in difficulties %}
+                  <option value="{{ difficulty.0 }}">{{ difficulty.1 }}</option>
+                {% endfor %}
               </select>
             </td>
           </tr>

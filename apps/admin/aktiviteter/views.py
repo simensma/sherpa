@@ -28,13 +28,17 @@ def new(request):
 def edit(request, aktivitet):
     if request.method == 'GET':
         aktivitet = Aktivitet.objects.get(id=aktivitet)
-        context = {'aktivitet': aktivitet}
+        context = {
+            'aktivitet': aktivitet,
+            'difficulties': Aktivitet.DIFFICULTY_CHOICES
+        }
         return render(request, 'common/admin/aktiviteter/edit.html', context)
     elif request.method == 'POST':
         # TODO: Server-side validations
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
+        aktivitet.difficulty = request.POST['difficulty']
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.save()
