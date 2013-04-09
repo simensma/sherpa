@@ -12,6 +12,10 @@ class Aktivitet(models.Model):
         ('hard', 'Krevende'),
         ('expert', 'Ekspert'),)
     difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
+    CATEGORY_CHOICES = (
+        ('trip', 'Tur'),
+        ('course', 'Kurs'),)
+    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
     hidden = models.BooleanField(default=False)
@@ -21,6 +25,9 @@ class Aktivitet(models.Model):
 
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
+
+    def get_category(self):
+        return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')

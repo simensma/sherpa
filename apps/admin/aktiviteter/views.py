@@ -20,7 +20,11 @@ def new(request):
     now = datetime.now()
     one_day_from_now = now + timedelta(days=1)
 
-    aktivitet = Aktivitet(pub_date=one_day_from_now)
+    # TODO: Validations
+    aktivitet = Aktivitet(
+        pub_date=one_day_from_now,
+        category=request.POST['category']
+    )
     aktivitet.save()
     create_aktivitet_date(aktivitet)
     return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
