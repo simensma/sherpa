@@ -88,8 +88,18 @@ var Tagger = function(el, newTag, existingTag) {
                 url: '/tags/filter/',
                 data: { name: query }
             }).done(function(result) {
+                query = query.toLowerCase();
                 tags = JSON.parse(result);
-                tags.unshift(query);
+                // Array.indexOf is JS 1.6 which IE7, IE8 doesn't support, so we'll do this the hard way
+                var exists = false;
+                for(var i=0; i<tags.length; i++) {
+                    if(tags[i] == query) {
+                        exists = true;
+                    }
+                }
+                if(!exists) {
+                    tags.unshift(query);
+                }
                 process(tags);
             });
         }
