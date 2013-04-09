@@ -37,7 +37,8 @@ def edit(request, aktivitet):
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         context = {
             'aktivitet': aktivitet,
-            'difficulties': Aktivitet.DIFFICULTY_CHOICES
+            'difficulties': Aktivitet.DIFFICULTY_CHOICES,
+            'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category])
         }
         return render(request, 'common/admin/aktiviteter/edit.html', context)
     elif request.method == 'POST':

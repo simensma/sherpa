@@ -3,8 +3,12 @@ $(document).ready(function() {
     var form = $("form.edit-aktivitet");
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
     var input = form.find("div.tags input[name='tags']");
+    var subcategories = form.find("select[name='subcategories']");
+
+    var subcategory_values = JSON.parse(subcategories.attr('data-all-subcategories'));
 
     form.find("div.control-group.difficulty select[name='difficulty']").chosen();
+    subcategories.chosen();
 
     function enableDatepicker(elements) {
         elements.datepicker({
@@ -14,6 +18,17 @@ $(document).ready(function() {
             language: 'nb'
         });
     }
+
+    // Sync subcategory-select with the actual chosen subcategories
+    subcategories.change(function() {
+        var option = subcategories.find("option:selected");
+        // TODO should be an easier way to add the tag! Simulate typing it into the input for now.
+        option.remove();
+        subcategories.trigger('liszt:updated');
+        $("input[name='tags']").val(option.val());
+        $("input[name='tags']").focusout();
+    });
+    // TODO - re-add removed options on tag removal
 
     // Long selectors make you feel alive
     enableDatepicker(form.find("div.control-group.start_date div.date,div.control-group.end_date div.date,div.control-group.signup_start div.date,div.control-group.signup_deadline div.date,div.control-group.signup_cancel_deadline div.date,div.control-group.pub_date div.date"));

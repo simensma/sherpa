@@ -27,6 +27,7 @@
 
       <ul class="nav nav-tabs">
         <li class="active"><a href="#beskrivelse" data-toggle="tab">Beskrivelse og informasjon</a></li>
+        <li><a href="#kategorier" data-toggle="tab">Kategorier</a></li>
         <li><a href="#datoer" data-toggle="tab">Datoer og påmelding</a></li>
         <li><a href="#synlighet" data-toggle="tab">Synlighet</a></li>
       </ul>
@@ -61,21 +62,6 @@
             </div>
           </div>
 
-          <div class="control-group tags">
-            <label class="control-label" for="tags">Kategorier:</label>
-            <div class="controls">
-              <p><input type="text" class="input-large" name="tags"></p>
-              <div class="tag-box">
-                {% for tag in aktivitet.category_tags.all %}
-                  <div class="tag">
-                    <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
-                    {{ tag.name }}
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-          <div style="clear: both;"></div>
         </div>
 
         <div id="datoer" class="tab-pane">
@@ -94,6 +80,36 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div id="kategorier" class="tab-pane">
+          <div class="control-group tags">
+            <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+            <div class="controls">
+              <select name="subcategories" class="chosen" data-placeholder="Legg til en kategori..." data-all-subcategories="{{ subcategories }}">
+                <option value=""></option>
+                {% for category in aktivitet.get_missing_subcategories %}
+                  <option value="{{ category }}">{{ category.title }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group tags">
+            <label class="control-label" for="tags">Opprett egne kategorier her:</label>
+            <div class="controls">
+              <p><input type="text" class="input-large" name="tags"></p>
+              <div class="tag-box">
+                {% for tag in aktivitet.category_tags.all %}
+                  <div class="tag">
+                    <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                    {{ tag.name }}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div style="clear: both;"></div>
         </div>
 
         <div id="synlighet" class="tab-pane">

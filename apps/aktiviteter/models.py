@@ -29,6 +29,26 @@ class Aktivitet(models.Model):
     def get_category(self):
         return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
+    def get_subcategories(self):
+        return self.SUBCATEGORIES[self.category]
+
+    def get_missing_subcategories(self):
+        existing_subcategories = [s.name for s in self.category_tags.all()]
+        return [s for s in self.get_subcategories() if s not in existing_subcategories]
+
+    # A predefined list of subcategory suggestions - they're simply implemented
+    # as tags ('core.Tag'), though.
+    SUBCATEGORIES = {
+        'trip': [
+            'fellestur',
+            'trilletur'
+        ],
+        'course': [
+            'skredkurs',
+            'klatrekurs'
+        ]
+    }
+
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
     start_date = models.DateTimeField()
