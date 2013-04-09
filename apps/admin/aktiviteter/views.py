@@ -13,7 +13,10 @@ import json
 
 def index(request):
     aktiviteter = Aktivitet.objects.all()
-    context = {'aktiviteter': aktiviteter}
+    context = {
+        'aktiviteter': aktiviteter,
+        'categories': Aktivitet.CATEGORY_CHOICES
+    }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
 def new(request):

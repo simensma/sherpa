@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/index.js"></script>
 {% endblock %}
 
+{% load rowiterator %}
+
 {% block body %}
 
 <div class="aktivitet-listing">
@@ -29,20 +31,13 @@
       {% csrf_token %}
       <input type="hidden" name="category" value="">
 
-      <div class="row">
-        <div class="span3">
-          <input type="submit" name="submit" value="Tur" data-tag-name="trip" class="btn">
-        </div>
-        <div class="span3">
-          <input type="submit" name="submit" value="Kurs" data-tag-name="course" class="btn">
-        </div>
-        <div class="span3">
-          <input type="submit" name="submit" value="Noe annet" data-tag-name="noe-annet" class="btn">
-        </div>
-        <div class="span3">
-          <input type="submit" name="submit" value="Noe annet" data-tag-name="noe-annet" class="btn">
-        </div>
-      </div>
+      {% rowiterator 4 %}
+        {% for category in categories %}
+          {% column %}
+            <input type="submit" name="submit" value="{{ category.1 }}" data-tag-name="{{ category.0 }}" class="btn">
+          {% endcolumn %}
+        {% endfor %}
+      {% endrowiterator %}
     </form>
   </div>
 
