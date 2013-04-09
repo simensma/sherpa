@@ -49,10 +49,10 @@ def edit(request, aktivitet):
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.save()
-        aktivitet.tags.clear()
+        aktivitet.category_tags.clear()
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
             obj, created = Tag.objects.get_or_create(name=tag)
-            aktivitet.tags.add(obj)
+            aktivitet.category_tags.add(obj)
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
 
 def new_aktivitet_date(request):

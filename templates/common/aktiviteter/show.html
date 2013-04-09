@@ -54,11 +54,11 @@
             <th>Vanskelighetsgrad:</th>
             <td>{{ aktivitet_date.aktivitet.get_difficulty }}</td>
           </tr>
-          {% if aktivitet_date.aktivitet.tags.all|length > 0 %}
+          {% if aktivitet_date.aktivitet.category_tags.all|length > 0 %}
             <tr>
               <th>Nøkkelord:</th>
               <td>
-                {% for tag in aktivitet_date.aktivitet.tags.all %}
+                {% for tag in aktivitet_date.aktivitet.category_tags.all %}
                   {{ tag.name }}{% if not forloop.last %}, {% endif%}
                 {% endfor %}
               </td>

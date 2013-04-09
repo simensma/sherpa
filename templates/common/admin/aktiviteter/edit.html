@@ -62,11 +62,11 @@
           </div>
 
           <div class="control-group tags">
-            <label class="control-label" for="tags">Nøkkelord:</label>
+            <label class="control-label" for="tags">Kategorier:</label>
             <div class="controls">
               <p><input type="text" class="input-large" name="tags"></p>
               <div class="tag-box">
-                {% for tag in aktivitet.tags.all %}
+                {% for tag in aktivitet.category_tags.all %}
                   <div class="tag">
                     <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
                     {{ tag.name }}

@@ -16,7 +16,7 @@ class Aktivitet(models.Model):
         ('trip', 'Tur'),
         ('course', 'Kurs'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
-    tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
+    category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
     hidden = models.BooleanField(default=False)
 
