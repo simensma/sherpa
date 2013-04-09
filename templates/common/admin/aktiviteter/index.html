@@ -2,28 +2,65 @@
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/index.js"></script>
+{% endblock %}
+
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<div class="aktivitet-listing">
 
-    <h2>Turer og aktiviteter</h2>
-
-    <p>
-      <a href="{% url admin.aktiviteter.views.new %}">Opprett ny aktivitet</a>
-    </p>
-
-    <table class="table table-striped">
-      {% for aktivitet in aktiviteter %}
-        <tr>
-          <td>
-            <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-
+  <div class="row">
+    <div class="span12">
+      <h2>Turer og aktiviteter</h2>
+      <p>
+        <a href="javascript:undefined" class="create-new">Opprett ny aktivitet</a>
+      </p>
+    </div>
   </div>
+
+  <div class="new-categories hide">
+    <div class="row">
+      <div class="span12">
+        <h3>Hva slags aktivitet vil du opprette?</h3>
+      </div>
+    </div>
+
+    <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category">
+      {% csrf_token %}
+      <input type="hidden" name="category" value="">
+
+      <div class="row">
+        <div class="span3">
+          <input type="submit" name="submit" value="Tur" data-tag-name="tur" class="btn">
+        </div>
+        <div class="span3">
+          <input type="submit" name="submit" value="Kurs" data-tag-name="kurs" class="btn">
+        </div>
+        <div class="span3">
+          <input type="submit" name="submit" value="Noe annet" data-tag-name="noe-annet" class="btn">
+        </div>
+        <div class="span3">
+          <input type="submit" name="submit" value="Noe annet" data-tag-name="noe-annet" class="btn">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="span12">
+      <table class="table table-striped">
+        {% for aktivitet in aktiviteter %}
+          <tr>
+            <td>
+              <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}
