@@ -66,12 +66,12 @@ def search(request):
     actors = actors.order_by('first_name')
 
     members = Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True)))
-    actors_wihtout_profile = actors.exclude(memberid__in=list(members.values_list('memberid', flat=True)))
+    actors_without_profile = actors.exclude(memberid__in=list(members.values_list('memberid', flat=True)))
     profiles = list(local_profiles) + list(members)
 
     context = RequestContext(request, {
         'profiles': profiles,
-        'actors_without_profile': actors_wihtout_profile})
+        'actors_without_profile': actors_without_profile})
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
