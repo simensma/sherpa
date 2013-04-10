@@ -107,3 +107,8 @@ $(document).on('keypress', 'body', function(e) {
 if(top != self) {
     top.location.replace(document.location);
 }
+
+/* Toggling a tab-pane outside from the actual tab links */
+$(document).on("click", "*[data-toggle-tab]", function() {
+    $("ul.nav-tabs a[href='#" + $(this).attr('data-toggle-tab') + "']").tab('show');
+});
