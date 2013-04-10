@@ -4,9 +4,13 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.conf import settings
+from django.db.models import Q
 
 from aktiviteter.models import Aktivitet, AktivitetDate
 from core.models import Tag
+from user.models import Profile
+from focus.models import Actor
 
 from datetime import datetime, timedelta
 import json
@@ -38,7 +42,8 @@ def edit(request, aktivitet):
         context = {
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
-            'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category])
+            'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
+            'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
         }
         return render(request, 'common/admin/aktiviteter/edit.html', context)
     elif request.method == 'POST':
@@ -55,6 +60,34 @@ def edit(request, aktivitet):
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
+
+def leader_search(request):
+    if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+        raise PermissionDenied
+
+    local_profiles = Profile.objects.all()
+    for word in request.POST['q'].split():
+        local_profiles = local_profiles.filter(
+            Q(user__first_name__icontains=word) |
+            Q(user__last_name__icontains=word))
+    local_profiles = local_profiles.order_by('user__first_name')
+
+    actors = Actor.objects.all()
+    for word in request.POST['q'].split():
+        actors = actors.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word))
+    actors = actors.order_by('first_name')
+
+    members = Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True)))
+    actors_without_profile = actors.exclude(memberid__in=list(members.values_list('memberid', flat=True)))
+    profiles = list(local_profiles) + list(members)
+
+    context = RequestContext(request, {
+        'profiles': profiles,
+        'actors_without_profile': actors_without_profile})
+    return HttpResponse(render_to_string('common/admin/aktiviteter/leader_search_results.html', context))
 
 def new_aktivitet_date(request):
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])

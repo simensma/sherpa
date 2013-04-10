@@ -7,6 +7,12 @@
   <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
 {% endblock %}
 
+{% block js_globals %}
+  <script>
+    window.admin_user_search_char_length = {{ admin_user_search_char_length }};
+  </script>
+{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
@@ -29,6 +35,7 @@
         <li class="active"><a href="#beskrivelse" data-toggle="tab">Beskrivelse og informasjon</a></li>
         <li><a href="#datoer" data-toggle="tab">Datoer og påmelding</a></li>
         <li><a href="#synlighet" data-toggle="tab">Synlighet</a></li>
+        <li><a href="#turledere" data-toggle="tab">Turledere</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible">
@@ -136,6 +143,56 @@
               <div class="hints">
                 En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="turledere" class="tab-pane">
+          <div class="control-group">
+            <div class="controls">
+              Her kan du legge til turledere som får tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst i medlemsregisteret, men personen må ha en Min side-bruker.
+            </div>
+          </div>
+
+          <div class="control-group leader" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
+            <label class="control-label" for="leader">Søk etter personer:</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" name="leader-search">
+              <button class="btn leader-search"><i class="icon-search"></i></button>
+
+              <table class="table leader-search-list hide">
+                <tr>
+                  <th>Navn</th>
+                  <th>Medlemsnummer</th>
+                  <th>Gi turleder-status</th>
+                </tr>
+
+                <tr class="no-hits hide">
+                  <td colspan="3">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
+                </tr>
+
+                <tr class="short_query hide">
+                  <td colspan="3">
+                    Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
+                  </td>
+                </tr>
+
+                <tr class="technical-error hide">
+                  <td colspan="3">
+                    <div class="alert alert-error">
+                      Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="loader hide">
+                  <td colspan="3">
+                    Vennligst vent mens vi søker.<br>
+                    Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
+                    <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
