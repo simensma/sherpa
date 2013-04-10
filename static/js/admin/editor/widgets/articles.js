@@ -26,7 +26,7 @@
         var box = widget_editor.find("div.tag-box");
         box.empty();
         for(var i=0; i<widget.tags.length; i++) {
-            var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + widget.tags[i] + '</div>');
+            var tag = $('<div class="tag"><a href="javascript:undefined" class="closer"></a> ' + widget.tags[i] + '</div>');
             box.append(tag);
         }
         if(widget.tags.length > 0) {
