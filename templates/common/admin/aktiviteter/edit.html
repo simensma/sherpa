@@ -76,7 +76,8 @@
           <div class="control-group tags">
             <label class="control-label" for="tags">Opprett egne kategorier her:</label>
             <div class="controls">
-              <p><input type="text" class="input-large" name="tags"></p>
+              <input type="hidden" name="tags" value="">
+              <p><input type="text" class="input-large" name="tag"></p>
               <div class="tag-box">
                 {% for tag in aktivitet.category_tags.all %}
                   <div class="tag">

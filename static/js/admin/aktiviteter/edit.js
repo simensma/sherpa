@@ -2,7 +2,8 @@ $(document).ready(function() {
 
     var form = $("form.edit-aktivitet");
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
-    var input = form.find("div.tags input[name='tags']");
+    var tag_input = form.find("div.tags input[name='tag']");
+    var tag_collection = form.find("div.tags input[name='tags']");
     var subcategories = form.find("select[name='subcategories']");
 
     var subcategory_values = JSON.parse(subcategories.attr('data-all-subcategories'));
@@ -25,8 +26,8 @@ $(document).ready(function() {
         // TODO should be an easier way to add the tag! Simulate typing it into the input for now.
         option.remove();
         subcategories.trigger('liszt:updated');
-        $("input[name='tags']").val(option.val());
-        $("input[name='tags']").focusout();
+        tag_input.val(option.val());
+        tag_input.focusout();
     });
     // TODO - re-add removed options on tag removal
 
@@ -51,7 +52,7 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    var tagger = new TypicalTagger(input, form.find("div.tag-box"));
+    var tagger = new TypicalTagger(tag_input, form.find("div.tag-box"));
 
     // Collect existing tags based on the DOM and layout
     var tags = [];
@@ -63,7 +64,7 @@ $(document).ready(function() {
     form.submit(function() {
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        input.val(JSON.stringify(tagger.tags));
+        tag_collection.val(JSON.stringify(tagger.tags));
     });
 
     // Enable date-editing
