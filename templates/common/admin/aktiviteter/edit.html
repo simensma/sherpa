@@ -27,7 +27,6 @@
 
       <ul class="nav nav-tabs">
         <li class="active"><a href="#beskrivelse" data-toggle="tab">Beskrivelse og informasjon</a></li>
-        <li><a href="#kategorier" data-toggle="tab">Kategorier</a></li>
         <li><a href="#datoer" data-toggle="tab">Datoer og påmelding</a></li>
         <li><a href="#synlighet" data-toggle="tab">Synlighet</a></li>
       </ul>
@@ -62,27 +61,6 @@
             </div>
           </div>
 
-        </div>
-
-        <div id="datoer" class="tab-pane">
-
-          {% for date in aktivitet.get_dates_ordered %}
-            {% include 'common/admin/aktiviteter/date-form.html' %}
-          {% endfor %}
-
-          <div class="control-group">
-            <div class="controls">
-              <div class="control-as-text">
-                <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url admin.aktiviteter.views.new_aktivitet_date %}">
-                  Legg til flere datoer
-                </a>
-                <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="kategorier" class="tab-pane">
           <div class="control-group tags">
             <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
             <div class="controls">
@@ -110,6 +88,25 @@
             </div>
           </div>
           <div style="clear: both;"></div>
+
+        </div>
+
+        <div id="datoer" class="tab-pane">
+
+          {% for date in aktivitet.get_dates_ordered %}
+            {% include 'common/admin/aktiviteter/date-form.html' %}
+          {% endfor %}
+
+          <div class="control-group">
+            <div class="controls">
+              <div class="control-as-text">
+                <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url admin.aktiviteter.views.new_aktivitet_date %}">
+                  Legg til flere datoer
+                </a>
+                <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="synlighet" class="tab-pane">
