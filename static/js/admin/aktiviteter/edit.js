@@ -205,6 +205,8 @@ $(document).ready(function() {
     leader_search_button.click(leaderSearch);
 
     function leaderSearch() {
+        leader_search_input.prop('disabled', true);
+        leader_search_button.prop('disabled', true);
         leader_table.show();
         leader_loader.show();
         leader_no_hits.hide();
@@ -213,6 +215,8 @@ $(document).ready(function() {
         leader_table.find("tr.result").remove();
         var query = leader_search_input.val();
         if(query.length < admin_user_search_char_length) {
+            leader_search_input.prop('disabled', false);
+            leader_search_button.prop('disabled', false);
             leader_short_query.show();
             leader_loader.hide();
             return;
@@ -233,6 +237,8 @@ $(document).ready(function() {
             leader_error.show();
         }).always(function(result) {
             leader_loader.hide();
+            leader_search_input.prop('disabled', false);
+            leader_search_button.prop('disabled', false);
         });
     }
 
