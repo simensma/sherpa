@@ -150,7 +150,12 @@
         <div id="turledere" class="tab-pane">
           <div class="control-group">
             <div class="controls">
-              Her kan du legge til turledere som får tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst i medlemsregisteret, men personen må ha en Min side-bruker.
+              <p>
+                Her kan du legge til turledere som får tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst i medlemsregisteret, men personen må ha en Min side-bruker.
+              </p>
+              <p>
+                Hvis aktiviteten har flere datoer, kobler du turlederen til en av datoene. Husk derfor å gjøre deg ferdig med <a href="javascript:undefined;" data-toggle-tab="datoer">datoer og påmelding</a> først.
+              </p>
             </div>
           </div>
 
@@ -160,7 +165,7 @@
               <input type="text" class="input-xlarge" name="leader-search">
               <button class="btn leader-search"><i class="icon-search"></i></button>
 
-              <table class="table leader-search-list hide">
+              <table class="table leader-search-list hide" data-add-auto-url="{% url admin.aktiviteter.views.leader_add_automatically %}">
                 <tr>
                   <th>Navn</th>
                   <th>Medlemsnummer</th>
@@ -193,6 +198,17 @@
                   </td>
                 </tr>
               </table>
+
+              <div class="choose-date-loader hide">
+                Lagrer turlederstatus, vennligst vent...<br>
+                <img class="ajaxloader" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+              </div>
+
+              <div class="choose-date form-border hide" data-add-manual-url="{% url admin.aktiviteter.views.leader_add_manually %}">
+                Velg hvilken dato <span class="name"></span> skal ha turlederstatus for:
+                <div class="date-options"></div>
+              </div>
+
             </div>
           </div>
         </div>

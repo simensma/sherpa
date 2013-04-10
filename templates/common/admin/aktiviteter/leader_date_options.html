@@ -1,0 +1,7 @@
+<ul>
+  {% for date in dates %}
+    <li>
+      <button class="btn choose-date" data-date-id="{{ date.id }}">{{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</button>
+    </li>
+  {% endfor %}
+</ul>

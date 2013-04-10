@@ -57,6 +57,7 @@ class AktivitetDate(models.Model):
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
+    leaders = models.ManyToManyField('user.Profile', related_name='+')
     participants = models.ManyToManyField('user.Profile', related_name='aktiviteter')
 
     def get_signup_enabled_json(self):

@@ -40,28 +40,43 @@ form.edit-aktivitet {
     }
   }
 
-  table.leader-search-list {
-    margin-top: 15px;
+  div.control-group.leader {
 
-    th, td {
-      font-family: "DTL Nobel" !important;
-      vertical-align: middle;
-    }
+    table.leader-search-list {
+      margin-top: 15px;
 
-    tr.loader, tr.short_query {
-      td {
+      th, td {
         font-family: "DTL Nobel" !important;
-        text-align: center;
+        vertical-align: middle;
+      }
+
+      tr.loader, tr.short_query {
+        td {
+          font-family: "DTL Nobel" !important;
+          text-align: center;
+        }
       }
     }
+
+    div.control-group.submit {
+      border-top: 1px solid rgb(216, 216, 216);
+      padding-top: 20px;
+    }
+
+    a.add-aktivitet-date {
+      font-weight: normal;
+    }
+
+    div.choose-date-loader {
+      margin-top: 15px;
+      font-family: "DTL Nobel" !important;
+      text-align: center;
+    }
+
+    div.choose-date {
+      margin-top: 15px;
+    }
+
   }
 
-  div.control-group.submit {
-    border-top: 1px solid rgb(216, 216, 216);
-    padding-top: 20px;
-  }
-
-  a.add-aktivitet-date {
-    font-weight: normal;
-  }
 }

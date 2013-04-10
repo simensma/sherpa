@@ -242,4 +242,65 @@ $(document).ready(function() {
         });
     }
 
+    // Found leader, choose date for leader status
+
+    var leader_choose_date = leader.find("div.choose-date");
+    var leader_choose_date_loader = leader.find("div.choose-date-loader");
+    $(document).on('click', "form.edit-aktivitet div.control-group.leader a.assign-leader-status", function() {
+        leader_table.hide();
+        leader_choose_date_loader.show();
+        var profile_id = $(this).parents("tr.result").attr("data-profile-id");
+        var profile_name = $(this).parents("tr.result").attr("data-profile-name");
+        $.ajaxQueue({
+            url: leader_table.attr("data-add-auto-url"),
+            data: {
+                aktivitet: form.attr("data-aktivitet-id"),
+                profile: profile_id
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.status == 'saved') {
+                // TODO: display results in a table
+                alert("The leader was saved.");
+            } else if(result.status == 'multiple') {
+                chooseDateForLeader(profile_id, profile_name, result.date_options);
+            }
+        }).fail(function() {
+            alert("Beklager - det oppstod en feil når vi skulle lagre turlederstatus!\n\n" +
+                "Har du sjekket at du ikke har mistet tilgang til internett?\n\n" +
+                "Du kan prøve igjen så mange ganger du vil. Feilen har blitt logget i våre systemer, og hvis vi ser at det er et teknisk problem i Sherpa så skal vi rette den så snart som mulig.");
+            leader_table.show();
+        }).always(function() {
+            leader_choose_date_loader.hide();
+        });
+    });
+
+    function chooseDateForLeader(profile_id, profile_name, date_options) {
+        leader_choose_date.attr("data-profile-id", profile_id);
+        leader_choose_date.find("span.name").text(profile_name);
+        leader_choose_date.find("div.date-options").empty().append(date_options);
+        leader_choose_date.slideDown();
+    }
+
+    $(document).on('click', "form.edit-aktivitet div.control-group.leader div.choose-date div.date-options button.choose-date", function() {
+        var date = $(this).attr("data-date-id");
+        $.ajaxQueue({
+            url: leader_choose_date.attr("data-add-manual-url"),
+            data: {
+                date: date,
+                profile: leader_choose_date.attr("data-profile-id")
+            }
+        }).done(function(result) {
+            // TODO: display results in a table
+            alert("The leader was saved.");
+            leader_choose_date.hide();
+        }).fail(function() {
+            alert("Beklager - det oppstod en feil når vi skulle lagre turlederstatus!\n\n" +
+                "Har du sjekket at du ikke har mistet tilgang til internett?\n\n" +
+                "Du kan prøve igjen så mange ganger du vil. Feilen har blitt logget i våre systemer, og hvis vi ser at det er et teknisk problem i Sherpa så skal vi rette den så snart som mulig.");
+        }).always(function() {
+            leader_choose_date_loader.hide();
+        });
+    });
+
 });
