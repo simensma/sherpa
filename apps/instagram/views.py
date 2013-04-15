@@ -27,7 +27,6 @@ def load(request):
     for tag, next_url in request.session['instagram']['tags'].items():
         if next_url is None:
             # This one didn't have a next_url on its last request
-            print("SKIPPING %s" % tag)
             continue
 
         data = cache.get('instagram.url.%s' % next_url)
