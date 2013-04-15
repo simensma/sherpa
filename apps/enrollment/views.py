@@ -595,7 +595,8 @@ def process_invoice(request):
         request,
         request.session['enrollment']['users'],
         request.session['enrollment']['association'],
-        request.session['enrollment']['location'], 'invoice',
+        request.session['enrollment']['location'],
+        'invoice',
         request.session['enrollment']['price_sum'])
 
     request.session['enrollment']['result'] = 'success_invoice'
@@ -654,7 +655,8 @@ def process_card(request):
                     request,
                     request.session['enrollment']['users'],
                     request.session['enrollment']['association'],
-                    request.session['enrollment']['location'], 'card',
+                    request.session['enrollment']['location'],
+                    'card',
                     request.session['enrollment']['price_sum'])
                 request.session['enrollment']['result'] = 'success_card'
             else:
