@@ -128,7 +128,7 @@
               </div>
               <div class="hints">
                 En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse:<br>
-                <a href="{% url aktiviteter.views.show aktivitet.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.id %}</a>
+                <a href="{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}</a>
               </div>
             </div>
           </div>
