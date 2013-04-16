@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.db import models
 
 from datetime import date
@@ -13,8 +14,10 @@ class Aktivitet(models.Model):
         ('expert', 'Ekspert'),)
     difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
     CATEGORY_CHOICES = (
-        ('trip', 'Tur'),
-        ('course', 'Kurs'),)
+        ('trip', 'Tur/Aktivitet'),
+        ('course', 'Kurs'),
+        ('event', 'Arrangement'),
+        ('volunteerwork', 'Dugnad'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
@@ -40,12 +43,61 @@ class Aktivitet(models.Model):
     # as tags ('core.Tag'), though.
     SUBCATEGORIES = {
         'trip': [
-            'fellestur',
-            'trilletur'
+            'Fottur',
+            'Skitur',
+            'Sykkeltur',
+            'Klatring',
+            'Padling',
+            'Skøytetur',
+            'Topptur',
+            'Kiting',
+            'Surfing',
+            'Brevandring',
+            'Grottetur',
+            'Snøhuletur',
+            'Trilletur',
+            'Bær-og-sopptur',
+            'Fisketur',
+            'Ridetur',
+            'Singeltur',
+            'Naturlos',
+            'Utenlandstur',
+            'Orientering',
         ],
         'course': [
-            'skredkurs',
-            'klatrekurs'
+            'Turlederkurs',
+            'Instruktørkurs',
+            'Brekurs',
+            'Klatrekurs',
+            'Skredkurs',
+            'GPS-kurs',
+            'Kajakkurs',
+            'Førstehjelpskurs',
+        ],
+        'event': [
+            'Kom-deg-ut-dagen',
+            'BaseCamp',
+            'OPPTUR',
+            'OPPSTART',
+            'Fjellsportsamling',
+            'Sommeråpning',
+            'Konsert',
+            'Festival',
+            'Medlemsmøte',
+            'Foredrag',
+            'Familieleir',
+            'Barneleir',
+        ],
+        'volunteerwork': [
+            'Merking',
+            'Varding',
+            'Rydding',
+            'Snekring',
+            'Maling',
+            'Vedlikeholdsarbeid',
+            'Turledelse',
+            'Organisasjonsarbeid',
+            'Arrangementsbistand',
         ]
     }
 
