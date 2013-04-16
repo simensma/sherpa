@@ -37,30 +37,29 @@ $(document).ready(function() {
         subcategories_other.slideDown();
     });
 
-    TagDisplayAH.enable({
-        targetInput: form_tags,
-        tagBox: form_tag_box,
-        removeCallback: function(tag) {
-            subcategories_buttons.each(function() {
-                if($(this).text().trim() === tag) {
-                    $(this).show();
-                }
-            });
-        }
+    TaggerAH.enable({
+        targetInput: form_tags
     });
 
     subcategories_buttons.click(function() {
-        TagDisplayAH.addTag($(this).text());
-        $(this).hide();
+        if($(this).is(".btn-danger")) {
+            TaggerAH.removeTag($(this).text());
+            $(this).removeClass("btn-danger");
+        } else {
+            var result = TaggerAH.addTag($(this).text());
+            if(result.status === 'ok') {
+                $(this).addClass("btn-danger");
+            }
+        }
     });
 
     form.submit(function(e) {
-        if(TagDisplayAH.count() === 0) {
+        if(TaggerAH.count() === 0) {
             alert("Du må legge til minst én kategori - velg fra knappene over.");
             e.preventDefault();
             return;
         }
-        TagDisplayAH.collect();
+        TaggerAH.collect();
     });
 
 });
