@@ -4,11 +4,6 @@ $(document).ready(function() {
     var form = new_categories.find("form.create-new-category");
     var form_category = form.find("input[name='category']");
 
-    listing.find("a.create-new").click(function() {
-        $(this).parent().hide();
-        new_categories.slideDown();
-    });
-
     form.find("input[type='submit']").click(function() {
         form_category.val($(this).attr('data-tag-name'));
     });
