@@ -49,45 +49,45 @@
       </div>
 
       <div class="subcategories-hidden hide">
-        <div class="subcategories square-well trip">
+        <div class="subcategories trip">
           <h3 class="chosen hide">Velg noen kategorier for turen/aktiviteten</h3>
           <h3 class="other hide">Kategorier for turer/aktiviteter</h3>
-          <p>
+          <div class="square-well">
             {% for subcategory in subcategories.trip %}
               <button class="btn subcategory">{{ subcategory }}</button>
             {% endfor %}
-          </p>
+          </div>
         </div>
-        <div class="subcategories square-well course">
+        <div class="subcategories course">
           <h3 class="chosen hide">Velg noen kategorier for kurset:</h3>
           <h3 class="other hide">Kategorier for kurs:</h3>
-          <p>
+          <div class="square-well">
             {% for subcategory in subcategories.course %}
               <button class="btn subcategory">{{ subcategory }}</button>
             {% endfor %}
-          </p>
+          </div>
         </div>
-        <div class="subcategories square-well event">
+        <div class="subcategories event">
           <h3 class="chosen hide">Velg noen kategorier for arrangementet:</h3>
           <h3 class="other hide">Kategorier for arrangement:</h3>
-          <p>
+          <div class="square-well">
             {% for subcategory in subcategories.event %}
               <button class="btn subcategory">{{ subcategory }}</button>
             {% endfor %}
-          </p>
+          </div>
         </div>
-        <div class="subcategories square-well volunteerwork">
+        <div class="subcategories volunteerwork">
           <h3 class="chosen hide">Velg noen kategorier for dugnaden:</h3>
           <h3 class="other hide">Kategorier for dugnad:</h3>
-          <p>
+          <div class="square-well">
             {% for subcategory in subcategories.volunteerwork %}
               <button class="btn subcategory">{{ subcategory }}</button>
             {% endfor %}
-          </p>
+          </div>
         </div>
       </div>
 
-      <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category form-border">
+      <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category">
         {% csrf_token %}
         <input type="hidden" name="category" value="">
         <input type="hidden" name="tags" value="">
