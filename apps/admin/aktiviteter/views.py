@@ -19,7 +19,8 @@ def index(request):
     aktiviteter = Aktivitet.objects.all()
     context = {
         'aktiviteter': aktiviteter,
-        'categories': Aktivitet.CATEGORY_CHOICES
+        'categories': Aktivitet.CATEGORY_CHOICES,
+        'subcategories': Aktivitet.SUBCATEGORIES
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
@@ -33,6 +34,9 @@ def new(request):
         category=request.POST['category']
     )
     aktivitet.save()
+    for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
+        obj, created = Tag.objects.get_or_create(name=tag)
+        aktivitet.category_tags.add(obj)
     create_aktivitet_date(aktivitet)
     return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
 

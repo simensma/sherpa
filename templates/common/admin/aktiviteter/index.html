@@ -4,6 +4,7 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/tagger-adhoc.js"></script>
 {% endblock %}
 
 {% load rowiterator %}
@@ -13,24 +14,96 @@
 <div class="aktivitet-listing">
 
   <div class="new-categories">
-    <div class="row">
-      <div class="span12">
-        <h3>Opprett en ny aktivitet (velg type):</h3>
+    <div class="initial-category">
+      <div class="row">
+        <div class="span12">
+          <h3>Opprett en ny aktivitet (velg type):</h3>
+        </div>
       </div>
-    </div>
-
-    <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category">
-      {% csrf_token %}
-      <input type="hidden" name="category" value="">
 
       {% rowiterator 4 %}
         {% for category in categories %}
           {% column %}
-            <input type="submit" name="submit" value="{{ category.1 }}" data-tag-name="{{ category.0 }}" class="btn">
+            <button class="btn category" data-tag-name="{{ category.0 }}">{{ category.1 }}</button>
           {% endcolumn %}
         {% endfor %}
       {% endrowiterator %}
-    </form>
+    </div>
+
+    <div class="pick-subcategories hide">
+      <div class="chosen-category">
+        <div class="row">
+          <div class="span12">
+            <p>
+              <a href="javascript:undefined" class="show-other-subcategories">Vis også kategoriforslag for andre turtyper...</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="other-categories hide">
+        <div class="row">
+          <div class="span4"></div>
+          <div class="span4"></div>
+          <div class="span4"></div>
+        </div>
+      </div>
+
+      <div class="subcategories-hidden hide">
+        <div class="subcategories square-well trip">
+          <h3 class="chosen hide">Velg noen kategorier for turen/aktiviteten</h3>
+          <h3 class="other hide">Kategorier for turer/aktiviteter</h3>
+          <p>
+            {% for subcategory in subcategories.trip %}
+              <button class="btn subcategory">{{ subcategory }}</button>
+            {% endfor %}
+          </p>
+        </div>
+        <div class="subcategories square-well course">
+          <h3 class="chosen hide">Velg noen kategorier for kurset:</h3>
+          <h3 class="other hide">Kategorier for kurs:</h3>
+          <p>
+            {% for subcategory in subcategories.course %}
+              <button class="btn subcategory">{{ subcategory }}</button>
+            {% endfor %}
+          </p>
+        </div>
+        <div class="subcategories square-well event">
+          <h3 class="chosen hide">Velg noen kategorier for arrangementet:</h3>
+          <h3 class="other hide">Kategorier for arrangement:</h3>
+          <p>
+            {% for subcategory in subcategories.event %}
+              <button class="btn subcategory">{{ subcategory }}</button>
+            {% endfor %}
+          </p>
+        </div>
+        <div class="subcategories square-well volunteerwork">
+          <h3 class="chosen hide">Velg noen kategorier for dugnaden:</h3>
+          <h3 class="other hide">Kategorier for dugnad:</h3>
+          <p>
+            {% for subcategory in subcategories.volunteerwork %}
+              <button class="btn subcategory">{{ subcategory }}</button>
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+
+      <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category form-border">
+        {% csrf_token %}
+        <input type="hidden" name="category" value="">
+        <input type="hidden" name="tags" value="">
+
+        <div class="row">
+          <div class="span12">
+            <h3>Valgte kategorier</h3>
+
+            <div class="tag-box"></div>
+            <div style="clear: both;"></div>
+
+            <input type="submit" value="Opprett aktiviteten" class="btn btn-large btn-success">
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 
   <div class="row">
