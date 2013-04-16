@@ -129,6 +129,9 @@ class AktivitetDate(models.Model):
     def get_other_dates_ordered(self):
         return self.other_dates().order_by('-start_date')
 
+    def get_leaders_ordered(self):
+        return sorted(self.leaders.all(), key=lambda p: p.get_first_name())
+
     @staticmethod
     def get_published():
         today = date.today()

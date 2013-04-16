@@ -160,6 +160,24 @@
             </div>
           </div>
 
+          <div class="control-group">
+            <label class="control-label">Turledere</label>
+            <div class="controls">
+              {% for date in aktivitet.get_dates_ordered %}
+                <div class="date" data-date-id="{{ date.id }}">
+                  <h3>{{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
+                  <table class="table">
+                    {% for profile in date.leaders.all %}
+                      <tr data-profile-id="{{ profile.id }}">
+                        <td>{{ profile.get_full_name }}</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
           <div class="control-group leader" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
             <label class="control-label" for="leader">Søk etter personer:</label>
             <div class="controls">
