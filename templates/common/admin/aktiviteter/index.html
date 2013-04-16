@@ -106,17 +106,19 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="span12">
-      <table class="table table-striped">
-        {% for aktivitet in aktiviteter %}
-          <tr>
-            <td>
-              <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
+  <div class="list-wrapper">
+    <div class="row">
+      <div class="span12">
+        <table class="table table-striped">
+          {% for aktivitet in aktiviteter %}
+            <tr>
+              <td>
+                <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
     </div>
   </div>
 

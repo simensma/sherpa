@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var listing = $("div.aktivitet-listing");
+    var actual_listing = listing.find("div.list-wrapper");
     var new_categories = listing.find("div.new-categories");
     var initial_category = new_categories.find("div.initial-category");
     var category_buttons = new_categories.find("button.category");
@@ -22,6 +23,7 @@ $(document).ready(function() {
         chosen_category.detach().prependTo(subcategories_chosen);
         subcategories.slideDown();
         initial_category.remove();
+        actual_listing.remove();
     });
 
     show_other_subcategories.click(function() {
