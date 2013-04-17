@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-    $("div.invoice-info").hide();
     $("form#payment input[name='payment_method'][value='card']").change(function() {
         if($(this).is(":checked")) {
             $("button.payment").html('Til betaling <i class="icon-arrow-right"></i>');
