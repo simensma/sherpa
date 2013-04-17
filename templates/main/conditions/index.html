@@ -10,49 +10,51 @@
 
 <div class="row">
   <div class="span12">
+    <div class="weather-conditions-wrapper">
 
-    <h1>Føremeldinger</h1>
+      <h1>Føremeldinger</h1>
 
-    <p>
-      Føremeldingene beskriver forholdene i utvalgte fjell- og turområder i Norge. Informasjonen er hentet fra hyttebestyrere, fjelloppsyn og andre lokale kilder. Husk at det kan være store lokale variasjoner og at forholdene i fjellet kan skifte rask.
-    </p>
+      <p>
+        Føremeldingene beskriver forholdene i utvalgte fjell- og turområder i Norge. Informasjonen er hentet fra hyttebestyrere, fjelloppsyn og andre lokale kilder. Husk at det kan være store lokale variasjoner og at forholdene i fjellet kan skifte rask.
+      </p>
 
-    <p>
-      Planlegg turen din på <a href="http://ut.no/">UT.no</a>. Sjekk også været på <a href="http://www.yr.no/">yr.no</a> og eventuell skredfare på <a href="http://www.varsom.no/">varsom.no</a>.<br>
-      Har du nettopp vært på tur? Del gjerne bilder og førerapport med andre på vår <a href="http://www.facebook.com/turistforeningen">Facebook-side</a>.
-    </p>
+      <p>
+        Planlegg turen din på <a href="http://ut.no/">UT.no</a>. Sjekk også været på <a href="http://www.yr.no/">yr.no</a> og eventuell skredfare på <a href="http://www.varsom.no/">varsom.no</a>.<br>
+        Har du nettopp vært på tur? Del gjerne bilder og førerapport med andre på vår <a href="http://www.facebook.com/turistforeningen">Facebook-side</a>.
+      </p>
 
-    <div class="conditions-search form-border">
-      Vis føremelding for:<br>
-      <select name="conditions-filter" data-placeholder="Alle områder">
-        <option value=""></option>
-        {% for location in available_locations %}
-          <option value="{{ location.id }}">{{ location.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    {% for condition in conditions %}
-
-      <div class="conditions" data-locations="{{ condition.get_location_ids_json }}">
-
-        <p class="date pull-right">{{ condition.get_date_observed }}</p>
-        <h2>{{ condition.get_comma_separated_locations }}</h2>
-        <p>
-          {{ condition.content|safe }}
-        </p>
-
-        <p class="author">
-          <span class="author-label">
-            Lagt inn av:
-          </span>
-          {{ condition.author_name.strip }} (<a href="mailto:{{ condition.author_email }}">{{ condition.author_email }}</a>), {{ condition.get_date_observed }}
-        </p>
-
+      <div class="conditions-search form-border">
+        Vis føremelding for:<br>
+        <select name="conditions-filter" data-placeholder="Alle områder">
+          <option value=""></option>
+          {% for location in available_locations %}
+            <option value="{{ location.id }}">{{ location.name }}</option>
+          {% endfor %}
+        </select>
       </div>
 
-    {% endfor %}
+      {% for condition in conditions %}
 
+        <div class="conditions" data-locations="{{ condition.get_location_ids_json }}">
+
+          <p class="date pull-right">{{ condition.get_date_observed }}</p>
+          <h2>{{ condition.get_comma_separated_locations }}</h2>
+          <p>
+            {{ condition.content|safe }}
+          </p>
+
+          <p class="author">
+            <span class="author-label">
+              Lagt inn av:
+            </span>
+            {{ condition.author_name.strip }} (<a href="mailto:{{ condition.author_email }}">{{ condition.author_email }}</a>), {{ condition.get_date_observed }}
+          </p>
+
+        </div>
+
+      {% endfor %}
+
+    </div>
   </div>
 </div>
 
