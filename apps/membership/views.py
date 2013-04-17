@@ -14,7 +14,7 @@ from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import logging
 import sys
