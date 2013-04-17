@@ -1,15 +1,19 @@
 $(document).ready(function() {
 
-    $("form#payment input[name='payment_method'][value='card']").change(function() {
+    var form = $("form#payment");
+    var payment_button = form.find("button.payment");
+    var invoice_info = form.find("div.invoice-info");
+
+    form.find("input[name='payment_method'][value='card']").change(function() {
         if($(this).is(":checked")) {
-            $("button.payment").html('Til betaling <i class="icon-arrow-right"></i>');
-            $("div.invoice-info").hide();
+            payment_button.html('Til betaling <i class="icon-arrow-right"></i>');
+            invoice_info.hide();
         }
     });
-    $("form#payment input[name='payment_method'][value='invoice']").change(function() {
+    form.find("input[name='payment_method'][value='invoice']").change(function() {
         if($(this).is(":checked")) {
-            $("button.payment").html('Send bestilling <i class="icon-ok"></i>');
-            $("div.invoice-info").show();
+            payment_button.html('Send bestilling <i class="icon-ok"></i>');
+            invoice_info.show();
         }
     });
 
