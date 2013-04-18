@@ -1,24 +1,26 @@
 $(document).ready(function() {
 
+    var form_placement = $("form.placement");
+
     $("a.toggle-old-placements").click(function() {
         $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
     });
 
     function updateCheck() {
-        if($("form.placement tr.time input[name='adplacement_type']:checked").length > 0) {
-            $("form.placement tr.time input[name='start_date'], form.placement tr.time input[name='end_date']").removeAttr('disabled');
-            $("form.placement tr.view input[name='view_limit']").val('').attr('disabled', true);
-        } else if($("form.placement tr.view input[name='adplacement_type']:checked").length > 0) {
-            $("form.placement tr.time input[name='start_date'], form.placement tr.time input[name='end_date']").val('').attr('disabled', true);
-            $("form.placement tr.view input[name='view_limit']").removeAttr('disabled');
+        if(form_placement.find("tr.time input[name='adplacement_type']:checked").length > 0) {
+            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").removeAttr('disabled');
+            form_placement.find("tr.view input[name='view_limit']").val('').attr('disabled', true);
+        } else if(form_placement.find("tr.view input[name='adplacement_type']:checked").length > 0) {
+            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").val('').attr('disabled', true);
+            form_placement.find("tr.view input[name='view_limit']").removeAttr('disabled');
         }
     }
 
-    $("form.placement input[name='adplacement_type']").click(updateCheck);
-    $("form.placement tr.time input[name='adplacement_type']").click();
+    form_placement.find("input[name='adplacement_type']").click(updateCheck);
+    form_placement.find("tr.time input[name='adplacement_type']").click();
     updateCheck();
 
-    $("form.placement input.date").datepicker({
+    form_placement.find("input.date").datepicker({
         changeMonth: true,
         changeYear: true,
         firstDay: 1,
