@@ -8,11 +8,11 @@ $(document).ready(function() {
 
     function updateCheck() {
         if(form_placement.find("tr.time input[name='adplacement_type']:checked").length > 0) {
-            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").removeAttr('disabled');
-            form_placement.find("tr.view input[name='view_limit']").val('').attr('disabled', true);
+            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").prop('disabled', false);
+            form_placement.find("tr.view input[name='view_limit']").val('').prop('disabled', true);
         } else if(form_placement.find("tr.view input[name='adplacement_type']:checked").length > 0) {
-            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").val('').attr('disabled', true);
-            form_placement.find("tr.view input[name='view_limit']").removeAttr('disabled');
+            form_placement.find("tr.time input[name='start_date'], tr.time input[name='end_date']").val('').prop('disabled', true);
+            form_placement.find("tr.view input[name='view_limit']").prop('disabled', false);
         }
     }
 
