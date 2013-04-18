@@ -154,7 +154,7 @@ $(document).ready(function() {
             var div = addReceiver(session_receivers[i].dob);
 
             // Pre-insert form data
-            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").attr('selected', true);
+            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").prop('selected', true);
             div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
             div.find("input[name='receiver_name']").val(session_receivers[i].name);
             div.find("input[name='receiver_address']").val(session_receivers[i].address);

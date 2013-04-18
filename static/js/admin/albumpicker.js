@@ -73,9 +73,9 @@ $(document).ready(function() {
 
                 // Set current to that one
                 if(!allow_root && result.path.length == 0) {
-                    picker.find("button.pick").attr('disabled', true);
+                    picker.find("button.pick").prop('disabled', true);
                 } else {
-                    picker.find("button.pick").removeAttr('disabled');
+                    picker.find("button.pick").prop('disabled', false);
                     var name;
                     if(result.path.length > 0) {
                         name = result.path[result.path.length-1].name;

@@ -77,9 +77,9 @@ $(document).ready(function() {
 
     form.find("input[name='toggle-sherpa-email']").change(function() {
         if($(this).is(':checked')) {
-            form.find("input[name='sherpa-email']").removeAttr('readonly');
+            form.find("input[name='sherpa-email']").prop('readonly', false);
         } else {
-            form.find("input[name='sherpa-email']").val('').attr('readonly', true).focusout();
+            form.find("input[name='sherpa-email']").val('').prop('readonly', true).focusout();
         }
     });
 

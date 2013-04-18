@@ -14,7 +14,7 @@
             uploader.find("div.uploading").show();
             var tags = JSON.stringify(tagger.tags);
             form.find("input[name='tags-serialized']").val(tags);
-            uploader.find("input[type='submit']").attr('disabled', 'disabled');
+            uploader.find("input[type='submit']").prop('disabled', true);
         });
 
         var photographer = form.find("input[name='photographer']");
@@ -34,7 +34,7 @@
     ImageUploadDialog.open = function(callback) {
         ImageUploadDialog.callback = callback;
 
-        uploader.find("input[type='submit']").removeAttr('disabled');
+        uploader.find("input[type='submit']").prop('disabled', false);
         uploader.find("input[type='reset']").click();
 
         uploader.find("input[name='tags-serialized']").val("");
@@ -55,15 +55,15 @@
             uploader.modal('hide');
             ImageUploadDialog.callback(result.url, description, photographer);
         } else if(result.status === "no_files") {
-            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("input[type='submit']").prop('disabled', false);
             uploader.find("div.upload-no-files").show();
             uploader.find("div.uploading").hide();
         } else if(result.status == 'parse_error') {
-            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("input[type='submit']").prop('disabled', false);
             uploader.find("div.parse-error").show();
             uploader.find("div.uploading").hide();
         } else if(result.status == 'unknown_exception') {
-            uploader.find("input[type='submit']").removeAttr('disabled');
+            uploader.find("input[type='submit']").prop('disabled', false);
             uploader.find("div.unknown-exception").show();
             uploader.find("div.uploading").hide();
         }
