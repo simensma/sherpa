@@ -84,8 +84,8 @@ def leader_search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True)))
-    actors_without_profile = actors.exclude(memberid__in=list(members.values_list('memberid', flat=True)))
+    members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
+    actors_without_profile = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
     profiles = list(local_profiles) + list(members)
 
     context = RequestContext(request, {
