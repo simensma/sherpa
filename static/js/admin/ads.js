@@ -20,24 +20,14 @@ $(document).ready(function() {
     form_placement.find("tr.time input[name='adplacement_type']").click();
     updateCheck();
 
-    form_placement.find("input.date").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        firstDay: 1,
-        yearRange: "-1:+20",
-        dateFormat: 'dd.mm.yy',
-        dayNames: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-        dayNamesShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-        dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-        monthNames: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August',
-          'September', 'Oktober', 'November', 'Desember'],
-        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',
-          'Nov', 'Des'],
-        showOn: 'both',
-        buttonImage: '/static/img/calendar.png',
-        buttonImageOnly: true,
-        buttonText: 'Velg dato...'
-    });
+    var dp_options = {
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        language: 'nb'
+    };
+    form_placement.find("div.date").datepicker(dp_options);
+    $("div.placement-dialog.time form div.date").datepicker(dp_options);
 
     $("table.placements.time tr.placement").click(function() {
         var form = $("div.placement-dialog.time form");
@@ -45,6 +35,10 @@ $(document).ready(function() {
         form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
         form.find("input[name='start_date']").val($(this).attr('data-start-date'));
         form.find("input[name='end_date']").val($(this).attr('data-end-date'));
+        // The bootstrap-datepicker 'update' method doesn't work, see:
+        // https://github.com/eternicode/bootstrap-datepicker/issues/240
+        // Just remove and recreate it for now.
+        form.find("div.date").datepicker('remove').datepicker(dp_options);
     });
 
     $("table.placements.view tr.placement").click(function() {

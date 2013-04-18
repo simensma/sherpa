@@ -1,9 +1,18 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Annonser &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url 'admin.ads.views.list' %}">Annonser</a>{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
+  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
+{% endblock %}
+
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
   <script src="{{ STATIC_URL }}js/admin/ads.js"></script>
 {% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -107,8 +116,14 @@
           <td><input type="radio" name="adplacement_type" value="time"></td>
           <td>Start/stopp visning:</td>
           <td>
-            <input type="text" name="start_date" class="input-medium date">
-            <input type="text" name="end_date" class="input-medium date">
+            <div class="input-append date">
+              <input type="text" name="start_date" class="input-medium">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+            <div class="input-append date">
+              <input type="text" name="end_date" class="input-medium">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
           </td>
         </tr>
         <tr class="view">
@@ -215,8 +230,14 @@
       <tr>
         <td>Start/stopp visning:</td>
         <td>
-          <input type="text" name="start_date" class="input-medium date">
-          <input type="text" name="end_date" class="input-medium date">
+          <div class="input-append date">
+            <input type="text" name="start_date" class="input-medium date">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
+          <div class="input-append date">
+            <input type="text" name="end_date" class="input-medium date">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
         </td>
       </tr>
       <tr>
