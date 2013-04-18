@@ -88,7 +88,7 @@ $(document).ready(function() {
             startView: 'decade',
             autoclose: true,
             language: 'nb'
-        }).on('hide', function() {
+        }).on('changeDate', function() {
             Validator.performValidation({
                 method: 'date',
                 control_group: box.find("div.control-group.receiver_dob"),
