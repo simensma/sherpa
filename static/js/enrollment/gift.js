@@ -5,7 +5,7 @@ $(document).ready(function() {
     var giver_area = $("input[name='giver_area']");
     var giver_loader = giver_zipcode.siblings("img.ajaxloader");
     Validator.validateZipcode(giver_control_group, giver_zipcode, giver_area, giver_loader);
-    if(giver_zipcode.val() != '') {
+    if(giver_zipcode.val() !== '') {
         Validator.triggerZipcode(giver_zipcode);
     }
 
@@ -106,7 +106,7 @@ $(document).ready(function() {
         new_receiver.detach();
         $("div.receiver-box").last().append(new_receiver);
         clone.find("div.control-group.receiver_type").popover();
-        clone.find("select[name='receiver_type']").chosen({disable_search: true})
+        clone.find("select[name='receiver_type']").chosen({disable_search: true});
         addReceiverValidations(clone, initial_date);
         clone.slideDown();
         return clone;
@@ -147,7 +147,7 @@ $(document).ready(function() {
         $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
     });
 
-    if(session_receivers.length == 0) {
+    if(session_receivers.length === 0) {
         addReceiver();
     } else {
         for(var i=0; i<session_receivers.length; i++) {
