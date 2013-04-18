@@ -1,12 +1,10 @@
 # encoding: utf-8
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
-from django.contrib import messages
 
-from datetime import datetime
 import json
 
 from enrollment.models import Giver, Receiver, membership_types
