@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-    $("table.placements tr.inactive, table.placements tr.old").hide();
     $("a.toggle-old-placements").click(function() {
         $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
     });
