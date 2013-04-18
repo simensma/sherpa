@@ -81,7 +81,7 @@ $(document).ready(function() {
             box.find("div.control-group.receiver_zipcode img.ajaxloader")
         );
 
-        var dob = box.find("input[name='receiver_dob']");
+        var dob = box.find("div.control-group.receiver_dob div.date");
         dob.val(initial_date).datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
@@ -92,7 +92,7 @@ $(document).ready(function() {
             Validator.performValidation({
                 method: 'date',
                 control_group: box.find("div.control-group.receiver_dob"),
-                input: dob,
+                input: dob.find("input[name='receiver_dob']"),
                 req: true
             });
         });
@@ -167,7 +167,7 @@ $(document).ready(function() {
 
     if(window.trigger_form_validations) {
         Validator.trigger();
-        $("div.receiver-box input[name='receiver_dob']").datepicker('hide');
+        $("div.receiver-box div.control-group.receiver_dob div.date").datepicker('hide');
         Validator.triggerZipcode($("input[name='giver_zipcode'], input[name='receiver_zipcode']"));
     }
 });
