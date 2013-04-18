@@ -66,6 +66,8 @@ def edit(request, aktivitet):
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
 
 def leader_search(request):
+    MAX_HITS = 100
+
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
@@ -89,9 +91,12 @@ def leader_search(request):
     profiles = list(local_profiles) + list(members)
 
     context = RequestContext(request, {
-        'profiles': profiles,
-        'actors_without_profile': actors_without_profile})
-    return HttpResponse(render_to_string('common/admin/aktiviteter/leader_search_results.html', context))
+        'profiles': profiles[:MAX_HITS],
+        'actors_without_profile': actors_without_profile[:MAX_HITS]})
+    return HttpResponse(json.dumps({
+        'results': render_to_string('common/admin/aktiviteter/leader_search_results.html', context),
+        'max_hits_exceeded': len(profiles) > MAX_HITS or len(actors_without_profile) > MAX_HITS
+    }))
 
 def leader_add_automatically(request):
     # If there is only one date, add the leader automatically to that date.

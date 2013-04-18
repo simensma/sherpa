@@ -195,6 +195,7 @@ $(document).ready(function() {
     var leader_no_hits = leader_table.find("tr.no-hits");
     var leader_short_query = leader_table.find("tr.short_query");
     var leader_error = leader_table.find("tr.technical-error");
+    var leader_max_hits_exceeded = leader_table.find("tr.max-hits-exceeded");
     var leader_result_mirror = leader_no_hits.find("span.result-mirror");
 
     leader_search_input.keyup(function(e) {
@@ -212,6 +213,7 @@ $(document).ready(function() {
         leader_no_hits.hide();
         leader_short_query.hide();
         leader_error.hide();
+        leader_max_hits_exceeded.hide();
         leader_table.find("tr.result").remove();
         var query = leader_search_input.val();
         if(query.length < admin_user_search_char_length) {
@@ -225,12 +227,16 @@ $(document).ready(function() {
             url: leader.attr('data-search-url'),
             data: { q: query }
         }).done(function(result) {
+            result = JSON.parse(result);
             leader_table.find("tr.result").remove();
-            if(result.trim() === '') {
+            if(result.results.trim() === '') {
                 leader_result_mirror.text(query);
                 leader_no_hits.show();
             } else {
-                leader_table.append(result);
+                leader_table.append(result.results);
+                if(result.max_hits_exceeded) {
+                    leader_max_hits_exceeded.show();
+                }
             }
         }).fail(function(result) {
             leader_table.find("tr.result").remove();
