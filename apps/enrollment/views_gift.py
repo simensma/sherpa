@@ -72,7 +72,7 @@ def validate(request):
             r['zipcode'],
             r['phone'],
             r['email']
-            ))
+        ))
 
     request.session['gift_membership'] = {
         'giver': giver,
