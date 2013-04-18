@@ -18,8 +18,8 @@ $(document).ready(function() {
         }
     });
 
-    payment_button.click(function() {
-        $(this).prop('disabled', true);
+    form.submit(function() {
+        payment_button.prop('disabled', true);
         ajaxloader.show();
     });
 
