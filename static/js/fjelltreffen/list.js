@@ -33,7 +33,7 @@ $(document).ready(function() {
     button_trigger.click(loadAnnonser);
 
     function filterChanged(){
-        if(input_max_age.val() != '' && input_min_age.val() > input_max_age.val()) {
+        if(input_max_age.val() !== '' && input_min_age.val() > input_max_age.val()) {
             alert("Du kan ikke søke fra en høyere alder til en lavere alder! Det får du ingen treff på. Velg en annen aldersgruppe.");
             return;
         }
@@ -70,9 +70,9 @@ $(document).ready(function() {
             result = JSON.parse(result);
             var new_items = $(result.html).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
 
-            if(new_items.length == 0) {
+            if(new_items.length === 0) {
                 // No results
-                if(start_index == 0) {
+                if(start_index === 0) {
                     // This was a new filter with no matches
                     no_matches.fadeIn();
                 } else {
