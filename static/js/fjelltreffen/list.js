@@ -68,7 +68,7 @@ $(document).ready(function() {
             data: {filter: JSON.stringify(filter)}
         }).done(function(result) {
             result = JSON.parse(result);
-            var new_items = $(result.html).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
+            var new_items = $(result.html.trim()).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
 
             if(new_items.length === 0) {
                 // No results
