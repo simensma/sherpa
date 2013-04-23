@@ -76,7 +76,9 @@
         <div class="controls">
           <input type="text" name="email" value="{% firstof annonse.email user.get_profile.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="input-xlarge">
           <span class="asterisk red">*</span><br>
-          <em>Svar blir sendt til denne adressen, men den vises ikke i annonsen.</em>
+          <div class="hints">
+            Svar blir sendt til denne adressen, men den vises ikke i annonsen.
+          </div>
         </div>
       </div>
 
@@ -101,17 +103,15 @@
         <label class="control-label" for="image">Last opp bilde</label>
         <div class="controls">
           <input type="file" name="image"><br>
-          <em>
-            {% if annonse.image %}
-              <span class="existing-image-label">
-                Du har lastet opp <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">dette</a> bildet. Hvis du laster opp nytt blir det gamle overskrevet.<br>
-              </span>
-            {% endif %}
-            {# We're using a span and hide here, because we'll want to show this text if the user deletes the image with AJAX. #}
-            <span class="default-image-label{% if annonse.image %} hide{% endif %}">
-              Bilde er valgfritt og vil vises i annonselistingen.
-            </span>
-          </em>
+          {% if annonse.image %}
+            <div class="hints existing-image-label">
+              Du har lastet opp <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">dette</a> bildet. Hvis du laster opp nytt blir det gamle overskrevet.<br>
+            </div>
+          {% endif %}
+          {# We're using double hints and hide here, because we'll want to show this text if the user deletes the image with AJAX. #}
+          <div class="hints default-image-label{% if annonse.image %} hide{% endif %}">
+            Bilde er valgfritt og vil vises i annonselistingen.
+          </div>
         </div>
       </div>
 

@@ -69,8 +69,8 @@ $(document).ready(function() {
         $.ajaxQueue({
             url: url
         }).done(function(result) {
-            form.find("span.existing-image-label").hide();
-            form.find("span.default-image-label").show();
+            form.find("div.existing-image-label").hide();
+            form.find("div.default-image-label").show();
             alert("Bildet har blitt slettet.");
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi prøvde å slette bildet. Vennligst prøv igjen senere.");
