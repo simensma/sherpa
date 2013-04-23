@@ -108,7 +108,9 @@
         {# Replies - show if already filled and there were errors #}
         <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
 
-          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
+          <h2>Svar på annonsen</h2>
+
+          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
