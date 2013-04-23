@@ -663,7 +663,7 @@ def process_card(request):
                 # Register the payment in focus
                 for user in request.session['enrollment']['users']:
                     focus_user = Enrollment.objects.get(member_id=user['id'])
-                    focus_user.payed = True
+                    focus_user.paid = True
                     focus_user.save()
                 prepare_and_send_email(
                     request,

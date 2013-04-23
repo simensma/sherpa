@@ -43,7 +43,7 @@
           <tr>
             <th>Ditt medlemskap:</th>
             <td>
-              {% if user.get_profile.get_actor.has_payed %}
+              {% if user.get_profile.get_actor.has_paid %}
                 Betalt for
                 {% if next_year %}
                   {{ year|add:"1" }}

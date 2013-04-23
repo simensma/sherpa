@@ -128,7 +128,7 @@ class Profile(models.Model):
             # The offer applies only the same year as membership enrollment
             return False
 
-        if not self.get_actor().has_payed():
+        if not self.get_actor().has_paid():
             # The offer applies only to active memberships
             return False
 

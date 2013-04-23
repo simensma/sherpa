@@ -166,7 +166,7 @@ def memberid_sms(request):
             'actor': actor,
             'year': datetime.now().year,
             'next_year': datetime.now().month >= settings.MEMBERSHIP_YEAR_START,
-            'all_payed': all(a.has_payed() for a in [actor] + list(actor.get_children()))
+            'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
         })
         sms_message = render_to_string('main/membership/memberid_sms.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))

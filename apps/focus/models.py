@@ -43,7 +43,7 @@ class Enrollment(models.Model):
     poststed = models.CharField(db_column=u'Poststed', max_length=255)
     language = models.CharField(max_length=255)
     totalprice = models.FloatField(db_column=u'TotalPrice')
-    payed = models.BooleanField(db_column=u'Payed', default=False)
+    paid = models.BooleanField(db_column=u'Payed', default=False)
     reg_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
     receive_email = models.BooleanField(db_column=u'ReceiveEmail', default=True)
     receive_sms = models.BooleanField(db_column=u'ReceiveSms', default=True)
@@ -228,16 +228,16 @@ class Actor(models.Model):
         # be considered canonical.
         return self.parent != 0 and self.parent != self.memberid
 
-    def has_payed(self):
-        has_payed = cache.get('actor.has_payed.%s' % self.memberid)
-        if has_payed is None:
+    def has_paid(self):
+        has_paid = cache.get('actor.has_paid.%s' % self.memberid)
+        if has_paid is None:
             try:
-                has_payed = self.balance.is_payed()
+                has_paid = self.balance.is_paid()
             except BalanceHistory.DoesNotExist:
-                # Not-existing balance for this year means that they haven't payed
-                has_payed = False
-            cache.set('actor.has_payed.%s' % self.memberid, has_payed, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return has_payed
+                # Not-existing balance for this year means that they haven't paid
+                has_paid = False
+            cache.set('actor.has_paid.%s' % self.memberid, has_paid, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return has_paid
 
     # Get the local County object based on the Actor's zipcode
     def get_county(self):
@@ -304,11 +304,11 @@ def delete_actor_cache(sender, **kwargs):
     cache.delete('actor.%s' % kwargs['instance'].memberid)
     cache.delete('actor.services.%s' % kwargs['instance'].memberid)
     cache.delete('actor.children.%s' % kwargs['instance'].memberid)
-    cache.delete('actor.has_payed.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.has_paid.%s' % kwargs['instance'].memberid)
     for child in kwargs['instance'].get_children():
         cache.delete('actor.%s' % child.memberid)
         cache.delete('actor.services.%s' % child.memberid)
-        cache.delete('actor.has_payed.%s' % child.memberid)
+        cache.delete('actor.has_paid.%s' % child.memberid)
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
@@ -439,7 +439,7 @@ class BalanceHistory(models.Model):
     # It was used in the old user page - after October, when "årskrav" is processed, a members payment status
     # Would be if _either_ the current_year or last_year balance was <= 0.
 
-    def is_payed(self):
+    def is_paid(self):
         # This will be incorrect in the period between "årskrav" processing and year end,
         # but only for those who haven't paid for the *next* year.
         # The user might have paid for the current year, and the membership is valid for the

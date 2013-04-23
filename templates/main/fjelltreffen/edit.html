@@ -47,7 +47,7 @@
         <div class="alert alert-error">
           Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.
         </div>
-      {% elif message.message == 'showing_when_not_payed' %}
+      {% elif message.message == 'showing_when_not_paid' %}
         <div class="alert alert-error">
           Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.
         </div>
@@ -143,8 +143,8 @@
       {# This section contains 3 parts with some duplicated code, but I prefer that to complicated inline if-statements #}
       {% if not annonse.is_expired %}
         {# Hidden state is irrelevant if the annonse is expired. #}
-        {% if annonse.hidden and not user.get_profile.get_actor.has_payed %}
-          {# Editing existing *hidden* annonse, and user hasn't payed - don't let them show the annonse #}
+        {% if annonse.hidden and not user.get_profile.get_actor.has_paid %}
+          {# Editing existing *hidden* annonse, and user hasn't paid - don't let them show the annonse #}
           <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
             <label class="control-label" for="hide-annonse">Skjul annonsen</label>
             <div class="controls">
