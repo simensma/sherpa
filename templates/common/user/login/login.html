@@ -292,6 +292,11 @@
 
 <div class="modal memberid-hint-modal hide">
   <div class="modal-body">
+    {# We're not using modal-header for the close button because it's too tall when empty.  #}
+    <p>
+      &nbsp;
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    </p>
     {% include 'main/membership/memberid_sms.html' %}
     <p>
       Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:
