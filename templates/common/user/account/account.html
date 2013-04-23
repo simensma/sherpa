@@ -70,12 +70,12 @@
           <td>{{ user.get_profile.get_actor.get_full_name }}</td>
         </tr>
         <tr>
-          <th>Epost</th>
+          <th>E-post</th>
           <td>{{ user.get_profile.get_actor.email|default:"" }}</td>
         </tr>
         {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
           <tr>
-            <th>Epost i Sherpa</th>
+            <th>E-post i Sherpa</th>
             <td>{{ user.get_profile.sherpa_email }}</td>
           </tr>
         {% endif %}
