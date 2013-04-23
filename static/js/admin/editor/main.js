@@ -13,6 +13,7 @@ $(document).ready(function() {
     disableIframes($("article div.content.widget"));
 
     var toolbar = $("div#toolbar");
+    var toolbarContents = toolbar.find("div.toolbar-contents");
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
@@ -507,7 +508,7 @@ $(document).ready(function() {
 
     /* Toggle toolbar usage */
     function disableToolbar(displayText, cancelCallback) {
-        toolbar.find("*").hide();
+        toolbarContents.hide();
         var btn = $('<button class="btn cancel">Avbryt</button>');
         btn.click(enableToolbar);
         btn.click(cancelCallback);
@@ -515,7 +516,7 @@ $(document).ready(function() {
     }
     function enableToolbar() {
         toolbar.find(".cancel").remove();
-        toolbar.find("*").show();
+        toolbarContents.show();
     }
 
     /* Toggle editing of the actual content */

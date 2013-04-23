@@ -5,6 +5,8 @@ $(document).ready(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("#toolbar");
+    var toolbarContents = toolbar.find("div.toolbar-contents")
+    var anchorInsert = toolbar.find("div.anchor-insert");
 
     /**
      * Toolbar buttons
@@ -107,46 +109,47 @@ $(document).ready(function() {
     });
 
     function addAnchor(anchorType) {
-        toolbar.find("*").hide();
-        var p;
+        anchorInsert.find("input[name='url']").val("");
         if(anchorType === 'url') {
-            p = $('<p class="anchor-insert">URL-adresse: </p>');
+            anchorInsert.find("span.url").show();
+            anchorInsert.find("span.email").hide();
         } else if(anchorType === 'email') {
-            p = $('<p class="anchor-insert">E-postadresse: </p>');
+            anchorInsert.find("span.url").hide();
+            anchorInsert.find("span.email").show();
         }
-        var input = $('<input type="text" name="url">');
-        p.append(input);
-        var buttons = $('<div class="anchor-buttons btn-group"><button class="btn anchor-add">Sett inn</button><button class="btn anchor-cancel">Avbryt</button></div>');
-        buttons.find("button.anchor-add").click(function() {
-            var range = selection.getRangeAt(0);
-            // Trim the selection for whitespace (actually, just the last char, since that's most common)
-            if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-                range.setEnd(range.endContainer, range.endOffset - 1);
-            }
-            selection.setSingleRange(range);
-            var url = toolbar.find("input[name='url']").val().trim();
-            if(anchorType === 'url') {
+        anchorInsert.data('type', anchorType);
+        toolbarContents.hide();
+        anchorInsert.show();
+    }
+
+    anchorInsert.find("div.anchor-buttons button.anchor-add").click(function() {
+        var range = selection.getRangeAt(0);
+        // Trim the selection for whitespace (actually, just the last char, since that's most common)
+        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+            range.setEnd(range.endContainer, range.endOffset - 1);
+        }
+        selection.setSingleRange(range);
+        var url = anchorInsert.find("input[name='url']").val().trim();
+        if(url !== "") {
+            if(anchorInsert.data('type') === 'url') {
                 if(!url.match(/^https?:\/\//)) {
                     url = "http://" + url;
                 }
-            } else if(anchorType === 'email') {
+            } else if(anchorInsert.data('type') === 'email') {
                 if(!url.match(/^mailto:/)) {
                     url = "mailto:" + url;
                 }
             }
             document.execCommand('createLink', false, url);
-            reset();
-        });
-        buttons.find("button.anchor-cancel").click(function() {
-            reset();
-        });
-        function reset() {
-            // Perform a new lookup since these elements are new
-            $("p.anchor-insert, #toolbar div.anchor-buttons").remove();
-            toolbar.find("*").show();
         }
-        toolbar.append(p, buttons);
-    }
+        anchorInsert.hide();
+        toolbarContents.show();
+    });
+
+    anchorInsert.find("div.anchor-buttons button.anchor-cancel").click(function() {
+        anchorInsert.hide();
+        toolbarContents.show();
+    });
 
     toolbar.find("a.button.anchor-add").click(function(event) {
         addAnchor('url');
