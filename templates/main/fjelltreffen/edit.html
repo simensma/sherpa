@@ -142,10 +142,17 @@
         {% if annonse.hidden and not user.get_profile.get_actor.has_paid %}
           {# Editing existing *hidden* annonse, and user hasn't paid - don't let them show the annonse #}
           <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
-            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+            <label class="control-label" for="hide-annonse">Synlighet</label>
             <div class="controls">
-              <input type="checkbox" name="hidden" checked disabled>
-              Ingen kan se eller svare på annonsen mens den er skjult.
+              <label class="radio">
+                <input type="radio" name="hidden" value="show" disabled> Publiser annonsen
+              </label>
+              <label class="radio">
+                <input type="radio" name="hidden" value="hide" checked disabled> Skjul annonsen
+              </label>
+              <div class="hints">
+                Ingen kan se eller svare på annonsen mens den er skjult.
+              </div>
             </div>
           </div>
         {% elif other_active_annonse_exists %}
@@ -158,10 +165,17 @@
         {% else %}
           {# No special state, let the user do as they please #}
           <div class="control-group hide-annonse">
-            <label class="control-label" for="hide-annonse">Skjul annonsen</label>
+            <label class="control-label" for="hide-annonse">Synlighet</label>
             <div class="controls">
-              <input type="checkbox" name="hidden"{% if annonse.hidden %} checked{% endif %}>
-              Ingen kan se eller svare på annonsen mens den er skjult.
+              <label class="radio">
+                <input type="radio" name="hidden" value="show"{% if not annonse.hidden %} checked{% endif %}> Publiser annonsen
+              </label>
+              <label class="radio">
+                <input type="radio" name="hidden" value="hide"{% if annonse.hidden %} checked{% endif %}> Skjul annonsen
+              </label>
+              <div class="hints">
+                Ingen kan se eller svare på annonsen mens den er skjult.
+              </div>
             </div>
           </div>
         {% endif %}

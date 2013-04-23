@@ -311,7 +311,7 @@ def save(request):
         else:
             return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
 
-    hidden = request.POST.get('hidden', '') == 'on'
+    hidden = request.POST.get('hidden', 'hide') == 'hide'
 
     # Don't allow showing an already hidden annonse when you haven't paid
     if request.POST['id'] != '':
