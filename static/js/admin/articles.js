@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    /* New article dialog */
+    var table = $("table.article-listing");
 
     $("a.new-article").click(function() {
         $("div.new-article").modal();
@@ -13,6 +13,11 @@ $(document).ready(function() {
         }
         $("div.new-article input[name='template']").val($(this).attr('data-template'));
         $(this).parents("form").submit();
+    });
+
+    InfiniteScroller.enable({
+        container: table.children("tbody"),
+        loader: $("div.infinite-scroll-loader")
     });
 
 });
