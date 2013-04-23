@@ -58,21 +58,27 @@ class Annonse(models.Model):
         return ((self.date_renewed + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
     def delete_image(self):
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
-
-        if self.image != '':
-            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+        if self.isold:
+            # Ignore images from old annonser, just let them rot on the old server.
             self.image = ''
-
-        if self.image_thumb != '':
-            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
             self.image_thumb = ''
+            self.save()
+        else:
+            s3 = simples3.S3Bucket(
+                settings.AWS_BUCKET,
+                settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY,
+                'https://%s' % settings.AWS_BUCKET)
 
-        self.save()
+            if self.image != '':
+                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+                self.image = ''
+
+            if self.image_thumb != '':
+                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+                self.image_thumb = ''
+
+            self.save()
 
     #
     # Utility methods
