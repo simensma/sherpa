@@ -59,8 +59,7 @@ $(document).ready(function() {
             minage: input_min_age.val(),
             maxage: input_max_age.val(),
             gender: input_gender.val(),
-            //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
-            county: input_county.attr("value"),
+            county: input_county.val(),
             text: input_text.val()
         };
 
