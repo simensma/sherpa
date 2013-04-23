@@ -40,12 +40,9 @@
             <th>Medlemsnummer:</th>
             <td>{{ user.get_profile.memberid }}</td>
           </tr>
-        {% endif %}
-        <tr>
-          <th>Ditt medlemskap:</th>
-          <td>
-            {% if user.get_profile.get_actor %}
-
+          <tr>
+            <th>Ditt medlemskap:</th>
+            <td>
               {% if user.get_profile.get_actor.has_payed %}
                 Betalt for
                 {% if next_year %}
@@ -61,15 +58,25 @@
                   {{ year }}
                 {% endif %}
               {% endif %}
-
-            {% else %}
-
+            </td>
+          </tr>
+          <tr>
+            <th>Din medlemsforening:</th>
+            <td>
+              {% if user.get_profile.get_actor.main_association.site %}<a href="http://{{ user.get_profile.get_actor.main_association.site.domain }}/">{% endif %}
+                {{ user.get_profile.get_actor.main_association.name }}
+              {% if user.get_profile.get_actor.main_association.site %}</a>{% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <th>Ditt medlemskap:</th>
+            <td>
               Du er ikke DNT-medlem.<br>
               <a href="{% url user.views.register_membership %}">Registrer ditt medlemskap</a>
-
-            {% endif %}
-          </td>
-        </tr>
+            </td>
+          </tr>
+        {% endif %}
       </table>
     </div>
   </div>
