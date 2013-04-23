@@ -14,7 +14,7 @@ $(document).ready(function() {
     });
 
     $("div.new-article img[data-template]").click(function() {
-        if($("div.new-article input[name='title']").val().length == 0) {
+        if($("div.new-article input[name='title']").val().length === 0) {
             alert("Du må skrive inn en tittel på artikkelen før du oppretter den!");
             return;
         }
