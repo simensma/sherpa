@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
   {% if annonse %}
@@ -214,5 +216,7 @@
     </div>
   </div>
 {% endif %}
+
+{% advertisement %}
 
 {% endblock %}

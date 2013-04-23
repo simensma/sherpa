@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
   <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <em>Aldersgrense</em>
@@ -23,5 +25,7 @@
   </div>
 
 </div>
+
+{% advertisement %}
 
 {% endblock %}

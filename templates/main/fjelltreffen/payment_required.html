@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
   <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <em><a href="{% url 'fjelltreffen.views.new' %}">Legg ut annonse</a></em>
@@ -22,5 +24,7 @@
     {% include 'main/fjelltreffen/navigation.html' with active='new' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

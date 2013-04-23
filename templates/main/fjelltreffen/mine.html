@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% load gender %}
+{% load advertisement %}
 
 {% block title %}Mine annonser — Fjelltreffen{% endblock %}
 {% block breadcrumb %}
@@ -90,5 +91,7 @@
     {% include 'main/fjelltreffen/navigation.html' with active='mine' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}
