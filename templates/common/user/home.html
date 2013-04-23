@@ -85,11 +85,22 @@
 <div class="user-home-navigation">
 
   {% rowiterator 3 %}
+    {% if perms.user.sherpa %}
+      {% column %}
+        <a href="{% url admin.views.index %}" class="element">
+          <p class="title">Gå til Sherpa</p>
+          <p>
+            Her kan du redigere nettsider og oppdatere informasjon om aktiviteter, hytter og turer.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
     {% column %}
       <a href="{% url user.views.account %}" class="element">
         <p class="title">Endre dine opplysninger</p>
         <p>
-          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+          Her kan du endre dine kontaktopplysninger og se detaljer om ditt medlemskap.
         </p>
       </a>
     {% endcolumn %}
@@ -98,7 +109,7 @@
       <a href="{% url user.views.account_password %}" class="element">
         <p class="title">Endre ditt passord</p>
         <p>
-          Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+          Her kan du endre passordet du bruker for å logge deg på Min side.
         </p>
       </a>
     {% endcolumn %}
@@ -106,9 +117,9 @@
     {% if user.get_profile.is_member %}
       {% column %}
         <a href="{% url user.views.publications %}" class="element">
-          <p class="title">Les Fjell og Vidde, årboken, UT, m.m.</p>
+          <p class="title">Publikasjoner</p>
           <p>
-            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            Les eller last ned Fjell og Vidde, årbøker, UT og andre publikasjoner.
           </p>
         </a>
       {% endcolumn %}
@@ -117,9 +128,9 @@
     {% if user.get_profile.is_member %}
       {% column %}
         <a href="{% url user.views.partneroffers %}" class="element">
-          <p class="title">Motta medlemsfordeler fra DNTs samarbeidspartnere</p>
+          <p class="title">Motta medlemsfordeler</p>
           <p>
-            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            Velg om du vil motta medlemsfordeler fra DNTs samarbeidspartnere.
           </p>
         </a>
       {% endcolumn %}
@@ -128,9 +139,29 @@
     {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
       {% column %}
         <a href="{% url user.views.norway_bus_tickets %}" class="element">
-          <p class="title">Bussbilletter</p>
+          <p class="title">Bestill bussbillett</p>
           <p>
-            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            Nye medlemmer kan bestille rabattkort med 50% rabatt på bussbillett fra NOR-WAY.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% column %}
+      <a href="{% url enrollment.views_gift.index %}" class="element">
+        <p class="title">Bestill gavemedlemskap</p>
+        <p>
+          Gi bort et medlemskap i DNT til noen du er glad i. Bestill her.
+        </p>
+      </a>
+    {% endcolumn %}
+
+    {% if user.get_profile.fjelltreffen_annonser.count > 0 %}
+      {% column %}
+        <a href="{% url fjelltreffen.views.mine %}" class="element">
+          <p class="title">Fjelltreffen</p>
+          <p>
+            Her finner du oversikt over dine Fjelltreffen-annonser.
           </p>
         </a>
       {% endcolumn %}
@@ -139,32 +170,15 @@
     {% if user.get_profile.is_member %}
       {% column %}
         <a href="{% url user.views.fotobok %}" class="element">
-          <p class="title">Fotobok</p>
+          <p class="title">Bestill fotoprodukter</p>
           <p>
-            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
-          </p>
-        </a>
-      {% endcolumn %}
-    {% endif %}
-
-    {% if perms.user.sherpa %}
-      {% column %}
-        <a href="{% url admin.views.index %}" class="element">
-          <p class="title">Gå til Sherpa</p>
-          <p>
-            Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
+            Her kan du bestille fotoprodukter fra Eurofoto til rabatterte priser.
           </p>
         </a>
       {% endcolumn %}
     {% endif %}
   {% endrowiterator %}
 
-</div>
-
-<div class="row">
-  <div class="span4">
-    {% include 'main/membership/memberid_sms.html' %}
-  </div>
 </div>
 
 {% endblock %}
