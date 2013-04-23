@@ -86,75 +86,75 @@
 
   {% rowiterator 3 %}
     {% column %}
-      <div class="element">
-        <p><a href="{% url user.views.account %}">Endre dine opplysninger</a></p>
+      <a href="{% url user.views.account %}" class="element">
+        <p class="title">Endre dine opplysninger</p>
         <p>
           Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
         </p>
-      </div>
+      </a>
     {% endcolumn %}
 
     {% column %}
-      <div class="element">
-        <p><a href="{% url user.views.account_password %}">Endre ditt passord</a></p>
+      <a href="{% url user.views.account_password %}" class="element">
+        <p class="title">Endre ditt passord</p>
         <p>
           Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
         </p>
-      </div>
+      </a>
     {% endcolumn %}
 
     {% if user.get_profile.is_member %}
       {% column %}
-        <div class="element">
-          <p><a href="{% url user.views.publications %}">Les Fjell og Vidde, årboken, UT, m.m.</a></p>
+        <a href="{% url user.views.publications %}" class="element">
+          <p class="title">Les Fjell og Vidde, årboken, UT, m.m.</p>
           <p>
             Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
           </p>
-        </div>
+        </a>
       {% endcolumn %}
     {% endif %}
 
     {% if user.get_profile.is_member %}
       {% column %}
-        <div class="element">
-          <p><a href="{% url user.views.partneroffers %}">Motta medlemsfordeler fra DNTs samarbeidspartnere</a></p>
+        <a href="{% url user.views.partneroffers %}" class="element">
+          <p class="title">Motta medlemsfordeler fra DNTs samarbeidspartnere</p>
           <p>
             Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
           </p>
-        </div>
+        </a>
       {% endcolumn %}
     {% endif %}
 
     {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
       {% column %}
-        <div class="element">
-          <p><a href="{% url user.views.norway_bus_tickets %}">Bussbilletter</a></p>
+        <a href="{% url user.views.norway_bus_tickets %}" class="element">
+          <p class="title">Bussbilletter</p>
           <p>
             Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
           </p>
-        </div>
+        </a>
       {% endcolumn %}
     {% endif %}
 
     {% if user.get_profile.is_member %}
       {% column %}
-        <div class="element">
-          <p><a href="{% url user.views.fotobok %}">Fotobok</a></p>
+        <a href="{% url user.views.fotobok %}" class="element">
+          <p class="title">Fotobok</p>
           <p>
             Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
           </p>
-        </div>
+        </a>
       {% endcolumn %}
     {% endif %}
 
     {% if perms.user.sherpa %}
       {% column %}
-        <div class="element">
-          <p><a href="{% url admin.views.index %}">Gå til Sherpa</a></p>
+        <a href="{% url admin.views.index %}" class="element">
+          <p class="title">Gå til Sherpa</p>
           <p>
             Her kan du gjøre det som strengt tatt står beskrevet i lenken, dette er litt lang forklarelsestekst.
           </p>
-        </div>
+        </a>
       {% endcolumn %}
     {% endif %}
   {% endrowiterator %}
