@@ -144,11 +144,11 @@ class Annonse(models.Model):
 
             annonse_matches.append(a)
 
-            if len(annonse_matches) >= settings.FJELLTREFFEN_BULKLOADNUM:
+            if len(annonse_matches) >= settings.FJELLTREFFEN_BULK_COUNT:
                 # We now have the amount of results we want
                 break
 
-        end = len(all_candidates) <= settings.FJELLTREFFEN_BULKLOADNUM
+        end = len(all_candidates) <= settings.FJELLTREFFEN_BULK_COUNT
         return (annonse_matches, next_start_index, end)
 
 # Upon deletion, delete any stored images from S3
