@@ -18,7 +18,7 @@ def list(request):
         variant__segment__isnull=True,
         active=True,
         variant__article__site=request.session['active_association'].site
-        ).order_by('-variant__article__created_date')
+    ).order_by('-variant__article__created_date')
     for version in versions:
         version.load_preview()
     context = {'versions': versions}
