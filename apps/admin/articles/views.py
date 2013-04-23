@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from datetime import datetime
 import json
@@ -11,21 +13,29 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget, widget_admin_context
 from user.models import Profile
-from core.models import Tag
-
-import urllib
 
 def list(request):
+    context = {'versions': list_bulk(request, 0)}
+    return render(request, 'common/admin/articles/list.html', context)
+
+def list_load(request):
+    if not request.is_ajax():
+        return HttpResponseRedirect(reverse('admin.articles.views.list'))
+    context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
+    return HttpResponse(render_to_string('common/admin/articles/list-elements.html', context))
+
+# This is not a view.
+def list_bulk(request, bulk):
+    BULK_COUNT = 8
     versions = Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
         variant__article__site=request.session['active_association'].site
-        ).order_by('-variant__article__created_date')
+    ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
     for version in versions:
         version.load_preview()
-    context = {'versions': versions}
-    return render(request, 'common/admin/articles/list.html', context)
+    return versions
 
 def new(request):
     article = Article(

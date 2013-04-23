@@ -83,6 +83,18 @@ article {
     background-color: rgb(235, 235, 235);
   }
 
+  div[contenteditable='true']:hover, div[contenteditable='true'].selected {
+    span.h1 {
+      // This quickfix avoids the bottom-margin of the content growing because the
+      // border added on hover makes the margins NOT collapse (both content and h1 has
+      // large bottom-margins).
+      // This might look weird if a h1 title is used in a content element together
+      // with normal paragraphs, but that almost never happens, besides this is JUST
+      // when hovering in the editor.
+      margin-bottom: 0;
+    }
+  }
+
   div.html.empty, div.lede.empty {
     margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
     border: 1px solid rgb(255, 95, 95);

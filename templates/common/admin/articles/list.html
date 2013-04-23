@@ -6,8 +6,6 @@
 {% endblock %}
 {% block body %}
 
-{% load dategtnow %}
-
 <div class="row">
   <div class="span12">
     <p style="text-align: center;"><a class="btn btn-success btn-large new-article" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny artikkel</a></p>
@@ -15,86 +13,19 @@
 </div>
 
 {% if not versions %}
-<div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
+  <div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
 {% else %}
 
-<table class="table table-striped article-listing">
-<tbody>
-{% for version in versions %}
-<tr>
-  <td class="article-preview">
-    <div class="media">
-      <h2 class="media-heading">
-        <a href="{% url admin.articles.views.edit_version version.id %}">
-          {{ version.title.content|striptags }}
-        </a>
-      </h2>
-      {% if not version.hide_thumbnail %}
-        <a class="pull-left" href="{% url admin.articles.views.edit_version version.id %}">
-          <img class="media-object" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
-        </a>
-      {% endif %}
-      <div class="media-body">
-        <p>
-          <a href="{% url admin.articles.views.edit_version version.id %}">
-            {{ version.lede.content|striptags|safe|truncatewords:40 }}
-          </a>
-        </p>
-      </div>
-    </div>
-  </td>
-  <td>
-    <!-- INCEPTION -->
-    <table class="article-metadata">
-      <tr>
-        <th>Publiseres:</th>
-          {% if version.variant.article.published %}
-            {% if version.variant.article.pub_date|dategtnow %}
-              <td class="published-future">
-                {{ version.variant.article.pub_date }}
-              </td>
-            {% else %}
-              <td class="published-past">
-                {{ version.variant.article.pub_date }}
-              </td>
-            {% endif %}
-          {% else %}
-            <td class="unpublished">
-              Ikke publisert
-            </td>
-          {% endif %}
-      </tr>
-      <tr>
-        <th>Forfattere:</th>
-        <td>
-          {% for publisher in version.publishers.all %}
-            {{ publisher.user.get_profile.get_full_name }}
-            {% if not forloop.last %}<br>{% endif %}
-          {% endfor %}
-        </td>
-      </tr>
-      <tr>
-        <th>Opprettet av:</th>
-        <td>
-          {{ version.variant.article.created_by.user.get_profile.get_full_name }}<br>
-          {{ version.variant.article.created_date }}
-        </td>
-      </tr>
-      {% if version.variant.article.modified_by %}
-        <tr>
-          <th>Sist endret av:</th>
-          <td>
-            {{ version.variant.article.modified_by.user.get_profile.get_full_name }}<br>
-            {{ version.variant.article.modified_date }}
-          </td>
-        </tr>
-      {% endif %}
-    </table>
-  </td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
+  <table class="table table-striped article-listing">
+    <tbody data-infinite-scroll-url="{% url admin.articles.views.list_load %}">
+      {% include 'common/admin/articles/list-elements.html' %}
+    </tbody>
+  </table>
+
+  <div class="infinite-scroll-loader">
+    <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+    Laster flere elementer, vennligst vent...
+  </div>
 {% endif %}
 
 <div class="modal hide new-article" data-width="auto">
