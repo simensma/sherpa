@@ -5,6 +5,8 @@ $(document).ready(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("#toolbar");
+    var toolbarContents = toolbar.find("div.toolbar-contents")
+    var anchorInsert = toolbar.find("div.anchor-insert");
 
     /**
      * Toolbar buttons
@@ -26,7 +28,7 @@ $(document).ready(function() {
         var styleClass = toolbar.find("select.formatting option:selected").val();
         $(this).val("default");
 
-        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+        if(typeof selection === "undefined" || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
             return $(this);
@@ -105,35 +107,55 @@ $(document).ready(function() {
         // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
         selection.refresh();
     });
-    toolbar.find("a.button.anchor-add").click(function(event) {
-        toolbar.find("*").hide();
-        var p = $('<p class="anchor-insert">URL-adresse: </p>');
-        var input = $('<input type="text" name="url">');
-        p.append(input);
-        var buttons = $('<div class="anchor-buttons btn-group"><button class="btn anchor-add">Sett inn</button><button class="btn anchor-cancel">Avbryt</button></div>');
-        buttons.find("button.anchor-add").click(function() {
-            var range = selection.getRangeAt(0);
-            // Trim the selection for whitespace (actually, just the last char, since that's most common)
-            if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-                range.setEnd(range.endContainer, range.endOffset - 1);
-            }
-            selection.setSingleRange(range);
-            var url = toolbar.find("input[name='url']").val().trim();
-            if(!url.match(/^https?:\/\//)) {
-                url = "http://" + url;
+
+    function addAnchor(anchorType) {
+        anchorInsert.find("input[name='url']").val("");
+        if(anchorType === 'url') {
+            anchorInsert.find("span.url").show();
+            anchorInsert.find("span.email").hide();
+        } else if(anchorType === 'email') {
+            anchorInsert.find("span.url").hide();
+            anchorInsert.find("span.email").show();
+        }
+        anchorInsert.data('type', anchorType);
+        toolbarContents.hide();
+        anchorInsert.show();
+    }
+
+    anchorInsert.find("div.anchor-buttons button.anchor-add").click(function() {
+        var range = selection.getRangeAt(0);
+        // Trim the selection for whitespace (actually, just the last char, since that's most common)
+        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+            range.setEnd(range.endContainer, range.endOffset - 1);
+        }
+        selection.setSingleRange(range);
+        var url = anchorInsert.find("input[name='url']").val().trim();
+        if(url !== "") {
+            if(anchorInsert.data('type') === 'url') {
+                if(!url.match(/^https?:\/\//)) {
+                    url = "http://" + url;
+                }
+            } else if(anchorInsert.data('type') === 'email') {
+                if(!url.match(/^mailto:/)) {
+                    url = "mailto:" + url;
+                }
             }
             document.execCommand('createLink', false, url);
-            reset();
-        });
-        buttons.find("button.anchor-cancel").click(function() {
-            reset();
-        });
-        function reset() {
-            // Perform a new lookup since these elements are new
-            $("p.anchor-insert, #toolbar div.anchor-buttons").remove();
-            toolbar.find("*").show();
         }
-        toolbar.append(p, buttons);
+        anchorInsert.hide();
+        toolbarContents.show();
+    });
+
+    anchorInsert.find("div.anchor-buttons button.anchor-cancel").click(function() {
+        anchorInsert.hide();
+        toolbarContents.show();
+    });
+
+    toolbar.find("a.button.anchor-add").click(function(event) {
+        addAnchor('url');
+    });
+    toolbar.find("a.button.email-add").click(function(event) {
+        addAnchor('email');
     });
     toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
@@ -173,7 +195,7 @@ $(document).ready(function() {
 
         // Also do some extra custom cleanup:
 
-        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+        if(typeof selection === "undefined" || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
             return $(this);

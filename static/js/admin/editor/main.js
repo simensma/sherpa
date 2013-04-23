@@ -12,16 +12,19 @@ $(document).ready(function() {
     enableEditing();
     disableIframes($("article div.content.widget"));
 
+    var toolbar = $("div#toolbar");
+    var toolbarContents = toolbar.find("div.toolbar-contents");
+
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
 
     // Make toolbar draggable
-    $("#toolbar").draggable({
+    toolbar.draggable({
         containment: 'window'
     });
 
     // Draggable will set position relative, so make sure it is fixed before the user drags it
-    $("#toolbar").css('position', 'fixed');
+    toolbar.css('position', 'fixed');
 
     /* Prevent all anchor clicks within the article */
     $(document).on('click', 'a', function(e) {
@@ -150,7 +153,7 @@ $(document).ready(function() {
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
 
     // Add text
-    $("#toolbar button.add-text").click(function() {
+    toolbar.find("button.add-text").click(function() {
         if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
@@ -176,7 +179,7 @@ $(document).ready(function() {
     });
 
     // Add image
-    $("#toolbar a.button.image").click(function() {
+    toolbar.find("a.button.image").click(function() {
         if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
@@ -201,7 +204,7 @@ $(document).ready(function() {
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
-    $("#toolbar a.button.widget").click(function() {
+    toolbar.find("a.button.widget").click(function() {
         if($("article").children().length === 0) {
             alert(noStructureForContentWarning);
             return;
@@ -229,7 +232,7 @@ $(document).ready(function() {
     });
 
     // Remove content (text/image/widget)
-    $("#toolbar button.remove-content").click(function() {
+    toolbar.find("button.remove-content").click(function() {
         function doneRemoving() {
             $(document).off('mouseenter mouseleave click', 'article div.content.html, article div.content.widget, article div.content.image');
             enableEditing();
@@ -252,7 +255,7 @@ $(document).ready(function() {
                 content.show();
                 content.removeClass('hover-remove');
                 content.find(".editable").focusout();
-                $("#toolbar button.cancel").click();
+                toolbar.find("button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
                 confirmation.remove();
@@ -316,7 +319,7 @@ $(document).ready(function() {
      */
 
     // Add a new row with columns
-    $("#toolbar button.add-columns").click(function() {
+    toolbar.find("button.add-columns").click(function() {
         disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
             $(".insertable").remove();
         });
@@ -389,7 +392,7 @@ $(document).ready(function() {
     }
 
     // Remove a row and all its content
-    $("#toolbar button.remove-columns").click(function() {
+    toolbar.find("button.remove-columns").click(function() {
         function doneRemoving() {
             $(document).off('mouseenter mouseleave click', 'article > div.row-fluid');
             enableEditing();
@@ -412,7 +415,7 @@ $(document).ready(function() {
                 row.show();
                 row.removeClass('hover-remove');
                 row.find(".editable").focusout();
-                $("#toolbar button.cancel").click();
+                toolbar.find("button.cancel").click();
             });
             confirmation.find("button.confirm").click(function() {
                 confirmation.remove();
@@ -437,23 +440,23 @@ $(document).ready(function() {
     var sortState = 'formatting';
     $("article").sortable({ disabled: true });
     $("article > div.row-fluid").sortable({ disabled: true });
-    $("#toolbar button.formatting").button('toggle');
+    toolbar.find("button.formatting").button('toggle');
 
-    $("#toolbar button.formatting").click(function() {
+    toolbar.find("button.formatting").click(function() {
         disableSort($("article"));
         disableSort($("article > div.row-fluid"));
         $("article .editable").attr('contenteditable', 'true');
         sortState = 'formatting';
     });
 
-    $("#toolbar button.horizontal").click(function() {
+    toolbar.find("button.horizontal").click(function() {
         disableSort($("article"));
         enableSort($("article > div.row-fluid"), 'horizontal');
         $("article .editable").removeAttr('contenteditable');
         sortState = 'horizontal';
     });
 
-    $("#toolbar button.vertical").click(function() {
+    toolbar.find("button.vertical").click(function() {
         enableSort($("article"), 'vertical');
         disableSort($("article > div.row-fluid"));
         $("article .editable").removeAttr('contenteditable');
@@ -505,15 +508,15 @@ $(document).ready(function() {
 
     /* Toggle toolbar usage */
     function disableToolbar(displayText, cancelCallback) {
-        $("#toolbar *").hide();
+        toolbarContents.hide();
         var btn = $('<button class="btn cancel">Avbryt</button>');
         btn.click(enableToolbar);
         btn.click(cancelCallback);
-        $("#toolbar").append('<p class="cancel">' + displayText + '</p>', btn);
+        toolbar.append('<p class="cancel">' + displayText + '</p>', btn);
     }
     function enableToolbar() {
-        $("#toolbar .cancel").remove();
-        $("#toolbar *").show();
+        toolbar.find(".cancel").remove();
+        toolbarContents.show();
     }
 
     /* Toggle editing of the actual content */
