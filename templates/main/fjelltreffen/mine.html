@@ -22,10 +22,10 @@
 
       {% for message in messages %}
         {% if message.message == 'max_one_active_annonse' %}
-          <div class="alert alert-error">
+          <div class="alert alert-success">
             <a class="close">x</a>
-            <strong>Du kan ikke ha mer enn én publisert annonse!</strong><br>
-            Annonsen du valgte er blitt publisert, men den som var publisert sist er nå blitt skjult. Kun én annonse kan være publisert om gangen, så du må velge hvilken du vil vise.
+            <strong>Annonsen er publisert!</strong><br>
+            Du kan kun ha én synlig og aktiv annonse. Annonsen som tidligere var publisert er nå skjult. Du kan når som helst bytte mellom hvilken annonse som skal være publisert.
           </div>
         {% elif message.message == 'membership_not_paid' %}
           <div class="alert alert-error">
