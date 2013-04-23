@@ -11,9 +11,6 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget, widget_admin_context
 from user.models import Profile
-from core.models import Tag
-
-import urllib
 
 def list(request):
     versions = Version.objects.filter(
