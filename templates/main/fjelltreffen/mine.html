@@ -63,12 +63,10 @@
               </td>
               <td class="expiration">
                 {% if not annonse.is_expired %}
-                  <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span><br>
+                  <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span>
                 {% else %}
                   <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span><br>
-                {% endif %}
-                {% if annonse.expires_in_days < annonse_retention_days %}
-                  <a href="{% url 'fjelltreffen.views.renew_mine' annonse.id %}">Forny</a>
+                  <a href="{% url fjelltreffen.views.renew_mine annonse.id %}">Forny</a>
                 {% endif %}
               </td>
             </tr>
