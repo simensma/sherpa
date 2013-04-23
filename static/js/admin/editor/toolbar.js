@@ -105,9 +105,15 @@ $(document).ready(function() {
         // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
         selection.refresh();
     });
-    toolbar.find("a.button.anchor-add").click(function(event) {
+
+    function addAnchor(anchorType) {
         toolbar.find("*").hide();
-        var p = $('<p class="anchor-insert">URL-adresse: </p>');
+        var p;
+        if(anchorType === 'url') {
+            p = $('<p class="anchor-insert">URL-adresse: </p>');
+        } else if(anchorType === 'email') {
+            p = $('<p class="anchor-insert">E-postadresse: </p>');
+        }
         var input = $('<input type="text" name="url">');
         p.append(input);
         var buttons = $('<div class="anchor-buttons btn-group"><button class="btn anchor-add">Sett inn</button><button class="btn anchor-cancel">Avbryt</button></div>');
@@ -119,8 +125,14 @@ $(document).ready(function() {
             }
             selection.setSingleRange(range);
             var url = toolbar.find("input[name='url']").val().trim();
-            if(!url.match(/^https?:\/\//)) {
-                url = "http://" + url;
+            if(anchorType === 'url') {
+                if(!url.match(/^https?:\/\//)) {
+                    url = "http://" + url;
+                }
+            } else if(anchorType === 'email') {
+                if(!url.match(/^mailto:/)) {
+                    url = "mailto:" + url;
+                }
             }
             document.execCommand('createLink', false, url);
             reset();
@@ -134,6 +146,13 @@ $(document).ready(function() {
             toolbar.find("*").show();
         }
         toolbar.append(p, buttons);
+    }
+
+    toolbar.find("a.button.anchor-add").click(function(event) {
+        addAnchor('url');
+    });
+    toolbar.find("a.button.email-add").click(function(event) {
+        addAnchor('email');
     });
     toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
