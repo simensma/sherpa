@@ -11,10 +11,10 @@
 <div class="row">
   <div class="span9">
 
-    <h2>Medlemsinformasjon fra DNT på e-post</h2>
+    <h2>Motta medlemsinformasjon fra DNT på e-post</h2>
 
     <p>
-      DNT sender ut aktuell medlemsinformasjon via e-post 3-4 ganger i året. Her kan du motta nyttig informasjon om medlemskapet, holde deg oppdatert på nye medlemsfordeler, samt få gode tips og råd om friluftsliv.
+      DNT sender ut aktuell medlemsinformasjon via e-post vanligvis fire ganger i året. Her får du nyttig informasjon om medlemskapet og medlemsfordeler, samt gode tips og råd om friluftsliv.
     </p>
 
     <div class="form-border user-reservations">
@@ -32,7 +32,7 @@
             <input type="radio" name="sponsors" value="reserve"{% if not user.get_profile.get_actor.receive_email %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
-            Nei, jeg ønsker ikke å motta medlemsinformasjon fra DNT på e-post
+            Nei, jeg ønsker ikke å motta medlemsinformasjon fra DNT på e-post, bortsett fra informasjon som er direkte knyttet til mitt medlemskap
           </td>
         </tr>
 
@@ -61,10 +61,6 @@
         </tr>
       </table>
     </div>
-
-    <p>
-      <em>DNT forbeholder seg retten til å sende medlemsinformasjon eller ta kontakt med deg på e-post dersom dette er direkte knyttet til ditt medlemskap i DNT.</em>
-    </p>
 
   </div>
   <div class="span3">
