@@ -26,7 +26,7 @@ $(document).ready(function() {
         var styleClass = toolbar.find("select.formatting option:selected").val();
         $(this).val("default");
 
-        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+        if(typeof selection === "undefined" || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
             return $(this);
@@ -173,7 +173,7 @@ $(document).ready(function() {
 
         // Also do some extra custom cleanup:
 
-        if(typeof selection === "undefined" || selection.rangeCount == 0) {
+        if(typeof selection === "undefined" || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
             return $(this);
