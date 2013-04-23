@@ -288,7 +288,8 @@ def send_restore_password_email(request):
                 'request': request,
                 'should_you_play_the_lottery': True,
                 'key': key
-        })
+            }
+        )
         key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
 
     all_matches = [u.get_profile() for u in local_match] + [Profile.objects.get(memberid=a.memberid) for a in focus_matches]
