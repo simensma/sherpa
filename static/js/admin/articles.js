@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
-	//carousel, stop spinning
+    //carousel, stop spinning
     $('.carousel').each(function(){
-    	$(this).carousel({
-    		interval:false
-    	});
+        $(this).carousel({
+            interval:false
+        });
     });
 
     /* New article dialog */
