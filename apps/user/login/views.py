@@ -302,7 +302,7 @@ def send_restore_password_email(request):
     c = RequestContext(request, {
         'found_user': profile.user,
         'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
+    send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
