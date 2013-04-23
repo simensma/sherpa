@@ -1,3 +1,5 @@
+{% load advertisement %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -163,8 +165,8 @@
 
 {% block body %}{% endblock %}
 
-{% if advertisement %}
-  {% include 'common/page/advertisement.html' %}
+{% if version.ads %}
+  {% advertisement %}
 {% endif %}
 
 </div>

@@ -87,9 +87,6 @@ def parse_content(request, version):
         context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
-    # Include ads if specified for this page
-    context['advertisement'] = AdPlacement.get_active_ad() if context['version'].ads else None
-
     context['request'] = request
 
     if request.site.domain == 'www.turistforeningen.no':
