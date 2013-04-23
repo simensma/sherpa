@@ -18,9 +18,12 @@
     <div class="fjelltreffen-list" data-start-index="{{ start_index }}">
       <h2>Fjelltreffen</h2>
 
-      <p>
-        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home %}">logger inn</a>.
-      </p>
+      {% if first_visit %}
+        <div class="alert alert-info">
+          På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
+          Søk i annonsene nedenfor eller <a href="{% url fjelltreffen.views.new %}">legg ut din egen annonse</a>.
+        </div>
+      {% endif %}
 
       {% include 'main/fjelltreffen/filter.html' %}
 

@@ -31,6 +31,9 @@ logger = logging.getLogger('sherpa')
 #
 
 def index(request):
+    first_visit = 'fjelltreffen.first_visit' not in request.session
+    if first_visit:
+        request.session['fjelltreffen.first_visit'] = True
     annonser, start_index, end = Annonse.get_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
         'annonser': annonser,
@@ -39,7 +42,8 @@ def index(request):
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'age_limits': settings.FJELLTREFFEN_AGE_LIMITS,
-        'filter': request.session.get('fjelltreffen.filter')}
+        'filter': request.session.get('fjelltreffen.filter'),
+        'first_visit': first_visit}
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request, start_index):
