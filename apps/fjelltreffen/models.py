@@ -30,16 +30,16 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-    isold = models.BooleanField()
+    is_old = models.BooleanField()
 
     def get_image_url(self):
-        if self.isold:
+        if self.is_old:
             return "http://%s/%s" % (settings.OLD_SITE, self.image)
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
     def get_image_thumb_url(self):
-        if self.isold:
+        if self.is_old:
             return self.get_image_url()
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
@@ -58,7 +58,7 @@ class Annonse(models.Model):
         return ((self.date_renewed + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
     def delete_image(self):
-        if self.isold:
+        if self.is_old:
             # Ignore images from old annonser, just let them rot on the old server.
             self.image = ''
             self.image_thumb = ''

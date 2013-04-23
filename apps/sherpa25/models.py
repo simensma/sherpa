@@ -161,7 +161,7 @@ def import_fjelltreffen_annonser(profile):
 
         annonse.image = old_annonse_imageurl
         annonse.text = old_annonse.content
-        annonse.isold = True
+        annonse.is_old = True
         annonse.hidden = True
         annonse.hideage = True
 
