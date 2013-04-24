@@ -10,17 +10,17 @@
   <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
   <div class="results">
-    <p class="hide ok">
+    <div class="alert alert-success ok hide">
       SMS med ditt medlemsnummer har blitt sendt til <span class="number"></span>.
-    </p>
-    <p class="hide no-match">
+    </div>
+    <div class="alert alert-error no-match hide">
       Vi fant ikke mobilnummer <span class="number"></span> i vårt medlemssystem. Vennligst kontakt DNTs medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> for å registrere ditt mobilnummer.
-    </p>
-    <p class="hide error">
+    </div>
+    <div class="alert alert-error error hide">
       Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
-    </p>
-    <p class="hide too-high-frequency">
+    </div>
+    <div class="alert alert-error too-high-frequency hide">
       Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.
-    </p>
+    </div>
   </div>
 </div>

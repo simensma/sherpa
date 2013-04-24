@@ -4,9 +4,9 @@ $(document).ready(function() {
     var input = wrapper.find("input[name='phone_mobile']");
     var loader = wrapper.find("img.ajaxloader");
     var results = wrapper.find("div.results").children();
-    var ok = results.filter("p.ok");
-    var no_match = results.filter("p.no-match");
-    var error = results.filter("p.error");
+    var ok = results.filter("div.alert.ok");
+    var no_match = results.filter("div.alert.no-match");
+    var error = results.filter("div.alert.error");
     var too_high_frequency = results.filter("p.too-high-frequency");
 
     input.keyup(function(e) {
