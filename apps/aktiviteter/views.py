@@ -39,6 +39,5 @@ def signup_confirm(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
-    profile = request.user.get_profile()
-    aktivitet_date.participants.add(profile)
+    aktivitet_date.participants.add(request.user.get_profile())
     return HttpResponseRedirect(reverse('aktiviteter.views.show', args=[aktivitet_date.id]))
