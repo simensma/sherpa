@@ -121,11 +121,11 @@
       <div class="control-group hideage">
         <label class="control-label" for="hideage">Vis min alder som:</label>
         <div class="controls">
-          <label for="hideage" class="radio">
+          <label class="radio">
             <input type="radio" name="hideage" value="raw"{% if not annonse.hideage %} checked{% endif %}>
             {{ user.get_profile.get_actor.get_age }} år
           </label>
-          <label for="hideage" class="radio">
+          <label class="radio">
             <input type="radio" name="hideage" value="hide"{% if annonse.hideage %} checked{% endif %}>
             {{ obscured_age }} år
           </label>
