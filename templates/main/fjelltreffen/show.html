@@ -21,7 +21,7 @@
       <h2>{{ annonse.title }}</h2>
       {% if annonse.image %}
         <div class="pull-right image-container">
-          <a href="{{ annonse.get_image_url }}">
+          <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">
             <img src="{{ annonse.get_image_thumb_url }}" alt="{{ annonse.title }}">
           </a>
         </div>
@@ -191,5 +191,26 @@
 </div>
 
 {% advertisement %}
+
+{% if annonse.image %}
+  <div class="modal annonse-image-modal hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Annonsebilde</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        <a href="{{ annonse.get_image_url }}" target="_blank" title="Klikk for å åpne fullversjon i nytt vindu">
+          <img src="{{ annonse.get_image_url }}" alt="Annonsebilde">
+        </a>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p class="modal-close">
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}
