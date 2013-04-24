@@ -25,7 +25,7 @@ $(document).ready(function() {
         }
     });
     restore_password_button.click(function() {
-        forgot_password.find("p.info").hide();
+        forgot_password.find("div.alert").hide();
         restore_password_button.attr('disabled', true);
         loader.show();
         $.ajax({
@@ -34,19 +34,19 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.status == 'unknown_email') {
-                forgot_password.find("p.info.unknown").show();
+                forgot_password.find("div.alert.unknown").show();
                 restore_password_button.removeAttr('disabled');
             } else if(result.status == 'invalid_email') {
-                forgot_password.find("p.info.invalid").show();
+                forgot_password.find("div.alert.invalid").show();
                 restore_password_button.removeAttr('disabled');
             } else if(result.status == 'unregistered_email') {
-                forgot_password.find("p.info.unregistered").show();
+                forgot_password.find("div.alert.unregistered").show();
                 restore_password_button.removeAttr('disabled');
             } else if(result.status == 'success') {
-                forgot_password.find("p.info.success").show();
+                forgot_password.find("div.alert.success").show();
             }
         }).fail(function(r) {
-            forgot_password.find("p.info.error").show();
+            forgot_password.find("div.alert.error").show();
             restore_password_button.removeAttr('disabled');
         }).always(function(r) {
             loader.hide();

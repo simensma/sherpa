@@ -99,10 +99,18 @@
                   <button class="btn restore-password">Gjenopprett passord</button>
                   <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
                 </p>
-                <p class="info success hide">En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.</p>
-                <p class="info unknown invalid hide">Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.</p>
-                <p class="info unregistered hide">Du har ikke opprettet brukerkonto ennå. Du kan <a href="javascript:undefined" class="toggle-register-tab">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!</p>
-                <p class="info error hide">Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.</p>
+                <div class="alert alert-success success hide">
+                  En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.
+                </div>
+                <div class="alert alert-error unknown invalid hide">
+                  Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.
+                </div>
+                <div class="alert alert-info unregistered hide">
+                  Du har ikke opprettet brukerkonto ennå. Du kan <a href="javascript:undefined" class="toggle-register-tab">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!
+                </div>
+                <div class="alert alert-error error hide">
+                  Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+                </div>
               </div>
             </div>
           </div>
