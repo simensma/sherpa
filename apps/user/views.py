@@ -25,6 +25,7 @@ from core import validator
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
+from aktiviteter.models import AktivitetDate
 
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires
@@ -265,6 +266,13 @@ def receive_email_set(request):
     actor.receive_email = not json.loads(request.POST['reserve'])
     actor.save()
     return HttpResponse()
+
+@login_required
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+def aktiviteter(request):
+    aktivitet_dates = AktivitetDate.objects.filter(participants=request.user.get_profile()).order_by('-start_date')
+    context = {'aktivitet_dates': aktivitet_dates}
+    return render(request, 'common/user/aktiviteter.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
