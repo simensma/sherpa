@@ -30,7 +30,7 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-    is_old = models.BooleanField()
+    is_old = models.BooleanField() # True for those imported from old Fjelltreffen
 
     def get_image_url(self):
         if self.is_old:
