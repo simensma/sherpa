@@ -183,7 +183,14 @@
 
       <div class="control-group">
         <div class="controls">
-          <button type="submit" class="btn btn-success">Lagre annonsen</button>
+          <button type="submit" class="btn btn-success">
+            {% if annonse.is_expired or other_active_annonse_exists or annonse.hidden and not user.get_profile.get_actor.has_paid %}
+              Lagre annonsen
+            {% else %}
+              <span class="save{% if not annonse.hidden %} hide{% endif %}">Lagre annonsen</span>
+              <span class="publish{% if annonse.hidden %} hide{% endif %}">Publiser annonsen</span>
+            {% endif %}
+          </button>
           {% if annonse %}
             <a class="btn btn-danger delete" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
           {% endif %}
