@@ -15,13 +15,20 @@
       <h2>{{ aktivitet_date.aktivitet.title }}</h2>
 
       <div class="meta square-well">
-        {% if aktivitet_date.accepts_signups %}
+        {% if aktivitet_date.accepts_signups and not user_is_participating %}
           <div class="pull-right">
             <a href="{% url aktiviteter.views.join aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
           </div>
         {% elif aktivitet_date.will_accept_signups %}
           <div class="pull-right signup-countdown">
             Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }}
+          </div>
+        {% endif %}
+
+        {% if user_is_participating %}
+          {# TODO Present overview and signup-cancelling options #}
+          <div class="pull-right already-participating">
+            Du har meldt deg på denne turen!
           </div>
         {% endif %}
 

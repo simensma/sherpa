@@ -20,7 +20,10 @@ def index(request):
 
 def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
-    context = {'aktivitet_date': aktivitet_date}
+    context = {
+        'aktivitet_date': aktivitet_date,
+        'user_is_participating': request.user.get_profile() in aktivitet_date.participants.all()
+    }
     return render(request, 'common/aktiviteter/show.html', context)
 
 @user_requires_login()
