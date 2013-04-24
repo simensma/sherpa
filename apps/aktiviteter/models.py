@@ -124,6 +124,10 @@ class AktivitetDate(models.Model):
         today = date.today()
         return self.signup_enabled and self.signup_start > today
 
+    def accepts_signup_cancels(self):
+        today = date.today()
+        return self.signup_enabled and self.signup_cancel_deadline >= today
+
     def other_dates(self):
         return self.aktivitet.dates.exclude(id=self.id)
 

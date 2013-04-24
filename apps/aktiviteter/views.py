@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 
 from sherpa.decorators import user_requires_login
 from aktiviteter.models import Aktivitet, AktivitetDate
@@ -41,3 +42,20 @@ def signup_confirm(request, aktivitet_date):
         raise PermissionDenied
     aktivitet_date.participants.add(request.user.get_profile())
     return HttpResponseRedirect(reverse('aktiviteter.views.show', args=[aktivitet_date.id]))
+
+@user_requires_login()
+def signup_cancel(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signup_cancels():
+        raise PermissionDenied
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/aktiviteter/signup_cancel.html', context)
+
+@user_requires_login()
+def signup_cancel_confirm(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signup_cancels():
+        raise PermissionDenied
+    aktivitet_date.participants.remove(request.user.get_profile())
+    messages.info(request, 'signup_cancel_success')
+    return HttpResponseRedirect(reverse('user.views.aktiviteter'))
