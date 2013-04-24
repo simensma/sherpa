@@ -26,11 +26,17 @@ $(document).ready(function() {
     // Response
 
     var response_wrapper = $("div.fjelltreffen-response");
+    var reply = response_wrapper.find("div.reply");
+    var report = response_wrapper.find("div.report");
 
-    response_wrapper.find("div.response a[data-response]").click(function() {
-        var response = $(this).attr("data-response");
-        $(this).parents("div.response").remove();
-        response_wrapper.find("div." + response).slideDown();
+    response_wrapper.find("button.reply").click(function() {
+        $(this).parent().hide();
+        reply.slideDown();
+    });
+
+    response_wrapper.find("a.report").click(function() {
+        $(this).parent().hide();
+        report.slideDown();
     });
 
 });
