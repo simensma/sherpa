@@ -27,15 +27,15 @@ def show(request, aktivitet_date):
     return render(request, 'common/aktiviteter/show.html', context)
 
 @user_requires_login()
-def join(request, aktivitet_date):
+def signup(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
-    return render(request, 'common/aktiviteter/join.html', context)
+    return render(request, 'common/aktiviteter/signup.html', context)
 
 @user_requires_login()
-def join_confirm(request, aktivitet_date):
+def signup_confirm(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied

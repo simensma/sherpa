@@ -17,7 +17,7 @@
       <div class="meta square-well">
         {% if aktivitet_date.accepts_signups and not user_is_participating %}
           <div class="pull-right">
-            <a href="{% url aktiviteter.views.join aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
+            <a href="{% url aktiviteter.views.signup aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
           </div>
         {% elif aktivitet_date.will_accept_signups %}
           <div class="pull-right signup-countdown">
