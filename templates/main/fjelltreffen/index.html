@@ -22,10 +22,15 @@
 
       {% if first_visit %}
         <div class="alert alert-info">
-          På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
-          Søk i annonsene nedenfor eller <a href="{% url fjelltreffen.views.new %}">legg ut din egen annonse</a>.
+          Velkommen til nye Fjelltreffen!<br>
+          Lenke til gamle Fjelltreffen, tekst TBD
         </div>
       {% endif %}
+
+      <p>
+        På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
+        Søk i annonsene nedenfor eller <a href="{% url fjelltreffen.views.new %}">legg ut din egen annonse</a>.
+      </p>
 
       {% include 'main/fjelltreffen/filter.html' %}
 
