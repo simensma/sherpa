@@ -106,15 +106,15 @@
 
     var tagBox;
     var removeCallback;
+    var pickerInput;
 
     TagDisplayAH.enable = function(options) {
         TaggerAH.enable(options);
         tagBox = options.tagBox;
         removeCallback = options.removeCallback;
         if(typeof options.pickerInput !== "undefined") {
-            TagPickerAH.enable({
-                input: options.pickerInput
-            });
+            pickerInput = options.pickerInput;
+            enableTagPicker();
         }
 
         $(document).on('click', tagBox.selector + ' div.tag a.closer', function() {
@@ -156,17 +156,8 @@
     TagDisplayAH.count = TaggerAH.count;
     TagDisplayAH.collect = TaggerAH.collect;
 
-}(window.TagDisplayAH = window.TagDisplayAH || {}, jQuery));
-
-// TagPicker parses tags and sends them to the tagger.
-(function(TagPickerAH, $, undefined) {
-
-    var input;
-
-    TagPickerAH.enable = function(options) {
-        input = options.input;
-
-        input.keyup(function(e) {
+    function enableTagPicker() {
+        pickerInput.keyup(function(e) {
             // Add tags whenever the cursor isn't on the last word
             var typeahead = false;
             $("ul.typeahead").each(function() {
@@ -175,10 +166,10 @@
                 }
             });
             if(!typeahead) {
-                var val = input.val();
+                var val = pickerInput.val();
                 if(val.length > 1 && val[val.length-1] == ' ' || e.which == 13) { // Key: Enter
-                    addCurrentTags();
-                    input.val("");
+                    addCurrentPickerTags();
+                    pickerInput.val("");
                 }
             }
         }).focusout(function(e) {
@@ -190,8 +181,8 @@
                 }
             });
             if(!typeahead) {
-                addCurrentTags();
-                input.val("");
+                addCurrentPickerTags();
+                pickerInput.val("");
             }
         }).typeahead({
             minLength: 3,
@@ -216,13 +207,13 @@
                 });
             }
         });
-    };
+    }
 
-    function addCurrentTags() {
-        var tags = input.val().split(' ');
+    function addCurrentPickerTags() {
+        var tags = pickerInput.val().split(' ');
         for(var i=0; i<tags.length; i++) {
             TagDisplayAH.addTag(tags[i]);
         }
     }
 
-}(window.TagPickerAH = window.TagPickerAH || {}, jQuery));
+}(window.TagDisplayAH = window.TagDisplayAH || {}, jQuery));
