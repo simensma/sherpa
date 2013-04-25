@@ -175,16 +175,13 @@
                 }).done(function(result) {
                     query = query.toLowerCase();
                     tags = JSON.parse(result);
-                    // Array.indexOf is JS 1.6 which IE7, IE8 doesn't support, so we'll do this the hard way
-                    var exists = false;
+                    // Ensure the current value is always the topmost suggestion.
                     for(var i=0; i<tags.length; i++) {
                         if(tags[i] == query) {
-                            exists = true;
+                            tags = tags.slice(0, i).concat(tags.slice(i + 1));
                         }
                     }
-                    if(!exists) {
-                        tags.unshift(query);
-                    }
+                    tags.unshift(query);
                     process(tags);
                 });
             }
