@@ -20,11 +20,11 @@
 
     <h2>Rediger aktivitet</h2>
 
+    {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
+
     {# TODO: Client-side validations #}
     <form action="{% url admin.aktiviteter.views.edit_description aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
       {% csrf_token %}
-
-      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
 
       <div class="tab-content tab-content-visible">
 
