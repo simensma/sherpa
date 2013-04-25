@@ -2,12 +2,6 @@
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
 
-{% block js_globals %}
-  <script>
-    window.admin_user_search_char_length = {{ admin_user_search_char_length }};
-  </script>
-{% endblock %}
-
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
@@ -26,187 +20,88 @@
     <form action="{% url admin.aktiviteter.views.edit_description aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
       {% csrf_token %}
 
-      <div class="tab-content tab-content-visible">
-
-        <div id="beskrivelse" class="tab-pane active">
-
-          <div class="control-group title">
-            <label class="control-label" for="title">Tittel:</label>
-            <div class="controls">
-              <input type="text" class="input-xxlarge" name="title" value="{{ aktivitet.title }}">
-            </div>
-          </div>
-
-          <div class="control-group description">
-            <label class="control-label" for="description">Beskrivelse:</label>
-            <div class="controls">
-              <textarea rows="6" cols="80" name="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
-            </div>
-          </div>
-
-          <div class="control-group difficulty">
-            <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
-            <div class="controls">
-              <select name="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-                <option value=""></option>
-                {% for difficulty in difficulties %}
-                  <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group tags">
-            <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
-            <div class="controls">
-              <select name="subcategories" class="chosen" data-placeholder="Legg til en kategori..." data-all-subcategories="{{ subcategories }}">
-                <option value=""></option>
-                {% for category in aktivitet.get_missing_subcategories %}
-                  <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group tags">
-            <label class="control-label" for="tags">Opprett egne kategorier her:</label>
-            <div class="controls">
-              <input type="hidden" name="tags" value="">
-              <p><input type="text" class="input-large" name="tag"></p>
-              <div class="tag-box">
-                {% for tag in aktivitet.category_tags.all %}
-                  <div class="tag">
-                    <a href="javascript:undefined" class="closer"></a>
-                    {{ tag.name }}
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-          <div style="clear: both;"></div>
-
-          <div class="control-group hide_aktivitet">
-            <label class="control-label" for="hide_aktivitet">Tilgjengelighet:</label>
-            <div class="controls">
-              <input type="hidden" name="hidden">
-              <div class="btn-group" data-toggle="buttons-radio">
-                <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
-                <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
-              </div>
-              <div class="hints">
-                En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse:<br>
-                {# TODO denne adressen vil gi feilmelding hvis det gjøres endringer på datoene og denne datoen slettes. #}
-                <a href="{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="control-group pub_date">
-            <label class="control-label" for="pub_date">Publiseres:</label>
-            <div class="controls">
-              <div class="input-append date">
-                <input type="text" class="input-medium" name="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
-                <span class="add-on"><i class="icon-th"></i></span>
-              </div>
-              <div class="hints">
-                En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
-              </div>
-            </div>
-          </div>
-
+      <div class="control-group title">
+        <label class="control-label" for="title">Tittel:</label>
+        <div class="controls">
+          <input type="text" class="input-xxlarge" name="title" value="{{ aktivitet.title }}">
         </div>
+      </div>
 
-        <div id="turledere" class="tab-pane">
-          <div class="control-group">
-            <div class="controls">
-              <p>
-                Her kan du legge til turledere som får tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst i medlemsregisteret, men personen må ha en Min side-bruker.
-              </p>
-              <p>
-                Hvis aktiviteten har flere datoer, kobler du turlederen til en av datoene. Husk derfor å gjøre deg ferdig med <a href="javascript:undefined;" data-toggle-tab="datoer">datoer og påmelding</a> først.
-              </p>
-            </div>
-          </div>
+      <div class="control-group description">
+        <label class="control-label" for="description">Beskrivelse:</label>
+        <div class="controls">
+          <textarea rows="6" cols="80" name="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label">Turledere</label>
-            <div class="controls">
-              {% for date in aktivitet.get_dates_ordered %}
-                <div class="date" data-date-id="{{ date.id }}">
-                  <h3>{{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
-                  <table class="table">
-                    {% for profile in date.leaders.all %}
-                      <tr data-profile-id="{{ profile.id }}">
-                        <td>{{ profile.get_full_name }}</td>
-                      </tr>
-                    {% endfor %}
-                  </table>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
+      <div class="control-group difficulty">
+        <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
+        <div class="controls">
+          <select name="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+            <option value=""></option>
+            {% for difficulty in difficulties %}
+              <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
 
-          <div class="control-group leader" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
-            <label class="control-label" for="leader">Søk etter personer:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" name="leader-search">
-              <button class="btn leader-search"><i class="icon-search"></i></button>
+      <div class="control-group tags">
+        <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+        <div class="controls">
+          <select name="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
+            <option value=""></option>
+            {% for category in aktivitet.get_missing_subcategories %}
+              <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
 
-              <table class="table leader-search-list hide" data-add-auto-url="{% url admin.aktiviteter.views.leader_add_automatically %}">
-                <tr>
-                  <th>Navn</th>
-                  <th>Medlemsnummer</th>
-                  <th>Gi turleder-status</th>
-                </tr>
-
-                <tr class="no-hits hide">
-                  <td colspan="3">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
-                </tr>
-
-                <tr class="short_query hide">
-                  <td colspan="3">
-                    Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
-                  </td>
-                </tr>
-
-                <tr class="technical-error hide">
-                  <td colspan="3">
-                    <div class="alert alert-error">
-                      Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="max-hits-exceeded hide">
-                  <td colspan="3">
-                    Du fikk veldig mange treff, kun et utvalg vises her.<br>
-                    Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
-                  </td>
-                </tr>
-
-                <tr class="loader hide">
-                  <td colspan="3">
-                    Vennligst vent mens vi søker.<br>
-                    Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
-                    <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-                  </td>
-                </tr>
-              </table>
-
-              <div class="choose-date-loader hide">
-                Lagrer turlederstatus, vennligst vent...<br>
-                <img class="ajaxloader" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+      <div class="control-group tags">
+        <label class="control-label" for="tags">Opprett egne kategorier her:</label>
+        <div class="controls">
+          <input type="hidden" name="tags" value="">
+          <p><input type="text" class="input-large" name="tag"></p>
+          <div class="tag-box">
+            {% for tag in aktivitet.category_tags.all %}
+              <div class="tag">
+                <a href="javascript:undefined" class="closer"></a>
+                {{ tag.name }}
               </div>
-
-              <div class="choose-date form-border hide" data-add-manual-url="{% url admin.aktiviteter.views.leader_add_manually %}">
-                Velg hvilken dato <span class="name"></span> skal ha turlederstatus for:
-                <div class="date-options"></div>
-              </div>
-
-            </div>
+            {% endfor %}
           </div>
         </div>
+      </div>
+      <div style="clear: both;"></div>
 
+      <div class="control-group hide_aktivitet">
+        <label class="control-label" for="hide_aktivitet">Tilgjengelighet:</label>
+        <div class="controls">
+          <input type="hidden" name="hidden">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
+            <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
+          </div>
+          <div class="hints">
+            En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse:<br>
+            {# TODO denne adressen vil gi feilmelding hvis det gjøres endringer på datoene og denne datoen slettes. #}
+            <a href="{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group pub_date">
+        <label class="control-label" for="pub_date">Publiseres:</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
+          <div class="hints">
+            En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
+          </div>
+        </div>
       </div>
 
       <div class="control-group submit">

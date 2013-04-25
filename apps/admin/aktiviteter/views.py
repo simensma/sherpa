@@ -47,7 +47,6 @@ def edit_description(request, aktivitet):
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
             'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
-            'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
         }
         return render(request, 'common/admin/aktiviteter/edit/description.html', context)
     elif request.method == 'POST':
@@ -71,6 +70,14 @@ def edit_dates(request, aktivitet):
         'aktivitet': aktivitet
     }
     return render(request, 'common/admin/aktiviteter/edit/dates.html', context)
+
+def edit_leaders(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    context = {
+        'aktivitet': aktivitet,
+        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
+    }
+    return render(request, 'common/admin/aktiviteter/edit/leaders.html', context)
 
 def edit_participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
