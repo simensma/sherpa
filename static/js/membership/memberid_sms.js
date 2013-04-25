@@ -31,6 +31,8 @@ $(document).ready(function() {
                 input.val(''); // Clear the input, so clicking 'OK' again isn't that tempting.
             } else if(result.status == 'service_fail') {
                 error.show();
+            } else if(result.status == 'connection_error') {
+                error.show();
             } else if(result.status == 'no_match') {
                 no_match.show();
             } else if(result.status == 'too_high_frequency') {
