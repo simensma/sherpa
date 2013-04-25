@@ -157,32 +157,14 @@
     TagDisplayAH.collect = TaggerAH.collect;
 
     function enableTagPicker() {
+        pickerInput.change(addCurrentPickerTags);
         pickerInput.keyup(function(e) {
-            // Add tags whenever the cursor isn't on the last word
-            var typeahead = false;
-            $("ul.typeahead").each(function() {
-                if($(this).css('display') != 'none') {
-                    typeahead = true;
-                }
-            });
-            if(!typeahead) {
-                var val = pickerInput.val();
-                if(val.length > 1 && val[val.length-1] == ' ' || e.which == 13) { // Key: Enter
-                    addCurrentPickerTags();
-                    pickerInput.val("");
-                }
+            if(e.which == 32 || (!typeaheadIsActive() && e.which == 13)) { // Space, or inactive + enter
+                addCurrentPickerTags();
             }
         }).focusout(function(e) {
-            // Add tags when losing focus, but not if typeahead is active
-            var typeahead = false;
-            $("ul.typeahead").each(function() {
-                if($(this).css('display') != 'none') {
-                    typeahead = true;
-                }
-            });
-            if(!typeahead) {
+            if(!typeaheadIsActive()) {
                 addCurrentPickerTags();
-                pickerInput.val("");
             }
         }).typeahead({
             minLength: 3,
@@ -210,10 +192,23 @@
     }
 
     function addCurrentPickerTags() {
-        var tags = pickerInput.val().split(' ');
+        var val = pickerInput.val().trim();
+        if(val.length === 0) {
+            return;
+        }
+        var tags = val.split(' ');
         for(var i=0; i<tags.length; i++) {
             TagDisplayAH.addTag(tags[i]);
         }
+        pickerInput.val("");
+    }
+
+    function typeaheadIsActive() {
+        var typeahead = pickerInput.siblings("ul.typeahead");
+        if(typeahead.length !== 0 && typeahead.css('display') !== 'none') {
+            return true;
+        }
+        return false;
     }
 
 }(window.TagDisplayAH = window.TagDisplayAH || {}, jQuery));
