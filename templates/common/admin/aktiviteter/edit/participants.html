@@ -26,6 +26,8 @@
           <p>Ingen påmeldte for denne turen.</p>
         {% endif %}
       {% endif %}
+    {% empty %}
+      <p>Aktiviteten har ingen turdatoer.</p>
     {% endfor %}
   </div>
 </div>

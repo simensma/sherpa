@@ -83,6 +83,8 @@ $(document).ready(function() {
             if(result.status == 'saved') {
                 // TODO: display results in a table
                 alert("The leader was saved.");
+            } else if(result.status == 'none') {
+                alert("Det finnes ingen turdatoer for denne aktiviteten. Du må opprette turdatoene først slik at du kan velge hvilke datoer turlederen er turleder for.");
             } else if(result.status == 'multiple') {
                 chooseDateForLeader(profile_id, profile_name, result.date_options);
             }

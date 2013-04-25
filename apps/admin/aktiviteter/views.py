@@ -37,7 +37,6 @@ def new(request):
     for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
         obj, created = Tag.objects.get_or_create(name=tag)
         aktivitet.category_tags.add(obj)
-    create_aktivitet_date(aktivitet)
     return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
 
 def edit_description(request, aktivitet):
@@ -131,6 +130,10 @@ def leader_add_automatically(request):
         date = aktivitet.dates.get()
         date.leaders.add(profile)
         return HttpResponse(json.dumps({'status': 'saved'}))
+    except AktivitetDate.DoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'none'
+        }))
     except MultipleObjectsReturned:
         dates = aktivitet.get_dates_ordered()
         context = RequestContext(request, {'dates': dates})
@@ -168,13 +171,7 @@ def edit_aktivitet_date(request, aktivitet_date):
     return HttpResponse(json.dumps(date_form))
 
 def delete_aktivitet_date(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date)
-    if aktivitet_date.aktivitet.dates.count() == 1:
-        # Aktiviteter must have at least one date. This isn't enforced on the model level so it's
-        # possible that if the stars align correctly, an aktivitet will end up without dates and
-        # errors will occur when assuming one exists. So try to avoid that, like we're doing here.
-        raise PermissionDenied
-    aktivitet_date.delete()
+    AktivitetDate.objects.get(id=aktivitet_date).delete()
     return HttpResponse()
 
 def create_aktivitet_date(aktivitet):

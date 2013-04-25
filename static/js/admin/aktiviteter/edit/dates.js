@@ -38,10 +38,6 @@ $(document).ready(function() {
     $(document).on('click', editor.selector + ' div.aktivitet-date div.summary a.delete-date', function() {
         // TODO: If the dates have participants, give a warning that the participants
         // should be notified about the date change
-        if(editor.find("div.aktivitet-date").length == 1) {
-            alert("Turen må ha minst én dato! Du kan ikke slette denne siste datoen.");
-            return $(this);
-        }
         if(!confirm("Er du helt sikker på at du vil slette disse datoene?")) {
             return $(this);
         }

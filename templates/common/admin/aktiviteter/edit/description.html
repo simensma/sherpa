@@ -96,9 +96,12 @@
             <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
           </div>
           <div class="hints">
-            En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse:<br>
-            {# TODO denne adressen vil gi feilmelding hvis det gjøres endringer på datoene og denne datoen slettes. #}
-            <a href="{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet.get_dates_ordered.all.0.id %}</a>
+            {% for aktivitet_date in aktivitet.get_dates_ordered.all %}
+              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
+              <a href="{% url aktiviteter.views.show aktivitet_date.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet_date.id %}</a>
+            {% empty %}
+              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
+            {% endfor %}
           </div>
         </div>
       </div>
