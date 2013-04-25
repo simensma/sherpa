@@ -27,7 +27,6 @@
       <ul class="nav nav-tabs">
         <li class="active"><a href="#beskrivelse" data-toggle="tab">Beskrivelse og informasjon</a></li>
         <li><a href="#datoer" data-toggle="tab">Datoer og påmelding</a></li>
-        <li><a href="#synlighet" data-toggle="tab">Synlighet</a></li>
         <li><a href="#turledere" data-toggle="tab">Turledere</a></li>
       </ul>
 
@@ -90,27 +89,6 @@
           </div>
           <div style="clear: both;"></div>
 
-        </div>
-
-        <div id="datoer" class="tab-pane">
-
-          {% for date in aktivitet.get_dates_ordered %}
-            {% include 'common/admin/aktiviteter/date-form.html' %}
-          {% endfor %}
-
-          <div class="control-group">
-            <div class="controls">
-              <div class="control-as-text">
-                <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url admin.aktiviteter.views.new_aktivitet_date %}">
-                  Legg til flere datoer
-                </a>
-                <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="synlighet" class="tab-pane">
           <div class="control-group hide_aktivitet">
             <label class="control-label" for="hide_aktivitet">Tilgjengelighet:</label>
             <div class="controls">
@@ -136,6 +114,25 @@
               </div>
               <div class="hints">
                 En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="datoer" class="tab-pane">
+
+          {% for date in aktivitet.get_dates_ordered %}
+            {% include 'common/admin/aktiviteter/date-form.html' %}
+          {% endfor %}
+
+          <div class="control-group">
+            <div class="controls">
+              <div class="control-as-text">
+                <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url admin.aktiviteter.views.new_aktivitet_date %}">
+                  Legg til flere datoer
+                </a>
+                <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
               </div>
             </div>
           </div>
