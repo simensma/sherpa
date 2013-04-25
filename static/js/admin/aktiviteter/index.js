@@ -9,10 +9,12 @@ $(document).ready(function() {
     var subcategories_buttons = subcategories.find("button.subcategory");
     var more_categories = new_categories.find("div.more-categories");
 
+    var tag_input = subcategories.find("div.subcategories.custom input[name='tagger']");
+    var tag_box = subcategories.find("div.subcategories.custom div.tag-box");
+
     var form = new_categories.find("form.create-new-category");
     var form_category = form.find("input[name='category']");
     var form_tags = form.find("input[name='tags']");
-    var form_tag_box = form.find("div.tag-box");
 
     category_buttons.click(function() {
         initial_category.hide();
@@ -42,8 +44,10 @@ $(document).ready(function() {
         }
     });
 
-    TaggerAH.enable({
-        targetInput: form_tags
+    TagDisplayAH.enable({
+        targetInput: form_tags,
+        pickerInput: tag_input,
+        tagBox: tag_box
     });
 
     subcategories_buttons.click(function() {
@@ -59,12 +63,12 @@ $(document).ready(function() {
     });
 
     form.submit(function(e) {
-        if(TaggerAH.count() === 0) {
+        if(TagDisplayAH.count() === 0) {
             alert("Du må legge til minst én kategori - velg fra knappene over.");
             e.preventDefault();
             return;
         }
-        TaggerAH.collect();
+        TagDisplayAH.collect();
     });
 
 });
