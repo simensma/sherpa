@@ -31,58 +31,84 @@
     </div>
 
     <div class="pick-subcategories hide">
-      <div class="chosen-category">
+      <div class="picked">
+        {# Subcategories will be appended here when picked, to get the chosen order. #}
+      </div>
+
+      <div class="subcategories trip hide">
         <div class="row">
           <div class="span12">
-            <p>
-              <a href="javascript:undefined" class="show-other-subcategories">Vis flere kategoriforslag...</a>
-            </p>
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags tur/aktivitet er dette?</h3>
+              <h3 class="extra hide">Kategorier for turer/aktiviteter:</h3>
+              {% for subcategory in subcategories.trip %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
-      <div class="other-categories hide">
+      <div class="subcategories course hide">
         <div class="row">
-          <div class="span4"></div>
-          <div class="span4"></div>
-          <div class="span4"></div>
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags kurs er dette?</h3>
+              <h3 class="extra hide">Kategorier for kurs:</h3>
+              {% for subcategory in subcategories.course %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subcategories event hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags arrangement er dette?</h3>
+              <h3 class="extra hide">Kategorier for arrangement:</h3>
+              {% for subcategory in subcategories.event %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subcategories volunteerwork hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags dugnad er dette?</h3>
+              <h3 class="extra hide">Kategorier for dugnad:</h3>
+              {% for subcategory in subcategories.volunteerwork %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="subcategories-hidden hide">
-        <div class="subcategories trip">
-          <h3 class="chosen hide">Velg noen kategorier for turen/aktiviteten</h3>
-          <h3 class="other hide">Kategorier for turer/aktiviteter</h3>
-          <div class="square-well">
-            {% for subcategory in subcategories.trip %}
-              <button class="btn subcategory">{{ subcategory }}</button>
-            {% endfor %}
+      <div class="subcategories custom hide">
+        <div class="row">
+          <div class="span12">
+            <h3>Legg inn dine egne kategorier:</h3>
+            <input type="text" name="tagger" class="input-large">
           </div>
         </div>
-        <div class="subcategories course">
-          <h3 class="chosen hide">Velg noen kategorier for kurset:</h3>
-          <h3 class="other hide">Kategorier for kurs:</h3>
-          <div class="square-well">
-            {% for subcategory in subcategories.course %}
-              <button class="btn subcategory">{{ subcategory }}</button>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="subcategories event">
-          <h3 class="chosen hide">Velg noen kategorier for arrangementet:</h3>
-          <h3 class="other hide">Kategorier for arrangement:</h3>
-          <div class="square-well">
-            {% for subcategory in subcategories.event %}
-              <button class="btn subcategory">{{ subcategory }}</button>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="subcategories volunteerwork">
-          <h3 class="chosen hide">Velg noen kategorier for dugnaden:</h3>
-          <h3 class="other hide">Kategorier for dugnad:</h3>
-          <div class="square-well">
-            {% for subcategory in subcategories.volunteerwork %}
-              <button class="btn subcategory">{{ subcategory }}</button>
-            {% endfor %}
+      </div>
+
+      <div class="more-categories">
+        <div class="row">
+          <div class="span12">
+            <h3>Finner du ikke kategorien du leter etter?</h3>
+            <p class="choices">
+              Vis forslag for
+              <span><a href="javascript:undefined" data-category="trip">turer</a>,</span>
+              <span><a href="javascript:undefined" data-category="course">kurs</a>,</span>
+              <span><a href="javascript:undefined" data-category="event">arrangement</a>,</span>
+              <span><a href="javascript:undefined" data-category="volunteerwork">dugnadsarbeid</a>,</span>
+              eller <a href="javascript:undefined" data-category="custom">legg inn dine egne kategorier</a>.
+            </p>
           </div>
         </div>
       </div>
