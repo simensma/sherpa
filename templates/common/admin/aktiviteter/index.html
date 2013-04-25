@@ -137,7 +137,7 @@
           {% for aktivitet in aktiviteter %}
             <tr>
               <td>
-                <a href="{% url admin.aktiviteter.views.edit aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+                <a href="{% url admin.aktiviteter.views.edit_description aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
               </td>
             </tr>
           {% endfor %}

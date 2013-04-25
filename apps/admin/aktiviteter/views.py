@@ -38,9 +38,9 @@ def new(request):
         obj, created = Tag.objects.get_or_create(name=tag)
         aktivitet.category_tags.add(obj)
     create_aktivitet_date(aktivitet)
-    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
+    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
 
-def edit(request, aktivitet):
+def edit_description(request, aktivitet):
     if request.method == 'GET':
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         context = {
@@ -63,7 +63,14 @@ def edit(request, aktivitet):
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
-        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit', args=[aktivitet.id]))
+        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
+
+def edit_participants(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    context = {
+        'aktivitet': aktivitet
+    }
+    return render(request, 'common/admin/aktiviteter/edit/participants.html', context)
 
 def leader_search(request):
     MAX_HITS = 100

@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs">
+  <li{% if active == 'description' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_description aktivitet.id %}">Beskrivelse og informasjon</a></li>
+  <li><a href="#datoer" data-toggle="tab">Datoer og påmelding</a></li>
+  <li><a href="#turledere" data-toggle="tab">Turledere</a></li>
+  <li{% if active == 'participants' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_participants aktivitet.id %}">Påmeldte</a></li>
+</ul>
