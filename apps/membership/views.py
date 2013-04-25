@@ -182,8 +182,8 @@ def memberid_sms(request):
                 }
             )
             return HttpResponse(json.dumps({
-                'status': 'service_fail'}
-            ))
+                'status': 'service_fail'
+            }))
         return HttpResponse(json.dumps({'status': 'ok'}))
     except requests.ConnectionError:
         logger.error(u"Kunne ikke sende medlemsnummer på SMS: requests.ConnectionError",
@@ -194,5 +194,5 @@ def memberid_sms(request):
             }
         )
         return HttpResponse(json.dumps({
-            'status': 'connection_error'}
-        ))
+            'status': 'connection_error'
+        }))
