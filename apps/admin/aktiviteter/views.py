@@ -49,7 +49,7 @@ def edit(request, aktivitet):
             'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
         }
-        return render(request, 'common/admin/aktiviteter/edit.html', context)
+        return render(request, 'common/admin/aktiviteter/edit/description.html', context)
     elif request.method == 'POST':
         # TODO: Server-side validations
         aktivitet = Aktivitet.objects.get(id=aktivitet)
