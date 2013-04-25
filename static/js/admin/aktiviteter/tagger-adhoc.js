@@ -64,6 +64,11 @@
         TaggerAH.enable(options);
         tagBox = options.tagBox;
         removeCallback = options.removeCallback;
+        if(typeof options.pickerInput !== "undefined") {
+            TagPickerAH.enable({
+                input: options.pickerInput
+            });
+        }
 
         $(document).on('click', tagBox.selector + ' div.tag a.closer', function() {
             TagDisplayAH.removeTag($(this).parent().text().trim());
@@ -105,3 +110,72 @@
     TagDisplayAH.collect = TaggerAH.collect;
 
 }(window.TagDisplayAH = window.TagDisplayAH || {}, jQuery));
+
+// TagPicker parses tags and sends them to the tagger.
+(function(TagPickerAH, $, undefined) {
+
+    var input;
+
+    TagPickerAH.enable = function(options) {
+        input = options.input;
+
+        input.keyup(function(e) {
+            // Add tags whenever the cursor isn't on the last word
+            var typeahead = false;
+            $("ul.typeahead").each(function() {
+                if($(this).css('display') != 'none') {
+                    typeahead = true;
+                }
+            });
+            if(!typeahead) {
+                var val = input.val();
+                if(val.length > 1 && val[val.length-1] == ' ' || e.which == 13) { // Key: Enter
+                    addCurrentTags();
+                    input.val("");
+                }
+            }
+        }).focusout(function(e) {
+            // Add tags when losing focus, but not if typeahead is active
+            var typeahead = false;
+            $("ul.typeahead").each(function() {
+                if($(this).css('display') != 'none') {
+                    typeahead = true;
+                }
+            });
+            if(!typeahead) {
+                addCurrentTags();
+                input.val("");
+            }
+        }).typeahead({
+            minLength: 3,
+            source: function(query, process) {
+                $.ajaxQueue({
+                    url: '/tags/filter/',
+                    data: { name: query }
+                }).done(function(result) {
+                    query = query.toLowerCase();
+                    tags = JSON.parse(result);
+                    // Array.indexOf is JS 1.6 which IE7, IE8 doesn't support, so we'll do this the hard way
+                    var exists = false;
+                    for(var i=0; i<tags.length; i++) {
+                        if(tags[i] == query) {
+                            exists = true;
+                        }
+                    }
+                    if(!exists) {
+                        tags.unshift(query);
+                    }
+                    process(tags);
+                });
+            }
+        });
+    };
+
+    function addCurrentTags() {
+        var tags = input.val().split(' ');
+        for(var i=0; i<tags.length; i++) {
+            TagDisplayAH.addTag(tags[i]);
+        }
+    }
+
+}(window.TagPickerAH = window.TagPickerAH || {}, jQuery));
