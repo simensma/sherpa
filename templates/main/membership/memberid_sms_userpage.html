@@ -1,0 +1,27 @@
+{# Like main/membership/memberid_sms.html, but adapted for use on the user page dashboard. Shares resources like javascript and the sms template. #}
+<div class="element memberid-sms">
+  <p class="title">Medlemsbevis på SMS</p>
+
+  <p>
+    Få gyldig kvittering på ditt medlemskap tilsendt gratis på SMS.
+  </p>
+
+  <input type="text" name="phone_mobile" class="input-medium" placeholder="Ditt mobilnummer...">
+  <button class="btn input-button-align" data-href="{% url membership.views.memberid_sms %}">Send</button>
+  <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+  <div class="results">
+    <div class="alert alert-success ok hide">
+      SMS med ditt medlemsnummer har blitt sendt til <span class="number"></span>.
+    </div>
+    <div class="alert alert-error no-match hide">
+      Vi fant ikke mobilnummer <span class="number"></span> i vårt medlemssystem. Vennligst kontakt DNTs medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> for å registrere ditt mobilnummer.
+    </div>
+    <div class="alert alert-error error hide">
+      Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
+    </div>
+    <div class="alert alert-error too-high-frequency hide">
+      Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.
+    </div>
+  </div>
+</div>

@@ -60,8 +60,7 @@ div.user-home-account {
 }
 
 div.user-home-navigation {
-  a.element {
-    display: block;
+  a.element, div.element {
     margin-bottom: 20px;
     .square-well;
 
@@ -74,6 +73,10 @@ div.user-home-navigation {
       font-size: 22px;
       color: @profile-red;
     }
+  }
+
+  a.element {
+    display: block;
   }
 
   a.element:hover, a.element:active, a.element:focus {
