@@ -157,7 +157,14 @@
     TagDisplayAH.collect = TaggerAH.collect;
 
     function enableTagPicker() {
-        pickerInput.change(addCurrentPickerTags);
+        pickerInput.change(function(e) {
+            // Sorry, this is kind of ugly. 'change' is fired by both jquery and bootstrap.
+            // To discriminate, we know that bootstraps event doesn't have the 'which' property.
+            // If you know of something better to check for here, feel free to fix this.
+            if(!e.hasOwnProperty('which')) {
+                addCurrentPickerTags();
+            }
+        });
         pickerInput.keyup(function(e) {
             if(e.which == 32 || (!typeaheadIsActive() && e.which == 13)) { // Space, or inactive + enter
                 addCurrentPickerTags();
