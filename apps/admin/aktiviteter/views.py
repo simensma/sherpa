@@ -46,6 +46,7 @@ def edit_description(request, aktivitet):
         context = {
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
+            'audiences': Aktivitet.AUDIENCE_CHOICES,
             'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
         }
         return render(request, 'common/admin/aktiviteter/edit/description.html', context)
@@ -55,6 +56,7 @@ def edit_description(request, aktivitet):
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
         aktivitet.difficulty = request.POST['difficulty']
+        aktivitet.audience = request.POST['audience']
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.save()

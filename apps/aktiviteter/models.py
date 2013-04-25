@@ -13,6 +13,14 @@ class Aktivitet(models.Model):
         ('hard', 'Krevende'),
         ('expert', 'Ekspert'),)
     difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
+    AUDIENCE_CHOICES = (
+        ('adults', 'Voksne'),
+        ('children', 'Barn'),
+        ('youth', 'Ungdom'),
+        ('senior', 'Seniorer'),
+        ('mountaineers', 'Fjellsportinteresserte'),
+        ('disabled', 'Funksjonshemmede'),)
+    audience = models.CharField(max_length=255, choices=AUDIENCE_CHOICES)
     CATEGORY_CHOICES = (
         ('trip', 'Tur/Aktivitet'),
         ('course', 'Kurs'),
@@ -28,6 +36,9 @@ class Aktivitet(models.Model):
 
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
+
+    def get_audience(self):
+        return [c[1] for c in self.AUDIENCE_CHOICES if c[0] == self.audience][0]
 
     def get_category(self):
         return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]

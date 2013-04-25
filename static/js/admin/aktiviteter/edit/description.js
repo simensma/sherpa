@@ -7,6 +7,7 @@ $(document).ready(function() {
     var subcategories = form.find("select[name='subcategories']");
 
     form.find("div.control-group.difficulty select[name='difficulty']").chosen();
+    form.find("div.control-group.audience select[name='audience']").chosen();
     subcategories.chosen();
 
     form.find("div.control-group.pub_date div.date").datepicker({

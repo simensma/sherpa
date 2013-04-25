@@ -46,6 +46,18 @@
         </div>
       </div>
 
+      <div class="control-group audience">
+        <label class="control-label" for="audience">Målgruppe:</label>
+        <div class="controls">
+          <select name="audience" class="chosen" data-placeholder="Velg målgruppe...">
+            <option value=""></option>
+            {% for audience in audiences %}
+              <option value="{{ audience.0 }}"{% if aktivitet.audience == audience.0 %} selected{% endif %}>{{ audience.1 }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
       <div class="control-group tags">
         <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
         <div class="controls">
