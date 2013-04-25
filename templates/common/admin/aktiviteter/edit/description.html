@@ -116,24 +116,6 @@
 
         </div>
 
-        <div id="datoer" class="tab-pane">
-
-          {% for date in aktivitet.get_dates_ordered %}
-            {% include 'common/admin/aktiviteter/date-form.html' %}
-          {% endfor %}
-
-          <div class="control-group">
-            <div class="controls">
-              <div class="control-as-text">
-                <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url admin.aktiviteter.views.new_aktivitet_date %}">
-                  Legg til flere datoer
-                </a>
-                <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div id="turledere" class="tab-pane">
           <div class="control-group">
             <div class="controls">
@@ -230,9 +212,6 @@
       <div class="control-group submit">
         <div class="controls">
           <button type="submit" class="btn btn-success btn-large"><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-          <div class="hints save-date-first hide">
-            Du må lagre datoen over før du kan lagre hele aktiviteten.
-          </div>
         </div>
       </div>
 

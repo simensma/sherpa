@@ -65,6 +65,13 @@ def edit_description(request, aktivitet):
             aktivitet.category_tags.add(obj)
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
 
+def edit_dates(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    context = {
+        'aktivitet': aktivitet
+    }
+    return render(request, 'common/admin/aktiviteter/edit/dates.html', context)
+
 def edit_participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
@@ -134,7 +141,7 @@ def new_aktivitet_date(request):
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
     aktivitet_date = create_aktivitet_date(aktivitet)
     context = RequestContext(request, {'date': aktivitet_date})
-    date_form = render_to_string('common/admin/aktiviteter/date-form.html', context)
+    date_form = render_to_string('common/admin/aktiviteter/edit/dates_form.html', context)
     return HttpResponse(json.dumps(date_form))
 
 def edit_aktivitet_date(request, aktivitet_date):
@@ -148,7 +155,7 @@ def edit_aktivitet_date(request, aktivitet_date):
         aktivitet_date.signup_cancel_deadline = datetime.strptime(request.POST['signup_cancel_deadline'], "%d.%m.%Y").date()
     aktivitet_date.save()
     context = RequestContext(request, {'date': aktivitet_date})
-    date_form = render_to_string('common/admin/aktiviteter/date-form.html', context)
+    date_form = render_to_string('common/admin/aktiviteter/edit/dates_form.html', context)
     return HttpResponse(json.dumps(date_form))
 
 def delete_aktivitet_date(request, aktivitet_date):
