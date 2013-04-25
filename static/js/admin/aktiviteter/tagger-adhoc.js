@@ -1,6 +1,53 @@
 // The idea here is that we'll create a better tagger ad hoc now, and eventually
 // convert all existing use of admin/tags.js to use this tagger.
 
+/*
+    Usage:
+
+    1. A simple tagger with manual addition/removal of tags:
+
+    // taggerInput is a hidden jquery text-input-element in which a JSON list of tags will be filled
+    TaggerAH.enable({
+        targetInput: some_input
+    });
+
+    TaggerAH.addTag('some-tag');
+    TaggerAH.removeTag('some-tag');
+    TaggerAH.count(); // gives the tag count
+
+    some_form.submit(function() {
+        TaggerAH.collect(); // This fills the targetInput with JSON for form submission
+    });
+
+
+    2. Display the selected tags in a tag box
+
+    TagDisplayAH.enable({
+        targetInput: some_input,
+        tagBox: some_container
+    });
+
+    If you now use TagDisplayAH.addTag and TagDisplayAH.removeTag, DOM elements will be
+    added to the tag box. You can still call addTag/removeTag directly on TaggerAH to
+    add tags that are NOT displayed in the tag-box, but still included on the collect call.
+
+    Remember that you still need to call TagDisplayAH.collect() to fill the target input on
+    form submission.
+
+
+    3. Enable a tag-picker with typeahead
+
+    TagDisplayAH.enable({
+        targetInput: some_target_input,
+        tagBox: some_container,
+        pickerInput: some_picker_input
+    });
+
+    Like 2., but adds listeners to the pickerInput which automatically adds entered tags to
+    TagDisplayAH. It also adds typeahead for existing tags.
+
+ */
+
 (function(TaggerAH, $, undefined) {
     var tags = [];
     var targetInput;
