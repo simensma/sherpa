@@ -27,6 +27,7 @@ def index(request):
 def new(request):
     # TODO: Validations
     aktivitet = Aktivitet(
+        association=request.session['active_association'],
         pub_date=datetime.now(),
         category=request.POST['category']
     )
