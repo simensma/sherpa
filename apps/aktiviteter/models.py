@@ -20,7 +20,10 @@ class Aktivitet(models.Model):
         ('senior', 'Seniorer'),
         ('mountaineers', 'Fjellsportinteresserte'),
         ('disabled', 'Funksjonshemmede'),)
-    audience = models.CharField(max_length=255, choices=AUDIENCE_CHOICES)
+    # audiences is multiple choice. We *could* model this with an 'audience' table
+    # with one char column and a many-to-many rel, but using a json list is easier
+    # and probably faster.
+    audiences = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
         ('trip', 'Tur/Aktivitet'),
         ('course', 'Kurs'),
@@ -37,8 +40,8 @@ class Aktivitet(models.Model):
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
 
-    def get_audience(self):
-        return [c[1] for c in self.AUDIENCE_CHOICES if c[0] == self.audience][0]
+    def get_audiences(self):
+        return json.loads(self.audiences)
 
     def get_category(self):
         return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]

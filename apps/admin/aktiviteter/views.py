@@ -52,7 +52,7 @@ def edit_description(request, aktivitet):
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
         aktivitet.difficulty = request.POST['difficulty']
-        aktivitet.audience = request.POST['audience']
+        aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.save()

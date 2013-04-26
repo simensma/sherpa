@@ -46,13 +46,13 @@
         </div>
       </div>
 
-      <div class="control-group audience">
-        <label class="control-label" for="audience">Målgruppe:</label>
+      <div class="control-group audiences">
+        <label class="control-label" for="audiences">Målgruppe:</label>
         <div class="controls">
-          <select name="audience" class="chosen" data-placeholder="Velg målgruppe...">
+          <select name="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
             <option value=""></option>
             {% for audience in audiences %}
-              <option value="{{ audience.0 }}"{% if aktivitet.audience == audience.0 %} selected{% endif %}>{{ audience.1 }}</option>
+              <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
             {% endfor %}
           </select>
         </div>
