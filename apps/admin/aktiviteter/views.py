@@ -17,11 +17,21 @@ from datetime import datetime, timedelta
 import json
 
 def index(request):
-    aktiviteter = Aktivitet.objects.all()
+    if 'forening' in request.GET:
+        association_filter = Association.objects.get(id=request.GET['forening'])
+    else:
+        association_filter = request.session['active_association']
+
+    aktiviteter = Aktivitet.objects.filter(
+        Q(association=association_filter) |
+        Q(co_association=association_filter)
+    )
+
     context = {
         'aktiviteter': aktiviteter,
         'categories': Aktivitet.CATEGORY_CHOICES,
-        'subcategories': Aktivitet.SUBCATEGORIES
+        'subcategories': Aktivitet.SUBCATEGORIES,
+        'association_filter': association_filter
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 

@@ -16,6 +16,11 @@ $(document).ready(function() {
     var form_category = form.find("input[name='category']");
     var form_tags = form.find("input[name='tags']");
 
+    var association_filter_select = actual_listing.find("select[name='association_filter']");
+    association_filter_select.change(function() {
+        window.location = $(this).find("option:selected").attr('data-filter-url');
+    });
+
     category_buttons.click(function() {
         initial_category.hide();
         actual_listing.hide();
