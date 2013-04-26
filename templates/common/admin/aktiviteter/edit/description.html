@@ -96,12 +96,15 @@
             <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
           </div>
           <div class="hints">
-            {% for aktivitet_date in aktivitet.get_dates_ordered.all %}
-              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
-              <a href="{% url aktiviteter.views.show aktivitet_date.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet_date.id %}</a>
-            {% empty %}
+            {% if aktivitet.dates.count == 0 %}
               En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
-            {% endfor %}
+            {% else %}
+              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
+              {% for aktivitet_date in aktivitet.get_dates_ordered %}
+                <a href="{% url aktiviteter.views.show aktivitet_date.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet_date.id %}</a>
+                {% if not forloop.last %}<br>{% endif %}
+              {% endfor %}
+            {% endif %}
           </div>
         </div>
       </div>
