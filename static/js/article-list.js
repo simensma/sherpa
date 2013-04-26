@@ -3,16 +3,16 @@ $(window).load(function() {
     var list = wrapper.find("div.article-listing");
     var old_list = wrapper.find("div.old-article-listing");
     var loader = wrapper.find("div.article-loader");
-    var loading = false;
+    var loader_button = loader.find("button");
+    var loading = loader.find("div.loading");
     var status = 'new';
     list.data('current', list.attr('data-initial-count'));
     old_list.data('current', 0);
 
-    $(window).scroll(function() {
-        if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
-            loading = true;
-            loadArticles();
-        }
+    loader_button.click(function() {
+        $(this).hide();
+        loading.fadeIn();
+        loadArticles();
     });
 
     function loadArticles() {
@@ -56,7 +56,8 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            loading = false;
+            loader_button.show();
+            loading.hide();
         });
     }
 
@@ -80,7 +81,8 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            loading = false;
+            loader_button.show();
+            loading.hide();
         });
     }
 

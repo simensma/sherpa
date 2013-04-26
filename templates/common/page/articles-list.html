@@ -45,8 +45,12 @@
       {% endif %}
 
       <div class="article-loader">
-        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
-        Laster flere artikler, vennligst vent...
+        <button class="btn btn-large">Last flere artikler</button>
+
+        <div class="loading form-border hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+          Laster flere artikler, vennligst vent...
+        </div>
       </div>
     </div>
   </div>
