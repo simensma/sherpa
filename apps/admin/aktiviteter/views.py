@@ -25,12 +25,9 @@ def index(request):
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
 def new(request):
-    now = datetime.now()
-    one_day_from_now = now + timedelta(days=1)
-
     # TODO: Validations
     aktivitet = Aktivitet(
-        pub_date=one_day_from_now,
+        pub_date=datetime.now(),
         category=request.POST['category']
     )
     aktivitet.save()
