@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied, MultipleObjectsReturned
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -87,6 +87,8 @@ def edit_participants(request, aktivitet):
 def leader_search(request):
     MAX_HITS = 100
 
+    aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
+
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
@@ -110,41 +112,26 @@ def leader_search(request):
     profiles = list(local_profiles) + list(members)
 
     context = RequestContext(request, {
+        'aktivitet': aktivitet,
         'profiles': profiles[:MAX_HITS],
         'actors_without_profile': actors_without_profile[:MAX_HITS]})
     return HttpResponse(json.dumps({
-        'results': render_to_string('common/admin/aktiviteter/leader_search_results.html', context),
+        'results': render_to_string('common/admin/aktiviteter/edit/leader_search_results.html', context),
         'max_hits_exceeded': len(profiles) > MAX_HITS or len(actors_without_profile) > MAX_HITS
     }))
 
-def leader_add_automatically(request):
-    # If there is only one date, add the leader automatically to that date.
-    # Otherwise, return the dates and let the user choose which date.
-    aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
+def leader_assign(request):
     profile = Profile.objects.get(id=request.POST['profile'])
-    try:
-        # Note that there shold be at least one date, so DoesNotExist should never be thrown.
-        date = aktivitet.dates.get()
+    for date in request.POST.getlist('aktivitet_dates'):
+        date = AktivitetDate.objects.get(id=date)
         date.leaders.add(profile)
-        return HttpResponse(json.dumps({'status': 'saved'}))
-    except AktivitetDate.DoesNotExist:
-        return HttpResponse(json.dumps({
-            'status': 'none'
-        }))
-    except MultipleObjectsReturned:
-        dates = aktivitet.get_dates_ordered()
-        context = RequestContext(request, {'dates': dates})
-        date_options = render_to_string('common/admin/aktiviteter/leader_date_options.html', context)
-        return HttpResponse(json.dumps({
-            'status': 'multiple',
-            'date_options': date_options
-        }))
+    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_leaders', args=[request.POST['aktivitet']]))
 
-def leader_add_manually(request):
-    aktivitet_date = AktivitetDate.objects.get(id=request.POST['date'])
+def leader_remove(request):
     profile = Profile.objects.get(id=request.POST['profile'])
-    aktivitet_date.leaders.add(profile)
-    return HttpResponse()
+    aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
+    aktivitet_date.leaders.remove(profile)
+    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_leaders', args=[aktivitet_date.aktivitet.id]))
 
 def new_aktivitet_date(request):
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])

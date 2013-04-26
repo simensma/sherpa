@@ -1,0 +1,29 @@
+{% for profile in profiles %}
+  <tr class="result" data-profile-id="{{ profile.id }}" data-profile-name="{{ profile.get_full_name }}">
+    <td>{{ profile.get_full_name }}</td>
+    <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
+    <td>
+      <button class="btn btn-danger assign-leader">Gi turlederstatus</button>
+      <form action="{% url admin.aktiviteter.views.leader_assign %}" method="post" class="hide">
+        {% csrf_token %}
+        <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
+        <input type="hidden" name="profile" value="{{ profile.id }}">
+        <strong>Velg datoer:</strong>
+        {% for aktivitet_date in aktivitet.get_dates_ordered %}
+          <label class="radio">
+            <input type="checkbox" name="aktivitet_dates" value="{{ aktivitet_date.id }}"> {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
+          </label>
+        {% endfor %}
+        <button type="submit" class="btn btn-danger">Gi turlederen tilgang til disse datoene</button>
+      </form>
+    </td>
+  </tr>
+{% endfor %}
+
+{% for actor in actors_without_profile %}
+  <tr class="result">
+    <td>{{ actor.get_full_name }}</td>
+    <td>{{ actor.memberid }}</td>
+    <td>Har ikke Min side-bruker.</td>
+  </tr>
+{% endfor %}

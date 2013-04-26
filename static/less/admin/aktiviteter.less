@@ -57,49 +57,60 @@ div.edit-aktivitet-dates {
 }
 
 div.edit-aktivitet-leaders {
-  div.control-group.leader {
 
-    table.leader-search-list {
-      margin-top: 15px;
+  div.leader-management {
+    margin-top: 40px;
+
+    table.leaders {
+      width: 100%;
+      margin-bottom: 30px;
 
       th, td {
         font-family: "DTL Nobel" !important;
-        vertical-align: middle;
       }
 
-      tr.loader, tr.short_query {
-        td {
-          font-family: "DTL Nobel" !important;
-          text-align: center;
-        }
-      }
-
-      tr.max-hits-exceeded {
-        td {
-          font-family: "DTL Nobel" !important;
-          text-align: center;
-          font-size: 18px;
-          padding-top: 20px;
-          padding-bottom: 20px;
+      td {
+        form {
+          margin-bottom: 0;
         }
       }
     }
 
-    div.control-group.submit {
-      border-top: 1px solid rgb(216, 216, 216);
-      padding-top: 20px;
-    }
+    div.leader-search {
+      table.search-results {
+        margin-top: 15px;
 
-    div.choose-date-loader {
-      margin-top: 15px;
-      font-family: "DTL Nobel" !important;
-      text-align: center;
-    }
+        th, td, td label {
+          font-family: "DTL Nobel" !important;
+          vertical-align: middle;
+        }
 
-    div.choose-date {
-      margin-top: 15px;
-    }
+        td {
+          label {
+            margin-top: 5px;
+            margin-bottom: 5px;
+          }
 
+          form {
+            margin-bottom: 0;
+          }
+        }
+
+        tr.loader, tr.short_query {
+          td {
+            text-align: center;
+          }
+        }
+
+        tr.max-hits-exceeded {
+          td {
+            text-align: center;
+            font-size: 18px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+          }
+        }
+      }
+    }
   }
 }
-

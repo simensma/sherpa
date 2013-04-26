@@ -24,8 +24,6 @@
 
       {% include 'common/admin/aktiviteter/edit/navigation.html' with active='leaders' %}
 
-      {# TODO: Client-side validations #}
-
       <p>
         Her kan du gi turledere tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst fra medlemsregisteret, men han/henne <strong>må ha en bruker på Min side</strong>.
       </p>
@@ -40,38 +38,46 @@
       {% else %}
 
         <p>
-          Hvis aktiviteten har flere datoer, velger du hvilke datoer han/hun er turleder for. Husk derfor å gjøre deg ferdig med <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">datoer og påmelding</a> først.
+          Hvis aktiviteten har flere datoer, velger du hvilke datoer turlederen har tilgang til. Husk derfor å gjøre deg ferdig med <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">datoer og påmelding</a> først.
         </p>
 
-        <div class="control-group">
-          <label class="control-label">Turledere</label>
-          <div class="controls">
-            {% for date in aktivitet.get_dates_ordered %}
-              <div class="date" data-date-id="{{ date.id }}">
-                <h3>{{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
-                <table class="table">
-                  {% for profile in date.leaders.all %}
-                    <tr data-profile-id="{{ profile.id }}">
-                      <td>{{ profile.get_full_name }}</td>
-                    </tr>
-                  {% endfor %}
-                </table>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
+        <div class="leader-management form-border">
 
-        <div class="control-group leader" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
-          <label class="control-label" for="leader">Søk etter personer:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="leader-search">
-            <button class="btn leader-search"><i class="icon-search"></i></button>
+          {% for date in aktivitet.get_dates_ordered %}
+            <div class="date" data-date-id="{{ date.id }}">
+              <h3>Turledere {{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
+              <table class="leaders">
+                {% for profile in date.leaders.all %}
+                  <tr data-profile-id="{{ profile.id }}">
+                    <td>
+                      <form action="{% url admin.aktiviteter.views.leader_remove %}" method="post" class="remove-leader">
+                        {% csrf_token %}
+                        <input type="hidden" name="aktivitet_date" value="{{ date.id }}">
+                        <input type="hidden" name="profile" value="{{ profile.id }}">
+                        <a href="javascript:undefined" class="remove"><i class="icon-remove"></i></a>
+                        {{ profile.get_full_name }}
+                      </form>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td>Ingen turledere er satt opp for denne turen.</td>
+                  </tr>
+                {% endfor %}
+              </table>
+            </div>
+          {% endfor %}
 
-            <table class="table leader-search-list hide" data-add-auto-url="{% url admin.aktiviteter.views.leader_add_automatically %}">
+          <div class="leader-search">
+            <h3>Finn nye turledere:</h3>
+            <input type="text" class="input-xlarge" name="leader-search" placeholder="Navn eller medlemsnummer...">
+            <button class="btn leader-search input-button-align"><i class="icon-search"></i></button>
+
+            <table class="table search-results hide" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>
-                <th>Gi turleder-status</th>
+                <th>Gi turlederstatus</th>
               </tr>
 
               <tr class="no-hits hide">
@@ -107,18 +113,8 @@
                 </td>
               </tr>
             </table>
-
-            <div class="choose-date-loader hide">
-              Lagrer turlederstatus, vennligst vent...<br>
-              <img class="ajaxloader" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-            </div>
-
-            <div class="choose-date form-border hide" data-add-manual-url="{% url admin.aktiviteter.views.leader_add_manually %}">
-              Velg hvilken dato <span class="name"></span> skal ha turlederstatus for:
-              <div class="date-options"></div>
-            </div>
-
           </div>
+
         </div>
 
       {% endif %}
