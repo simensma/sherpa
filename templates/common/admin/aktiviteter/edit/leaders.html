@@ -26,16 +26,12 @@
 
       {# TODO: Client-side validations #}
 
-        <div class="control-group">
-          <div class="controls">
-            <p>
-              Her kan du legge til turledere som får tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst i medlemsregisteret, men personen må ha en Min side-bruker.
-            </p>
-            <p>
-              Hvis aktiviteten har flere datoer, kobler du turlederen til en av datoene. Husk derfor å gjøre deg ferdig med <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">datoer og påmelding</a> først.
-            </p>
-          </div>
-        </div>
+      <p>
+        Her kan du gi turledere tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst fra medlemsregisteret, men han/henne <strong>må ha en bruker på Min side</strong>.
+      </p>
+      <p>
+        Hvis aktiviteten har flere datoer, velger du hvilke datoer han/hun er turleder for. Husk derfor å gjøre deg ferdig med <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">datoer og påmelding</a> først.
+      </p>
 
         <div class="control-group">
           <label class="control-label">Turledere</label>
