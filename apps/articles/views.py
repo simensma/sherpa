@@ -9,7 +9,7 @@ from articles.models import Article, OldArticle
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 
 TAG_SEARCH_LENGTH = 3
