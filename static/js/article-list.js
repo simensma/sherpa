@@ -1,8 +1,8 @@
 $(window).load(function() {
     var wrapper = $("div.wrapper");
-    var list = $("div.article-listing");
-    var old_list = $("div.old-article-listing");
-    var loader = $("div.article-loader");
+    var list = wrapper.find("div.article-listing");
+    var old_list = wrapper.find("div.old-article-listing");
+    var loader = wrapper.find("div.article-loader");
     var loading = false;
     var status = 'new';
     list.data('current', list.attr('data-initial-count'));
