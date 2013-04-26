@@ -56,6 +56,7 @@ def edit_description(request, aktivitet):
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
+            'all_associations': Association.sort(Association.objects.all())
         }
         return render(request, 'common/admin/aktiviteter/edit/description.html', context)
     elif request.method == 'POST':
@@ -75,8 +76,6 @@ def edit_description(request, aktivitet):
             co_association = None
         else:
             co_association = Association.objects.get(id=request.POST['co_association'])
-            if not co_association in request.user.children_associations():
-                raise PermissionDenied
 
         aktivitet.association = association
         aktivitet.co_association = co_association

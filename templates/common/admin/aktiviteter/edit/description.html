@@ -164,30 +164,30 @@
         <div class="controls">
           <select name="co_association" class="chosen" data-placeholder="Ingen medarrangør">
             <option value=""></option>
-            {% if user.get_profile.children_associations_sorted.central|length > 0 %}
+            {% if all_associations.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">
-                {% for association in user.get_profile.children_associations_sorted.central %}
+                {% for association in all_associations.central %}
                   <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
-            {% if user.get_profile.children_associations_sorted.associations|length > 0 %}
+            {% if all_associations.associations|length > 0 %}
               <optgroup label="Medlemsforeninger">
-                {% for association in user.get_profile.children_associations_sorted.associations %}
+                {% for association in all_associations.associations %}
                   <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
-            {% if user.get_profile.children_associations_sorted.small_associations|length > 0 %}
+            {% if all_associations.small_associations|length > 0 %}
               <optgroup label="Lokale turlag">
-                {% for association in user.get_profile.children_associations_sorted.small_associations %}
+                {% for association in all_associations.small_associations %}
                   <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
             {% endif %}
-            {% if user.get_profile.children_associations_sorted.hike_groups|length > 0 %}
+            {% if all_associations.hike_groups|length > 0 %}
               <optgroup label="Turgrupper">
-                {% for association in user.get_profile.children_associations_sorted.hike_groups %}
+                {% for association in all_associations.hike_groups %}
                   <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
