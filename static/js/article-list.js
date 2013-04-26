@@ -29,7 +29,7 @@ $(window).load(function() {
             data: { current: list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length == 0) {
+            if(result.length === 0) {
                 if(old_list.length > 0) {
                     old_list.fadeIn();
                     status = 'old';
@@ -45,7 +45,7 @@ $(window).load(function() {
             // TODO handle end of list
             var first;
             for(var i=0; i<result.length; i++) {
-                if(i % 2 == 0) {
+                if(i % 2 === 0) {
                     first = $('<div class="row-fluid">' + result[i] + '</div>');
                 } else {
                     first.append(result[i]).addClass('hide');
@@ -66,7 +66,7 @@ $(window).load(function() {
             data: { current: old_list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length == 0) {
+            if(result.length === 0) {
                 loader.fadeOut();
                 status = 'complete';
                 return;
