@@ -9,6 +9,11 @@
     <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url 'user.views.account_password' %}">Endre passord</a></li>
     {% if user.get_profile.is_member %}
       <li{% if active == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.aktiviteter' %}">Turer og aktiviteter</a></li>
+    {% endif %}
+    {% if user.get_profile.leader_aktivitet_dates.count != 0 %}
+      <li{% if active == 'leader_aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.leader_aktivitet_dates' %}">Dine arrangerte turer</a></li>
+    {% endif %}
+    {% if user.get_profile.is_member %}
       <li{% if active == 'publications' %} class="active"{% endif %}><a href="{% url 'user.views.publications' %}">Publikasjoner</a></li>
       <li{% if active == 'partneroffers' %} class="active"{% endif %}><a href="{% url 'user.views.partneroffers' %}">Motta medlemsfordeler</a></li>
     {% endif %}

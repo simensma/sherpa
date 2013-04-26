@@ -11,24 +11,13 @@
 
     {% include 'common/admin/aktiviteter/edit/navigation.html' with active='participants' %}
 
-    {% for date in aktivitet.get_dates_ordered %}
-      {% if date.signup_enabled %}
-        <h3>Påmeldte {{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
-        {% if date.participants.all|length > 0 %}
-          <table class="table">
-            {% for profile in date.participants.all %}
-              <tr>
-                <td>{{ profile.get_full_name }}</td>
-              </tr>
-            {% endfor %}
-          </table>
-        {% else %}
-          <p>Ingen påmeldte for denne turen.</p>
-        {% endif %}
-      {% endif %}
+    {% for aktivitet_date in aktivitet.get_dates_ordered %}
+      {% include 'common/admin/aktiviteter/edit/participants_common_content.html' %}
     {% empty %}
       <p>Aktiviteten har ingen turdatoer.</p>
     {% endfor %}
+
+
   </div>
 </div>
 

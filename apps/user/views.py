@@ -274,6 +274,18 @@ def aktiviteter(request):
     return render(request, 'common/user/aktiviteter.html', context)
 
 @user_requires_login()
+def leader_aktivitet_dates(request):
+    aktivitet_dates = request.user.get_profile().leader_aktivitet_dates.order_by('-start_date')
+    context = {'aktivitet_dates': aktivitet_dates}
+    return render(request, 'common/user/leader_aktivitet_dates.html', context)
+
+@user_requires_login()
+def leader_aktivitet_date(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, leaders=request.user.get_profile())
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/user/leader_aktivitet_date.html', context)
+
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()

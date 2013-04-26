@@ -1,0 +1,21 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Dine turer og aktiviteter &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Dine turer og aktiviteter</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>{{ aktivitet_date.aktivitet.title }}</h2>
+
+    {% include 'common/admin/aktiviteter/edit/participants_common_content.html' %}
+
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='leader_aktiviteter' %}
+  </div>
+</div>
+
+{% endblock %}
