@@ -11,6 +11,7 @@ from aktiviteter.models import Aktivitet, AktivitetDate
 from core.models import Tag
 from user.models import Profile
 from focus.models import Actor
+from association.models import Association
 
 from datetime import datetime, timedelta
 import json
@@ -56,6 +57,20 @@ def edit_description(request, aktivitet):
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
+
+        association = Association.objects.get(id=request.POST['association'])
+        if not association in request.user.get_profile().children_associations():
+            raise PermissionDenied
+        if request.POST['co_association'] == '':
+            co_association = None
+        else:
+            co_association = Association.objects.get(id=request.POST['co_association'])
+            if not co_association in request.user.children_associations():
+                raise PermissionDenied
+
+        aktivitet.association = association
+        aktivitet.co_association = co_association
+
         aktivitet.save()
         aktivitet.category_tags.clear()
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:

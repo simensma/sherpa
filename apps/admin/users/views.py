@@ -96,6 +96,7 @@ def make_sherpa_admin(request, user):
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
     user.user_permissions.add(permission)
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
 
 def add_association_permission(request):
@@ -125,6 +126,7 @@ def add_association_permission(request):
         role.save()
 
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
 
 def revoke_association_permission(request):
@@ -139,4 +141,5 @@ def revoke_association_permission(request):
     role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
     role.delete()
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))

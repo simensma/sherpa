@@ -5,6 +5,13 @@ $(document).ready(function() {
     var tag_input = form.find("div.tags input[name='tag']");
     var tag_collection = form.find("div.tags input[name='tags']");
     var subcategories = form.find("select[name='subcategories']");
+    var association_select = form.find("select[name='association']");
+    var co_association_select = form.find("select[name='co_association']");
+
+    association_select.chosen();
+    co_association_select.chosen({
+        'allow_single_deselect': true
+    });
 
     form.find("div.control-group.difficulty select[name='difficulty']").chosen();
     form.find("div.control-group.audiences select[name='audiences']").chosen();

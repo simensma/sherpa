@@ -115,6 +115,37 @@ class Profile(models.Model):
     def all_associations_sorted(self):
         return Association.sort(self.all_associations())
 
+    # Returns this users' associations, with all their children, regardless of role.
+    # Used with aktiviteter where users can list their associations' children if desired
+    # and set aktivitet-association to those too.
+    def children_associations(self):
+        associations = cache.get('profile.%s.children_associations' % self.id)
+        if associations is None:
+            if self.user.has_perm('user.sherpa_admin'):
+                # Sherpa admins have access to all associations
+                associations = Association.objects.all()
+                #for association in associations:
+                #    association.role = 'admin'
+            else:
+                # A normal user, return all connected associations with their children
+                associations = []
+                for association in self.associations.all():
+                    for association in association.get_with_children():
+                        # association.role = 'admin'
+                        associations.append(association)
+
+                # Since this will add duplicates if any of the related associations
+                # are child/parent-related with each other, sort and group by association
+                # id and remove dupes.
+                sorted_associations = sorted(associations, key=lambda a: a.id)
+                grouped_associations = groupby(sorted_associations, key=lambda a: a.id)
+                associations = [list(group)[0] for key, group in grouped_associations]
+            cache.set('profile.%s.children_associations' % self.id, associations, 60 * 60 * 24)
+        return associations
+
+    def children_associations_sorted(self):
+        return Association.sort(self.children_associations())
+
     def is_eligible_for_norway_bus_tickets(self):
         if NorwayBusTicket.objects.filter(profile=self).exists():
             # Only one order per member
