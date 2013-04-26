@@ -11,7 +11,7 @@
 <div class="row">
   <div class="span12">
     <div class="wrapper">
-      <div class="article-listing" data-initial-count="{{ versions|length }}">
+      <div class="article-listing" data-initial-count="{{ versions|length }}" data-url="{% url articles.views.more %}">
         <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
 
         {% if tag %}
@@ -35,7 +35,7 @@
       </div>
 
       {% if site.domain == 'www.turistforeningen.no' %}
-        <div class="old-article-listing hide">
+        <div class="old-article-listing hide" data-url="{% url articles.views.more_old %}">
           <div class="alert alert-info">
             <a class="close">x</a>
             <strong>Eldre artikler</strong><br>
@@ -45,8 +45,12 @@
       {% endif %}
 
       <div class="article-loader">
-        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
-        Laster flere artikler, vennligst vent...
+        <button class="btn btn-large">Last flere artikler</button>
+
+        <div class="loading form-border hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+          Laster flere artikler, vennligst vent...
+        </div>
       </div>
     </div>
   </div>

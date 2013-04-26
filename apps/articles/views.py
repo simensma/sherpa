@@ -9,7 +9,7 @@ from articles.models import Article, OldArticle
 from page.models import AdPlacement, Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 
 TAG_SEARCH_LENGTH = 3
@@ -23,9 +23,8 @@ def index(request):
         active=True,
         variant__article__pub_date__lt=datetime.now(),
         variant__article__site=request.site
-        ).order_by('-variant__article__pub_date')
+    ).order_by('-variant__article__pub_date')
 
-    tags = request.GET.getlist('tag')
     if 'tag' in request.GET and len(request.GET['tag']) >= TAG_SEARCH_LENGTH:
         versions = versions.filter(tags__name__icontains=request.GET['tag'])
 
@@ -49,7 +48,7 @@ def more(request):
         active=True,
         variant__article__pub_date__lt=datetime.now(),
         variant__article__site=request.site
-        ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
+    ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
         context = RequestContext(request, {'version': version})

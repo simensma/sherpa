@@ -1,18 +1,18 @@
 $(window).load(function() {
     var wrapper = $("div.wrapper");
-    var list = $("div.article-listing");
-    var old_list = $("div.old-article-listing");
-    var loader = $("div.article-loader");
-    var loading = false;
+    var list = wrapper.find("div.article-listing");
+    var old_list = wrapper.find("div.old-article-listing");
+    var loader = wrapper.find("div.article-loader");
+    var loader_button = loader.find("button");
+    var loading = loader.find("div.loading");
     var status = 'new';
     list.data('current', list.attr('data-initial-count'));
     old_list.data('current', 0);
 
-    $(window).scroll(function() {
-        if(!loading && status != 'complete' && $(window).scrollTop() + $(window).height() > wrapper.offset().top + wrapper.height()) {
-            loading = true;
-            loadArticles();
-        }
+    loader_button.click(function() {
+        $(this).hide();
+        loading.fadeIn();
+        loadArticles();
     });
 
     function loadArticles() {
@@ -25,11 +25,11 @@ $(window).load(function() {
 
     function loadNewArticles() {
         $.ajaxQueue({
-            url: '/nyheter/flere/',
+            url: list.attr('data-url'),
             data: { current: list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length == 0) {
+            if(result.length === 0) {
                 if(old_list.length > 0) {
                     old_list.fadeIn();
                     status = 'old';
@@ -45,7 +45,7 @@ $(window).load(function() {
             // TODO handle end of list
             var first;
             for(var i=0; i<result.length; i++) {
-                if(i % 2 == 0) {
+                if(i % 2 === 0) {
                     first = $('<div class="row-fluid">' + result[i] + '</div>');
                 } else {
                     first.append(result[i]).addClass('hide');
@@ -56,17 +56,18 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            loading = false;
+            loader_button.show();
+            loading.hide();
         });
     }
 
     function loadOldArticles() {
         $.ajaxQueue({
-            url: '/nyhetsarkiv/flere/',
+            url: old_list.attr('data-url'),
             data: { current: old_list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length == 0) {
+            if(result.length === 0) {
                 loader.fadeOut();
                 status = 'complete';
                 return;
@@ -80,7 +81,8 @@ $(window).load(function() {
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere nyheter. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
-            loading = false;
+            loader_button.show();
+            loading.hide();
         });
     }
 
