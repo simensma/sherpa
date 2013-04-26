@@ -25,7 +25,7 @@ $(window).load(function() {
 
     function loadNewArticles() {
         $.ajaxQueue({
-            url: '/nyheter/flere/',
+            url: list.attr('data-url'),
             data: { current: list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
@@ -62,7 +62,7 @@ $(window).load(function() {
 
     function loadOldArticles() {
         $.ajaxQueue({
-            url: '/nyhetsarkiv/flere/',
+            url: old_list.attr('data-url'),
             data: { current: old_list.data('current') }
         }).done(function(result) {
             result = JSON.parse(result);
