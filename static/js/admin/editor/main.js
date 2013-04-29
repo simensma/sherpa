@@ -336,22 +336,30 @@ $(document).ready(function() {
 
     function addColumns(choice) {
         if(choice === "0") {
-            columns = [{span: 12, offset: 0, order: 0}]
+            columns = [{span: 12, offset: 0, order: 0}];
         } else if(choice === "1") {
-            columns = [{span: 9, offset: 0, order: 0},
-                       {span: 3, offset: 0, order: 1}]
+            columns = [
+                {span: 9, offset: 0, order: 0},
+                {span: 3, offset: 0, order: 1}
+            ];
         } else if(choice === "2") {
-            columns = [{span: 6, offset: 0, order: 0},
-                       {span: 6, offset: 0, order: 1}]
+            columns = [
+                {span: 6, offset: 0, order: 0},
+                {span: 6, offset: 0, order: 1}
+            ];
         } else if(choice === "3") {
-            columns = [{span: 4, offset: 0, order: 0},
-                       {span: 4, offset: 0, order: 1},
-                       {span: 4, offset: 0, order: 2}]
+            columns = [
+                {span: 4, offset: 0, order: 0},
+                {span: 4, offset: 0, order: 1},
+                {span: 4, offset: 0, order: 2}
+            ];
         } else if(choice === "4") {
-            columns = [{span: 3, offset: 0, order: 0},
-                       {span: 3, offset: 0, order: 1},
-                       {span: 3, offset: 0, order: 2},
-                       {span: 3, offset: 0, order: 3}]
+            columns = [
+                {span: 3, offset: 0, order: 0},
+                {span: 3, offset: 0, order: 1},
+                {span: 3, offset: 0, order: 2},
+                {span: 3, offset: 0, order: 3}
+            ];
         }
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajaxQueue({
