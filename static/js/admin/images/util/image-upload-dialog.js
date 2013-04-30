@@ -33,7 +33,6 @@
     ImageUploadDialog.open = function(callback) {
         ImageUploadDialog.callback = callback;
 
-        uploader.modal();
         uploader.find("input[type='submit']").removeAttr('disabled');
         uploader.find("input[type='reset']").click();
 
@@ -42,6 +41,8 @@
 
         // Hide that which should be hidden by default
         uploader.find("div.hide").hide();
+
+        uploader.modal();
     };
 
     window.iframeUploadComplete = iframeUploadComplete;
