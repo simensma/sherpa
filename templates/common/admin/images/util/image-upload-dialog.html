@@ -24,6 +24,7 @@
 
     <form action="{% url admin.images.util.image_upload_dialog %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
       {% csrf_token %}
+      <input type="reset" class="hide">
 
       <div class="control-group">
         <label class="control-label">Finn bilde:</label>

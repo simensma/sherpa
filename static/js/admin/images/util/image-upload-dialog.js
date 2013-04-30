@@ -35,6 +35,7 @@
 
         uploader.modal();
         uploader.find("input[type='submit']").removeAttr('disabled');
+        uploader.find("input[type='reset']").click();
 
         uploader.find("input[name='tags-serialized']").val("");
         uploader.find("div.tag-box").empty();
