@@ -100,6 +100,13 @@ def edit_description(request, aktivitet):
 
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
 
+def edit_position(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    context = {
+        'aktivitet': aktivitet
+    }
+    return render(request, 'common/admin/aktiviteter/edit/position.html', context)
+
 def edit_dates(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
