@@ -3,6 +3,7 @@
 {% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/imagecarousel-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
@@ -223,7 +224,7 @@
                   <td>
                     <input type="text" name="url" value="" class="input-xxlarge" placeholder="Legg inn lenke til bilde...">
                     <div class="shortcuts">
-                      <button class="btn"><i class="icon-search"></i> Finn bilde i arkivet</button>
+                      <button class="btn pick-from-image-archive"><i class="icon-search"></i> Finn bilde i arkivet</button>
                       <button class="btn"><i class="icon-upload"></i> Last opp nytt bilde</button>
                     </div>
                   </td>
@@ -261,5 +262,7 @@
 
   </div>
 </div>
+
+{% include 'common/admin/images/util/image-archive-picker.html' %}
 
 {% endblock %}

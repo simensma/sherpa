@@ -1,3 +1,6 @@
+/*
+  Depends on ImageArchivePicker
+ */
 (function(ImageCarouselPicker, $, undefined) {
 
     var elements = {};
@@ -66,6 +69,12 @@
                 elements.ajaxloader.show();
                 elements.display_image.attr('src', $(this).val());
             }
+        });
+        elements.inputs.find("button.pick-from-image-archive").click(function() {
+            ImageArchivePicker.pick(function(url, description, photographer) {
+                elements.inputs.find("input[name='url']").val(url);
+                elements.inputs.find("input[name='url']").change();
+            });
         });
 
         if(elements.picker.is('[data-preload]')) {
