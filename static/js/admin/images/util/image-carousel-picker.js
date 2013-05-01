@@ -8,7 +8,7 @@
     var currentIndex = 0;
 
     $(document).ready(function() {
-        elements.picker = $("div.imagecarousel-picker");
+        elements.picker = $("div.image-carousel-picker");
 
         elements.navigation = elements.picker.find("div.navigation");
         elements.nav_current_image = elements.navigation.find("span.current");

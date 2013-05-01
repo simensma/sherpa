@@ -5,7 +5,7 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/imagecarousel-picker.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-carousel-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
 {% endblock %}
@@ -203,53 +203,7 @@
       <div class="control-group images">
         <label class="control-label" for="images">Bilder:</label>
         <div class="controls">
-          {# TODO make this one generic, and replace the CMS widget with this one? #}
-          <div class="imagecarousel-picker" data-preload="{{ aktivitet.get_images_json }}">
-            <div class="navigation form-border">
-              <span class="status">
-                Bilde <span class="current">1</span> av <span class="total">1</span>
-              </span>
-
-              <button class="btn prev" disabled><i class="icon-arrow-left"></i> Forrige</button>
-              <button class="btn btn-danger delete"><i class="icon-remove"></i> Slett dette bildet</button>
-              <button class="btn next hide">Neste <i class="icon-arrow-right"></i></button>
-              <button class="btn new">Nytt bilde <i class="icon-plus"></i></button>
-            </div>
-
-            <div class="current-image form-border">
-              <table class="inputs">
-                <tr>
-                  <td>
-                    Bilde (URL):
-                  </td>
-                  <td>
-                    <input type="text" name="url" value="" class="input-xxlarge" placeholder="Legg inn lenke til bilde...">
-                    <div class="shortcuts">
-                      <button class="btn pick-from-image-archive"><i class="icon-search"></i> Finn bilde i arkivet</button>
-                      <button class="btn upload-new-image"><i class="icon-upload"></i> Last opp nytt bilde</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Bildetekst:</td>
-                  <td>
-                    <input type="text" name="text" value="" class="input-xxlarge">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Fotograf:</td>
-                  <td>
-                    <input type="text" name="photographer" value="" class="input-xlarge">
-                  </td>
-                </tr>
-              </table>
-
-              <div class="display">
-                <img src="" alt="" class="display hide">
-                <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-              </div>
-            </div>
-          </div>
+          {% include 'common/admin/images/util/image-carousel-picker.html' %}
         </div>
       </div>
 
