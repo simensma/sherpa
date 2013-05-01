@@ -60,7 +60,12 @@ div.aktivitet {
     }
   }
 
-  div.carousel {
+  // Hackish item for using carousel-caption (which need a positioned parent) on single images
+  div.images {
+    div.single-carousel-item {
+      position: relative;
+    }
+
     // The caption might should use div.img-desc (like in cms articles) instead?
     div.carousel-caption {
       p {
