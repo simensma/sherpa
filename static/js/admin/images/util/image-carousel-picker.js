@@ -28,6 +28,19 @@
 
     ImageCarouselPicker.getImages = function() {
         saveCurrentImage();
+
+        // Check if silly users added a bunch of images without urls
+        var all_empty = true;
+        for(var i=0; i<images.length; i++) {
+            if(images[i].url.trim() !== '') {
+                all_empty = false;
+                break;
+            }
+        }
+        if(all_empty) {
+            // Yeah, don't save these empty images
+            return [];
+        }
         return images;
     };
 
