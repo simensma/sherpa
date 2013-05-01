@@ -1,5 +1,5 @@
 /*
-  Depends on ImageArchivePicker
+  Depends on ImageArchivePicker and ImageUploadDialog
  */
 (function(ImageCarouselPicker, $, undefined) {
 
@@ -72,6 +72,12 @@
         });
         elements.inputs.find("button.pick-from-image-archive").click(function() {
             ImageArchivePicker.pick(function(url, description, photographer) {
+                elements.inputs.find("input[name='url']").val(url);
+                elements.inputs.find("input[name='url']").change();
+            });
+        });
+        elements.inputs.find("button.upload-new-image").click(function() {
+            ImageUploadDialog.open(function(url, description, photographer) {
                 elements.inputs.find("input[name='url']").val(url);
                 elements.inputs.find("input[name='url']").change();
             });
