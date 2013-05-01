@@ -7,6 +7,7 @@ $(document).ready(function() {
     var subcategories = form.find("select[name='subcategories']");
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
+    var images = form.find("input[name='images']");
 
     association_select.chosen();
     co_association_select.chosen({
@@ -53,6 +54,7 @@ $(document).ready(function() {
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
         tag_collection.val(JSON.stringify(tagger.tags));
+        images.val(JSON.stringify(ImageCarouselPicker.getImages()));
     });
 
 });

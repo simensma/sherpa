@@ -157,3 +157,10 @@ class AktivitetDate(models.Model):
     def get_published():
         today = date.today()
         return AktivitetDate.objects.filter(aktivitet__pub_date__lte=today)
+
+class AktivitetImage(models.Model):
+    aktivitet = models.ForeignKey(Aktivitet, related_name='images')
+    url = models.CharField(max_length=2048)
+    text = models.CharField(max_length=1024)
+    photographer = models.CharField(max_length=255)
+    order = models.IntegerField()

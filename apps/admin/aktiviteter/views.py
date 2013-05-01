@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.db.models import Q
 
-from aktiviteter.models import Aktivitet, AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag
 from user.models import Profile
 from focus.models import Actor
@@ -81,10 +81,23 @@ def edit_description(request, aktivitet):
         aktivitet.co_association = co_association
 
         aktivitet.save()
+
         aktivitet.category_tags.clear()
         for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
+
+        aktivitet.images.all().delete()
+        for image in json.loads(request.POST['images']):
+            image = AktivitetImage(
+                aktivitet=aktivitet,
+                url=image['url'],
+                text=image['text'],
+                photographer=image['photographer'],
+                order=image['order']
+            )
+            image.save()
+
         return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
 
 def edit_dates(request, aktivitet):

@@ -3,6 +3,7 @@
 {% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/imagecarousel-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
 {% endblock %}
@@ -19,6 +20,7 @@
     {# TODO: Client-side validations #}
     <form action="{% url admin.aktiviteter.views.edit_description aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
       {% csrf_token %}
+      <input type="hidden" name="images" value="">
 
       <div class="control-group title">
         <label class="control-label" for="title">Tittel:</label>
@@ -193,6 +195,59 @@
               </optgroup>
             {% endif %}
           </select>
+        </div>
+      </div>
+
+      <div class="control-group images">
+        <label class="control-label" for="images">Bilder:</label>
+        <div class="controls">
+          {# TODO make this one generic, and replace the CMS widget with this one? #}
+          <div class="imagecarousel-picker">
+            <div class="navigation form-border">
+              <span class="status">
+                Bilde <span class="current">1</span> av <span class="total">1</span>
+              </span>
+
+              <button class="btn prev" disabled><i class="icon-arrow-left"></i> Forrige</button>
+              <button class="btn btn-danger delete"><i class="icon-remove"></i> Slett dette bildet</button>
+              <button class="btn next hide">Neste <i class="icon-arrow-right"></i></button>
+              <button class="btn new">Nytt bilde <i class="icon-plus"></i></button>
+            </div>
+
+            <div class="current-image form-border">
+              <table class="inputs">
+                <tr>
+                  <td>
+                    Bilde (URL):
+                  </td>
+                  <td>
+                    <input type="text" name="url" value="" class="input-xxlarge" placeholder="Legg inn lenke til bilde...">
+                    <div class="shortcuts">
+                      <button class="btn"><i class="icon-search"></i> Finn bilde i arkivet</button>
+                      <button class="btn"><i class="icon-upload"></i> Last opp nytt bilde</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Bildetekst:</td>
+                  <td>
+                    <input type="text" name="text" value="" class="input-xxlarge">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Fotograf:</td>
+                  <td>
+                    <input type="text" name="photographer" value="" class="input-xlarge">
+                  </td>
+                </tr>
+              </table>
+
+              <div class="display">
+                <img src="" alt="" class="display hide">
+                <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
