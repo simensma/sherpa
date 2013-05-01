@@ -55,6 +55,9 @@ class Aktivitet(models.Model):
         existing_subcategories = [s.name for s in self.category_tags.all()]
         return [s for s in self.get_subcategories() if s not in existing_subcategories]
 
+    def get_images_ordered(self):
+        return self.images.order_by('order')
+
     def get_images_json(self):
         images = []
         for image in self.images.order_by('order'):
