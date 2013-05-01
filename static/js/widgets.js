@@ -10,7 +10,7 @@ $(document).ready(function() {
     });
 
     //carousel, stop spinning
-    $('.carousel').each(function(){
+    $("div.widget.carousel div.carousel").each(function() {
         $(this).carousel({
             interval:false
         });
