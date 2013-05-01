@@ -68,6 +68,10 @@
             }
         });
 
+        if(elements.picker.is('[data-preload]')) {
+            images = JSON.parse(elements.picker.attr('data-preload'));
+        }
+
         resetState();
     }
 

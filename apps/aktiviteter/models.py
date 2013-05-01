@@ -55,6 +55,17 @@ class Aktivitet(models.Model):
         existing_subcategories = [s.name for s in self.category_tags.all()]
         return [s for s in self.get_subcategories() if s not in existing_subcategories]
 
+    def get_images_json(self):
+        images = []
+        for image in self.images.order_by('order'):
+            images.append({
+                'url': image.url,
+                'text': image.text,
+                'photographer': image.photographer,
+                'order': image.order,
+            })
+        return json.dumps(images)
+
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
     SUBCATEGORIES = {

@@ -202,7 +202,7 @@
         <label class="control-label" for="images">Bilder:</label>
         <div class="controls">
           {# TODO make this one generic, and replace the CMS widget with this one? #}
-          <div class="imagecarousel-picker">
+          <div class="imagecarousel-picker" data-preload="{{ aktivitet.get_images_json }}">
             <div class="navigation form-border">
               <span class="status">
                 Bilde <span class="current">1</span> av <span class="total">1</span>
