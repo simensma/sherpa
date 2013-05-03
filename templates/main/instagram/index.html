@@ -22,9 +22,14 @@
     <div class="items"></div>
 
     <div style="clear: both;"></div>
-    <div class="loader">
-      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
-      Laster bilder, vennligst vent...
+
+    <div class="infinite-loader">
+      <button class="btn btn-large">Se flere bilder</button>
+
+      <div class="loading form-border hide">
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+        Laster bilder, vennligst vent...
+      </div>
     </div>
 
     <div class="ender hide">

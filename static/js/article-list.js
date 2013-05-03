@@ -2,7 +2,7 @@ $(window).load(function() {
     var wrapper = $("div.wrapper");
     var list = wrapper.find("div.article-listing");
     var old_list = wrapper.find("div.old-article-listing");
-    var loader = wrapper.find("div.article-loader");
+    var loader = wrapper.find("div.infinite-loader");
     var loader_button = loader.find("button");
     var loading = loader.find("div.loading");
     var status = 'new';
