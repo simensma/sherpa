@@ -11,16 +11,25 @@ import json
 
 from page.models import AdPlacement
 
-tags = ['turistforeningen', 'komdegut']
 initial_url = 'https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s'
 
-def index(request):
+def default(request):
+    tags = ['turistforeningen', 'komdegut']
     request.session['instagram'] = {
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
     context = {'advertisement': AdPlacement.get_active_ad()}
-    return render(request, 'main/instagram/index.html', context)
+    return render(request, 'main/instagram/default.html', context)
+
+def opptur2013(request):
+    tags = ['opptur2013']
+    request.session['instagram'] = {
+        'iteration': 0,
+        'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
+    }
+    context = {'advertisement': AdPlacement.get_active_ad()}
+    return render(request, 'main/instagram/opptur.html', context)
 
 def load(request):
     if not 'instagram' in request.session:
