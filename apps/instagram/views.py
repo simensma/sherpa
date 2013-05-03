@@ -9,15 +9,27 @@ from itertools import cycle, islice
 import requests
 import json
 
-tags = ['turistforeningen', 'komdegut']
+from page.models import AdPlacement
+
 initial_url = 'https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s'
 
-def index(request):
+def default(request):
+    tags = ['turistforeningen', 'komdegut']
     request.session['instagram'] = {
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    return render(request, 'main/instagram/index.html')
+    context = {'advertisement': AdPlacement.get_active_ad()}
+    return render(request, 'main/instagram/default.html', context)
+
+def opptur2013(request):
+    tags = ['opptur2013']
+    request.session['instagram'] = {
+        'iteration': 0,
+        'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
+    }
+    context = {'advertisement': AdPlacement.get_active_ad()}
+    return render(request, 'main/instagram/opptur.html', context)
 
 def load(request):
     if not 'instagram' in request.session:
@@ -54,7 +66,7 @@ def load(request):
 
 iterations = ['small', 'small', 'small', 'small', 'medium', 'large', 'medium', 'small', 'small', 'small', 'small', 'medium', 'medium', 'medium', 'medium', 'small', 'small', 'large']
 def next_image(request, item):
-    t = loader.get_template('main/instagram/image_%s.html' % iterations[request.session['instagram']['iteration']])
+    t = loader.get_template('main/instagram/images/%s.html' % iterations[request.session['instagram']['iteration']])
     c = RequestContext(request, {'item': item})
     request.session['instagram']['iteration'] += 1
     if request.session['instagram']['iteration'] == len(iterations):
