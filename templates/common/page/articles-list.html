@@ -1,5 +1,7 @@
 {% extends site.template.name|add:"/layout.html" %}
 
+{% load advertisement %}
+
 {% block title %}Nyheter{% endblock %}
 {% block breadcrumb %}<em><a href="">Nyheter</a></em>{% endblock %}
 {% block extra_js %}
@@ -55,5 +57,7 @@
     </div>
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

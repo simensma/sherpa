@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {# Children will have to define the breadcrumb and title #}
 
 {% block extra_js %}
@@ -46,5 +48,7 @@
 
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}
