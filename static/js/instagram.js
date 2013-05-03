@@ -18,7 +18,7 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 for(var i=0; i<result.items.length; i++) {
                     var instagram = $("div.instagram").last();
-                    if(iteration == 0) {
+                    if(iteration === 0) {
                         instagram = skeleton.clone();
                         instagram.removeClass('instagram-skeleton hide').addClass('instagram').appendTo(items);
                     }
