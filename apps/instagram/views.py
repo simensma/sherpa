@@ -9,6 +9,8 @@ from itertools import cycle, islice
 import requests
 import json
 
+from page.models import AdPlacement
+
 tags = ['turistforeningen', 'komdegut']
 initial_url = 'https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s'
 
@@ -17,7 +19,8 @@ def index(request):
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    return render(request, 'main/instagram/index.html')
+    context = {'advertisement': AdPlacement.get_active_ad()}
+    return render(request, 'main/instagram/index.html', context)
 
 def load(request):
     if not 'instagram' in request.session:
