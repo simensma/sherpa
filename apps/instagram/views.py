@@ -66,7 +66,7 @@ def load(request):
 
 iterations = ['small', 'small', 'small', 'small', 'medium', 'large', 'medium', 'small', 'small', 'small', 'small', 'medium', 'medium', 'medium', 'medium', 'small', 'small', 'large']
 def next_image(request, item):
-    t = loader.get_template('main/instagram/image_%s.html' % iterations[request.session['instagram']['iteration']])
+    t = loader.get_template('main/instagram/images/%s.html' % iterations[request.session['instagram']['iteration']])
     c = RequestContext(request, {'item': item})
     request.session['instagram']['iteration'] += 1
     if request.session['instagram']['iteration'] == len(iterations):
