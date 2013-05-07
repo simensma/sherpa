@@ -8,6 +8,7 @@ from django.conf import settings
 from datetime import datetime
 
 from association.models import Association
+from sherpa2.models import Association as Sherpa2Association
 from core.models import County, FocusCountry
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename
 
@@ -152,6 +153,16 @@ class Actor(models.Model):
         if association is None:
             association = Association.objects.get(focus_id=self.main_association_id)
             cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def main_association_old(self):
+        # This sad method returns the association object from the old sherpa2 model.
+        # For now it's mostly used to get the site url because most of the new objects
+        # don't have an assigned site.
+        association = cache.get('focus.association_old.%s' % self.main_association_id)
+        if association is None:
+            association = Sherpa2Association.objects.get(focus_id=self.main_association_id)
+            cache.set('focus.association_old.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
         return association
 
     def membership_type(self):
