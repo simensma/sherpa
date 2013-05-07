@@ -46,12 +46,14 @@ $(document).ready(function() {
 
     registration_form.submit(function(e) {
         if(memberid_accepted) {
+            step2.find("button[type='submit']").prop('disabled', true);
+            step2.find("img.ajaxloader.submit").show();
             return $(this);
         }
         no_memberid_match.hide();
         e.preventDefault();
         step1.find("button[type='submit']").hide();
-        registration_form.find("img.ajaxloader.submit").show();
+        step1.find("img.ajaxloader.submit").show();
         $.ajax({
             url: '/minside/sjekk-medlemsnummer/',
             data: {
@@ -79,7 +81,7 @@ $(document).ready(function() {
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
             step1.find("button[type='submit']").show();
-            registration_form.find("img.ajaxloader.submit").hide();
+            step1.find("img.ajaxloader.submit").hide();
         });
     });
 
