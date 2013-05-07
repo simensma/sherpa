@@ -207,7 +207,7 @@
                 {% endif %}
 
                 {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
-                  <em>Du kan ikke endre dette her. Kontakt medlemsservice.</em>
+                  <em>Du kan ikke endre dette her. <a href="{% url membership.views.service %}">Kontakt medlemsservice</a>.</em>
                 {% else %}
                   <a href="{% url user.views.reserve_publications %}">Endre</a>
                 {% endif %}
@@ -237,7 +237,7 @@
                 {% endif %}
 
                 {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
-                  <em>Du kan ikke endre dette her. Kontakt medlemsservice.</em>
+                  <em>Du kan ikke endre dette her. <a href="{% url membership.views.service %}">Kontakt medlemsservice</a>.</em>
                 {% else %}
                   <a href="{% url user.views.reserve_publications %}">Endre</a>
                 {% endif %}
