@@ -1,5 +1,13 @@
 # encoding: utf-8
 
+# A few defined service codes, consult Focus for more
+FJELLOGVIDDE_SERVICE_CODE = 151
+YEARBOOK_SERVICE_CODES = [152, 153, 154]
+
+# Actor endcodes (reasons for terminating membership).
+# These aren't really properly documented yet, to resolve codes/reasons consult Focus.
+ACTOR_ENDCODE_DUBLETT = 21
+
 MEMBERSHIP_TYPES = [
     {'code': 101, 'codename': u'main', 'name': u'Hovedmedlem'},
     {'code': 102, 'codename': u'youth', 'name': u'Ungdomsmedlem'},

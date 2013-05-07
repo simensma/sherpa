@@ -9,7 +9,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from sherpa2.models import Association
-from focus.models import FocusZipcode, Price, Actor, ACTOR_ENDCODE_DUBLETT
+from focus.models import FocusZipcode, Price, Actor
+from focus.util import ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest

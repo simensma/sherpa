@@ -10,13 +10,7 @@ from datetime import datetime
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 from core.models import County, FocusCountry
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename
-
-# Actor endcodes - not really properly documented yet, to resolve codes/reasons consult Focus.
-ACTOR_ENDCODE_DUBLETT = 21
-
-FJELLOGVIDDE_SERVICE_CODE = 151
-YEARBOOK_SERVICE_CODES = [152, 153, 154]
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
