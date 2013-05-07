@@ -17,5 +17,9 @@ def actoraddress(actor):
             formatted_a2 = ', %s' % actor.address.a2
         formatted_a3 = ''
         if actor.address.a3 != '' and actor.address.a3 is not None:
-            formatted_a3 = ', %s' % actor.address.a3
+            if actor.address.a3.startswith("%s-" % country.code):
+                a3 = actor.address.a3[len(country.code) + 1:]
+            else:
+                a3 = actor.address.a3
+            formatted_a3 = ', %s' % a3
         return "%s%s%s (%s, %s)" % (actor.address.a1, formatted_a2, formatted_a3, country.name, country.code)
