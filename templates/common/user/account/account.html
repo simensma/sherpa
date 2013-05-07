@@ -94,28 +94,12 @@
             <td>{{ user.get_profile.get_actor.birth_date|date:"j. F Y" }}</td>
           </tr>
 
-          {% if user.get_profile.get_actor.address.country == 'NO' %}
-            <tr>
-              <th>Adresse</th>
-              <td>
-                {{ user.get_profile.get_actor.address.a1 }}<br>
-                {{ user.get_profile.get_actor.address.zipcode }} {{ user.get_profile.get_actor.address.area|title }}
-              </td>
-            </tr>
-          {% else %}
-            <tr>
-              <th>Adresse</th>
-              <td>
-                {% if user.get_profile.get_actor.address.a1 %}{{ user.get_profile.get_actor.address.a1 }}<br>{% endif %}
-                {% if user.get_profile.get_actor.address.a2 %}{{ user.get_profile.get_actor.address.a2 }}<br>{% endif %}
-                {% if user.get_profile.get_actor.address.a3 %}{{ user.get_profile.get_actor.address.a3 }}{% endif %}
-                {% if user.get_profile.get_actor.address.country != 'NO' %}
-                  <br>
-                  {{ user.get_profile.get_actor.address.get_country.name }}
-                {% endif %}
-              </td>
-            </tr>
-        {% endif %}
+          <tr>
+            <th>Adresse</th>
+            <td>
+              {{ user.get_profile.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+            </td>
+          </tr>
         </table>
 
         <h2>Ditt medlemskap</h2>

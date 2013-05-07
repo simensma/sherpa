@@ -9,7 +9,7 @@ from datetime import datetime
 
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
-from core.models import County, FocusCountry
+from core.models import County, FocusCountry, Zipcode
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES
 
 class Enrollment(models.Model):
@@ -298,6 +298,9 @@ class Actor(models.Model):
                 created_date=datetime.now())
             text.save()
 
+    def get_clean_address(self):
+        return ActorAddressClean(self.address)
+
     class Meta:
         db_table = u'Actor'
 
@@ -366,8 +369,70 @@ class ActorAddress(models.Model):
     class Meta:
         db_table = u'ActAd'
 
-    def get_country(self):
-        return FocusCountry.objects.get(code=self.country)
+# This is NOT a model, but a cleaner address model, based on Focus' ActorAddress model.
+# It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
+# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode').
+# The class has utility methods for typical formatting of addresses (with newlines, and for
+# one line with commas).
+class ActorAddressClean:
+    def __init__(self, address):
+        # Add fields, replacing NULL values with the empty string
+        self.field1 = address.a1.strip() if address.a1 is not None else ''
+        self.field2 = address.a2.strip() if address.a2 is not None else ''
+        self.field3 = address.a3.strip() if address.a3 is not None else ''
+
+        # Set the actual country object
+        self.country = FocusCountry.objects.get(code=address.country)
+
+        if self.country.code == 'NO':
+            # Norwegians - set the actual zipcode object
+            self.zipcode = Zipcode.objects.get(zipcode=address.zipcode)
+        else:
+            # Foreigners - ignore zipcode/area
+            # Remove country code prefixes
+            if self.field1.lower().startswith("%s-" % self.country.code.lower()):
+                self.field1 = self.field1[len(self.country.code) + 1:].strip()
+            if self.field2.lower().startswith("%s-" % self.country.code.lower()):
+                self.field2 = self.field2[len(self.country.code) + 1:].strip()
+            if self.field3.lower().startswith("%s-" % self.country.code.lower()):
+                self.field3 = self.field3[len(self.country.code) + 1:].strip()
+
+    # This is adapted for user page account details right now - if norwegian,
+    # this doesn't display country, if foreigner, it does. If rewritten, account
+    # for that and add parameters or something for that usage.
+    def format_with_newlines(self):
+        if self.country.code == 'NO':
+            address_string = self.field1
+            if self.field2 != '':
+                address_string += '\n%s' % self.field2
+            if self.field3 != '':
+                address_string += '\n%s' % self.field3
+            address_string += '\n%s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
+        else:
+            address_string = ''
+            if self.field1 != '':
+                address_string += '%s\n' % self.field1
+            if self.field2 != '':
+                address_string += '%s\n' % self.field2
+            if self.field3 != '':
+                address_string += '%s\n' % self.field3
+            address_string += "%s, %s" % (self.country.name, self.country.code)
+        return address_string
+
+    # This is adapted for NOR-WAY bus tickets emails right now. If rewritten,
+    # account for that and add parameters or something for that usage.
+    def format_for_oneline(self):
+        address_string = self.field1
+        if self.field2 != '':
+            address_string += ', %s' % self.field2
+        if self.field3 != '':
+            address_string += ', %s' % self.field3
+
+        if self.country.code == 'NO':
+            address_string += ', %s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
+        else:
+            address_string += ' (%s, %s)' % (self.country.name, self.country.code)
+        return address_string
 
 class ActorText(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
