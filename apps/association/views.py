@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 from sherpa2.models import Association, COUNTIES_SHERPA2_SET1 as COUNTIES_SHERPA2
-from core.models import County, Zipcode
+from core.models import County
 
 import json
 
