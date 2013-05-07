@@ -127,6 +127,17 @@
 
     {% if user.get_profile.is_member %}
       {% column %}
+        <a href="{% url membership.views.benefits user.get_profile.get_actor.main_association.id %}" class="element">
+          <p class="title">Dine medlemsfordeler</p>
+          <p>
+            Se oversikt over alle fordelene du får gjennom ditt DNT-medlemskap.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% if user.get_profile.is_member %}
+      {% column %}
         <a href="{% url user.views.partneroffers %}" class="element">
           <p class="title">Motta medlemsfordeler</p>
           <p>
