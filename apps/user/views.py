@@ -41,7 +41,7 @@ def home(request):
         'year': now.year,
         'next_year': now.month >= settings.MEMBERSHIP_YEAR_START
     }
-    return render(request, 'common/user/home.html', context)
+    return render(request, 'common/user/account/home.html', context)
 
 @login_required
 def account(request):
@@ -267,7 +267,7 @@ def publications(request):
     context = {
         'publications_user': list(publications_user_central) + list(publications_user_accessible),
         'publications_other': publications_other}
-    return render(request, 'common/user/publications.html', context)
+    return render(request, 'common/user/account/publications.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -280,7 +280,7 @@ def publication(request, publication):
         Q(association__in=accessible_associations)
     ).get(id=publication)
     context = {'publication': publication}
-    return render(request, 'common/user/publication.html', context)
+    return render(request, 'common/user/account/publication.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -301,7 +301,7 @@ def norway_bus_tickets(request):
         'now': now,
         'new_ticket': new_ticket,
         'old_ticket': old_ticket}
-    return render(request, 'common/user/norway_bus_tickets.html', context)
+    return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -335,7 +335,7 @@ def norway_bus_tickets_order(request):
 
     try:
         context = RequestContext(request, {'ticket': ticket})
-        message = render_to_string('common/user/norway_bus_tickets_email.txt', context)
+        message = render_to_string('common/user/account/norway_bus_tickets_email.txt', context)
         send_mail(
             "Billettbestilling fra DNT",
             message,
@@ -362,7 +362,7 @@ def norway_bus_tickets_order(request):
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def fotobok(request):
-    return render(request, 'common/user/fotobok.html')
+    return render(request, 'common/user/account/fotobok.html')
 
 @login_required
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
