@@ -311,27 +311,27 @@ def verification(request):
     if request.session['enrollment']['existing'] != '':
         # Use main members' association if applicable
         focus_association_id = Actor.objects.get(memberid=request.session['enrollment']['existing']).main_association_id
-        association = cache.get('focus.association.%s' % focus_association_id)
+        association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
         if request.session['enrollment']['location']['country'] == 'NO':
             focus_association_id = cache.get('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'])
             if focus_association_id is None:
                 focus_association_id = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).main_association_id
                 cache.set('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
-            association = cache.get('focus.association.%s' % focus_association_id)
+            association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
             if association is None:
                 association = Association.objects.get(focus_id=focus_association_id)
-                cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+                cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
             oslo_association_id = 2 # This is the current ID for that association
-            association = cache.get('association.%s' % oslo_association_id)
+            association = cache.get('association_sherpa2.%s' % oslo_association_id)
             if association is None:
                 association = Association.objects.get(id=oslo_association_id)
-                cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
+                cache.set('association_sherpa2.%s' % oslo_association_id, association, 60 * 60 * 24)
     request.session['enrollment']['association'] = association
 
     # Get the prices for that association

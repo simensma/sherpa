@@ -153,10 +153,10 @@ class Actor(models.Model):
         # This sad method returns the association object from the old sherpa2 model.
         # For now it's mostly used to get the site url because most of the new objects
         # don't have an assigned site.
-        association = cache.get('focus.association_old.%s' % self.main_association_id)
+        association = cache.get('focus.association_sherpa2.%s' % self.main_association_id)
         if association is None:
             association = Sherpa2Association.objects.get(focus_id=self.main_association_id)
-            cache.set('focus.association_old.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('focus.association_sherpa2.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
         return association
 
     def membership_type(self):

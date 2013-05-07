@@ -40,10 +40,10 @@ def benefits(request, association_id):
         association_focus_id = 10
         association = None
     else:
-        association = cache.get('association.%s' % association_id)
+        association = cache.get('association_sherpa2.%s' % association_id)
         if association is None:
             association = Association.objects.get(id=association_id)
-            cache.set('association.%s' % association_id, association, 60 * 60 * 24)
+            cache.set('association_sherpa2.%s' % association_id, association, 60 * 60 * 24)
         association_focus_id = association.focus_id
 
     price = cache.get('association.price.%s' % association_focus_id)
@@ -74,10 +74,10 @@ def zipcode_search(request):
             cache.set('focus.zipcode_association.%s' % request.POST['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
 
         # Get association based on zipcode-ID
-        association = cache.get('focus.association.%s' % focus_association_id)
+        association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
 
         # Success, redirect user
         url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
