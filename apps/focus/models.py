@@ -258,6 +258,8 @@ class Actor(models.Model):
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 
+    # This assumes that the actor *has* the F&V service, I suspect that assumption
+    # will sometimes be incorrect
     def get_reserved_against_fjellogvidde(self):
         return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is not None
 
