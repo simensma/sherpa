@@ -98,6 +98,7 @@ INSTALLED_APPS = (
     'fjelltreffen',
     'conditions',
     'aktiviteter',
+    'connect',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
