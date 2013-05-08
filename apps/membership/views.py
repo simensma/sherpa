@@ -185,7 +185,7 @@ def send_sms_receipt(request, actor):
             'next_year': datetime.now().month >= settings.MEMBERSHIP_YEAR_START,
             'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
         })
-        sms_message = render_to_string('main/membership/memberid_sms.txt', context).encode('utf-8')
+        sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
