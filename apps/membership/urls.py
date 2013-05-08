@@ -6,4 +6,5 @@ urlpatterns = patterns('membership.views',
     url(r'^fordeler/(?P<association_id>\d+).*/$', 'benefits'),
     url(r'^postnummer/$', 'zipcode_search'),
     url(r'^medlemsnummer/$', 'memberid_sms'),
+    url(r'^medlemsnummer/fra-minside/$', 'memberid_sms_userpage'),
 )

@@ -3,7 +3,7 @@
 {% block breadcrumb %}<em><a href="{% url user.views.home %}">Min side</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms_userpage.js"></script>
 {% endblock %}
 
 {% load rowiterator %}
@@ -38,7 +38,10 @@
         {% if user.get_profile.is_member %}
           <tr>
             <th>Medlemsnummer:</th>
-            <td>{{ user.get_profile.memberid }}</td>
+            <td>
+              {{ user.get_profile.memberid }}
+              {% include 'main/membership/memberid_sms_userpage.html' %}
+            </td>
           </tr>
           <tr>
             <th>Ditt medlemskap:</th>
@@ -188,10 +191,6 @@
         </a>
       {% endcolumn %}
     {% endif %}
-
-    {% column %}
-      {% include 'main/membership/memberid_sms_userpage.html' %}
-    {% endcolumn %}
   {% endrowiterator %}
 
 </div>

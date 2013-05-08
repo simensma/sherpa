@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+from sherpa.decorators import user_requires_login
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT
@@ -161,7 +162,22 @@ def memberid_sms(request):
     actor = actors[0]
     sms_request.memberid = actor.memberid
     sms_request.save()
+    return send_sms_receipt(request, actor)
 
+@user_requires_login()
+def memberid_sms_userpage(request):
+    # Requests from the userpage
+    actor = request.user.get_profile().get_actor()
+    if actor.phone_mobile.strip() == '':
+        # This shouldn't happen (it's checked client-side first) - but handle it anyway, just in case
+        return HttpResponse(json.dumps({
+            'status': 'missing_number'
+        }))
+    return send_sms_receipt(request, actor)
+
+# This is not a view
+def send_sms_receipt(request, actor):
+    number = re.sub('\s', '', actor.phone_mobile)
     try:
         context = RequestContext(request, {
             'actor': actor,
