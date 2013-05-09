@@ -143,9 +143,9 @@
                       {% endfor %}
                     </optgroup>
                     <optgroup id="world" label="Rest of world">
-                    {% for c in countries.other %}
-                      <option value="{{ c.code }}">{{ c.name }}</option>
-                    {% endfor %}
+                      {% for c in countries.other %}
+                        <option value="{{ c.code }}">{{ c.name }}</option>
+                      {% endfor %}
                     </optgroup>
                   </select>
                 </div>
