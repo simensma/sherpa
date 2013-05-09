@@ -3,7 +3,7 @@
 $(document).ready(function() {
     (function(AlbumPicker, $, undefined ) {
 
-        var picker = $("div.dialog.album-picker");
+        var picker = $("div.album-picker");
         var current = {};
         var allow_root = true;
 
@@ -15,7 +15,7 @@ $(document).ready(function() {
         });
 
         picker.find("button.pick").click(function() {
-            picker.dialog('close');
+            picker.modal('hide');
             picked(current);
         });
 
@@ -28,7 +28,7 @@ $(document).ready(function() {
         });
 
         picker.find("button.cancel").click(function() {
-            picker.dialog('close');
+            picker.modal('hide');
         });
 
         AlbumPicker.open = function(options) {
@@ -40,7 +40,7 @@ $(document).ready(function() {
                 picker.find("button.deselect").hide();
             }
             picked = options.picked;
-            picker.dialog('open');
+            picker.modal();
         }
 
         // Not using a form, so simulate search submit upon enter keypress in input
