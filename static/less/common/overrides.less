@@ -1,7 +1,10 @@
-/* This file contains *general* changes to bootstrap styles that don't quite suit us,
- * but that we don't want to modify directly in bootstrap.
- *
- * Note: Some specific elements may have bootstrap overrides declared in their respective files.
+/**
+ * Generic styles that are explicit overrides of styles applied by the libraries we use.
+ * If any explicit overrides are found elsewhere, consider moving them here.
+ */
+
+/**
+ * BOOTSTRAP
  */
 
 /* Don't set margin-top to headers globally */
@@ -10,12 +13,12 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 }
 
-/* Negate border-radius for wells */
+/* No border-radius for wells */
 div.well {
   border-radius: none !important;
 }
 
-/* Override alert-boxes */
+/* Alert-box styles */
 
 div.alert, div.alert * {
   font-family: "DTL Nobel" !important;
@@ -32,7 +35,7 @@ div.alert-error {
   background-color: rgb(243, 192, 188) !important;
 }
 
-/* Override red button */
+/* Profile-color for red button */
 
 .btn-danger {
   background-color: @profile-red !important;
@@ -43,19 +46,19 @@ div.alert-error {
   background-color: rgb(246, 72, 62) !important;
 }
 
-/* Override radio input */
+/* No radio input border */
 
 input[type='radio'], input[type='checkbox'] {
   border: none;
 }
 
-/* Enlarge popover title */
+/* Larger popover title */
 
 .popover-title {
   font-size: 18px;
 }
 
-/* Use DTL Nobel for nav-lists */
+/* Profile-font for nav-lists */
 
 ul.nav-list li {
   font-family: "DTL Nobel" !important;
@@ -65,7 +68,7 @@ ul.nav-list li a:hover {
   background-color: rgb(215, 215, 215);
 }
 
-/* Override form 'success' colors */
+/* Profile-friendly form 'success' colors */
 
 .control-group.success label {
   color: rgb(51, 51, 51);
@@ -73,4 +76,22 @@ ul.nav-list li a:hover {
 
 .control-group.success input, .control-group.success input:focus {
   border-color: rgb(29, 235, 32);
+}
+
+/**
+ * DATEPICKER
+ */
+
+.datepicker {
+ font-family: sans-serif !important;
+ font-size: 16px;
+}
+
+/**
+ * CHOSEN
+ */
+
+.chzn-container, .chzn-drop, .chzn-search input, .chzn-results li {
+ font-family: "DTL Nobel" !important;
+ font-size: 16px !important;
 }
