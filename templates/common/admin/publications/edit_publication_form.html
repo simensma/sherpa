@@ -14,23 +14,23 @@
   {% endif %}
 
   <div class="control-group title">
-    <label class="control-label" for="title">Navn:</label>
+    <label class="control-label" for="publication_title">Navn:</label>
     <div class="controls">
-      <input type="text" class="input-xlarge" name="title" value="{{ publication.title }}">
+      <input type="text" class="input-xlarge" name="title" id="publication_title" value="{{ publication.title }}">
     </div>
   </div>
 
   <div class="control-group description">
-    <label class="control-label" for="description">Beskrivelse:</label>
+    <label class="control-label" for="publication_description">Beskrivelse:</label>
     <div class="controls">
-      <textarea name="description" rows="5" class="input-xlarge">{{ publication.description }}</textarea>
+      <textarea name="description" id="publication_description" rows="5" class="input-xlarge">{{ publication.description }}</textarea>
     </div>
   </div>
 
   <div class="control-group association">
-    <label class="control-label" for="association">Tilhører:</label>
+    <label class="control-label" for="publication_association">Tilhører:</label>
     <div class="controls">
-      <select name="association" data-chosen data-placeholder="Velg tilhørende forening...">
+      <select name="association" id="publication_association" data-chosen data-placeholder="Velg tilhørende forening...">
         <option value=""></option>
         {% if user.get_profile.all_associations_sorted.central|length > 0 %}
           <optgroup label="Sentralt/nasjonalt">
@@ -65,28 +65,28 @@
   </div>
 
   <div class="control-group access{% if publication and publication.association.type == 'sentral' or not publication and active_association.type == 'sentral' %} hide{% endif %}">
-    <label class="control-label" for="access">Tilgjengelig for:</label>
+    <label class="control-label">Tilgjengelig for:</label>
     <div class="controls">
-      <label for="all" class="radio">
-        <input type="radio" name="access" value="all" {% if publication.access == 'all' or not publication %} checked{% endif %}>
+      <label for="publication_access_all" class="radio">
+        <input type="radio" name="access" id="publication_access_all" value="all" {% if publication.access == 'all' or not publication %} checked{% endif %}>
         Alle DNTs medlemmer
       </label>
-      <label for="association" class="radio">
-        <input type="radio" name="access" value="association" {% if publication.access == 'association' %} checked{% endif %}>
+      <label for="publication_access_association" class="radio">
+        <input type="radio" name="access" id="publication_access_association" value="association" {% if publication.access == 'association' %} checked{% endif %}>
         Kun medlemmer i <span class="association-name">{% firstof publication.association.get_main_association.name active_association.get_main_association.name %}</span>
       </label>
     </div>
   </div>
 
   <div class="control-group license">
-    <label class="control-label" for="license">Lisens:</label>
+    <label class="control-label">Lisens:</label>
     <div class="controls">
-      <label for="all_rights_reserved" class="radio">
-        <input type="radio" name="license" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' or not publication %} checked{% endif %}>
+      <label for="publication_license_all_rights_reserved" class="radio">
+        <input type="radio" name="license" id="publication_license_all_rights_reserved" value="all_rights_reserved" {% if publication.license == 'all_rights_reserved' or not publication %} checked{% endif %}>
         Alle rettigheter reservert
       </label>
-      <label for="cc-by-nc-nd" class="radio">
-        <input type="radio" name="license" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked{% endif %}>
+      <label for="publication_license_cc-by-nc-nd" class="radio">
+        <input type="radio" name="license" id="publication_license_cc-by-nc-nd" value="cc-by-nc-nd" {% if publication.license == 'cc-by-nc-nd' %} checked{% endif %}>
         <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.no">Creative Commons (CC BY-NC-ND 3.0)</a>
       </label>
     </div>

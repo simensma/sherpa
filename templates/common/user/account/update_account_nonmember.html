@@ -54,14 +54,14 @@
       <div class="control-group name">
         <label class="control-label" for="name">Fullt navn</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="name" value="{{ user.get_profile.get_full_name }}">
+          <input type="text" class="input-xlarge" name="name" id="name" value="{{ user.get_profile.get_full_name }}">
         </div>
       </div>
 
       <div class="control-group email">
         <label class="control-label" for="email">E-post</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="email" value="{{ user.get_profile.get_email }}">
+          <input type="text" class="input-xlarge" name="email" id="email" value="{{ user.get_profile.get_email }}">
         </div>
       </div>
 
@@ -70,7 +70,7 @@
           <label class="control-label" for="sherpa-email">E-post i Sherpa</label>
           <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Egen Sherpa-epost" data-content="Hvis du bruker din private e-postadresse på Min side, kan du angi en egen e-postadresse for Sherpa. Den vil vises i artikler du skriver og på din Sherpa-profil.<br><br>Tips: Registrer adressen på www.gravatar.com!<br><br><strong>Du kan ikke logge på med denne e-postadressen!</strong>">
             <input name="toggle-sherpa-email" type="checkbox"{% if user.get_profile.sherpa_email != '' %} checked{% endif %}>
-            <input type="text" class="input-xlarge" name="sherpa-email" value="{{ user.get_profile.sherpa_email }}"{% if user.get_profile.sherpa_email == '' %} readonly{% endif %}>
+            <input type="text" class="input-xlarge" name="sherpa-email" id="sherpa-email" value="{{ user.get_profile.sherpa_email }}"{% if user.get_profile.sherpa_email == '' %} readonly{% endif %}>
             <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
             <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
           </div>

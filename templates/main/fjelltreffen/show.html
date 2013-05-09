@@ -91,21 +91,21 @@
             {% csrf_token %}
 
             <div class="control-group name">
-              <label class="control-label" for="name">Ditt navn</label>
+              <label class="control-label" for="id_name">Ditt navn</label>
               <div class="controls">
                 {{ form.name }} <span class="asterisk red">*</span>
               </div>
             </div>
 
             <div class="control-group email">
-              <label class="control-label" for="name">Din e-postadresse</label>
+              <label class="control-label" for="id_email">Din e-postadresse</label>
               <div class="controls">
                 {{ form.email }} <span class="asterisk red">*</span>
               </div>
             </div>
 
             <div class="control-group text">
-              <label class="control-label" for="name">Svar til annonsøren</label>
+              <label class="control-label" for="id_text">Svar til annonsøren</label>
               <div class="controls">
                 {{ form.text }}
               </div>
@@ -114,7 +114,7 @@
             {% if form.captcha %}
               {# Will only be required for anonymous users #}
               <div class="control-group captcha">
-                <label class="control-label" for="name">Skriv inn bokstavene i bildet</label>
+                <label class="control-label">Skriv inn bokstavene i bildet</label>
                 <div class="controls">
                   {{ form.captcha }}
                 </div>

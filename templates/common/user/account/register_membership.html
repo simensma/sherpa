@@ -27,13 +27,13 @@
           <div class="control-group memberid">
             <label class="control-label" for="memberid">Medlemsnummer:</label>
             <div class="controls">
-              <input type="text" class="input-xlarge" name="memberid">
+              <input type="text" class="input-xlarge" name="memberid" id="memberid">
             </div>
           </div>
           <div class="control-group zipcode">
             <label class="control-label" for="zipcode">Postnummer:</label>
             <div class="controls">
-              <input type="text" class="input-small" name="zipcode" maxlength="4">
+              <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
               <input type="text" class="input-medium" name="area" disabled>
               <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
@@ -42,7 +42,7 @@
 
         <div class="step2 hide">
           <div class="control-group email" data-email="{{ user.get_profile.get_email }}">
-            <label class="control-label" for="email">E-postadresse:</label>
+            <label class="control-label">E-postadresse:</label>
             <div class="controls">
               <div class="hints">
                 Du har forskjellige e-postadresser i Min side og medlemsregisteret, vennligst velg hvilken adresse du vil bruke:
