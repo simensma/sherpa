@@ -22,7 +22,7 @@ import hashlib
 
 from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
-from core.models import Zipcode
+from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
 
@@ -182,7 +182,10 @@ def register_membership(request):
         return HttpResponseRedirect(reverse('user.views.home'))
 
     if request.method == 'GET':
-        context = {'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT}
+        context = {
+            'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT,
+            'countries': FocusCountry.get_sorted()
+        }
         return render(request, 'common/user/account/register_membership.html', context)
     elif request.method == 'POST':
         try:
