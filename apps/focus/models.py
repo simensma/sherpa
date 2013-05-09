@@ -384,7 +384,8 @@ class ActorAddressClean:
         self.field3 = address.a3.strip() if address.a3 is not None else ''
 
         # Set the actual country object
-        self.country = FocusCountry.objects.get(code=address.country)
+        # Uppercase the country code (just in case - you never know with Focus)
+        self.country = FocusCountry.objects.get(code=address.country.upper())
 
         if self.country.code == 'NO':
             # Norwegians - set the actual zipcode object
