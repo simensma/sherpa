@@ -261,7 +261,8 @@ def upload_image(request):
             ids.append(image.id)
         result = json.dumps({
             'status': 'success',
-            'ids': json.dumps(ids)})
+            'ids': ids
+        })
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
         logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",
