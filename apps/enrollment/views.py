@@ -250,9 +250,9 @@ def existing(request):
     try:
         if data['country'] == 'NO':
             # Include zipcode for norwegian members
-            address = ActorAddress.objects.get(actor=actor.id, zipcode=data['zipcode'], country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, zipcode=data['zipcode'], country_code=data['country'])
         else:
-            address = ActorAddress.objects.get(actor=actor.id, country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, country_code=data['country'])
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 

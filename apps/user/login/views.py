@@ -158,7 +158,7 @@ def register(request):
                 raise PermissionDenied
             actor = Actor.objects.filter(
                 memberid=request.POST['memberid'],
-                address__country=request.POST['country'])
+                address__country_code=request.POST['country'])
             if request.POST['country'] == 'NO':
                 actor = actor.filter(address__zipcode=request.POST['zipcode'])
             actor = actor.get()
@@ -248,7 +248,7 @@ def verify_memberid(request):
     try:
         actor = Actor.objects.filter(
             memberid=request.POST['memberid'],
-            address__country=request.POST['country'])
+            address__country_code=request.POST['country'])
         if request.POST['country'] == 'NO':
             actor = actor.filter(address__zipcode=request.POST['zipcode'])
         actor = actor.get()
