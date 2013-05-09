@@ -94,7 +94,7 @@ $(document).ready(function() {
         }
         $("div.existing-result span.result").hide();
         $("div.existing-result span.result").removeClass('success error');
-        $.ajax({
+        $.ajaxQueue({
             url: '/innmelding/eksisterende/',
             data: { data: JSON.stringify(data) }
         }).done(function(result) {

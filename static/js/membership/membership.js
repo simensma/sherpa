@@ -46,7 +46,7 @@ $(document).ready(function() {
             loader.hide();
             return $(this);
         }
-        $.ajax({
+        $.ajaxQueue({
             url: '/medlem/postnummer/',
             data: { zipcode: zipcode }
         }).done(function(result) {

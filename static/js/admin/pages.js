@@ -38,7 +38,7 @@ $(document).ready(function() {
 
     function performLookup() {
         // Check dynamically that the slug is unique
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/side/ny/unik/',
             data: 'slug=' + encodeURIComponent(lookupVal)
         }).done(function(result) {
@@ -130,7 +130,7 @@ $(document).ready(function() {
             var id = $(this).attr("data-id");
             var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
             $(this).parents("tr").after(loader);
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/cms/side/barn/' + id + '/',
                 data: { level: level }
             }).done(function(result) {
@@ -205,7 +205,7 @@ $(document).ready(function() {
                 });
                 i++;
             });
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/cms/meny/sorter/',
                 data: { menus: JSON.stringify(items) }
             }).fail(function(result) {
@@ -228,7 +228,7 @@ $(document).ready(function() {
         } else {
             ajaxUrl = 'rediger/' + encodeURIComponent(activeMenu.attr('data-id')) + '/';
         }
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/meny/' + ajaxUrl,
             data: {
                 name: name,
@@ -255,7 +255,7 @@ $(document).ready(function() {
         if(!confirm('Er du sikker på at du vil slette denne linken fra hovedmenyen?')) {
             return;
         }
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/meny/slett/' + activeMenu.attr('data-id') + '/',
             type: 'POST'
         }).done(function(result) {

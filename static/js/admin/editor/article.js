@@ -27,7 +27,7 @@ $(document).ready(function() {
         if($(this).is(':checked')) {
             var image = $(this);
             $("div.editor-header img.article-thumbnail").hide();
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/skjul/',
                 type: 'POST'
             });
@@ -43,7 +43,7 @@ $(document).ready(function() {
             }
             var image = $(this);
             $("div.editor-header img.article-thumbnail").hide();
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/slett/',
                 type: 'POST'
             });
@@ -59,7 +59,7 @@ $(document).ready(function() {
     });
 
     function saveImage() {
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/',
             data: { thumbnail: $("div.editor-header img.article-thumbnail").attr('src') }
         });

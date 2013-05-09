@@ -81,7 +81,7 @@
         content.empty();
         ajaxloader.show();
 
-        $.ajax({
+        $.ajaxQueue({
             url: url,
             data: data
         }).done(function(result) {

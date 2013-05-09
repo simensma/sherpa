@@ -32,7 +32,7 @@ $(document).ready(function() {
         var form = $(this);
         form.find("button[type='submit']").hide();
         form.find("img.ajaxloader.submit").show();
-        $.ajax({
+        $.ajaxQueue({
             url: '/minside/sjekk-medlemsnummer/',
             data: {
                 memberid: form.find("input[name='memberid']").val(),

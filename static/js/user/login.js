@@ -28,7 +28,7 @@ $(document).ready(function() {
         forgot_password.find("div.alert").hide();
         restore_password_button.attr('disabled', true);
         loader.show();
-        $.ajax({
+        $.ajaxQueue({
             url: '/minside/gjenopprett-passord/e-post/',
             data: { email: forgot_password.find("input[name='email']").val() }
         }).done(function(result) {
