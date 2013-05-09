@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.context_processors import PermWrapper
@@ -154,6 +154,11 @@ class Profile(models.Model):
 
             # No orders, and offer expired - hide the item
             return False
+
+    @staticmethod
+    def sherpa_users():
+        permission = Permission.objects.get(codename='sherpa')
+        return Profile.objects.filter(user__user_permissions=permission)
 
     class Meta:
         permissions = [
