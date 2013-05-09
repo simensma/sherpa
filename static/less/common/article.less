@@ -12,20 +12,15 @@ article div.image img, div.widget.carousel img {
 
 article {
 
-  /* Header styles are copied from common.less, please merge them somehow */
   span.h1, span.h2, span.h3 {
-    font-family: "DTL Nobel" !important;
-    font-weight: bold;
     display: block;
-    line-height: normal;
+    font-weight: bold;
     margin-bottom: 25px;
+    .nobel-font;
   }
 
   span.h1 {
-    text-transform: uppercase;
-    font-size: 40px;
-    border-bottom: 4px solid rgb(35, 35, 35);
-    margin-bottom: 25px;
+    .header1;
   }
 
   @media (max-width: 767px) {
@@ -35,13 +30,11 @@ article {
   }
 
   span.h2 {
-    font-size: 28px;
-    line-height: 1.2;
-    margin-bottom: 0;
+    .header2;
   }
 
   span.h3 {
-    font-size: 18px;
+    .header3;
     margin-bottom: 0;
   }
 
