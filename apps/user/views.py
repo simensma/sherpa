@@ -121,7 +121,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_profile().get_actor().address.country == 'NO':
+            if request.user.get_profile().get_actor().get_clean_address().country.code == 'NO':
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -147,7 +147,7 @@ def update_account(request):
             actor.phone_mobile = request.POST['phone_mobile']
             actor.save()
 
-            if actor.address.country == 'NO':
+            if actor.get_clean_address().country.code == 'NO':
                 actor.address.a1 = request.POST['address']
                 if 'address2' in request.POST:
                     actor.address.a2 = request.POST['address2']
@@ -402,7 +402,7 @@ def fotobok_eurofoto_request(request):
         ('address2', profile.get_actor().address.a2 if profile.get_actor().address.a2 is not None else '',),
         ('zipcode', profile.get_actor().address.zipcode,),
         ('city', profile.get_actor().address.area,),
-        ('country', profile.get_actor().address.country,),
+        ('country', profile.get_actor().get_clean_address().country.code,),
         ('phonework', '',),
         ('phonehome', profile.get_actor().phone_home if profile.get_actor().phone_home is not None else '',),
         ('phonemobile', profile.get_actor().phone_mobile if profile.get_actor().phone_mobile is not None else '',),

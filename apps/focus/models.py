@@ -360,7 +360,7 @@ class ActorAddress(models.Model):
     a3 = models.CharField(max_length=40, db_column=u'A3')
     zipcode = models.CharField(max_length=9, db_column=u'PCode')
     area = models.CharField(max_length=30, db_column=u'PArea')
-    country = models.CharField(max_length=3, db_column=u'CtryCode')
+    country_code = models.CharField(max_length=3, db_column=u'CtryCode')
     frdt = models.DateTimeField(null=True, db_column=u'FrDt')
     todt = models.DateTimeField(null=True, db_column=u'ToDt')
     chby = models.CharField(max_length=50, db_column=u'ChBy')
@@ -385,7 +385,7 @@ class ActorAddressClean:
 
         # Set the actual country object
         # Uppercase the country code (just in case - you never know with Focus)
-        self.country = FocusCountry.objects.get(code=address.country.upper())
+        self.country = FocusCountry.objects.get(code=address.country_code.upper())
 
         if self.country.code == 'NO':
             # Norwegians - set the actual zipcode object

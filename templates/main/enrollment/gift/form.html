@@ -65,12 +65,12 @@
         </div>
         <div class="control-group giver_address">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_address" value="{% if user.get_profile.is_member and user.get_profile.get_actor.address.country == 'NO' %}{% firstof giver.address user.get_profile.get_actor.address.a1 %}{% else %}{{ giver.address }}{% endif %}">
+          <input type="text" class="input-large" name="giver_address" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.address user.get_profile.get_actor.get_clean_address.field1 %}{% else %}{{ giver.address }}{% endif %}">
         </div>
         <div class="control-group giver_zipcode">
           <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{% if user.get_profile.is_member and user.get_profile.get_actor.address.country == 'NO' %}{% firstof giver.zipcode user.get_profile.get_actor.address.zipcode %}{% else %}{{ giver.zipcode }}{% endif %}" maxlength="10">
-          <input type="text" class="input-medium area" name="giver_area" value="{% if user.get_profile.is_member and user.get_profile.get_actor.address.country == 'NO' %}{% firstof giver.area user.get_profile.get_actor.address.area %}{% else %}{{ giver.area }}{% endif %}" disabled>
+          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.zipcode user.get_profile.get_actor.get_clean_address.zipcode.zipcode %}{% else %}{{ giver.zipcode }}{% endif %}" maxlength="10">
+          <input type="text" class="input-medium area" name="giver_area" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.area user.get_profile.get_actor.get_clean_address.zipcode.area %}{% else %}{{ giver.area }}{% endif %}" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
         <div class="control-group giver_memberid" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i husstanden? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
