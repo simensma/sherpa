@@ -25,7 +25,7 @@
     }
 
     function displayCurrentImage() {
-        if(currentCropperInstance != undefined){
+        if(currentCropperInstance !== undefined){
             currentCropperInstance.cancelSelection();
         }
 
@@ -152,7 +152,7 @@
         // Ensure imgareaselect follows the bootstrap-modal scrolling
         widget_editor.on('shown', function() {
             $("div.modal-scrollable").scroll(function() {
-                if(typeof currentCropperInstance !== 'undefined') {
+                if(currentCropperInstance !== undefined) {
                     currentCropperInstance.update();
                 }
             });

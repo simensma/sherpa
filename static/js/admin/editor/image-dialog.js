@@ -20,7 +20,7 @@
                     clearTimeout(updaterId);
                 }
                 updaterId = setTimeout(function() {
-                    if(typeof currentCropperInstance !== 'undefined') {
+                    if(currentCropperInstance !== undefined) {
                         currentCropperInstance.update();
                     }
                 }, 200);
