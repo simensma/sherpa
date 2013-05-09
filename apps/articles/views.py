@@ -90,7 +90,8 @@ def show(request, article, text):
             row.columns = columns
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
-    return render(request, 'common/page/article.html')
+    return render(request, 'common/page/article.html', context)
+
 
 def show_old(request, article, text):
     # TODO - HACK:
