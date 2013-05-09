@@ -149,6 +149,10 @@ def update_account(request):
 
             if actor.address.country == 'NO':
                 actor.address.a1 = request.POST['address']
+                if 'address2' in request.POST:
+                    actor.address.a2 = request.POST['address2']
+                if 'address3' in request.POST:
+                    actor.address.a3 = request.POST['address3']
                 actor.address.zipcode = zipcode.zipcode
                 actor.address.area = zipcode.area
                 actor.address.save()

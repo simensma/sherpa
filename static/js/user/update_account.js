@@ -40,10 +40,27 @@ $(document).ready(function() {
         req: false
     });
 
+    var address = form.find("div.control-group.address");
     Validator.validate({
         method: 'address',
-        control_group: form.find("div.control-group.address"),
-        input: form.find("input[name='address']"),
+        control_group: address,
+        input: address.find("input[name='address']"),
+        req: true
+    });
+
+    var address2 = form.find("div.control-group.address2");
+    Validator.validate({
+        method: 'address',
+        control_group: address2,
+        input: address2.find("input[name='address2']"),
+        req: true
+    });
+
+    var address3 = form.find("div.control-group.address3");
+    Validator.validate({
+        method: 'address',
+        control_group: address3,
+        input: address3.find("input[name='address3']"),
         req: true
     });
 

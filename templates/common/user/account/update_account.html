@@ -96,13 +96,29 @@
         </div>
       </div>
 
-      {% if user.get_profile.get_actor.address.country == 'NO' %}
+      {% if user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}
         <div class="control-group address">
           <label class="control-label" for="address">Adresse</label>
           <div class="controls">
-            <input type="text" class="input-large" name="address" value="{{ user.get_profile.get_actor.address.a1 }}">
+            <input type="text" class="input-large" name="address" value="{{ user.get_profile.get_actor.get_clean_address.field1 }}">
           </div>
         </div>
+
+        {% if user.get_profile.get_actor.get_clean_address.field2 %}
+          <div class="control-group address2">
+            <div class="controls">
+              <input type="text" class="input-large" name="address2" value="{{ user.get_profile.get_actor.get_clean_address.field2 }}">
+            </div>
+          </div>
+        {% endif %}
+
+        {% if user.get_profile.get_actor.get_clean_address.field3 %}
+          <div class="control-group address3">
+            <div class="controls">
+              <input type="text" class="input-large" name="address3" value="{{ user.get_profile.get_actor.get_clean_address.field3 }}">
+            </div>
+          </div>
+        {% endif %}
 
         <div class="control-group zipcode" for="zipcode">
           <label class="control-label">Postnummer</label>
