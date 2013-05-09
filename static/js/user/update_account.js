@@ -16,12 +16,12 @@ $(document).ready(function() {
         req: true
     });
 
-    var control_group = form.find("div.control-group.sherpa-email");
-    if(control_group.length > 0) {
+    var sherpa_email = form.find("div.control-group.sherpa-email");
+    if(sherpa_email.length > 0) {
         Validator.validate({
             method: 'email',
-            control_group: control_group,
-            input: control_group.find("input[name='sherpa-email']"),
+            control_group: sherpa_email,
+            input: sherpa_email.find("input[name='sherpa-email']"),
             req: false
         });
     }
