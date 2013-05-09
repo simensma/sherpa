@@ -132,9 +132,9 @@
         <div class="control-group">
           <label class="control-label">Adresse</label>
           <div class="controls">
-            {% if user.get_profile.get_actor.address.a1 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a1 }}" disabled></p>{% endif %}
-            {% if user.get_profile.get_actor.address.a2 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a2 }}" disabled></p>{% endif %}
-            {% if user.get_profile.get_actor.address.a3 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a3 }}" disabled></p>{% endif %}
+            <div class="control-as-text">
+              {{ user.get_profile.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+            </div>
             <div class="alert alert-error">
               Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> om du har behov for å endre din adresse.
             </div>
