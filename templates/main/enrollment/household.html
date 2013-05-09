@@ -57,13 +57,13 @@
           <label> Land <span class="asterisk red">*</span></label>
           <select name="country">
             <optgroup id="scandinavia" label="Scandinavia">
-              <option value="{{ countries_norway.code }}"{% if location.country == countries_norway.code or not location %} selected{% endif %}>{{ countries_norway.name }}</option>
-              {% for c in countries_other_scandinavian %}
+              <option value="{{ countries.norway.code }}"{% if location.country == countries.norway.code or not location %} selected{% endif %}>{{ countries.norway.name }}</option>
+              {% for c in countries.scandinavia %}
                 <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
               {% endfor %}
             </optgroup>
             <optgroup id="world" label="Rest of world">
-            {% for c in countries_other %}
+            {% for c in countries.other %}
               <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
             {% endfor %}
             </optgroup>

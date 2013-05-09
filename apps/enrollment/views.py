@@ -211,11 +211,6 @@ def household(request):
             main = True
             break
 
-    countries = FocusCountry.objects.all()
-    countries_norway = countries.get(code='NO')
-    countries_other_scandinavian = countries.filter(scandinavian=True).exclude(code='NO')
-    countries_other = countries.filter(scandinavian=False)
-
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
@@ -224,11 +219,11 @@ def household(request):
         'location': request.session['enrollment'].get('location', ''),
         'existing': request.session['enrollment'].get('existing', ''),
         'invalid_existing': invalid_existing in request.GET,
-        'countries_norway': countries_norway, 'main': main,
+        'countries': FocusCountry.get_sorted(),
+        'main': main,
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'countries_other_scandinavian': countries_other_scandinavian,
-        'countries_other': countries_other, 'errors': errors,
+        'errors': errors,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/household.html', context)
 

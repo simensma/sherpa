@@ -32,17 +32,11 @@ def login(request):
     if 'authenticated_profiles' in request.session:
         del request.session['authenticated_profiles']
 
-    countries = FocusCountry.objects.all()
-    countries = {
-        'norway': countries.get(code='NO'),
-        'scandinavia': countries.filter(scandinavian=True).exclude(code='NO'),
-        'other': countries.filter(scandinavian=False)
-    }
-
     context = {
         'user_password_length': settings.USER_PASSWORD_LENGTH,
         'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT,
-        'countries': countries}
+        'countries': FocusCountry.get_sorted()
+    }
 
     if request.method == 'GET':
         if request.user.is_authenticated():
