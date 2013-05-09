@@ -41,7 +41,7 @@ def user_images(request, profile):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
         'current_navigation': current_navigation,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'common/admin/images/user_images.html', context)
@@ -63,7 +63,7 @@ def list_albums(request, album):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH}
     return render(request, 'common/admin/images/list_albums.html', context)
@@ -85,7 +85,7 @@ def image_details(request, image):
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
         'current_navigation': 'albums'}
     return render(request, 'common/admin/images/image_details.html', context)
 
@@ -311,7 +311,7 @@ def album_search_json(request):
 def search(request):
     context = {
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.objects.all(), key=lambda p: p.get_first_name())}
+        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name())}
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({
             'too_short_query': True,
