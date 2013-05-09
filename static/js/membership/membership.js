@@ -2,6 +2,8 @@
 
 $(document).ready(function() {
 
+    var zipcode_button = $("button.zipcode-search");
+
     $("div#benefits dl dd, div#faq dl dd").hide();
     $("div#benefits dl dt, div#faq dl dt").click(function() {
         $(this).next().slideToggle(400);
@@ -29,25 +31,24 @@ $(document).ready(function() {
     $("input[name='zipcode']").keydown(function(e) {
         if(e.which == 13) {
             // 13 is the Enter key
-            $("button.zipcode-search").click();
+            zipcode_button.click();
         }
     });
 
-    $("button.zipcode-search").click(function() {
-        var button = $(this);
+    zipcode_button.click(function() {
         var loader = $(this).siblings('img.ajaxloader.zipcode-search');
-        button.hide();
+        zipcode_button.hide();
         loader.show();
         var zipcode = $("input[name='zipcode']").val();
         if(zipcode == '') {
             $("div.zipcode-modal").find("h3, p").hide().filter('.missing').show();
             $("div.zipcode-modal").modal();
-            button.show();
+            zipcode_button.show();
             loader.hide();
             return $(this);
         }
         $.ajaxQueue({
-            url: '/medlem/postnummer/',
+            url: zipcode_button.attr('data-zipcode-url'),
             data: { zipcode: zipcode }
         }).done(function(result) {
             result = JSON.parse(result);
@@ -58,19 +59,19 @@ $(document).ready(function() {
                 $("strong.zipcode").text(result.zipcode);
                 $("div.zipcode-modal").find("h3, p").hide().filter('.invalid').show();
                 $("div.zipcode-modal").modal();
-                button.show();
+                zipcode_button.show();
                 loader.hide();
             } else if(result.error == 'unregistered_zipcode') {
                 $("strong.zipcode").text(result.zipcode);
                 $("div.zipcode-modal").find("h3, p").hide().filter('.unregistered').show();
                 $("div.zipcode-modal").modal();
-                button.show();
+                zipcode_button.show();
                 loader.hide();
             }
         }).fail(function(result) {
             $("div.zipcode-modal").find("h3, p").hide().filter('.fail').show();
             $("div.zipcode-modal").modal();
-            button.show();
+            zipcode_button.show();
             loader.hide();
         });
     });

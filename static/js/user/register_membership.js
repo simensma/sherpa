@@ -44,7 +44,7 @@ $(document).ready(function() {
         form.find("button[type='submit']").hide();
         form.find("img.ajaxloader.submit").show();
         $.ajaxQueue({
-            url: '/minside/sjekk-medlemsnummer/',
+            url: form.attr('data-memberid-url'),
             data: {
                 memberid: form.find("input[name='memberid']").val(),
                 country: country_select.val(),

@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    var searchbox = $("div#searchbox");
+
     $("div.loading").hide();
     $("div.count").hide();
     $("div.no-results").hide();
@@ -55,7 +57,7 @@ $(document).ready(function() {
         $("div.no-results").hide();
         $("div.syntaxerror").hide();
         $.ajaxQueue({
-            url: '/foreninger/filtrer/',
+            url: searchbox.attr('data-filter-url'),
             data: {
                 category: category,
                 county: county

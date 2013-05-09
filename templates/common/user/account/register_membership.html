@@ -17,7 +17,7 @@
       Hvis du er medlem i DNT bør du koble profilen din til medlemssystemet.
     </p>
 
-    <form action="{% url user.views.register_membership %}" method="post" class="form-default form-border form-horizontal register-membership">
+    <form action="{% url user.views.register_membership %}" method="post" class="form-default form-border form-horizontal register-membership" data-memberid-url="{% url user.login.views.verify_memberid %}">
       {% csrf_token %}
       <input type="hidden" name="email-equal" value="">
 

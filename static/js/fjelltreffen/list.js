@@ -64,7 +64,7 @@ $(document).ready(function() {
         };
 
         $.ajaxQueue({
-            url: "/fjelltreffen/last/" + start_index + "/",
+            url: wrapper.attr('data-load-url'),
             data: {filter: JSON.stringify(filter)}
         }).done(function(result) {
             result = JSON.parse(result);

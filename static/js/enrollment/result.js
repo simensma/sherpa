@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
-    $("button.phone-receipt").click(function() {
+    var button = $("button.phone-receipt");
+
+    button.click(function() {
         $(this).attr('disabled', true);
         $(this).text("Sender, vennligst vent...");
         var button = $(this);
@@ -8,7 +10,7 @@ $(document).ready(function() {
         var number = $(this).attr('data-number');
         var memberserviceBackup = 'Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS.';
         $.ajaxQueue({
-            url: '/innmelding/sms/',
+            url: button.attr('data-sms-url'),
             data: { index: index }
         }).done(function(result) {
             result = JSON.parse(result);

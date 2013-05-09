@@ -28,11 +28,12 @@ $(document).ready(function() {
         $("input[name='fields']").val(JSON.stringify(fields));
     });
 
-    $("form.update-images input[name='photographer']").typeahead({
+    var photographer = $("form.update-images input[name='photographer']");
+    photographer.typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
-                url: '/sherpa/bildearkiv/fotograf/',
+                url: photographer.attr('data-source-url'),
                 data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));

@@ -93,7 +93,7 @@
           <div class="control-group">
             <div class="controls">
               <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-              <div class="forgot-password hide">
+              <div class="forgot-password hide" data-email-url="{% url user.login.views.send_restore_password_email %}">
                 <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
                 <p class="actions">
                   <button class="btn restore-password">Gjenopprett passord</button>
@@ -118,7 +118,7 @@
         </div>
         <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-          <form action="{% url user.login.views.register %}" method="post" class="form-default form-horizontal">
+          <form action="{% url user.login.views.register %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url user.login.views.verify_memberid %}">
             {% csrf_token %}
 
             <div class="step1">

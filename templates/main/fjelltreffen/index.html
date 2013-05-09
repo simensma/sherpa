@@ -17,7 +17,7 @@
 <div class="row">
   <div class="span9">
 
-    <div class="fjelltreffen-list" data-start-index="{{ start_index }}">
+    <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url fjelltreffen.views.load start_index %}">
       <h2>Fjelltreffen</h2>
 
       {% if first_visit %}

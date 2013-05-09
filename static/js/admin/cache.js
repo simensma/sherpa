@@ -48,7 +48,7 @@ $(document).ready(function() {
         button.hide();
         button.siblings("img.loader").show();
         $.ajaxQueue({
-            url: '/sherpa/cache/slett/',
+            url: table.attr('data-url'),
             data: {
                 key: key,
                 id: id

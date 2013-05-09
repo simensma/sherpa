@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<article>
+<article data-add-columns-url="{% url admin.cms.views.row.add_columns %}" data-save-url="{% url admin.cms.views.content.save version.id %}" data-render-widget-url="{% url admin.cms.views.content.render_widget %}">
 
 {% for row in rows %}
 <div class="row-fluid" data-id="{{ row.id }}">

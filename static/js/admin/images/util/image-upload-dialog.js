@@ -17,11 +17,12 @@
             uploader.find("input[type='submit']").attr('disabled', 'disabled');
         });
 
-        form.find("input[name='photographer']").typeahead({
+        var photographer = form.find("input[name='photographer']");
+        photographer.typeahead({
             minLength: 3,
             source: function(query, process) {
                 $.ajaxQueue({
-                    url: '/sherpa/bildearkiv/fotograf/',
+                    url: photographer.attr('data-source-url'),
                     data: { name: query }
                 }).done(function(result) {
                     process(JSON.parse(result));

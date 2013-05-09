@@ -363,7 +363,7 @@ $(document).ready(function() {
         }
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajaxQueue({
-            url: '/sherpa/cms/kolonner/ny/',
+            url: $("article").attr('data-add-columns-url'),
             data: {
                 version: $("div.editor-header").attr("data-version-id"),
                 order: order,

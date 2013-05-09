@@ -61,7 +61,7 @@
     {% if location.country == 'NO' %}
       {% for user in users %}
         {% if user.phone != '' and not user.sms_sent %}
-          <p class="sms"><button class="btn btn-danger phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}">
+          <p class="sms"><button class="btn btn-danger phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url enrollment.views.sms %}">
             Send gratis kvittering på SMS til {{ user.phone }}
           </button></p>
         {% endif %}

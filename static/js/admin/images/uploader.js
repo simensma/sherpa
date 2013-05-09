@@ -34,11 +34,12 @@ $(document).ready(function() {
         $("div.image-details").show();
     });
 
-    $("div.image-details form input[name='photographer']").typeahead({
+    var photographer = $("div.image-details form input[name='photographer']");
+    photographer.typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
-                url: '/sherpa/bildearkiv/fotograf/',
+                url: photographer.attr('data-source-url'),
                 data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));

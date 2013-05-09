@@ -32,7 +32,7 @@ $(document).ready(function() {
                 return;
             }
             $.ajaxQueue({
-                url: '/sherpa/brukere/søk/',
+                url: table.attr('data-search-url'),
                 data: { q: query }
             }).done(function(result) {
                 table.find("tr.result").remove();
