@@ -27,21 +27,21 @@
       <div class="control-group title">
         <label class="control-label" for="title">Tittel:</label>
         <div class="controls">
-          <input type="text" class="input-xxlarge" name="title" value="{{ aktivitet.title }}">
+          <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
         </div>
       </div>
 
       <div class="control-group description">
         <label class="control-label" for="description">Beskrivelse:</label>
         <div class="controls">
-          <textarea rows="6" cols="80" name="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+          <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
         </div>
       </div>
 
       <div class="control-group difficulty">
         <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
         <div class="controls">
-          <select name="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+          <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
             <option value=""></option>
             {% for difficulty in difficulties %}
               <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
@@ -53,7 +53,7 @@
       <div class="control-group audiences">
         <label class="control-label" for="audiences">Målgruppe:</label>
         <div class="controls">
-          <select name="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
+          <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
             <option value=""></option>
             {% for audience in audiences %}
               <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
@@ -62,10 +62,10 @@
         </div>
       </div>
 
-      <div class="control-group tags">
-        <label class="control-label" for="tags">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+      <div class="control-group subcategories">
+        <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
         <div class="controls">
-          <select name="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
+          <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
             <option value=""></option>
             {% for category in aktivitet.get_missing_subcategories %}
               <option value="{{ category }}">{{ category }}</option>
@@ -78,7 +78,7 @@
         <label class="control-label" for="tags">Opprett egne kategorier her:</label>
         <div class="controls">
           <input type="hidden" name="tags" value="">
-          <p><input type="text" class="input-large" name="tag"></p>
+          <p><input type="text" class="input-large" name="tag" id="tags"></p>
           <div class="tag-box">
             {% for tag in aktivitet.category_tags.all %}
               <div class="tag">
@@ -92,7 +92,7 @@
       <div style="clear: both;"></div>
 
       <div class="control-group hide_aktivitet">
-        <label class="control-label" for="hide_aktivitet">Tilgjengelighet:</label>
+        <label class="control-label">Tilgjengelighet:</label>
         <div class="controls">
           <input type="hidden" name="hidden">
           <div class="btn-group" data-toggle="buttons-radio">
@@ -117,7 +117,7 @@
         <label class="control-label" for="pub_date">Publiseres:</label>
         <div class="controls">
           <div class="input-append date">
-            <input type="text" class="input-medium" name="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+            <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
             <span class="add-on"><i class="icon-th"></i></span>
           </div>
           <div class="hints">
@@ -129,7 +129,7 @@
       <div class="control-group association">
         <label class="control-label" for="association">Arrangør:</label>
         <div class="controls">
-          <select name="association" class="chosen" data-placeholder="Velg arrangør...">
+          <select name="association" id="association" class="chosen" data-placeholder="Velg arrangør...">
             <option value=""></option>
             {% if user.get_profile.children_associations_sorted.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">
@@ -166,7 +166,7 @@
       <div class="control-group co_association">
         <label class="control-label" for="co_association">Medarrangør:</label>
         <div class="controls">
-          <select name="co_association" class="chosen" data-placeholder="Ingen medarrangør">
+          <select name="co_association" id="co_association" class="chosen" data-placeholder="Ingen medarrangør">
             <option value=""></option>
             {% if all_associations.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">
@@ -201,7 +201,7 @@
       </div>
 
       <div class="control-group images">
-        <label class="control-label" for="images">Bilder:</label>
+        <label class="control-label">Bilder:</label>
         <div class="controls">
           {% include 'common/admin/images/util/image-carousel-picker.html' %}
         </div>

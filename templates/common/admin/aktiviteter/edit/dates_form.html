@@ -49,7 +49,7 @@
   <div class="editing hide" data-url="{% url admin.aktiviteter.views.edit_aktivitet_date date.id %}">
 
     <div class="control-group start_date">
-      <label class="control-label" for="start_date">Starter:</label>
+      <label class="control-label">Starter:</label>
       <div class="controls">
         <div class="input-append date">
           <input type="text" class="input-medium" name="start_date" value="{{ date.start_date|date:"d.m.Y" }}">
@@ -60,7 +60,7 @@
     </div>
 
     <div class="control-group end_date">
-      <label class="control-label" for="end_date">Slutter:</label>
+      <label class="control-label">Slutter:</label>
       <div class="controls">
         <div class="input-append date">
           <input type="text" class="input-medium" name="end_date" value="{{ date.end_date|date:"d.m.Y" }}">
@@ -71,7 +71,7 @@
     </div>
 
     <div class="control-group signup_enabled">
-      <label class="control-label" for="signup_enabled">Tillat påmelding:</label>
+      <label class="control-label">Tillat påmelding:</label>
       <div class="controls">
         <input type="hidden" name="signup_enabled" value="{{ date.get_signup_enabled_json }}">
         <div class="btn-group" data-toggle="buttons-radio">
@@ -83,7 +83,7 @@
 
     <div class="signup-details{% if not date.signup_enabled %} hide{% endif %}">
       <div class="control-group signup_start">
-        <label class="control-label" for="signup_start">Påmeldingsstart:</label>
+        <label class="control-label">Påmeldingsstart:</label>
         <div class="controls">
           <div class="input-append date">
             <input type="text" class="input-medium" name="signup_start" value="{{ date.signup_start|date:"d.m.Y" }}">
@@ -93,7 +93,7 @@
       </div>
 
       <div class="control-group signup_deadline">
-        <label class="control-label" for="signup_deadline">Påmeldingsfrist:</label>
+        <label class="control-label">Påmeldingsfrist:</label>
         <div class="controls">
           <div class="input-append date">
             <input type="text" class="input-medium" name="signup_deadline" value="{{ date.signup_deadline|date:"d.m.Y" }}">
@@ -103,7 +103,7 @@
       </div>
 
       <div class="control-group signup_cancel_deadline">
-        <label class="control-label" for="signup_cancel_deadline">Avmeldingsfrist:</label>
+        <label class="control-label">Avmeldingsfrist:</label>
         <div class="controls">
           <div class="input-append date">
             <input type="text" class="input-medium" name="signup_cancel_deadline" value="{{ date.signup_cancel_deadline|date:"d.m.Y" }}">
