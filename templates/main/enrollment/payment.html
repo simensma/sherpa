@@ -37,7 +37,7 @@
       </div>
     {% endif %}
 
-    <form id="payment" action="{% url enrollment.views.payment %}" method="post">
+    <form id="payment" action="{% url 'enrollment.views.payment' %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="main-member" value="">
       <h2> Velg betalingsmåte:</h2>
@@ -64,7 +64,7 @@
       </div>
 
       <p>
-        <a class="btn btn-large" href="{% url enrollment.views.verification %}"><i class="icon-arrow-left"></i> Tilbake</a>
+        <a class="btn btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> Tilbake</a>
         {% if card_available %}
           <button type="submit" class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
         {% else %}

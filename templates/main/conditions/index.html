@@ -1,7 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}Føremeldinger{% endblock %}
-{% block breadcrumb %}<em><a href="{% url conditions.views.index %}">Føremeldinger</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'conditions.views.index' %}">Føremeldinger</a></em>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/conditions.js"></script>
 {% endblock %}

@@ -47,7 +47,7 @@
 <header>
   <div class="row">
     <div class="span6">
-      <a href="{% url page.views.page %}">
+      <a href="{% url 'page.views.page' %}">
         <div class="association-logo left">
           {{ site.association.name }}
         </div>
@@ -56,7 +56,7 @@
       <p><a href="http://www.turistforeningen.no/">(Til DNTs hovedside)</a></p>
     </div>
     <div class="span6 search">
-      <form action="{% url page.views.search %}" method="get" class="form-search">
+      <form action="{% url 'page.views.search' %}" method="get" class="form-search">
         <input type="text" name="q" value="{{ search_query }}" class="input-medium">
         <button type="submit" class="btn">Søk</button>
       </form>
@@ -81,7 +81,7 @@
 
   <div class="row">
     <div class="span12">
-      <form action="{% url page.views.search %}" method="get" class="search-mobile form-search">
+      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
         <input type="text" name="q" value="{{ search_query }}">
         <button type="submit" class="btn">Søk</button>
       </form>
@@ -103,11 +103,11 @@
     <div class="span3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
-          {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
-          <a href="{% url user.views.home_new %}">Min side</a>
-          <a href="{% url user.login.views.logout %}">Logg ut</a>
+          {% if perms.user.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
+          <a href="{% url 'user.views.home_new' %}">Min side</a>
+          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
         {% else %}
-          <a href="{% url user.views.home_new %}">Min side</a>
+          <a href="{% url 'user.views.home_new' %}">Min side</a>
         {% endif %}
       </div>
     </div>
@@ -132,7 +132,7 @@
               / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
             {% endif %}
           {% elif version.variant.article %}
-            / <a href="{% url articles.views.index %}">Nyheter</a>
+            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
             / <em><a href="">{{ version.title.content|striptags }}</a></em>
           {% else %}
             {# Fall back to the static title #}

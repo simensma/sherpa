@@ -51,7 +51,7 @@
                 <img class="thumbnail" src="{{ version.thumbnail }}" alt="{{ version.title.content|striptags }}">
               {% endif %}
               <h3>
-                <a href="{% url articles.views.show version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>
+                <a href="{% url 'articles.views.show' version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>
               </h3>
               <span class="published">{{ version.variant.article.pub_date|date:"j. F Y" }}</span>
               <p>{{ version.lede.content|striptags|safe|truncatewords:15 }}</p>
@@ -62,7 +62,7 @@
           {% for article in old_articles %}
             <div class="search-result old-article">
               <h3>
-                <a href="{% url articles.views.show_old article.id article.title|slugify %}">{{ article.title }}</a>
+                <a href="{% url 'articles.views.show_old' article.id article.title|slugify %}">{{ article.title }}</a>
               </h3>
               <span class="published">{{ article.date|date:"j. F Y" }}</span>
               {{ article.lede|safe }}

@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Registrer deg{% endblock %}
-{% block breadcrumb %}<em><a href="{% url user.login.views.register %}">Registrer deg</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'user.login.views.register' %}">Registrer deg</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -18,7 +18,7 @@
   <div class="span12">
     <h2>Registrer deg</h2>
 
-    <form action="{% url user.login.views.register %}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url 'user.login.views.register' %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="row-fluid">
@@ -74,7 +74,7 @@
 
             <div class="hide profile-exists">
               <strong>Du har allerede en Min side-bruker!</strong>
-              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+              Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
             </div>
 
           </div>
@@ -99,12 +99,12 @@
 
             <div class="hide no-memberid-match error">
               <strong>Feil medlemsnummer eller postnummer</strong><br>
-              Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+              Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
             </div>
 
             <div class="hide memberid-lookups-exceeded error">
               <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
             </div>
 
             <div class="hide password-hint short error">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
@@ -115,12 +115,12 @@
                 {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
                 <div class="error">
                   <strong>Feil medlemsnummer eller postnummer</strong><br>
-                  Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+                  Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
                 </div>
               {% elif message.message == 'memberid_lookups_exceeded' %}
                 <div class="error">
                   <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-                  Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+                  Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
                 </div>
               {% elif message.message == 'too_short_password' %}
                 <div class="error">
@@ -130,12 +130,12 @@
               {% elif message.message == 'profile_exists' %}
                 <div class="error">
                   <strong>Du har allerede en Min Side-bruker!</strong><br>
-                  Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+                  Hvis du har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
                 </div>
               {% elif message.message == 'email_exists' %}
                 <div class="error">
                   <strong>E-postadressen din er allerede i bruk!</strong><br>
-                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+                  Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
                 </div>
               {% elif message.message == 'invalid_email' %}
                 <div class="error">
@@ -157,7 +157,7 @@
   <div class="span12">
     <h3>Ikke medlem?</h3>
     <p>
-      Du må være medlem for å registrere deg på Min side. Hvis du ikke er medlem kan du <a href="{% url membership.views.benefits %}">melde deg inn her</a>.
+      Du må være medlem for å registrere deg på Min side. Hvis du ikke er medlem kan du <a href="{% url 'membership.views.benefits' %}">melde deg inn her</a>.
     </p>
   </div>
 </div>

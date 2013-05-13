@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.articles.views.list' %}">Nyheter</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
 {% endblock %}
@@ -17,7 +17,7 @@
 {% else %}
 
   <table class="table table-striped article-listing">
-    <tbody data-infinite-scroll-url="{% url admin.articles.views.list_load %}">
+    <tbody data-infinite-scroll-url="{% url 'admin.articles.views.list_load' %}">
       {% include 'common/admin/articles/list-elements.html' %}
     </tbody>
   </table>
@@ -34,7 +34,7 @@
     <h3>Opprett ny artikkel</h3>
   </div>
   <div class="modal-body">
-    <form action="{% url admin.articles.views.new %}" method="post">
+    <form action="{% url 'admin.articles.views.new' %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">

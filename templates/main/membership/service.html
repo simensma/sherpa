@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}Medlemsservice{% endblock %}
-{% block breadcrumb %}<a href="{% url membership.views.index %}">Medlemskap</a> / <em><a href="{% url membership.views.service %}">Medlemsservice</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'membership.views.index' %}">Medlemskap</a> / <em><a href="{% url 'membership.views.service' %}">Medlemsservice</a></em>{% endblock %}
 
 {% block body %}
 
@@ -37,13 +37,13 @@
       <dd>For medlemmer bosatt utenfor Norge må portotillegg betales for å få tilsendt Fjell og Vidde og årbok. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
 
       <dt>Jeg ønsker å gi bort et medlemskap i gave. Hvordan gjør jeg det?</dt>
-      <dd>Hvis du ønsker å gi bort medlemskap i gave, kan du bestille det via <a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a>, eller ved å kontakte medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+      <dd>Hvis du ønsker å gi bort medlemskap i gave, kan du bestille det via <a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a>, eller ved å kontakte medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
 
       <dt>Hvordan kan jeg bli medlem av en annen lokal turistforening?</dt>
       <dd>Dersom du ønsker medlemskap i annen forening enn den du normalt sokner til, må du ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
 
       <dt>Jeg har vært medlem tidligere, og ønsker nå å bli medlem igjen. Hvordan fornyer jeg medlemskapet?</dt>
-      <dd>Du kan <a href="{% url enrollment.views.registration %}">melde deg inn på nytt</a> eller ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så aktiverer vi medlemskapet igjen.</dd>
+      <dd>Du kan <a href="{% url 'enrollment.views.registration' %}">melde deg inn på nytt</a> eller ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så aktiverer vi medlemskapet igjen.</dd>
 
       <dt>Jeg blir ikke medlem i rett medlemskategori, selv om jeg er innenfor aldersgrensen. Hvorfor?</dt>
       <dd>Medlemskategorien bestemmes ut i fra din alder ved utgangen av det gjeldende medlemsåret. Hvis du for eksempel blir 19 år i løpet av året vil du bli ungdomsmedlem, selv om du er 18 år når du melder deg inn. Er du ufør må du forevise/sende oss kopi av Honnørrabattkortet ditt. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
@@ -148,7 +148,7 @@
       <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
       <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
       <br>
-      <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+      <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
       </form>
     </div>
   </div>

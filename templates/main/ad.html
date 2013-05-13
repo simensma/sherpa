@@ -6,21 +6,21 @@
         <script>
           var flashvars = {
             // Account for some unfortunate variations in clicktag capitalization
-            clickTAG: "{% url page.views.ad advertisement.id %}",
-            clickTag: "{% url page.views.ad advertisement.id %}"
+            clickTAG: "{% url 'page.views.ad' advertisement.id %}",
+            clickTag: "{% url 'page.views.ad' advertisement.id %}"
           };
           {# Require flash version 9, not sure if this is reasonable? #}
           swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
         </script>
         <div id="ad">
           {% if advertisement.ad.has_fallback %}
-            <a href="{% url page.views.ad advertisement.id %}">
+            <a href="{% url 'page.views.ad' advertisement.id %}">
               <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
             </a>
           {% endif %}
         </div>
       {% else %}
-        <a href="{% url page.views.ad advertisement.id %}">
+        <a href="{% url 'page.views.ad' advertisement.id %}">
           <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
         </a>
       {% endif %}

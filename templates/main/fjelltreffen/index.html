@@ -3,7 +3,7 @@
 {% block title %}Fjelltreffen{% endblock %}
 
 {% block breadcrumb %}
-  <em><a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a></em>
+  <em><a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a></em>
 {% endblock %}
 
 {% block extra_js %}
@@ -19,7 +19,7 @@
       <h2>Fjelltreffen</h2>
 
       <p>
-        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url user.views.home_new %}">logger inn</a>.
+        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url 'user.views.home_new' %}">logger inn</a>.
       </p>
 
       {% include 'main/fjelltreffen/filter.html' %}

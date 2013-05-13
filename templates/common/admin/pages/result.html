@@ -6,10 +6,10 @@
           <i class="icon-plus" data-next-class="icon-minus"></i>
         </a>
       {% endif %}
-      <a href="{% url admin.cms.views.page.edit_version version.id %}">{{ version.variant.page.title }}</a>
+      <a href="{% url 'admin.cms.views.page.edit_version' version.id %}">{{ version.variant.page.title }}</a>
     </td>
     <td>
-      <a href="{% url admin.cms.views.page.edit_version version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a>
+      <a href="{% url 'admin.cms.views.page.edit_version' version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a>
       <img src="/static/img/icons/netlife/icon-info.png" alt="Mer informasjon" class="pull-right" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="{{ version.variant.page.title }}" data-content="<p><strong>Opprettet av:</strong><br>{{ version.variant.page.created_by.user.get_profile.get_full_name }}<br>{{ version.variant.page.created_date }}</p>{% if version.variant.page.modified_by %}<br><p><strong>Sist endret av:</strong><br>{{ version.variant.page.modified_by.user.get_profile.get_full_name }}<br>{{ version.variant.page.modified_date }}</p>{% endif %}">
     </td>
   </tr>

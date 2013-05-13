@@ -1,13 +1,13 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}{{ version.title.content|striptags }}{% endblock %}
-{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.articles.views.list' %}">Nyheter</a>{% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="span12">
     <div class="alert alert-info">
-      <a class="btn btn-large" href="{% url admin.articles.views.edit_version version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
+      <a class="btn btn-large" href="{% url 'admin.articles.views.edit_version' version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
       <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
     </div>
   </div>
@@ -19,7 +19,7 @@
 <div class="row">
   <div class="span12">
     <div class="alert alert-info">
-      <a class="btn btn-large" href="{% url admin.articles.views.edit_version version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
+      <a class="btn btn-large" href="{% url 'admin.articles.views.edit_version' version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
       <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
     </div>
   </div>

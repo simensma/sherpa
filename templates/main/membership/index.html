@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block title %}Medlemskap{% endblock %}
-{% block breadcrumb %}<em><a href="{% url membership.views.index %}">Medlemskap</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'membership.views.index' %}">Medlemskap</a></em>{% endblock %}
 
 {% block body %}
 
@@ -28,7 +28,7 @@
             <button class="btn btn-danger zipcode-search input-button-align">OK</button>
             <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
             <br>
-            <a href="{% url membership.views.benefits %}">Jeg bor ikke i Norge</a>
+            <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
           </p>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
     <p>
       <strong>Har du spørsmål om medlemskap?</strong><br>
-      <a href="{% url membership.views.service %}">Gå til medlemsservice</a>
+      <a href="{% url 'membership.views.service' %}">Gå til medlemsservice</a>
     </p>
 
     <p>
@@ -69,12 +69,12 @@
     <p>
       <strong>Du kan velge mellom:</strong>
       <ul>
-        <li>Vanlig medlemskap (<a href="{% url membership.views.benefits %}">Se gjeldende kontingentsatser</a>).</li>
+        <li>Vanlig medlemskap (<a href="{% url 'membership.views.benefits' %}">Se gjeldende kontingentsatser</a>).</li>
         <li>Dåpsgave (Medlemskap i Barnas Turlag fra 0-12 år). Pris: 1000,-</li>
         <li>Jubileum (Hovedmedlemskap i 10 år). Pris: 5700,-</li>
         <li>Livsvarig medlemskap (Hovedmedlemskap x 25). Pris: 14250,-</li>
       </ul>
-      <a href="{% url enrollment.views_gift.index %}">Bestill gavemedlemskap</a>
+      <a href="{% url 'enrollment.views_gift.index' %}">Bestill gavemedlemskap</a>
     </p>
   </div>
   <div class="span4">

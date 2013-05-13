@@ -11,12 +11,12 @@
 <div class="row">
   <div class="span12">
     <div class="wrapper">
-      <div class="article-listing" data-initial-count="{{ versions|length }}" data-url="{% url articles.views.more %}">
+      <div class="article-listing" data-initial-count="{{ versions|length }}" data-url="{% url 'articles.views.more' %}">
         <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
 
         {% if tag %}
           <p>
-            Viser artikler tagget med "<em>{{ tag }}</em>". <a href="{% url articles.views.index %}">Vis alle artikler</a>.
+            Viser artikler tagget med "<em>{{ tag }}</em>". <a href="{% url 'articles.views.index' %}">Vis alle artikler</a>.
           </p>
         {% endif %}
 
@@ -35,7 +35,7 @@
       </div>
 
       {% if site.domain == 'www.turistforeningen.no' %}
-        <div class="old-article-listing hide" data-url="{% url articles.views.more_old %}">
+        <div class="old-article-listing hide" data-url="{% url 'articles.views.more_old' %}">
           <div class="alert alert-info">
             <a class="close">x</a>
             <strong>Eldre artikler</strong><br>

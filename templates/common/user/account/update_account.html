@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.account %}">Dine opplysninger</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home_new' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/update_account.js"></script>
 {% endblock %}
@@ -18,7 +18,7 @@
 
     <h2>Dine opplysninger</h2>
 
-    <form action="{% url user.views.update_account %}" method="post" class="form-border form-horizontal form-default account-info">
+    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-horizontal form-default account-info">
       {% csrf_token %}
 
       <div class="form-hints">
@@ -137,7 +137,7 @@
             {% if user.get_profile.get_actor.address.a2 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a2 }}" disabled></p>{% endif %}
             {% if user.get_profile.get_actor.address.a3 %}<p><input type="text" class="input-large" name="" value="{{ user.get_profile.get_actor.address.a3 }}" disabled></p>{% endif %}
             <div class="alert alert-error">
-              Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a> om du har behov for å endre din adresse.
+              Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> om du har behov for å endre din adresse.
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
     </form>
 
     <h2>Endre passord</h2>
-    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal form-default">
+    <form action="{% url 'user.views.update_account_password' %}" method="post" class="form-border form-horizontal form-default">
       {% csrf_token %}
       <div class="control-group password">
         <label class="control-label" for="password">Passord</label>

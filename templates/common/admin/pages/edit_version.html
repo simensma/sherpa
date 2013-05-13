@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
@@ -86,8 +86,8 @@
 
         <div class="save">
           <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
-          <button class="btn btn-success preview" data-href="{% url admin.cms.views.page.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-          <a class="btn btn-danger delete-page" href="{% url admin.cms.views.page.delete version.variant.page.id %}">
+          <button class="btn btn-success preview" data-href="{% url 'admin.cms.views.page.preview' version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+          <a class="btn btn-danger delete-page" href="{% url 'admin.cms.views.page.delete' version.variant.page.id %}">
             <i class="icon-warning-sign"></i> Slett
           </a>
         </div>

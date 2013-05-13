@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Logg inn{% endblock %}
-{% block breadcrumb %}<em><a href="{% url user.login.views.login %}">Logg inn</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'user.login.views.login' %}">Logg inn</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/login.js"></script>
@@ -30,7 +30,7 @@
       {% endfor %}
 
       <div class="form-border">
-        <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal">
+        <form action="{% url 'user.login.views.login' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal">
           {% csrf_token %}
 
           {% for message in messages %}
@@ -39,7 +39,7 @@
                 <strong>Feil e-postadresse eller passord,</strong> vennligst prøv igjen.
                 <ul>
                   <li>Har du glemt passordet? Trykk på "Glemt passord"-lenken under.</li>
-                  <li>Har du ikke bruker? <a href="{% url user.login.views.register %}">Registrer deg her!</a></li>
+                  <li>Har du ikke bruker? <a href="{% url 'user.login.views.register' %}">Registrer deg her!</a></li>
                 </ul>
               </div>
             {% elif message.message == 'old_memberid_but_memberid_exists' %}
@@ -110,7 +110,7 @@
                 Er du medlem i DNT kan du registrere deg her og få tilgang til Min side. Da kan du se status på medlemskap, endre dine kontaktopplysninger, finne elektronisk arkiv for Fjell og Vidde, UT og årboken, og mye mer.
               </p>
               <p>
-                <a href="{% url user.login.views.register %}" class="btn btn-large btn-danger">Registrer deg nå</a>
+                <a href="{% url 'user.login.views.register' %}" class="btn btn-large btn-danger">Registrer deg nå</a>
               </p>
             </div>
           </div>

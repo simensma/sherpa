@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Bildearkiv &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.images.views.index %}">Bildearkiv</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.images.views.index' %}">Bildearkiv</a>{% endblock %}
 
 {% block extra_js %}
   <script src="/static/js/admin/images/layout.js"></script>
@@ -12,7 +12,7 @@
   <div class="span4">
     <div class="item{% if current_navigation == 'personal' %} current{% endif %}">
       <p>
-        {% if current_navigation != 'personal' %}<a href="{% url admin.images.views.user_images user.id %}">{% else %}<span class="disabled-link">{% endif %}
+        {% if current_navigation != 'personal' %}<a href="{% url 'admin.images.views.user_images' user.id %}">{% else %}<span class="disabled-link">{% endif %}
         Mine bilder
         {% if current_navigation != 'personal' %}</a>{% else %}</span>{% endif %}
       </p>
@@ -31,7 +31,7 @@
   <div class="span4">
     <div class="item{% if current_navigation == 'albums' %} current{% endif %}">
       <p>
-        {% if current_navigation != 'albums' %}<a href="{% url admin.images.views.list_albums %}">{% else %}<span class="disabled-link">{% endif %}
+        {% if current_navigation != 'albums' %}<a href="{% url 'admin.images.views.list_albums' %}">{% else %}<span class="disabled-link">{% endif %}
         Alle bilder
         {% if current_navigation != 'albums' %}</a>{% else %}</span>{% endif %}
       </p>
@@ -41,7 +41,7 @@
 
 <div class="row image-archive-quicksearch">
   <div class="span4">
-    <form action="{% url admin.images.views.search %}" method="get">
+    <form action="{% url 'admin.images.views.search' %}" method="get">
       <input type="text" name="q" placeholder="Søk etter bilder..." value="{{ search_query }}">
       <button type="submit" class="btn input-button-align"><i class="icon-search"></i></button>
     </form>
@@ -55,7 +55,7 @@
     <select name="user-images" data-placeholder="Andre brukeres bilder...">
       <option></option>
       {% for profile in all_users %}
-        <option value="{{ profile.id }}" data-href="{% url admin.images.views.user_images '0' %}">{{ profile.user.get_profile.get_full_name }}</option>
+        <option value="{{ profile.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ profile.user.get_profile.get_full_name }}</option>
       {% endfor %}
     </select>
   </div>
@@ -66,9 +66,9 @@
     <div class="span12">
       <div class="albumpath">
         <strong>Album:</strong>
-        <a href="{% url admin.images.views.list_albums %}">Alle bilder</a>
+        <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
         {% for album in albumpath %}
-          / <a href="{% url admin.images.views.list_albums album.id %}">{{ album.name }}</a>
+          / <a href="{% url 'admin.images.views.list_albums' album.id %}">{{ album.name }}</a>
         {% endfor %}
       </div>
     </div>

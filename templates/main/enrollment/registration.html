@@ -53,7 +53,7 @@
         {% for user in users %}
           <tr>
             <td>
-              <a href="{% url enrollment.views.registration user.index %}" title="Rediger {{ user.name }}">
+              <a href="{% url 'enrollment.views.registration' user.index %}" title="Rediger {{ user.name }}">
                 {% if user.name %}
                   {{ user.name }}
                 {% else %}
@@ -61,7 +61,7 @@
                 {% endif %}
               </a>
               <span class="remove">
-                <a href="{% url enrollment.views.remove user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+                <a href="{% url 'enrollment.views.remove' user.index %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
               </span>
             </td>
           </tr>
@@ -70,14 +70,14 @@
         <label class="checkbox">
           <input type="checkbox" class="conditions"{% if conditions %} checked{% endif %}> {% if users|length > 1 %}Vi{% else %}Jeg{% endif %} har lest og godtar <a href="javascript:undefined" data-toggle="modal" data-target=".modal">betingelsene</a>
         </label>
-        <p><a href="{% url enrollment.views.household %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right icon-white"></i></a></p>
+        <p><a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-large step2{% if user.index >= 0 %} post{% endif %}">Gå videre <i class="icon-arrow-right icon-white"></i></a></p>
       </div>
       <h2>Meld inn flere i familien/husstanden:</h2>
       <p>Du kan kun melde inn flere samtidig hvis alle bor på samme adresse.</p>
       <br>
     {% endif %}
 
-    <form id="registration" class="form-border" action="{% url enrollment.views.registration %}" method="post">
+    <form id="registration" class="form-border" action="{% url 'enrollment.views.registration' %}" method="post">
       {% csrf_token %}
       {% if person.index >= 0 %}
         <input type="hidden" name="user" value="{{ person.index }}">
