@@ -4,7 +4,7 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a></em>
+  <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <em><a href="{% url 'fjelltreffen.views.show' annonse.id %}">{{ annonse.title }}</a></em>
 {% endblock %}
 
 {% block extra_js %}
@@ -38,7 +38,7 @@
 
     {% if annonse.profile == user.get_profile %}
 
-      <p><em>Dette er din annonse. Du kan <a href="{% url fjelltreffen.views.edit annonse.id %}">redigere den her</a>.</em></p>
+      <p><em>Dette er din annonse. Du kan <a href="{% url 'fjelltreffen.views.edit' annonse.id %}">redigere den her</a>.</em></p>
 
     {% else %}
 
@@ -65,7 +65,7 @@
                 Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
               </p>
               <p>
-                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a> direkte for å rapportere annonsen.
               </p>
             </div>
           {% endif %}
@@ -96,7 +96,7 @@
                 <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
               {% else %}
                 {# You must be logged in to report annonser - link to the report view, which will redirect back here #}
-                <a href="{% url fjelltreffen.views.report annonse.id %}">Gi oss beskjed!</a>
+                <a href="{% url 'fjelltreffen.views.report' annonse.id %}">Gi oss beskjed!</a>
               {% endif %}
             </li>
           </ul>
@@ -105,7 +105,7 @@
         {# Replies - show if already filled and there were errors #}
         <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
 
-          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
+          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
@@ -162,7 +162,7 @@
             <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
           </p>
 
-          <form action="{% url fjelltreffen.views.report annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
+          <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
             {% csrf_token %}
 
             <div class="control-group text">

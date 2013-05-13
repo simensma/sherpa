@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.become_member %}">Registrer medlemskap</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home_new' %}">Min side</a> / <em><a href="{% url 'user.views.become_member' %}">Registrer medlemskap</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/become_member.js"></script>
@@ -17,7 +17,7 @@
       Hvis du er medlem i DNT bør du koble profilen din til medlemssystemet.
     </p>
 
-    <form action="{% url user.views.become_member %}" method="post" class="form-default form-border form-horizontal">
+    <form action="{% url 'user.views.become_member' %}" method="post" class="form-default form-border form-horizontal">
       {% csrf_token %}
       <input type="hidden" name="email-equal" value="">
 
@@ -78,34 +78,34 @@
       <div class="form-hints">
         <div class="hide no-memberid-match error">
           <strong>Feil medlemsnummer eller postnummer</strong><br>
-          Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+          Beklager, det finnes ingen som har medlemsnummer <span class="memberid"></span> og postnummer <span class="zipcode"></span>! Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
         </div>
 
         <div class="hide memberid-lookups-exceeded error">
           <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-          Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+          Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
         </div>
 
         <div class="hide profile-exists error">
           <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
-          Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+          Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
         </div>
 
         {% for message in messages %}
           {% if message.message == 'invalid_memberid' %}
             <div class="error">
               <strong>Feil medlemsnummer eller postnummer</strong><br>
-              Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+              Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
             </div>
           {% elif message.message == 'memberid_lookups_exceeded' %}
             <div class="error">
               <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+              Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
             </div>
           {% elif message.message == 'profile_exists' %}
             <div class="error">
               <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
-              Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">login-siden</a>.
+              Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">login-siden</a>.
             </div>
           {% elif message.message == 'email_exists' %}
             <div class="error">

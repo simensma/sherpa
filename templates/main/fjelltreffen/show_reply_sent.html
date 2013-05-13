@@ -4,7 +4,7 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a> / <em>Svar sendt</em>
+  <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <a href="{% url 'fjelltreffen.views.show' annonse.id %}">{{ annonse.title }}</a> / <em>Svar sendt</em>
 {% endblock %}
 
 {% block body %}
@@ -29,7 +29,7 @@
       <pre>{{ reply.text }}</pre>
     </div>
 
-    <p><a href="{% url fjelltreffen.views.index %}">Tilbake til forsiden</a></p>
+    <p><a href="{% url 'fjelltreffen.views.index' %}">Tilbake til forsiden</a></p>
 
     <hr>
 

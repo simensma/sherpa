@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.account %}">Dine opplysninger</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home_new' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/update_account_nonmember.js"></script>
 {% endblock %}
@@ -50,7 +50,7 @@
       {% endfor %}
     </div>
 
-    <form action="{% url user.views.update_account %}" method="post" class="form-border form-default form-horizontal account-info">
+    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-default form-horizontal account-info">
       {% csrf_token %}
 
       <div class="control-group name">
@@ -87,7 +87,7 @@
     </form>
 
     <h2>Endre passord</h2>
-    <form action="{% url user.views.update_account_password %}" method="post" class="form-border form-horizontal password">
+    <form action="{% url 'user.views.update_account_password' %}" method="post" class="form-border form-horizontal password">
       {% csrf_token %}
       <div class="control-group password">
         <label class="control-label" for="password">Passord</label>

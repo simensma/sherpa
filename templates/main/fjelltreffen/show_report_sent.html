@@ -4,7 +4,7 @@
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <a href="{% url fjelltreffen.views.show annonse.id %}">{{ annonse.title }}</a> / <em>Anmeldelse sendt</em>
+  <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <a href="{% url 'fjelltreffen.views.show' annonse.id %}">{{ annonse.title }}</a> / <em>Anmeldelse sendt</em>
 {% endblock %}
 
 {% block body %}
@@ -22,7 +22,7 @@
       <pre>{{ report.reason|linebreaksbr }}</pre>
     {% endif %}
 
-    <p><a href="{% url fjelltreffen.views.index %}">Tilbake til forsiden</a></p>
+    <p><a href="{% url 'fjelltreffen.views.index' %}">Tilbake til forsiden</a></p>
 
     <hr>
 

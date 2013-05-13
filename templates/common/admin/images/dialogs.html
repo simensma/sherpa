@@ -8,7 +8,7 @@
   <p class="images hide">
     Er du helt sikker på at du vil slette alle bildene du har merket, for godt?
   </p>
-  <form action="{% if current_album %}{% url admin.images.views.delete_items current_album.id %}{% else %}{% url admin.images.views.delete_items %}{% endif %}" method="post">
+  <form action="{% if current_album %}{% url 'admin.images.views.delete_items' current_album.id %}{% else %}{% url 'admin.images.views.delete_items' %}{% endif %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="albums">
     <input type="hidden" name="images">
@@ -19,7 +19,7 @@
 </div>
 
 <div class="dialog album-dialog" data-title="Legg til album" data-width="auto">
-  <form action="{% if album %}{% url admin.images.views.add_album album %}{% else %}{% url admin.images.views.add_album %}{% endif %}" method="post">
+  <form action="{% if album %}{% url 'admin.images.views.add_album' album %}{% else %}{% url 'admin.images.views.add_album' %}{% endif %}" method="post">
     {% csrf_token %}
     <p>Navn på nytt album: <input type="text" name="name"></p>
     <p><input type="submit" value="Legg til album"></p>
@@ -27,7 +27,7 @@
 </div>
 
 <div class="dialog album-details" data-title="Oppdater albuminformasjon" data-width="auto">
-  <form action="{% url admin.images.views.update_album %}" method="post">
+  <form action="{% url 'admin.images.views.update_album' %}" method="post">
     {% csrf_token %}
     <p>Nytt navn: <input type="text" name="name"></p>
     <input type="hidden" name="albums">

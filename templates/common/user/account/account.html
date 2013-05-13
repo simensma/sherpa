@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home_new %}">Min side</a> / <em><a href="{% url user.views.account %}">Dine opplysninger</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home_new' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/account.js"></script>
@@ -27,7 +27,7 @@
           <div class="alert alert-success">
             <a class="close">x</a>
             <strong>Dine medlemsopplysninger har blitt oppdatert.</strong><br>
-            Hvis noe skulle være feil, vennligst ta kontakt med <a href="{% url membership.views.service %}">medlemsservice</a>.</strong>
+            Hvis noe skulle være feil, vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.</strong>
           </div>
         {% endif %}
       {% endfor %}
@@ -55,13 +55,13 @@
         <tr>
           <th></th>
           <td>
-            <i class="icon-pencil"></i> <a href="{% url user.views.update_account %}">Endre dine opplysninger</a>
+            <i class="icon-pencil"></i> <a href="{% url 'user.views.update_account' %}">Endre dine opplysninger</a>
           </td>
         </tr>
       </table>
 
       <p>
-        Du er ikke registrert som medlem i DNT. <a href="{% url user.views.become_member %}">Jeg er medlem, registrer meg!</a>
+        Du er ikke registrert som medlem i DNT. <a href="{% url 'user.views.become_member' %}">Jeg er medlem, registrer meg!</a>
       </p>
 
     {% else %}
@@ -121,7 +121,7 @@
         <tr>
           <th></th>
           <td>
-            <i class="icon-pencil"></i> <a href="{% url user.views.update_account %}">Endre dine opplysninger</a>
+            <i class="icon-pencil"></i> <a href="{% url 'user.views.update_account' %}">Endre dine opplysninger</a>
           </td>
         </tr>
       </table>

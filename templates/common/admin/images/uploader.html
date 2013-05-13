@@ -14,7 +14,7 @@
       Det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
-    <form class="image-uploader" action="{% url admin.images.views.upload_image %}" method="post" enctype="multipart/form-data" target="iframe">
+    <form class="image-uploader" action="{% url 'admin.images.views.upload_image' %}" method="post" enctype="multipart/form-data" target="iframe">
       {% csrf_token %}
       <input type="hidden" name="album" value="{{ current_album.id }}">
       <h1 class="sherpa">Last opp nye bilder</h1>
@@ -46,7 +46,7 @@
     <div class="image-details hide">
       <h2>Fyll inn bildeinformasjon</h2>
 
-      <form class="upload-image-details form-horizontal" method="post" action="{% url admin.images.views.update_images %}">
+      <form class="upload-image-details form-horizontal" method="post" action="{% url 'admin.images.views.update_images' %}">
         {% csrf_token %}
         <input type="hidden" name="ids">
         <input type="hidden" name="origin" value="{{ origin }}">

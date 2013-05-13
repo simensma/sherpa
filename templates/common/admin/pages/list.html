@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.cms.views.page.list %}">Websider</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/pages.js"></script>
 {% endblock %}
@@ -54,7 +54,7 @@
     <h3>Opprett ny webside</h3>
   </div>
   <div class="modal-body">
-    <form action="{% url admin.cms.views.page.new %}" method="post">
+    <form action="{% url 'admin.cms.views.page.new' %}" method="post">
     {% csrf_token %}
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">

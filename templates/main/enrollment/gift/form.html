@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb %}<a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a> / <em><a href="{% url enrollment.views_gift.form %}">Skjema</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.views_gift.form' %}">Skjema</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<form id="gift" method="post" action="{% url enrollment.views_gift.validate %}">
+<form id="gift" method="post" action="{% url 'enrollment.views_gift.validate' %}">
   {% csrf_token %}
   <input type="hidden" name="receivers" value="">
   <div class="row">

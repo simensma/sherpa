@@ -48,13 +48,13 @@
   <div class="row">
     <div class="span6">
       <div class="association-logo left">
-        <a href="{% url page.views.page %}">
+        <a href="{% url 'page.views.page' %}">
           {{ site.association.name }}
         </a>
       </div>
     </div>
     <div class="span6 search">
-      <form action="{% url page.views.search %}" method="get" class="form-search">
+      <form action="{% url 'page.views.search' %}" method="get" class="form-search">
         <input type="text" name="q" value="{{ search_query }}" class="input-medium">
         <button type="submit" class="btn">Søk</button>
       </form>
@@ -79,7 +79,7 @@
 
   <div class="row">
     <div class="span12">
-      <form action="{% url page.views.search %}" method="get" class="search-mobile form-search">
+      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
         <input type="text" name="q" value="{{ search_query }}">
         <button type="submit" class="btn">Søk</button>
       </form>
@@ -101,11 +101,11 @@
     <div class="span3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
-          {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
-          <a href="{% url user.views.home_new %}">Min side</a>
-          <a href="{% url user.login.views.logout %}">Logg ut</a>
+          {% if perms.user.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
+          <a href="{% url 'user.views.home_new' %}">Min side</a>
+          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
         {% else %}
-          <a href="{% url user.views.home %}">Min side</a>
+          <a href="{% url 'user.views.home' %}">Min side</a>
         {% endif %}
       </div>
     </div>
@@ -130,10 +130,10 @@
               / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
             {% endif %}
           {% elif version.variant.article %}
-            / <a href="{% url articles.views.index %}">Nyheter</a>
+            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
             / <em><a href="">{{ version.title.content|striptags }}</a></em>
           {% elif article %}
-            / <a href="{% url articles.views.index %}">Nyheter</a>
+            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
             / <em><a href="">{{ article.title }}</a></em>
           {% else %}
             {# Fall back to the static title #}
@@ -231,18 +231,18 @@
           <li><a href="/ung/">DNT ung</a></li>
           <li><a href="/fjellsport/">DNT fjellsport</a></li>
           <li><a href="/senior/">DNT senior</a></li>
-          <li><a href="{% url association.views.index %}">DNT der du bor</a></li>
+          <li><a href="{% url 'association.views.index' %}">DNT der du bor</a></li>
         </ul>
       </div>
       <div class="span3">
         <h2>Medlemskap</h2>
         <ul>
-          <li><a href="{% url membership.views.index %}">Bli medlem</a></li>
-          <li><a href="{% url membership.views.service %}">Medlemsservice</a></li>
+          <li><a href="{% url 'membership.views.index' %}">Bli medlem</a></li>
+          <li><a href="{% url 'membership.views.service' %}">Medlemsservice</a></li>
           <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
-          <li><a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a></li>
+          <li><a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a></li>
           <li><a href="http://{{ old_site }}/form2.php?form=verving">Verv en venn</a></li>
-          <li><a href="{% url user.views.home %}">Min side</a></li>
+          <li><a href="{% url 'user.views.home' %}">Min side</a></li>
         </ul>
       </div>
       <div class="span3">

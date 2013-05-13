@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block title %}Medlemsfordeler{% endblock %}
-{% block breadcrumb %}<a href="{% url membership.views.index %}">Medlemskap</a> / <em><a href="">Fordeler</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'membership.views.index' %}">Medlemskap</a> / <em><a href="">Fordeler</a></em>{% endblock %}
 
 {% block body %}
 
@@ -213,13 +213,13 @@
           Rabatt på forsikring i Gjensidige
         </dt>
         <dd>
-          Som DNT-medlem får du <strong>opptil 18 prosent rabatt på skadeforsikring</strong> i Gjensidige. Har du 1-2 forsikringer får du 14 prosent rabatt, har du 3 og flere får du 18 prosent på dine skadeforsikringer. I tillegg får du <strong>redusert egenandel på bilforsikringen og 5% ekstra rabatt på innboforsikringen</strong>. Hvis du vil benytte deg av dette tilbudet, <strong>ring Gjensidige på 03100 og oppgi ditt medlemsnummer</strong>. Du har rett på rabatten, med mindre du har reservert deg på <a href="{% url user.views.home %}">Min side</a>. Les mer om medlemsrabatten i Gjensidige på <a href="http://www.gjensidige.no/turistforeningen">www.gjensidige.no/turistforeningen</a>.
+          Som DNT-medlem får du <strong>opptil 18 prosent rabatt på skadeforsikring</strong> i Gjensidige. Har du 1-2 forsikringer får du 14 prosent rabatt, har du 3 og flere får du 18 prosent på dine skadeforsikringer. I tillegg får du <strong>redusert egenandel på bilforsikringen og 5% ekstra rabatt på innboforsikringen</strong>. Hvis du vil benytte deg av dette tilbudet, <strong>ring Gjensidige på 03100 og oppgi ditt medlemsnummer</strong>. Du har rett på rabatten, med mindre du har reservert deg på <a href="{% url 'user.views.home' %}">Min side</a>. Les mer om medlemsrabatten i Gjensidige på <a href="http://www.gjensidige.no/turistforeningen">www.gjensidige.no/turistforeningen</a>.
         </dd>
         <dt>
           Fotoprodukter til medlemspriser
         </dt>
         <dd>
-          Medlemmer i DNT får fotoprodukter fra Eurofoto til rabatterte priser: fotobok, forstørrelser, print av bilder og mye mer. Tjenesten er kun tilgjengelig fra <a href="{% url user.views.home %}">Min Side</a>.
+          Medlemmer i DNT får fotoprodukter fra Eurofoto til rabatterte priser: fotobok, forstørrelser, print av bilder og mye mer. Tjenesten er kun tilgjengelig fra <a href="{% url 'user.views.home' %}">Min Side</a>.
         </dd>
         <dt>
           20% rabatt på Stryn Sommerski
@@ -244,19 +244,19 @@
           Medlemsbladet Fjell og Vidde
         </dt>
         <dd>
-          <a href="http://www.turistforeningen.no/fjellogvidde/">Fjell og Vidde</a> er landets største friluftsmagasin, og kommer ut seks ganger i året. Medlemmer (hoved, ungdom, og honnør) får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url user.views.home %}">Min side</a>.
+          <a href="http://www.turistforeningen.no/fjellogvidde/">Fjell og Vidde</a> er landets største friluftsmagasin, og kommer ut seks ganger i året. Medlemmer (hoved, ungdom, og honnør) får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url 'user.views.home' %}">Min side</a>.
         </dd>
         <dt>
           Ungdomsmagasinet UT
         </dt>
         <dd>
-          <a href="http://www.turistforeningen.no/ut/">UT</a> er DNT ungs medlemsblad, og kommer ut to ganger i året. Bladet et helstøpt friluftsmagasin med ungdommelig vri. Ungdomsmedlemmer får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url user.views.home %}">Min side</a>.
+          <a href="http://www.turistforeningen.no/ut/">UT</a> er DNT ungs medlemsblad, og kommer ut to ganger i året. Bladet et helstøpt friluftsmagasin med ungdommelig vri. Ungdomsmedlemmer får bladet tilsendt gratis og/eller kan lese det på nett via <a href="{% url 'user.views.home' %}">Min side</a>.
         </dd>
         <dt>
           DNTs årbok
         </dt>
         <dd>
-          <a href="http://www.turistforeningen.no/aarbok/">DNTs årbøker</a> har blitt utgitt i en ubrutt rekke fra foreningens stiftelse i 1868 fram til i dag. Er du medlem (hoved, ungdom og honnør) får du boka tilsendt gratis og/eller kan lese den på nett via <a href="{% url user.views.home %}">Min side</a>.
+          <a href="http://www.turistforeningen.no/aarbok/">DNTs årbøker</a> har blitt utgitt i en ubrutt rekke fra foreningens stiftelse i 1868 fram til i dag. Er du medlem (hoved, ungdom og honnør) får du boka tilsendt gratis og/eller kan lese den på nett via <a href="{% url 'user.views.home' %}">Min side</a>.
         </dd>
       </dl>
     </div>
@@ -352,8 +352,8 @@
   </div>
   <div class="span4 membership">
     {% if enrollment_active %}
-      <a href="{% url enrollment.views.index %}" class="btn btn-danger membership">Bli medlem!</a><br>
-      <a href="{% url enrollment.views_gift.index %}">Gi bort medlemskap!</a>
+      <a href="{% url 'enrollment.views.index' %}" class="btn btn-danger membership">Bli medlem!</a><br>
+      <a href="{% url 'enrollment.views_gift.index' %}">Gi bort medlemskap!</a>
     {% endif %}
   </div>
 </div>
@@ -393,7 +393,7 @@
       Finn turer og hytter på <a href="http://ut.no/">UT.no</a><br><br>
 
       <h3>Har du spørsmål om medlemskap?</h3>
-      <a href="{% url membership.views.service %}">Gå til medlemsservice</a><br>
+      <a href="{% url 'membership.views.service' %}">Gå til medlemsservice</a><br>
       Ring: 40001870<br>
       <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a><br>
       Åpent alle hverdager:<br>

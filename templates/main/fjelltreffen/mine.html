@@ -4,7 +4,7 @@
 
 {% block title %}Mine annonser — Fjelltreffen{% endblock %}
 {% block breadcrumb %}
-  <a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a> / <em><a href="{% url fjelltreffen.views.mine %}">Mine annonser</a></em>
+  <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <em><a href="{% url 'fjelltreffen.views.mine' %}">Mine annonser</a></em>
 {% endblock %}
 
 {% block extra_js %}
@@ -30,7 +30,7 @@
           <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Du kan ikke publisere en ny annonse fordi du har ikke betalt medlemskontingenten.</strong><br>
-            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem. Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
+            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url 'enrollment.views.index' %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem. Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
           </div>
         {% endif %}
       {% endfor %}
@@ -42,7 +42,7 @@
           {% for annonse in annonser %}
             <tr>
               <td>
-                <h3><a href="{% url fjelltreffen.views.edit annonse.id %}">{{ annonse.title }}</a></h3>
+                <h3><a href="{% url 'fjelltreffen.views.edit' annonse.id %}">{{ annonse.title }}</a></h3>
                 <p class="details">
                   {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name|default:"Utlandet" }}, {{ annonse.date_added|date:"j. F Y" }}<br>
                   {% if not annonse.is_expired %}
@@ -54,10 +54,10 @@
               <td class="status">
                 {% if not annonse.hidden and not annonse.is_expired %}
                   <span class="label label-success">Synlig</span><br>
-                  <a href="{% url fjelltreffen.views.hide_mine annonse.id %}">Skjul</a>
+                  <a href="{% url 'fjelltreffen.views.hide_mine' annonse.id %}">Skjul</a>
                 {% elif annonse.hidden and not annonse.is_expired %}
                   <span class="label label-warning">Skjult</span><br>
-                  <a href="{% url fjelltreffen.views.show_mine annonse.id %}">Vis</a>
+                  <a href="{% url 'fjelltreffen.views.show_mine' annonse.id %}">Vis</a>
                 {% endif %}
               </td>
               <td class="expiration">
@@ -67,7 +67,7 @@
                   <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span><br>
                 {% endif %}
                 {% if annonse.expires_in_days < annonse_retention_days %}
-                  <a href="{% url fjelltreffen.views.renew_mine annonse.id %}">Forny</a>
+                  <a href="{% url 'fjelltreffen.views.renew_mine' annonse.id %}">Forny</a>
                 {% endif %}
               </td>
             </tr>
@@ -79,7 +79,7 @@
 
         <p>
           Du har ikke lagt ut noen annonser.<br>
-          Hvorfor ikke <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a>?
+          Hvorfor ikke <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a>?
         </p>
 
       {% endif %}

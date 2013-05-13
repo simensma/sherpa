@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.articles.views.list %}">Nyheter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.articles.views.list' %}">Nyheter</a>{% endblock %}
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
@@ -93,8 +93,8 @@
 
       <div class="status">
         <button class="btn btn-success save"><i class="icon-heart"></i> Lagre</button>
-        <button class="btn btn-success preview" data-href="{% url admin.articles.views.preview version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-        <a class="btn btn-danger delete-article" href="{% url admin.articles.views.confirm_delete version.variant.article.id %}">
+        <button class="btn btn-success preview" data-href="{% url 'admin.articles.views.preview' version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+        <a class="btn btn-danger delete-article" href="{% url 'admin.articles.views.confirm_delete' version.variant.article.id %}">
           <i class="icon-warning-sign"></i> Slett
         </a>
       </div>

@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb %}<a href="{% url enrollment.views_gift.index %}">Gavemedlemskap</a> / <em><a href="{% url enrollment.views_gift.confirm %}">Bekreft</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.views_gift.confirm' %}">Bekreft</a></em>{% endblock %}
 
 {% block body %}
 
@@ -45,8 +45,8 @@
 
     </div>
     <p class="gift-confirmation-buttons">
-      <a class="btn btn-large" href="{% url enrollment.views_gift.form %}"><i class="icon-arrow-left"></i> Tilbake</a>
-      <a class="btn btn-large btn-success" href="{% url enrollment.views_gift.send %}"><i class="icon-ok icon-white"></i> Send bestilling</a>
+      <a class="btn btn-large" href="{% url 'enrollment.views_gift.form' %}"><i class="icon-arrow-left"></i> Tilbake</a>
+      <a class="btn btn-large btn-success" href="{% url 'enrollment.views_gift.send' %}"><i class="icon-ok icon-white"></i> Send bestilling</a>
     </p>
     <p>
       Faktura, gavekort og medlemskort blir sendt til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.

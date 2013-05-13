@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.users.views.index %}">Brukere</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.users.views.index' %}">Brukere</a>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
@@ -132,7 +132,7 @@
           <li>Du må gi brukeren tilgang til minst én forening etterpå, ellers gir det ikke mening at han/henne er Sherpa-bruker.</li>
           <li>Turledere trenger ikke nødvendigvis tilgang til Sherpa. Hvis du setter en bruker som turleder på en aktivitet, får han/henne tilgang fra Min side.</li>
         </ol>
-        <p><a href="{% url admin.users.views.give_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-bruker</a></p>
+        <p><a href="{% url 'admin.users.views.give_sherpa_access' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-bruker</a></p>
         <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
       </div>
 
@@ -151,7 +151,7 @@
             <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
             Sherpa-administratorer har tilgang til absolutt alt, og kan gjøre andre brukere til Sherpa-administratorer.
           </p>
-          <p><a href="{% url admin.users.views.make_sherpa_admin other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-administrator</a></p>
+          <p><a href="{% url 'admin.users.views.make_sherpa_admin' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_profile.get_full_name }} til Sherpa-administrator</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
         <div class="alert alert-error hide revoke-sherpa-access">
@@ -159,7 +159,7 @@
             <strong>Ta bort Sherpa-tilgang!?</strong><br>
             {{ other_user.get_profile.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
           </p>
-          <p><a href="{% url admin.users.views.revoke_sherpa_access other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
+          <p><a href="{% url 'admin.users.views.revoke_sherpa_access' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
           <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
         </div>
 
@@ -216,7 +216,7 @@
       </div>
 
       <div class="alert alert-error verify-association-permission hide">
-        <form action="{% url admin.users.views.add_association_permission %}" method="post">
+        <form action="{% url 'admin.users.views.add_association_permission' %}" method="post">
           {% csrf_token %}
           <input type="hidden" name="user" value="{{ other_user.id }}">
           <input type="hidden" name="association" value="">
@@ -264,7 +264,7 @@
           </select>
 
           <div class="association-permission-revoke-verify hide alert alert-error">
-            <form action="{% url admin.users.views.revoke_association_permission %}" method="post">
+            <form action="{% url 'admin.users.views.revoke_association_permission' %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="user" value="{{ other_user.id }}">
               <input type="hidden" name="association" value="">

@@ -15,7 +15,7 @@
       <th>Fotograf:</th>
       <td>
         {% if image.photographer %}
-          <a href="{% url admin.images.views.search %}?q={{ image.photographer }}">{{ image.photographer }}</a>
+          <a href="{% url 'admin.images.views.search' %}?q={{ image.photographer }}">{{ image.photographer }}</a>
         {% else %}
           (Ingen fotograf oppgitt)
         {% endif %}
@@ -42,7 +42,7 @@
     <tr>
       <th>Lastet opp av:</th>
       <td>
-        <a href="{% url admin.images.views.user_images image.uploader.user.get_profile.id %}">
+        <a href="{% url 'admin.images.views.user_images' image.uploader.user.get_profile.id %}">
           {{ image.uploader.user.get_profile.get_full_name }}
         </a><br>
         {{ image.uploaded|date:"j. F Y" }}
@@ -74,9 +74,9 @@
 
     <p class="edit-button">
       {# This URL is kind of ugly, but it's just a URLencoded JSON-list of one image id #}
-      <a class="btn btn-warning" href="{% url admin.images.views.update_images %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a>
+      <a class="btn btn-warning" href="{% url 'admin.images.views.update_images' %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a>
     </p>
-    <form class="move-image hide" method="post" action="{% url admin.images.views.move_items %}">
+    <form class="move-image hide" method="post" action="{% url 'admin.images.views.move_items' %}">
       {% csrf_token %}
       <input type="hidden" name="images" value="[&quot;{{ image.id }}&quot;]">
       <input type="hidden" name="albums" value="[]">
@@ -85,9 +85,9 @@
     <p class="edit-button">
       <button class="btn btn-warning move-image" data-album-id="{{ image.album.id }}"><i class="icon-share-alt"></i> Flytt bildet til album</button>
     </p>
-    <form method="post" action="{% url admin.images.views.delete_items %}" class="delete-image">
+    <form method="post" action="{% url 'admin.images.views.delete_items' %}" class="delete-image">
       {% csrf_token %}
-      <input type="hidden" name="origin" value="{% if image.album.id %}{% url admin.images.views.list_albums image.album.id %}{% else %}{% url admin.images.views.list_albums %}{% endif %}">
+      <input type="hidden" name="origin" value="{% if image.album.id %}{% url 'admin.images.views.list_albums' image.album.id %}{% else %}{% url 'admin.images.views.list_albums' %}{% endif %}">
       <input type="hidden" name="albums" value="[]">
       <input type="hidden" name="images" value="[{{ image.id }}]">
       <p class="edit-button">
@@ -112,7 +112,7 @@
     <h3>Nøkkelord:</h3>
     <div class="tag-box">
       {% for tag in tags %}
-        <div class="tag" data-href="{% url admin.images.views.search %}?q={{ tag.name }}">{{ tag.name }}</div>
+        <div class="tag" data-href="{% url 'admin.images.views.search' %}?q={{ tag.name }}">{{ tag.name }}</div>
       {% empty %}
         <p>{{ image.uploader.user.get_profile.get_first_name }} la ikke inn noen nøkkelord for bildet.</p>
       {% endfor %}
