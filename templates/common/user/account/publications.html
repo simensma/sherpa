@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Publikasjoner &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Publikasjoner</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Publikasjoner</em>{% endblock %}
 
 {% load has_membership_type %}
 
@@ -17,7 +17,7 @@
       {# Don't say anything, just let the account page inform about this. #}
     {% else %}
       <p>
-        <a href="{% url user.views.reserve_publications %}">Hvordan vil du lese Fjell og Vidde og årboken?</a>
+        <a href="{% url 'user.views.reserve_publications' %}">Hvordan vil du lese Fjell og Vidde og årboken?</a>
       </p>
     {% endif %}
 
@@ -33,7 +33,7 @@
           <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
             <div class="publication">
               <h3 class="title">
-                <a href="{% url user.views.publication publication.id %}">
+                <a href="{% url 'user.views.publication' publication.id %}">
                   {{ publication.title }}
                 </a>
               </h3>
@@ -46,7 +46,7 @@
                 {% endif %}
               </p>
               <p>
-                <a href="{% url user.views.publication publication.id %}">
+                <a href="{% url 'user.views.publication' publication.id %}">
                   <img src="{% firstof publication.get_latest_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}">
                 </a>
               </p>
@@ -70,7 +70,7 @@
         </tr>
         {% for publication in publications_other %}
           <tr>
-            <td><a href="{% url user.views.publication publication.id %}">{{ publication.title }}</a></td>
+            <td><a href="{% url 'user.views.publication' publication.id %}">{{ publication.title }}</a></td>
             <td>{{ publication.association.name }}</td>
           </tr>
         {% endfor %}

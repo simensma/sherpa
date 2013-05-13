@@ -192,7 +192,7 @@
             {% endif %}
           </button>
           {% if annonse %}
-            <a class="btn btn-danger delete" href="{% url fjelltreffen.views.delete annonse.id %}">Slett</a>
+            <a class="btn btn-danger delete" href="{% url 'fjelltreffen.views.delete' annonse.id %}">Slett</a>
           {% endif %}
         </div>
       </div>

@@ -1,8 +1,8 @@
 {# This may be a 'create' or an 'edit' form #}
 {% if release %}
-  <form action="{% url admin.publications.views.edit_release publication.id release.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
+  <form action="{% url 'admin.publications.views.edit_release' publication.id release.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
 {% else %}
-  <form action="{% url admin.publications.views.edit_release publication.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release hide">
+  <form action="{% url 'admin.publications.views.edit_release' publication.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release hide">
 {% endif %}
 
   {% csrf_token %}

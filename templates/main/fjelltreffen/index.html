@@ -17,7 +17,7 @@
 <div class="row">
   <div class="span9">
 
-    <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url fjelltreffen.views.load start_index %}">
+    <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url 'fjelltreffen.views.load' start_index %}">
       <h2>Fjelltreffen</h2>
 
       {% if first_visit %}
@@ -29,7 +29,7 @@
 
       <p>
         På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
-        Søk i annonsene nedenfor eller <a href="{% url fjelltreffen.views.new %}">legg ut din egen annonse</a>.
+        Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
       </p>
 
       {% include 'main/fjelltreffen/filter.html' %}
@@ -45,12 +45,12 @@
 
       <div class="no-matches alert alert-error{% if annonser|length > 0 %} hide{% endif %}">
         Vi fant ingen annonser på dette søket - prøv å endre søkekriteriene dine.<br>
-        Hva med å <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a> selv?<br><br>
+        Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
         Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
       </div>
 
       <div class="no-further-matches alert alert-error{% if annonser|length == 0 or not end %} hide{% endif %}">
-        Dette var alle annonsene som passet søket ditt. Endre søkekriteriene for å finne flere eller færre annonser. Hva med å <a href="{% url fjelltreffen.views.new %}">legge ut en annonse</a> selv?<br><br>
+        Dette var alle annonsene som passet søket ditt. Endre søkekriteriene for å finne flere eller færre annonser. Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
         Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
       </div>
     </div>

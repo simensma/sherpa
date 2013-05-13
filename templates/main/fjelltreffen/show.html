@@ -40,7 +40,7 @@
       <hr>
 
       <p>
-        <em>Dette er din annonse. Du kan <a href="{% url fjelltreffen.views.edit annonse.id %}">redigere den her</a>.</em>
+        <em>Dette er din annonse. Du kan <a href="{% url 'fjelltreffen.views.edit' annonse.id %}">redigere den her</a>.</em>
       </p>
 
     {% else %}
@@ -87,7 +87,7 @@
 
           <h2>Svar på annonsen</h2>
 
-          <form action="{% url fjelltreffen.views.show annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
+          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
@@ -148,7 +148,7 @@
                 Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
               </p>
               <p>
-                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url membership.views.service %}">medlemsservice</a> direkte for å rapportere annonsen.
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a> direkte for å rapportere annonsen.
               </p>
             </div>
           {% endif %}
@@ -161,7 +161,7 @@
               <a href="javascript:undefined" class="report">Gi oss beskjed!</a>
             {% else %}
               {# You must be logged in to report annonser - link to the report view, which will redirect back here #}
-              <a href="{% url fjelltreffen.views.report annonse.id %}">Gi oss beskjed!</a>
+              <a href="{% url 'fjelltreffen.views.report' annonse.id %}">Gi oss beskjed!</a>
             {% endif %}
           </p>
         {% endif %}

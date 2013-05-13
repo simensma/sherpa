@@ -31,7 +31,7 @@
           <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Du kan ikke publisere en ny annonse fordi du har ikke betalt medlemskontingenten.</strong><br>
-            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.<br><br>Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
+            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url 'enrollment.views.index' %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.<br><br>Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
           </div>
         {% endif %}
       {% endfor %}
@@ -55,10 +55,10 @@
               <td class="status">
                 {% if not annonse.hidden and not annonse.is_expired %}
                   <span class="label label-success">Publisert</span><br>
-                  <a href="{% url fjelltreffen.views.hide_mine annonse.id %}">Skjul</a>
+                  <a href="{% url 'fjelltreffen.views.hide_mine' annonse.id %}">Skjul</a>
                 {% elif annonse.hidden and not annonse.is_expired %}
                   <span class="label label-warning">Skjult</span><br>
-                  <a href="{% url fjelltreffen.views.show_mine annonse.id %}">Publiser</a>
+                  <a href="{% url 'fjelltreffen.views.show_mine' annonse.id %}">Publiser</a>
                 {% endif %}
               </td>
               <td class="expiration">
@@ -66,7 +66,7 @@
                   <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span>
                 {% else %}
                   <span class="label label-important expired" title="Denne annonsen har ligget ute i over {{ annonse_retention_days }} dager og er derfor ikke lenger aktiv.">Utgått</span><br>
-                  <a href="{% url fjelltreffen.views.renew_mine annonse.id %}">Forny</a>
+                  <a href="{% url 'fjelltreffen.views.renew_mine' annonse.id %}">Forny</a>
                 {% endif %}
               </td>
             </tr>

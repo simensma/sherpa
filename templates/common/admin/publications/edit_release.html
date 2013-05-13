@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a>{% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
@@ -31,7 +31,7 @@
     {% endfor %}
 
     <h2>
-      <a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a> / {{ release.title|default:"Ny utgivelse" }}
+      <a href="{% url 'admin.publications.views.edit_publication' publication.id %}">{{ publication.title }}</a> / {{ release.title|default:"Ny utgivelse" }}
     </h2>
 
     {% include 'common/admin/publications/edit_release_form.html' %}
@@ -50,7 +50,7 @@
       </p>
 
       <p>
-        <a href="{% url admin.publications.views.delete_release release.id %}" class="btn btn-danger delete-release-final">
+        <a href="{% url 'admin.publications.views.delete_release' release.id %}" class="btn btn-danger delete-release-final">
           <i class="icon-remove"></i> Ja, jeg skjønner. Slett utgivelsen for godt.
         </a>
       </p>

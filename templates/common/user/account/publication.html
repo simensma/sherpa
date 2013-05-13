@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Publikasjoner &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <a href="{% url user.views.publications %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/publication.js"></script>
@@ -33,7 +33,7 @@
         Vi har dessverre ikke fått publisert noen utgivelser av {{ publication.title }} her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
       </p>
       <p>
-        <a href="{% url user.views.publications %}">Tilbake til publikasjoner</a>
+        <a href="{% url 'user.views.publications' %}">Tilbake til publikasjoner</a>
       </p>
     {% endif %}
 

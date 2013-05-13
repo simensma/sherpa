@@ -1,6 +1,6 @@
 {# Adapted for inline view on the user page #}
 <div class="memberid-sms inline">
-  <a href="javascript:undefined" class="trigger" data-href="{% url membership.views.memberid_sms_userpage %}">
+  <a href="javascript:undefined" class="trigger" data-href="{% url 'membership.views.memberid_sms_userpage' %}">
     Send gratis medlemsbevis på SMS
   </a>
 
@@ -10,7 +10,7 @@
   </span>
 
   <span class="result missing-number hide">
-    Vi har ikke registrert ditt mobilnummer! <a href="{% url user.views.update_account %}">Legg det inn her</a>.
+    Vi har ikke registrert ditt mobilnummer! <a href="{% url 'user.views.update_account' %}">Legg det inn her</a>.
   </span>
 
   <span class="result ok hide">

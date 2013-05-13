@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Logg inn{% endblock %}
-{% block breadcrumb %}<a href="{% url user.login.views.login %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.login.views.login' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/choose-authenticated-user.js"></script>
@@ -19,7 +19,7 @@
           Du har flere brukere med <strong>samme</strong> e-postadresse og passord. Vennligst velg hvilken du vil logge på med:
         </p>
 
-        <form action="{% url user.login.views.login_chosen_user %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal choose">
+        <form action="{% url 'user.login.views.login_chosen_user' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal choose">
           {% csrf_token %}
           <input type="hidden" name="profile" value="">
 

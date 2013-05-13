@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Partnertilbud — Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Partnertilbud</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Partnertilbud</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
@@ -18,7 +18,7 @@
     </p>
 
     <div class="form-border user-reservations">
-      <table class="user-reservations sponsors" data-url="{% url user.views.partneroffers_reserve %}">
+      <table class="user-reservations sponsors" data-url="{% url 'user.views.partneroffers_reserve' %}">
         <tr class="choice">
           <td>
             <input type="radio" name="sponsors" value="allow"{% if not user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>

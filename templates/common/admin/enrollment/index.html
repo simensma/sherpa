@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
 
-<div class="change-enrollment-status" data-activate-state-url="{% url admin.enrollment.views.activate_state %}" data-activate-card-url="{% url admin.enrollment.views.activate_card %}">
+<div class="change-enrollment-status" data-activate-state-url="{% url 'admin.enrollment.views.activate_state' %}" data-activate-card-url="{% url 'admin.enrollment.views.activate_card' %}">
   <div class="row">
     <div class="span6 cont">
       <div class="active state{% if not state.active %} hide{% endif %}">

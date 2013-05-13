@@ -66,7 +66,7 @@
             {% endif %}
           {% endfor %}
 
-          <form action="{% url user.login.views.login %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+          <form action="{% url 'user.login.views.login' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
             {% csrf_token %}
 
             <div class="control-group email">
@@ -93,7 +93,7 @@
           <div class="control-group">
             <div class="controls">
               <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-              <div class="forgot-password hide" data-email-url="{% url user.login.views.send_restore_password_email %}">
+              <div class="forgot-password hide" data-email-url="{% url 'user.login.views.send_restore_password_email' %}">
                 <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
                 <p class="actions">
                   <button class="btn restore-password">Gjenopprett passord</button>
@@ -118,7 +118,7 @@
         </div>
         <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-          <form action="{% url user.login.views.register %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url user.login.views.verify_memberid %}">
+          <form action="{% url 'user.login.views.register' %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
             {% csrf_token %}
 
             <div class="step1">
@@ -226,12 +226,12 @@
 
           <div class="hide alert alert-error no-memberid-match">
             <strong>Ukjent bruker</strong><br>
-            Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+            Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
           </div>
 
           <div class="hide alert alert-error memberid-lookups-exceeded">
             <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
           </div>
 
           {% for message in messages %}
@@ -239,12 +239,12 @@
               {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
               <div class="alert alert-error">
                 <strong>Ukjent bruker</strong><br>
-                Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url membership.views.service %}">medlemsservice</a> hvis du mener at dette skal være rett.
+                Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
               </div>
             {% elif message.message == 'memberid_lookups_exceeded' %}
               <div class="alert alert-error">
                 <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-                Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url membership.views.service %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+                Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
               </div>
             {% elif message.message == 'too_short_password' %}
               <div class="alert alert-error">

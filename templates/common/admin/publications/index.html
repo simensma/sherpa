@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.publications.views.index %}">Publikasjoner</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -27,7 +27,7 @@
         </tr>
         {% for publication in publications %}
           <tr>
-            <td><a href="{% url admin.publications.views.edit_publication publication.id %}">{{ publication.title }}</a></td>
+            <td><a href="{% url 'admin.publications.views.edit_publication' publication.id %}">{{ publication.title }}</a></td>
             <td>
               {% if publication.releases.all|length > 0 %}
                 {{ publication.releases.all|length }}

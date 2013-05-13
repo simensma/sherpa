@@ -48,7 +48,7 @@
       </div>
     {% endif %}
 
-    <form id="household" action="{% url enrollment.views.household %}" method="post" data-existing-url="{% url enrollment.views.existing %}">
+    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}">
       {% csrf_token %}
 
       <div class="form-border">

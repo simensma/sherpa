@@ -22,8 +22,8 @@
       Du er i ferd med å registrere deg som bruker uten medlemskap på DNTs nettsted. Da går du glipp av innhold og tjenester som kun er tilgjengelige for DNTs medlemmer.
 
       <ul>
-        <li><a href="{% url user.login.views.login %}#registrering">Registrer MED medlemskap</a></li>
-        <li><a href="{% url membership.views.benefits %}">Bli medlem</a></li>
+        <li><a href="{% url 'user.login.views.login' %}#registrering">Registrer MED medlemskap</a></li>
+        <li><a href="{% url 'membership.views.benefits' %}">Bli medlem</a></li>
         <li><a href="javascript:undefined" class="confirm">Fortsett</a></li>
       </ul>
     </div>
@@ -92,7 +92,7 @@
             {% elif message.message == 'email_exists' %}
               <div class="alert alert-error">
                 <strong>E-postadressen din er allerede i bruk!</strong><br>
-                Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url user.login.views.login %}">innloggingssiden</a>.
+                Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a>.
               </div>
             {% elif message.message == 'too_short_password' %}
               <div class="alert alert-error">

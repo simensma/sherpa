@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Les magasiner på nett — Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <a href="{% url user.views.publications %}">Publikasjoner</a> / <em>Les magasiner på nett</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>Les magasiner på nett</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
@@ -20,7 +20,7 @@
     <div class="form-border user-reservations">
 
       <h3>Fjell og Vidde</h3>
-      <table class="user-reservations fjellogvidde" data-url="{% url user.views.reserve_fjellogvidde %}">
+      <table class="user-reservations fjellogvidde" data-url="{% url 'user.views.reserve_fjellogvidde' %}">
         <tr class="choice">
           <td>
             <input type="radio" name="fjellogvidde" value="allow"{% if not user.get_profile.get_actor.get_reserved_against_fjellogvidde %} checked{% endif %}>
@@ -66,7 +66,7 @@
       </table>
 
       <h3>Årboken</h3>
-      <table class="user-reservations yearbook" data-url="{% url user.views.reserve_yearbook %}">
+      <table class="user-reservations yearbook" data-url="{% url 'user.views.reserve_yearbook' %}">
         <tr class="choice">
           <td>
             <input type="radio" name="yearbook" value="allow"{% if not user.get_profile.get_actor.get_reserved_against_yearbook %} checked{% endif %}>

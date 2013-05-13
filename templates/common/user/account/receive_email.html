@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Motta e-post — Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Motta e-post</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Motta e-post</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
@@ -18,7 +18,7 @@
     </p>
 
     <div class="form-border user-reservations">
-      <table class="user-reservations sponsors" data-url="{% url user.views.receive_email_set %}">
+      <table class="user-reservations sponsors" data-url="{% url 'user.views.receive_email_set' %}">
         <tr class="choice">
           <td>
             <input type="radio" name="sponsors" value="allow"{% if user.get_profile.get_actor.receive_email %} checked{% endif %}>

@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}NOR-WAY Bussbilletter &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>NOR-WAY Bussbilletter</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>NOR-WAY Bussbilletter</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/norway_bus_tickets.js"></script>
@@ -77,7 +77,7 @@
       <h3>Ubetalt årskontingent</h3>
 
       <p>
-        For å benytte deg av tilbudet må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url enrollment.views.index %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.
+        For å benytte deg av tilbudet må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url 'enrollment.views.index' %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.
       </p>
 
       <div class="alert alert-info">
@@ -86,7 +86,7 @@
 
     {% else %}
 
-      <form action="{% url user.views.norway_bus_tickets_order %}" method="post" class="form-border form-horizontal form-default">
+      <form action="{% url 'user.views.norway_bus_tickets_order' %}" method="post" class="form-border form-horizontal form-default">
         {% csrf_token %}
 
         {% for message in messages %}
@@ -103,7 +103,7 @@
           {% elif message.message == 'email_failure' %}
             <div class="alert alert-error">
               <strong>Bestillingen har ikke blitt sendt!</strong><br>
-              Vi beklager, det oppstod en feil når vi skulle sende bestillingen til NOR-WAY Bussekspress. Bestillingen har <strong>ikke</strong> blitt sendt - vennligst prøv igjen litt senere. Kontakt <a href="{% url membership.views.service %}">medlemsservice</a> dersom feilen ikke går bort.
+              Vi beklager, det oppstod en feil når vi skulle sende bestillingen til NOR-WAY Bussekspress. Bestillingen har <strong>ikke</strong> blitt sendt - vennligst prøv igjen litt senere. Kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> dersom feilen ikke går bort.
             </div>
           {% endif %}
         {% endfor %}
@@ -135,7 +135,7 @@
               {{ user.get_profile.get_actor.get_clean_address.format_for_oneline }}
             </div>
             <div class="hints">
-              Feil adresse? <a href="{% url user.views.update_account %}">Endre den her</a> FØR du bestiller!
+              Feil adresse? <a href="{% url 'user.views.update_account' %}">Endre den her</a> FØR du bestiller!
             </div>
           </div>
         </div>

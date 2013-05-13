@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em><a href="{% url user.views.account %}">Dine opplysninger</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/account.js"></script>
@@ -46,13 +46,13 @@
           <tr>
             <th></th>
             <td>
-              <i class="icon-pencil"></i> <a href="{% url user.views.update_account %}">Endre dine opplysninger</a>
+              <i class="icon-pencil"></i> <a href="{% url 'user.views.update_account' %}">Endre dine opplysninger</a>
             </td>
           </tr>
         </table>
 
         <p>
-          Du er ikke registrert som medlem i DNT. <a href="{% url user.views.register_membership %}">Jeg er medlem, registrer meg!</a>
+          Du er ikke registrert som medlem i DNT. <a href="{% url 'user.views.register_membership' %}">Jeg er medlem, registrer meg!</a>
         </p>
 
       {% else %}
@@ -60,7 +60,7 @@
         <h2 class="user-account-header">
           Dine opplysninger
           <span class="pull-right">
-            <a class="btn btn-danger" href="{% url user.views.update_account %}">
+            <a class="btn btn-danger" href="{% url 'user.views.update_account' %}">
               <i class="icon-pencil icon-white"></i> Endre dine opplysninger
             </a>
           </span>
@@ -191,9 +191,9 @@
                 {% endif %}
 
                 {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
-                  <em>Du kan ikke endre dette her. <a href="{% url membership.views.service %}">Kontakt medlemsservice</a>.</em>
+                  <em>Du kan ikke endre dette her. <a href="{% url 'membership.views.service' %}">Kontakt medlemsservice</a>.</em>
                 {% else %}
-                  <a href="{% url user.views.reserve_publications %}">Endre</a>
+                  <a href="{% url 'user.views.reserve_publications' %}">Endre</a>
                 {% endif %}
 
               {% endif %}
@@ -221,9 +221,9 @@
                 {% endif %}
 
                 {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
-                  <em>Du kan ikke endre dette her. <a href="{% url membership.views.service %}">Kontakt medlemsservice</a>.</em>
+                  <em>Du kan ikke endre dette her. <a href="{% url 'membership.views.service' %}">Kontakt medlemsservice</a>.</em>
                 {% else %}
-                  <a href="{% url user.views.reserve_publications %}">Endre</a>
+                  <a href="{% url 'user.views.reserve_publications' %}">Endre</a>
                 {% endif %}
 
               {% endif %}
@@ -237,7 +237,7 @@
               {% else %}
                 Du vil ikke motta medlemsinformasjon fra DNT på e-post.
               {% endif %}
-              <a href="{% url user.views.receive_email %}">Endre</a>
+              <a href="{% url 'user.views.receive_email' %}">Endre</a>
             </td>
           </tr>
           <tr>
@@ -248,7 +248,7 @@
               {% else %}
                 Du vil motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere.
               {% endif %}
-              <a href="{% url user.views.partneroffers %}">Endre</a>
+              <a href="{% url 'user.views.partneroffers' %}">Endre</a>
             </td>
           </tr>
         </table>

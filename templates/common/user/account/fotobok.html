@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Fotobok &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Fotobok</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Fotobok</em>{% endblock %}
 
 {% block body %}
 
@@ -44,10 +44,10 @@
     {% endfor %}
 
     <div class="fotobok-eurofoto-anchor">
-      <a href="{% url user.views.fotobok_eurofoto_request %}">
+      <a href="{% url 'user.views.fotobok_eurofoto_request' %}">
         <img src="{{ STATIC_URL }}img/user/eurofoto-fotobok.jpg" alt="Gå til fotobok!">
       </a><br>
-      <a href="{% url user.views.fotobok_eurofoto_request %}" class="btn btn-danger btn-large">Gå til fotobok!</a>
+      <a href="{% url 'user.views.fotobok_eurofoto_request' %}" class="btn btn-danger btn-large">Gå til fotobok!</a>
     </div>
 
   </div>

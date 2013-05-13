@@ -9,7 +9,7 @@
 <h2 class="skinny">Hovedmeny</h2>
 <div class="row">
   <div class="span12">
-    <nav id="menus" data-reorder-url="{% url admin.cms.views.menu.reorder %}">
+    <nav id="menus" data-reorder-url="{% url 'admin.cms.views.menu.reorder' %}">
       <ul>
         {% for menu in menus %}
         <li>
@@ -48,7 +48,7 @@
 </table>
 {% endif %}
 
-<div class="modal container hide new-page" data-check-slug-url="{% url admin.cms.views.page.check_slug %}">
+<div class="modal container hide new-page" data-check-slug-url="{% url 'admin.cms.views.page.check_slug' %}">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Opprett ny webside</h3>

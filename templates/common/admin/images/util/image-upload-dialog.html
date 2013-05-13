@@ -22,7 +22,7 @@
       Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
-    <form action="{% url admin.images.util.image_upload_dialog %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
+    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
       {% csrf_token %}
       <input type="reset" class="hide">
 
@@ -43,7 +43,7 @@
       <div class="control-group">
         <label class="control-label">Fotograf:</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-source-url="{% url admin.images.views.photographer %}">
+          <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-source-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 

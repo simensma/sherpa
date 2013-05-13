@@ -104,9 +104,9 @@
     <div class="span3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
-          {% if perms.user.sherpa %}<a href="{% url admin.views.index %}">Sherpa</a>{% endif %}
-          <a href="{% url user.views.home %}">Min side</a>
-          <a href="{% url user.login.views.logout %}">Logg ut</a>
+          {% if perms.user.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
+          <a href="{% url 'user.views.home' %}">Min side</a>
+          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
         {% else %}
           <a href="{% url 'user.views.home' %}">Min side</a>
         {% endif %}
@@ -223,7 +223,7 @@
           <li><a href="/kurs/">Kurs og utdanning</a></li>
           <li><a href="/skole/">Skole</a></li>
           <li><a href="http://www.nettbutikken.dntoslo.no/">Turutstyr og kart</a></li>
-          <li><a href="{% url fjelltreffen.views.index %}">Fjelltreffen</a></li>
+          <li><a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a></li>
           <li><a href="http://ut.no">UT.no</a></li>
         </ul>
       </div>
