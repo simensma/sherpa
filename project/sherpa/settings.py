@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis', # GeoDjango
     'raven.contrib.django', # Error logging
     'captcha', # django-simple-captcha
     'south', # Database migrations
