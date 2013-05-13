@@ -21,6 +21,7 @@ $(document).ready(function() {
     form.submit(function() {
         payment_button.prop('disabled', true);
         ajaxloader.show();
+        adf.track(133425,2765716,{});
     });
 
 });

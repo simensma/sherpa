@@ -78,6 +78,10 @@ $(document).ready(function() {
         $("div.dialog.conditions").dialog('close');
     });
 
+    $("form#registration").submit(function() {
+        adf.track(133425,2765715,{});
+    });
+
     if(window.trigger_form_validations) {
         Validator.trigger();
         validateDatepicker();
