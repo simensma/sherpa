@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Dine turer og aktiviteter &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url user.views.home %}">Min side</a> / <em>Dine turer og aktiviteter</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Dine turer og aktiviteter</em>{% endblock %}
 
 {% block body %}
 
@@ -21,7 +21,7 @@
       {% for aktivitet_date in aktivitet_dates %}
         <div class="form-border aktivitet">
           <h3>
-            <a href="{% url aktiviteter.views.show aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>
+            <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>
           </h3>
           <p>
             {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
@@ -29,14 +29,14 @@
           {% if aktivitet_date.accepts_signup_cancels %}
             <hr>
             <p class="signup-cancel">
-              Ønsker du å melde deg av denne turen? <a href="{% url aktiviteter.views.signup_cancel aktivitet_date.id %}">Meld deg av her</a>.<br>
+              Ønsker du å melde deg av denne turen? <a href="{% url 'aktiviteter.views.signup_cancel' aktivitet_date.id %}">Meld deg av her</a>.<br>
               Avmeldingsfristen er {{ aktivitet_date.signup_cancel_deadline|date:"j. F Y" }}
             </p>
           {% endif %}
         </div>
       {% empty %}
         <p>
-          Du har ikke meldt deg på noen turer og aktiviteter. <a href="{% url aktiviteter.views.index %}">Finn en tur som passer for deg</a>!
+          Du har ikke meldt deg på noen turer og aktiviteter. <a href="{% url 'aktiviteter.views.index' %}">Finn en tur som passer for deg</a>!
         </p>
       {% endfor %}
 

@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a> / <em><a href="{% url aktiviteter.views.show aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <em><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/aktiviteter/show.js"></script>
@@ -17,7 +17,7 @@
       <div class="meta square-well">
         {% if aktivitet_date.accepts_signups and not user_is_participating %}
           <div class="pull-right">
-            <a href="{% url aktiviteter.views.signup aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
+            <a href="{% url 'aktiviteter.views.signup' aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
           </div>
         {% elif aktivitet_date.will_accept_signups %}
           <div class="pull-right signup-countdown">
@@ -46,7 +46,7 @@
               {% endif %}
               <div class="alternatives{% if aktivitet_date.other_dates|length > 1 %} hide{% endif %}">
                 {% for date in aktivitet_date.get_other_dates_ordered %}
-                  <a href="{% url aktiviteter.views.show date.id %}">
+                  <a href="{% url 'aktiviteter.views.show' date.id %}">
                     {{ date.start_date|date:"j. F Y" }}
                     til
                     {{ date.end_date|date:"j. F Y" }}

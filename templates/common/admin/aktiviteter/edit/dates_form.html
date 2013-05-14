@@ -32,7 +32,7 @@
             </tr>
             <tr class="management">
               <td></td>
-              <td colspan="3"><a href="javascript:undefined" class="delete-date" data-url="{% url admin.aktiviteter.views.delete_aktivitet_date date.id %}">Slett</a></td>
+              <td colspan="3"><a href="javascript:undefined" class="delete-date" data-url="{% url 'admin.aktiviteter.views.delete_aktivitet_date' date.id %}">Slett</a></td>
             </tr>
             <tr class="ajaxloader hide">
               <td></td>
@@ -46,7 +46,7 @@
     </div>
 
   </div>
-  <div class="editing hide" data-url="{% url admin.aktiviteter.views.edit_aktivitet_date date.id %}">
+  <div class="editing hide" data-url="{% url 'admin.aktiviteter.views.edit_aktivitet_date' date.id %}">
 
     <div class="control-group start_date">
       <label class="control-label">Starter:</label>

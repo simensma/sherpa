@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -32,13 +32,13 @@
 
         <p>
           Du må velge hvilke turdatoer turlederen har tilgang til, men denne aktiviteten har ingen oppsatte datoer.<br>
-          <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">Velg turdatoer her først</a>, så kan du komme tilbake hit og legge til turledere.
+          <a href="{% url 'admin.aktiviteter.views.edit_dates' aktivitet.id %}">Velg turdatoer her først</a>, så kan du komme tilbake hit og legge til turledere.
         </p>
 
       {% else %}
 
         <p>
-          Hvis aktiviteten har flere datoer, velger du hvilke datoer turlederen har tilgang til. Husk derfor å gjøre deg ferdig med <a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">datoer og påmelding</a> først.
+          Hvis aktiviteten har flere datoer, velger du hvilke datoer turlederen har tilgang til. Husk derfor å gjøre deg ferdig med <a href="{% url 'admin.aktiviteter.views.edit_dates' aktivitet.id %}">datoer og påmelding</a> først.
         </p>
 
         <div class="leader-management form-border">
@@ -50,7 +50,7 @@
                 {% for profile in date.leaders.all %}
                   <tr data-profile-id="{{ profile.id }}">
                     <td>
-                      <form action="{% url admin.aktiviteter.views.leader_remove %}" method="post" class="remove-leader">
+                      <form action="{% url 'admin.aktiviteter.views.leader_remove' %}" method="post" class="remove-leader">
                         {% csrf_token %}
                         <input type="hidden" name="aktivitet_date" value="{{ date.id }}">
                         <input type="hidden" name="profile" value="{{ profile.id }}">
@@ -73,7 +73,7 @@
             <input type="text" class="input-xlarge" name="leader-search" placeholder="Navn eller medlemsnummer...">
             <button class="btn leader-search input-button-align"><i class="icon-search"></i></button>
 
-            <table class="table search-results hide" data-search-url="{% url admin.aktiviteter.views.leader_search %}">
+            <table class="table search-results hide" data-search-url="{% url 'admin.aktiviteter.views.leader_search' %}">
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>

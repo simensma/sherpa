@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<em><a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a></em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/aktiviteter/index.js"></script>
@@ -84,7 +84,7 @@
         <tr>
           <td>
             <h2>
-              <a href="{% url aktiviteter.views.show date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
+              <a href="{% url 'aktiviteter.views.show' date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
             </h2>
             <p class="date">
               {{ date.start_date|date:"j. F Y" }}

@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<a href="{% url aktiviteter.views.index %}">Turer og aktiviteter</a> / <a href="{% url aktiviteter.views.show aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
 
 {% block body %}
 
@@ -15,8 +15,8 @@
       </p>
 
       <p>
-        <a href="{% url aktiviteter.views.signup_confirm aktivitet_date.id %}" class="btn btn-success">Ja, meld meg på</a>
-        <a href="{% url aktiviteter.views.show aktivitet_date.id %}">Nei, avbryt</a>
+        <a href="{% url 'aktiviteter.views.signup_confirm' aktivitet_date.id %}" class="btn btn-success">Ja, meld meg på</a>
+        <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">Nei, avbryt</a>
       </p>
     </div>
 

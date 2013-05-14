@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/index.js"></script>
@@ -117,7 +117,7 @@
         </div>
       </div>
 
-      <form action="{% url admin.aktiviteter.views.new %}" method="post" class="create-new-category">
+      <form action="{% url 'admin.aktiviteter.views.new' %}" method="post" class="create-new-category">
         {% csrf_token %}
         <input type="hidden" name="category" value="">
         <input type="hidden" name="tags" value="">
@@ -140,28 +140,28 @@
         {% if user.get_profile.children_associations_sorted.central|length > 0 %}
           <optgroup label="Sentralt/nasjonalt">
             {% for association in user.get_profile.children_associations_sorted.central %}
-              <option value="{{ association.id }}" data-filter-url="{% url admin.aktiviteter.views.index %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
         {% if user.get_profile.children_associations_sorted.associations|length > 0 %}
           <optgroup label="Medlemsforeninger">
             {% for association in user.get_profile.children_associations_sorted.associations %}
-              <option value="{{ association.id }}" data-filter-url="{% url admin.aktiviteter.views.index %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
         {% if user.get_profile.children_associations_sorted.small_associations|length > 0 %}
           <optgroup label="Lokale turlag">
             {% for association in user.get_profile.children_associations_sorted.small_associations %}
-              <option value="{{ association.id }}" data-filter-url="{% url admin.aktiviteter.views.index %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
         {% if user.get_profile.children_associations_sorted.hike_groups|length > 0 %}
           <optgroup label="Turgrupper">
             {% for association in user.get_profile.children_associations_sorted.hike_groups %}
-              <option value="{{ association.id }}" data-filter-url="{% url admin.aktiviteter.views.index %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
@@ -174,7 +174,7 @@
           {% for aktivitet in aktiviteter %}
             <tr>
               <td>
-                <a href="{% url admin.aktiviteter.views.edit_description aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+                <a href="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
               </td>
             </tr>
           {% endfor %}

@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs">
-  <li{% if active == 'description' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_description aktivitet.id %}">Beskrivelse og informasjon</a></li>
-  <li{% if active == 'position' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_position aktivitet.id %}">Posisjon</a></li>
-  <li{% if active == 'dates' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_dates aktivitet.id %}">Datoer og påmelding</a></li>
-  <li{% if active == 'leaders' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_leaders aktivitet.id %}">Turledere</a></li>
-  <li{% if active == 'participants' %} class="active"{% endif %}><a href="{% url admin.aktiviteter.views.edit_participants aktivitet.id %}">Påmeldte</a></li>
+  <li{% if active == 'description' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}">Beskrivelse og informasjon</a></li>
+  <li{% if active == 'position' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_position' aktivitet.id %}">Posisjon</a></li>
+  <li{% if active == 'dates' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_dates' aktivitet.id %}">Datoer og påmelding</a></li>
+  <li{% if active == 'leaders' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_leaders' aktivitet.id %}">Turledere</a></li>
+  <li{% if active == 'participants' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_participants' aktivitet.id %}">Påmeldte</a></li>
 </ul>

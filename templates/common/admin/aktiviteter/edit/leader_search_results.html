@@ -4,7 +4,7 @@
     <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
       <button class="btn btn-danger assign-leader">Gi turlederstatus</button>
-      <form action="{% url admin.aktiviteter.views.leader_assign %}" method="post" class="hide">
+      <form action="{% url 'admin.aktiviteter.views.leader_assign' %}" method="post" class="hide">
         {% csrf_token %}
         <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
         <input type="hidden" name="profile" value="{{ profile.id }}">

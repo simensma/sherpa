@@ -132,7 +132,7 @@
 
     {% if user.get_profile.leader_aktivitet_dates.count != 0 %}
       {% column %}
-        <a href="{% url user.views.leader_aktivitet_dates %}" class="element">
+        <a href="{% url 'user.views.leader_aktivitet_dates' %}" class="element">
           <p class="title">Dine arrangerte turer</p>
           <p>
             Se turer og aktiviteter hvor du er turleder.

@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url admin.aktiviteter.views.index %}">Aktiviteter</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
@@ -20,7 +20,7 @@
     {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
 
     {# TODO: Client-side validations #}
-    <form action="{% url admin.aktiviteter.views.edit_description aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
+    <form action="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
       {% csrf_token %}
       <input type="hidden" name="images" value="">
 
@@ -101,11 +101,11 @@
           </div>
           <div class="hints">
             {% if aktivitet.dates.count == 0 %}
-              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
+              En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
             {% else %}
-              En privat aktivitet kommer ikke frem i <a href="{% url aktiviteter.views.index %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
+              En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
               {% for aktivitet_date in aktivitet.get_dates_ordered %}
-                <a href="{% url aktiviteter.views.show aktivitet_date.id %}">http://{{ site.domain }}{% url aktiviteter.views.show aktivitet_date.id %}</a>
+                <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">http://{{ site.domain }}{% url 'aktiviteter.views.show' aktivitet_date.id %}</a>
                 {% if not forloop.last %}<br>{% endif %}
               {% endfor %}
             {% endif %}
