@@ -13,7 +13,7 @@ from datetime import date, timedelta
 import json
 import sys
 import logging
-import Image as pil
+from PIL import Image as pil
 from cStringIO import StringIO
 import hashlib
 import simples3
