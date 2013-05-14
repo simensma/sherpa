@@ -10,7 +10,7 @@ from user.models import Profile
 from core import xmp
 from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
 
-import Image as pil
+from PIL import Image as pil
 from cStringIO import StringIO
 import json
 import logging

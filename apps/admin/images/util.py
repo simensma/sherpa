@@ -14,7 +14,7 @@ from core import xmp
 
 from PIL.ExifTags import TAGS
 import random
-import Image as pil
+from PIL import Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
 import simples3
