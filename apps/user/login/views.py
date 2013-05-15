@@ -32,10 +32,15 @@ def login(request):
     if 'authenticated_profiles' in request.session:
         del request.session['authenticated_profiles']
 
+    first_visit = 'minside.login.has_visited' not in request.session
+    if first_visit:
+        request.session['minside.login.has_visited'] = True
+
     context = {
         'user_password_length': settings.USER_PASSWORD_LENGTH,
         'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT,
-        'countries': FocusCountry.get_sorted()
+        'countries': FocusCountry.get_sorted(),
+        'first_visit': first_visit
     }
 
     if request.method == 'GET':
