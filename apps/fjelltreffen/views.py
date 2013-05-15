@@ -31,9 +31,10 @@ logger = logging.getLogger('sherpa')
 #
 
 def index(request):
-    first_visit = 'fjelltreffen.first_visit' not in request.session
+    first_visit = 'fjelltreffen.has_visited' not in request.session
     if first_visit:
-        request.session['fjelltreffen.first_visit'] = True
+        request.session['fjelltreffen.has_visited'] = True
+
     annonser, start_index, end = Annonse.get_by_filter(request.session.get('fjelltreffen.filter', {}))
     context = {
         'annonser': annonser,
