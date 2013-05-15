@@ -4,5 +4,6 @@
     <li{% if active == 'index' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.index' %}">Alle annonser</a></li>
     <li{% if active == 'new' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.new' %}">Legg ut annonse</a></li>
     <li{% if active == 'mine' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.mine' %}">Mine annonser</a></li>
+    <li{% if active == 'about' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.about' %}">Om Fjelltreffen</a></li>
   </ul>
 </div>

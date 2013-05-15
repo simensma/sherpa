@@ -1,0 +1,119 @@
+{% extends 'main/layout.html' %}
+
+{% load advertisement %}
+
+{% block title %}Fjelltreffen{% endblock %}
+
+{% block breadcrumb %}
+  <a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a> / <em><a href="{% url 'fjelltreffen.views.about' %}">Om Fjelltreffen</a></em>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <div class="fjelltreffen-about">
+
+      <h2>Om Fjelltreffen</h2>
+
+      <h3>Hva er Fjelltreffen?</h3>
+      <p>
+        Fjelltreffen er en kontaktplass for friluftsfolk hvor du kan du søke etter turfølge. Uansett om du er på jakt etter noen å dele turopplevelsen med eller drømmer om noe mer, finner du likesinnede som deler interessen for friluftsliv. Du kan legge inn en egen annonse selv (kun for medlemmer i DNT) eller søke blant annonser andre har lagt inn (åpent for alle).
+      </p>
+
+
+      <h3>Hvem kan legge inn en annonse?</h3>
+      <p>
+        For å kunne legge inn en annonse må du være medlem i DNT og over 18 år. Du må også være registrert og logget på som bruker på Min side.
+      </p>
+
+      <p>
+        Annonsen du legger inn vil være synlig i 90 dager. Du kan når som helst endre eller slette annonsen under <a href="{% url 'fjelltreffen.views.mine' %}">Mine annonser</a>.
+      </p>
+
+      <p>
+        Eventuelle svar på din annonse vil blir sendt til e-posten du oppgir når du legger inn annonsen. Sjekk derfor at denne er riktig før du publiserer annonsen. Sjekk også at dine øvrige medlemsopplysninger er korrekte, da informasjon om kjønn og alder hentes automatisk fra vårt medlemssystem.
+      </p>
+
+
+      <h3>Hvem kan svare på en annonse?</h3>
+        Alle kan svare på en annonse – også personer som ikke er medlem i DNT. Svar på en annonse sendes til annonsørens e-postadresse.
+      </p>
+
+      <p>
+        Når du sender svaret ditt, vil annonsøren motta en e-post med ditt navn, din e-postadresse og ditt svar. Det er deretter opp til annonsøren å svare deg.
+      </p>
+
+
+      <h3>Er ikke annonsen synlig?</h3>
+      <p>
+        Annonsen skal bli synlig på nettsidene i løpet av kort tid etter at den er registrert. Ta kontakt med oss på <a href="mailto:fjelltreffen@turistforeningen.no">fjelltreffen@turistforeningen.no</a> dersom det skulle oppstå noe feil under registrering.
+      </p>
+
+      <p>
+        Husk at annonsen er synlig i 90 dager. Deretter må du legge inn en ny eller oppdatere den gamle.
+      </p>
+
+      <h3>Hvorfor får jeg ikke noe svar på annonsen min?</h3>
+      <p>
+        Vi kan ikke garantere deg svar på annonsen din, men for sikkerhets skyld kan du gjøre følgende:
+      </p>
+
+      <ul>
+        <li>
+          Sjekk at annonsen er publisert. Hvis den ikke er publisert kan du sjekke eventuell status for annonsen på Min side.
+        </li>
+        <li>
+          Sjekk at du er registrert med korrekt e-postadresse på <a href="{% url 'user.views.update_account' %}">Min side</a>.
+        </li>
+        <li>
+          Prøv å svare på din egen annonse for å se om svaret kommer frem til din e-postadresse. NB! For å kunne svare på din egen annonse må du logge deg av Min side.
+        </li>
+      </ul>
+
+      <h3>Anmeld upassende annonser</h3>
+      <p>
+        Opplever du en annonse som støtende eller upassende kan du gi DNT beskjed om dette ved å klikke på lenken under annonsen.
+      </p>
+
+      <h3>Ansvar og vilkår</h3>
+
+      <ul>
+        <li>
+          For å kunne legge inn en annonse må du være medlem i DNT og over 18 år. Du må også være registrert som bruker på Min side.
+        </li>
+
+        <li>
+          Informasjon om kjønn og alder hentes automatisk fra DNTs medlemssystem.
+        </li>
+
+        <li>
+          DNT behandler all personlig informasjon konfidensielt og vil ikke benyttet dette i andre sammenhenger.
+        </li>
+
+        <li>
+          Annonser som inneholder eller henviser til informasjon som er ærekrenkende, rasistisk, truende, pornografisk eller annet i strid med norsk lov er forbudt.
+        </li>
+
+        <li>
+          Det er ikke tillatt å publisere annonser med kommersielle (reklame, salg av produkter eller tjenester, verving til organisasjoner og lignende) budskap. Vennligst benytt tjenestene for markedsannonser til dette.
+        </li>
+
+        <li>
+          DNT forbeholder seg retten til å endre eller slette annonser som etter DNTs oppfatning inneholder støtende eller annen upassende informasjon. Vi vil så langt det lar seg gjøre informere eieren av en annonse om hvorfor den er slettet.
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="span3">
+    {% include 'main/fjelltreffen/navigation.html' with active='about' %}
+  </div>
+
+</div>
+
+{% advertisement %}
+
+{% endblock %}

@@ -172,6 +172,9 @@ def show_report_sent(request, id):
     del request.session['fjelltreffen.report']
     return render(request, 'main/fjelltreffen/show_report_sent.html', context)
 
+def about(request):
+    return render(request, 'main/fjelltreffen/about.html')
+
 #
 # Actions for logged-in users (crud)
 #
