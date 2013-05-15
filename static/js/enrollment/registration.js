@@ -79,7 +79,10 @@ $(document).ready(function() {
     });
 
     $("form#registration").submit(function() {
-        adf.track(133425,2765715,{});
+        // The adform guys advised us to defer this call even though it probably shouldn't be
+        setTimeout(function() {
+            adf.track(133425,2765715,{});
+        }, 0);
     });
 
     if(window.trigger_form_validations) {
