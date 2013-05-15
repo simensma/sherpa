@@ -9,7 +9,8 @@ from admin.models import Image, Album
 from user.models import Profile
 
 from PIL.ExifTags import TAGS
-import random, Image as pil
+from PIL import Image as pil
+import random
 from cStringIO import StringIO
 from hashlib import sha1
 import json, simples3, logging, sys
