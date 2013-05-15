@@ -5,6 +5,7 @@ django-simple-captcha==0.3.7
 eventlet==0.12.1
 greenlet==0.4.0
 gunicorn==0.17.4
+ipython==0.13.2
 lxml==3.2.1
 psycopg2==2.5
 pylibmc==1.2.3
