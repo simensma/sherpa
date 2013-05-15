@@ -36,10 +36,15 @@ NORWAY_EMAIL_RECIPIENT = 'NOR-WAY Bussekspress AS <post@nor-way.no>'
 
 @login_required
 def home(request):
+    first_visit = 'minside.has_visited' not in request.session
+    if first_visit:
+        request.session['minside.has_visited'] = True
+
     now = datetime.now()
     context = {
         'year': now.year,
-        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START
+        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START,
+        'first_visit': first_visit
     }
     return render(request, 'common/user/account/home.html', context)
 

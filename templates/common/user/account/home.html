@@ -4,6 +4,7 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/membership/memberid_sms_userpage.js"></script>
+  <script src="{{ STATIC_URL }}js/user/home.js"></script>
 {% endblock %}
 
 {% load rowiterator %}
@@ -194,5 +195,34 @@
   {% endrowiterator %}
 
 </div>
+
+{# Temporary #}
+{% if first_visit %}
+  <div class="modal first-time-minside-visitor hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Velkommen til ny Min side!</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        Innholdet og tjenestene er stort sett som før, men utseende og oppsett er nytt. Vi har dessverre ikke fått på plass oversikt over dine påmeldinger til turer og aktiviteter, vennevervinger eller nyhetsbrev - vi jobber med både disse og nye tjenester.
+      </p>
+      <p>
+        Vi håper uansett du blir fornøyd med endringene.
+      </p>
+      <p>
+        <em>Hilsen oss på DNTs medlemsservice!</em>
+      </p>
+      <p>
+        Spørsmål? Ta gjerne kontakt med oss på 4000 1870 eller <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p>
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}
