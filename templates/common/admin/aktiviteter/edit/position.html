@@ -17,6 +17,15 @@
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
 {% endblock %}
 
+{% block js_globals %}
+  {% if aktivitet.start_point %}
+    <script>
+      window.start_point_lat = JSON.parse({{ aktivitet.get_start_point_lat_json }});
+      window.start_point_lng = JSON.parse({{ aktivitet.get_start_point_lng_json }});
+    </script>
+  {% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -40,6 +49,13 @@
         <h3>{{ aktivitet.title }}</h3>
         <p>{{ aktivitet.description|truncatewords:"30" }}</p>
       </div>
+
+      <form action="{% url 'admin.aktiviteter.views.edit_position' aktivitet.id %}" method="post" class="save-position">
+        {% csrf_token %}
+        <input type="hidden" name="lat" value="">
+        <input type="hidden" name="lng" value="">
+        <button type="submit" class="btn save">Lagre</button>
+      </form>
 
     </div>
   </div>

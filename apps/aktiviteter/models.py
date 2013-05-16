@@ -1,5 +1,5 @@
 # encoding: utf-8
-from django.db import models
+from django.contrib.gis.db import models
 
 from datetime import date
 import json
@@ -9,6 +9,7 @@ class Aktivitet(models.Model):
     co_association = models.ForeignKey('association.Association', null=True, related_name='+')
     title = models.CharField(max_length=255)
     description = models.TextField()
+    start_point = models.PointField(null=True)
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),
@@ -41,6 +42,12 @@ class Aktivitet(models.Model):
 
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
+
+    def get_start_point_lat_json(self):
+        return json.dumps(self.start_point.get_coords()[0])
+
+    def get_start_point_lng_json(self):
+        return json.dumps(self.start_point.get_coords()[1])
 
     def get_audiences(self):
         return json.loads(self.audiences)

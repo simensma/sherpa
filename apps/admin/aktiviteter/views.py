@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db.models import Q
+from django.contrib.gis.geos import Point
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag
@@ -102,10 +103,16 @@ def edit_description(request, aktivitet):
 
 def edit_position(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
-    context = {
-        'aktivitet': aktivitet
-    }
-    return render(request, 'common/admin/aktiviteter/edit/position.html', context)
+
+    if request.method == 'GET':
+        context = {
+            'aktivitet': aktivitet
+        }
+        return render(request, 'common/admin/aktiviteter/edit/position.html', context)
+    elif request.method == 'POST':
+        aktivitet.start_point = Point(float(request.POST['lat']), float(request.POST['lng']))
+        aktivitet.save()
+        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_position', args=[aktivitet.id]))
 
 def edit_dates(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
