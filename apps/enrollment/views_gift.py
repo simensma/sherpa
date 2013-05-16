@@ -34,7 +34,14 @@ def form(request):
             receiver.validate(request, add_messages=True)
 
     if 'type' in request.POST:
-        chosen_type = int(request.POST['type'])
+        # We had some error where type was set to the empty string. Not sure how
+        # that can happen (it was with Firefox 20.0), but the type isn't that
+        # important so just ignore this error.
+        # If you want to, see https://sentry.turistforeningen.no/turistforeningen/sherpa/group/127/events/
+        try:
+            chosen_type = int(request.POST['type'])
+        except ValueError:
+            chosen_type = None
     else:
         chosen_type = None
 
