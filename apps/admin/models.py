@@ -5,6 +5,8 @@ from django.conf import settings
 
 import simples3
 
+from page.models import *
+
 class Image(models.Model):
     key = models.CharField(max_length=8)
     extension = models.CharField(max_length=4)
@@ -35,6 +37,9 @@ class ImageRecovery(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='+')
+
+    def site_usage(self):
+        return Content.objects.filter(type='image', content__icontains='%s.%s' % (self.key, self.extension), column__row__version__variant__page__isnull=False)
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")

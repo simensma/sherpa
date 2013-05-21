@@ -18,6 +18,7 @@ from articles.models import Article, OldArticle
 from analytics.models import Search, NotFound
 from page.widgets import parse_widget, get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
+from admin.models import ImageRecovery
 
 variant_key = 'var'
 
@@ -224,3 +225,8 @@ def server_error(request, template_name='main/500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))
+
+def img(request):
+    images = ImageRecovery.objects.all()
+    context = {'images': images}
+    return render(request, 'common/page/img.html', context)
