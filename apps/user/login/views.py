@@ -78,6 +78,16 @@ def login(request):
                     context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
 
+                # Verify that they exist in the membersystem (this turned out to be an incorrect assumption)
+                if not Actor.objects.filter(memberid=old_member.memberid).exists():
+                    # We're not quite sure why this can happen, so we'll just give them the invalid
+                    # credentials message - but this might be confusing for those who were able to log
+                    # in previously.
+                    messages.error(request, 'invalid_credentials')
+                    context['next'] = request.GET.get('next')
+                    context['email'] = request.POST['email']
+                    return render(request, 'common/user/login/login.html', context)
+
                 # Create the new user
                 user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
