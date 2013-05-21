@@ -21,6 +21,21 @@ class Image(models.Model):
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
 
+class ImageRecovery(models.Model):
+    key = models.CharField(max_length=8)
+    extension = models.CharField(max_length=4)
+    hash = models.CharField(max_length=40)
+    description = models.TextField()
+    album = models.ForeignKey('admin.Album', null=True)
+    photographer = models.CharField(max_length=200)
+    credits = models.CharField(max_length=200)
+    licence = models.CharField(max_length=200)
+    exif = models.TextField()
+    uploaded = models.DateTimeField(auto_now_add=True)
+    width = models.IntegerField()
+    height = models.IntegerField()
+    tags = models.ManyToManyField('core.Tag', related_name='+')
+
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
