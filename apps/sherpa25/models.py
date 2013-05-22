@@ -77,6 +77,9 @@ class Member(models.Model):
     status = models.IntegerField(null=True)
     online = models.BooleanField()
 
+    def get_full_name(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
     class Meta:
         db_table = u'Member'
 

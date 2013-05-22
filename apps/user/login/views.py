@@ -15,13 +15,14 @@ from datetime import datetime, timedelta
 import json
 import logging
 import sys
+import hashlib
 
 from user.models import Profile
 from focus.models import Actor
 from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
 from core import validator
 from core.models import FocusCountry
-from sherpa25.models import import_fjelltreffen_annonser
+from sherpa25.models import Member, import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
@@ -277,8 +278,9 @@ def send_restore_password_email(request):
     local_match = User.objects.filter(email=request.POST['email'])
     local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
     focus_matches = Actor.objects.filter(memberid__in=local_members, email=request.POST['email'])
+    sherpa_matches = Member.objects.filter(email=request.POST['email']).exclude(memberid__in=local_members)
 
-    if len(local_match) == 0 and len(focus_matches) == 0:
+    if len(local_match) == 0 and len(focus_matches) == 0 and len(sherpa_matches) == 0:
         # No email-address matches.
         if Actor.objects.exclude(memberid__in=local_members).filter(email=request.POST['email']).exists():
             # Oh, the email address exists in Focus, but the user isn't in our user-base. Let them know.
@@ -301,17 +303,34 @@ def send_restore_password_email(request):
         )
         key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
 
+    # Recreate new password for all sherpa2 hits that don't have a local profile (old returning users)
+    for member in sherpa_matches:
+        sha1 = hashlib.sha1()
+        new_password = crypto.get_random_string(length=10)
+        sha1.update(new_password)
+        member.password = sha1.hexdigest()
+        member.save()
+
+    if len(sherpa_matches) > 0:
+        t = loader.get_template('common/user/login/restore-password-email-sherpa25.txt')
+        c = RequestContext(request, {
+            'member': member,
+            'new_password': new_password
+        })
+        send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
+
     all_matches = [u.get_profile() for u in local_match] + [Profile.objects.get(memberid=a.memberid) for a in focus_matches]
     for profile in all_matches:
         profile.password_restore_key = key
         profile.password_restore_date = datetime.now()
         profile.save()
 
-    t = loader.get_template('common/user/login/restore-password-email.txt')
-    c = RequestContext(request, {
-        'found_user': profile.user,
-        'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
+    if len(all_matches) > 0:
+        t = loader.get_template('common/user/login/restore-password-email.txt')
+        c = RequestContext(request, {
+            'found_user': profile.user,
+            'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
+        send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
