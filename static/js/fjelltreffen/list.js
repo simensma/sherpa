@@ -68,7 +68,10 @@ $(document).ready(function() {
 
         $.ajaxQueue({
             url: wrapper.attr('data-load-url'),
-            data: {filter: JSON.stringify(filter)}
+            data: {
+                filter: JSON.stringify(filter),
+                start_index: start_index
+            }
         }).done(function(result) {
             result = JSON.parse(result);
             var new_items = $(result.html.trim()).filter(function() { return this.nodeType != 3; }); // Filter out text nodes

@@ -47,11 +47,12 @@ def index(request):
         'first_visit': first_visit}
     return render(request, 'main/fjelltreffen/index.html', context)
 
-def load(request, start_index):
+def load(request):
     if not request.is_ajax() or request.method != 'POST':
         raise PermissionDenied
 
     filter = json.loads(request.POST['filter'])
+    start_index = request.POST['start_index']
 
     request.session['fjelltreffen.filter'] = {
         'minage': filter['minage'],
