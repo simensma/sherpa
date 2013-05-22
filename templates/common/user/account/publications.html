@@ -4,6 +4,8 @@
 
 {% load has_membership_type %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -88,5 +90,7 @@
     {% include 'common/user/account/navigation.html' with active='publications' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

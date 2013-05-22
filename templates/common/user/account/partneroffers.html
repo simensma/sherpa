@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
 {% endblock %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -69,5 +71,7 @@
     {% include 'common/user/account/navigation.html' with active='partneroffers' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

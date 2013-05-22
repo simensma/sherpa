@@ -2,6 +2,8 @@
 {% block title %}Fotobok &mdash; Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Fotobok</em>{% endblock %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -55,5 +57,7 @@
     {% include 'common/user/account/navigation.html' with active='fotobok' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

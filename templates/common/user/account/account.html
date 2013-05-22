@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% load has_membership_type %}
+{% load advertisement %}
 
 {% block body %}
 
@@ -262,5 +263,7 @@
     {% include 'common/user/account/navigation.html' with active='account' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

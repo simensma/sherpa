@@ -1,6 +1,7 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/update_account_nonmember.js"></script>
 {% endblock %}
@@ -10,6 +11,8 @@
     var user_password_length = {{ user_password_length }};
   </script>
 {% endblock %}
+
+{% load advertisement %}
 
 {% block body %}
 
@@ -89,5 +92,7 @@
     {% include 'common/user/account/navigation.html' with active='account' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

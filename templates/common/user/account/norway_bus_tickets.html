@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/user/norway_bus_tickets.js"></script>
 {% endblock %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -188,5 +190,7 @@
     {% include 'common/user/account/navigation.html' with active='norway_bus_tickets' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/user/publication.js"></script>
 {% endblock %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -94,5 +96,7 @@
     {% include 'common/user/account/navigation.html' with active='publications' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

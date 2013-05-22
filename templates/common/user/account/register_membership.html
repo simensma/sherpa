@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/user/register_membership.js"></script>
 {% endblock %}
 
+{% load advertisement %}
+
 {% block body %}
 
 <div class="row">
@@ -140,5 +142,7 @@
     {% include 'common/user/account/navigation.html' with active='register_membership' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}
