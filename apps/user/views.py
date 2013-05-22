@@ -416,7 +416,7 @@ def fotobok_eurofoto_request(request):
         ('phonemobile', profile.get_actor().phone_mobile if profile.get_actor().phone_mobile is not None else '',),
     ])
     sha1 = hashlib.sha1()
-    sha1.update('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, ''.join(payload.values())))
+    sha1.update(('%s%s'.decode('utf-8').encode('utf-8') % (settings.EUROFOTO_PRIVATE_KEY, ''.join(payload.values()))).encode('utf-8'))
     payload['signature'] = sha1.hexdigest()
 
     try:
