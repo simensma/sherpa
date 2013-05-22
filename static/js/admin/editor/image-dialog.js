@@ -20,7 +20,7 @@
                     clearTimeout(updaterId);
                 }
                 updaterId = setTimeout(function() {
-                    if(typeof currentCropperInstance !== 'undefined') {
+                    if(currentCropperInstance !== undefined) {
                         currentCropperInstance.update();
                     }
                 }, 200);
@@ -30,10 +30,10 @@
         imageDialog.find("div#ratio-radio").append(getRatioRadioButtons());
 
         imageDialog.find("button.choose-image").click(function() {
-            chooseImagefromArchive(inputDataFromSource);
+            ImageArchivePicker.pick(inputDataFromSource);
         });
         imageDialog.find("button.upload-image").click(function() {
-            openImageUpload(inputDataFromSource);
+            ImageUploadDialog.open(inputDataFromSource);(inputDataFromSource);
         });
 
         function inputDataFromSource(url, description, photographer) {
@@ -124,6 +124,19 @@
 
         imageDialog.find("input[name='ratio']").change(function() {
             setImageRatio(true);
+        });
+
+        var photographer = imageDialog.find("div.image-details input[name='photographer']");
+        photographer.typeahead({
+            minLength: 3,
+            source: function(query, process) {
+                $.ajaxQueue({
+                    url: photographer.attr('data-source-url'),
+                    data: { name: query }
+                }).done(function(result) {
+                    process(JSON.parse(result));
+                });
+            }
         });
     });
 

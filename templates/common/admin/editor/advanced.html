@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<article>
+<article data-add-columns-url="{% url 'admin.cms.views.row.add_columns' %}" data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
 
 {% for row in rows %}
 <div class="row-fluid" data-id="{{ row.id }}">
@@ -100,8 +100,8 @@
 {% include 'main/widgets/fact/edit.html' %}
 
 {# Other dialogs #}
-{% include 'common/admin/editor/image-from-archive-dialog.html' %}
-{% include 'common/admin/editor/image-fast-upload-dialog.html' %}
+{% include 'common/admin/images/util/image-archive-picker.html' %}
+{% include 'common/admin/images/util/image-upload-dialog.html' %}
 {% include 'common/admin/editor/image-dialog.html' %}
 {% include 'common/admin/editor/button-dialog.html' %}
 {% include 'common/admin/editor/toolbar.html' %}

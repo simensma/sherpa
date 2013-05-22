@@ -1,48 +1,50 @@
 $(document).ready(function() {
 
-    $("form#household img.ajaxloader").hide();
-    $("form#household select[name='country']").chosen();
+    var form = $("form#household");
+
+    form.find("img.ajaxloader").hide();
+    form.find("select[name='country']").chosen();
 
     // Zipcode-validations
-    var zipcode_control_group = $("form#household div.control-group.zipcode");
-    var zipcode = $("form#household input[name='zipcode']");
-    var area = $("form#household input[name='area']");
-    var loader = $("form#household img.zip.ajaxloader");
+    var zipcode_control_group = form.find("div.control-group.zipcode");
+    var zipcode = form.find("input[name='zipcode']");
+    var area = form.find("input[name='area']");
+    var loader = form.find("img.zip.ajaxloader");
 
-    $("form#household select[name='country']").change(function() {
+    form.find("select[name='country']").change(function() {
         setAddressState(false);
     });
     setAddressState(true);
     function setAddressState(first) {
-        var sel = $("form#household select[name='country'] option:selected");
+        var sel = form.find("select[name='country'] option:selected");
         if(sel.val() == 'NO') {
-            $("form#household div.world").hide();
-            $("form#household div.scandinavia").show();
-            $("form#household div.yearbook").hide();
+            form.find("div.world").hide();
+            form.find("div.scandinavia").show();
+            form.find("div.yearbook").hide();
             area.attr('disabled', true);
             Validator.validateZipcode(zipcode_control_group, zipcode, area, loader);
             if(!first || (first && zipcode.val() != '')) {
                 Validator.triggerZipcode(zipcode);
             }
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
-            $("form#household div.world").hide();
-            $("form#household div.scandinavia").show();
-            $("form#household div.yearbook").show();
+            form.find("div.world").hide();
+            form.find("div.scandinavia").show();
+            form.find("div.yearbook").show();
             area.removeAttr('disabled');
             Validator.stopZipcodeValidation(zipcode);
             zipcode.focusout();
         } else {
-            $("form#household div.world").show();
-            $("form#household div.scandinavia").hide();
-            $("form#household div.yearbook").show();
+            form.find("div.world").show();
+            form.find("div.scandinavia").hide();
+            form.find("div.yearbook").show();
         }
     }
 
-    $("form#household input").focus(function() {
+    form.find("input").focus(function() {
         $(this).parents("div.control-group").removeClass('error warning success');
     });
 
-    $("form#household input[name='address1']").focusout(function() {
+    form.find("input[name='address1']").focusout(function() {
         if($(this).val() == "") {
             $(this).parents("div.control-group").addClass('error');
         } else {
@@ -50,12 +52,12 @@ $(document).ready(function() {
         }
     });
 
-    $("form#household input[name='address2'], form#household input[name='address3']").focusout(function() {
+    form.find("input[name='address2'], input[name='address3']").focusout(function() {
         $(this).parents("div.control-group").addClass('success');
     });
 
     zipcode.focusout(function() {
-        if($("form#household select[name='country'] option:selected").val() != 'NO') {
+        if(form.find("select[name='country'] option:selected").val() != 'NO') {
             if($(this).val() == '' || area.val() == '') {
                 zipcode_control_group.removeClass('success').addClass('error');
             } else {
@@ -72,30 +74,30 @@ $(document).ready(function() {
         }
     });
 
-    $("form#household").submit(function(e) {
+    form.submit(function(e) {
         if($(this).find("input[name='address1']").val() == '' &&
-           $("form#household select[name='country'] option:selected").val() == 'NO' &&
+           form.find("select[name='country'] option:selected").val() == 'NO' &&
            !confirm("Har du glemt å fylle ut gateadressen?\n\nHvis du ikke har gateadresse, klikker du bare OK for å gå videre.")) {
                 e.preventDefault();
         }
     });
 
     /* Existing */
-    $("form#household button.search").click(function(e) {
+    form.find("button.search").click(function(e) {
         e.preventDefault();
         $("div.existing-result").show();
         var button = $(this);
         button.attr('disabled', true);
-        $("form#household img.existing.ajaxloader").show();
+        form.find("img.existing.ajaxloader").show();
         var data = {
-            id: $("form#household input[name='existing']").val(),
-            zipcode: $("form#household input[name='zipcode']").val(),
-            country: $("form#household select[name='country'] option:selected").val()
+            id: form.find("input[name='existing']").val(),
+            zipcode: form.find("input[name='zipcode']").val(),
+            country: form.find("select[name='country'] option:selected").val()
         }
         $("div.existing-result span.result").hide();
         $("div.existing-result span.result").removeClass('success error');
-        $.ajax({
-            url: '/innmelding/eksisterende/',
+        $.ajaxQueue({
+            url: form.attr('data-existing-url'),
             data: { data: JSON.stringify(data) }
         }).done(function(result) {
             result = JSON.parse(result);
@@ -128,19 +130,19 @@ $(document).ready(function() {
             // Todo
         }).always(function() {
             button.removeAttr('disabled');
-            $("form#household img.existing.ajaxloader").hide();
+            form.find("img.existing.ajaxloader").hide();
             $("div.existing-result span.result").show();
         });
     });
 
     if(existing) {
-        $("form#household button.search").click();
+        form.find("button.search").click();
     } else {
         $("div.existing-result").hide();
     }
 
     if(window.trigger_form_validations) {
-        $("form#household input").focusout();
+        form.find("input").focusout();
         Validator.triggerZipcode(zipcode);
     }
 });

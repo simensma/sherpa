@@ -113,7 +113,7 @@ function calculatePrices() {
         if(!$(this).hasClass('main') && $(this).siblings(".main").length > 0) {
             if(price > price_household) {
                 price = price_household;
-                type = "Husstandsmedlem";
+                type = membership_type_names.household;
             }
         }
         $(this).find("td.type").text(type);
@@ -132,9 +132,9 @@ function priceOf(age) {
 }
 
 function typeOf(age) {
-    if(age >= age_senior)       return 'Honnørmedlem';
-    else if(age >= age_main)    return 'Hovedmedlem';
-    else if(age >= age_youth)   return 'Ungdomsmedlem';
-    else if(age >= age_school)  return 'Skoleungdomsmedlem';
-    else                        return 'Barnemedlem';
+    if(age >= age_senior)       return membership_type_names.senior;
+    else if(age >= age_main)    return membership_type_names.main;
+    else if(age >= age_youth)   return membership_type_names.youth;
+    else if(age >= age_school)  return membership_type_names.school;
+    else                        return membership_type_names.child;
 }

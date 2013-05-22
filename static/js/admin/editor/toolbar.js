@@ -28,7 +28,7 @@ $(document).ready(function() {
         var styleClass = toolbar.find("select.formatting option:selected").val();
         $(this).val("default");
 
-        if(typeof selection === "undefined" || selection.rangeCount === 0) {
+        if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
             return $(this);
@@ -74,14 +74,14 @@ $(document).ready(function() {
                     start.next().attr('data-special-case-tmp-2', '');
                     var match = /(.*)<.*?data-special-case-tmp.*?>(.*)<.*?data-special-case-tmp-2.*?>(.*)/.exec(container.html());
                     var clone = container.clone().html(match[3]);
-                    if(typeof content !== 'undefined') {
+                    if(content !== undefined) {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2], '<br>', clone);
                 } else {
                     // Breaks are *only* before
                     var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
-                    if(typeof content !== 'undefined') {
+                    if(content !== undefined) {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2]);
@@ -90,14 +90,14 @@ $(document).ready(function() {
                 // Breaks are *only* after
                 start.next().attr('data-special-case-tmp', '');
                 var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
-                if(typeof content !== 'undefined') {
+                if(content !== undefined) {
                     match[1] = content[0] + match[1] + content[1];
                 }
                 container.html(match[2]).before(match[1], '<br>');
             } else {
                 // No mozilla madness, just remove the containernode <3
                 var text = container.text();
-                if(typeof content !== 'undefined') {
+                if(content !== undefined) {
                     text = content[0] + text + content[1];
                 }
                 container.replaceWith(text);
@@ -195,7 +195,7 @@ $(document).ready(function() {
 
         // Also do some extra custom cleanup:
 
-        if(typeof selection === "undefined" || selection.rangeCount === 0) {
+        if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
             return $(this);

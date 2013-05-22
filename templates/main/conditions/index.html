@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {% block title %}Føremeldinger{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'conditions.views.index' %}">Føremeldinger</a></em>{% endblock %}
 {% block extra_js %}
@@ -57,5 +59,7 @@
     </div>
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

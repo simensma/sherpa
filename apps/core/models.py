@@ -34,3 +34,12 @@ class FocusCountry(models.Model):
     code = models.CharField(max_length=2)
     name = models.CharField(max_length=255)
     scandinavian = models.BooleanField()
+
+    @staticmethod
+    def get_sorted():
+        countries = FocusCountry.objects.all()
+        return {
+            'norway': countries.get(code='NO'),
+            'scandinavia': countries.filter(scandinavian=True).exclude(code='NO'),
+            'other': countries.filter(scandinavian=False)
+        }

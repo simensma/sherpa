@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% load advertisement %}
+
 {% block title %}Fjelltreffen{% endblock %}
 
 {% block breadcrumb %}
@@ -15,11 +17,12 @@
 <div class="row">
   <div class="span9">
 
-    <div class="fjelltreffen-list" data-start-index="{{ start_index }}">
+    <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url 'fjelltreffen.views.load' start_index %}">
       <h2>Fjelltreffen</h2>
 
       <p>
-        Velkommen til nye fjelltreffen! Hvis du har annonser på gamle fjelltreffen blir de automatisk lagt inn her når du <a href="{% url 'user.views.home_new' %}">logger inn</a>.
+        På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
+        Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
       </p>
 
       {% include 'main/fjelltreffen/filter.html' %}
@@ -30,15 +33,27 @@
 
       <div class="load-more">
         <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-        <button class="btn btn-large load{% if end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
+        <button class="btn btn-large load{% if annonser|length == 0 or end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
       </div>
 
       <div class="no-matches alert alert-error{% if annonser|length > 0 %} hide{% endif %}">
-        Fant ingen treff på dette søket - prøv å endre søkekriteriene dine.
+        Vi fant ingen annonser på dette søket - prøv å endre søkekriteriene dine.<br>
+
+        {# Temporary #}
+        I en overgangsperiode finner du også annonser på <a href="https://www2.turistforeningen.no/fjelltreffen">de gamle Fjelltreffen-sidene</a>.<br>
+
+        Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
+        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
       </div>
 
-      <div class="no-further-matches alert alert-error hide">
-        Dette var alle annonsene som matchet søket ditt.
+      <div class="no-further-matches alert alert-error{% if annonser|length == 0 or not end %} hide{% endif %}">
+        Dette var alle annonsene som passet søket ditt. Endre søkekriteriene for å finne flere eller færre annonser.<br>
+
+        {# Temporary #}
+        I en overgangsperiode finner du også annonser på <a href="https://www2.turistforeningen.no/fjelltreffen">de gamle Fjelltreffen-sidene</a>.<br>
+
+        Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
+        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
       </div>
     </div>
   </div>
@@ -48,5 +63,36 @@
   </div>
 
 </div>
+
+{% advertisement %}
+
+{# Temporary #}
+{% if first_visit %}
+  <div class="modal first-time-fjelltreffen-visitor hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Fjelltreffen har fått ny drakt!</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        Vi har flyttet Fjelltreffen fra våre gamle til våre nye nettsider. Tjenesten ser litt annerledes ut enn før, men du kan som vanlig søke i annonser eller legge inn din egen annonse.
+      </p>
+
+      <p>
+        <a href="https://www2.turistforeningen.no/fjelltreffen">De gamle Fjelltreffen-sidene</a> vil være tilgjengelige en liten stund fremover. Her kan du finne og svare på annonser som er lagt inn tidligere.
+      </p>
+
+      <p>
+        <strong>Har du annonse på de gamle sidene?</strong><br>
+        Hvis du har annonser på de gamle Fjelltreffen-sidene vil disse bli oppdatert og flyttet over til nye Fjelltreffen når du logger deg på <a href="{% url 'user.views.home' %}">Min side</a>.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p>
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}

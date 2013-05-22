@@ -11,7 +11,7 @@
     </div>
     <div class="alert alert-error upload-unknown-exception hide">
       <a class="close">x</a>
-      Det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
+      Beklager, det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
     <form class="image-uploader" action="{% url 'admin.images.views.upload_image' %}" method="post" enctype="multipart/form-data" target="iframe">
@@ -38,10 +38,7 @@
   </div>
 
   <div class="span6">
-    <div class="alert alert-error licencing">
-      <strong>Lisensiering</strong><br>
-      Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
-    </div>
+    {% include 'common/admin/images/util/licencing.html' %}
 
     <div class="image-details hide">
       <h2>Fyll inn bildeinformasjon</h2>
@@ -57,7 +54,7 @@
         <div class="control-group">
           <label class="control-label" for="image-photographer">Fotograf:</label>
           <div class="controls">
-            <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." id="image-photographer">
+            <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." id="image-photographer" data-source-url="{% url 'admin.images.views.photographer' %}">
           </div>
         </div>
 

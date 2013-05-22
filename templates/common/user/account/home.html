@@ -1,0 +1,228 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'user.views.home' %}">Min side</a></em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms_userpage.js"></script>
+  <script src="{{ STATIC_URL }}js/user/home.js"></script>
+{% endblock %}
+
+{% load rowiterator %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <h2>Min side</h2>
+
+    {% for message in messages %}
+      {% if message.message == 'password_reset_success' %}
+        <div class="alert alert-success">
+          Velkommen tilbake {{ user.get_profile.get_full_name }}, passordet ditt har blitt endret og du er nå innlogget.
+        </div>
+      {% elif message.message == 'password_update_success' %}
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Passordet ditt har blitt endret.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="user-home-account form-border form-horizontal">
+
+      <table>
+        <tr>
+          <th>Deg:</th>
+          <td>{{ user.get_profile.get_full_name }}</td>
+        </tr>
+        {% if user.get_profile.is_member %}
+          <tr>
+            <th>Medlemsnummer:</th>
+            <td>
+              {{ user.get_profile.memberid }}
+              {% include 'main/membership/memberid_sms/userpage.html' %}
+            </td>
+          </tr>
+          <tr>
+            <th>Ditt medlemskap:</th>
+            <td>
+              {% if user.get_profile.get_actor.has_paid %}
+                Betalt for
+                {% if next_year %}
+                  {{ year|add:"1" }}
+                {% else %}
+                  {{ year }}
+                {% endif %}
+              {% else %}
+                Ikke betalt for
+                {% if next_year %}
+                  {{ year|add:"1" }}
+                {% else %}
+                  {{ year }}
+                {% endif %}
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>Din medlemsforening:</th>
+            <td>
+              {% if user.get_profile.get_actor.main_association.site %}<a href="http://{{ user.get_profile.get_actor.main_association.site.domain }}/">{% endif %}
+                {{ user.get_profile.get_actor.main_association.name }}
+              {% if user.get_profile.get_actor.main_association.site %}</a>{% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <th>Ditt medlemskap:</th>
+            <td>
+              Du er ikke DNT-medlem.<br>
+              <a href="{% url 'user.views.register_membership' %}">Registrer ditt medlemskap</a>
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="user-home-navigation">
+
+  {% rowiterator 3 %}
+    {% if perms.user.sherpa %}
+      {% column %}
+        <a href="{% url 'admin.views.index' %}" class="element">
+          <p class="title">Gå til Sherpa</p>
+          <p>
+            Her kan du redigere nettsider og oppdatere informasjon om aktiviteter, hytter og turer.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% column %}
+      <a href="{% url 'user.views.account' %}" class="element">
+        <p class="title">Endre dine opplysninger</p>
+        <p>
+          Her kan du endre dine kontaktopplysninger og se detaljer om ditt medlemskap.
+        </p>
+      </a>
+    {% endcolumn %}
+
+    {% column %}
+      <a href="{% url 'user.views.account_password' %}" class="element">
+        <p class="title">Endre ditt passord</p>
+        <p>
+          Her kan du endre passordet du bruker for å logge deg på Min side.
+        </p>
+      </a>
+    {% endcolumn %}
+
+    {% if user.get_profile.is_member %}
+      {% column %}
+        <a href="{% url 'user.views.publications' %}" class="element">
+          <p class="title">Publikasjoner</p>
+          <p>
+            Les eller last ned Fjell og Vidde, årbøker, UT og andre publikasjoner.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% if user.get_profile.is_member %}
+      {% column %}
+        <a href="{% url 'membership.views.benefits' user.get_profile.get_actor.main_association.id %}" class="element">
+          <p class="title">Dine medlemsfordeler</p>
+          <p>
+            Se oversikt over alle fordelene du får gjennom ditt DNT-medlemskap.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% if user.get_profile.is_member %}
+      {% column %}
+        <a href="{% url 'user.views.partneroffers' %}" class="element">
+          <p class="title">Motta medlemsfordeler</p>
+          <p>
+            Velg om du vil motta medlemsfordeler fra DNTs samarbeidspartnere.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
+      {% column %}
+        <a href="{% url 'user.views.norway_bus_tickets' %}" class="element">
+          <p class="title">Bestill bussbillett</p>
+          <p>
+            Nye medlemmer kan bestille rabattkort med 50% rabatt på bussbillett fra NOR-WAY.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% column %}
+      <a href="{% url 'enrollment.views_gift.index' %}" class="element">
+        <p class="title">Bestill gavemedlemskap</p>
+        <p>
+          Gi bort et medlemskap i DNT til noen du er glad i. Bestill gavemedlemskap her.
+        </p>
+      </a>
+    {% endcolumn %}
+
+    {% if user.get_profile.fjelltreffen_annonser.count > 0 %}
+      {% column %}
+        <a href="{% url 'fjelltreffen.views.mine' %}" class="element">
+          <p class="title">Fjelltreffen</p>
+          <p>
+            Her finner du oversikt over dine Fjelltreffen-annonser.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+
+    {% if user.get_profile.is_member %}
+      {% column %}
+        <a href="{% url 'user.views.fotobok' %}" class="element">
+          <p class="title">Bestill fotoprodukter</p>
+          <p>
+            Her kan du bestille fotoprodukter fra Eurofoto til rabatterte priser.
+          </p>
+        </a>
+      {% endcolumn %}
+    {% endif %}
+  {% endrowiterator %}
+
+</div>
+
+{# Temporary #}
+{% if first_visit %}
+  <div class="modal first-time-minside-visitor hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Velkommen til ny Min side!</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        Innholdet og tjenestene er stort sett som før, men utseende og oppsett er nytt. Vi har dessverre ikke fått på plass oversikt over dine påmeldinger til turer og aktiviteter, vennevervinger eller nyhetsbrev - vi jobber med både disse og nye tjenester.
+      </p>
+      <p>
+        Vi håper uansett du blir fornøyd med endringene.
+      </p>
+      <p>
+        <em>Hilsen oss på DNTs medlemsservice!</em>
+      </p>
+      <p>
+        Spørsmål? Ta gjerne kontakt med oss på 4000 1870 eller <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p>
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

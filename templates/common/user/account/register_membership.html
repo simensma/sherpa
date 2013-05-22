@@ -1,0 +1,144 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.register_membership' %}">Registrer medlemskap</a></em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/register_membership.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Registrer medlemskap</h2>
+
+    <p>
+      Hvis du er medlem i DNT bør du koble profilen din til medlemssystemet.
+    </p>
+
+    <form action="{% url 'user.views.register_membership' %}" method="post" class="form-default form-border form-horizontal register-membership" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
+      {% csrf_token %}
+      <input type="hidden" name="email-equal" value="">
+
+      <div class="form-elements">
+
+        <div class="step1">
+          <div class="control-group memberid">
+            <label class="control-label" for="memberid">Medlemsnummer:</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" name="memberid" id="memberid">
+            </div>
+          </div>
+
+          <div class="control-group zipcode">
+            <label class="control-label" for="zipcode">Postnummer:</label>
+            <div class="controls">
+              <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
+              <input type="text" class="input-medium" name="area" disabled>
+              <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+            </div>
+          </div>
+
+          <div class="control-group country">
+            <label class="control-label" for="country">Land:</label>
+            <div class="controls">
+              <select name="country" id="country" data-chosen>
+                <optgroup id="scandinavia" label="Scandinavia">
+                  <option value="{{ countries.norway.code }}" selected>{{ countries.norway.name }}</option>
+                  {% for c in countries.scandinavia %}
+                    <option value="{{ c.code }}">{{ c.name }}</option>
+                  {% endfor %}
+                </optgroup>
+                <optgroup id="world" label="Rest of world">
+                  {% for c in countries.other %}
+                    <option value="{{ c.code }}">{{ c.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="step2 hide">
+          <div class="control-group email" data-email="{{ user.get_profile.get_email }}">
+            <label class="control-label">E-postadresse:</label>
+            <div class="controls">
+              <div class="hints">
+                Du har forskjellige e-postadresser i Min side og medlemsregisteret, vennligst velg hvilken adresse du vil bruke:
+              </div>
+
+              <label class="radio">
+                <input type="radio" name="email-choice" value="sherpa">
+                <span class="preselected-email sherpa"></span>
+              </label>
+
+              <label class="radio">
+                <input type="radio" name="email-choice" value="focus" checked>
+                <span class="preselected-email focus"></span>
+              </label>
+
+              <label class="radio">
+                <input type="radio" name="email-choice" value="custom">
+                <input type="text" class="input-xlarge" name="email" placeholder="Velg en annen adresse..." disabled>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-error no-memberid-match hide">
+        <strong>Ukjent bruker</strong><br>
+        Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
+      </div>
+
+      <div class="alert alert-error memberid-lookups-exceeded hide">
+        <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+        Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+      </div>
+
+      <div class="alert alert-error profile-exists hide">
+        <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
+        Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
+      </div>
+
+      {% for message in messages %}
+        {% if message.message == 'invalid_memberid' %}
+          <div class="alert alert-error">
+            <strong>Feil medlemsnummer eller postnummer</strong><br>
+            Beklager, det finnes ingen som har det medlemsnummeret og postnummeret. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
+          </div>
+        {% elif message.message == 'memberid_lookups_exceeded' %}
+          <div class="alert alert-error">
+            <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
+            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+          </div>
+        {% elif message.message == 'profile_exists' %}
+          <div class="alert alert-error">
+            <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
+            Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du <a href="{% url 'user.login.views.logout' %}">logge ut</a> først).
+          </div>
+        {% elif message.message == 'invalid_email' %}
+          <div class="alert alert-error">
+            <strong>E-postadressen din er ikke gyldig!</strong><br>
+            Vennligst oppgi en gyldig e-postadresse.
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </form>
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' with active='register_membership' %}
+  </div>
+</div>
+
+{% endblock %}

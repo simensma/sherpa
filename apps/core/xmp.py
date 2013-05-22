@@ -1,3 +1,7 @@
+def find_keywords(data):
+    xmp_dict = parse_xmp(data)
+    return keywords(xmp_dict) if xmp_dict is not None else []
+
 def keywords(xmp):
     if 'dc' in xmp:
         if 'subject' in xmp['dc']:

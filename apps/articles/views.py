@@ -31,8 +31,7 @@ def index(request):
     versions = versions[:NEWS_ITEMS_BULK_SIZE]
     for version in versions:
         version.load_preview()
-    context = {'versions': versions, 'tag': request.GET.get('tag', ''),
-        'advertisement': AdPlacement.get_active_ad()}
+    context = {'versions': versions, 'tag': request.GET.get('tag', '')}
     return render(request, 'common/page/articles-list.html', context)
 
 # Note: This is probably not compatible with the tag search
@@ -91,8 +90,8 @@ def show(request, article, text):
             row.columns = columns
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
-    context['advertisement'] = AdPlacement.get_active_ad()
     return render(request, 'common/page/article.html', context)
+
 
 def show_old(request, article, text):
     # TODO - HACK:
@@ -113,5 +112,4 @@ def show_old(request, article, text):
             cache.set('old_articles.%s' % article.id, context, 60 * 60 * 24 * 30)
         except OldArticle.DoesNotExist:
             raise Http404
-    context['advertisement'] = AdPlacement.get_active_ad()
     return render(request, 'common/page/article_old.html', context)

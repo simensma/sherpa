@@ -1,0 +1,143 @@
+/* Generic markup-styles and mixins */
+
+@profile-red: rgb(216, 45, 32);
+
+.rounded-corners (@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.form-border {
+  padding: 14px 20px;
+  border: 1px solid rgb(221, 221, 221);
+  margin-bottom: 20px;
+}
+
+.input-button-align {
+  // Note, there's a few places this is still done specifically for each element
+  // (But use this one from now on, and if you find any replace them with this one)
+  margin-bottom: 9px;
+}
+
+form.form-horizontal label.control-label {
+  font-family: "DTL Nobel" !important;
+}
+
+.custom-tooltip {
+  font-family: "DTL Nobel" !important;
+  font-size: 16px;
+  position: absolute;
+  z-index: 10000;
+}
+
+.well.nav-container {
+  padding: 8px 0;
+}
+
+.square-well {
+  background-color: rgb(240, 240, 240);
+  padding: 15px 20px;
+}
+
+div.association-logo {
+  @img-width: 59px;
+  @img-height: 56px;
+
+  display: inline-block;
+  height: @img-height;
+  font-family: "DTL Nobel" !important;
+  font-size: 17px;
+  margin-left: auto;
+  margin-right: auto;
+  background: @profile-red url('/static/img/header-logo-part.png') top right no-repeat;
+  height: @img-height;
+  white-space: nowrap;
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  a, span {
+    @padding-top: 15px;
+    @padding-horizontal: 16px;
+
+    display: block;
+    margin: 0;
+    padding-top: @padding-top;
+    padding-right: @img-width + @padding-horizontal;
+    padding-left: @padding-horizontal;
+    color: white;
+    height: @img-height - @padding-top;
+  }
+}
+
+div.association-logo.jubilee {
+  // Special jubilee background on the logo for DNT ung (25 years 2013)
+  background: url('/static/img/header-logo-part.png') top right no-repeat, url('/static/img/ung_25.png') center left no-repeat !important;
+  background-color: @profile-red !important;
+}
+
+div.association-logo.left {
+  float: left;
+}
+
+div.association-logo.right {
+  float: right;
+}
+
+select.chosen, select[data-chosen] {
+  /* General width for chosen-selects, some may require other specific widths */
+  width: 400px;
+  max-width: 100%;
+}
+
+div.infinite-scroll-loader {
+  font-family: "DTL Nobel" !important;
+  font-size: 20px;
+  text-align: center;
+  .form-border;
+}
+
+div.infinite-loader {
+  text-align: center;
+
+  div.loading {
+    text-align: center;
+    color: rgb(95, 95, 95);
+    font-family: "DTL Nobel" !important;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+div.tag-box {
+
+  div.tag {
+    float: left;
+    color: #3e6d8e;
+    background: #e0eaf1;
+    border-bottom: 1px solid #3e6d8e;
+    border-right: 1px solid #7f9fb6;
+    margin: 2px 3px 10px 3px;
+    padding: 3px 4px;
+
+    a {
+      /* This will look ugly in IE7 (100% width), but ignore that as the functionality is
+       * still there and people should upgrade anyway. */
+      cursor: pointer;
+      float: right;
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+    }
+  }
+
+  div.tag[data-href]:hover {
+    cursor: pointer;
+    color: #e0eaf1;
+    background-color: #3e6d8e;
+  }
+}

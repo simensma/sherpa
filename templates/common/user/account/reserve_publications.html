@@ -1,0 +1,120 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Les magasiner på nett — Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>Les magasiner på nett</em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Hvordan ønsker du å lese Fjell og Vidde og årboken?</h2>
+
+    <p>
+      Her kan du velge å lese Fjell og Vidde og årboken på nett i stedet for å få det tilsendt.
+    </p>
+
+    <div class="form-border user-reservations">
+
+      <h3>Fjell og Vidde</h3>
+      <table class="user-reservations fjellogvidde" data-url="{% url 'user.views.reserve_fjellogvidde' %}">
+        <tr class="choice">
+          <td>
+            <input type="radio" name="fjellogvidde" value="allow"{% if not user.get_profile.get_actor.get_reserved_against_fjellogvidde %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker Fjell og Vidde tilsendt hjem til meg
+          </td>
+        </tr>
+        <tr class="choice">
+          <td>
+            <input type="radio" name="fjellogvidde" value="reserve"{% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker ikke Fjell og Vidde tilsendt, men leser det på nett
+          </td>
+        </tr>
+
+        <tr class="status loading hide">
+          <td></td>
+          <td>
+            Lagrer ditt valg, vennligst vent...<br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="status success hide">
+          <td></td>
+          <td>
+            <div class="alert alert-success">
+              <strong>Oppdateringen er registrert.</strong><br>
+              <span class="success reserve">Du vil nå <strong>ikke</strong> motta Fjell og Vidde.</span>
+              <span class="success allow">Du vil nå motta Fjell og Vidde.</span>
+            </div>
+          </td>
+        </tr>
+        <tr class="status error hide">
+          <td></td>
+          <td>
+            <div class="alert alert-error">
+              Oppdateringen feilet! Vennligst prøv igjen om et par minutter, eller ring medlemsservice hvis problemet vedvarer.
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h3>Årboken</h3>
+      <table class="user-reservations yearbook" data-url="{% url 'user.views.reserve_yearbook' %}">
+        <tr class="choice">
+          <td>
+            <input type="radio" name="yearbook" value="allow"{% if not user.get_profile.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker årboken tilsendt hjem til meg
+          </td>
+        </tr>
+        <tr class="choice">
+          <td>
+            <input type="radio" name="yearbook" value="reserve"{% if user.get_profile.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Jeg ønsker ikke årboken tilsendt, men leser den på nett
+          </td>
+        </tr>
+
+        <tr class="status loading hide">
+          <td></td>
+          <td>
+            Lagrer ditt valg, vennligst vent...<br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="status success hide">
+          <td></td>
+          <td>
+            <div class="alert alert-success">
+              <strong>Oppdateringen er registrert.</strong><br>
+              <span class="success reserve">Du vil nå <strong>ikke</strong> motta årboken.</span>
+              <span class="success allow">Du vil nå motta årboken.</span>
+            </div>
+          </td>
+        </tr>
+        <tr class="status error hide">
+          <td></td>
+          <td>
+            <div class="alert alert-error">
+              Oppdateringen feilet! Vennligst prøv igjen om et par minutter, eller ring medlemsservice hvis problemet vedvarer.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' with active='publications' %}
+  </div>
+</div>
+
+{% endblock %}

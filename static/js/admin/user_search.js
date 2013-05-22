@@ -7,41 +7,44 @@ $(document).ready(function() {
         var loader = table.find("tr.loader");
         var initial = table.find("tr.initial");
         var no_hits = table.find("tr.no-hits");
+        var short_query = table.find("tr.short_query");
+        var error = table.find("tr.error");
         var result_mirror = no_hits.find("span.result-mirror");
-        var MIN_LENGTH = 3;
 
-        var search_id;
-        var previous_query = "";
-        search_input.keyup(search_soon);
-        search_button.click(search_soon);
-
-        function search_soon() {
-            var query = search_input.val();
-            if(query.length < MIN_LENGTH || query == previous_query) {
-                return;
+        search_input.keyup(function(e) {
+            if(e.which == 13) { // Enter
+                search();
             }
-            previous_query = query;
+        });
+        search_button.click(search);
+
+        function search() {
             loader.show();
             no_hits.hide();
             initial.hide();
+            short_query.hide();
+            error.hide();
             table.find("tr.result").remove();
-            clearInterval(search_id);
-            search_id = setTimeout(search, 1000);
-        }
-
-        function search() {
             var query = search_input.val();
+            if(query.length < admin_user_search_char_length) {
+                short_query.show();
+                loader.hide();
+                return;
+            }
             $.ajaxQueue({
-                url: '/sherpa/brukere/søk/',
+                url: table.attr('data-search-url'),
                 data: { q: query }
             }).done(function(result) {
-                if(result.trim() == '') {
+                table.find("tr.result").remove();
+                if(result.trim() === '') {
                     result_mirror.text(query);
                     no_hits.show();
                 } else {
                     table.append(result);
                 }
             }).fail(function(result) {
+                table.find("tr.result").remove();
+                error.show();
             }).always(function(result) {
                 loader.hide();
             });

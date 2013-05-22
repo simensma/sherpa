@@ -15,6 +15,7 @@ LOGIN_URL = '/minside/logg-inn/'
 AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_FJELLTREFFEN_IMAGES_PREFIX = 'fjelltreffen'
+AWS_PUBLICATIONS_PREFIX = 'publications'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
@@ -41,7 +42,7 @@ FJELLTREFFEN_ANNONSE_RETENTION_DAYS = 90 # How long fjelltreffen-annonser are sh
 FJELLTREFFEN_AGE_LIMITS = [18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80] # Age queries are rounded to these values
 FJELLTREFFEN_AGE_LIMIT = min(FJELLTREFFEN_AGE_LIMITS)
 FJELLTREFFEN_REPORT_EMAIL = 'DNT medlemsservice <medlem@turistforeningen.no>'
-FJELLTREFFEN_BULKLOADNUM = 20 #annonser to load when a user requests more
+FJELLTREFFEN_BULK_COUNT = 20 # Annonser to load when a user requests more
 FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
 CAPTCHA_FLITE_PATH = '/usr/bin/flite'
 CAPTCHA_FONT_SIZE = 50
@@ -70,6 +71,7 @@ USE_L10N = True
 STATIC_URL = '/static/'
 
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
+AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -107,7 +109,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.menus",
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
-    "sherpa.context_processors.admin_user_associations",
+    "sherpa.context_processors.admin_active_association",
 )
 
 MIDDLEWARE_CLASSES = (

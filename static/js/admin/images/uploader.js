@@ -16,7 +16,7 @@ $(document).ready(function() {
             allow_root: false,
             allow_deselect: true,
             picked: function(album) {
-                if(album.name == '') {
+                if(album.name === '') {
                     album.name = "(Legges ikke i album)";
                 }
                 var form = $("form.upload-image-details");
@@ -34,11 +34,12 @@ $(document).ready(function() {
         $("div.image-details").show();
     });
 
-    $("div.image-details form input[name='photographer']").typeahead({
+    var photographer = $("div.image-details form input[name='photographer']");
+    photographer.typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
-                url: '/sherpa/bildearkiv/fotograf/',
+                url: photographer.attr('data-source-url'),
                 data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));
@@ -64,25 +65,25 @@ $(document).ready(function() {
     });
 });
 
-function uploadComplete(result, ids) {
+function iframeUploadComplete(result) {
     $("div.uploading").hide();
-    if(result == 'success') {
+    if(result.status == 'success') {
         $("div.upload-complete").show();
-        $("div.image-details input[name='ids']").val(ids);
+        $("div.image-details input[name='ids']").val(JSON.stringify(result.ids));
         uploadReady = true;
         if(userReady) {
             $("div.image-details form").trigger('submit');
         }
-    } else if(result == 'parse_error') {
+    } else if(result.status == 'no_files') {
+        $("div.upload-no-files").show();
+        $("div.image-details").hide();
+        $("form.image-uploader").show();
+    } else if(result.status == 'parse_error') {
         $("div.upload-failed").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
-    } else if(result == 'no_files') {
-        $("div.upload-no-files").show()
-        $("div.image-details").hide();
-        $("form.image-uploader").show();
-    } else if(result == 'unknown_exception') {
-        $("div.upload-unknown-exception").show()
+    } else if(result.status == 'unknown_exception') {
+        $("div.upload-unknown-exception").show();
         $("div.image-details").hide();
         $("form.image-uploader").show();
     }

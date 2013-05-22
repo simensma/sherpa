@@ -19,8 +19,7 @@ def default(request):
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    context = {'advertisement': AdPlacement.get_active_ad()}
-    return render(request, 'main/instagram/default.html', context)
+    return render(request, 'main/instagram/default.html')
 
 def opptur2013(request):
     tags = ['opptur2013']
@@ -28,8 +27,7 @@ def opptur2013(request):
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    context = {'advertisement': AdPlacement.get_active_ad()}
-    return render(request, 'main/instagram/opptur.html', context)
+    return render(request, 'main/instagram/opptur.html')
 
 def load(request):
     if not 'instagram' in request.session:

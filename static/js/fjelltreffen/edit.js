@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
     var form = $("form.fjelltreffen-annonse-edit");
+    var submit_button = form.find("button[type='submit']");
+    var hidden_buttons = form.find("input[name='hidden']");
 
     form.find("div.control-group.hideage div.controls a.hideage-info").click(function() {
         $(this).hide();
@@ -69,8 +71,8 @@ $(document).ready(function() {
         $.ajaxQueue({
             url: url
         }).done(function(result) {
-            form.find("span.existing-image-label").hide();
-            form.find("span.default-image-label").show();
+            form.find("div.existing-image-label").hide();
+            form.find("div.default-image-label").show();
             alert("Bildet har blitt slettet.");
         }).fail(function(result) {
             alert("Beklager, det oppstod en feil når vi prøvde å slette bildet. Vennligst prøv igjen senere.");
@@ -81,5 +83,21 @@ $(document).ready(function() {
             modal.modal('hide');
         });
     });
+
+    // 'Dynamic' submit button name
+    if(submit_button.has('span')) {
+        // The button will just have a text element if the annonse
+        // for some reason won't be published
+        hidden_buttons.click(function() {
+            // These are radio buttons, but an old browser 'hack' makes sure
+            // click is triggered even if they are changed with the keyboard.
+            submit_button.find('span').hide();
+            if(hidden_buttons.filter("[value='show']:checked").length > 0) {
+                submit_button.find('span.publish').show();
+            } else {
+                submit_button.find('span.save').show();
+            }
+        });
+    }
 
 });

@@ -1,0 +1,77 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Motta e-post — Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Motta e-post</em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Motta medlemsinformasjon fra DNT på e-post</h2>
+
+    <p>
+      DNT sender ut aktuell medlemsinformasjon via e-post vanligvis fire ganger i året. Her får du nyttig informasjon om medlemskapet og medlemsfordeler, samt gode tips og råd om friluftsliv.
+    </p>
+
+    <div class="form-border user-reservations">
+      <table class="user-reservations sponsors" data-url="{% url 'user.views.receive_email_set' %}">
+        <tr class="choice">
+          <td>
+            <input type="radio" name="sponsors" value="allow"{% if user.get_profile.get_actor.receive_email %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Ja, jeg ønsker å motta medlemsinformasjon fra DNT på e-post<br>
+          </td>
+        </tr>
+        <tr class="choice">
+          <td>
+            <input type="radio" name="sponsors" value="reserve"{% if not user.get_profile.get_actor.receive_email %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Nei, jeg ønsker ikke å motta medlemsinformasjon fra DNT på e-post, bortsett fra informasjon som er direkte knyttet til mitt medlemskap
+          </td>
+        </tr>
+
+        <tr class="status loading hide">
+          <td></td>
+          <td>
+            Lagrer ditt valg, vennligst vent...<br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="status success hide">
+          <td></td>
+          <td>
+            <div class="alert alert-success">
+              <strong>Oppdateringen er registrert.</strong><br>
+              <span class="success reserve">Du har nå reservert deg mot medlemsinformasjon på e-post.</span>
+              <span class="success allow">Du godtar nå å motta medlemsinformasjon på e-post.</span>
+            </div>
+          </td>
+        </tr>
+        <tr class="status error hide">
+          <td></td>
+          <td>
+            <div class="alert alert-error">
+              Oppdateringen feilet! Vennligst prøv igjen om et par minutter, eller ring medlemsservice hvis problemet vedvarer.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <p>
+      Din lokale medlemsforening kan også sende ut egne nyhetsbrev, uavhengig av e-post fra DNT. For påmelding eller avmelding se nettsidene til <a href="{{ user.get_profile.get_actor.main_association_old.url }}">{{ user.get_profile.get_actor.main_association_old.name }}</a>.
+    </p>
+
+  </div>
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' %}
+  </div>
+</div>
+
+{% endblock %}

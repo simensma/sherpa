@@ -9,45 +9,87 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
+from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, timedelta
-import json, re
+import json
+import logging
+import sys
 
 from user.models import Profile
 from focus.models import Actor
-from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user
+from user.util import username, memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
 from core import validator
+from core.models import FocusCountry
 from sherpa25.models import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
 
+logger = logging.getLogger('sherpa')
+
 def login(request):
+    if 'authenticated_profiles' in request.session:
+        del request.session['authenticated_profiles']
+
+    first_visit = 'minside.login.has_visited' not in request.session
+    if first_visit:
+        request.session['minside.login.has_visited'] = True
+
+    context = {
+        'user_password_length': settings.USER_PASSWORD_LENGTH,
+        'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT,
+        'countries': FocusCountry.get_sorted(),
+        'first_visit': first_visit
+    }
+
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
-        context = {'next': request.GET.get('next')}
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+        context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
+
     elif request.method == 'POST':
-        user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
-        if user is not None:
+        matches = authenticate_users(request.POST['email'], request.POST['password'])
+
+        if len(matches) == 1:
+            # Exactly one match, cool, just authenticate the user
+            user = authenticate(user=matches[0].user)
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
-        else:
+            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+
+        elif len(matches) > 1:
+            # Multiple matches, offer a choice between all matches
+            request.session['authenticated_profiles'] = [p.id for p in matches]
+            if 'next' in request.GET:
+                return HttpResponseRedirect("%s?next=%s" %
+                    (reverse('user.login.views.choose_authenticated_user'), request.GET['next']))
+            else:
+                return HttpResponseRedirect(reverse('user.login.views.choose_authenticated_user'))
+
+        elif len(matches) == 0:
+            # Incorrect credentials. Check if this is a user from the old userpage system
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
             if old_member is not None:
+                # Actually, it is! Let's try to import them.
                 if Profile.objects.filter(memberid=old_member.memberid).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
-                    return render(request, 'common/user/login/login.html')
+                    context['email'] = request.POST['email']
+                    return render(request, 'common/user/login/login.html', context)
 
-                if User.objects.filter(username=username(request.POST['email'])):
-                    messages.error(request, 'old_memberid_but_email_exists')
-                    return render(request, 'common/user/login/login.html')
+                # Verify that they exist in the membersystem (this turned out to be an incorrect assumption)
+                if not Actor.objects.filter(memberid=old_member.memberid).exists():
+                    # We're not quite sure why this can happen, so we'll just give them the invalid
+                    # credentials message - but this might be confusing for those who were able to log
+                    # in previously.
+                    messages.error(request, 'invalid_credentials')
+                    context['next'] = request.GET.get('next')
+                    context['email'] = request.POST['email']
+                    return render(request, 'common/user/login/login.html', context)
 
-                # Authenticated old user, create a new one
-                User.objects.create_user(username(request.POST['email']), password=request.POST['password'])
-                user = authenticate(username=username(request.POST['email']), password=request.POST['password'])
+                # Create the new user
+                user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
                 profile = Profile(user=user, memberid=old_member.memberid)
                 profile.save()
 
@@ -59,66 +101,96 @@ def login(request):
                 # Import any fjelltreffen-annonser from the old system
                 import_fjelltreffen_annonser(user.get_profile())
 
+                authenticate(user=user)
                 log_user_in(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home_new')))
+                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+
             else:
+                # No luck, just provide the error message
                 messages.error(request, 'invalid_credentials')
-                context = {'next': request.GET.get('next')}
+                context['next'] = request.GET.get('next')
+                context['email'] = request.POST['email']
                 return render(request, 'common/user/login/login.html', context)
+
+def choose_authenticated_user(request):
+    if not 'authenticated_profiles' in request.session:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    profiles = Profile.objects.filter(id__in=request.session['authenticated_profiles'])
+    context = {
+        'profiles': sorted(profiles, key=lambda p: p.get_first_name()),
+        'next': request.GET.get('next')}
+    return render(request, 'common/user/login/choose_authenticated_user.html', context)
+
+def login_chosen_user(request):
+    if not 'authenticated_profiles' in request.session:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    if not 'profile' in request.POST:
+        del request.session['authenticated_profiles']
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    # Verify that the user authenticated for this user
+    if not int(request.POST['profile']) in request.session['authenticated_profiles']:
+        del request.session['authenticated_profiles']
+        return HttpResponseRedirect(reverse('user.login.views.login'))
+
+    # All is swell, log the user in
+    profile = Profile.objects.get(id=request.POST['profile'])
+    user = authenticate(user=profile.user)
+    log_user_in(request, user)
+    del request.session['authenticated_profiles']
+    return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
 
 def logout(request):
     log_user_out(request)
     return HttpResponseRedirect(reverse('page.views.page'))
 
 def register(request):
-    if request.method == 'GET':
-        context = {
-            'user_password_length': settings.USER_PASSWORD_LENGTH,
-            'memberid_lookups_limit': settings.MEMBERID_LOOKUPS_LIMIT
-        }
-        return render(request, 'common/user/login/registration.html', context)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         try:
             # Check that the password is long enough
             if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 messages.error(request, 'too_short_password')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the email address is valid
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
-            actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+            if not FocusCountry.objects.filter(code=request.POST['country']).exists():
+                raise PermissionDenied
+            actor = Actor.objects.filter(
+                memberid=request.POST['memberid'],
+                address__country_code=request.POST['country'])
+            if request.POST['country'] == 'NO':
+                actor = actor.filter(address__zipcode=request.POST['zipcode'])
+            actor = actor.get()
 
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid']).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
-
-            # Check that the email address isn't in use
-            if User.objects.filter(username=username(request.POST['email'])).exists():
-                # Note! This COULD be a collision based on our username-algorithm (and pigs COULD fly)
-                messages.error(request, 'email_exists')
-                return HttpResponseRedirect(reverse('user.login.views.register'))
+                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             actor.email = request.POST['email']
             actor.save()
-            user = User.objects.create_user(username(actor.email), password=request.POST['password'])
+            user = User.objects.create_user(actor.memberid, password=request.POST['password'])
             profile = Profile(user=user, memberid=actor.memberid)
             profile.save()
-            log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+            authenticate(user=user)
+            log_user_in(request, user)
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-            return HttpResponseRedirect(reverse('user.views.home_new'))
+            return HttpResponseRedirect(reverse('user.views.home'))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
-            return HttpResponseRedirect(reverse('user.login.views.register'))
+            return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
 def register_nonmember(request):
     if request.method == 'GET':
@@ -166,25 +238,32 @@ def register_nonmember(request):
             username(request.POST['email']),
             email=request.POST['email'],
             password=request.POST['password'])
-        user.first_name = ' '.join(request.POST['name'].split(' ')[:-1])
-        user.last_name = request.POST['name'].split(' ')[-1]
+        user.first_name, user.last_name = request.POST['name'].rsplit(' ', 1)
         user.save()
         profile = Profile(user=user)
         profile.save()
-        log_user_in(request, authenticate(username=user.username, password=request.POST['password']))
+        authenticate(user=user)
+        log_user_in(request, user)
         t = loader.get_template('common/user/login/registered_nonmember_email.html')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-        return HttpResponseRedirect(reverse('user.views.home_new'))
+        return HttpResponseRedirect(reverse('user.views.home'))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
         return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
+    if not FocusCountry.objects.filter(code=request.POST['country']).exists():
+        raise PermissionDenied
     try:
-        actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+        actor = Actor.objects.filter(
+            memberid=request.POST['memberid'],
+            address__country_code=request.POST['country'])
+        if request.POST['country'] == 'NO':
+            actor = actor.filter(address__zipcode=request.POST['zipcode'])
+        actor = actor.get()
         return HttpResponse(json.dumps({
             'exists': True,
-            'name': "%s %s" % (actor.first_name, actor.last_name),
+            'name': actor.get_full_name(),
             'email': actor.email or '',
             'profile_exists': Profile.objects.filter(memberid=request.POST['memberid']).exists()}))
     except (ValueError, Actor.DoesNotExist):
@@ -193,61 +272,86 @@ def verify_memberid(request):
 def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
-    try:
-        # Try users that aren't members first - this won't be many
-        profile = User.objects.get(email=request.POST['email']).get_profile()
-    except User.DoesNotExist:
-        try:
-            actor = Actor.objects.get(email=request.POST['email'])
-            profile = Profile.objects.get(memberid=actor.memberid)
-        except Actor.DoesNotExist:
+
+    # The address will match only one non-member, but may match several members
+    local_match = User.objects.filter(email=request.POST['email'])
+    local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
+    focus_matches = Actor.objects.filter(memberid__in=local_members, email=request.POST['email'])
+
+    if len(local_match) == 0 and len(focus_matches) == 0:
+        # No email-address matches.
+        if Actor.objects.exclude(memberid__in=local_members).filter(email=request.POST['email']).exists():
+            # Oh, the email address exists in Focus, but the user isn't in our user-base. Let them know.
+            return HttpResponse(json.dumps({'status': 'unregistered_email'}))
+        else:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
-        except Profile.DoesNotExist:
-            # This means the email exists in Focus, but the user isn't in our user-base.
-            # Maybe we should inform them that they're not registered, or something?
-            return HttpResponse(json.dumps({'status': 'unknown_email'}))
-        except Actor.MultipleObjectsReturned:
-            # TODO: Multiple email-hits will need to be handled differently soon
-            return HttpResponse(json.dumps({'status': 'multiple_hits'}))
-    except KeyError:
-        return HttpResponse(json.dumps({'status': 'unknown_email'}))
+
     key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-    profile.password_restore_key = key
-    profile.password_restore_date = datetime.now()
-    profile.save()
-    t = loader.get_template('common/user/login/restore-password-email.html')
+    while Profile.objects.filter(password_restore_key=key).exists():
+        # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+        # ~238 bits of entropy which means that this will never ever happen, ever.
+        # You will win the lottery before this happens. And I want to know if it does, so log it.
+        logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+            exc_info=sys.exc_info(),
+            extra={
+                'request': request,
+                'should_you_play_the_lottery': True,
+                'key': key
+            }
+        )
+        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+
+    all_matches = [u.get_profile() for u in local_match] + [Profile.objects.get(memberid=a.memberid) for a in focus_matches]
+    for profile in all_matches:
+        profile.password_restore_key = key
+        profile.password_restore_date = datetime.now()
+        profile.save()
+
+    t = loader.get_template('common/user/login/restore-password-email.txt')
     c = RequestContext(request, {
-       'found_user': profile.user,
-       'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
-    send_mail("Gjenopprettelse av passord", t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
+        'found_user': profile.user,
+        'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
+    send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    try:
-        profile = Profile.objects.get(password_restore_key=key)
-    except Profile.DoesNotExist:
+    profiles = Profile.objects.filter(password_restore_key=key)
+    if len(profiles) == 0:
         context = {'no_such_key': True}
         return render(request, 'common/user/login/restore-password.html', context)
-    deadline = profile.password_restore_date + timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
-    if datetime.now() > deadline:
+
+    date_limit = datetime.now() - timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
+    if any([p.password_restore_date < date_limit for p in profiles]):
         # We've passed the deadline for key validity
         context = {'key_expired': True, 'validity_period': settings.RESTORE_PASSWORD_VALIDITY}
         return render(request, 'common/user/login/restore-password.html', context)
 
     # Passed all tests, looks like we're ready to reset the password
     if request.method == 'GET':
-        context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH}
+        context = {
+            'ready': True,
+            'key': key,
+            'password_length': settings.USER_PASSWORD_LENGTH}
         return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
-        if request.POST['password'] != request.POST['password-duplicate'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            context = {'ready': True, 'key': key, 'password_length': settings.USER_PASSWORD_LENGTH,
+        if request.POST['password'] != request.POST['password-repeat'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+            context = {
+                'ready': True,
+                'key': key,
+                'password_length': settings.USER_PASSWORD_LENGTH,
                 'unacceptable_password': True}
             return render(request, 'common/user/login/restore-password.html', context)
+
         # Everything is in order. Reset the password.
-        profile.user.set_password(request.POST['password'])
-        profile.user.save()
-        profile.password_restore_key = None
-        profile.password_restore_date = None
-        profile.save()
-        context = {'success': True}
-        return render(request, 'common/user/login/restore-password.html', context)
+        for profile in profiles:
+            profile.user.set_password(request.POST['password'])
+            profile.user.save()
+            profile.password_restore_key = None
+            profile.password_restore_date = None
+            profile.save()
+
+        # Log the user in automatically
+        user = authenticate(user=profile.user)
+        log_user_in(request, user)
+        messages.info(request, 'password_reset_success')
+        return HttpResponseRedirect(reverse('user.views.home'))

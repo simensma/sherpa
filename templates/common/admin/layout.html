@@ -25,6 +25,7 @@
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.9.2.custom.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
@@ -60,34 +61,34 @@
   </div>
   <div class="span4 right">
     <p class="userline">
-      <a href="{% url 'user.views.home_new' %}">{{ user.get_profile.get_full_name }}</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span>
+      <a href="{% url 'user.views.home' %}">{{ user.get_profile.get_full_name }}</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span>
     </p>
     <select name="user_association" data-placeholder="Velg en forening...">
       <option value=""></option>
-      {% if user_associations.central|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.central|length > 0 %}
         <optgroup label="Sentralt/nasjonalt">
-          {% for association in user_associations.central %}
+          {% for association in user.get_profile.all_associations_sorted.central %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user_associations.associations|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.associations|length > 0 %}
         <optgroup label="Medlemsforeninger">
-          {% for association in user_associations.associations %}
+          {% for association in user.get_profile.all_associations_sorted.associations %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user_associations.small_associations|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.small_associations|length > 0 %}
         <optgroup label="Lokale turlag">
-        {% for association in user_associations.small_associations %}
+        {% for association in user.get_profile.all_associations_sorted.small_associations %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user_associations.hike_groups|length > 0 %}
+      {% if user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
         <optgroup label="Turgrupper">
-        {% for association in user_associations.hike_groups %}
+        {% for association in user.get_profile.all_associations_sorted.hike_groups %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>

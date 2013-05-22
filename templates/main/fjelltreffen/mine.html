@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% load gender %}
+{% load advertisement %}
 
 {% block title %}Mine annonser — Fjelltreffen{% endblock %}
 {% block breadcrumb %}
@@ -21,16 +22,16 @@
 
       {% for message in messages %}
         {% if message.message == 'max_one_active_annonse' %}
-          <div class="alert alert-error">
+          <div class="alert alert-success">
             <a class="close">x</a>
-            <strong>Du kan ikke ha mer enn én synlig annonse!</strong><br>
-            Annonsen du valgte er blitt synlig, men den som var synlig sist er nå blitt skjult. Kun én annonse kan være synlig om gangen, så du må velge hvilken du vil vise.
+            <strong>Annonsen er publisert!</strong><br>
+            Du kan kun ha én synlig og aktiv annonse. Annonsen som tidligere var publisert er nå skjult. Du kan når som helst bytte mellom hvilken annonse som skal være publisert.
           </div>
-        {% elif message.message == 'membership_not_payed' %}
+        {% elif message.message == 'membership_not_paid' %}
           <div class="alert alert-error">
             <a class="close">x</a>
             <strong>Du kan ikke publisere en ny annonse fordi du har ikke betalt medlemskontingenten.</strong><br>
-            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url 'enrollment.views.index' %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem. Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
+            For å legge ut annonser i Fjelltreffen må du være medlem og ha betalt årskontingenten. Du kan bruke <a href="{% url 'enrollment.views.index' %}">innmeldingsskjemaet</a> til å fornye ditt medlemskap, selv om du allerede er medlem.<br><br>Merk at innbetalingen ikke blir registrert i medlemssystemet før påfølgende virkedag! Det kan derfor ta litt tid fra du betaler til du får tilgang til Fjelltreffen — vær tålmodig!
           </div>
         {% endif %}
       {% endfor %}
@@ -53,20 +54,18 @@
               </td>
               <td class="status">
                 {% if not annonse.hidden and not annonse.is_expired %}
-                  <span class="label label-success">Synlig</span><br>
+                  <span class="label label-success">Publisert</span><br>
                   <a href="{% url 'fjelltreffen.views.hide_mine' annonse.id %}">Skjul</a>
                 {% elif annonse.hidden and not annonse.is_expired %}
                   <span class="label label-warning">Skjult</span><br>
-                  <a href="{% url 'fjelltreffen.views.show_mine' annonse.id %}">Vis</a>
+                  <a href="{% url 'fjelltreffen.views.show_mine' annonse.id %}">Publiser</a>
                 {% endif %}
               </td>
               <td class="expiration">
                 {% if not annonse.is_expired %}
-                  <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span><br>
+                  <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span>
                 {% else %}
-                  <span class="label label-important expired" title="Annonsen har lagt ute i over {{ annonse_retention_days }} dager og er derfor utgått.">Utgått</span><br>
-                {% endif %}
-                {% if annonse.expires_in_days < annonse_retention_days %}
+                  <span class="label label-important expired" title="Denne annonsen har ligget ute i over {{ annonse_retention_days }} dager og er derfor ikke lenger aktiv.">Utgått</span><br>
                   <a href="{% url 'fjelltreffen.views.renew_mine' annonse.id %}">Forny</a>
                 {% endif %}
               </td>
@@ -90,5 +89,7 @@
     {% include 'main/fjelltreffen/navigation.html' with active='mine' %}
   </div>
 </div>
+
+{% advertisement %}
 
 {% endblock %}

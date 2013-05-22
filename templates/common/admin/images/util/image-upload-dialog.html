@@ -1,0 +1,88 @@
+<div class="modal hide image-upload-dialog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg et bilde å laste opp...</h3>
+  </div>
+
+  <div class="modal-body">
+    <div class="alert alert-info uploading hide">
+      <a class="close">x</a>
+      Vent mens bildet lastes opp...
+    </div>
+    <div class="alert alert-error upload-no-files hide">
+      <a class="close">x</a>
+      Du må velge et bilde å laste opp!
+    </div>
+    <div class="alert alert-error parse-error hide">
+      <a class="close">x</a>
+      Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!
+    </div>
+    <div class="alert alert-error unknown-exception hide">
+      <a class="close">x</a>
+      Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
+    </div>
+
+    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
+      {% csrf_token %}
+      <input type="reset" class="hide">
+
+      <div class="control-group">
+        <label class="control-label">Finn bilde:</label>
+        <div class="controls">
+          <input type="file" name="file">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Beskrivelse:</label>
+        <div class="controls">
+          <textarea name="description" rows="4" class="input-xlarge"></textarea>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Fotograf:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-source-url="{% url 'admin.images.views.photographer' %}">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Kreditering:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l...">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Bruksrett:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov...">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Nøkkelord</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="tags">
+          <input type="hidden" name="tags-serialized">
+          <div class="tag-box"></div>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <input class="btn btn-success" type="submit" value="Last opp">
+        </div>
+      </div>
+    </form>
+
+    <iframe name="inlineframe" class="hide"></iframe>
+    {% include 'common/admin/images/util/licencing.html' %}
+  </div>
+
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
+</div>

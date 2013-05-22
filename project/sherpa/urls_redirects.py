@@ -10,14 +10,10 @@ urlpatterns = patterns('',
     url(r'^gullgjest/', 'page.views.redirect', kwargs={'url': '/hyttesamler/', 'permanent': True}),
     url(r'^gratis-overnatting/$', 'page.views.redirect', kwargs={'url': '/ung/gratis-overnatting/', 'permanent': True}),
     url(r'^E1/$', 'page.views.redirect', kwargs={'url': '/e1/', 'permanent': True}),
+    url(r'^fjelltreff/$', 'page.views.redirect', kwargs={'url': '/fjelltreffen/', 'permanent': True}),
 
     # Keep old admin-ui for now (difference is /admin/ vs /sherpa/)
     url(r'^admin/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/admin/' % settings.OLD_SITE}),
-
-    # Keep old user page
-    # Note: This URL uses hardcoded links in enrollment result pages and email receipts.
-    url(r'^minside/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/minside/' % settings.OLD_SITE}),
-    url(r'^fjelltreffen/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen/' % settings.OLD_SITE}),
 
     # Old static content
     url(r'^img/(?P<slug>.*)', 'page.views.redirect', kwargs={'url': 'http://%s/img/' % settings.OLD_SITE}),
@@ -206,7 +202,6 @@ urlpatterns = patterns('',
     url(r'^fjellfesten/$', 'page.views.redirect', kwargs={'url': 'http://%s/article.php' % settings.OLD_SITE, 'params': {'ar_id': '8152', 'fo_id': '15'}}),
     url(r'^fjellforing/$', 'page.views.redirect', kwargs={'url': 'http://www.dntfjellsport.no/index.php', 'params': {'fo_id' '176'}}),
     url(r'^fjellogviddespesial/$', 'page.views.redirect', kwargs={'url': 'http://www.calameo.com/read/0002483005e90ae80224e'}),
-    url(r'^fjelltreff/$', 'page.views.redirect', kwargs={'url': 'http://%s/fjelltreffen' % settings.OLD_SITE}),
     url(r'^fjellvett/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '184'}}),
     url(r'^gaver/$', 'page.views.redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '3160'}}),
     url(r'^grensesommen/$', 'page.views.redirect', kwargs={'url': 'http://%s/turplanlegger/trip.php' % settings.OLD_SITE, 'params': {'ac_id': '7438'}}),

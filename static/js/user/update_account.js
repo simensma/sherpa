@@ -1,74 +1,85 @@
 $(document).ready(function() {
 
+    var form = $("form.account-info");
+
     Validator.validate({
         method: 'full_name',
-        control_group: $("div.control-group.name"),
-        input: $("input[name='name']"),
+        control_group: form.find("div.control-group.name"),
+        input: form.find("input[name='name']"),
         req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: $("div.control-group.email"),
-        input: $("input[name='email']"),
+        control_group: form.find("div.control-group.email"),
+        input: form.find("input[name='email']"),
         req: true
     });
 
-    var control_group = $("div.control-group.sherpa-email");
-    if(control_group.length > 0) {
+    var sherpa_email = form.find("div.control-group.sherpa-email");
+    if(sherpa_email.length > 0) {
         Validator.validate({
             method: 'email',
-            control_group: control_group,
-            input: control_group.find("input[name='sherpa-email']"),
+            control_group: sherpa_email,
+            input: sherpa_email.find("input[name='sherpa-email']"),
             req: false
         });
     }
 
     Validator.validate({
         method: 'phone',
-        control_group: $("div.control-group.phone_home"),
-        input: $("input[name='phone_home']"),
+        control_group: form.find("div.control-group.phone_home"),
+        input: form.find("input[name='phone_home']"),
         req: false
     });
 
     Validator.validate({
         method: 'phone',
-        control_group: $("div.control-group.phone_mobile"),
-        input: $("input[name='phone_mobile']"),
+        control_group: form.find("div.control-group.phone_mobile"),
+        input: form.find("input[name='phone_mobile']"),
         req: false
     });
 
+    var address = form.find("div.control-group.address");
     Validator.validate({
         method: 'address',
-        control_group: $("div.control-group.address"),
-        input: $("input[name='address']"),
+        control_group: address,
+        input: address.find("input[name='address']"),
+        req: true
+    });
+
+    var address2 = form.find("div.control-group.address2");
+    Validator.validate({
+        method: 'address',
+        control_group: address2,
+        input: address2.find("input[name='address2']"),
+        req: true
+    });
+
+    var address3 = form.find("div.control-group.address3");
+    Validator.validate({
+        method: 'address',
+        control_group: address3,
+        input: address3.find("input[name='address3']"),
         req: true
     });
 
     Validator.validateZipcode(
-        $("div.control-group.zipcode"),
-        $("input[name='zipcode']"),
-        $("input[name='area']"),
-        $("img.ajaxloader.zipcode")
+        form.find("div.control-group.zipcode"),
+        form.find("input[name='zipcode']"),
+        form.find("input[name='area']"),
+        form.find("img.ajaxloader.zipcode")
     );
-
-    Validator.validatePasswords({
-        control_group: $("div.control-group.password, div.control-group.password-repeat"),
-        pass1: $("input[name='password']"),
-        pass2: $("input[name='password-repeat']"),
-        min_length: user_password_length,
-        hints: $("div.form-hints div.password-hint")
-    });
 
     // Trigger all validations
     Validator.trigger();
-    Validator.triggerZipcode($("input[name='zipcode']"));
+    Validator.triggerZipcode(form.find("input[name='zipcode']"));
 
-    $("input[name='toggle-sherpa-email']").change(function() {
+    form.find("input[name='toggle-sherpa-email']").change(function() {
         if($(this).is(':checked')) {
-            $("input[name='sherpa-email']").removeAttr('readonly');
+            form.find("input[name='sherpa-email']").removeAttr('readonly');
         } else {
-            $("input[name='sherpa-email']").val('').attr('readonly', true).focusout();
+            form.find("input[name='sherpa-email']").val('').attr('readonly', true).focusout();
         }
     });
 

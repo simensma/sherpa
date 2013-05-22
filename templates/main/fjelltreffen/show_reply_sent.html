@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% load gender %}
+{% load advertisement %}
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
@@ -31,23 +32,6 @@
 
     <p><a href="{% url 'fjelltreffen.views.index' %}">Tilbake til forsiden</a></p>
 
-    <hr>
-
-    <div class="fjelltreffen-annonse">
-      <h2>{{ annonse.title }}</h2>
-      {% if annonse.image %}
-        <div class="pull-right image-container">
-          <img src="{{ annonse.get_image_url }}" alt="{{ annonse.title }}">
-        </div>
-      {% endif %}
-      <p class="details">
-        {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name|default:"Utlandet" }}, {{ annonse.date_added|date:"j. F Y" }}
-      </p>
-
-      <p>{{ annonse.text|linebreaksbr }}</p>
-      <br>
-    </div>
-
   </div>
 
   <div class="span3">
@@ -55,5 +39,7 @@
   </div>
 
 </div>
+
+{% advertisement %}
 
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
 
 {% load gender %}
+{% load advertisement %}
 
 {% block title %}Fjelltreffen{% endblock %}
 {% block breadcrumb %}
@@ -20,7 +21,7 @@
       <h2>{{ annonse.title }}</h2>
       {% if annonse.image %}
         <div class="pull-right image-container">
-          <a href="{{ annonse.get_image_url }}">
+          <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">
             <img src="{{ annonse.get_image_thumb_url }}" alt="{{ annonse.title }}">
           </a>
         </div>
@@ -34,17 +35,24 @@
 
     <div style="clear: both;"></div>
 
-    <hr>
-
     {% if annonse.profile == user.get_profile %}
 
-      <p><em>Dette er din annonse. Du kan <a href="{% url 'fjelltreffen.views.edit' annonse.id %}">redigere den her</a>.</em></p>
+      <hr>
+
+      <p>
+        <em>Dette er din annonse. Du kan <a href="{% url 'fjelltreffen.views.edit' annonse.id %}">redigere den her</a>.</em>
+      </p>
 
     {% else %}
 
       <div class="fjelltreffen-response">
 
-        {# Messages are technical errors when delivering email, both reply and report #}
+        {% if not form.errors and not email_reply_failure %}
+          <p>
+            <button class="btn btn-danger reply">Svar på annonsen!</button>
+          </p>
+        {% endif %}
+
         {% for message in messages %}
           {% if message.message == 'email_reply_failure' %}
             <div class="alert alert-error">
@@ -57,21 +65,9 @@
                 Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan det kanskje hende at det er noe galt med e-postadressen til annonsøren.
               </p>
             </div>
-          {% elif message.message == 'email_report_failure' %}
-            <div class="alert alert-error">
-              <a class="close">x</a>
-              <p><strong>Teknisk feil!</strong></p>
-              <p>
-                Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
-              </p>
-              <p>
-                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a> direkte for å rapportere annonsen.
-              </p>
-            </div>
           {% endif %}
         {% endfor %}
 
-        {# Form errors (for replies) #}
         {% if form.errors %}
           <div class="alert alert-error">
             <a class="close">x</a>
@@ -86,44 +82,30 @@
           </div>
         {% endif %}
 
-        {# Anchors for slidedown - hide if errors are present #}
-        {% if messages|length == 0 and not form.errors %}
-          <ul class="response">
-            <li><a href="javascript:undefined" data-response="reply">Svar på annonsen!</a></li>
-            <li>
-              Opplever du annonsen som støtende eller upassende?
-              {% if user.is_authenticated %}
-                <a href="javascript:undefined" data-response="report">Gi oss beskjed!</a>
-              {% else %}
-                {# You must be logged in to report annonser - link to the report view, which will redirect back here #}
-                <a href="{% url 'fjelltreffen.views.report' annonse.id %}">Gi oss beskjed!</a>
-              {% endif %}
-            </li>
-          </ul>
-        {% endif %}
-
         {# Replies - show if already filled and there were errors #}
         <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
+
+          <h2>Svar på annonsen</h2>
 
           <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
-              <label class="control-label" for="name">Ditt navn</label>
+              <label class="control-label" for="id_name">Ditt navn</label>
               <div class="controls">
                 {{ form.name }} <span class="asterisk red">*</span>
               </div>
             </div>
 
             <div class="control-group email">
-              <label class="control-label" for="name">Din e-postadresse</label>
+              <label class="control-label" for="id_email">Din e-postadresse</label>
               <div class="controls">
                 {{ form.email }} <span class="asterisk red">*</span>
               </div>
             </div>
 
             <div class="control-group text">
-              <label class="control-label" for="name">Svar til annonsøren</label>
+              <label class="control-label" for="id_text">Svar til annonsøren</label>
               <div class="controls">
                 {{ form.text }}
               </div>
@@ -132,7 +114,7 @@
             {% if form.captcha %}
               {# Will only be required for anonymous users #}
               <div class="control-group captcha">
-                <label class="control-label" for="name">Skriv inn bokstavene i bildet</label>
+                <label class="control-label">Skriv inn bokstavene i bildet</label>
                 <div class="controls">
                   {{ form.captcha }}
                 </div>
@@ -147,7 +129,7 @@
 
             <div class="control-group">
               <div class="controls">
-                <button type="submit" class="btn btn-success">Send</button>
+                <button type="submit" class="btn btn-success">Send svar</button>
               </div>
             </div>
 
@@ -155,9 +137,36 @@
 
         </div>
 
-        {# Report - show if filled and technical error #}
-        <div class="report{% if messages|length == 0 or not report %} hide{% endif %}">
+        <hr>
 
+        {% for message in messages %}
+          {% if message.message == 'email_report_failure' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <p><strong>Teknisk feil!</strong></p>
+              <p>
+                Vi beklager, det oppstod en teknisk feil ved sending av anmeldelsen. Vi har logget feilen, og dersom det er noe galt med systemene våre vil vi se på problemet så snart som mulig.
+              </p>
+              <p>
+                Du kan prøve igjen når som helst. Hvis feilen ikke går bort, kan du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a> direkte for å rapportere annonsen.
+              </p>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% if not report %}
+          <p>
+            Opplever du annonsen som støtende eller upassende?
+            {% if user.is_authenticated %}
+              <a href="javascript:undefined" class="report">Gi oss beskjed!</a>
+            {% else %}
+              {# You must be logged in to report annonser - link to the report view, which will redirect back here #}
+              <a href="{% url 'fjelltreffen.views.report' annonse.id %}">Gi oss beskjed!</a>
+            {% endif %}
+          </p>
+        {% endif %}
+
+        <div class="report{% if not report %} hide{% endif %}">
           <p>
             <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
           </p>
@@ -184,5 +193,28 @@
   </div>
 
 </div>
+
+{% advertisement %}
+
+{% if annonse.image %}
+  <div class="modal annonse-image-modal hide">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">X</button>
+      <h3>Annonsebilde</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        <a href="{{ annonse.get_image_url }}" target="_blank" title="Klikk for å åpne fullversjon i nytt vindu">
+          <img src="{{ annonse.get_image_url }}" alt="Annonsebilde">
+        </a>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <p class="modal-close">
+        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}

@@ -281,7 +281,7 @@ $(document).ready(function() {
     });
     $("div.add-button div.alert").hide();
     $("div.add-button").on('show', function(event) {
-        if(typeof selection === 'undefined') {
+        if(selection === undefined) {
             alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
             $(this).on('shown', function() {
                 $(this).modal('hide');
@@ -363,7 +363,7 @@ $(document).ready(function() {
         }
         var order = insertable.prevAll(":not(.insertable)").length;
         $.ajaxQueue({
-            url: '/sherpa/cms/kolonner/ny/',
+            url: $("article").attr('data-add-columns-url'),
             data: {
                 version: $("div.editor-header").attr("data-version-id"),
                 order: order,

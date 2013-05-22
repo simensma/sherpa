@@ -25,7 +25,7 @@
     }
 
     function displayCurrentImage() {
-        if(currentCropperInstance != undefined){
+        if(currentCropperInstance !== undefined){
             currentCropperInstance.cancelSelection();
         }
 
@@ -152,7 +152,7 @@
         // Ensure imgareaselect follows the bootstrap-modal scrolling
         widget_editor.on('shown', function() {
             $("div.modal-scrollable").scroll(function() {
-                if(typeof currentCropperInstance !== 'undefined') {
+                if(currentCropperInstance !== undefined) {
                     currentCropperInstance.update();
                 }
             });
@@ -211,12 +211,12 @@
 
         //choose clicked
         widget_editor.find("button[name='choose']").click(function(){
-            chooseImagefromArchive(chooseFromSpurce);
+            ImageArchivePicker.pick(chooseFromSpurce);
         });
 
         //upload clicked
         widget_editor.find("button[name='upload']").click(function(){
-            openImageUpload(chooseFromSpurce);
+            ImageUploadDialog.open(chooseFromSpurce);
         });
 
         //updating data in "model" on key up

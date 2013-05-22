@@ -48,7 +48,7 @@
             minLength: 3,
             source: function(query, process) {
                 $.ajaxQueue({
-                    url: '/tags/filter/',
+                    url: widget_editor.find("input[name='tag-link']").attr('data-source-url'),
                     data: { name: query }
                 }).done(function(result) {
                     process(JSON.parse(result));

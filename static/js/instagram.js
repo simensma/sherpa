@@ -14,7 +14,7 @@ $(document).ready(function() {
         loader_button.hide();
         loading.fadeIn();
         $.ajaxQueue({
-            url: '/instagram/last/'
+            url: wrapper.attr('data-load-url')
         }).done(function(result) {
             result = JSON.parse(result);
             for(var i=0; i<result.items.length; i++) {

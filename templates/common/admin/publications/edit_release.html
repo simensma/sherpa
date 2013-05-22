@@ -1,0 +1,65 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a>{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
+  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_release.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_release_form.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    {% for message in messages %}
+      {% if message.message == 'incorrect_file_format' %}
+        <div class="alert alert-error">
+          <strong>Du kan kun laste opp filer i PDF-format.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <h2>
+      <a href="{% url 'admin.publications.views.edit_publication' publication.id %}">{{ publication.title }}</a> / {{ release.title|default:"Ny utgivelse" }}
+    </h2>
+
+    {% include 'common/admin/publications/edit_release_form.html' %}
+
+    <p>
+      <a href="javascript:undefined" class="delete-release">Slett utgivelsen</a>
+    </p>
+
+    <div class="alert alert-error delete-release-confirm hide">
+      <p>
+        <strong>Er du sikker på at du vil slette {{ release.title }}?</strong><br>
+        {% if release.pdf_hash != '' %}
+          Dette vil også slette <a href="{{ release.get_pdf_url }}">PDF-filen</a> som er lastet opp.
+        {% endif %}
+        Forsidebildet vil bli liggende i bildearkivet, hvis du vil slette det også må du gå til bildearkivet og gjøre det selv.
+      </p>
+
+      <p>
+        <a href="{% url 'admin.publications.views.delete_release' release.id %}" class="btn btn-danger delete-release-final">
+          <i class="icon-remove"></i> Ja, jeg skjønner. Slett utgivelsen for godt.
+        </a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% include 'common/admin/images/util/image-archive-picker.html' %}
+{% include 'common/admin/images/util/image-upload-dialog.html' %}
+
+{% endblock %}

@@ -38,8 +38,8 @@ $(document).ready(function() {
 
     function performLookup() {
         // Check dynamically that the slug is unique
-        $.ajax({
-            url: '/sherpa/cms/side/ny/unik/',
+        $.ajaxQueue({
+            url: newPage.attr('data-check-slug-url'),
             data: 'slug=' + encodeURIComponent(lookupVal)
         }).done(function(result) {
             result = JSON.parse(result);
@@ -130,7 +130,7 @@ $(document).ready(function() {
             var id = $(this).attr("data-id");
             var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
             $(this).parents("tr").after(loader);
-            $.ajax({
+            $.ajaxQueue({
                 url: '/sherpa/cms/side/barn/' + id + '/',
                 data: { level: level }
             }).done(function(result) {
@@ -171,7 +171,9 @@ $(document).ready(function() {
     // Set when a dialog is opened (undefined for new items, or the anchor element for editing)
     var activeMenu;
 
-    $("nav#menus a.new").click(function() {
+    var menus = $("nav#menus");
+
+    menus.find("a.new").click(function() {
         activeMenu = undefined;
         var dialog = $("div.menu-dialog");
         dialog.find("input[name='name']").val('');
@@ -180,7 +182,7 @@ $(document).ready(function() {
         dialog.dialog('open');
     });
 
-    $("nav#menus a.edit").click(edit);
+    menus.find("a.edit").click(edit);
 
     function edit() {
         activeMenu = $(this);
@@ -191,22 +193,22 @@ $(document).ready(function() {
         dialog.dialog('open');
     }
 
-    $("nav#menus ul").sortable({
+    menus.find("ul").sortable({
         items: 'li:not(.new)',
         update: function() {
             var list = $(this);
             list.sortable('disable');
             var i = 0;
             var items = [];
-            $("nav#menus a.edit").each(function() {
+            menus.find("a.edit").each(function() {
                 items.push({
                     "id": $(this).attr('data-id'),
                     "order": i
                 });
                 i++;
             });
-            $.ajax({
-                url: '/sherpa/cms/meny/sorter/',
+            $.ajaxQueue({
+                url: menus.attr('data-reorder-url'),
                 data: { menus: JSON.stringify(items) }
             }).fail(function(result) {
                 // Todo
@@ -228,7 +230,7 @@ $(document).ready(function() {
         } else {
             ajaxUrl = 'rediger/' + encodeURIComponent(activeMenu.attr('data-id')) + '/';
         }
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/meny/' + ajaxUrl,
             data: {
                 name: name,
@@ -239,7 +241,7 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
                 item.find("a.edit").click(edit);
-                $("nav#menus li").last().before(item);
+                menus.find("li").last().before(item);
             } else {
                 activeMenu.text(name);
                 activeMenu.attr('data-href', url);
@@ -255,7 +257,7 @@ $(document).ready(function() {
         if(!confirm('Er du sikker på at du vil slette denne linken fra hovedmenyen?')) {
             return;
         }
-        $.ajax({
+        $.ajaxQueue({
             url: '/sherpa/cms/meny/slett/' + activeMenu.attr('data-id') + '/',
             type: 'POST'
         }).done(function(result) {

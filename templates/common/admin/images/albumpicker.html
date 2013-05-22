@@ -1,45 +1,51 @@
-<div class="dialog album-picker" data-title="Velg album..." data-width="80%">
-  <div class="row image-archive-navigation">
-    <div class="span6">
-      <div class="item">
-        <input type="text" name="search" placeholder="Søk etter album...">
-        <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+<div class="modal container hide album-picker" data-search-url="{% url 'admin.images.views.album_search_json' %}">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg album...</h3>
+  </div>
+  <div class="modal-body">
+    <div class="row-fluid image-archive-navigation">
+      <div class="span4">
+        <div class="item">
+          <input type="text" name="search" placeholder="Søk etter album...">
+          <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+        </div>
+      </div>
+      <div class="span4">
+        <div class="item">
+          {# Todo, when associations are created #}
+          <p>
+            <a href="javascript:undefined" class="associations">Foreningsbilder</a>
+          </p>
+        </div>
+      </div>
+      <div class="span4">
+        <div class="item current">
+          <p>
+            <a href="javascript:undefined" class="albums">Alle bilder</a>
+          </p>
+        </div>
       </div>
     </div>
-    <div class="span6">
-      <div class="item">
-        {# Todo, when associations are created #}
-        <p>
-          <a href="javascript:undefined" class="associations">Foreningsbilder</a>
-        </p>
-      </div>
+
+    <hr>
+
+    <div class="albumpath">
+      <a href="javascript:undefined" data-albumpicker-id="">Bildearkiv</a>
+      <span class="path">
+      </span>
+      <button class="btn btn-success pick"><i class="icon-ok"></i> Velg dette albumet</button>
+      <button class="btn btn-danger deselect hide"><i class="icon-ban-circle"></i> Ikke legg i album</button>
+      <button class="btn cancel"><i class="icon-remove"></i> Avbryt</button>
     </div>
-    <div class="span6">
-      <div class="item current">
-        <p>
-          <a href="javascript:undefined" class="albums">Alle bilder</a>
-        </p>
-      </div>
+
+    <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+    <div class="dummy-child hide">
+      <img src="/static/img/icons/imagearchive/folder.png" alt="Album">
+      <a href="javascript:undefined" data-albumpicker-id=""></a>
     </div>
-  </div>
-
-  <hr>
-
-  <div class="albumpath">
-    <a href="javascript:undefined" data-albumpicker-id="">Bildearkiv</a>
-    <span class="path">
-    </span>
-    <button class="btn btn-success pick"><i class="icon-ok"></i> Velg dette albumet</button>
-    <button class="btn btn-danger deselect hide"><i class="icon-ban-circle"></i> Ikke legg i album</button>
-    <button class="btn cancel"><i class="icon-remove"></i> Avbryt</button>
-  </div>
-
-  <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-
-  <div class="dummy-child hide">
-    <img src="/static/img/icons/imagearchive/folder.png" alt="Album">
-    <a href="javascript:undefined" data-albumpicker-id=""></a>
-  </div>
-  <div class="children">
+    <div class="children">
+    </div>
   </div>
 </div>

@@ -1,0 +1,54 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Publikasjoner &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a>{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.association_main_mappings = JSON.parse("{{ association_main_mappings|escapejs }}");
+  </script>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/publications/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/publications/edit_publication_form.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    {% if publications|length > 0 %}
+      <table class="table">
+        <tr>
+          <th>Publikasjon</th>
+          <th>Utgivelser</th>
+          <th>Forening</th>
+        </tr>
+        {% for publication in publications %}
+          <tr>
+            <td><a href="{% url 'admin.publications.views.edit_publication' publication.id %}">{{ publication.title }}</a></td>
+            <td>
+              {% if publication.releases.all|length > 0 %}
+                {{ publication.releases.all|length }}
+              {% else %}
+                Ingen!
+              {% endif %}
+            </td>
+            <td>{{ publication.association.name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="alert alert-info">
+        Din forening har ikke lagt ut noen publikasjoner.
+      </div>
+    {% endif %}
+
+    <button class="btn btn-large create-publication">Opprett ny publikasjon</button>
+    {% include 'common/admin/publications/edit_publication_form.html' %}
+
+  </div>
+</div>
+
+{% endblock %}

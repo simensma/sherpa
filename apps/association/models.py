@@ -35,28 +35,24 @@ class Association(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
-    role = None # Can be set to contain a M2M-field for a user instance
-    def apply_role(self, user):
-        if user.has_perm('user.sherpa_admin'):
-            self.role = 'admin'
+    def get_with_children(self):
+        associations = [self]
+        for children in self.children.all():
+            associations += children.get_with_children()
+        return associations
+
+    def get_main_association(self):
+        if self.type == 'sentral' or self.type == 'forening':
+            return self
         else:
-            from user.models import AssociationRole
-            self.role = AssociationRole.objects.get(profile=user.get_profile(), association=self).role
+            return self.parent.get_main_association()
 
     @staticmethod
     def sort(associations):
-        associations = associations.order_by('name')
+        associations = sorted(associations, key=lambda a: a.name.lower())
         return {
-            'central': associations.filter(type='sentral'),
-            'associations': associations.filter(type='forening'),
-            'small_associations': associations.filter(type='turlag'),
-            'hike_groups': associations.filter(type='turgruppe'),
+            'central': [a for a in associations if a.type == 'sentral'],
+            'associations': [a for a in associations if a.type == 'forening'],
+            'small_associations': [a for a in associations if a.type == 'turlag'],
+            'hike_groups': [a for a in associations if a.type == 'turgruppe'],
         }
-
-    @staticmethod
-    def sort_and_apply_roles(associations, user):
-        associations = Association.sort(associations)
-        for list in associations.values():
-            for association in list:
-                association.apply_role(user)
-        return associations

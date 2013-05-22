@@ -13,6 +13,7 @@ class Link(models.Model):
     toid = models.IntegerField(db_column='toId')
     role = models.IntegerField()
     priority = models.IntegerField(null=True, blank=True)
+
     class Meta:
         db_table = u'Link'
 
@@ -26,6 +27,7 @@ class Classified(models.Model):
     authorized = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
+
     class Meta:
         db_table = u'Classified'
 
@@ -36,6 +38,7 @@ class ClassifiedImage(models.Model):
     modified = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
+
     class Meta:
         db_table = u'ClassifiedImage'
 
@@ -73,8 +76,34 @@ class Member(models.Model):
     modified = models.DateTimeField(null=True)
     status = models.IntegerField(null=True)
     online = models.BooleanField()
+
     class Meta:
         db_table = u'Member'
+
+# This model exists only for the migration import.
+# Use 'user.models.NorwayBusTicketOld' otherwise.
+class Norway(models.Model):
+    # Useful
+    memberid = models.IntegerField(unique=True, db_column='memberId')
+    date_placed = models.DateTimeField(null=True, db_column='registerDate')
+    date_trip_text = models.CharField(max_length=25, db_column='tripDate')
+    distance = models.CharField(max_length=255, db_column='tripStretch')
+
+    # Stuff we'll ignore
+    membername = models.CharField(max_length=255, db_column='memberName')
+    address1 = models.CharField(max_length=255)
+    address2 = models.CharField(max_length=255)
+    zipcode = models.CharField(max_length=20, db_column='zipCode')
+    ziparea = models.CharField(max_length=255, db_column='zipArea')
+    countrycode = models.CharField(max_length=20, db_column='countryCode')
+    orderid = models.IntegerField(primary_key=True, db_column='orderId')
+    email = models.TextField()
+    homephone = models.TextField(db_column='homePhone')
+    workphone = models.TextField(db_column='workPhone')
+    cellphone = models.TextField(db_column='cellPhone')
+
+    class Meta:
+        db_table = u'Norway'
 
 def import_fjelltreffen_annonser(profile):
     old_member = Member.objects.get(memberid=profile.memberid)
@@ -132,7 +161,7 @@ def import_fjelltreffen_annonser(profile):
 
         annonse.image = old_annonse_imageurl
         annonse.text = old_annonse.content
-        annonse.isold = True
+        annonse.is_old = True
         annonse.hidden = True
         annonse.hideage = True
 

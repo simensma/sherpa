@@ -1,0 +1,92 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Publikasjoner &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Publikasjoner</em>{% endblock %}
+
+{% load has_membership_type %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Publikasjoner</h2>
+
+    {% if user.get_profile.get_actor.is_household_member %}
+      {# Don't say anything, just let the account page inform about this. #}
+    {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
+      {# Don't say anything, just let the account page inform about this. #}
+    {% else %}
+      <p>
+        <a href="{% url 'user.views.reserve_publications' %}">Hvordan vil du lese Fjell og Vidde og årboken?</a>
+      </p>
+    {% endif %}
+
+    {% if publications_user|length == 0 and publications_other|length == 0 %}
+      <p>
+        Vi har dessverre ikke fått lagt ut noen publikasjoner her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
+      </p>
+    {% endif %}
+
+    {# Temporary #}
+    <div class="alert alert-info">
+      Vi jobber med å overføre det gamle publikasjonsarkivet til nye Min side. Om du savner noen utgaver kan du i mellomtiden besøke de gamle arkivene for <a href="https://www2.turistforeningen.no/minside/fjellogvidde">Fjell og Vidde</a>, <a href="https://www2.turistforeningen.no/minside/aarbok">Årboken</a> eller <a href="https://www2.turistforeningen.no/minside/ut">UT</a>.
+    </div>
+
+    <div class="publications">
+      <div class="row-fluid">
+        {% for publication in publications_user %}
+          <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
+            <div class="publication">
+              <h3 class="title">
+                <a href="{% url 'user.views.publication' publication.id %}">
+                  {{ publication.title }}
+                </a>
+              </h3>
+              <p class="meta">
+                {% if publication.releases.all|length > 0 %}
+                  {{ publication.releases.all|length }} utgivelser<br>
+                  Siste: {{ publication.get_latest_release.pub_date|date:"j. F Y" }}
+                {% else %}
+                  Ingen utgivelser ennå.<br>&nbsp;
+                {% endif %}
+              </p>
+              <p>
+                <a href="{% url 'user.views.publication' publication.id %}">
+                  <img src="{% firstof publication.get_latest_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ publication.title }}">
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {% if not forloop.last and forloop.counter|divisibleby:"2" %}
+            </div><div class="row-fluid">
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if publications_other|length > 0 %}
+      {# This phrasing might seem weird if someone has "other" publications but no "user" publications. However that's probably not the case for anyone. #}
+
+      <table class="table other-publications">
+        <tr>
+          <th>Andre publikasjoner</th>
+          <th>Utgis av</th>
+        </tr>
+        {% for publication in publications_other %}
+          <tr>
+            <td><a href="{% url 'user.views.publication' publication.id %}">{{ publication.title }}</a></td>
+            <td>{{ publication.association.name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' with active='publications' %}
+  </div>
+</div>
+
+{% endblock %}

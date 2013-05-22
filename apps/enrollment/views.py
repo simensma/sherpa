@@ -14,6 +14,7 @@ from core import validator
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
+from focus.util import get_membership_type_by_codename
 from enrollment.models import State
 
 from datetime import datetime, timedelta
@@ -187,7 +188,7 @@ def household(request):
                     return HttpResponseRedirect(reverse('enrollment.views.verification'))
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
-                    logger.error(u"Postnummer finnes i Zipcode, men ikke i Focus!",
+                    logger.warning(u"Postnummer finnes i Zipcode, men ikke i Focus!",
                         exc_info=sys.exc_info(),
                         extra={
                             'request': request,
@@ -196,7 +197,7 @@ def household(request):
                     )
                     messages.error(request, 'focus_zipcode_missing')
                 except Association.DoesNotExist:
-                    logger.error(u"Focus-postnummer mangler foreningstilknytning!",
+                    logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
                         exc_info=sys.exc_info(),
                         extra={'request': request}
                     )
@@ -210,11 +211,6 @@ def household(request):
             main = True
             break
 
-    countries = FocusCountry.objects.all()
-    countries_norway = countries.get(code='NO')
-    countries_other_scandinavian = countries.filter(scandinavian=True).exclude(code='NO')
-    countries_other = countries.filter(scandinavian=False)
-
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
 
@@ -223,11 +219,11 @@ def household(request):
         'location': request.session['enrollment'].get('location', ''),
         'existing': request.session['enrollment'].get('existing', ''),
         'invalid_existing': invalid_existing in request.GET,
-        'countries_norway': countries_norway, 'main': main,
+        'countries': FocusCountry.get_sorted(),
+        'main': main,
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'countries_other_scandinavian': countries_other_scandinavian,
-        'countries_other': countries_other, 'errors': errors,
+        'errors': errors,
         'now': now, 'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/household.html', context)
 
@@ -249,9 +245,9 @@ def existing(request):
     try:
         if data['country'] == 'NO':
             # Include zipcode for norwegian members
-            address = ActorAddress.objects.get(actor=actor.id, zipcode=data['zipcode'], country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, zipcode=data['zipcode'], country_code=data['country'])
         else:
-            address = ActorAddress.objects.get(actor=actor.id, country=data['country'])
+            address = ActorAddress.objects.get(actor=actor.id, country_code=data['country'])
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
@@ -284,10 +280,10 @@ def verification(request):
     if request.session['enrollment']['existing'] != '':
         actor = Actor.objects.get(memberid=request.session['enrollment']['existing'])
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
-        request.session['enrollment']['location']['country'] = actor.address.country
-        if actor.address.country == 'NO':
+        request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
+        if actor.get_clean_address().country.code == 'NO':
             request.session['enrollment']['location']['address1'] = actor.address.a1
-        elif actor.address.country == 'DK' or actor.address.country == 'SE':
+        elif actor.get_clean_address().country.code == 'DK' or actor.get_clean_address().country.code == 'SE':
             # Don't change the user-provided address.
             # The user might potentially provide a different address than the existing
             # member, which isn't allowed, but this is preferable to trying to parse the
@@ -297,7 +293,7 @@ def verification(request):
             pass
         else:
             # Uppercase the country code as Focus doesn't use consistent casing
-            request.session['enrollment']['location']['country'] = actor.address.country.upper()
+            request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
             request.session['enrollment']['location']['address1'] = actor.address.a1
             request.session['enrollment']['location']['address2'] = actor.address.a2
             request.session['enrollment']['location']['address3'] = actor.address.a3
@@ -310,27 +306,27 @@ def verification(request):
     if request.session['enrollment']['existing'] != '':
         # Use main members' association if applicable
         focus_association_id = Actor.objects.get(memberid=request.session['enrollment']['existing']).main_association_id
-        association = cache.get('focus.association.%s' % focus_association_id)
+        association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
         if request.session['enrollment']['location']['country'] == 'NO':
             focus_association_id = cache.get('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'])
             if focus_association_id is None:
                 focus_association_id = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).main_association_id
                 cache.set('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
-            association = cache.get('focus.association.%s' % focus_association_id)
+            association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
             if association is None:
                 association = Association.objects.get(focus_id=focus_association_id)
-                cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+                cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
             oslo_association_id = 2 # This is the current ID for that association
-            association = cache.get('association.%s' % oslo_association_id)
+            association = cache.get('association_sherpa2.%s' % oslo_association_id)
             if association is None:
                 association = Association.objects.get(id=oslo_association_id)
-                cache.set('association.%s' % oslo_association_id, association, 60 * 60 * 24)
+                cache.set('association_sherpa2.%s' % oslo_association_id, association, 60 * 60 * 24)
     request.session['enrollment']['association'] = association
 
     # Get the prices for that association
@@ -359,20 +355,36 @@ def verification(request):
     keyprice = keycount * KEY_PRICE
     multiple_main = youth_or_older_count > 1
     updateIndices(request.session)
-    context = {'users': request.session['enrollment']['users'],
+    context = {
+        'users': request.session['enrollment']['users'],
         'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
         'location': request.session['enrollment']['location'],
         'association': request.session['enrollment']['association'],
-        'existing': request.session['enrollment']['existing'], 'existing_name': existing_name,
-        'keycount': keycount, 'keyprice': keyprice, 'multiple_main': multiple_main,
-        'main': main, 'year': year, 'next_year': next_year,
+        'existing': request.session['enrollment']['existing'],
+        'existing_name': existing_name,
+        'keycount': keycount,
+        'keyprice': keyprice,
+        'multiple_main': multiple_main,
+        'main': main,
+        'year': year,
+        'next_year': next_year,
         'price': request.session['enrollment']['price'],
-        'age_senior': AGE_SENIOR, 'age_main': AGE_MAIN, 'age_youth': AGE_YOUTH,
+        'age_senior': AGE_SENIOR,
+        'age_main': AGE_MAIN,
+        'age_youth': AGE_YOUTH,
         'age_school': AGE_SCHOOL,
+        'membership_type_names': {
+            'senior': get_membership_type_by_codename('senior')['name'],
+            'main': get_membership_type_by_codename('main')['name'],
+            'youth': get_membership_type_by_codename('youth')['name'],
+            'school': get_membership_type_by_codename('school')['name'],
+            'household': get_membership_type_by_codename('household')['name'],
+        },
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'now': now, 'new_membership_year': new_membership_year}
+        'now': now,
+        'new_membership_year': new_membership_year}
     return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
@@ -519,16 +531,14 @@ def payment(request):
     # Infer order details based on (poor) conventions.
     if main is not None:
         order_number = 'I_%s' % main['id']
-        first_name = main['name'].split(' ')[0]
-        last_name = main['name'].split(' ')[1:]
+        first_name, last_name = main['name'].rsplit(' ', 1)
         email = main['email']
     else:
         found = False
         for user in request.session['enrollment']['users']:
             if user['age'] >= AGE_YOUTH:
                 order_number = 'I_%s' % user['id']
-                first_name = user['name'].split(' ')[0]
-                last_name = user['name'].split(' ')[1:]
+                first_name, last_name = user['name'].rsplit(' ', 1)
                 email = user['email']
                 found = True
                 break
@@ -537,8 +547,7 @@ def payment(request):
             for user in request.session['enrollment']['users']:
                 order_number += '_%s' % user['id']
             # Just use the name of the first user.
-            first_name = request.session['enrollment']['users'][0]['name'].split(' ')[0]
-            last_name = request.session['enrollment']['users'][0]['name'].split(' ')[1:]
+            first_name, last_name = request.session['enrollment']['users'][0]['name'].rsplit(' ', 1)
             email = request.session['enrollment']['users'][0]['email']
 
     context = Context({'year': year, 'next_year': next_year})
@@ -649,7 +658,7 @@ def process_card(request):
                 # Register the payment in focus
                 for user in request.session['enrollment']['users']:
                     focus_user = Enrollment.objects.get(member_id=user['id'])
-                    focus_user.payed = True
+                    focus_user.paid = True
                     focus_user.save()
                 prepare_and_send_email(
                     request,
@@ -907,7 +916,7 @@ def validate_existing(id, zipcode, country):
     if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
         return False
 
-    if actor.address.country != country:
+    if actor.get_clean_address().country.code != country:
         return False
 
     if country == 'NO' and actor.address.zipcode != zipcode:
@@ -941,12 +950,18 @@ def price_of_age(age, price):
     else:                    return price.child
 
 def type_of(age, household):
-    if household and age >= AGE_YOUTH:   return 'Husstandsmedlem'
-    elif age >= AGE_SENIOR:              return 'Honnørmedlem'
-    elif age >= AGE_MAIN:                return 'Hovedmedlem'
-    elif age >= AGE_YOUTH:               return 'Ungdomsmedlem'
-    elif age >= AGE_SCHOOL:              return 'Skoleungdomsmedlem'
-    else:                                return 'Barnemedlem'
+    if household and age >= AGE_YOUTH:
+        return get_membership_type_by_codename('household')['name']
+    elif age >= AGE_SENIOR:
+        return get_membership_type_by_codename('senior')['name']
+    elif age >= AGE_MAIN:
+        return get_membership_type_by_codename('main')['name']
+    elif age >= AGE_YOUTH:
+        return get_membership_type_by_codename('youth')['name']
+    elif age >= AGE_SCHOOL:
+        return get_membership_type_by_codename('school')['name']
+    else:
+        return get_membership_type_by_codename('child')['name']
 
 def polite_title(str):
     # If the string is all lowercase or uppercase, apply titling for it
@@ -957,8 +972,7 @@ def polite_title(str):
         return str
 
 def add_focus_user(name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
-    first_name = ' '.join(name.split(' ')[:-1])
-    last_name = name.split(' ')[-1]
+    first_name, last_name = name.rsplit(' ', 1)
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to is not None)
@@ -1017,15 +1031,17 @@ def focus_payment_method_code(method):
 
 def focus_type_of(age, household):
     if household and age >= AGE_YOUTH:
-                             return 107
-    elif age >= AGE_SENIOR:  return 103
-    elif age >= AGE_MAIN:    return 101
-    elif age >= AGE_YOUTH:   return 102
-    elif age >= AGE_SCHOOL:  return 106
-    else:                    return 105
-    # 104 = Lifelong member
-    # 108 = Old household entries, being phased out (use 107)
-    # 109 = Lifelong household member
+        return get_membership_type_by_codename('household')['code']
+    elif age >= AGE_SENIOR:
+        return get_membership_type_by_codename('senior')['code']
+    elif age >= AGE_MAIN:
+        return get_membership_type_by_codename('main')['code']
+    elif age >= AGE_YOUTH:
+        return get_membership_type_by_codename('youth')['code']
+    elif age >= AGE_SCHOOL:
+        return get_membership_type_by_codename('school')['code']
+    else:
+        return get_membership_type_by_codename('child')['code']
 
 def focus_receive_yearbook(age, linked_to):
     if linked_to != '':

@@ -18,6 +18,9 @@ $(document).ready(function() {
     var no_matches = wrapper.find("div.no-matches");
     var no_further_matches = wrapper.find("div.no-further-matches");
 
+    var first_time_fjelltreffen_visitor = $("div.modal.first-time-fjelltreffen-visitor");
+    first_time_fjelltreffen_visitor.modal();
+
     input_min_age.change(filterChanged);
     input_max_age.change(filterChanged);
     input_gender.change(filterChanged);
@@ -33,7 +36,7 @@ $(document).ready(function() {
     button_trigger.click(loadAnnonser);
 
     function filterChanged(){
-        if(input_max_age.val() != '' && input_min_age.val() > input_max_age.val()) {
+        if(input_max_age.val() !== '' && input_min_age.val() > input_max_age.val()) {
             alert("Du kan ikke søke fra en høyere alder til en lavere alder! Det får du ingen treff på. Velg en annen aldersgruppe.");
             return;
         }
@@ -59,21 +62,20 @@ $(document).ready(function() {
             minage: input_min_age.val(),
             maxage: input_max_age.val(),
             gender: input_gender.val(),
-            //this is some jquery quirk. .val() removes leading zeroes, and focus uses leading zeroes in county codes
-            county: input_county.attr("value"),
+            county: input_county.val(),
             text: input_text.val()
         };
 
         $.ajaxQueue({
-            url: "/fjelltreffen/last/" + start_index + "/",
+            url: wrapper.attr('data-load-url'),
             data: {filter: JSON.stringify(filter)}
         }).done(function(result) {
             result = JSON.parse(result);
-            var new_items = $(result.html).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
+            var new_items = $(result.html.trim()).filter(function() { return this.nodeType != 3; }); // Filter out text nodes
 
-            if(new_items.length == 0) {
+            if(new_items.length === 0) {
                 // No results
-                if(start_index == 0) {
+                if(start_index === 0) {
                     // This was a new filter with no matches
                     no_matches.fadeIn();
                 } else {

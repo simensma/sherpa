@@ -61,29 +61,29 @@
         <p>Faktura, gavekort og medlemskort blir sendt til din adresse.</p>
         <div class="control-group giver_name">
           <label>Fullt navn <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_name" value="{{ giver.name }}">
+          <input type="text" class="input-large" name="giver_name" value="{% firstof giver.name user.get_profile.get_full_name %}">
         </div>
         <div class="control-group giver_address">
           <label> Adresse <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="giver_address" value="{{ giver.address }}">
+          <input type="text" class="input-large" name="giver_address" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.address user.get_profile.get_actor.get_clean_address.field1 %}{% else %}{{ giver.address }}{% endif %}">
         </div>
         <div class="control-group giver_zipcode">
           <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
-          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{{ giver.zipcode }}" maxlength="10">
-          <input type="text" class="input-medium area" name="giver_area" value="{{ giver.area }}" disabled>
+          <input type="text" class="input-small zipcode" name="giver_zipcode" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.zipcode user.get_profile.get_actor.get_clean_address.zipcode.zipcode %}{% else %}{{ giver.zipcode }}{% endif %}" maxlength="10">
+          <input type="text" class="input-medium area" name="giver_area" value="{% if user.get_profile.is_member and user.get_profile.get_actor.get_clean_address.country.code == 'NO' %}{% firstof giver.area user.get_profile.get_actor.get_clean_address.zipcode.area %}{% else %}{{ giver.area }}{% endif %}" disabled>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
         <div class="control-group giver_memberid" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Husstandsmedlemskap" data-content="Er du selv medlem og skal gi gavemedlemskap til andre i husstanden? Da vil vi gjerne at du oppgir medlemsnummeret ditt, slik at vi kan koble dere sammen i medlemssystemet vårt.">
           <label>Medlemsnummer</label>
-          <input type="text" class="input-large" name="giver_memberid" value="{{ giver.memberid }}">
+          <input type="text" class="input-large" name="giver_memberid" value="{% firstof giver.memberid user.get_profile.memberid %}">
         </div>
         <div class="control-group giver_phone" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> Mobiltelefon</label>
-          <input type="text" class="input-medium" name="giver_phone" value="{{ giver.phone }}">
+          <input type="text" class="input-medium" name="giver_phone" value="{% if user.get_profile.is_member %}{% firstof giver.phone user.get_profile.get_actor.phone_mobile user.get_profile.get_actor.phone_home %}{% endif %}">
         </div>
         <div class="control-group giver_email" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> E-post</label>
-          <input type="text" class="input-large" name="giver_email" value="{{ giver.email }}">
+          <input type="text" class="input-large" name="giver_email" value="{% firstof giver.email user.get_profile.get_email %}">
         </div>
       </div>
     </div>

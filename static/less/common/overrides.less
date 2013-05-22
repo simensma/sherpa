@@ -1,0 +1,97 @@
+/**
+ * Generic styles that are explicit overrides of styles applied by the libraries we use.
+ * If any explicit overrides are found elsewhere, consider moving them here.
+ */
+
+/**
+ * BOOTSTRAP
+ */
+
+/* Don't set margin-top to headers globally */
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+/* No border-radius for wells */
+div.well {
+  border-radius: none !important;
+}
+
+/* Alert-box styles */
+
+div.alert, div.alert * {
+  font-family: "DTL Nobel" !important;
+}
+
+div.alert-info {
+  border-color: rgb(180, 180, 180) !important;
+  background-color: rgb(220, 220, 220) !important;
+  color: rgb(51, 51, 51) !important;
+}
+
+div.alert-error {
+  color: black !important;
+  background-color: rgb(243, 192, 188) !important;
+}
+
+/* Profile-color for red button */
+
+.btn-danger {
+  background-color: @profile-red !important;
+  background-image: none !important;
+}
+
+.btn-danger:hover {
+  background-color: rgb(246, 72, 62) !important;
+}
+
+/* No radio input border */
+
+input[type='radio'], input[type='checkbox'] {
+  border: none;
+}
+
+/* Larger popover title */
+
+.popover-title {
+  font-size: 18px;
+}
+
+/* Profile-font for nav-lists */
+
+ul.nav-list li {
+  font-family: "DTL Nobel" !important;
+}
+
+ul.nav-list li a:hover {
+  background-color: rgb(215, 215, 215);
+}
+
+/* Profile-friendly form 'success' colors */
+
+.control-group.success label {
+  color: rgb(51, 51, 51);
+}
+
+.control-group.success input, .control-group.success input:focus {
+  border-color: rgb(29, 235, 32);
+}
+
+/**
+ * DATEPICKER
+ */
+
+.datepicker {
+ font-family: sans-serif !important;
+ font-size: 16px;
+}
+
+/**
+ * CHOSEN
+ */
+
+.chzn-container, .chzn-drop, .chzn-search input, .chzn-results li {
+ font-family: "DTL Nobel" !important;
+ font-size: 16px !important;
+}

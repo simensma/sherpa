@@ -15,7 +15,7 @@ default_gender = ''     # All genders - empty string is also used in the select 
 default_text = ''       # Text search, empty means no constraints
 
 class Annonse(models.Model):
-    profile = models.ForeignKey('user.Profile')
+    profile = models.ForeignKey('user.Profile', related_name='fjelltreffen_annonser')
     date_added = models.DateField(auto_now_add=True)
     date_renewed = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)
@@ -30,16 +30,16 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField()
     hideage = models.BooleanField()
-    isold = models.BooleanField()
+    is_old = models.BooleanField() # True for those imported from old Fjelltreffen
 
     def get_image_url(self):
-        if self.isold:
+        if self.is_old:
             return "http://%s/%s" % (settings.OLD_SITE, self.image)
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
     def get_image_thumb_url(self):
-        if self.isold:
+        if self.is_old:
             return self.get_image_url()
         else:
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
@@ -58,21 +58,27 @@ class Annonse(models.Model):
         return ((self.date_renewed + timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)) - date.today()).days
 
     def delete_image(self):
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
-
-        if self.image != '':
-            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+        if self.is_old:
+            # Ignore images from old annonser, just let them rot on the old server.
             self.image = ''
-
-        if self.image_thumb != '':
-            s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
             self.image_thumb = ''
+            self.save()
+        else:
+            s3 = simples3.S3Bucket(
+                settings.AWS_BUCKET,
+                settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY,
+                'https://%s' % settings.AWS_BUCKET)
 
-        self.save()
+            if self.image != '':
+                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+                self.image = ''
+
+            if self.image_thumb != '':
+                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+                self.image_thumb = ''
+
+            self.save()
 
     #
     # Utility methods
@@ -144,11 +150,11 @@ class Annonse(models.Model):
 
             annonse_matches.append(a)
 
-            if len(annonse_matches) >= settings.FJELLTREFFEN_BULKLOADNUM:
+            if len(annonse_matches) >= settings.FJELLTREFFEN_BULK_COUNT:
                 # We now have the amount of results we want
                 break
 
-        end = len(all_candidates) <= settings.FJELLTREFFEN_BULKLOADNUM
+        end = len(all_candidates) <= settings.FJELLTREFFEN_BULK_COUNT
         return (annonse_matches, next_start_index, end)
 
 # Upon deletion, delete any stored images from S3

@@ -22,7 +22,7 @@
       <div class="control-group">
         <label class="control-label" for="image-photographer">Fotograf:</label>
         <div class="controls">
-          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer">
+          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer" data-source-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 

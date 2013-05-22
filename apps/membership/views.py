@@ -8,8 +8,10 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+from sherpa.decorators import user_requires_login
 from sherpa2.models import Association
-from focus.models import FocusZipcode, Price, Actor, ACTOR_ENDCODE_DUBLETT
+from focus.models import FocusZipcode, Price, Actor
+from focus.util import ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
@@ -39,10 +41,10 @@ def benefits(request, association_id):
         association_focus_id = 10
         association = None
     else:
-        association = cache.get('association.%s' % association_id)
+        association = cache.get('association_sherpa2.%s' % association_id)
         if association is None:
             association = Association.objects.get(id=association_id)
-            cache.set('association.%s' % association_id, association, 60 * 60 * 24)
+            cache.set('association_sherpa2.%s' % association_id, association, 60 * 60 * 24)
         association_focus_id = association.focus_id
 
     price = cache.get('association.price.%s' % association_focus_id)
@@ -73,10 +75,10 @@ def zipcode_search(request):
             cache.set('focus.zipcode_association.%s' % request.POST['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
 
         # Get association based on zipcode-ID
-        association = cache.get('focus.association.%s' % focus_association_id)
+        association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('focus.association.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
 
         # Success, redirect user
         url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
@@ -85,7 +87,7 @@ def zipcode_search(request):
     except FocusZipcode.DoesNotExist:
         # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
         if Zipcode.objects.filter(zipcode=request.POST['zipcode']).exists():
-            logger.error(u"Postnummer finnes i Zipcode, men ikke i Focus!",
+            logger.warning(u"Postnummer finnes i Zipcode, men ikke i Focus!",
                 exc_info=sys.exc_info(),
                 extra={
                     'request': request,
@@ -98,7 +100,7 @@ def zipcode_search(request):
             return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
 
     except Association.DoesNotExist:
-        logger.error(u"Focus-postnummer mangler foreningstilknytning!",
+        logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
@@ -160,15 +162,30 @@ def memberid_sms(request):
     actor = actors[0]
     sms_request.memberid = actor.memberid
     sms_request.save()
+    return send_sms_receipt(request, actor)
 
+@user_requires_login()
+def memberid_sms_userpage(request):
+    # Requests from the userpage
+    actor = request.user.get_profile().get_actor()
+    if actor.phone_mobile.strip() == '':
+        # This shouldn't happen (it's checked client-side first) - but handle it anyway, just in case
+        return HttpResponse(json.dumps({
+            'status': 'missing_number'
+        }))
+    return send_sms_receipt(request, actor)
+
+# This is not a view
+def send_sms_receipt(request, actor):
+    number = re.sub('\s', '', actor.phone_mobile)
     try:
         context = RequestContext(request, {
             'actor': actor,
             'year': datetime.now().year,
             'next_year': datetime.now().month >= settings.MEMBERSHIP_YEAR_START,
-            'all_payed': all(a.has_payed() for a in [actor] + list(actor.get_children()))
+            'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
         })
-        sms_message = render_to_string('main/membership/memberid_sms.txt', context).encode('utf-8')
+        sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         status = re.findall('Status: .*', r.text)
         if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
@@ -182,8 +199,8 @@ def memberid_sms(request):
                 }
             )
             return HttpResponse(json.dumps({
-                'status': 'service_fail'}
-            ))
+                'status': 'service_fail'
+            }))
         return HttpResponse(json.dumps({'status': 'ok'}))
     except requests.ConnectionError:
         logger.error(u"Kunne ikke sende medlemsnummer på SMS: requests.ConnectionError",
@@ -194,5 +211,5 @@ def memberid_sms(request):
             }
         )
         return HttpResponse(json.dumps({
-            'status': 'connection_error'}
-        ))
+            'status': 'connection_error'
+        }))

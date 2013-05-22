@@ -1,0 +1,112 @@
+div.image-archive-picker {
+
+  div.modal-header h2 {
+    margin-bottom: 0;
+  }
+
+  // Note that this extends/overrides the generic albumpath style
+  div.albumpath {
+    border-color: rgb(220, 220, 220) !important;
+
+    span.initial-separator {
+      margin-left: 5px;
+      margin-right: 5px;
+      color: rgb(200, 200, 200);
+    }
+  }
+
+  label.radio {
+    font-family: "DTL Nobel" !important;
+    display: inline;
+  }
+
+  div.content {
+    div.albums {
+      div.album {
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        font-family: "DTL Nobel" !important;
+
+        img {
+          margin-right: 4px;
+        }
+      }
+
+      img.album {
+        float: left;
+        width: 25px;
+      }
+    }
+
+    ul.images {
+      li {
+        @image-height: 120px;
+        @image-width: 150px;
+        @height: @image-height + 50px;
+
+        display: block;
+        float: left;
+        font-family: "DTL Nobel" !important;
+        width: @image-width + 30px;
+        height: @height;
+        border: 1px solid rgb(210, 210, 210);
+        margin: 10px;
+        padding: 15px 5px;
+        text-align: center;
+        cursor: pointer;
+
+        img {
+          margin-bottom: 5px;
+          max-height: @image-height;
+        }
+      }
+
+      li.clickable-album {
+        color: @profile-red;
+      }
+
+      li:hover {
+        background-color: rgb(235, 235, 235);
+      }
+    }
+  }
+
+  div.content.simple-display {
+    ul.images {
+      li {
+        @image-height: 120px;
+        height: @image-height;
+        margin: 2px;
+        padding: 0;
+        width: auto;
+        border: none;
+
+        img {
+          height: @image-height;
+          margin-bottom: 2px;
+        }
+
+        span.meta {
+          display: none;
+        }
+      }
+
+      li.clickable-album {
+        img {
+          height: 90px;
+        }
+      }
+
+      li:hover {
+        background-color: transparent;
+        opacity: 0.7;
+        filter: alpha(opacity=70);
+      }
+    }
+  }
+}
+
+div.image-upload-dialog {
+  width: 800px;
+}

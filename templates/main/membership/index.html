@@ -25,7 +25,7 @@
           <h2>Se dine medlemsfordeler og priser:</h2>
           <p class="search">
             <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
-            <button class="btn btn-danger zipcode-search input-button-align">OK</button>
+            <button class="btn btn-danger zipcode-search input-button-align" data-zipcode-url="{% url 'membership.views.zipcode_search' %}">OK</button>
             <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
             <br>
             <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>

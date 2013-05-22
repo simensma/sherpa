@@ -6,37 +6,39 @@
 {% endblock %}
 {% block body %}
 
-<div class="row change-enrollment-status">
-  <div class="span6 cont">
-    <div class="active state{% if not state.active %} hide{% endif %}">
-      <h2 class="status active">Innmeldingsskjemaet er aktivert.</h2>
-      <button class="btn btn-large btn-danger deactivate-state">Deaktiver innmeldingsskjemaet</button>
+<div class="change-enrollment-status" data-activate-state-url="{% url 'admin.enrollment.views.activate_state' %}" data-activate-card-url="{% url 'admin.enrollment.views.activate_card' %}">
+  <div class="row">
+    <div class="span6 cont">
+      <div class="active state{% if not state.active %} hide{% endif %}">
+        <h2 class="status active">Innmeldingsskjemaet er aktivert.</h2>
+        <button class="btn btn-large btn-danger deactivate-state">Deaktiver innmeldingsskjemaet</button>
+      </div>
+
+      <div class="inactive state{% if state.active %} hide{% endif %}">
+        <h2 class="status inactive">Innmeldingsskjemaet er deaktivert!</h2>
+        <button class="btn btn-large btn-success activate-state">Aktiver innmeldingsskjemaet</button>
+      </div>
+
+      <p class="ajaxloader state hide">
+        <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      </p>
     </div>
 
-    <div class="inactive state{% if state.active %} hide{% endif %}">
-      <h2 class="status inactive">Innmeldingsskjemaet er deaktivert!</h2>
-      <button class="btn btn-large btn-success activate-state">Aktiver innmeldingsskjemaet</button>
+    <div class="span6 cont">
+      <div class="active card{% if not state.card %} hide{% endif %}">
+        <h2 class="status active">Kortbetaling er aktivert.</h2>
+        <button class="btn btn-large btn-danger deactivate-card">Deaktiver kortbetaling</button>
+      </div>
+
+      <div class="inactive card{% if state.card %} hide{% endif %}">
+        <h2 class="status inactive">Kortbetaling er deaktivert!</h2>
+        <button class="btn btn-large btn-success activate-card">Aktiver kortbetaling</button>
+      </div>
+
+      <p class="ajaxloader card hide">
+        <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      </p>
     </div>
-
-    <p class="ajaxloader state hide">
-      <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-    </p>
-  </div>
-
-  <div class="span6 cont">
-    <div class="active card{% if not state.card %} hide{% endif %}">
-      <h2 class="status active">Kortbetaling er aktivert.</h2>
-      <button class="btn btn-large btn-danger deactivate-card">Deaktiver kortbetaling</button>
-    </div>
-
-    <div class="inactive card{% if state.card %} hide{% endif %}">
-      <h2 class="status inactive">Kortbetaling er deaktivert!</h2>
-      <button class="btn btn-large btn-success activate-card">Aktiver kortbetaling</button>
-    </div>
-
-    <p class="ajaxloader card hide">
-      <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-    </p>
   </div>
 </div>
 

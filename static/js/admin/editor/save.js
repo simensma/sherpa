@@ -172,7 +172,7 @@ $(document).ready(function() {
 
         // Save content
         $.ajaxQueue({
-            url: '/sherpa/cms/editor/lagre/' + $("div.editor-header").attr('data-version-id') + '/',
+            url: article_element.attr('data-save-url'),
             data: data
         }).done(function(result) {
             result = JSON.parse(result);

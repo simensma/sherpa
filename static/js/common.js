@@ -35,7 +35,7 @@ $(document).ready(function() {
             return $(this);
         }
         var hostname = $(this).get(0).hostname;
-        if(hostname != '' && hostname != location.hostname) {
+        if(hostname !== '' && hostname != location.hostname) {
             $(this).addClass('external');
         }
     });
@@ -60,6 +60,9 @@ $(document).ready(function() {
         window.location = $(this).attr('data-href');
     });
 
+    /* Enable self-declared chosen selects */
+    $("select[data-chosen]").chosen();
+
 });
 
 $.fn.enableDialog = function() {
@@ -71,7 +74,7 @@ $.fn.enableDialog = function() {
             width: $(this).attr('data-width')
         }).hide();
     });
-}
+};
 
 $.fn.enableDialogButton = function() {
     return this.each(function() {
@@ -79,12 +82,12 @@ $.fn.enableDialogButton = function() {
             $($(this).attr('data-dialog')).dialog('open');
         });
     });
-}
+};
 
 // The escape key seems to only work for IE, not Opera or Firefox, so simulate
 // the modal close upon escape keypress.
 $(document).on('keypress', 'body', function(e) {
-    if(e.which == 0) {
+    if(e.which === 0) {
         $(".modal").modal('hide');
     }
 });

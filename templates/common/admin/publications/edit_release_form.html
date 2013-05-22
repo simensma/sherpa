@@ -1,0 +1,106 @@
+{# This may be a 'create' or an 'edit' form #}
+{% if release %}
+  <form action="{% url 'admin.publications.views.edit_release' publication.id release.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
+{% else %}
+  <form action="{% url 'admin.publications.views.edit_release' publication.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release hide">
+{% endif %}
+
+  {% csrf_token %}
+
+  <div class="control-group title">
+    <label class="control-label" for="release_title">Tittel:</label>
+    <div class="controls">
+      <input type="text" class="input-xlarge" name="title" id="release_title" value="{{ release.title }}">
+    </div>
+  </div>
+
+  <div class="control-group cover_photo">
+    <label class="control-label" for="release_cover_photo">Forsidebilde:</label>
+    <div class="controls">
+      <div class="row-fluid">
+        <div class="span3">
+          <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}" class="cover_photo">
+          <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        </div>
+        <div class="span9">
+          <input type="text" class="input-xxlarge" name="cover_photo" id="release_cover_photo" value="{{ release.cover_photo }}">
+          <p>
+            <a href="javascript:undefined" class="btn pick-from-image-archive">Hent fra bildearkivet</a>
+            <a href="javascript:undefined" class="btn upload-new-image">Last opp nytt</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group description">
+    <label class="control-label" for="release_description">Oppsummering:</label>
+    <div class="controls">
+      <textarea name="description" id="release_description" rows="5" class="input-xlarge">{{ release.description }}</textarea>
+    </div>
+  </div>
+
+  <div class="control-group pub_date">
+    <label class="control-label" for="release_pub_date">Publisert:</label>
+    <div class="controls">
+      <div class="input-append date pub_date-wrapper">
+        <input type="text" class="input-medium" name="pub_date" id="release_pub_date" value="{% firstof release.pub_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+        <span class="add-on"><i class="icon-th"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group tags">
+    <label class="control-label" for="release_tags">Nøkkelord:</label>
+    <div class="controls">
+      <input type="hidden" name="tags-serialized">
+      <input type="text" class="input-xlarge" name="tags" id="release_tags" style="margin-bottom: 10px">
+      <div class="tag-box">
+        {% for tag in release.tags.all %}
+          <div class="tag">
+            <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+            {{ tag.name }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group pdf">
+    <label class="control-label" for="release_pdf">Last opp PDF:</label>
+    <div class="controls">
+      <input type="file" class="input-xlarge" name="pdf" id="release_pdf" accept="application/pdf">
+      <div class="hints">
+        PDF-magasin som medlemmer kan laste ned.
+        {% if release and release.pdf_hash != '' %}
+        <br>
+        <a href="{{ release.get_pdf_url }}">Denne</a> ({{ release.pdf_file_size|filesizeformat }}) er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group online_view">
+    <label class="control-label" for="release_online_view">Les på nett-lenke:</label>
+    <div class="controls">
+      <input type="text" class="input-xxlarge" name="online_view" id="release_online_view" value="{% firstof release.online_view 'http://' %}">
+      <div class="hints">
+        Kan lenke til en tjeneste der man kan lese utgaven på nett, f.eks. på <a href="http://www.calameo.com/">Calameo</a>.<br>
+        Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-danger"><i class="icon-ok icon-white"></i>
+        {% if not release %}
+          Legg ut utgivelsen
+        {% else %}
+          Lagre utgivelsen
+        {% endif %}
+      </button>
+    </div>
+  </div>
+
+</form>

@@ -7,7 +7,7 @@ Fra: {{ giver.name }}
 {{ giver.zipcode }} {{ giver.area }}{% if giver.memberid %}
 Medlemsnummer: {{ giver.memberid }}{% endif %}{% if giver.phone %}
 Tlf: {{ giver.phone }}{% endif %}{% if giver.email %}
-Epost: {{ giver.email }}{% endif %}
+E-post: {{ giver.email }}{% endif %}
 
 {% for receiver in receivers %}Til: {{ receiver.name }}
 Type: {{ receiver.type.name }}
@@ -15,7 +15,7 @@ Født: {{ receiver.dob|date:"j. F Y" }}
 {{ receiver.address }}
 {{ receiver.zipcode }} {{ receiver.area }}{% if receiver.phone %}
 Tlf: {{ receiver.phone }}{% endif %}{% if receiver.email %}
-Epost: {{ receiver.email }}{% endif %}
+E-post: {{ receiver.email }}{% endif %}
 
 {% endfor %}Feil med bestillingen? Ta kontakt med DNTs medlemsservice på telefon 40001870 eller e-post medlem@turistforeningen.no
 

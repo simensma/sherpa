@@ -1,0 +1,73 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Partnertilbud — Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Partnertilbud</em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Medlemsfordeler fra DNTs samarbeidspartnere</h2>
+
+    <p>
+      Flere av våre samarbeidspartnere tilbyr gode medlemsfordeler til DNTs medlemmer. For at du skal få maksimalt utbytte av disse medlemsfordelene, kan det være aktuelt for noen av våre samarbeidspartnere å ta kontakt med deg via telefon, e-post eller vanlig post.
+    </p>
+
+    <div class="form-border user-reservations">
+      <table class="user-reservations sponsors" data-url="{% url 'user.views.partneroffers_reserve' %}">
+        <tr class="choice">
+          <td>
+            <input type="radio" name="sponsors" value="allow"{% if not user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Ja, jeg ønsker å motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere<br>
+          </td>
+        </tr>
+        <tr class="choice">
+          <td>
+            <input type="radio" name="sponsors" value="reserve"{% if user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>
+          </td>
+          <td class="fake-table-label">
+            Nei, jeg vil reservere meg mot medlemsfordeler fra DNTs samarbeidspartnere
+          </td>
+        </tr>
+
+        <tr class="status loading hide">
+          <td></td>
+          <td>
+            Lagrer ditt valg, vennligst vent...<br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="status success hide">
+          <td></td>
+          <td>
+            <div class="alert alert-success">
+              <strong>Oppdateringen er registrert.</strong><br>
+              <span class="success reserve">Du har nå reservert deg mot tilbud fra våre samarbeidspartnere.</span>
+              <span class="success allow">Du godtar nå å motta tilbud fra våre samarbeidspartnere.</span>
+            </div>
+          </td>
+        </tr>
+        <tr class="status error hide">
+          <td></td>
+          <td>
+            <div class="alert alert-error">
+              Oppdateringen feilet! Vennligst prøv igjen om et par minutter, eller ring medlemsservice hvis problemet vedvarer.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' with active='partneroffers' %}
+  </div>
+</div>
+
+{% endblock %}

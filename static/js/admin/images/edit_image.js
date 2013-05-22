@@ -15,11 +15,12 @@ $(document).ready(function() {
         $("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
     });
 
-    $("form.update-image input[name='photographer']").typeahead({
+    var photographer = $("form.update-image input[name='photographer']");
+    photographer.typeahead({
         minLength: 3,
         source: function(query, process) {
             $.ajaxQueue({
-                url: '/sherpa/bildearkiv/fotograf/',
+                url: photographer.attr('data-source-url'),
                 data: { name: query }
             }).done(function(result) {
                 process(JSON.parse(result));

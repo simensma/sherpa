@@ -218,10 +218,8 @@ class SetActiveAssociation(object):
                     raise PermissionDenied
 
                 request.session['active_association'] = association
-                if 'referrer' in request.session:
-                    referrer = request.session['referrer']
-                    del request.session['referrer']
-                    return HttpResponseRedirect(referrer)
+                if request.GET.get('next', '') != '':
+                    return HttpResponseRedirect(request.GET['next'])
                 else:
                     return HttpResponseRedirect(reverse('admin.views.index'))
 
@@ -239,13 +237,13 @@ class CheckSherpaPermissions(object):
 
             # No active association set
             if not 'active_association' in request.session:
-                request.session['referrer'] = request.get_full_path()
                 if len(request.user.get_profile().all_associations()) == 1:
                     # The user has only access to 1 association, set it automatically
                     return HttpResponseRedirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
                 else:
                     # Let the user choose
-                    return render(request, 'common/admin/set_active_association.html')
+                    context = {'next': request.get_full_path()}
+                    return render(request, 'common/admin/set_active_association.html', context)
 
             # Accessing CMS-functionality, but no site set
             if request.session['active_association'].site is None and (
@@ -253,7 +251,6 @@ class CheckSherpaPermissions(object):
                 request.path.startswith('/sherpa/nyheter/') or
                 request.path.startswith('/sherpa/annonser/') or
                 request.path.startswith(u'/sherpa/analyse/søk/')):
-                messages.error(request, 'no_association_site')
                 return render(request, 'common/admin/no_association_site.html')
 
 class DeactivatedEnrollment():

@@ -1,0 +1,23 @@
+{# Adapted for inline view on the user page #}
+<div class="memberid-sms inline">
+  <a href="javascript:undefined" class="trigger" data-href="{% url 'membership.views.memberid_sms_userpage' %}">
+    Send gratis medlemsbevis på SMS
+  </a>
+
+  <span class="sending hide">
+    <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+    Sender SMS...
+  </span>
+
+  <span class="result missing-number hide">
+    Vi har ikke registrert ditt mobilnummer! <a href="{% url 'user.views.update_account' %}">Legg det inn her</a>.
+  </span>
+
+  <span class="result ok hide">
+    SMS med ditt medlemsnummer har blitt sendt til <span class="number">{{ user.get_profile.get_actor.phone_mobile.strip|default:"" }}</span>.
+  </span>
+
+  <span class="result error hide">
+    Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
+  </span>
+</div>

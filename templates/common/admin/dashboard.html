@@ -26,6 +26,14 @@
             <div style="clear: both;"></div>
           </li>
           <li>
+            <a href="{% url 'admin.publications.views.index' %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/magazine.png">
+            </a>
+            <h2><a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a></h2>
+            <p>Legg ut blader, årbøker, brosjyrer eller liknende som blir tilgjengelige for medlemmer via Min side.</p>
+            <div style="clear: both;"></div>
+          </li>
+          <li>
             <a href="{% url 'admin.ads.views.list' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
             </a>

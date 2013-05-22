@@ -103,7 +103,7 @@
                 return zipcode;
             }
             loader.show();
-            $.ajax({
+            $.ajaxQueue({
                 url: '/postnummer/' + encodeURIComponent(zipcode.val()) + '/',
                 type: 'POST'
             }).done(function(result) {

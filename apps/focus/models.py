@@ -8,10 +8,9 @@ from django.conf import settings
 from datetime import datetime
 
 from association.models import Association
-from core.models import County, FocusCountry
-
-# Actor endcodes - not really properly documented yet, to resolve codes/reasons consult Focus.
-ACTOR_ENDCODE_DUBLETT = 21
+from sherpa2.models import Association as Sherpa2Association
+from core.models import County, FocusCountry, Zipcode
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -39,13 +38,14 @@ class Enrollment(models.Model):
     poststed = models.CharField(db_column=u'Poststed', max_length=255)
     language = models.CharField(max_length=255)
     totalprice = models.FloatField(db_column=u'TotalPrice')
-    payed = models.BooleanField(db_column=u'Payed', default=False)
+    paid = models.BooleanField(db_column=u'Payed', default=False)
     reg_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
     receive_email = models.BooleanField(db_column=u'ReceiveEmail', default=True)
     receive_sms = models.BooleanField(db_column=u'ReceiveSms', default=True)
     submitted_by = models.CharField(db_column=u'SubmittedBy', max_length=255, null=True, default=None)
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
+
     class Meta:
         db_table = u'CustTurist_members'
 
@@ -72,6 +72,10 @@ class Actor(models.Model):
     start_code = models.CharField(max_length=5, db_column=u'StartCd')
     end_date = models.DateTimeField(null=True, db_column=u'EndDt')
     end_code = models.CharField(max_length=5, db_column=u'EndCd')
+
+    # Other relevant stuff
+    receive_email = models.BooleanField(db_column=u'OptBit1')
+    reserved_against_partneroffers = models.BooleanField(db_column=u'OptBit3')
 
     orgno = models.CharField(max_length=50, db_column=u'OrgNo')
     fax = models.CharField(max_length=50, db_column=u'Fax')
@@ -103,9 +107,7 @@ class Actor(models.Model):
     optchar7 = models.CharField(max_length=10, db_column=u'OptChar7')
     optchar8 = models.CharField(max_length=10, db_column=u'OptChar8')
     optchar9 = models.CharField(max_length=10, db_column=u'OptChar9')
-    optbit1 = models.BooleanField(db_column=u'OptBit1')
     optbit2 = models.BooleanField(db_column=u'OptBit2')
-    optbit3 = models.BooleanField(db_column=u'OptBit3')
     optbit4 = models.BooleanField(db_column=u'OptBit4')
     optbit5 = models.BooleanField(db_column=u'OptBit5')
     optbit6 = models.BooleanField(db_column=u'OptBit6')
@@ -147,9 +149,25 @@ class Actor(models.Model):
             cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
         return association
 
+    def main_association_old(self):
+        # This sad method returns the association object from the old sherpa2 model.
+        # For now it's mostly used to get the site url because most of the new objects
+        # don't have an assigned site.
+        association = cache.get('focus.association_sherpa2.%s' % self.main_association_id)
+        if association is None:
+            association = Sherpa2Association.objects.get(focus_id=self.main_association_id)
+            cache.set('focus.association_sherpa2.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
     def membership_type(self):
         # Supposedly, there should only be one service in this range
-        return self.membership_type_name(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+        code = int(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+        return get_membership_type_by_code(code)
+
+    def has_membership_type(self, codename):
+        # Note that you shouldn't use this to check for the 'household' membership type,
+        # use is_household_member() -- se the docs on that method for more info.
+        return self.membership_type() == get_membership_type_by_codename(codename)
 
     def get_services(self):
         services = cache.get('actor.services.%s' % self.memberid)
@@ -172,19 +190,6 @@ class Actor(models.Model):
         else:
             return ''
 
-    def membership_type_name(self, code):
-        # Should be moved to some kind of "Focus utility" module and merged with the
-        # functionality currently found in enrollment/views
-        if   code == u'101': return u'Hovedmedlem'
-        elif code == u'102': return u'Ungdomsmedlem'
-        elif code == u'103': return u'Honnørmedlem'
-        elif code == u'104': return u'Livsvarig medlem'
-        elif code == u'105': return u'Barnemedlem'
-        elif code == u'106': return u'Skoleungdomsmedlem'
-        elif code == u'107': return u'Husstandsmedlem'
-        elif code == u'108': return u'Husstandsmedlem'
-        elif code == u'109': return u'Livsvarig husstandsmedlem'
-
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
 
@@ -201,13 +206,15 @@ class Actor(models.Model):
 
     def get_parent(self):
         parent = self.parent
+        if not self.is_household_member():
+            return None
         if parent == 0 or parent == self.memberid:
             return None
         else:
-            actor = cache.get('actor.%s' % parent)
+            actor = cache.get('actor.%s' % self.parent)
             if actor is None:
-                actor = Actor.objects.get(memberid=parent)
-                cache.set('actor.%s' % parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+                actor = Actor.objects.get(memberid=self.parent)
+                cache.set('actor.%s' % self.parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
             return actor
 
     def get_children(self):
@@ -217,16 +224,25 @@ class Actor(models.Model):
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
-    def has_payed(self):
-        has_payed = cache.get('actor.has_payed.%s' % self.memberid)
-        if has_payed is None:
+    def is_household_member(self):
+        # Note that the definition of a household member is vague; membership type codes
+        # (defined by Focus services) include "household member" but it is only used when
+        # the member is an adult - if it is a child, a "child member" service is used instead,
+        # even though they do have a parent (and hence is a household member).
+        # This method defines *having a separate parent* as being a household member and should
+        # be considered canonical.
+        return self.parent != 0 and self.parent != self.memberid
+
+    def has_paid(self):
+        has_paid = cache.get('actor.has_paid.%s' % self.memberid)
+        if has_paid is None:
             try:
-                has_payed = self.balance.is_payed()
+                has_paid = self.balance.is_paid()
             except BalanceHistory.DoesNotExist:
-                # Not-existing balance for this year means that they haven't payed
-                has_payed = False
-            cache.set('actor.has_payed.%s' % self.memberid, has_payed, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return has_payed
+                # Not-existing balance for this year means that they haven't paid
+                has_paid = False
+            cache.set('actor.has_paid.%s' % self.memberid, has_paid, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return has_paid
 
     # Get the local County object based on the Actor's zipcode
     def get_county(self):
@@ -242,24 +258,81 @@ class Actor(models.Model):
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 
+    # This assumes that the actor *has* the F&V service, I suspect that assumption
+    # will sometimes be incorrect
+    def get_reserved_against_fjellogvidde(self):
+        return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is not None
+
+    def set_reserved_against_fjellogvidde(self, reserved):
+        service = self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE)
+        if reserved:
+            note = u'Ønsker ikke Fjell og Vidde (aktivert gjennom Min Side).'
+        else:
+            note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
+        self.set_service_status(service, not reserved, note)
+
+    # Note: Assuming that all Actors only have ONE of the yearbook services.
+    # This might be incorrect, Focus never fails to surprise.
+    def get_reserved_against_yearbook(self):
+        return self.get_services().get(code__in=YEARBOOK_SERVICE_CODES).stop_date is not None
+
+    def set_reserved_against_yearbook(self, reserved):
+        service = self.get_services().get(code__in=YEARBOOK_SERVICE_CODES)
+        if reserved:
+            note = u'Ønsker ikke tilsendt årbok (aktivert gjennom Min Side).'
+        else:
+            note = u'Ønsker tilsendt årbok(aktivert gjennom Min Side).'
+        self.set_service_status(service, not reserved, note)
+
+    def set_service_status(self, service, enable, note=None):
+        if enable:
+            service.stop_date = None
+            service.save()
+        else:
+            service.stop_date = datetime.now()
+            service.save()
+        if note is not None:
+            text = ActorText(
+                actor=self,
+                memberid=self.memberid,
+                text=note,
+                created_by=self.memberid,
+                created_date=datetime.now())
+            text.save()
+
+    def get_clean_address(self):
+        return ActorAddressClean(self.address)
+
     class Meta:
         db_table = u'Actor'
 
+# This receiver should keep track of all cache keys related to an actor, and delete them.
+# So whenever you add a new actor-related key to the cache, remember to delete it here!
+# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
 @receiver(post_save, sender=Actor, dispatch_uid="focus.models")
 def delete_actor_cache(sender, **kwargs):
     cache.delete('actor.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.services.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.children.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.has_paid.%s' % kwargs['instance'].memberid)
+    for child in kwargs['instance'].get_children():
+        cache.delete('actor.%s' % child.memberid)
+        cache.delete('actor.services.%s' % child.memberid)
+        cache.delete('actor.has_paid.%s' % child.memberid)
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
     actor = models.ForeignKey(Actor, related_name='services', db_column=u'ActSeqNo')
     memberid = models.IntegerField(null=True, db_column=u'ActNo')
+
     code = models.CharField(max_length=25, db_column=u'ArticleNo')
+    start_date = models.DateTimeField(null=True, db_column=u'StartDt')
+    end_date = models.DateTimeField(null=True, db_column=u'EndDt')
+    stop_date = models.DateTimeField(null=True, db_column=u'StopDt')
+
     actpayno = models.IntegerField(null=True, db_column=u'ActPayNo')
     invoicetype = models.IntegerField(null=True, db_column=u'InvType')
     invprinttype = models.IntegerField(null=True, db_column=u'InvPrintType')
-    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
-    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
-    stopdt = models.DateTimeField(null=True, db_column=u'StopDt')
     newstartdt = models.DateTimeField(null=True, db_column=u'NewStartDt')
     previousinvoicedt = models.DateTimeField(null=True, db_column=u'PreviousInvoiceDt')
     invoicefreq = models.IntegerField(null=True, db_column=u'InvoiceFreq')
@@ -273,6 +346,7 @@ class ActorService(models.Model):
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     invdate = models.DateTimeField(null=True, db_column=u'InvDate')
+
     class Meta:
         db_table = u'ActService'
 
@@ -286,18 +360,99 @@ class ActorAddress(models.Model):
     a3 = models.CharField(max_length=40, db_column=u'A3')
     zipcode = models.CharField(max_length=9, db_column=u'PCode')
     area = models.CharField(max_length=30, db_column=u'PArea')
-    country = models.CharField(max_length=3, db_column=u'CtryCode')
+    country_code = models.CharField(max_length=3, db_column=u'CtryCode')
     frdt = models.DateTimeField(null=True, db_column=u'FrDt')
     todt = models.DateTimeField(null=True, db_column=u'ToDt')
     chby = models.CharField(max_length=50, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     crby = models.CharField(max_length=50, db_column=u'CrBy')
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
+
     class Meta:
         db_table = u'ActAd'
 
-    def get_country(self):
-        return FocusCountry.objects.get(code=self.country)
+# This is NOT a model, but a cleaner address model, based on Focus' ActorAddress model.
+# It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
+# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode').
+# The class has utility methods for typical formatting of addresses (with newlines, and for
+# one line with commas).
+class ActorAddressClean:
+    def __init__(self, address):
+        # Add fields, replacing NULL values with the empty string
+        self.field1 = address.a1.strip() if address.a1 is not None else ''
+        self.field2 = address.a2.strip() if address.a2 is not None else ''
+        self.field3 = address.a3.strip() if address.a3 is not None else ''
+
+        # Set the actual country object
+        # Uppercase the country code (just in case - you never know with Focus)
+        self.country = FocusCountry.objects.get(code=address.country_code.upper())
+
+        if self.country.code == 'NO':
+            # Norwegians - set the actual zipcode object
+            self.zipcode = Zipcode.objects.get(zipcode=address.zipcode)
+        else:
+            # Foreigners - ignore zipcode/area
+            # Remove country code prefixes
+            if self.field1.lower().startswith("%s-" % self.country.code.lower()):
+                self.field1 = self.field1[len(self.country.code) + 1:].strip()
+            if self.field2.lower().startswith("%s-" % self.country.code.lower()):
+                self.field2 = self.field2[len(self.country.code) + 1:].strip()
+            if self.field3.lower().startswith("%s-" % self.country.code.lower()):
+                self.field3 = self.field3[len(self.country.code) + 1:].strip()
+
+    # This is adapted for user page account details right now - if norwegian,
+    # this doesn't display country, if foreigner, it does. If rewritten, account
+    # for that and add parameters or something for that usage.
+    def format_with_newlines(self):
+        if self.country.code == 'NO':
+            address_string = self.field1
+            if self.field2 != '':
+                address_string += '\n%s' % self.field2
+            if self.field3 != '':
+                address_string += '\n%s' % self.field3
+            address_string += '\n%s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
+        else:
+            address_string = ''
+            if self.field1 != '':
+                address_string += '%s\n' % self.field1
+            if self.field2 != '':
+                address_string += '%s\n' % self.field2
+            if self.field3 != '':
+                address_string += '%s\n' % self.field3
+            address_string += "%s, %s" % (self.country.name, self.country.code)
+        return address_string
+
+    # This is adapted for NOR-WAY bus tickets emails right now. If rewritten,
+    # account for that and add parameters or something for that usage.
+    def format_for_oneline(self):
+        address_string = self.field1
+        if self.field2 != '':
+            address_string += ', %s' % self.field2
+        if self.field3 != '':
+            address_string += ', %s' % self.field3
+
+        if self.country.code == 'NO':
+            address_string += ', %s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
+        else:
+            address_string += ' (%s, %s)' % (self.country.name, self.country.code)
+        return address_string
+
+class ActorText(models.Model):
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor = models.ForeignKey(Actor, unique=True, related_name='text', db_column=u'ActSeqNo')
+    memberid = models.IntegerField(null=True, db_column=u'ActNo')
+
+    type = models.CharField(max_length=50, db_column=u'TxtType')
+    name = models.CharField(max_length=50, db_column=u'TxtNm')
+    text = models.TextField(db_column=u'Description')
+
+    created_by = models.CharField(max_length=25, db_column=u'CrBy')
+    created_date = models.DateTimeField(null=True, db_column=u'CrDt')
+    changed_by = models.CharField(max_length=25, db_column=u'ChBy')
+    changed_date = models.DateTimeField(null=True, db_column=u'ChDt')
+
+    class Meta:
+        db_table = u'ActText'
 
 # The Zipcode table connects zipcodes to counties and associations.
 class FocusZipcode(models.Model):
@@ -340,6 +495,7 @@ class Price(models.Model):
     school = models.IntegerField(null=True, db_column=u'C106')
     household = models.IntegerField(null=True, db_column=u'C107')
     unknown = models.IntegerField(null=True, db_column=u'C108')
+
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
 
@@ -356,7 +512,7 @@ class BalanceHistory(models.Model):
     # It was used in the old user page - after October, when "årskrav" is processed, a members payment status
     # Would be if _either_ the current_year or last_year balance was <= 0.
 
-    def is_payed(self):
+    def is_paid(self):
         # This will be incorrect in the period between "årskrav" processing and year end,
         # but only for those who haven't paid for the *next* year.
         # The user might have paid for the current year, and the membership is valid for the
@@ -364,6 +520,10 @@ class BalanceHistory(models.Model):
         # So it will be correct for those who have paid for next year.
         # Note that since Focus treats it this way, so do we in our code, based on the current
         # date compared to the month in settings.MEMBERSHIP_YEAR_START.
+        # This means that we DON'T KNOW what the membership status for the current year is
+        # after the "årskrav" month, and can't inform about it, e.g. on the account page.
+        # This should be fixed. If it is, refactor all usages of this method and rephrase
+        # the info presented to the user.
         return self.current_year <= 0
 
     class Meta:

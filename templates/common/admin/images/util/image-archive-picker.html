@@ -1,0 +1,29 @@
+<div class="modal container hide image-archive-picker" data-album-url="{% url 'admin.images.util.content_dialog' %}" data-mine-url="{% url 'admin.images.util.mine_dialog' %}" data-search-url="{% url 'admin.images.util.search_dialog' %}">
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h2>Velg et bilde fra bildearkivet</h2>
+  </div>
+
+  <div class="modal-body">
+    <input type="text" name="search" class="input-xxlarge" placeholder="Søk etter nøkkelord her, eller bla deg frem i albumene under...">
+    <button class="btn btn-success input-button-align image-search"><i class="icon-search"></i> Søk</button>
+    <label class="radio" for="include_meta">
+      <input type="checkbox" name="include_meta" id="include_meta" checked> Vis størrelse og fotograf under bildene
+    </label>
+
+    <div class="alert alert-error span4 too-few-chars hide">
+      <a class="close">x</a>
+      <strong>For få søketegn!</strong><br>Vennligst bruk minst {{ image_search_length }} tegn når du søker, ellers får du garantert mange flere resultater enn du vil ha.
+    </div>
+    <div style="clear: both;"></div>
+
+    <div class="content">{# Here will be AJAX-rendered content #}</div>
+    <img class="ajaxloader hide" src="/static/img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+  </div>
+
+  <div class="modal-footer" style="clear: both;">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  </div>
+
+</div>

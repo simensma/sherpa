@@ -1,0 +1,59 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Fotobok &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Fotobok</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Fotoprodukter til hyggelige priser</h2>
+
+    <div class="pull-right">
+      <img src="{{ STATIC_URL }}img/user/eurofoto.png" alt="Eurofoto.no">
+    </div>
+
+    <p>
+      Den Norske Turistforening og Eurofoto har inngått et samarbeid der du som DNT-medlem får fotoprodukter fra <a href="http://www.eurofoto.no/">Eurofoto</a> til rabatterte priser. For å verifisere gyldig DNT-medlemsskap er tjenesten kun tilgjengelig fra MinSide, og vi gjør oppmerksom på følgende:
+    </p>
+
+    <p>
+       Hvis du klikker deg inn på fotobok vil følgende informasjon om deg sendes fra medlemssystemet i Den Norske Turistforening til Eurofoto sitt kundesystem: navn, adresse, e-post, telefonnummer (både hjem, arbeid og mobil).
+    </p>
+
+    <h3>Ved å klikke deg inn på fotobok aksepterer du at denne informasjonen oversendes Eurofoto.</h3>
+
+    <p>
+      Se forøvrig <a href="http://eurofoto.no/hjelp/sluttbrukervilkar/">sluttbrukervilkår</a> hos Eurofoto.
+    </p>
+
+    {% for message in messages %}
+      {% if message.message == 'eurofoto_api_connection_error' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong>Kunne ikke koble til Eurofoto</strong><br>
+          Beklager, det kan se ut som Eurofoto sine sider er nede. Vennligst prøv igjen litt senere.
+        </div>
+      {% elif message.message == 'eurofoto_api_unparseable_reply' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong>Teknisk feil ved kontakt med Eurofoto</strong><br>
+          Beklager, det oppstod en teknisk feil ved kontakt med Eurofoto! Feilen har blitt logget i våre systemer og vi vil fikse den så snart som mulig. Vennligst smør deg inn med tålmodighet og prøv igjen litt senere.
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="fotobok-eurofoto-anchor">
+      <a href="{% url 'user.views.fotobok_eurofoto_request' %}">
+        <img src="{{ STATIC_URL }}img/user/eurofoto-fotobok.jpg" alt="Gå til fotobok!">
+      </a><br>
+      <a href="{% url 'user.views.fotobok_eurofoto_request' %}" class="btn btn-danger btn-large">Gå til fotobok!</a>
+    </div>
+
+  </div>
+  <div class="span3">
+    {% include 'common/user/account/navigation.html' with active='fotobok' %}
+  </div>
+</div>
+
+{% endblock %}

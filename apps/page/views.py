@@ -1,20 +1,18 @@
 # encoding: utf-8
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
 from django.db.models import Q
-from django.template.defaultfilters import slugify, striptags
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.cache import cache
 
-from string import split
 from datetime import datetime
 import json
 
 from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
-from articles.models import Article, OldArticle
+from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from page.widgets import parse_widget, get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
@@ -88,9 +86,6 @@ def parse_content(request, version):
 
         context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
-
-    # Include ads if specified for this page
-    context['advertisement'] = AdPlacement.get_active_ad() if context['version'].ads else None
 
     context['request'] = request
 

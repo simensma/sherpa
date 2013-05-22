@@ -1,3 +1,5 @@
+{% load advertisement %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +25,7 @@
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
@@ -104,10 +107,10 @@
       <div class="login">
         {% if user.is_authenticated %}
           {% if perms.user.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
-          <a href="{% url 'user.views.home_new' %}">Min side</a>
+          <a href="{% url 'user.views.home' %}">Min side</a>
           <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
         {% else %}
-          <a href="{% url 'user.views.home_new' %}">Min side</a>
+          <a href="{% url 'user.views.home' %}">Min side</a>
         {% endif %}
       </div>
     </div>
@@ -161,8 +164,8 @@
 
 {% block body %}{% endblock %}
 
-{% if advertisement %}
-  {% include 'main/ad.html' %}
+{% if version.ads %}
+  {% advertisement %}
 {% endif %}
 
 </div>
