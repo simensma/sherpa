@@ -154,7 +154,8 @@ class Annonse(models.Model):
                 # We now have the amount of results we want
                 break
 
-        end = len(all_candidates) <= settings.FJELLTREFFEN_BULK_COUNT
+        # End is True when we've searched through all the candidates
+        end = (next_start_index - start_index) == len(all_candidates)
         return (annonse_matches, next_start_index, end)
 
 # Upon deletion, delete any stored images from S3
