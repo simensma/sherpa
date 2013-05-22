@@ -58,7 +58,7 @@ def authenticate_users(email, password):
 
 def authenticate_sherpa2_user(email, password):
     sha1 = hashlib.sha1()
-    sha1.update(password)
+    sha1.update(password.encode('utf-8'))
     hashed_password = sha1.hexdigest()
     try:
         return Member.objects.get(email=email, password=hashed_password)
