@@ -302,6 +302,9 @@ def save(request):
                 data,
                 acl='public-read',
                 mimetype=file.content_type)
+
+            # In case this was an annonse with imported image, specify that it itsn't anymore
+            annonse.is_image_old = False
         except Exception:
             logger.error(u"Kunne ikke laste opp Fjelltreffen-bilde",
                 exc_info=sys.exc_info(),
