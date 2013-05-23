@@ -192,6 +192,8 @@ def register(request):
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+    else:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
 
 def register_nonmember(request):
     if request.method == 'GET':
