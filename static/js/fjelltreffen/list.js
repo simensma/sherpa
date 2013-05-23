@@ -98,7 +98,8 @@ $(document).ready(function() {
             }
             start_index = result.start_index;
         }).fail(function(result) {
-            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere annonser. Prøv å oppdatere siden, og scrolle ned igjen.");
+            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere annonser. Feilen har blitt logget i vårt system og vi vil fikse den så snart som mulig. Vennligst prøv igjen litt senere.");
+            button_trigger.show();
         }).always(function(result) {
             loading = false;
             loader.hide();
