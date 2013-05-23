@@ -272,12 +272,13 @@ def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
     publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
+    publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
     publications_other = Publication.objects.exclude(
         Q(association__in=accessible_associations) |
         Q(association__type='sentral')
-    ).filter(access='all')
+    ).filter(access='all').order_by('title')
     context = {
-        'publications_user': list(publications_user_central) + list(publications_user_accessible),
+        'publications_user': publications_user,
         'publications_other': publications_other}
     return render(request, 'common/user/account/publications.html', context)
 
