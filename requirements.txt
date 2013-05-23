@@ -1,6 +1,7 @@
 Django==1.5.1
 Pillow==2.0.0
 South==0.7.6
+boto==2.9.4
 django-simple-captcha==0.3.7
 eventlet==0.12.1
 greenlet==0.4.0
