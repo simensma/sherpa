@@ -371,7 +371,7 @@ class ActorAddress(models.Model):
     class Meta:
         db_table = u'ActAd'
 
-# This is NOT a model, but a cleaner address model, based on Focus' ActorAddress model.
+# This is NOT a db table, but a cleaner address model, based on Focus' ActorAddress model.
 # It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
 # If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode').
 # The class has utility methods for typical formatting of addresses (with newlines, and for
