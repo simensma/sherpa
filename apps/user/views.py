@@ -126,7 +126,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_profile().get_actor().get_clean_address().country.code == 'NO':
+            if request.user.get_profile().get_actor().get_clean_address().country.code == 'NO' and not request.user.get_profile().get_actor().is_household_member():
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -152,7 +152,7 @@ def update_account(request):
             actor.phone_mobile = request.POST['phone_mobile']
             actor.save()
 
-            if actor.get_clean_address().country.code == 'NO':
+            if actor.get_clean_address().country.code == 'NO' and not actor.is_household_member():
                 actor.address.a1 = request.POST['address']
                 if 'address2' in request.POST:
                     actor.address.a2 = request.POST['address2']
