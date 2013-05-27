@@ -4,7 +4,7 @@ $(document).ready(function() {
     $("input[placeholder]").each(function() {
         $(this).data('placeholder', $(this).attr('placeholder'));
         $(this).removeAttr('placeholder');
-        if($(this).val() == "") {
+        if($(this).val() === "") {
             $(this).data('holding', true); // true when the value is actually the placeholder
             $(this).val($(this).data('placeholder'));
         }
@@ -15,7 +15,7 @@ $(document).ready(function() {
             }
         });
         $(this).focusout(function() {
-            if($(this).val() == "") {
+            if($(this).val() === "") {
                 $(this).data('holding', true);
                 $(this).val($(this).data('placeholder'));
             }
