@@ -1,7 +1,10 @@
 $(document).ready(function() {
 
-    /* IE doesn't support the placeholder attribute, so simulate it. */
-    $("input[placeholder]").each(function() {
+    /**
+     * IE doesn't support the placeholder attribute, so simulate it.
+     * Use the data-no-custom-placeholder for those cases where this isn't appropriate
+     */
+    $("input[placeholder]:not([data-no-custom-placeholder])").each(function() {
         $(this).data('placeholder', $(this).attr('placeholder'));
         $(this).removeAttr('placeholder');
         if($(this).val() === "") {
