@@ -1,4 +1,6 @@
-<h1>{{ widget.title }}</h1>
+{% if widget.title %}
+  <h1>{{ widget.title }}</h1>
+{% endif %}
 
 {% for version in widget.versions %}
   <div class="media">
