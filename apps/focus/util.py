@@ -31,3 +31,12 @@ def get_membership_type_by_code(code):
 
 def get_membership_type_by_codename(codename):
     return [t for t in MEMBERSHIP_TYPES if t['codename'] == codename][0]
+
+# The old sherpa2 turleder-script defined these and said they were based on Focus
+LEADER_TYPES = {
+    81: "Vinterturleder",
+    82: "Sommerturleder",
+    83: "Nærmiljøturleder",
+    84: "DNT ambassadør",
+    85: "Kursleder",
+}

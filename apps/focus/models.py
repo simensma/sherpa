@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import datetime
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, LEADER_TYPES
 
 logger = logging.getLogger('sherpa')
 
@@ -441,6 +441,36 @@ class ActorAddress(models.Model):
 
     class Meta:
         db_table = u'ActAd'
+
+class ActorPosition(models.Model):
+    id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    actor = models.ForeignKey(Actor, null=True, related_name='position', db_column=u'ActSeqNo')
+    memberid = models.IntegerField(null=True, db_column=u'ActNo')
+    leader_code = models.CharField(max_length=8, db_column=u'PosCode')
+
+    actseqnopos = models.IntegerField(null=True, db_column=u'ActSeqNoPos')
+    actnopos = models.IntegerField(null=True, db_column=u'ActNoPos')
+    actseqnopos1 = models.IntegerField(null=True, db_column=u'ActSeqNoPos1')
+    actnopos1 = models.IntegerField(null=True, db_column=u'ActNoPos1')
+    commity = models.CharField(max_length=8, db_column=u'Commity')
+    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
+    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
+    posoptint1 = models.IntegerField(null=True, db_column=u'PosOptInt1')
+    posoptint2 = models.IntegerField(null=True, db_column=u'PosOptInt2')
+    poschar1 = models.CharField(max_length=50, db_column=u'PosChar1')
+    poschar2 = models.CharField(max_length=50, db_column=u'PosChar2')
+    posweb = models.CharField(max_length=50, db_column=u'PosWeb')
+    description = models.TextField(db_column=u'Description') # This field type is a guess.
+    crby = models.CharField(max_length=25, db_column=u'CrBy')
+    crdt = models.DateTimeField(null=True, db_column=u'CrDt')
+    chby = models.CharField(max_length=25, db_column=u'ChBy')
+    chdt = models.DateTimeField(null=True, db_column=u'ChDt')
+
+    def get_leader_type(self):
+        return LEADER_TYPES[int(self.poscode)]
+
+    class Meta:
+        db_table = u'ActPosition'
 
 class ActorText(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
