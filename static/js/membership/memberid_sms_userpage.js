@@ -7,13 +7,21 @@ $(document).ready(function() {
     var ok = wrapper.find("span.ok");
     var no_match = wrapper.find("span.no-match");
     var error = wrapper.find("span.error");
+    var too_high_frequency = wrapper.find("span.too-high-frequency");
 
     trigger.click(function() {
-        trigger.hide();
         if(number.trim() === '') {
+            trigger.hide();
             missing_number.show();
             return $(this);
         }
+
+        if(!confirm("Send medlemsbevis på SMS til tlf. " + number + "?")) {
+            trigger.show();
+            return $(this);
+        }
+
+        trigger.hide();
         sending.show();
         $.ajaxQueue({
             url: trigger.attr('data-href')
@@ -28,6 +36,8 @@ $(document).ready(function() {
                 missing_number.show();
             } else if(result.status == 'connection_error') {
                 error.show();
+            } else if(result.status == 'too_high_frequency') {
+                too_high_frequency.show();
             }
         }).fail(function(result) {
             error.show();

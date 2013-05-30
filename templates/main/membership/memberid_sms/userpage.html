@@ -1,7 +1,7 @@
 {# Adapted for inline view on the user page #}
 <div class="memberid-sms inline">
   <a href="javascript:undefined" class="trigger" data-href="{% url 'membership.views.memberid_sms_userpage' %}">
-    Send gratis medlemsbevis på SMS
+    Få gratis medlemsbevis på SMS
   </a>
 
   <span class="sending hide">
@@ -19,5 +19,9 @@
 
   <span class="result error hide">
     Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
+  </span>
+
+  <span class="result too-high-frequency hide">
+    Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.
   </span>
 </div>

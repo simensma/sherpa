@@ -7,7 +7,7 @@ $(document).ready(function() {
     var ok = results.filter("div.alert.ok");
     var no_match = results.filter("div.alert.no-match");
     var error = results.filter("div.alert.error");
-    var too_high_frequency = results.filter("p.too-high-frequency");
+    var too_high_frequency = results.filter("div.too-high-frequency");
 
     input.keyup(function(e) {
         if(e.which == 13) { // Enter
