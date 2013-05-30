@@ -10,11 +10,18 @@ $(document).ready(function() {
     var too_high_frequency = wrapper.find("span.too-high-frequency");
 
     trigger.click(function() {
-        trigger.hide();
         if(number.trim() === '') {
+            trigger.hide();
             missing_number.show();
             return $(this);
         }
+
+        if(!confirm("Send medlemsbevis på SMS til tlf. " + number + "?")) {
+            trigger.show();
+            return $(this);
+        }
+
+        trigger.hide();
         sending.show();
         $.ajaxQueue({
             url: trigger.attr('data-href')
