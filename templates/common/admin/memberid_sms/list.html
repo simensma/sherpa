@@ -35,12 +35,18 @@
               {% endif %}
             </td>
             <td>{{ request.ip }}</td>
-            <td>{{ request.phone_number_input }}</td>
+            <td>
+              {% if request.phone_number_input != None %}
+                {{ request.phone_number_input }}
+              {% else %}
+                <em>Fra Min Side</em>
+              {% endif %}
+            </td>
             <td>
               {% if not request.blocked %}
-                {{ request.memberid|default:"Ingen match på tlf." }}
+                {{ request.memberid|default:"<em>Ingen match på tlf.</em>" }}
               {% else %}
-                N/A (blokkert)
+                <em>N/A (blokkert)</em>
               {% endif %}
             </td>
             <td>{{ request.count }}{% if request.blocked %} - Blokkert!{% endif %}</td>

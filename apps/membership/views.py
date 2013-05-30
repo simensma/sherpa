@@ -120,16 +120,6 @@ def memberid_sms(request):
     if not 'phone_mobile' in request.POST:
         return HttpResponseRedirect(reverse('membership.views.service'))
 
-    # Use the local cache to count requests, identify on IP
-    def memberid_sms_count(ip_address):
-        lookups = cache.get('memberid_sms_requests.%s' % ip_address)
-        if lookups is None:
-            lookups = 1
-        else:
-            lookups += 1
-        cache.set('memberid_sms_requests.%s' % ip_address, lookups, 60 * 30)
-        return lookups
-
     # Start recording this request - details will be filled underway
     sms_request = SMSServiceRequest()
     sms_request.phone_number_input = request.POST['phone_mobile']
@@ -137,8 +127,6 @@ def memberid_sms(request):
     if request.user.is_authenticated():
         sms_request.profile = request.user.get_profile()
 
-    # Simple security - if the same person (IP) sends > 10 requests within 30 minutes,
-    # we'll suspect something's up.
     sms_request.count = memberid_sms_count(request.META['REMOTE_ADDR'])
     if sms_request.count > 10:
         sms_request.blocked = True
@@ -168,12 +156,39 @@ def memberid_sms(request):
 def memberid_sms_userpage(request):
     # Requests from the userpage
     actor = request.user.get_profile().get_actor()
+
+    sms_request = SMSServiceRequest(
+        phone_number_input=None,
+        ip=request.META['REMOTE_ADDR'],
+        profile=request.user.get_profile(),
+        memberid=actor.memberid
+    )
+
+    sms_request.count = memberid_sms_count(request.META['REMOTE_ADDR'])
+    if sms_request.count > 10:
+        sms_request.blocked = True
+        sms_request.save()
+        return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
+
     if actor.phone_mobile.strip() == '':
         # This shouldn't happen (it's checked client-side first) - but handle it anyway, just in case
         return HttpResponse(json.dumps({
             'status': 'missing_number'
         }))
+    sms_request.save()
     return send_sms_receipt(request, actor)
+
+# Simple security - if the same person (IP) sends > 10 requests within 30 minutes,
+# we'll suspect something's up.
+# Use the local cache to count requests, identify on IP
+def memberid_sms_count(ip_address):
+    lookups = cache.get('memberid_sms_requests.%s' % ip_address)
+    if lookups is None:
+        lookups = 1
+    else:
+        lookups += 1
+    cache.set('memberid_sms_requests.%s' % ip_address, lookups, 60 * 30)
+    return lookups
 
 # This is not a view
 def send_sms_receipt(request, actor):
