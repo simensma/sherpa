@@ -34,7 +34,11 @@ def parse_widget(request, widget):
         versions = versions[:widget['count']]
         for version in versions:
             version.load_preview()
-        data = {'title': widget['title'], 'tag_link': widget['tag_link'], 'versions': versions}
+        data = {
+            'title': widget['title'],
+            'display_images': widget['display_images'],
+            'tag_link': widget['tag_link'],
+            'versions': versions}
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
         data = cache.get('widgets.blog.category.' + widget['category'])

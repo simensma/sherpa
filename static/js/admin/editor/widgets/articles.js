@@ -17,6 +17,7 @@
 
         widget_editor.find("input[name='title']").val(widget.title);
         widget_editor.find("input[name='count']").val(widget.count);
+        widget_editor.find("input[name='display-images']").prop('checked', widget.display_images);
         if(widget.tag_link == null) {
             widget_editor.find("input[name='set-tag-link']").prop('checked', false);
             widget_editor.find("input[name='tag-link']").attr('disabled', true).val("");
@@ -86,6 +87,7 @@
                 return $(this);
             }
             var title = widget_editor.find("input[name='title']").val();
+            var display_images = widget_editor.find("input[name='display-images']").prop('checked');
             if(widget_editor.find("input[name='set-tag-link']").is(':checked')) {
                 var tag_link = widget_editor.find("input[name='tag-link']").val();
             } else {
@@ -100,6 +102,7 @@
             saveWidget(widgetBeingEdited, {
                 widget: "articles",
                 title: title,
+                display_images: display_images,
                 tag_link: tag_link,
                 tags: tags,
                 count: count
