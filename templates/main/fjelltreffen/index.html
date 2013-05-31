@@ -15,14 +15,17 @@
 {% block body %}
 
 <div class="row">
+  <div class="span12">
+    <h1>Fjelltreffen</h1>
+  </div>
+</div>
+
+<div class="row">
   <div class="span9">
 
     <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url 'fjelltreffen.views.load' %}">
-      <h2>Fjelltreffen</h2>
-
-      <p>
-        På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet?<br>
-        Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
+      <p class="lede">
+        På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet? Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
       </p>
 
       {% include 'main/fjelltreffen/filter.html' %}
