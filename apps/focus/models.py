@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import datetime
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, LEADER_TYPES
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, TURLEDER_TYPES
 
 logger = logging.getLogger('sherpa')
 
@@ -467,7 +467,7 @@ class ActorPosition(models.Model):
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
 
     def get_leader_type(self):
-        return LEADER_TYPES[int(self.poscode)]
+        return TURLEDER_TYPES[int(self.poscode)]
 
     class Meta:
         db_table = u'ActPosition'
