@@ -53,7 +53,7 @@ def benefits(request, association_id):
         cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
 
     now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     context = {
         'association': association,

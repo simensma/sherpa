@@ -122,7 +122,7 @@ def registration(request, user):
         return HttpResponseRedirect(reverse("enrollment.views.household"))
 
     now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     context = {'users': request.session['enrollment']['users'], 'person': user,
         'errors': errors,
@@ -212,7 +212,7 @@ def household(request):
             break
 
     now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     updateIndices(request.session)
     context = {'users': request.session['enrollment']['users'],
@@ -339,7 +339,7 @@ def verification(request):
     now = datetime.now()
     year = now.year
     next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     keycount = 0
     youth_or_older_count = 0
@@ -405,7 +405,7 @@ def payment_method(request):
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
     now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     context = {'card_available': State.objects.all()[0].card,
         'now': now, 'new_membership_year': new_membership_year}
@@ -710,7 +710,7 @@ def result(request):
     emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
     now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=now.day)
+    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
