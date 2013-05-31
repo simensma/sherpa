@@ -1,39 +1,45 @@
 <article>
   {% for row in rows %}
-  <div class="row-fluid">
-    {% for column in row.columns %}
-      <div class="offset{{ column.offset }} span{{ column.span }}">
-        {% for content in column.contents %}
-          {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
-            <div class="content {{ content.type }}">
-              {{ content.content|safe }}
-            </div>
-          {% elif content.type == 'image' %}
-            <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image">
-              {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-                <img src="{{ content.content.src }}" 
-                {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
-                {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}>
-              {% if content.content.anchor %}</a>{% endif %}
-              {% if content.content.description.strip or content.content.photographer %}
-                <div class="img-desc">
-                  {% if content.content.description.strip %}
-                    {{ content.content.description }}
-                  {% endif %}
-                  {% if content.content.photographer %}
-                    Foto: {{ content.content.photographer }}
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
-          {% elif content.type == 'widget' %}
-            <div class="content widget {{ content.content.widget }}">
-              {% include content.content.template with widget=content.content %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% endfor %}
-  </div>
+    <div class="row-fluid">
+      {% for column in row.columns %}
+        <div class="offset{{ column.offset }} span{{ column.span }}">
+          {% for content in column.contents %}
+
+            {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
+
+              <div class="content {{ content.type }}">
+                {{ content.content|safe }}
+              </div>
+
+            {% elif content.type == 'image' %}
+
+              <div class="content image" style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}">
+                {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
+                  <img src="{{ content.content.src }}" {% if content.content.style %}style="{{ content.content.style }}"{% endif %} alt="{{ content.content.description }}">
+                {% if content.content.anchor %}</a>{% endif %}
+                {% if content.content.description.strip or content.content.photographer %}
+                  <div class="img-desc">
+                    {% if content.content.description.strip %}
+                      {{ content.content.description }}
+                    {% endif %}
+                    {% if content.content.photographer %}
+                      Foto: {{ content.content.photographer }}
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+
+            {% elif content.type == 'widget' %}
+
+              <div class="content widget {{ content.content.widget }}">
+                {% include content.content.template with widget=content.content %}
+              </div>
+
+            {% endif %}
+
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
   {% endfor %}
 </article>

@@ -71,11 +71,11 @@
             }
             imageDialog.find("div.empty-src").hide();
 
-            var parentWidth = currentImage.parent().width();
+            var parentWidth = currentImage.parents("div.content.image").width();
 
             addCssCropping(parentWidth, function(cssMap, selection, parentHeight) {
                 var image = currentImage;
-                var wrapper = currentImage.parent();
+                var wrapper = currentImage.parents("div.content.image");
 
                 var newurl = imageDialog.find("input[name='src']").val();
 
