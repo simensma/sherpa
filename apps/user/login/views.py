@@ -112,6 +112,8 @@ def login(request):
                 context['next'] = request.GET.get('next')
                 context['email'] = request.POST['email']
                 return render(request, 'common/user/login/login.html', context)
+    else:
+        return HttpResponseRedirect(reverse('user.login.views.login'))
 
 def choose_authenticated_user(request):
     if not 'authenticated_profiles' in request.session:
