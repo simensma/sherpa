@@ -444,6 +444,9 @@ class ActorAddress(models.Model):
 
 class ActorPosition(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
+    # Note that 3 rows out of 1442 had ActSeqNo set to NULL. I manually fixed it as I'm
+    # not sure where that error came from, and we're planning to import this table
+    # to the sherpa-db soon anyway.
     actor = models.ForeignKey(Actor, null=True, related_name='position', db_column=u'ActSeqNo')
     memberid = models.IntegerField(null=True, db_column=u'ActNo')
     leader_code = models.CharField(max_length=8, db_column=u'PosCode')
