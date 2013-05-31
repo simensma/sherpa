@@ -52,7 +52,7 @@ CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
-MEMBERSHIP_YEAR_START = 10
+MEMBERSHIP_YEAR_START = 11
 
 # Pixel sizes for thumbnail images generated from uploaded images.
 # Duplicated client-side in js/admin/editor/image-utils.js
