@@ -1,35 +1,23 @@
 <div class="row">
   <div class="span12">
-    <div class="{{ promo.type }}">
-      <div class="wrapper centered main">
-        {% include 'main/widgets/promo/static/menu.html' %}
+    <div class="{{ promo.type }} main">
+      {% include 'main/widgets/promo/static/menu.html' %}
 
-        <div class="right">
-          <h1>
-            Stor<br>
-            fotokonkurranse
-          </h1>
+      <div class="content">
+        <h1>
+          Finn turfølge
+        </h1>
 
-          <p>
-            Del dine naturopplevelser i 2013 med oss og send inn dine beste bilder til vår store fotokonkurranse. Du kan vinne<br>
-            10 000 kr og 100 Flax-lodd.
-          </p>
+        <p>
+          Leter du etter noen å dra på tur med?<br>
+          På Fjelltreffen kan du finne en turvenn som deler dine interesser.
+        </p>
 
-          <p class="button">
-            <a class="btn btn-large" href="http://www.turistforeningen.no/fotokonkurranse">Send inn bilder</a>
-          </p>
+        <p class="double-button-hack">
+          <a class="btn btn-large btn-danger full" href="{% url 'fjelltreffen.views.index' %}">Gå til Fjelltreffen</a>
+          <a class="btn btn-large small" href="{% url 'fjelltreffen.views.index' %}">Gå til Fjelltreffen</a>
+        </p>
 
-          <p class="sponsors">
-            <a href="https://www.norsk-tipping.no/" class="logo">
-              <img src="{{ STATIC_URL }}img/widgets/promo/Norsk_Tipping_sidestilt_sh_negativ-1.png" alt="I samarbeid med vår turpartner Norsk Tipping">
-            </a>
-
-            I samarbeid med vår turpartner <a href="https://www.norsk-tipping.no/" class="white-link">Norsk Tipping</a>
-          </p>
-
-        </div>
-        <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/fotokonk_470x480.png" alt="Stor fotokonkurranse">
-        <div style="clear: both;"></div>
       </div>
     </div>
   </div>
