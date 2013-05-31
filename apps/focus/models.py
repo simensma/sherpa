@@ -470,7 +470,7 @@ class ActorPosition(models.Model):
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
 
     def get_leader_type(self):
-        return TURLEDER_TYPES[int(self.poscode)]
+        return TURLEDER_TYPES[int(self.leader_code)]
 
     class Meta:
         db_table = u'ActPosition'
