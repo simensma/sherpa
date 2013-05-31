@@ -13,7 +13,7 @@
 
             {% elif content.type == 'image' %}
 
-              <div class="content image" style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;">
+              <div class="content image" style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}">
                 {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                   <img src="{{ content.content.src }}" {% if content.content.style %}style="{{ content.content.style }}"{% endif %} alt="{{ content.content.description }}">
                 {% if content.content.anchor %}</a>{% endif %}

@@ -18,7 +18,7 @@
         {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
           <div class="content {{ content.type }} editable" data-id="{{ content.id }}">{{ content.content|safe }}</div>
         {% elif content.type == 'image' %}
-          <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}overflow:hidden;" class="content image" data-id="{{ content.id }}">
+          <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image" data-id="{{ content.id }}">
             {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
             <img src="{{ content.content.src }}"
               {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
