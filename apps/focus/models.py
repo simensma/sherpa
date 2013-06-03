@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django.db import models
 from django.core.cache import cache
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
@@ -160,8 +161,9 @@ class Actor(models.Model):
         return association
 
     def membership_type(self):
+        now = datetime.now()
         # Supposedly, there should only be one service in this range
-        code = int(self.get_services().get(code__gt=100, code__lt=110).code.strip())
+        code = int(self.get_services().get(Q(stop_date__isnull=True) | Q(stop_date__gt=now), code__gt=100, code__lt=110).code.strip())
         return get_membership_type_by_code(code)
 
     def has_membership_type(self, codename):
