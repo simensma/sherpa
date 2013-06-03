@@ -7,8 +7,10 @@
     {% endif %}
     <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url 'user.views.account' %}">Dine opplysninger</a></li>
     <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url 'user.views.account_password' %}">Endre passord</a></li>
-    {% if user.get_profile.is_member %}
-      <li{% if active == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.aktiviteter' %}">Turer og aktiviteter</a></li>
+    {% if False %}
+      {% if user.get_profile.is_member %}
+        <li{% if active == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.aktiviteter' %}">Turer og aktiviteter</a></li>
+      {% endif %}
     {% endif %}
     {% if user.get_profile.leader_aktivitet_dates.count != 0 %}
       <li{% if active == 'leader_aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.leader_aktivitet_dates' %}">Dine arrangerte turer</a></li>

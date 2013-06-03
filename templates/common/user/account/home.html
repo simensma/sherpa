@@ -119,15 +119,17 @@
       </a>
     {% endcolumn %}
 
-    {% if user.get_profile.is_member %}
-      {% column %}
-        <a href="{% url 'user.views.aktiviteter' %}" class="element">
-          <p class="title">Turer og aktiviteter</p>
-          <p>
-            Se hvilke turer og aktiviteter du er påmeldt.
-          </p>
-        </a>
-      {% endcolumn %}
+    {% if False %}
+      {% if user.get_profile.is_member %}
+        {% column %}
+          <a href="{% url 'user.views.aktiviteter' %}" class="element">
+            <p class="title">Turer og aktiviteter</p>
+            <p>
+              Se hvilke turer og aktiviteter du er påmeldt.
+            </p>
+          </a>
+        {% endcolumn %}
+      {% endif %}
     {% endif %}
 
     {% if user.get_profile.leader_aktivitet_dates.count != 0 %}
