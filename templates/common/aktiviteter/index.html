@@ -1,4 +1,4 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends "common/aktiviteter/layout.html" %}
 {% block title %}Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a></em>{% endblock %}
 
@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block body %}
+
+{{ block.super }}
 
 <div class="row">
   <div class="span12">

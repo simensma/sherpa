@@ -1,4 +1,4 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends "common/aktiviteter/layout.html" %}
 {% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <em><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a></em>{% endblock %}
 
@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block body %}
+
+{{ block.super }}
 
 <div class="row">
   <div class="span12">

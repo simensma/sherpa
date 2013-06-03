@@ -33,9 +33,12 @@
             <a href="{% url 'admin.aktiviteter.views.index' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
             </a>
-            <h2><a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a></h2>
+            <h2><a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter (prototype!)</a></h2>
             <p>
-              Legg ut fellesturer og aktiviteter som listes på nettsidene, hvor deltakere kan få mer informasjon og melde seg på.
+              <strong>Dette er en prototype som ikke er i bruk.</strong> Vi sikter på å lansere det nye systemet høsten 2013, men <strong>i mellomtiden må du <a href="http://{{ old_site }}/admin/activity.php">bruke gamle Sherpa</a></strong> om du vil behandle aktiviteter som publiseres på nettsidene.
+            </p>
+            <p>
+              Du kan imidlertid gjerne prøve ut det nye systemet, men vær obs på at aktiviteter som legges inn <strong>vil bli slettet</strong> før den offentlige lanseringen. Du kan besøke test-visningen av disse på <a href="http://{{ site.domain }}/aktiviteter-beta/">http://{{ site.domain }}/aktiviteter-beta/</a>.
             </p>
             <div style="clear: both;"></div>
           </li>

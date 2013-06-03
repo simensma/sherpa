@@ -1,0 +1,21 @@
+{% extends site.template.name|add:"/layout.html" %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <div class="alert alert-info">
+      <a class="close">x</a>
+      <p>
+        <strong>Heisann! Dette er en prototype av våre nye aktivitetssider.</strong> Du vil egentlig besøke <a href="http://{{ site.domain }}/aktiviteter/">de offentlige aktivitetssidene</a>.<br>
+        Dersom du bare er en nyskjerrig forbipasserende er du velkommen til å se deg rundt, men husk at:
+      </p>
+
+      <p class="temporary-aktivitet-beta-highlight">
+        Denne siden inneholder kun test-data. Du kan ikke se eller melde deg på våre aktiviteter her.
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
