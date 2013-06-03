@@ -454,13 +454,13 @@ class ActorPosition(models.Model):
     # Not sure what the deal with "committee" is, but that's what Focus calls it.
     # It defines the group of 'verv', e.g. turleder or tillitsvalgt.
     committee = models.CharField(max_length=8, db_column=u'Commity')
+    date_start = models.DateTimeField(null=True, db_column=u'StartDt')
+    date_end = models.DateTimeField(null=True, db_column=u'EndDt')
 
     actseqnopos = models.IntegerField(null=True, db_column=u'ActSeqNoPos')
     actnopos = models.IntegerField(null=True, db_column=u'ActNoPos')
     actseqnopos1 = models.IntegerField(null=True, db_column=u'ActSeqNoPos1')
     actnopos1 = models.IntegerField(null=True, db_column=u'ActNoPos1')
-    startdt = models.DateTimeField(null=True, db_column=u'StartDt')
-    enddt = models.DateTimeField(null=True, db_column=u'EndDt')
     posoptint1 = models.IntegerField(null=True, db_column=u'PosOptInt1')
     posoptint2 = models.IntegerField(null=True, db_column=u'PosOptInt2')
     poschar1 = models.CharField(max_length=50, db_column=u'PosChar1')
