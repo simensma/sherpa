@@ -24,13 +24,13 @@ $(document).ready(function() {
     $("div.editor-header button.preview").click(function() {
         var button = $(this);
         button.html('<i class="icon-search"></i> Lagrer først...');
-        button.attr('disabled', true);
+        button.prop('disabled', true);
         var url = $(this).attr('data-href');
         save(function() {
             window.location = url;
         }, function() {
             button.html('<i class="icon-search"></i> Forhåndsvisning');
-            button.removeAttr('disabled');
+            button.prop('disabled', false);
         });
     });
 
@@ -38,7 +38,7 @@ $(document).ready(function() {
     function save(done, fail) {
         clearTimeout(updateSaveCountID);
         var saveButton = $("div.editor-header button.save");
-        saveButton.attr('disabled', true);
+        saveButton.prop('disabled', true);
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
         $("div.no-save-warning").hide();
 
@@ -225,7 +225,7 @@ $(document).ready(function() {
             }
         }).always(function(result) {
             updateSaveCount();
-            saveButton.removeAttr('disabled');
+            saveButton.prop('disabled', false);
         });
 
     }

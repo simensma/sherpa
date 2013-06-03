@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
+from django.shortcuts import render
 
 from core.models import Tag, Zipcode
 
@@ -17,3 +18,6 @@ def filter_tags(request):
     tag_objects = Tag.objects.filter(name__icontains=request.POST['name'])
     tags = [tag.name for tag in tag_objects]
     return HttpResponse(json.dumps(tags))
+
+def attribution(request):
+    return render(request, 'main/attribution.html')

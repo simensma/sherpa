@@ -63,6 +63,17 @@ $(document).ready(function() {
     /* Enable self-declared chosen selects */
     $("select[data-chosen]").chosen();
 
+    /* Sliders */
+    $("div.slider").each(function() {
+        var content = $(this).find("div.slider-content");
+        var bar = $(this).find("a.slider-bar");
+
+        bar.click(function() {
+            content.slideToggle();
+            $(this).find("span.text,div.button").toggle();
+        });
+    });
+
 });
 
 $.fn.enableDialog = function() {
@@ -96,3 +107,8 @@ $(document).on('keypress', 'body', function(e) {
 if(top != self) {
     top.location.replace(document.location);
 }
+
+/* Toggling a tab-pane outside from the actual tab links */
+$(document).on("click", "*[data-toggle-tab]", function() {
+    $("ul.nav-tabs a[href='#" + $(this).attr('data-toggle-tab') + "']").tab('show');
+});

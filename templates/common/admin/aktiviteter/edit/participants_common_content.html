@@ -1,0 +1,16 @@
+<h3>Påmeldte {{ aktivitet_date.start_date|date:"j. F Y" }} - {{ aktivitet_date.end_date|date:"j. F Y" }}</h3>
+{% if aktivitet_date.signup_enabled %}
+    {% if aktivitet_date.participants.all|length > 0 %}
+      <table class="table">
+        {% for profile in aktivitet_date.participants.all %}
+          <tr>
+            <td>{{ profile.get_full_name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>Ingen påmeldte for denne turen.</p>
+    {% endif %}
+{% else %}
+  <p>Denne turdatoen tar ikke imot påmeldinger.</p>
+{% endif %}

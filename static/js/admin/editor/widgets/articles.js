@@ -20,21 +20,21 @@
         widget_editor.find("input[name='display-images']").prop('checked', widget.display_images);
         if(widget.tag_link == null) {
             widget_editor.find("input[name='set-tag-link']").prop('checked', false);
-            widget_editor.find("input[name='tag-link']").attr('disabled', true).val("");
+            widget_editor.find("input[name='tag-link']").prop('disabled', true).val("");
         }
         article_widget_tagger.tags = widget.tags;
         var box = widget_editor.find("div.tag-box");
         box.empty();
         for(var i=0; i<widget.tags.length; i++) {
-            var tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + widget.tags[i] + '</div>');
+            var tag = $('<div class="tag"><a href="javascript:undefined" class="closer"></a> ' + widget.tags[i] + '</div>');
             box.append(tag);
         }
         if(widget.tags.length > 0) {
             widget_editor.find("input[name='enable-tags']").prop('checked', true);
-            widget_editor.find("input[name='tags']").removeAttr('disabled');
+            widget_editor.find("input[name='tags']").prop('disabled', false);
         } else {
             widget_editor.find("input[name='enable-tags']").prop('checked', false);
-            widget_editor.find("input[name='tags']").attr('disabled', true);
+            widget_editor.find("input[name='tags']").prop('disabled', true);
         }
     });
 
@@ -58,17 +58,17 @@
         });
         widget_editor.find("input[name='set-tag-link']").change(function() {
             if($(this).is(':checked')) {
-                widget_editor.find("input[name='tag-link']").removeAttr('disabled');
+                widget_editor.find("input[name='tag-link']").prop('disabled', false);
             } else {
-                widget_editor.find("input[name='tag-link']").attr('disabled', true).val("");
+                widget_editor.find("input[name='tag-link']").prop('disabled', true).val("");
             }
         });
 
         widget_editor.find("input[name='enable-tags']").change(function() {
             if($(this).is(':checked')) {
-                widget_editor.find("input[name='tags']").removeAttr('disabled');
+                widget_editor.find("input[name='tags']").prop('disabled', false);
             } else {
-                widget_editor.find("input[name='tags']").attr('disabled', true).val("");
+                widget_editor.find("input[name='tags']").prop('disabled', true).val("");
                 widget_editor.find("div.tag-box").empty();
             }
         });

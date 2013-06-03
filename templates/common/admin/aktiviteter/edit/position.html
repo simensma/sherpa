@@ -1,0 +1,64 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.css" media="screen">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.ie.css" media="screen">
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.ie.css" media="screen">
+  <![endif]-->
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
+  <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  {% if aktivitet.start_point %}
+    <script>
+      window.start_point_lat = JSON.parse({{ aktivitet.get_start_point_lat_json }});
+      window.start_point_lng = JSON.parse({{ aktivitet.get_start_point_lng_json }});
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <div class="edit-aktivitet-position">
+
+      <h2>Rediger aktivitet</h2>
+
+      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='position' %}
+
+      <p>
+        Her kan du plassere punktet hvor turen <strong>starter</strong> på kartet. Dette bør du gjøre slik at turen vises på kartoversikten i aktivitetssøket.
+      </p>
+
+      <p>
+        Bruk knappen til venstre på kartet for å plassere pinnen.
+      </p>
+
+      <div id="map" class="leaflet-map"></div>
+      <div class="popup-content hide">
+        <h3>{{ aktivitet.title }}</h3>
+        <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+      </div>
+
+      <form action="{% url 'admin.aktiviteter.views.edit_position' aktivitet.id %}" method="post" class="save-position">
+        {% csrf_token %}
+        <input type="hidden" name="lat" value="">
+        <input type="hidden" name="lng" value="">
+        <button type="submit" class="btn save">Lagre</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

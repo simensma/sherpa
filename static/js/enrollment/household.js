@@ -21,7 +21,7 @@ $(document).ready(function() {
             form.find("div.world").hide();
             form.find("div.scandinavia").show();
             form.find("div.yearbook").hide();
-            area.attr('disabled', true);
+            area.prop('disabled', true);
             Validator.validateZipcode(zipcode_control_group, zipcode, area, loader);
             if(!first || (first && zipcode.val() != '')) {
                 Validator.triggerZipcode(zipcode);
@@ -30,7 +30,7 @@ $(document).ready(function() {
             form.find("div.world").hide();
             form.find("div.scandinavia").show();
             form.find("div.yearbook").show();
-            area.removeAttr('disabled');
+            area.prop('disabled', false);
             Validator.stopZipcodeValidation(zipcode);
             zipcode.focusout();
         } else {
@@ -87,7 +87,7 @@ $(document).ready(function() {
         e.preventDefault();
         $("div.existing-result").show();
         var button = $(this);
-        button.attr('disabled', true);
+        button.prop('disabled', true);
         form.find("img.existing.ajaxloader").show();
         var data = {
             id: form.find("input[name='existing']").val(),
@@ -129,7 +129,7 @@ $(document).ready(function() {
         }).fail(function(result) {
             // Todo
         }).always(function() {
-            button.removeAttr('disabled');
+            button.prop('disabled', false);
             form.find("img.existing.ajaxloader").hide();
             $("div.existing-result span.result").show();
         });

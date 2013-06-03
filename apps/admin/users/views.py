@@ -14,12 +14,10 @@ from association.models import Association
 from user.models import Profile, AssociationRole
 from focus.models import Actor
 
-ADMIN_USER_SEARCH_CHAR_LENGTH = 4
-
 def index(request):
     context = {
         'password_length': settings.USER_PASSWORD_LENGTH,
-        'admin_user_search_char_length': ADMIN_USER_SEARCH_CHAR_LENGTH}
+        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH}
     return render(request, 'common/admin/users/index.html', context)
 
 def show(request, other_user):
@@ -47,7 +45,7 @@ def show(request, other_user):
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):
-    if len(request.POST['q']) < ADMIN_USER_SEARCH_CHAR_LENGTH:
+    if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
     local_profiles = Profile.objects.all()
@@ -65,13 +63,13 @@ def search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = Profile.objects.filter(memberid__in=list(actors.values_list('memberid', flat=True)))
-    actors_wihtout_profile = actors.exclude(memberid__in=list(members.values_list('memberid', flat=True)))
+    members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
+    actors_without_profile = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
     profiles = list(local_profiles) + list(members)
 
     context = RequestContext(request, {
         'profiles': profiles,
-        'actors_without_profile': actors_wihtout_profile})
+        'actors_without_profile': actors_without_profile})
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
@@ -98,6 +96,7 @@ def make_sherpa_admin(request, user):
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
     user.user_permissions.add(permission)
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
 
 def add_association_permission(request):
@@ -127,6 +126,7 @@ def add_association_permission(request):
         role.save()
 
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
 
 def revoke_association_permission(request):
@@ -141,4 +141,5 @@ def revoke_association_permission(request):
     role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
     role.delete()
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
+    cache.delete('profile.%s.children_associations' % user.get_profile().id)
     return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))

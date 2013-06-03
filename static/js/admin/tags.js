@@ -3,7 +3,7 @@ var TypicalTagger = function(input, tag_box) {
     var that = this;
 
     this.tagger = new Tagger(input, function(tag) {
-        tag = $('<div class="tag"><a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a> ' + tag + '</div>');
+        tag = $('<div class="tag"><a href="javascript:undefined" class="closer"></a> ' + tag + '</div>');
         tag_box.append(tag);
     }, function(tag) {
         tag_box.find("div.tag").each(function() {
@@ -21,13 +21,7 @@ var TypicalTagger = function(input, tag_box) {
         });
     });
 
-    $(document).on('mouseover', tag_box.selector + ' div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-hover.png');
-    });
-    $(document).on('mouseout', tag_box.selector + ' div.tag a', function() {
-        $(this).children("img").attr('src', '/static/img/so/close-default.png');
-    });
-    $(document).on('click', tag_box.selector + ' div.tag a', function() {
+    $(document).on('click', tag_box.selector + ' div.tag a.closer', function() {
         that.tagger.removeTag($(this).parent().text().trim());
         $(this).parent().remove();
     });
@@ -88,8 +82,18 @@ var Tagger = function(el, newTag, existingTag) {
                 url: '/tags/filter/',
                 data: { name: query }
             }).done(function(result) {
+                query = query.toLowerCase();
                 tags = JSON.parse(result);
-                tags.unshift(query);
+                // Array.indexOf is JS 1.6 which IE7, IE8 doesn't support, so we'll do this the hard way
+                var exists = false;
+                for(var i=0; i<tags.length; i++) {
+                    if(tags[i] == query) {
+                        exists = true;
+                    }
+                }
+                if(!exists) {
+                    tags.unshift(query);
+                }
                 process(tags);
             });
         }

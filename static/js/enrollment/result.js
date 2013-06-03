@@ -3,7 +3,7 @@ $(document).ready(function() {
     var button = $("button.phone-receipt");
 
     button.click(function() {
-        $(this).attr('disabled', true);
+        $(this).prop('disabled', true);
         $(this).text("Sender, vennligst vent...");
         var button = $(this);
         var index = $(this).attr('data-index');

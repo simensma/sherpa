@@ -19,6 +19,8 @@ $(document).ready(function() {
         search_button.click(search);
 
         function search() {
+            search_input.prop('disabled', true);
+            search_button.prop('disabled', true);
             loader.show();
             no_hits.hide();
             initial.hide();
@@ -27,6 +29,8 @@ $(document).ready(function() {
             table.find("tr.result").remove();
             var query = search_input.val();
             if(query.length < admin_user_search_char_length) {
+                search_input.prop('disabled', false);
+                search_button.prop('disabled', false);
                 short_query.show();
                 loader.hide();
                 return;
@@ -47,6 +51,8 @@ $(document).ready(function() {
                 error.show();
             }).always(function(result) {
                 loader.hide();
+                search_input.prop('disabled', false);
+                search_button.prop('disabled', false);
             });
         }
 

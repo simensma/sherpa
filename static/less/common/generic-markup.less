@@ -124,14 +124,22 @@ div.tag-box {
     margin: 2px 3px 10px 3px;
     padding: 3px 4px;
 
-    a {
+    a.closer {
       /* This will look ugly in IE7 (100% width), but ignore that as the functionality is
        * still there and people should upgrade anyway. */
+      display: block;
       cursor: pointer;
       float: right;
       width: 12px;
       height: 12px;
       margin-left: 4px;
+      margin-top: 4px;
+      background: url('/static/img/so/close-default.png') center right no-repeat;
+      vertical-align: middle;
+    }
+
+    a.closer:hover {
+      background-image: url('/static/img/so/close-hover.png');
     }
   }
 
@@ -139,5 +147,17 @@ div.tag-box {
     cursor: pointer;
     color: #e0eaf1;
     background-color: #3e6d8e;
+  }
+
+  div.tag.exists {
+    color: white !important;
+    background-color: @profile-red !important;
+  }
+}
+
+ul.nav.nav-tabs {
+  li a {
+    font-family: "DTL Nobel" !important;
+    font-weight: bold;
   }
 }

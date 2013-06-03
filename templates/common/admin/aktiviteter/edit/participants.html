@@ -1,0 +1,24 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <h2>Rediger aktivitet</h2>
+
+    {% include 'common/admin/aktiviteter/edit/navigation.html' with active='participants' %}
+
+    {% for aktivitet_date in aktivitet.get_dates_ordered %}
+      {% include 'common/admin/aktiviteter/edit/participants_common_content.html' %}
+    {% empty %}
+      <p>Aktiviteten har ingen turdatoer.</p>
+    {% endfor %}
+
+
+  </div>
+</div>
+
+{% endblock %}

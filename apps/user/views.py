@@ -4,7 +4,6 @@ from django.conf import settings
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
@@ -25,16 +24,17 @@ from core import validator
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
+from aktiviteter.models import AktivitetDate
 
 from user.util import username, memberid_lookups_exceeded
-from sherpa.decorators import user_requires
+from sherpa.decorators import user_requires, user_requires_login
 
 logger = logging.getLogger('sherpa')
 
 NORWAY_EMAIL_FROM = 'Den Norske Turistforening <webmaster@turistforeningen.no>'
 NORWAY_EMAIL_RECIPIENT = 'NOR-WAY Bussekspress AS <post@nor-way.no>'
 
-@login_required
+@user_requires_login()
 def home(request):
     first_visit = 'minside.has_visited' not in request.session
     if first_visit:
@@ -48,7 +48,7 @@ def home(request):
     }
     return render(request, 'common/user/account/home.html', context)
 
-@login_required
+@user_requires_login()
 def account(request):
     now = datetime.now()
     context = {
@@ -57,7 +57,7 @@ def account(request):
     }
     return render(request, 'common/user/account/account.html', context)
 
-@login_required
+@user_requires_login()
 def update_account(request):
     if not request.user.get_profile().is_member():
         if request.method == 'GET':
@@ -165,12 +165,12 @@ def update_account(request):
             messages.info(request, 'update_success')
             return HttpResponseRedirect(reverse('user.views.account'))
 
-@login_required
+@user_requires_login()
 def account_password(request):
     context = {'user_password_length': settings.USER_PASSWORD_LENGTH}
     return render(request, 'common/user/account/update_account_password.html', context)
 
-@login_required
+@user_requires_login()
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
@@ -181,7 +181,7 @@ def update_account_password(request):
         messages.info(request, 'password_update_success')
         return HttpResponseRedirect(reverse('user.views.home'))
 
-@login_required
+@user_requires_login()
 def register_membership(request):
     if request.user.get_profile().is_member():
         return HttpResponseRedirect(reverse('user.views.home'))
@@ -240,12 +240,12 @@ def register_membership(request):
             messages.error(request, 'invalid_memberid')
             return HttpResponseRedirect(reverse('user.views.register_membership'))
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def partneroffers(request):
     return render(request, 'common/user/account/partneroffers.html')
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
     actor = request.user.get_profile().get_actor()
@@ -253,12 +253,12 @@ def partneroffers_reserve(request):
     actor.save()
     return HttpResponse()
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def receive_email(request):
     return render(request, 'common/user/account/receive_email.html')
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
     actor = request.user.get_profile().get_actor()
@@ -266,7 +266,26 @@ def receive_email_set(request):
     actor.save()
     return HttpResponse()
 
-@login_required
+@user_requires_login()
+@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+def aktiviteter(request):
+    aktivitet_dates = AktivitetDate.objects.filter(participants=request.user.get_profile()).order_by('-start_date')
+    context = {'aktivitet_dates': aktivitet_dates}
+    return render(request, 'common/user/aktiviteter.html', context)
+
+@user_requires_login()
+def leader_aktivitet_dates(request):
+    aktivitet_dates = request.user.get_profile().leader_aktivitet_dates.order_by('-start_date')
+    context = {'aktivitet_dates': aktivitet_dates}
+    return render(request, 'common/user/leader_aktivitet_dates.html', context)
+
+@user_requires_login()
+def leader_aktivitet_date(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, leaders=request.user.get_profile())
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/user/leader_aktivitet_date.html', context)
+
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
@@ -282,7 +301,7 @@ def publications(request):
         'publications_other': publications_other}
     return render(request, 'common/user/account/publications.html', context)
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
     accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
@@ -295,7 +314,7 @@ def publication(request, publication):
     context = {'publication': publication}
     return render(request, 'common/user/account/publication.html', context)
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
     now = datetime.now()
@@ -316,7 +335,7 @@ def norway_bus_tickets(request):
         'old_ticket': old_ticket}
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
 def norway_bus_tickets_order(request):
@@ -372,12 +391,12 @@ def norway_bus_tickets_order(request):
         messages.error(request, 'email_failure')
         return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def fotobok(request):
     return render(request, 'common/user/account/fotobok.html')
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def fotobok_eurofoto_request(request):
     profile = request.user.get_profile()
@@ -450,14 +469,14 @@ def fotobok_eurofoto_request(request):
         messages.error(request, 'eurofoto_api_unparseable_reply')
         return HttpResponseRedirect(reverse('user.views.fotobok'))
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
@@ -467,7 +486,7 @@ def reserve_fjellogvidde(request):
     actor.save()
     return HttpResponse()
 
-@login_required
+@user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
 @user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')

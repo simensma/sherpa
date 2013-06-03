@@ -34,9 +34,9 @@ $(document).ready(function() {
 
     $("input[name='toggle-sherpa-email']").change(function() {
         if($(this).is(':checked')) {
-            $("input[name='sherpa-email']").removeAttr('readonly');
+            $("input[name='sherpa-email']").prop('readonly', false);
         } else {
-            $("input[name='sherpa-email']").val('').attr('readonly', true).focusout();
+            $("input[name='sherpa-email']").val('').prop('readonly', true).focusout();
         }
     });
 

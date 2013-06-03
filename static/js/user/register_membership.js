@@ -60,7 +60,7 @@ $(document).ready(function() {
                         form.find("input[name='email-equal']").val('true');
                         form.submit();
                     } else {
-                        form.find("div.form-elements div.step1 input").attr('readonly', true);
+                        form.find("div.form-elements div.step1 input").prop('readonly', true);
                         form.find("div.form-elements div.step2").slideDown();
                         email.find("span.preselected-email.sherpa").text(email.attr('data-email'));
                         email.find("span.preselected-email.focus").text(result.email);
@@ -85,9 +85,9 @@ $(document).ready(function() {
 
     form.find("input[name='email-choice']").change(function() {
         if(form.find("input[name='email-choice']:checked").val() == 'custom') {
-            form.find("input[name='email']").removeAttr('disabled');
+            form.find("input[name='email']").prop('disabled', false);
         } else {
-            form.find("input[name='email']").attr('disabled', true);
+            form.find("input[name='email']").prop('disabled', true);
             form.find("div.control-group.email").removeClass('error success');
         }
     });

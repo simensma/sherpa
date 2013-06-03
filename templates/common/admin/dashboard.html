@@ -6,7 +6,9 @@
   <div class="span12">
     <nav class="dashboard">
       <ul>
+
         {% if active_association.site %}
+
           <li>
             <a href="{% url 'admin.cms.views.page.list' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg">
@@ -17,6 +19,7 @@
             </p>
             <div style="clear: both;"></div>
           </li>
+
           <li>
             <a href="{% url 'admin.articles.views.list' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg">
@@ -25,6 +28,21 @@
             <p>Skriv og publiser artikler som vises under <a href="{% url 'articles.views.index' %}">/nyheter/</a></p>
             <div style="clear: both;"></div>
           </li>
+
+          <li>
+            <a href="{% url 'admin.aktiviteter.views.index' %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
+            </a>
+            <h2><a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter (prototype!)</a></h2>
+            <p>
+              <strong>Dette er en prototype som ikke er i bruk.</strong> Vi sikter på å lansere det nye systemet høsten 2013, men <strong>i mellomtiden må du <a href="http://{{ old_site }}/admin/activity.php">bruke gamle Sherpa</a></strong> om du vil behandle aktiviteter som publiseres på nettsidene.
+            </p>
+            <p>
+              Du kan imidlertid gjerne prøve ut det nye systemet, men vær obs på at aktiviteter som legges inn <strong>vil bli slettet</strong> før den offentlige lanseringen. Du kan besøke test-visningen av disse på <a href="http://{{ site.domain }}/aktiviteter-beta/">http://{{ site.domain }}/aktiviteter-beta/</a>.
+            </p>
+            <div style="clear: both;"></div>
+          </li>
+
           <li>
             <a href="{% url 'admin.publications.views.index' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/magazine.png">
@@ -33,6 +51,7 @@
             <p>Legg ut blader, årbøker, brosjyrer eller liknende som blir tilgjengelige for medlemmer via Min side.</p>
             <div style="clear: both;"></div>
           </li>
+
           <li>
             <a href="{% url 'admin.ads.views.list' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
@@ -41,7 +60,9 @@
             <p>Last opp og legg ut annonser. Hvilke sider annonsene vises på velges under "<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>".</p>
             <div style="clear: both;"></div>
           </li>
+
         {% endif %}
+
         <li>
           <a href="{% url 'admin.images.views.index' %}">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
@@ -50,6 +71,7 @@
           <p>Finn bilder eller last opp nye. Det gamle bildearkivet finner du foreløpig i <a href="https://{{ old_site }}/admin/">gamle sherpa</a>, mens vi jobber med å flytte dem hit.</p>
           <div style="clear: both;"></div>
         </li>
+
         <li>
           <a href="{% url 'admin.analytics.views.index' %}">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/statistics.jpg">
@@ -58,6 +80,7 @@
           <p>Statistikk og analyse av bruksmønstre på siden. Foreløpig finner man kun søkestatistikk her, men vi ønsker å utvide funksjonaliteten etter hvert.</p>
           <div style="clear: both;"></div>
         </li>
+
         <li>
           <a href="{% url 'admin.users.views.index' %}">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/users.png">
@@ -66,6 +89,7 @@
           <p>Finn Sherpa-brukere eller opprett ny bruker i din forening (eller en underforening).</p>
           <div style="clear: both;"></div>
         </li>
+
         {% if active_association.site %}
           <li>
             <a href="{% url 'admin.cache.views.index' %}">
@@ -78,6 +102,7 @@
             <div style="clear: both;"></div>
           </li>
         {% endif %}
+
         {% if active_association.id == 56 %}
           {# Applies only to DNT Central #}
           <li>
@@ -89,6 +114,7 @@
             <div style="clear: both;"></div>
           </li>
         {% endif %}
+
         {% if perms.user.sherpa_admin %}
           <li>
             <a href="{% url 'admin.memberid_sms.views.list' %}">
@@ -108,16 +134,6 @@
 
       <ul>
         <li>
-          <a href="http://www.turistforeningen.no/admin/activity.php">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
-          </a>
-          <h2><a href="http://www.turistforeningen.no/admin/activity.php">Aktiviteter</a></h2>
-          <p>
-            Vi jobber med et nytt system for forvaltning av aktiviteter; i mellomtiden må systemet i gamle Sherpa benyttes.
-          </p>
-          <div style="clear: both;"></div>
-        </li>
-        <li>
           <a href="http://www.turistforeningen.no/admin/cabin.php">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cabin.jpg">
           </a>
@@ -127,6 +143,7 @@
           </p>
           <div style="clear: both;"></div>
         </li>
+
         <li>
           <a href="http://www.turistforeningen.no/admin/trip.php">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/trail.jpg">
@@ -137,6 +154,7 @@
           </p>
           <div style="clear: both;"></div>
         </li>
+
         <li>
           <a href="http://www.turistforeningen.no/admin/conditions.php">
             <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/weather.jpg">
@@ -147,6 +165,7 @@
           </p>
           <div style="clear: both;"></div>
         </li>
+
         {# Don't link directly to the file manager, there's some security stuff in place in case you're not logged in to the old sherpa which will block you from the entire domain for a short period. #}
         <li>
           <a href="http://www.turistforeningen.no/admin/">

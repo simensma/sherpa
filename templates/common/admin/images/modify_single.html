@@ -48,7 +48,7 @@
           <div class="tag-box">
             {% for tag in image.tags.all %}
               <div class="tag">
-                <a href="javascript:undefined"><img src="/static/img/so/close-default.png"></a>
+                <a href="javascript:undefined" class="closer"></a>
                 {{ tag.name }}
               </div>
             {% endfor %}

@@ -137,6 +137,15 @@ table.norway-busticket-order {
   }
 }
 
+div.user-aktiviteter-list {
+  div.aktivitet {
+    p.signup-cancel {
+      font-size: 14px;
+      font-family: "DTL Nobel" !important;
+    }
+  }
+}
+
 div.publications {
   div.content-wrapper {
     div.hover-content {
@@ -189,22 +198,10 @@ div.loginpage-wrapper {
   ul.nav.nav-tabs {
     // Align the tabs with the tab-content borders
     margin-bottom: 0;
-
-    li a {
-      // Custom nav-styling, maybe this should be site-wide?
-      font-family: "DTL Nobel" !important;
-      font-weight: bold;
-    }
   }
   div.tab-content div.login-form-wrapper, div.tab-content div.registration-form-wrapper {
     // Remove the top border, ul.nav will take care of that
     border-top: none;
-  }
-
-  div.tab-content {
-    // Bootstrap sets overflow: auto; by default. This yields scrollbars when used with
-    // a chosen select box, so reset it to visible in this case.
-    overflow: visible;
   }
 
   div.registration-form-wrapper {

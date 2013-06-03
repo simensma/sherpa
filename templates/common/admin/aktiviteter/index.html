@@ -1,0 +1,199 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/tagger-adhoc.js"></script>
+{% endblock %}
+
+{% load rowiterator %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <div class="alert alert-info">
+      <a class="close">x</a>
+      <strong>Dette er en prototype som ikke er i bruk.</strong><br>
+      Vi sikter på å lansere det nye systemet høsten 2013, men <strong>i mellomtiden må du <a href="http://{{ old_site }}/admin/activity.php">bruke gamle Sherpa</a></strong> om du vil behandle aktiviteter som publiseres på nettsidene.<br>
+      Du kan imidlertid gjerne prøve ut det nye systemet, men vær obs på at aktiviteter som legges inn <strong>vil bli slettet</strong> før den offentlige lanseringen. Du kan besøke test-visningen av disse på <a href="http://{{ site.domain }}/aktiviteter-beta/">http://{{ site.domain }}/aktiviteter-beta/</a>.
+    </div>
+  </div>
+</div>
+
+<div class="aktivitet-listing">
+
+  <div class="new-categories">
+    <div class="initial-category">
+      <div class="row">
+        <div class="span12">
+          <h3>Opprett en ny aktivitet (velg type):</h3>
+        </div>
+      </div>
+
+      {% rowiterator 4 %}
+        {% for category in categories %}
+          {% column %}
+            <button class="btn category" data-tag-name="{{ category.0 }}">{{ category.1 }}</button>
+          {% endcolumn %}
+        {% endfor %}
+      {% endrowiterator %}
+    </div>
+
+    <div class="pick-subcategories hide">
+      <div class="picked">
+        {# Subcategories will be appended here when picked, to get the chosen order. #}
+      </div>
+
+      <div class="subcategories trip hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags tur/aktivitet er dette?</h3>
+              <h3 class="extra hide">Kategorier for turer/aktiviteter:</h3>
+              {% for subcategory in subcategories.trip %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subcategories course hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags kurs er dette?</h3>
+              <h3 class="extra hide">Kategorier for kurs:</h3>
+              {% for subcategory in subcategories.course %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subcategories event hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags arrangement er dette?</h3>
+              <h3 class="extra hide">Kategorier for arrangement:</h3>
+              {% for subcategory in subcategories.event %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subcategories volunteerwork hide">
+        <div class="row">
+          <div class="span12">
+            <div class="square-well">
+              <h3 class="chosen hide">Hva slags dugnad er dette?</h3>
+              <h3 class="extra hide">Kategorier for dugnad:</h3>
+              {% for subcategory in subcategories.volunteerwork %}
+                <button class="btn subcategory">{{ subcategory }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subcategories custom hide">
+        <div class="row">
+          <div class="span12">
+            <h3>Legg inn dine egne kategorier:</h3>
+            <p>
+              <input type="text" name="tagger" class="input-large">
+            </p>
+            <div class="tag-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="more-categories">
+        <div class="row">
+          <div class="span12">
+            <h3>Finner du ikke kategorien du leter etter?</h3>
+            <p class="choices">
+              Vis forslag for
+              {# Span is used to remove the first chosen category entirely (and include the comma). #}
+              <span><a href="javascript:undefined" data-category="trip">turer</a>,</span>
+              <span><a href="javascript:undefined" data-category="course">kurs</a>,</span>
+              <span><a href="javascript:undefined" data-category="event">arrangement</a>,</span>
+              <span><a href="javascript:undefined" data-category="volunteerwork">dugnadsarbeid</a>,</span>
+              eller <a href="javascript:undefined" data-category="custom">legg inn dine egne kategorier</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <form action="{% url 'admin.aktiviteter.views.new' %}" method="post" class="create-new-category">
+        {% csrf_token %}
+        <input type="hidden" name="category" value="">
+        <input type="hidden" name="tags" value="">
+
+        <div class="row">
+          <div class="span12">
+            <input type="submit" value="Opprett aktiviteten" class="btn btn-large btn-success">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="list-wrapper">
+
+    <p>
+      Velg hvilken forening du vil se aktiviteter for:
+      <select name="association_filter" data-chosen data-placeholder="Velg en forening...">
+        <option value=""></option>
+        {% if user.get_profile.children_associations_sorted.central|length > 0 %}
+          <optgroup label="Sentralt/nasjonalt">
+            {% for association in user.get_profile.children_associations_sorted.central %}
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.children_associations_sorted.associations|length > 0 %}
+          <optgroup label="Medlemsforeninger">
+            {% for association in user.get_profile.children_associations_sorted.associations %}
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.children_associations_sorted.small_associations|length > 0 %}
+          <optgroup label="Lokale turlag">
+            {% for association in user.get_profile.children_associations_sorted.small_associations %}
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if user.get_profile.children_associations_sorted.hike_groups|length > 0 %}
+          <optgroup label="Turgrupper">
+            {% for association in user.get_profile.children_associations_sorted.hike_groups %}
+              <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      </select>
+    </p>
+
+    <div class="row">
+      <div class="span12">
+        <table class="table table-striped">
+          {% for aktivitet in aktiviteter %}
+            <tr>
+              <td>
+                <a href="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

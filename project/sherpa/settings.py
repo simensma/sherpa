@@ -47,8 +47,7 @@ FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
 CAPTCHA_FLITE_PATH = '/usr/bin/flite'
 CAPTCHA_FONT_SIZE = 50
 CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
-
-
+ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
 # From the start of this month, memberships are for the remaining year AND next year
 # (1 = January, 12 = December)
@@ -79,6 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis', # GeoDjango
     'raven.contrib.django', # Error logging
     'captcha', # django-simple-captcha
     'south', # Database migrations
@@ -97,6 +97,7 @@ INSTALLED_APPS = (
     'instagram',
     'fjelltreffen',
     'conditions',
+    'aktiviteter',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

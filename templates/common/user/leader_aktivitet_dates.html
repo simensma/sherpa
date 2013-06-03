@@ -1,0 +1,34 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Dine turer og aktiviteter &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Dine turer og aktiviteter</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span9">
+
+    <h2>Dine arrangerte turer</h2>
+
+    {% for aktivitet_date in aktivitet_dates %}
+      <div class="form-border">
+        <h3>
+          <a href="{% url 'user.views.leader_aktivitet_date' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>
+        </h3>
+        <p>
+          {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
+        </p>
+      </div>
+    {% empty %}
+      <p>
+        Du er ikke turleder.
+      </p>
+    {% endfor %}
+
+  </div>
+
+  <div class="span3">
+    {% include 'common/user/navigation.html' with active='leader_aktiviteter' %}
+  </div>
+</div>
+
+{% endblock %}

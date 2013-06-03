@@ -1,0 +1,25 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Kreditering{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'core.views.attribution' %}">Kreditering</a></em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    {# TODO: Bruk denne siden til å liste åpen kildekode-verktøy vi bruker? Med link til github m.m.? #}
+
+    <h1>Kreditering</h1>
+    <p>
+      Vi benytter oss av følgende grafikk fra <a href="http://thenounproject.com/">The Noun Project</a> utgitt under <a href="https://creativecommons.org/">Creative Commons</a>:
+    </p>
+
+    <ul>
+      <li><a href="http://thenounproject.com/noun/download/#icon-No464">Download Icon</a> av ukjent designer</li>
+      <li><a href="http://thenounproject.com/noun/book/#icon-No2248">Book Icon</a> av <a href="http://thenounproject.com/Foomandoonian">Geoff R</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

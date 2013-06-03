@@ -26,7 +26,7 @@ $(document).ready(function() {
     });
     restore_password_button.click(function() {
         forgot_password.find("div.alert").hide();
-        restore_password_button.attr('disabled', true);
+        restore_password_button.prop('disabled', true);
         loader.show();
         $.ajaxQueue({
             url: forgot_password.attr('data-email-url'),
@@ -35,19 +35,19 @@ $(document).ready(function() {
             result = JSON.parse(result);
             if(result.status == 'unknown_email') {
                 forgot_password.find("div.alert.unknown").show();
-                restore_password_button.removeAttr('disabled');
+                restore_password_button.prop('disabled', false);
             } else if(result.status == 'invalid_email') {
                 forgot_password.find("div.alert.invalid").show();
-                restore_password_button.removeAttr('disabled');
+                restore_password_button.prop('disabled', false);
             } else if(result.status == 'unregistered_email') {
                 forgot_password.find("div.alert.unregistered").show();
-                restore_password_button.removeAttr('disabled');
+                restore_password_button.prop('disabled', false);
             } else if(result.status == 'success') {
                 forgot_password.find("div.alert.success").show();
             }
         }).fail(function(r) {
             forgot_password.find("div.alert.error").show();
-            restore_password_button.removeAttr('disabled');
+            restore_password_button.prop('disabled', false);
         }).always(function(r) {
             loader.hide();
         });
