@@ -217,18 +217,28 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if Profile.objects.filter(memberid=request.POST['memberid']).exists():
+            if Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists():
                 messages.error(request, 'profile_exists')
                 return HttpResponseRedirect(reverse('user.views.register_membership'))
 
-            # Store focus-user and remove sherpa-stored data
+            # Ok, registration successful, update the profile
             profile = request.user.get_profile()
+
+            # If this memberid is already an imported inactive member, merge them
+            try:
+                other_profile = Profile.objects.get(memberid=request.POST['memberid'], user__is_active=False)
+                profile.merge_with(other_profile) # This will delete the other profile
+            except Profile.DoesNotExist:
+                pass
+
             profile.memberid = request.POST['memberid']
             profile.save()
 
+            # Save the chosen email in Focus
             actor.email = chosen_email
             actor.save()
 
+            # Reset the User-object state, this data will come from Focus
             request.user.username = request.POST['memberid']
             request.user.first_name = ''
             request.user.last_name = ''

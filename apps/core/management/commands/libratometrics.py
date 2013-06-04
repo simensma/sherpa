@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = u"Henter sherpa-metrics for libratoappen vår, se https://github.com/Turistforeningen/librato"
 
     def handle(self, *args, **options):
-        profiles = Profile.objects.all()
+        profiles = Profile.objects.filter(user__is_active=True)
         sherpa_profiles = profiles.filter(user__user_permissions=Permission.objects.get(codename='sherpa'))
         metrics = {
             'gauges': [{

@@ -186,6 +186,55 @@ class Profile(models.Model):
             # No orders, and offer expired - hide the item
             return False
 
+    def merge_with(self, other_profile):
+        # This method transfers ALL objects related to the other profile object
+        # over to this one. ANY relation to the profile object needs to be added here.
+        # Typically, the merge occurs when a non-member registers their membership with a
+        # memberid which exists for an imported inactive user. This is not often, but it
+        # *can* happen. See the Sherpa docs for more info.
+        # Whenever ForeignKeys to Profile are created, an entry needs to be created here
+        # which transfers it. This is easy to miss, so be sure to search through the codebase
+        # for missed tables from time to time. Use the 'profilerelations' manage.py-command.
+
+        from admin.models import Image
+        from aktiviteter.models import AktivitetDate
+        from articles.models import Article
+        from fjelltreffen.models import Annonse
+        from membership.models import SMSServiceRequest
+        from page.models import Page, Variant, Version
+
+        Annonse.objects.filter(profile=other_profile).update(profile=self)
+        Article.objects.filter(created_by=other_profile).update(created_by=self)
+        Article.objects.filter(modified_by=other_profile).update(modified_by=self)
+        AssociationRole.objects.filter(profile=other_profile).update(profile=self)
+        Image.objects.filter(uploader=other_profile).update(uploader=self)
+        NorwayBusTicket.objects.filter(profile=other_profile).update(profile=self)
+        Page.objects.filter(created_by=other_profile).update(created_by=self)
+        Page.objects.filter(modified_by=other_profile).update(modified_by=self)
+        SMSServiceRequest.objects.filter(profile=other_profile).update(profile=self)
+        Variant.objects.filter(owner=other_profile).update(owner=self)
+        Version.objects.filter(owner=other_profile).update(owner=self)
+
+        for version in Version.objects.filter(publishers=other_profile):
+            version.publishers.remove(other_profile)
+            version.publishers.add(self)
+        for aktivitet_date in AktivitetDate.objects.filter(leaders=other_profile):
+            aktivitet_date.leaders.remove(other_profile)
+            aktivitet_date.leaders.add(self)
+        for aktivitet_date in AktivitetDate.objects.filter(participants=other_profile):
+            aktivitet_date.participants.remove(other_profile)
+            aktivitet_date.participants.add(self)
+
+        # Merge user-permissions.
+        for p in other_profile.user.user_permissions.all():
+            self.user.user_permissions.add(p)
+
+        # That should be everything. Since all objects should have been transferred, it's safe
+        # to delete the other profile. Note that if we forgot to transfer any objects, they
+        # will be deleted.
+        other_profile.user.delete()
+        other_profile.delete()
+
     @staticmethod
     def sherpa_users():
         permission = Permission.objects.get(codename='sherpa')

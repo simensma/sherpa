@@ -74,7 +74,7 @@ def login(request):
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
             if old_member is not None:
                 # Actually, it is! Let's try to import them.
-                if Profile.objects.filter(memberid=old_member.memberid).exists():
+                if Profile.objects.filter(memberid=old_member.memberid, user__is_active=True).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
                     context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
@@ -90,9 +90,18 @@ def login(request):
                     return render(request, 'common/user/login/login.html', context)
 
                 # Create the new user
-                user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
-                profile = Profile(user=user, memberid=old_member.memberid)
-                profile.save()
+                try:
+                    # Check if the user's already created as inactive
+                    profile = Profile.objects.get(memberid=old_member.memberid, user__is_active=False)
+                    user = profile.user
+                    user.is_active = True
+                    user.set_password(request.POST['password'])
+                    user.save()
+                except Profile.DoesNotExist:
+                    # New user
+                    user = User.objects.create_user(old_member.memberid, password=request.POST['password'])
+                    profile = Profile(user=user, memberid=old_member.memberid)
+                    profile.save()
 
                 # Update the email on this actor, in case it were to differ from the sherpa2 email
                 actor = profile.get_actor()
@@ -176,15 +185,26 @@ def register(request):
             actor = actor.get()
 
             # Check that the user doesn't already have an account
-            if Profile.objects.filter(memberid=request.POST['memberid']).exists():
+            if Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists():
                 messages.error(request, 'profile_exists')
                 return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
 
             actor.email = request.POST['email']
             actor.save()
-            user = User.objects.create_user(actor.memberid, password=request.POST['password'])
-            profile = Profile(user=user, memberid=actor.memberid)
-            profile.save()
+
+            try:
+                # Check if the user's already created as inactive
+                profile = Profile.objects.get(memberid=request.POST['memberid'], user__is_active=False)
+                user = profile.user
+                user.is_active = True
+                user.set_password(request.POST['password'])
+                user.save()
+            except Profile.DoesNotExist:
+                # New user
+                user = User.objects.create_user(actor.memberid, password=request.POST['password'])
+                profile = Profile(user=user, memberid=actor.memberid)
+                profile.save()
+
             authenticate(user=user)
             log_user_in(request, user)
             t = loader.get_template('common/user/login/registered_email.html')
@@ -270,7 +290,7 @@ def verify_memberid(request):
             'exists': True,
             'name': actor.get_full_name(),
             'email': actor.email or '',
-            'profile_exists': Profile.objects.filter(memberid=request.POST['memberid']).exists()}))
+            'profile_exists': Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists()}))
     except (ValueError, Actor.DoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
 
@@ -280,7 +300,7 @@ def send_restore_password_email(request):
 
     # The address will match only one non-member, but may match several members
     local_match = User.objects.filter(email=request.POST['email'])
-    local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
+    local_members = list(Profile.objects.filter(memberid__isnull=False, user__is_active=True).values_list('memberid', flat=True))
     focus_matches = Actor.objects.filter(memberid__in=local_members, email=request.POST['email'])
     sherpa_matches = Member.objects.filter(email=request.POST['email']).exclude(memberid__in=local_members)
 
@@ -338,7 +358,7 @@ def send_restore_password_email(request):
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    profiles = Profile.objects.filter(password_restore_key=key)
+    profiles = Profile.objects.filter(password_restore_key=key, user__is_active=True)
     if len(profiles) == 0:
         context = {'no_such_key': True}
         return render(request, 'common/user/login/restore-password.html', context)
