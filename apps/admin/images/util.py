@@ -229,20 +229,25 @@ def generate_unique_random_image_key():
     return key
 
 def get_exif_tags(pil_image):
-    exif = {}
-    if hasattr(pil_image, '_getexif') and pil_image._getexif() is not None:
-        for tag, value in pil_image._getexif().items():
-            if tag == 37500:
-                # MakerNote data, see: https://en.wikipedia.org/wiki/Exchangeable_image_file_format#MakerNote_data
-                continue
-            try:
-                # No more known binary tags. Attempt to recursively encode the data:
-                json.dumps(value)
-            except UnicodeDecodeError:
-                # Skip this tag, it's not a text string
-                # TODO: Should log a warning with the tag string here.
-                continue
-            exif[TAGS.get(tag, tag)] = value
+    try:
+        exif = {}
+        if hasattr(pil_image, '_getexif') and pil_image._getexif() is not None:
+            for tag, value in pil_image._getexif().items():
+                if tag == 37500:
+                    # MakerNote data, see: https://en.wikipedia.org/wiki/Exchangeable_image_file_format#MakerNote_data
+                    continue
+                try:
+                    # No more known binary tags. Attempt to recursively encode the data:
+                    json.dumps(value)
+                except UnicodeDecodeError:
+                    # Skip this tag, it's not a text string
+                    # TODO: Should log a warning with the tag string here.
+                    continue
+                exif[TAGS.get(tag, tag)] = value
+    except IOError:
+        # Calling _getexif() on some select images raises IOError("not enough data").
+        # Not sure what that means but we'll ignore exif data on those images for now.
+        return {}
 
 def create_thumb(pil_image, extension, size):
     fp = StringIO()
