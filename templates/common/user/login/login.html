@@ -35,6 +35,11 @@
             Du må være pålogget Min side for å rapportere annonser på Fjelltreffen. Dette er for å unngå misbruk av rapporteringstjenesten.<br>
             Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
           </div>
+        {% elif message.message == 'norway_bus_tickets_login_required' %}
+          <div class="alert alert-error">
+            Du må være pålogget Min side for å benytte deg av NOR-WAYs bussbillettilbud.<br>
+            Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
+          </div>
         {% endif %}
       {% endfor %}
 

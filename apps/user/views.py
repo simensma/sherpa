@@ -314,7 +314,7 @@ def publication(request, publication):
     context = {'publication': publication}
     return render(request, 'common/user/account/publication.html', context)
 
-@user_requires_login()
+@user_requires_login(message='norway_bus_tickets_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
     now = datetime.now()
