@@ -67,3 +67,12 @@ def authenticate_sherpa2_user(email, password):
         return Member.objects.get(email=email, password=hashed_password)
     except Member.DoesNotExist:
         return None
+
+def create_inactive_user(memberid):
+    Actor.objects.get(memberid=memberid) # Verify that the Actor exists
+    user = User.objects.create_user(memberid, password='')
+    user.is_active = False
+    user.save()
+    profile = Profile(user=user, memberid=memberid)
+    profile.save()
+    return profile
