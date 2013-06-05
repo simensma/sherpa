@@ -46,10 +46,13 @@ def authenticate_users(email, password):
 
     # Then add matching members in Focus that have local accounts
     # This large local-members lookup might become slow when the DB grows
-    local_members = list(Profile.objects.filter(memberid__isnull=False).values_list('memberid', flat=True))
+    local_members = list(Profile.objects.filter(memberid__isnull=False, user__is_active=True).values_list('memberid', flat=True))
     focus_candidates = Actor.objects.filter(memberid__in=local_members, email=email)
     for a in focus_candidates:
-        p = Profile.objects.get(memberid=a.memberid)
+        p = Profile.objects.get(
+            memberid=a.memberid,
+            user__is_active=True
+        )
         if p.user.check_password(password):
             matches.append(p)
 
@@ -64,3 +67,12 @@ def authenticate_sherpa2_user(email, password):
         return Member.objects.get(email=email, password=hashed_password)
     except Member.DoesNotExist:
         return None
+
+def create_inactive_user(memberid):
+    Actor.objects.get(memberid=memberid) # Verify that the Actor exists
+    user = User.objects.create_user(memberid, password='')
+    user.is_active = False
+    user.save()
+    profile = Profile(user=user, memberid=memberid)
+    profile.save()
+    return profile
