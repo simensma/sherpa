@@ -9,6 +9,7 @@ from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
+from datetime import date
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'
@@ -552,3 +553,9 @@ class Turleder(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
+
+    def get_role(self):
+        return [c[1] for c in self.TURLEDER_CHOICES if c[0] == self.role][0]
+
+    def is_expired(self):
+        return self.date_end <= date.today()
