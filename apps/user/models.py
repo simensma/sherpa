@@ -415,6 +415,7 @@ class User(AbstractBaseUser):
         from fjelltreffen.models import Annonse
         from membership.models import SMSServiceRequest
         from page.models import Page, Variant, Version
+        from user.models import Turleder
 
         # Ordered alphabetically (and so is 'userrelations')
 
@@ -459,6 +460,9 @@ class User(AbstractBaseUser):
         elif old_ticket is not None:
             old_ticket.user = self
             old_ticket.save()
+
+        # user.Turleder:
+        Turleder.objects.filter(profile=other_profile).update(profile=self)
 
         # page.Page:
         Page.objects.filter(created_by=other_user).update(created_by=self)
