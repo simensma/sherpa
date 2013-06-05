@@ -80,7 +80,7 @@ def edit(request, profile):
         return HttpResponseRedirect(reverse('admin.turledere.views.edit'))
 
 def search(request):
-    if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+    if request.POST['search_type'] != 'all' and len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
     actors = Actor.objects.all()
@@ -97,6 +97,9 @@ def search(request):
         members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
         actors_without_profile = [ProfileWrapper(a, a.memberid) for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
         profiles = sorted(list(members) + list(actors_without_profile), key=lambda p: p.get_full_name())
+    elif request.POST['search_type'] == 'all':
+        turledere = Profile.objects.filter(turleder__isnull=False).distinct().prefetch_related('turleder', 'turleder__association')
+        profiles = sorted(list(turledere), key=lambda p: p.get_actor().get_full_name())
 
     context = RequestContext(request, {
         'profiles': profiles,

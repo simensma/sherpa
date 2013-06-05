@@ -33,11 +33,17 @@ $(document).ready(function() {
         perform_search('members', member_search_input.val());
     });
 
+    list_all.click(function() {
+        if(confirm("Er du sikker? Å liste alle turlederne vil ta ganske lang tid (typisk 20-30 sekunder).")) {
+            perform_search('all', '');
+        }
+    });
+
     function perform_search(search_type, query) {
         instructions.hide();
         short_query.hide();
         error.hide();
-        if(query.length < admin_user_search_char_length) {
+        if(search_type !== 'all' && query.length < admin_user_search_char_length) {
             short_query.show();
             return;
         }
