@@ -6,7 +6,17 @@ div.turlederregister {
     margin-bottom: 20px;
   }
 
+  div.search-area {
+    div.span4 {
+      text-align: center;
+    }
+  }
+
   table.turledere {
+    td, th {
+      font-family: "DTL Nobel" !important;
+    }
+
     tr.hide-border {
       td {
         border-top: none;
@@ -14,6 +24,19 @@ div.turlederregister {
 
       td.expired {
         color: @profile-red;
+      }
+    }
+
+    tr.instructions, tr.short-query, tr.loading, tr.technical-error, tr.no-results {
+      td {
+        padding-top: 10px;
+        text-align: center;
+      }
+    }
+
+    tr.no-results {
+      span.query {
+        font-weight: bold;
       }
     }
   }

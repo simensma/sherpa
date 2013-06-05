@@ -1,0 +1,49 @@
+{% for profile in profiles %}
+  {% if profile.is_wrapper or profile.turleder.count == 0 %}
+    <tr class="result">
+      <td>
+        {% if profile.is_wrapper %}
+          <a href="">{{ profile.get_full_name }} ({{ profile.memberid }})</a> TODO
+        {% else %}
+          <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
+        {% endif %}
+      </td>
+      <td colspan="4">
+        <em>Ikke turleder</em>
+      </td>
+    </tr>
+  {% else %}
+    {% for turleder in profile.turleder.all %}
+      <tr class="result{% if not forloop.first %} hide-border{% endif %}">
+        <td>
+          {% if forloop.first %}
+            <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
+          {% endif %}
+        </td>
+        <td>
+          {{ turleder.get_role }}
+        </td>
+        <td>
+          {{ turleder.association.name }}
+        </td>
+        <td>
+          {{ turleder.date_start|date:"d.m.Y" }}
+        </td>
+        <td{% if turleder.is_expired %} class="expired"{% endif %}>
+          {{ turleder.date_end|date:"d.m.Y" }}
+        </td>
+      </tr>
+    {% endfor %}
+  {% endif %}
+{% empty %}
+  <tr class="result no-results">
+    <td colspan="5">
+      {% if search_type == 'turledere' %}
+        Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
+        Prøv søkeboksen i midten for å se om han/henne finnes, men ikke er turleder.
+      {% elif search_type == 'members' %}
+        Beklager, fant ingen medlemmer med navn eller medlemsnummer <span class="query">{{ query }}</span>.
+      {% endif %}
+    </td>
+  </tr>
+{% endfor %}

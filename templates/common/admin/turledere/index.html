@@ -2,16 +2,45 @@
 {% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
 
+{% block js_globals %}
+  <script>
+    window.admin_user_search_char_length = {{ admin_user_search_char_length }};
+  </script>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/turledere/index.js"></script>
+{% endblock %}
+
 {% block body %}
 
-<div class="turlederregister">
+<div class="turlederregister" data-search-url="{% url 'admin.turledere.views.search' %}">
   <div class="row">
     <div class="span12">
-
       <div class="count">
-        Totalt {{ turledere|length }} turledere i registeret.
+        Totalt {{ total_count }} turledere i registeret.
       </div>
+    </div>
+  </div>
 
+  <div class="search-area">
+    <div class="row">
+      <div class="span4">
+        <input type="text" name="turleder" placeholder="Søk etter turledere..." class="input-large">
+        <button class="btn input-button-align turleder-search"><i class="icon-search"></i></button>
+      </div>
+      <div class="span4">
+        <input type="text" name="member" placeholder="Opprett ny turleder..." class="input-large">
+        <button class="btn input-button-align member-search"><i class="icon-search"></i></button>
+      </div>
+      <div class="span4">
+        <button class="btn list-all">Vis alle turledere i én liste</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12">
       <table class="table turledere">
         <tr>
           <th>Medlem</th>
@@ -20,29 +49,46 @@
           <th>Startdato</th>
           <th>Sluttdato</th>
         </tr>
-        {% for profile in turledere %}
-          {% for turleder in profile.turleder.all %}
-            <tr{% if not forloop.first %} class="hide-border"{% endif %}>
-              <td>
-                {% if forloop.first %}
-                  <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }}</a>
-                {% endif %}
-              </td>
-              <td>
-                {{ turleder.get_role }}
-              </td>
-              <td>
-                {{ turleder.association.name }}
-              </td>
-              <td>
-                {{ turleder.date_start|date:"d.m.Y" }}
-              </td>
-              <td{% if turleder.is_expired %} class="expired"{% endif %}>
-                {{ turleder.date_end|date:"d.m.Y" }}
-              </td>
-            </tr>
-          {% endfor %}
-        {% endfor %}
+        <tr class="instructions">
+          <td colspan="5">
+            <div class="row-fluid">
+              <div class="span4">
+                <div class="alert alert-info">
+                  Bruk søkeboksen til venstre til å finne turledere.
+                </div>
+              </div>
+              <div class="span4">
+                <div class="alert alert-info">
+                  Bruk søkeboksen i midten til å finne medlemmer du vil opprette turlederstatus på. Den søker blant alle medlemmene i DNT.
+                </div>
+              </div>
+              <div class="span4">
+                <div class="alert alert-info">
+                  Bruk knappen til høyre til å liste ut alle {{ total_count }} turlederne &mdash; dette tar litt tid.
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="short-query hide">
+          <td colspan="5">
+            Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
+          </td>
+        </tr>
+        <tr class="loading hide">
+          <td colspan="5">
+            Sjekker turleder- og medlemsregisteret, vennligst vent...<br>
+            <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+          </td>
+        </tr>
+        <tr class="technical-error hide">
+          <td colspan="5">
+            <div class="alert alert-error">
+              Beklager, det oppstod en teknisk feil!<br>
+              Feilen har blitt logget og vi vil fikse den så snart som mulig.
+            </div>
+          </td>
+        </tr>
       </table>
     </div>
   </div>
