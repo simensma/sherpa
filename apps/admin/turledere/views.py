@@ -15,6 +15,7 @@ from association.models import Association
 from user.models import Profile, Turleder
 from focus.models import Actor
 from admin.turledere.models import ProfileWrapper
+from user.util import create_inactive_user
 
 def index(request):
     total_count = Profile.objects.filter(turleder__isnull=False).distinct().count()
@@ -79,6 +80,10 @@ def edit(request, profile):
 
     else:
         return HttpResponseRedirect(reverse('admin.turledere.views.edit'))
+
+def create_and_edit(request, memberid):
+    profile = create_inactive_user(memberid)
+    return HttpResponseRedirect(reverse('admin.turledere.views.edit', args=[profile.id]))
 
 def search(request):
     if request.POST['search_type'] != 'all' and len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:

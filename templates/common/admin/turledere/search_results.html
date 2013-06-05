@@ -3,7 +3,7 @@
     <tr class="result">
       <td>
         {% if profile.is_wrapper %}
-          <a href="">{{ profile.get_full_name }} ({{ profile.memberid }})</a> TODO
+          <a href="{% url 'admin.turledere.views.create_and_edit' profile.memberid %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
         {% else %}
           <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
         {% endif %}
