@@ -1,0 +1,51 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/turledere/edit.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="turlederregister">
+  <div class="row">
+    <div class="span12">
+
+      <h2>{{ profile.get_full_name }}, medlemsnr. {{ profile.memberid }}</h2>
+
+      <table class="table edit">
+        <tr>
+          <th>Turlederrolle</th>
+          <th>Godkjent av</th>
+          <th>Startdato</th>
+          <th>Sluttdato</th>
+          <th>Slett</th>
+        </tr>
+        {% for turleder in profile.turleder.all %}
+          <tr data-turleder="{{ turleder.id }}">
+            {% include 'common/admin/turledere/edit_row.html' %}
+          </tr>
+        {% endfor %}
+
+        <tr class="hide new">
+          {% include 'common/admin/turledere/edit_row.html' %}
+        </tr>
+        <tr class="add">
+          <td colspan="5">
+            <a href="javascript:undefined">Legg til en ny turlederrolle...</a>
+          </td>
+        </tr>
+      </table>
+
+      <form action="{% url 'admin.turledere.views.edit' profile.id %}" method="post" class="save">
+        {% csrf_token %}
+        <input type="hidden" name="turledere" value="">
+        <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

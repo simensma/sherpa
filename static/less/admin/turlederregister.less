@@ -4,10 +4,32 @@ div.turlederregister {
       td {
         border-top: none;
       }
+
+      td.expired {
+        color: @profile-red;
+      }
+    }
+  }
+
+  table.edit {
+    th, td {
+      font-family: "DTL Nobel" !important;
+    }
+    td.delete {
+      text-align: center;
+      vertical-align: middle;
     }
 
-    td.expired {
-      color: @profile-red;
+    select[name='role'] {
+      width: 200px;
     }
+
+    select[name='association'] {
+      width: 300px;
+    }
+  }
+
+  form.save {
+    text-align: center;
   }
 }

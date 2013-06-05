@@ -20,7 +20,7 @@
             <tr{% if not forloop.first %} class="hide-border"{% endif %}>
               <td>
                 {% if forloop.first %}
-                  {{ profile.get_full_name }}
+                  <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }}</a>
                 {% endif %}
               </td>
               <td>
