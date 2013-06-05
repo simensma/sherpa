@@ -14,6 +14,7 @@ import json
 from association.models import Association
 from user.models import Profile, Turleder
 from focus.models import Actor
+from admin.turledere.models import ProfileWrapper
 
 def index(request):
     total_count = Profile.objects.filter(turleder__isnull=False).distinct().count()
@@ -107,14 +108,3 @@ def search(request):
         'query': request.POST['query']
     })
     return HttpResponse(render_to_string('common/admin/turledere/search_results.html', context))
-
-class ProfileWrapper():
-    def __init__(self, actor, memberid):
-        self.actor = actor
-        self.memberid = memberid
-
-    def get_full_name(self):
-        return self.actor.get_full_name()
-
-    def is_wrapper(self):
-        return True
