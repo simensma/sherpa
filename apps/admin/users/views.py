@@ -48,7 +48,7 @@ def search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_profiles = Profile.objects.all(memberid__isnull=True)
+    local_profiles = Profile.objects.filter(memberid__isnull=True)
     for word in request.POST['q'].split():
         local_profiles = local_profiles.filter(
             Q(user__first_name__icontains=word) |
