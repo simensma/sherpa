@@ -456,9 +456,9 @@ class ActorPosition(models.Model):
     committee = models.CharField(max_length=8, db_column=u'Commity')
     date_start = models.DateTimeField(null=True, db_column=u'StartDt')
     date_end = models.DateTimeField(null=True, db_column=u'EndDt')
+    association_id = models.IntegerField(null=True, db_column=u'ActNoPos')
 
     actseqnopos = models.IntegerField(null=True, db_column=u'ActSeqNoPos')
-    actnopos = models.IntegerField(null=True, db_column=u'ActNoPos')
     actseqnopos1 = models.IntegerField(null=True, db_column=u'ActSeqNoPos1')
     actnopos1 = models.IntegerField(null=True, db_column=u'ActNoPos1')
     posoptint1 = models.IntegerField(null=True, db_column=u'PosOptInt1')

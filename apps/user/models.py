@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
@@ -538,3 +539,16 @@ class NorwayBusTicket(models.Model):
     date_trip_text = models.CharField(max_length=25)
     distance = models.CharField(max_length=1024)
     is_imported = models.BooleanField(default=False)
+
+class Turleder(models.Model):
+    TURLEDER_CHOICES = (
+        (u'vinter', u'Vinterturleder'),
+        (u'sommer', u'Sommerturleder'),
+        (u'nærmiljø', u'Nærmiljøturleder'),
+        (u'ambassadør', u'DNT Ambassadør'),
+        (u'kursleder', u'Kursleder'),)
+    profile = models.ForeignKey(Profile, related_name='turleder')
+    role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
+    association = models.ForeignKey('association.Association', related_name='+')
+    date_start = models.DateField(null=True)
+    date_end = models.DateField(null=True)
