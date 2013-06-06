@@ -294,6 +294,37 @@
           </tr>
         </table>
 
+        {% if user.get_profile.turledere.count > 0 %}
+
+          <h2>Turlederstatus</h2>
+
+          <table class="table">
+            <tr>
+              <th>Turlederrolle</th>
+              <th>Godkjent av</th>
+              <th>Startdato</th>
+              <th>Sluttdato</th>
+            </tr>
+            {% for turleder in user.get_profile.turledere.all %}
+              <tr>
+                <td>
+                  {{ turleder.get_role }}
+                </td>
+                <td>
+                  {{ turleder.association.name }}
+                </td>
+                <td>
+                  {{ turleder.date_start|date:"d.m.Y" }}
+                </td>
+                <td{% if turleder.is_expired %} class="expired"{% endif %}>
+                  {{ turleder.date_end|date:"d.m.Y" }}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+
+        {% endif %}
+
       {% endif %}
 
     </div>
