@@ -14,6 +14,15 @@
 
       <h2>{{ profile.get_full_name }}, medlemsnr. {{ profile.memberid }}</h2>
 
+      {% for message in messages %}
+        {% if message.message == 'success' %}
+          <div class="alert alert-success">
+            <strong>Endringene har blitt lagret.</strong><br>
+            <a href="{% url 'admin.turledere.views.index' %}">Tilbake til turlederregisteret</a>
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <table class="table edit">
         <tr>
           <th>Turlederrolle</th>
