@@ -76,6 +76,11 @@ class Aktivitet(models.Model):
             })
         return json.dumps(images)
 
+    @staticmethod
+    def get_published():
+        today = date.today()
+        return Aktivitet.objects.filter(pub_date__lte=today)
+
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
     SUBCATEGORIES = {
