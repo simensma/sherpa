@@ -75,7 +75,7 @@ def edit(request, profile):
             turleder.date_end = date_end
             turleder.save()
 
-            messages.info(request, "success")
+        messages.info(request, "success")
         return HttpResponseRedirect(reverse('admin.turledere.views.edit', args=[profile.id]))
 
     else:
