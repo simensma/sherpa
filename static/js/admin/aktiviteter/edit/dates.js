@@ -78,7 +78,7 @@ $(document).ready(function() {
         }).done(function(result) {
             result = $(JSON.parse(result));
             result.addClass('hide');
-            editor.find("div.aktivitet-date").last().after(result);
+            editor.find("div.date-list").append(result);
             enableDatepicker(result.find("div.input-append.date"));
             result.find("div.summary").hide();
             result.find("div.editing").attr('data-active', '').show();

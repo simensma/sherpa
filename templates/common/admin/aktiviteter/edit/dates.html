@@ -18,9 +18,11 @@
 
       {# TODO: Client-side validations #}
 
-      {% for date in aktivitet.get_dates_ordered %}
-        {% include 'common/admin/aktiviteter/edit/dates_form.html' %}
-      {% endfor %}
+      <div class="date-list">
+        {% for date in aktivitet.get_dates_ordered %}
+          {% include 'common/admin/aktiviteter/edit/dates_form.html' %}
+        {% endfor %}
+      </div>
 
       <div class="control-group">
         <div class="controls">
