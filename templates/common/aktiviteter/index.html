@@ -2,8 +2,27 @@
 {% block title %}Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a></em>{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.css" media="screen">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.ie.css" media="screen">
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.ie.css" media="screen">
+  <![endif]-->
+{% endblock %}
+
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
+  <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
   <script src="{{ STATIC_URL }}js/aktiviteter/index.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {
+      aktivitet_points: JSON.parse("{{ aktivitet_positions_json|escapejs }}")
+    };
+  </script>
 {% endblock %}
 
 {% block body %}
@@ -99,6 +118,16 @@
           </tr>
         {% endfor %}
       </table>
+
+      <div id="map" class="leaflet-map"></div>
+      <div class="popups hide">
+        {% for aktivitet in aktivitet_positions %}
+          <div class="popup-content" data-aktivitet-date-id="{{ aktivitet.id }}">
+            <h3>{{ aktivitet.title }}</h3>
+            <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+          </div>
+        {% endfor %}
+      </div>
 
     </div>
   </div>

@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
+import json
+
 from sherpa.decorators import user_requires_login
 from aktiviteter.models import Aktivitet, AktivitetDate
 
@@ -13,8 +15,16 @@ def index(request):
     ).order_by(
         '-start_date'
     )
+    aktivitet_positions = Aktivitet.get_published().filter(start_point__isnull=False)
+    aktivitet_positions_json = json.dumps([{
+        'id': a.id,
+        'lat': a.start_point.get_coords()[0],
+        'lng': a.start_point.get_coords()[1]
+    } for a in aktivitet_positions])
     context = {
         'aktivitet_dates': aktivitet_dates,
+        'aktivitet_positions': aktivitet_positions,
+        'aktivitet_positions_json': aktivitet_positions_json,
         'difficulties': Aktivitet.DIFFICULTY_CHOICES
     }
     return render(request, 'common/aktiviteter/index.html', context)
