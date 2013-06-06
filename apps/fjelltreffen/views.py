@@ -21,7 +21,7 @@ import simples3
 from sherpa.decorators import user_requires, user_requires_login
 from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
-from core import validator
+from core import validator, librato
 from core.models import County
 
 logger = logging.getLogger('sherpa')
@@ -92,6 +92,7 @@ def show(request, id):
                     })
                 content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
                 send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
+                librato.increment('sherpa.fjelltreffen_svar')
                 request.session['fjelltreffen.reply'] = {
                     'name': form.cleaned_data['name'],
                     'email': form.cleaned_data['email'],
