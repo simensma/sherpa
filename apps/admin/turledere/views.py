@@ -18,7 +18,7 @@ from admin.turledere.models import ProfileWrapper
 from user.util import create_inactive_user
 
 def index(request):
-    total_count = Profile.objects.filter(turleder__isnull=False).distinct().count()
+    total_count = Profile.objects.filter(turledere__isnull=False).distinct().count()
 
     context = {
         'total_count': total_count,
@@ -53,7 +53,7 @@ def edit(request, profile):
     elif request.method == 'POST':
 
         turledere = json.loads(request.POST['turledere'])
-        profile.turleder.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
+        profile.turledere.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
         for turleder in turledere:
             role = turleder['role']
             if turleder['role'] not in [c[0] for c in Turleder.TURLEDER_CHOICES]:
@@ -97,14 +97,14 @@ def search(request):
             Q(memberid__icontains=word))
 
     if request.POST['search_type'] == 'turledere':
-        turledere = Profile.objects.filter(turleder__isnull=False, memberid__in=[a.memberid for a in actors])
+        turledere = Profile.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors])
         profiles = sorted(turledere, key=lambda p: p.get_full_name())
     elif request.POST['search_type'] == 'members':
         members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
         actors_without_profile = [ProfileWrapper(a, a.memberid) for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
         profiles = sorted(list(members) + list(actors_without_profile), key=lambda p: p.get_full_name())
     elif request.POST['search_type'] == 'all':
-        turledere = Profile.objects.filter(turleder__isnull=False).distinct().prefetch_related('turleder', 'turleder__association')
+        turledere = Profile.objects.filter(turledere__isnull=False).distinct().prefetch_related('turledere', 'turledere__association')
         profiles = sorted(list(turledere), key=lambda p: p.get_actor().get_full_name())
 
     context = RequestContext(request, {

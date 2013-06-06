@@ -31,7 +31,7 @@
           <th>Sluttdato</th>
           <th>Slett</th>
         </tr>
-        {% for turleder in profile.turleder.all %}
+        {% for turleder in profile.turledere.all %}
           <tr data-turleder="{{ turleder.id }}">
             {% include 'common/admin/turledere/edit_row.html' %}
           </tr>

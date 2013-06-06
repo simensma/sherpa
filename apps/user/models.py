@@ -552,7 +552,7 @@ class Turleder(models.Model):
         (u'nærmiljø', u'Nærmiljøturleder'),
         (u'ambassadør', u'DNT Ambassadør'),
         (u'kursleder', u'Kursleder'),)
-    profile = models.ForeignKey(Profile, related_name='turleder')
+    profile = models.ForeignKey(Profile, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
     association = models.ForeignKey('association.Association', related_name='+')
     date_start = models.DateField(null=True)

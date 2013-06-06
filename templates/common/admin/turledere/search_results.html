@@ -1,5 +1,5 @@
 {% for profile in profiles %}
-  {% if profile.is_wrapper or profile.turleder.count == 0 %}
+  {% if profile.is_wrapper or profile.turledere.count == 0 %}
     <tr class="result">
       <td>
         {% if profile.is_wrapper %}
@@ -13,7 +13,7 @@
       </td>
     </tr>
   {% else %}
-    {% for turleder in profile.turleder.all %}
+    {% for turleder in profile.turledere.all %}
       <tr class="result{% if not forloop.first %} hide-border{% endif %}">
         <td>
           {% if forloop.first %}
