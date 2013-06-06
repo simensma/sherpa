@@ -22,6 +22,11 @@
           <p class="intro">
             Som medlem får du nøkkel til 480 hytter, rabatt på overnatting, turutstyr til medlemspriser, friluftsmagasinet Fjell og Vidde, tilbud om turer og kurs over hele landet, og mye mer.
           </p>
+
+          <p class="enrollment-button">
+            <a href="{% url 'enrollment.views.index' %}" class="btn btn-danger enrollment">Bli medlem!</a>
+          </p>
+
           <h2>Se dine medlemsfordeler og priser:</h2>
           <p class="search">
             <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
