@@ -28,7 +28,7 @@ $(document).ready(function() {
         zipcode_button.hide();
         loader.show();
         var zipcode = $("input[name='zipcode']").val();
-        if(zipcode == '') {
+        if(zipcode === '') {
             $("div.zipcode-modal").find("h3, p").hide().filter('.missing').show();
             $("div.zipcode-modal").modal();
             zipcode_button.show();
