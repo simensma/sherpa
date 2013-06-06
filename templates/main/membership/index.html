@@ -8,17 +8,17 @@
 
 {% block body %}
 
-{% if display_downtime_message %}
-  <div class="alert alert-info">
-    <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige torsdag 24. januar fra kl. 17:00 og ut kvelden, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper dette medfører.
-  </div>
-{% endif %}
+<div class="membership-entry">
+  {% if display_downtime_message %}
+    <div class="alert alert-info">
+      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige torsdag 24. januar fra kl. 17:00 og ut kvelden, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper dette medfører.
+    </div>
+  {% endif %}
 
-<div class="row">
-  <div class="span12">
-    <div class="membership-box">
-      <div class="wrapper">
-        <div class="search-box">
+  <div class="row">
+    <div class="span12">
+      <div class="entry-box-wrapper">
+        <div class="entry-box">
           <p class="intro">
             Som medlem får du nøkkel til 480 hytter, rabatt på overnatting, turutstyr til medlemspriser, friluftsmagasinet Fjell og Vidde, tilbud om turer og kurs over hele landet, og mye mer.
           </p>
@@ -34,61 +34,61 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="span4">
-    <h2>Medlemsservice</h2>
-    <p>
-      Trenger du turtips? Finn turer og hytter på <a href="http://ut.no/">UT.no</a>
-    </p>
+  <div class="row">
+    <div class="span4">
+      <h2>Medlemsservice</h2>
+      <p>
+        Trenger du turtips? Finn turer og hytter på <a href="http://ut.no/">UT.no</a>
+      </p>
 
-    <p>
-      <strong>Har du spørsmål om medlemskap?</strong><br>
-      <a href="{% url 'membership.views.service' %}">Gå til medlemsservice</a>
-    </p>
+      <p>
+        <strong>Har du spørsmål om medlemskap?</strong><br>
+        <a href="{% url 'membership.views.service' %}">Gå til medlemsservice</a>
+      </p>
 
-    <p>
-      Ring: 4000 1870<br>
-      <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a><br>
-      Åpent alle hverdager:<br>
-      kl. 09.00 - 16.00<br>
-      Tirsdager kl. 10.00 - 16.00
-    </p>
+      <p>
+        Ring: 4000 1870<br>
+        <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a><br>
+        Åpent alle hverdager:<br>
+        kl. 09.00 - 16.00<br>
+        Tirsdager kl. 10.00 - 16.00
+      </p>
 
-    <p>
-      Ta gjerne kontakt med oss på <a href="http://www.facebook.com/turistforeningen">Facebook</a>
-    </p>
-  </div>
-  <div class="span4">
-    <h2>Gavemedlemskap</h2>
-    <p>
-      Et medlemskap i DNT varer lenge og kan brukes så mye man vil.
-    </p>
+      <p>
+        Ta gjerne kontakt med oss på <a href="http://www.facebook.com/turistforeningen">Facebook</a>
+      </p>
+    </div>
+    <div class="span4">
+      <h2>Gavemedlemskap</h2>
+      <p>
+        Et medlemskap i DNT varer lenge og kan brukes så mye man vil.
+      </p>
 
-    <p>
-      <strong>Du kan velge mellom:</strong>
-      <ul>
-        <li>Vanlig medlemskap (<a href="{% url 'membership.views.benefits' %}">Se gjeldende kontingentsatser</a>).</li>
-        <li>Dåpsgave (Medlemskap i Barnas Turlag fra 0-12 år). Pris: 1000,-</li>
-        <li>Jubileum (Hovedmedlemskap i 10 år). Pris: 5700,-</li>
-        <li>Livsvarig medlemskap (Hovedmedlemskap x 25). Pris: 14250,-</li>
-      </ul>
-      <a href="{% url 'enrollment.views_gift.index' %}">Bestill gavemedlemskap</a>
-    </p>
-  </div>
-  <div class="span4">
-    <h2>Meld inn bedriften</h2>
-    <p>
-      Med et bedriftsmedlemskap i DNT bedrift får dere:
-      <ul>
-        <li>en lokal turekspert/bedriftskontakt</li>
-        <li>friske, sunne medarbeidere</li>
-        <li>lokale turtips</li>
-        <li>DNTs medlemsfordeler for alle ansatte</li>
-      </ul>
-      <a href="/bedrift/">Meld inn bedriften</a>
-    </p>
+      <p>
+        <strong>Du kan velge mellom:</strong>
+        <ul>
+          <li>Vanlig medlemskap (<a href="{% url 'membership.views.benefits' %}">Se gjeldende kontingentsatser</a>).</li>
+          <li>Dåpsgave (Medlemskap i Barnas Turlag fra 0-12 år). Pris: 1000,-</li>
+          <li>Jubileum (Hovedmedlemskap i 10 år). Pris: 5700,-</li>
+          <li>Livsvarig medlemskap (Hovedmedlemskap x 25). Pris: 14250,-</li>
+        </ul>
+        <a href="{% url 'enrollment.views_gift.index' %}">Bestill gavemedlemskap</a>
+      </p>
+    </div>
+    <div class="span4">
+      <h2>Meld inn bedriften</h2>
+      <p>
+        Med et bedriftsmedlemskap i DNT bedrift får dere:
+        <ul>
+          <li>en lokal turekspert/bedriftskontakt</li>
+          <li>friske, sunne medarbeidere</li>
+          <li>lokale turtips</li>
+          <li>DNTs medlemsfordeler for alle ansatte</li>
+        </ul>
+        <a href="/bedrift/">Meld inn bedriften</a>
+      </p>
+    </div>
   </div>
 </div>
 

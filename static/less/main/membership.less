@@ -1,14 +1,16 @@
-/* Zipcode-search */
+/* Entry page for membership information */
 
-div.membership-box {
-  background-image: url('/static/img/membership/zipcode_search.png');
-  height: 474px;
-  margin-bottom: 40px;
+div.membership-entry {
 
-  div.wrapper {
-    padding-top: 100px;
+  div.entry-box-wrapper {
+    @padding-top: 100px;
+    @image-height: 474px;
+    background-image: url('/static/img/membership/zipcode_search.png');
+    height: @image-height - @padding-top;
+    margin-bottom: 40px;
+    padding-top: @padding-top;
 
-    div.search-box {
+    div.entry-box {
       background-color: white;
       margin-left: auto;
       margin-right: auto;
@@ -42,18 +44,15 @@ div.membership-box {
       }
     }
   }
-}
 
-@media (max-width: 767px) {
-  div.membership-box {
-    background-image: none;
-    width: auto;
-    height: auto;
-
-    div.wrapper {
+  @media (max-width: 767px) {
+    div.entry-box-wrapper {
+      background-image: none;
+      width: auto;
+      height: auto;
       padding-top: 0;
 
-      div.search-box {
+      div.entry-box {
         margin: 0;
         width: auto;
         border: 1px solid rgb(158, 158, 158);
