@@ -23,6 +23,7 @@
             <a href="{% url 'user.login.views.login' %}?next={% url 'aktiviteter.views.signup_logged_on' aktivitet_date.id %}">Logg på her</a>
           </p>
         </div>
+
         <div class="choice square-well register">
           <p class="title">Jeg må opprette en Min side-bruker.</p>
           <p class="action">
@@ -50,6 +51,27 @@
             </ul>
           </div>
         </div>
+
+        {% for message in messages %}
+          {% if message.message == 'simple_signup_phone_or_email_required' %}
+            <div class="alert alert-error">
+              <strong>Du må oppgi enten telefonnummer eller e-postadresse for enkel påmelding.</strong>
+            </div>
+          {% elif message.message == 'simple_signup_name_invalid' %}
+            <div class="alert alert-error">
+              <strong>Du må oppgi hele navnet ditt.</strong>
+            </div>
+          {% elif message.message == 'simple_signup_phone_invalid' %}
+            <div class="alert alert-error">
+              <strong>Telefonnummeret du oppgav er ugyldig.</strong>
+            </div>
+          {% elif message.message == 'simple_signup_email_invalid' %}
+            <div class="alert alert-error">
+              <strong>E-postadressen du oppgav er ugyldig.</strong>
+            </div>
+          {% endif %}
+        {% endfor %}
+
         <div class="choice square-well simple-signup">
           <p class="title">Jeg vil ikke opprette noen bruker, bare melde meg på turen raskt og enkelt.</p>
           <p class="action">
@@ -81,6 +103,12 @@
                 <label class="control-label">E-postadresse:</label>
                 <div class="controls">
                   <input type="text" class="input-large" name="email">
+                </div>
+              </div>
+
+              <div class="control-group submit">
+                <div class="controls">
+                  <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> Meld deg på</button>
                 </div>
               </div>
 
