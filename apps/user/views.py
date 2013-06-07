@@ -291,19 +291,19 @@ def receive_email_set(request):
 def aktiviteter(request):
     aktivitet_dates = AktivitetDate.objects.filter(participants=request.user).order_by('-start_date')
     context = {'aktivitet_dates': aktivitet_dates}
-    return render(request, 'common/user/aktiviteter.html', context)
+    return render(request, 'common/user/account/aktiviteter.html', context)
 
 @user_requires_login()
 def leader_aktivitet_dates(request):
     aktivitet_dates = request.user.leader_aktivitet_dates.order_by('-start_date')
     context = {'aktivitet_dates': aktivitet_dates}
-    return render(request, 'common/user/leader_aktivitet_dates.html', context)
+    return render(request, 'common/user/account/leader_aktivitet_dates.html', context)
 
 @user_requires_login()
 def leader_aktivitet_date(request, aktivitet_date):
     aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, leaders=request.user)
     context = {'aktivitet_date': aktivitet_date}
-    return render(request, 'common/user/leader_aktivitet_date.html', context)
+    return render(request, 'common/user/account/leader_aktivitet_date.html', context)
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
