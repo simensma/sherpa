@@ -3,8 +3,8 @@
     <td>{{ user.get_full_name }}</td>
     <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
-      <button class="btn btn-danger assign-leader">Gi turlederstatus</button>
-      <form action="{% url 'admin.aktiviteter.views.leader_assign' %}" method="post" class="hide">
+      <button class="btn btn-danger assign-turleder">Gi turlederstatus</button>
+      <form action="{% url 'admin.aktiviteter.views.turleder_assign' %}" method="post" class="hide">
         {% csrf_token %}
         <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
         <input type="hidden" name="user" value="{{ user.id }}">

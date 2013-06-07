@@ -153,7 +153,7 @@ class AktivitetDate(models.Model):
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
-    leaders = models.ManyToManyField('user.User', related_name='leader_aktivitet_dates')
+    turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
 
     def get_signup_enabled_json(self):
@@ -181,8 +181,8 @@ class AktivitetDate(models.Model):
     def get_other_dates_ordered(self):
         return self.other_dates().order_by('-start_date')
 
-    def get_leaders_ordered(self):
-        return sorted(self.leaders.all(), key=lambda p: p.get_first_name())
+    def get_turledere_ordered(self):
+        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     @staticmethod
     def get_published():

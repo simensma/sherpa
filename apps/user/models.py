@@ -450,9 +450,9 @@ class User(AbstractBaseUser):
         # Ordered alphabetically (and so is 'userrelations')
 
         # aktiviteter.AktivitetDate:
-        for aktivitet_date in AktivitetDate.objects.filter(leaders=other_user):
-            aktivitet_date.leaders.remove(other_user)
-            aktivitet_date.leaders.add(self)
+        for aktivitet_date in AktivitetDate.objects.filter(turledere=other_user):
+            aktivitet_date.turledere.remove(other_user)
+            aktivitet_date.turledere.add(self)
         for aktivitet_date in AktivitetDate.objects.filter(participants=other_user):
             aktivitet_date.participants.remove(other_user)
             aktivitet_date.participants.add(self)

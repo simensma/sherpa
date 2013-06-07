@@ -127,13 +127,13 @@ def edit_dates(request, aktivitet):
     }
     return render(request, 'common/admin/aktiviteter/edit/dates.html', context)
 
-def edit_leaders(request, aktivitet):
+def edit_turledere(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
         'aktivitet': aktivitet,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
-    return render(request, 'common/admin/aktiviteter/edit/leaders.html', context)
+    return render(request, 'common/admin/aktiviteter/edit/turledere.html', context)
 
 def edit_participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
@@ -142,7 +142,7 @@ def edit_participants(request, aktivitet):
     }
     return render(request, 'common/admin/aktiviteter/edit/participants.html', context)
 
-def leader_search(request):
+def turleder_search(request):
     MAX_HITS = 100
 
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
@@ -174,22 +174,22 @@ def leader_search(request):
         'users': users[:MAX_HITS],
         'actors_without_user': actors_without_user[:MAX_HITS]})
     return HttpResponse(json.dumps({
-        'results': render_to_string('common/admin/aktiviteter/edit/leader_search_results.html', context),
+        'results': render_to_string('common/admin/aktiviteter/edit/turleder_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors_without_user) > MAX_HITS
     }))
 
-def leader_assign(request):
+def turleder_assign(request):
     user = User.get_users().get(id=request.POST['user'])
     for date in request.POST.getlist('aktivitet_dates'):
         date = AktivitetDate.objects.get(id=date)
-        date.leaders.add(user)
-    return redirect('admin.aktiviteter.views.edit_leaders', request.POST['aktivitet'])
+        date.turledere.add(user)
+    return redirect('admin.aktiviteter.views.edit_turledere', request.POST['aktivitet'])
 
-def leader_remove(request):
+def turleder_remove(request):
     user = User.get_users().get(id=request.POST['user'])
     aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
-    aktivitet_date.leaders.remove(user)
-    return redirect('admin.aktiviteter.views.edit_leaders', aktivitet_date.aktivitet.id)
+    aktivitet_date.turledere.remove(user)
+    return redirect('admin.aktiviteter.views.edit_turledere', aktivitet_date.aktivitet.id)
 
 def new_aktivitet_date(request):
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
