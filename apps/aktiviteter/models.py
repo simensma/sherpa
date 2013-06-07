@@ -165,7 +165,7 @@ class AktivitetDate(models.Model):
 
     def will_accept_signups(self):
         today = date.today()
-        return self.signup_enabled and self.signup_start > today
+        return self.signup_enabled and self.signup_start >= today
 
     def accepts_signup_cancels(self):
         today = date.today()
