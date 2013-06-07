@@ -52,69 +52,71 @@
           </div>
         </div>
 
-        {% for message in messages %}
-          {% if message.message == 'simple_signup_phone_or_email_required' %}
-            <div class="alert alert-error">
-              <strong>Du må oppgi enten telefonnummer eller e-postadresse for enkel påmelding.</strong>
-            </div>
-          {% elif message.message == 'simple_signup_name_invalid' %}
-            <div class="alert alert-error">
-              <strong>Du må oppgi hele navnet ditt.</strong>
-            </div>
-          {% elif message.message == 'simple_signup_phone_invalid' %}
-            <div class="alert alert-error">
-              <strong>Telefonnummeret du oppgav er ugyldig.</strong>
-            </div>
-          {% elif message.message == 'simple_signup_email_invalid' %}
-            <div class="alert alert-error">
-              <strong>E-postadressen du oppgav er ugyldig.</strong>
-            </div>
-          {% endif %}
-        {% endfor %}
+        {% if aktivitet_date.aktivitet.allow_simple_signup %}
+          {% for message in messages %}
+            {% if message.message == 'simple_signup_phone_or_email_required' %}
+              <div class="alert alert-error">
+                <strong>Du må oppgi enten telefonnummer eller e-postadresse for enkel påmelding.</strong>
+              </div>
+            {% elif message.message == 'simple_signup_name_invalid' %}
+              <div class="alert alert-error">
+                <strong>Du må oppgi hele navnet ditt.</strong>
+              </div>
+            {% elif message.message == 'simple_signup_phone_invalid' %}
+              <div class="alert alert-error">
+                <strong>Telefonnummeret du oppgav er ugyldig.</strong>
+              </div>
+            {% elif message.message == 'simple_signup_email_invalid' %}
+              <div class="alert alert-error">
+                <strong>E-postadressen du oppgav er ugyldig.</strong>
+              </div>
+            {% endif %}
+          {% endfor %}
 
-        <div class="choice square-well simple-signup">
-          <p class="title">Jeg vil ikke opprette noen bruker, bare melde meg på turen raskt og enkelt.</p>
-          <p class="action">
-            <a href="javascript:undefined">Meld deg på her</a>
-          </p>
-          <div class="content hide">
-            <p>
-              Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
+          <div class="choice square-well simple-signup">
+            <p class="title">Jeg vil ikke opprette noen bruker, bare melde meg på turen raskt og enkelt.</p>
+            <p class="action">
+              <a href="javascript:undefined">Meld deg på her</a>
             </p>
+            <div class="content hide">
+              <p>
+                Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
+              </p>
 
-            <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-default form-horizontal simple-signup">
-              {% csrf_token %}
+              <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-default form-horizontal simple-signup">
+                {% csrf_token %}
 
-              <div class="control-group name">
-                <label class="control-label">Ditt navn</label>
-                <div class="controls">
-                  <input type="text" class="input-large" name="name">
+                <div class="control-group name">
+                  <label class="control-label">Ditt navn</label>
+                  <div class="controls">
+                    <input type="text" class="input-large" name="name">
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group phone">
-                <label class="control-label">Telefonnummer:</label>
-                <div class="controls">
-                  <input type="text" class="input-large" name="phone">
+                <div class="control-group phone">
+                  <label class="control-label">Telefonnummer:</label>
+                  <div class="controls">
+                    <input type="text" class="input-large" name="phone">
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group email">
-                <label class="control-label">E-postadresse:</label>
-                <div class="controls">
-                  <input type="text" class="input-large" name="email">
+                <div class="control-group email">
+                  <label class="control-label">E-postadresse:</label>
+                  <div class="controls">
+                    <input type="text" class="input-large" name="email">
+                  </div>
                 </div>
-              </div>
 
-              <div class="control-group submit">
-                <div class="controls">
-                  <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> Meld deg på</button>
+                <div class="control-group submit">
+                  <div class="controls">
+                    <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> Meld deg på</button>
+                  </div>
                 </div>
-              </div>
 
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
+        {% endif %}
       </div>
     </div>
 
