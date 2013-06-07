@@ -14,7 +14,7 @@
   <div class="span12">
 
     <div class="aktivitet-signup">
-      <h2>Påmelding: {{ aktivitet_date.aktivitet.title }}</h2>
+      <h2><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>: Påmelding</h2>
 
       <div class="choices">
         <div class="choice square-well login">

@@ -10,7 +10,7 @@
   <div class="span12">
 
     <div class="aktivitet">
-      <h2>Påmelding: {{ aktivitet_date.aktivitet.title }}</h2>
+      <h2><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>: Påmelding</h2>
 
       <p>
         Er du sikker på at du vil melde deg på denne turen?
