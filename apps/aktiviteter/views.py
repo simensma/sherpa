@@ -46,6 +46,8 @@ def signup(request, aktivitet_date):
 
 def signup_not_logged_on(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if request.user.is_authenticated():
+        return redirect('aktiviteter.views.signup_logged_on', aktivitet_date.id)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
