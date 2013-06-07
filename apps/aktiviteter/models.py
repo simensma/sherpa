@@ -195,3 +195,9 @@ class AktivitetImage(models.Model):
     text = models.CharField(max_length=1024)
     photographer = models.CharField(max_length=255)
     order = models.IntegerField()
+
+class SimpleParticipant(models.Model):
+    aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
+    name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)
