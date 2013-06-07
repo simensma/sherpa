@@ -35,6 +35,7 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
+    allow_simple_signup = models.BooleanField()
     hidden = models.BooleanField(default=False)
 
     def get_dates_ordered(self):

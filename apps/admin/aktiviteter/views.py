@@ -114,6 +114,12 @@ def edit_position(request, aktivitet):
         aktivitet.save()
         return redirect('admin.aktiviteter.views.edit_position', aktivitet.id)
 
+def edit_simple_signup(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    aktivitet.allow_simple_signup = json.loads(request.POST['allow_simple_signup'])
+    aktivitet.save()
+    return HttpResponse()
+
 def edit_dates(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
