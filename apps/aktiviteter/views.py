@@ -31,7 +31,7 @@ def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     context = {
         'aktivitet_date': aktivitet_date,
-        'user_is_participating': request.user in aktivitet_date.participants.all()
+        'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
     }
     return render(request, 'common/aktiviteter/show.html', context)
 
