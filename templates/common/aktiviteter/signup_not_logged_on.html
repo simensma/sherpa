@@ -19,15 +19,42 @@
       <div class="choices">
         <div class="choice square-well login">
           <p class="title">Jeg har allerede en Min side-bruker.</p>
-          <p class="action">Logg på her</p>
+          <p class="action">
+            <a href="{% url 'user.login.views.login' %}?next={% url 'aktiviteter.views.signup_logged_on' aktivitet_date.id %}">Logg på her</a>
+          </p>
         </div>
         <div class="choice square-well register">
           <p class="title">Jeg må opprette en Min side-bruker.</p>
-          <p class="action">Opprett bruker her</p>
+          <p class="action">
+            <a href="javascript:undefined">Opprett bruker her</a>
+          </p>
+          <div class="content hide">
+            <ul>
+              <li>
+                <a href="{% url 'user.login.views.login' %}?next={% url 'aktiviteter.views.signup_logged_on' aktivitet_date.id %}#registrering">
+                  Jeg er medlem i DNT.
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  Jeg er ikke medlem i DNT, men vil gjerne melde meg inn!
+                </a>
+                (TODO)
+              </li>
+              <li>
+                <a href="">
+                  Jeg er ikke medlem i DNT, og jeg er ikke klar for å melde meg inn ennå.
+                </a>
+                (TODO)
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="choice square-well simple-signup">
           <p class="title">Jeg vil ikke opprette noen bruker, bare melde meg på turen raskt og enkelt.</p>
-          <p class="action">Meld deg på her</p>
+          <p class="action">
+            <a href="javascript:undefined">Meld deg på her</a>
+          </p>
           <div class="content hide">
             <p>
               Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
