@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
@@ -76,14 +76,14 @@ def edit(request, profile):
             turleder.save()
 
         messages.info(request, "success")
-        return HttpResponseRedirect(reverse('admin.turledere.views.edit', args=[profile.id]))
+        return redirect('admin.turledere.views.edit', profile.id)
 
     else:
-        return HttpResponseRedirect(reverse('admin.turledere.views.edit'))
+        return redirect('admin.turledere.views.edit')
 
 def create_and_edit(request, memberid):
     profile = create_inactive_user(memberid)
-    return HttpResponseRedirect(reverse('admin.turledere.views.edit', args=[profile.id]))
+    return redirect('admin.turledere.views.edit', profile.id)
 
 def search(request):
     if request.POST['search_type'] != 'all' and len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
