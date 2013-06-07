@@ -17,22 +17,33 @@
       <h2>{{ aktivitet_date.aktivitet.title }}</h2>
 
       <div class="meta square-well">
-        {% if aktivitet_date.accepts_signups and not user_is_participating %}
-          <div class="pull-right">
-            <a href="{% url 'aktiviteter.views.signup' aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a>
-          </div>
-        {% elif aktivitet_date.will_accept_signups %}
-          <div class="pull-right signup-countdown">
-            Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }}
-          </div>
-        {% endif %}
-
-        {% if user_is_participating %}
-          {# TODO Present overview and signup-cancelling options #}
-          <div class="pull-right already-participating">
-            Du har meldt deg på denne turen!
-          </div>
-        {% endif %}
+        <div class="signup">
+          {% if not aktivitet_date.signup_enabled %}
+            <div class="pull-right no-signup">
+              Det er ingen påmelding til denne turen.
+            </div>
+          {% elif user_is_participating %}
+            {# TODO Present overview and signup-cancelling options #}
+            <div class="pull-right already-participating">
+              Du har meldt deg på denne turen!
+            </div>
+          {% elif aktivitet_date.accepts_signups %}
+            <div class="pull-right accepts-signups">
+              <a href="{% url 'aktiviteter.views.signup' aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a><br>
+              <span class="deadline">
+                Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
+              </span>
+            </div>
+          {% elif aktivitet_date.will_accept_signups %}
+            <div class="pull-right signup-countdown">
+              Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }} til {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
+            </div>
+          {% elif aktivitet_date.signup_deadline_passed %}
+            <div class="pull-right signup-passed">
+              Påmeldingsfristen har passert.
+            </div>
+          {% endif %}
+        </div>
 
         <table>
           <tr>
