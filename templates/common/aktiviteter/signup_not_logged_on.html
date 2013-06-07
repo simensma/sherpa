@@ -1,0 +1,69 @@
+{% extends "common/aktiviteter/layout.html" %}
+{% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/aktiviteter/signup_not_logged_on.js"></script>
+{% endblock %}
+
+{% block body %}
+
+{{ block.super }}
+
+<div class="row">
+  <div class="span12">
+
+    <div class="aktivitet-signup">
+      <h2>Påmelding: {{ aktivitet_date.aktivitet.title }}</h2>
+
+      <div class="choices">
+        <div class="choice square-well login">
+          <p class="title">Jeg har allerede en Min side-bruker.</p>
+          <p class="action">Logg på her</p>
+        </div>
+        <div class="choice square-well register">
+          <p class="title">Jeg må opprette en Min side-bruker.</p>
+          <p class="action">Opprett bruker her</p>
+        </div>
+        <div class="choice square-well simple-signup">
+          <p class="title">Jeg vil ikke opprette noen bruker, bare melde meg på turen raskt og enkelt.</p>
+          <p class="action">Meld deg på her</p>
+          <div class="content hide">
+            <p>
+              Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
+            </p>
+
+            <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-default form-horizontal simple-signup">
+              {% csrf_token %}
+
+              <div class="control-group name">
+                <label class="control-label">Ditt navn</label>
+                <div class="controls">
+                  <input type="text" class="input-large" name="name">
+                </div>
+              </div>
+
+              <div class="control-group phone">
+                <label class="control-label">Telefonnummer:</label>
+                <div class="controls">
+                  <input type="text" class="input-large" name="phone">
+                </div>
+              </div>
+
+              <div class="control-group email">
+                <label class="control-label">E-postadresse:</label>
+                <div class="controls">
+                  <input type="text" class="input-large" name="email">
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

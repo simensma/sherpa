@@ -35,13 +35,36 @@ def show(request, aktivitet_date):
     }
     return render(request, 'common/aktiviteter/show.html', context)
 
-@user_requires_login()
 def signup(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
+    if request.user.is_authenticated():
+        return redirect('aktiviteter.views.signup_logged_on', aktivitet_date.id)
+    else:
+        return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
+
+def signup_not_logged_on(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signups():
+        raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
-    return render(request, 'common/aktiviteter/signup.html', context)
+    return render(request, 'common/aktiviteter/signup_not_logged_on.html', context)
+
+def signup_simple(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signups():
+        raise PermissionDenied
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/aktiviteter/signup_not_logged_on.html', context)
+
+@user_requires_login()
+def signup_logged_on(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signups():
+        raise PermissionDenied
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/aktiviteter/signup_logged_on.html', context)
 
 @user_requires_login()
 def signup_confirm(request, aktivitet_date):
