@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.contrib.auth.models import User, Permission
@@ -78,7 +78,7 @@ def give_sherpa_access(request, user):
 
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa')
     User.objects.get(id=user).user_permissions.add(permission)
-    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
+    return redirect('admin.users.views.show', user)
 
 def revoke_sherpa_access(request, user):
     if not request.user.has_perm('user.sherpa'):
@@ -86,7 +86,7 @@ def revoke_sherpa_access(request, user):
 
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa')
     User.objects.get(id=user).user_permissions.remove(permission)
-    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
+    return redirect('admin.users.views.show', user)
 
 def make_sherpa_admin(request, user):
     if not request.user.has_perm('user.sherpa_admin'):
@@ -97,7 +97,7 @@ def make_sherpa_admin(request, user):
     user.user_permissions.add(permission)
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
     cache.delete('profile.%s.children_associations' % user.get_profile().id)
-    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user]))
+    return redirect('admin.users.views.show', user)
 
 def add_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
@@ -127,7 +127,7 @@ def add_association_permission(request):
 
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
     cache.delete('profile.%s.children_associations' % user.get_profile().id)
-    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
+    return redirect('admin.users.views.show', user.id)
 
 def revoke_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
@@ -142,4 +142,4 @@ def revoke_association_permission(request):
     role.delete()
     cache.delete('profile.%s.all_associations' % user.get_profile().id)
     cache.delete('profile.%s.children_associations' % user.get_profile().id)
-    return HttpResponseRedirect(reverse('admin.users.views.show', args=[user.id]))
+    return redirect('admin.users.views.show', user.id)

@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -37,7 +37,7 @@ def index(request):
 # Note: This is probably not compatible with the tag search
 def more(request):
     if not 'current' in request.POST:
-        return HttpResponseRedirect(reverse('articles.views.index'))
+        return redirect('articles.views.index')
 
     response = []
     versions = Version.objects.filter(
@@ -99,7 +99,7 @@ def show_old(request, article, text):
     # (The search currently presents this article in such a way that it's more likely to be
     # clicked than the relevant page when searching for the appropriate keywords)
     if article == '1151':
-        return HttpResponseRedirect('/vintermerking/')
+        return redirect('/vintermerking/')
 
     context = cache.get('old_articles.%s' % article)
     if context is None:

@@ -1,9 +1,9 @@
 # encoding: utf-8
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
@@ -86,7 +86,7 @@ def update_account(request):
                 errors = True
 
             if errors:
-                return HttpResponseRedirect(reverse('user.views.update_account'))
+                return redirect('user.views.update_account')
 
             if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
                 profile = request.user.get_profile()
@@ -98,7 +98,7 @@ def update_account(request):
             request.user.first_name, request.user.last_name = request.POST['name'].rsplit(' ', 1)
             request.user.save()
             messages.info(request, 'update_success')
-            return HttpResponseRedirect(reverse('user.views.account'))
+            return redirect('user.views.account')
     else:
         if request.method == 'GET':
             return render(request, 'common/user/account/update_account.html')
@@ -138,7 +138,7 @@ def update_account(request):
                     errors = True
 
             if errors:
-                return HttpResponseRedirect(reverse('user.views.update_account'))
+                return redirect('user.views.update_account')
 
             if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
                 profile = request.user.get_profile()
@@ -163,7 +163,7 @@ def update_account(request):
                 actor.address.save()
 
             messages.info(request, 'update_success')
-            return HttpResponseRedirect(reverse('user.views.account'))
+            return redirect('user.views.account')
 
 @user_requires_login()
 def account_password(request):
@@ -174,17 +174,17 @@ def account_password(request):
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
-        return HttpResponseRedirect(reverse('user.views.account_password'))
+        return redirect('user.views.account_password')
     else:
         request.user.set_password(request.POST['password'])
         request.user.save()
         messages.info(request, 'password_update_success')
-        return HttpResponseRedirect(reverse('user.views.home'))
+        return redirect('user.views.home')
 
 @user_requires_login()
 def register_membership(request):
     if request.user.get_profile().is_member():
-        return HttpResponseRedirect(reverse('user.views.home'))
+        return redirect('user.views.home')
 
     if request.method == 'GET':
         context = {
@@ -197,7 +197,7 @@ def register_membership(request):
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
-                return HttpResponseRedirect(reverse('user.views.register_membership'))
+                return redirect('user.views.register_membership')
             actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             if request.POST['email-equal'] == 'true':
@@ -211,7 +211,7 @@ def register_membership(request):
                 # Check that the email address is valid
                 if not validator.email(request.POST['email']):
                     messages.error(request, 'invalid_email')
-                    return HttpResponseRedirect(reverse('user.views.register_membership'))
+                    return redirect('user.views.register_membership')
                 chosen_email = request.POST['email']
             else:
                 raise Exception("Missing email-equal / email-choise-parameters")
@@ -219,7 +219,7 @@ def register_membership(request):
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect(reverse('user.views.register_membership'))
+                return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the profile
             profile = request.user.get_profile()
@@ -245,10 +245,10 @@ def register_membership(request):
             request.user.email = ''
             request.user.save()
 
-            return HttpResponseRedirect(reverse('user.views.home'))
+            return redirect('user.views.home')
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
-            return HttpResponseRedirect(reverse('user.views.register_membership'))
+            return redirect('user.views.register_membership')
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -367,7 +367,7 @@ def norway_bus_tickets_order(request):
         messages.error(request, 'missing_distance')
 
     if errors:
-        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
+        return redirect('user.views.norway_bus_tickets')
 
     ticket = NorwayBusTicket(
         profile=request.user.get_profile(),
@@ -384,7 +384,7 @@ def norway_bus_tickets_order(request):
             NORWAY_EMAIL_FROM,
             [NORWAY_EMAIL_RECIPIENT])
         messages.info(request, 'order_success')
-        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
+        return redirect('user.views.norway_bus_tickets')
     except SMTPException:
         logger.warning(u"(Håndtert) Mail til NOR-WAY Bussekspress failet",
             exc_info=sys.exc_info(),
@@ -399,7 +399,7 @@ def norway_bus_tickets_order(request):
         # should provide the info we need. Otherwise, we'd need a way to mark the order as erroneous.
         ticket.delete()
         messages.error(request, 'email_failure')
-        return HttpResponseRedirect(reverse('user.views.norway_bus_tickets'))
+        return redirect('user.views.norway_bus_tickets')
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -453,7 +453,7 @@ def fotobok_eurofoto_request(request):
         r = requests.post(settings.EUROFOTO_SIGNUP_SERVICE, data=payload)
         reply = json.loads(r.text)
         if reply['result'] and reply['message'] == 'OK':
-            return HttpResponseRedirect(reply['url'])
+            return redirect(reply['url'])
         else:
             logger.error(u"Ukjent svar fra Eurofoto-API",
                 exc_info=sys.exc_info(),
@@ -463,21 +463,21 @@ def fotobok_eurofoto_request(request):
                 }
             )
             messages.error(request, 'eurofoto_api_unparseable_reply')
-            return HttpResponseRedirect(reverse('user.views.fotobok'))
+            return redirect('user.views.fotobok')
     except requests.ConnectionError as e:
         logger.warning(u"(Håndtert) %s" % e.message,
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
         messages.error(request, 'eurofoto_api_connection_error')
-        return HttpResponseRedirect(reverse('user.views.fotobok'))
+        return redirect('user.views.fotobok')
     except ValueError as e:
         logger.error(e.message,
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
         messages.error(request, 'eurofoto_api_unparseable_reply')
-        return HttpResponseRedirect(reverse('user.views.fotobok'))
+        return redirect('user.views.fotobok')
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')

@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext
@@ -67,7 +67,7 @@ def new(request):
     version.save()
 
     create_template(request.POST['template'], version)
-    return HttpResponseRedirect(reverse('admin.cms.views.page.edit_version', args=[version.id]))
+    return redirect('admin.cms.views.page.edit_version', version.id)
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
@@ -76,7 +76,7 @@ def check_slug(request):
 
 def delete(request, page):
     Page.on(request.session['active_association'].site).get(id=page).delete()
-    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
+    return redirect('admin.cms.views.page.list')
 
 def edit_version(request, version):
     pages = Page.on(request.session['active_association'].site).all().order_by('title')

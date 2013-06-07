@@ -1,7 +1,7 @@
 # encoding: utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.cache import cache
 
 from datetime import datetime
@@ -35,7 +35,7 @@ def index(request):
 
 def delete(request):
     if not request.is_ajax():
-        return HttpResponseRedirect(reverse('admin.cache.views.index'))
+        return redirect('admin.cache.views.index')
 
     if request.POST['key'] == 'frontpage':
         id = Version.objects.get(

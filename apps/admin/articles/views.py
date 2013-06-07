@@ -1,7 +1,7 @@
 # encoding: utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -20,7 +20,7 @@ def list(request):
 
 def list_load(request):
     if not request.is_ajax():
-        return HttpResponseRedirect(reverse('admin.articles.views.list'))
+        return redirect('admin.articles.views.list')
     context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
     return HttpResponse(render_to_string('common/admin/articles/list-elements.html', context))
 
@@ -52,7 +52,7 @@ def new(request):
     version.save()
     version.publishers.add(request.user.get_profile())
     create_template(request.POST['template'], version, request.POST['title'])
-    return HttpResponseRedirect(reverse('admin.articles.views.edit_version', args=[version.id]))
+    return redirect('admin.articles.views.edit_version', version.id)
 
 def image(request, article):
     article = Article.objects.get(id=article)
@@ -86,7 +86,7 @@ def delete(request, article):
     except Article.DoesNotExist:
         # Probably not a code error but a double-click or something, ignore
         pass
-    return HttpResponseRedirect(reverse('admin.articles.views.list'))
+    return redirect('admin.articles.views.list')
 
 def edit_version(request, version):
     rows, version = parse_version_content(request, version)

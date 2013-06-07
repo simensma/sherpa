@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from django.core.cache import cache
 
 from analytics.models import Search, NotFound

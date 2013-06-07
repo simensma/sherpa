@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404, HttpResponseNotFound, HttpResponseServerError
+from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponseNotFound, HttpResponseServerError
 from django.template import RequestContext, loader
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
@@ -39,7 +39,7 @@ def page(request, slug):
             return parse_content(request, version)
         else:
             # No variant requested, but the page has variants and a special one matched.
-            return HttpResponseRedirect("%s?%s=%s" %
+            return redirect("%s?%s=%s" %
                 (reverse('page.views.page', args=[slug]), variant_key, matched_variant.id))
     else:
         # A specific variant was requested. Show it regardless of which variant matches the user,
@@ -155,7 +155,7 @@ def ad(request, ad):
         ad = AdPlacement.objects.get(id=ad)
         ad.clicks += 1
         ad.save()
-        return HttpResponseRedirect(ad.ad.destination)
+        return redirect(ad.ad.destination)
     except AdPlacement.DoesNotExist:
         raise Http404
 
@@ -166,7 +166,7 @@ def match_user(request, page):
             return variant
     return None
 
-def redirect(request, url, slug="", params={}, permanent=False, include_params=True):
+def perform_redirect(request, url, slug="", params={}, permanent=False, include_params=True):
     param_str = request.GET.copy()
     param_str.update(params)
     param_str = param_str.urlencode()
@@ -176,8 +176,7 @@ def redirect(request, url, slug="", params={}, permanent=False, include_params=T
         uri = "%s%s%s" % (url, slug, param_str)
     else:
         uri = "%s%s" % (url, slug)
-    if permanent: return HttpResponsePermanentRedirect(uri)
-    else:         return HttpResponseRedirect(uri)
+    return redirect(uri, permanent=permanent)
 
 def redirect_cabin(request):
     try:
@@ -186,13 +185,13 @@ def redirect_cabin(request):
         cabin = Sherpa2Cabin.objects.get(id=request.GET['ca_id'])
         if cabin.url_ut is None or cabin.url_ut == '':
             raise Sherpa2Cabin.DoesNotExist
-        return HttpResponsePermanentRedirect(cabin.url_ut)
+        return redirect(cabin.url_ut, permanent=True)
     except (Sherpa2Cabin.DoesNotExist, ValueError):
-        return redirect(request, url='http://%s%s' % (settings.OLD_SITE, request.path))
+        return perform_redirect(request, url='http://%s%s' % (settings.OLD_SITE, request.path))
 
 def redirect_index(request):
     if request.GET.get('fo_id', '') == '311':
-        return HttpResponseRedirect(reverse('membership.views.benefits'))
+        return redirect('membership.views.benefits')
     raise Http404
 
 def page_not_found(request, template_name='main/404.html'):

@@ -1,6 +1,6 @@
 # encoding: utf-8
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -54,7 +54,7 @@ AGE_SCHOOL = 13
 # they should be headed.
 
 def index(request):
-    return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    return redirect("enrollment.views.registration")
 
 def registration(request, user):
     request.session.modified = True
@@ -82,7 +82,7 @@ def registration(request, user):
         try:
             user = request.session['enrollment']['users'][int(user)]
         except IndexError:
-            return HttpResponseRedirect(reverse('enrollment.views.registration'))
+            return redirect('enrollment.views.registration')
 
     errors = False
     if request.method == 'POST':
@@ -119,7 +119,7 @@ def registration(request, user):
     updateIndices(request.session)
 
     if not errors and 'forward' in request.POST:
-        return HttpResponseRedirect(reverse("enrollment.views.household"))
+        return redirect("enrollment.views.household")
 
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
@@ -133,7 +133,7 @@ def registration(request, user):
 def remove(request, user):
     request.session.modified = True
     if not 'enrollment' in request.session:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
 
     # If the index is too high, ignore it and redirect the user back.
     # This should only happen if the user messes with back/forwards buttons in their browser,
@@ -142,7 +142,7 @@ def remove(request, user):
         del request.session['enrollment']['users'][int(user)]
         if len(request.session['enrollment']['users']) == 0:
             del request.session['enrollment']
-    return HttpResponseRedirect(reverse("enrollment.views.registration"))
+    return redirect("enrollment.views.registration")
 
 def household(request):
     request.session.modified = True
@@ -157,7 +157,7 @@ def household(request):
     elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
 
     request.session['enrollment']['conditions'] = True
     errors = invalid_location in request.GET
@@ -180,12 +180,12 @@ def household(request):
 
         if validate_location(request.session['enrollment']['location']):
             if request.session['enrollment']['location']['country'] != 'NO':
-                return HttpResponseRedirect(reverse('enrollment.views.verification'))
+                return redirect('enrollment.views.verification')
             else:
                 try:
                     focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
                     association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
-                    return HttpResponseRedirect(reverse('enrollment.views.verification'))
+                    return redirect('enrollment.views.verification')
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
                     logger.warning(u"Postnummer finnes i Zipcode, men ikke i Focus!",
@@ -229,7 +229,7 @@ def household(request):
 
 def existing(request):
     if not request.is_ajax():
-        return HttpResponseRedirect(reverse('enrollment.views.household'))
+        return redirect('enrollment.views.household')
 
     # Note: This logic is duplicated in validate_existing()
     data = json.loads(request.POST['data'])
@@ -273,7 +273,7 @@ def verification(request):
     elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
 
     # If existing member is specified, save details and change to that address
     existing_name = ''
@@ -400,7 +400,7 @@ def payment_method(request):
     elif request.session['enrollment']['state'] == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
@@ -419,7 +419,7 @@ def payment(request):
 
     # If for some reason the user managed to POST 'card' as payment_method
     if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
 
     if request.session['enrollment']['state'] == 'registration':
         # All right, enter payment state
@@ -427,12 +427,12 @@ def payment(request):
     elif request.session['enrollment']['state'] == 'payment':
         # Already in payment state, redirect them forwards to processing
         if request.session['enrollment']['payment_method'] == 'invoice':
-            return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
+            return redirect('enrollment.views.process_invoice')
         elif request.session['enrollment']['payment_method'] == 'card':
             # Let's check for a transaction id first
             if 'transaction_id' in request.session['enrollment']:
                 # Yeah, it's there. Skip payment and redirect forwards to processing
-                return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+                return redirect("%s?merchantId=%s&transactionId=%s" % (
                     settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
                 ))
             else:
@@ -442,11 +442,11 @@ def payment(request):
                 pass
     elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
-        return HttpResponseRedirect(reverse('enrollment.views.result'))
+        return redirect('enrollment.views.result')
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
         messages.error(request, 'invalid_payment_method')
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
     request.session['enrollment']['payment_method'] = request.POST['payment_method']
 
     # Figure out who's a household-member, who's not, and who's the main member
@@ -465,7 +465,7 @@ def payment(request):
                 # Ensure that the user didn't circumvent the javascript limitations for selecting main member
                 if user['age'] < AGE_YOUTH:
                     messages.error(request, 'invalid_main_member')
-                    return HttpResponseRedirect(reverse('enrollment.views.verification'))
+                    return redirect('enrollment.views.verification')
                 user['household'] = False
                 user['yearbook'] = True
                 main = user
@@ -475,7 +475,7 @@ def payment(request):
         if main is None:
             # The specified main-member index doesn't exist
             messages.error(request, 'nonexistent_main_member')
-            return HttpResponseRedirect(reverse('enrollment.views.verification'))
+            return redirect('enrollment.views.verification')
     else:
         # In this case, one or more members below youth age are registered,
         # so no main/household status applies.
@@ -485,7 +485,7 @@ def payment(request):
             # Verify that all members are below youth age
             if user['age'] >= AGE_YOUTH:
                 messages.error(request, 'no_main_member')
-                return HttpResponseRedirect(reverse('enrollment.views.verification'))
+                return redirect('enrollment.views.verification')
 
     # Ok. We need the memberID of the main user, so add that user and generate its ID
     if main is not None:
@@ -521,7 +521,7 @@ def payment(request):
 
     # If we're paying by invoice, skip ahead to invoice processing
     if request.session['enrollment']['payment_method'] == 'invoice':
-        return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
+        return redirect('enrollment.views.process_invoice')
 
     # Paying with card, move on.
     now = datetime.now()
@@ -573,7 +573,7 @@ def payment(request):
             extra={'request': request}
         )
         messages.error(request, 'nets_register_connection_error')
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
 
     # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
     response = r.text.encode('utf-8')
@@ -581,24 +581,24 @@ def payment(request):
     # Sweet, almost done, now just send the user to complete the transaction
     request.session['enrollment']['transaction_id'] = etree.fromstring(response).find("TransactionId").text
 
-    return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+    return redirect("%s?merchantId=%s&transactionId=%s" % (
         settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
     ))
 
 def process_invoice(request):
     request.session.modified = True
     if not 'enrollment' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+        return redirect('enrollment.views.registration')
 
     if request.session['enrollment']['state'] == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
     elif request.session['enrollment']['state'] == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
         request.session['enrollment']['state'] = 'complete'
     elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
-        return HttpResponseRedirect(reverse('enrollment.views.result'))
+        return redirect('enrollment.views.result')
 
     prepare_and_send_email(
         request,
@@ -609,24 +609,24 @@ def process_invoice(request):
         request.session['enrollment']['price_sum'])
 
     request.session['enrollment']['result'] = 'success_invoice'
-    return HttpResponseRedirect(reverse('enrollment.views.result'))
+    return redirect('enrollment.views.result')
 
 def process_card(request):
     request.session.modified = True
     if not 'enrollment' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+        return redirect('enrollment.views.registration')
 
     if request.session['enrollment']['state'] == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         # Note, *this* makes it impossible to use a previously verified transaction id
         # on a *second* registration by skipping the payment view and going straight to this check.
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
     elif request.session['enrollment']['state'] == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
         request.session['enrollment']['state'] = 'complete'
     elif request.session['enrollment']['state'] == 'complete':
         # Registration has already been completed, redirect forwards to results page
-        return HttpResponseRedirect(reverse('enrollment.views.result'))
+        return redirect('enrollment.views.result')
 
     if request.GET['responseCode'] == 'OK':
         try:
@@ -681,22 +681,22 @@ def process_card(request):
     else:
         request.session['enrollment']['state'] = 'registration'
         request.session['enrollment']['result'] = 'cancel'
-    return HttpResponseRedirect(reverse('enrollment.views.result'))
+    return redirect('enrollment.views.result')
 
 def result(request):
     request.session.modified = True
     if not 'enrollment' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views.registration'))
+        return redirect('enrollment.views.registration')
 
     if request.session['enrollment']['state'] == 'registration' and request.session['enrollment'].get('result') != 'cancel':
         # Whoops, how did we get here without going through payment first? Redirect back.
-        return HttpResponseRedirect(reverse('enrollment.views.payment_method'))
+        return redirect('enrollment.views.payment_method')
     elif request.session['enrollment']['state'] == 'payment':
         # Not done with payments, why is the user here? Redirect back to payment processing
         if request.session['enrollment']['payment_method'] == 'invoice':
-            return HttpResponseRedirect(reverse('enrollment.views.process_invoice'))
+            return redirect('enrollment.views.process_invoice')
         elif request.session['enrollment']['payment_method'] == 'card':
-            return HttpResponseRedirect("%s?merchantId=%s&transactionId=%s" % (
+            return redirect("%s?merchantId=%s&transactionId=%s" % (
                 settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
             ))
 
@@ -723,7 +723,7 @@ def result(request):
 
 def sms(request):
     if not request.is_ajax():
-        return HttpResponseRedirect(reverse('enrollment.views.result'))
+        return redirect('enrollment.views.result')
 
     if request.method == 'GET':
         # This shouldn't happen, but already did happen twice (according to error logs).
@@ -816,21 +816,21 @@ def updateIndices(session):
 
 def validate(request, require_location, require_existing):
     if not 'enrollment' in request.session:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
     if len(request.session['enrollment']['users']) == 0:
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
     if not validate_youth_count(request.session['enrollment']['users']):
         messages.error(request, 'too_many_underage')
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
     if not validate_user_contact(request.session['enrollment']['users']):
         messages.error(request, 'contact_missing')
-        return HttpResponseRedirect(reverse("enrollment.views.registration"))
+        return redirect("enrollment.views.registration")
     if require_location:
         if not 'location' in request.session['enrollment'] or not validate_location(request.session['enrollment']['location']):
-            return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
+            return redirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
     if require_existing:
         if request.session['enrollment']['existing'] != '' and not validate_existing(request.session['enrollment']['existing'], request.session['enrollment']['location']['zipcode'], request.session['enrollment']['location']['country']):
-            return HttpResponseRedirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
+            return redirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
 
 def validate_user(user):
     # Name or address is empty

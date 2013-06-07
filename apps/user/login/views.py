@@ -2,8 +2,8 @@
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -47,7 +47,7 @@ def login(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
             # User is already authenticated, skip login
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return redirect(request.GET.get('next', reverse('user.views.home')))
         context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
 
@@ -58,16 +58,16 @@ def login(request):
             # Exactly one match, cool, just authenticate the user
             user = authenticate(user=matches[0].user)
             log_user_in(request, user)
-            return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+            return redirect(request.GET.get('next', reverse('user.views.home')))
 
         elif len(matches) > 1:
             # Multiple matches, offer a choice between all matches
             request.session['authenticated_profiles'] = [p.id for p in matches]
             if 'next' in request.GET:
-                return HttpResponseRedirect("%s?next=%s" %
+                return redirect("%s?next=%s" %
                     (reverse('user.login.views.choose_authenticated_user'), request.GET['next']))
             else:
-                return HttpResponseRedirect(reverse('user.login.views.choose_authenticated_user'))
+                return redirect('user.login.views.choose_authenticated_user')
 
         elif len(matches) == 0:
             # Incorrect credentials. Check if this is a user from the old userpage system
@@ -113,7 +113,7 @@ def login(request):
 
                 authenticate(user=user)
                 log_user_in(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+                return redirect(request.GET.get('next', reverse('user.views.home')))
 
             else:
                 # No luck, just provide the error message
@@ -122,11 +122,11 @@ def login(request):
                 context['email'] = request.POST['email']
                 return render(request, 'common/user/login/login.html', context)
     else:
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
 def choose_authenticated_user(request):
     if not 'authenticated_profiles' in request.session:
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
     profiles = Profile.objects.filter(id__in=request.session['authenticated_profiles'])
     context = {
@@ -136,27 +136,27 @@ def choose_authenticated_user(request):
 
 def login_chosen_user(request):
     if not 'authenticated_profiles' in request.session:
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
     if not 'profile' in request.POST:
         del request.session['authenticated_profiles']
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
     # Verify that the user authenticated for this user
     if not int(request.POST['profile']) in request.session['authenticated_profiles']:
         del request.session['authenticated_profiles']
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
     # All is swell, log the user in
     profile = Profile.objects.get(id=request.POST['profile'])
     user = authenticate(user=profile.user)
     log_user_in(request, user)
     del request.session['authenticated_profiles']
-    return HttpResponseRedirect(request.GET.get('next', reverse('user.views.home')))
+    return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def logout(request):
     log_user_out(request)
-    return HttpResponseRedirect(reverse('page.views.page'))
+    return redirect('page.views.page')
 
 def register(request):
     if request.method == 'POST':
@@ -164,17 +164,17 @@ def register(request):
             # Check that the password is long enough
             if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
                 messages.error(request, 'too_short_password')
-                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+                return redirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the email address is valid
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email')
-                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+                return redirect("%s#registrering" % reverse('user.login.views.login'))
 
             # Check that the memberid is correct (and retrieve the Actor-entry)
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
-                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+                return redirect("%s#registrering" % reverse('user.login.views.login'))
             if not FocusCountry.objects.filter(code=request.POST['country']).exists():
                 raise PermissionDenied
             actor = Actor.objects.filter(
@@ -187,7 +187,7 @@ def register(request):
             # Check that the user doesn't already have an account
             if Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists():
                 messages.error(request, 'profile_exists')
-                return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+                return redirect("%s#registrering" % reverse('user.login.views.login'))
 
             actor.email = request.POST['email']
             actor.save()
@@ -210,12 +210,12 @@ def register(request):
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-            return HttpResponseRedirect(reverse('user.views.home'))
+            return redirect('user.views.home')
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
-            return HttpResponseRedirect("%s#registrering" % reverse('user.login.views.login'))
+            return redirect("%s#registrering" % reverse('user.login.views.login'))
     else:
-        return HttpResponseRedirect(reverse('user.login.views.login'))
+        return redirect('user.login.views.login')
 
 def register_nonmember(request):
     if request.method == 'GET':
@@ -257,7 +257,7 @@ def register_nonmember(request):
             request.session['user.registration_nonmember_attempt'] = {
                 'name': request.POST['name'],
                 'email': request.POST['email']}
-            return HttpResponseRedirect(reverse('user.login.views.register_nonmember'))
+            return redirect('user.login.views.register_nonmember')
 
         user = User.objects.create_user(
             username(request.POST['email']),
@@ -272,7 +272,7 @@ def register_nonmember(request):
         t = loader.get_template('common/user/login/registered_nonmember_email.html')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [profile.get_email()])
-        return HttpResponseRedirect(reverse('user.views.home'))
+        return redirect('user.views.home')
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
@@ -397,4 +397,4 @@ def restore_password(request, key):
         user = authenticate(user=profile.user)
         log_user_in(request, user)
         messages.info(request, 'password_reset_success')
-        return HttpResponseRedirect(reverse('user.views.home'))
+        return redirect('user.views.home')

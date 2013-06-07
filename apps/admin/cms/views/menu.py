@@ -1,8 +1,9 @@
 from __future__ import absolute_import
 
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.db.models import Max
 from page.models import Menu
 
@@ -28,7 +29,7 @@ def edit(request, menu):
 def delete(request, menu):
     Menu.on(request.session['active_association'].site).get(id=menu).delete()
     cache.delete('main.menu')
-    return HttpResponseRedirect(reverse('admin.cms.views.page.list'))
+    return redirect('admin.cms.views.page.list')
 
 def reorder(request):
     for menu in json.loads(request.POST['menus']):

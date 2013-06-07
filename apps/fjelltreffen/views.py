@@ -1,9 +1,9 @@
 # encoding: utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -98,7 +98,7 @@ def show(request, id):
                     'email': form.cleaned_data['email'],
                     'text': form.cleaned_data['text']
                 }
-                return HttpResponseRedirect(reverse('fjelltreffen.views.show_reply_sent', args=[annonse.id]))
+                return redirect('fjelltreffen.views.show_reply_sent', annonse.id)
             except Exception:
                 # Use both a message (for consistency with the report-failure)
                 # and context to be able to manipulate the template based on message info
@@ -130,7 +130,7 @@ def show(request, id):
 
 def show_reply_sent(request, id):
     if not 'fjelltreffen.reply' in request.session:
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+        return redirect('fjelltreffen.views.show', id)
     annonse = Annonse.objects.get(id=id, hidden=False)
     context = {
         'annonse': annonse,
@@ -142,7 +142,7 @@ def show_reply_sent(request, id):
 def report(request, id):
     if request.method == 'GET':
         # This route will be used when redirecting to login page with 'next' and the user logs in
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+        return redirect('fjelltreffen.views.show', id)
     elif request.method == 'POST':
         try:
             annonse = Annonse.objects.get(id=id, hidden=False)
@@ -155,18 +155,18 @@ def report(request, id):
             content = render_to_string('main/fjelltreffen/report_email.txt', context)
 
             send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
-            return HttpResponseRedirect(reverse('fjelltreffen.views.show_report_sent', args=[annonse.id]))
+            return redirect('fjelltreffen.views.show_report_sent', annonse.id)
         except Exception:
             messages.error(request, 'email_report_failure')
             logger.error(u"Klarte ikke å sende Fjelltreffen rapporteringsepost",
                 exc_info=sys.exc_info(),
                 extra={'request': request}
             )
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[annonse.id]))
+        return redirect('fjelltreffen.views.show', annonse.id)
 
 def show_report_sent(request, id):
     if not 'fjelltreffen.report' in request.session:
-        return HttpResponseRedirect(reverse('fjelltreffen.views.show', args=[id]))
+        return redirect('fjelltreffen.views.show', id)
     annonse = Annonse.objects.get(id=id, hidden=False)
     context = {
         'annonse': annonse,
@@ -316,9 +316,9 @@ def save(request):
 
     if errors:
         if request.POST['id'] == '':
-            return HttpResponseRedirect(reverse('fjelltreffen.views.new'))
+            return redirect('fjelltreffen.views.new')
         else:
-            return HttpResponseRedirect(reverse('fjelltreffen.views.edit', args=[request.POST['id']]))
+            return redirect('fjelltreffen.views.edit', request.POST['id'])
 
     hidden = request.POST.get('hidden', 'hide') == 'hide'
 
@@ -348,7 +348,7 @@ def save(request):
     annonse.hidden = hidden
     annonse.hideage = request.POST['hideage'] == 'hide'
     annonse.save()
-    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -361,10 +361,10 @@ def delete(request, id):
             raise PermissionDenied
         else:
             annonse.delete()
-            return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+            return redirect('fjelltreffen.views.mine')
     except Annonse.DoesNotExist:
         # Ignore - maybe a double-request, or something. They can try again if something failed.
-        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -391,7 +391,7 @@ def mine(request):
 def show_mine(request, id):
     if not request.user.get_profile().get_actor().has_paid():
         messages.error(request, 'membership_not_paid')
-        return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+        return redirect('fjelltreffen.views.mine')
 
     # Hide all other annonser that belongs to this user first
     hidden = Annonse.get_active().filter(profile=request.user.get_profile()).update(hidden=True)
@@ -400,7 +400,7 @@ def show_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = False
     annonse.save()
-    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -409,7 +409,7 @@ def hide_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.hidden = True
     annonse.save()
-    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
@@ -418,7 +418,7 @@ def renew_mine(request, id):
     annonse = Annonse.objects.get(id=id, profile=request.user.get_profile())
     annonse.date_renewed = date.today()
     annonse.save()
-    return HttpResponseRedirect(reverse('fjelltreffen.views.mine'))
+    return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')

@@ -1,6 +1,5 @@
 # encoding: utf-8
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
@@ -17,14 +16,14 @@ EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
 def index(request):
     if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+        return redirect('enrollment.views_gift.receipt')
     return render(request, 'main/enrollment/gift/index.html')
 
 def form(request):
     if not 'gift_membership' in request.session:
         request.session['gift_membership'] = {}
     if 'order_sent' in request.session['gift_membership']:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+        return redirect('enrollment.views_gift.receipt')
 
     if 'giver' in request.session['gift_membership']:
         request.session['gift_membership']['giver'].validate(request, add_messages=True)
@@ -55,11 +54,11 @@ def form(request):
 
 def validate(request):
     if not 'gift_membership' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+        return redirect('enrollment.views_gift.index')
     if 'order_sent' in request.session['gift_membership']:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+        return redirect('enrollment.views_gift.receipt')
     if request.method == 'GET':
-        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+        return redirect('enrollment.views_gift.form')
 
     giver = Giver(
         request.POST['giver_name'],
@@ -90,21 +89,21 @@ def validate(request):
     for receiver in receivers:
         form_valid = form_valid and receiver.validate()
     if not form_valid:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+        return redirect('enrollment.views_gift.form')
 
-    return HttpResponseRedirect(reverse('enrollment.views_gift.confirm'))
+    return redirect('enrollment.views_gift.confirm')
 
 def confirm(request):
     if not 'gift_membership' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+        return redirect('enrollment.views_gift.index')
     if 'order_sent' in request.session['gift_membership']:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+        return redirect('enrollment.views_gift.receipt')
 
     form_valid = request.session['gift_membership']['giver'].validate()
     for receiver in request.session['gift_membership']['receivers']:
         form_valid = form_valid and receiver.validate()
     if not form_valid:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.form'))
+        return redirect('enrollment.views_gift.form')
 
     context = {
         'giver': request.session['gift_membership']['giver'],
@@ -114,7 +113,7 @@ def confirm(request):
 
 def send(request):
     if not 'gift_membership' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+        return redirect('enrollment.views_gift.index')
     t1 = loader.get_template('main/enrollment/gift/email-memberservice.html')
     t2 = loader.get_template('main/enrollment/gift/email-giver.html')
     # Note that this context is used for both email templates
@@ -129,11 +128,11 @@ def send(request):
         send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
     request.session['gift_membership']['order_sent'] = True
     request.session.modified = True
-    return HttpResponseRedirect(reverse('enrollment.views_gift.receipt'))
+    return redirect('enrollment.views_gift.receipt')
 
 def receipt(request):
     if not 'gift_membership' in request.session:
-        return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+        return redirect('enrollment.views_gift.index')
     context = {
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers'],
@@ -143,4 +142,4 @@ def receipt(request):
 
 def clear(request):
     del request.session['gift_membership']
-    return HttpResponseRedirect(reverse('enrollment.views_gift.index'))
+    return redirect('enrollment.views_gift.index')

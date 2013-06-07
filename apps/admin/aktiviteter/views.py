@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -47,7 +47,7 @@ def new(request):
     for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
         obj, created = Tag.objects.get_or_create(name=tag)
         aktivitet.category_tags.add(obj)
-    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
+    return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
 
 def edit_description(request, aktivitet):
     if request.method == 'GET':
@@ -99,7 +99,7 @@ def edit_description(request, aktivitet):
             )
             image.save()
 
-        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_description', args=[aktivitet.id]))
+        return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
 
 def edit_position(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
@@ -112,7 +112,7 @@ def edit_position(request, aktivitet):
     elif request.method == 'POST':
         aktivitet.start_point = Point(float(request.POST['lat']), float(request.POST['lng']))
         aktivitet.save()
-        return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_position', args=[aktivitet.id]))
+        return redirect('admin.aktiviteter.views.edit_position', aktivitet.id)
 
 def edit_dates(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
@@ -177,13 +177,13 @@ def leader_assign(request):
     for date in request.POST.getlist('aktivitet_dates'):
         date = AktivitetDate.objects.get(id=date)
         date.leaders.add(profile)
-    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_leaders', args=[request.POST['aktivitet']]))
+    return redirect('admin.aktiviteter.views.edit_leaders', request.POST['aktivitet'])
 
 def leader_remove(request):
     profile = Profile.objects.get(id=request.POST['profile'])
     aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
     aktivitet_date.leaders.remove(profile)
-    return HttpResponseRedirect(reverse('admin.aktiviteter.views.edit_leaders', args=[aktivitet_date.aktivitet.id]))
+    return redirect('admin.aktiviteter.views.edit_leaders', aktivitet_date.aktivitet.id)
 
 def new_aktivitet_date(request):
     aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])

@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
@@ -51,7 +50,7 @@ def edit_publication(request, publication):
                 publication.license = request.POST['license']
         publication.save()
         messages.info(request, 'publication_info_saved')
-        return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
+        return redirect('admin.publications.views.edit_publication', publication.id)
 
 def edit_release(request, publication, release):
     publication = Publication.objects.get(id=publication)
@@ -98,9 +97,9 @@ def edit_release(request, publication, release):
             if file.content_type != 'application/pdf' or extension != 'pdf':
                 messages.error(request, 'incorrect_file_format')
                 if release.id is None:
-                    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
+                    return redirect('admin.publications.views.edit_publication', publication.id)
                 else:
-                    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id, release.id]))
+                    return redirect('admin.publications.views.edit_publication', publication.id, release.id)
 
             # Upload to AWS
             s3 = simples3.S3Bucket(
@@ -126,7 +125,7 @@ def edit_release(request, publication, release):
         for tag in [tag.lower() for tag in json.loads(request.POST['tags-serialized'])]:
             obj, created = Tag.objects.get_or_create(name=tag)
             release.tags.add(obj)
-        return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[publication.id]))
+        return redirect('admin.publications.views.edit_publication', publication.id)
 
 def delete_release(request, release):
     release = Release.objects.get(id=release)
@@ -134,7 +133,7 @@ def delete_release(request, release):
         raise PermissionDenied
 
     release.delete()
-    return HttpResponseRedirect(reverse('admin.publications.views.edit_publication', args=[release.publication.id]))
+    return redirect('admin.publications.views.edit_publication', release.publication.id)
 
 def delete_publication(request, publication):
     publication = Publication.objects.get(id=publication)
@@ -142,7 +141,7 @@ def delete_publication(request, publication):
         raise PermissionDenied
 
     publication.delete()
-    return HttpResponseRedirect(reverse('admin.publications.views.index'))
+    return redirect('admin.publications.views.index')
 
 def get_association_main_mappings():
     association_main_mappings = cache.get('association_main_mappings')

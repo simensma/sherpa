@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -68,7 +68,7 @@ def visit(request):
 
 def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
-        return HttpResponseRedirect(reverse('association.views.index'))
+        return redirect('association.views.index')
     result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result is None:
         exists = False

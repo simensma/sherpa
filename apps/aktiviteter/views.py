@@ -1,6 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
@@ -51,7 +49,7 @@ def signup_confirm(request, aktivitet_date):
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     aktivitet_date.participants.add(request.user.get_profile())
-    return HttpResponseRedirect(reverse('aktiviteter.views.show', args=[aktivitet_date.id]))
+    return redirect('aktiviteter.views.show', aktivitet_date.id)
 
 @user_requires_login()
 def signup_cancel(request, aktivitet_date):
@@ -68,4 +66,4 @@ def signup_cancel_confirm(request, aktivitet_date):
         raise PermissionDenied
     aktivitet_date.participants.remove(request.user.get_profile())
     messages.info(request, 'signup_cancel_success')
-    return HttpResponseRedirect(reverse('user.views.aktiviteter'))
+    return redirect('user.views.aktiviteter')

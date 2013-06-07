@@ -1,8 +1,8 @@
 # encoding: utf-8
 from django import http
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
-from django.http import Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import Http404
 from django.core.mail import mail_managers
 from django.core.exceptions import PermissionDenied
 from django.utils.http import urlquote
@@ -37,7 +37,7 @@ class RedirectTrailingDot():
         # This should preferably be in the nginx config, but it seems to ignore the trailing dot.
         domain = request.get_host().split(':', 1)[0]
         if domain.endswith('.'):
-            return HttpResponsePermanentRedirect("http://%s%s" % (domain[:-1], request.get_full_path()))
+            return redirect("http://%s%s" % (domain[:-1], request.get_full_path()), permanent=True)
 
 class Sites():
     def process_request(self, request):
@@ -219,9 +219,9 @@ class SetActiveAssociation(object):
 
                 request.session['active_association'] = association
                 if request.GET.get('next', '') != '':
-                    return HttpResponseRedirect(request.GET['next'])
+                    return redirect(request.GET['next'])
                 else:
-                    return HttpResponseRedirect(reverse('admin.views.index'))
+                    return redirect('admin.views.index')
 
 
 class CheckSherpaPermissions(object):
@@ -229,7 +229,7 @@ class CheckSherpaPermissions(object):
         if request.current_app == 'admin':
             # Not logged in
             if not request.user.is_authenticated():
-                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+                return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
             # Missing sherpa-permission
             if not request.user.has_perm('user.sherpa'):
@@ -239,7 +239,7 @@ class CheckSherpaPermissions(object):
             if not 'active_association' in request.session:
                 if len(request.user.get_profile().all_associations()) == 1:
                     # The user has only access to 1 association, set it automatically
-                    return HttpResponseRedirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
+                    return redirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
                 else:
                     # Let the user choose
                     context = {'next': request.get_full_path()}

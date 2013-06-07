@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import RequestContext, loader
@@ -31,7 +31,7 @@ def opptur2013(request):
 
 def load(request):
     if not 'instagram' in request.session:
-        return HttpResponseRedirect(reverse('instagram.views.index'))
+        return redirect('instagram.views.index')
     meta = {}
     item_lists = []
     for tag, next_url in request.session['instagram']['tags'].items():

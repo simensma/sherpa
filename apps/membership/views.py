@@ -1,6 +1,6 @@
 # encoding: utf-8
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.core.cache import cache
@@ -118,7 +118,7 @@ def memberid_sms(request):
 
     # Robots etc, just redirect them
     if not 'phone_mobile' in request.POST:
-        return HttpResponseRedirect(reverse('membership.views.service'))
+        return redirect('membership.views.service')
 
     # Start recording this request - details will be filled underway
     sms_request = SMSServiceRequest()

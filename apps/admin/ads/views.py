@@ -1,7 +1,7 @@
 # encoding: utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
 from django.contrib import messages
 
@@ -21,7 +21,7 @@ def list(request):
 
 def create_ad(request):
     if not 'ad' in request.FILES:
-        return HttpResponseRedirect(reverse('admin.ads.views.list'))
+        return redirect('admin.ads.views.list')
 
     hash, extension, content_type = upload(request.FILES['ad'])
     fallback_hash = None
@@ -39,7 +39,7 @@ def create_ad(request):
         fallback_extension=fallback_extension, fallback_sha1_hash=fallback_hash,
         fallback_content_type=fallback_content_type)
     ad.save()
-    return HttpResponseRedirect(reverse('admin.ads.views.list'))
+    return redirect('admin.ads.views.list')
 
 def update_ad(request):
     ad = Ad.objects.get(id=request.POST['id'])
@@ -55,7 +55,7 @@ def update_ad(request):
         ad.delete_fallback_file()
         ad.fallback_sha1_hash, ad.fallback_extension, ad.fallback_content_type = upload(request.FILES['ad_fallback'])
     ad.save()
-    return HttpResponseRedirect(reverse('admin.ads.views.list'))
+    return redirect('admin.ads.views.list')
 
 def create_placement(request):
     try:
@@ -72,7 +72,7 @@ def create_placement(request):
         ap.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return HttpResponseRedirect(reverse('admin.ads.views.list'))
+    return redirect('admin.ads.views.list')
 
 def update_placement(request):
     try:
@@ -86,7 +86,7 @@ def update_placement(request):
         placement.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return HttpResponseRedirect(reverse('admin.ads.views.list'))
+    return redirect('admin.ads.views.list')
 
 def upload(file):
     # TODO: Consider streaming the file instead of reading everything into memory first.

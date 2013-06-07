@@ -1,6 +1,6 @@
 from functools import wraps
+from django.shortcuts import redirect
 from django.utils.decorators import available_attrs
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
@@ -25,6 +25,6 @@ def user_requires(test_func, redirect_to, include_next=False, message=None):
                 url = reverse(redirect_to)
                 if include_next:
                     url = "%s?next=%s" % (url, request.path)
-                return HttpResponseRedirect(url)
+                return redirect(url)
         return _wrapped_view
     return decorator

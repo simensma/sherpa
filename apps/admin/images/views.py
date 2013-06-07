@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.conf import settings
 
 from core.models import Tag
@@ -26,7 +26,7 @@ logger = logging.getLogger('sherpa')
 # Consider using a session variable instead, including hidden form field is kind of inconvenient
 
 def index(request):
-    return HttpResponseRedirect(reverse('admin.images.views.user_images', args=[request.user.get_profile().id]))
+    return redirect('admin.images.views.user_images', request.user.get_profile().id)
 
 def user_images(request, profile):
     profile = Profile.objects.get(id=profile)
@@ -113,31 +113,31 @@ def move_items(request):
         image.save()
 
     if destination_album is not None:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[destination_album.id]))
+        return redirect('admin.images.views.list_albums', destination_album.id)
     elif request.POST.get('origin', '') != '':
-        return HttpResponseRedirect(request.POST['origin'])
+        return redirect(request.POST['origin'])
     else:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+        return redirect('admin.images.views.list_albums')
 
 def delete_items(request, album):
     Album.objects.filter(id__in=json.loads(request.POST['albums'])).delete()
     Image.objects.filter(id__in=json.loads(request.POST['images'])).delete()
     if request.POST.get('origin', '') != '':
-        return HttpResponseRedirect(request.POST['origin'])
+        return redirect(request.POST['origin'])
     elif album is None:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+        return redirect('admin.images.views.list_albums')
     else:
         album = Album.objects.get(id=album)
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[album.id]))
+        return redirect('admin.images.views.list_albums', album.id)
 
 def add_album(request, parent):
     parent = None if parent is None else Album.objects.get(id=parent)
     album = Album(name=request.POST['name'], parent=parent)
     album.save()
     if parent is None:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+        return redirect('admin.images.views.list_albums')
     else:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
+        return redirect('admin.images.views.list_albums', parent.id)
 
 def update_album(request):
     albums = Album.objects.filter(id__in=json.loads(request.POST['albums']))
@@ -146,9 +146,9 @@ def update_album(request):
         album.save()
     parent = albums[0].parent
     if parent is None:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+        return redirect('admin.images.views.list_albums')
     else:
-        return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[parent.id]))
+        return redirect('admin.images.views.list_albums', parent.id)
 
 def update_images(request):
     if request.method == 'GET':
@@ -168,9 +168,9 @@ def update_images(request):
             # No images to edit, not sure why, just redirect them to origin or home.
             # TODO: Should maybe log an error here in case this was our fault.
             if request.GET.get('origin', '') != '':
-                return HttpResponseRedirect(request.GET['origin'])
+                return redirect(request.GET['origin'])
             else:
-                return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+                return redirect('admin.images.views.list_albums')
     elif request.method == 'POST':
         # Figure out which fields should be updated
         if 'fields' in request.POST:
@@ -200,11 +200,11 @@ def update_images(request):
 
         # Temporary 'get': album key should always exist (need to update all forms that post to this view)
         if request.POST.get('album', '') != '':
-            return HttpResponseRedirect(reverse('admin.images.views.list_albums', args=[request.POST['album']]))
+            return redirect('admin.images.views.list_albums', request.POST['album'])
         elif request.POST.get('origin', '') != '':
-            return HttpResponseRedirect(request.POST['origin'])
+            return redirect(request.POST['origin'])
         else:
-            return HttpResponseRedirect(reverse('admin.images.views.list_albums'))
+            return redirect('admin.images.views.list_albums')
 
 def upload_image(request):
     try:
