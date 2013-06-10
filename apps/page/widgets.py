@@ -3,11 +3,11 @@ from django.core.cache import cache
 from django.conf import settings
 
 from lxml import etree
+from datetime import datetime, date
 import requests
 import json
 import re
 import random
-import datetime
 
 from page.models import Version
 
@@ -24,7 +24,7 @@ def parse_widget(request, widget):
             variant__segment__isnull=True,
             variant__article__published=True,
             active=True,
-            variant__article__pub_date__lt=datetime.datetime.now(),
+            variant__article__pub_date__lt=datetime.now(),
             variant__article__site=request.site
             ).order_by('-variant__article__pub_date')
 
@@ -116,9 +116,25 @@ def widget_admin_context():
 
 # Used temporary for static promo content
 def get_static_promo_context(path):
+
+    ROTATION_TEXTS = [
+        {
+            'title': 'Vil du på #vennetur til Vinjerock?',
+            'paragraph': 'Vinn billetter idag på <a href="http://www.vennetur.no/">vennetur.no</a>'
+        }, {
+            'title': 'Vinn en #vennetur til Student BaseCamp!',
+            'paragraph': 'Finn ut hvordan på <a href="http://www.vennetur.no/">vennetur.no</a>'
+        }
+    ]
+
+    sequence_start_date = date(year=2013, month=6, day=10)
+    main_sequence = (date.today() - sequence_start_date).days
+    # After the period, use the last defined sequence
+    if main_sequence >= len(ROTATION_TEXTS):
+        main_sequence = len(ROTATION_TEXTS) - 1
     context = {}
     promos = [
-        {'name': 'Fjelltreffen', 'url': '/', 'template': 'main', 'type': 'cover'},
+        {'name': '#vennetur', 'url': '/', 'template': 'main', 'type': 'cover', 'sequence': main_sequence},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
@@ -135,7 +151,9 @@ def get_static_promo_context(path):
         if path == promo['url']:
             context['promo'] = {
                 'template': 'main/widgets/promo/static/%s.html' % promo['template'],
-                'type': promo.get('type')
+                'type': promo.get('type'),
+                'sequence': promo.get('sequence'),
+                'text': ROTATION_TEXTS[main_sequence]
             }
 
     context['promos'] = promos

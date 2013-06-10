@@ -307,19 +307,67 @@ div.widget.promo {
   }
 
   div.cover.main {
-    background-image: url('/static/img/widgets/promo/fjelltreffen_promobilde.jpg');
+    div.content {
+
+      color: white;
+
+      div.wrapper {
+        padding: 10px 25px;
+        background-color: @profile-red;
+        text-align: left;
+
+        h1 {
+          text-transform: none;
+          font-weight: normal;
+        }
+
+        p {
+          font-size: 18px;
+          margin-bottom: 0;
+
+          a {
+            color: white;
+            text-decoration: underline;
+          }
+        }
+
+        @media(max-width: 767px) {
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  /* In a period from 10.06.2013 there will be a new promo each day, use "sequence"-classes */
+
+  div.cover.main.sequence-0 {
+    background-image: url('/static/img/widgets/promo/vennetur_bilde1.jpg');
 
     div.content {
-      @width: 350px;
-      @padding-right: 70px;
+      @width: 410px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 190px;
+      width: @width;
+      padding-right: @padding-right;
+    }
+  }
+
+  div.cover.main.sequence-1 {
+    background-image: url('/static/img/widgets/promo/vennetur_bilde2.jpg');
+
+    div.content {
+      @width: 410px;
+      @padding-right: 0;
       padding-left: 940px - @width - @padding-right;
       padding-top: 190px;
       width: @width;
       padding-right: @padding-right;
 
-      color: white;
     }
   }
+
+  /* Other cover-promos */
 
   div.cover.ung {
     background-image: url('/static/img/widgets/promo/dntung_promobilde.jpg');
