@@ -9,6 +9,7 @@ gunicorn==0.17.4
 ipython==0.13.2
 lxml==3.2.1
 psycopg2==2.5
+pycrypto==2.6
 pylibmc==1.2.3
 pyodbc==3.0.6
 raven==3.3.6
