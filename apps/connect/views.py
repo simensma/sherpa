@@ -8,6 +8,8 @@ from urllib import quote_plus
 import json
 import base64
 
+from core import pkcs7
+
 def connect(request):
 
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
@@ -49,7 +51,7 @@ def receive(request):
     return HttpResponse(decrypted)
 
 def encrypt(key, plaintext):
-    padded_text = plaintext + (settings.DNT_CONNECT_BLOCK_SIZE - len(plaintext) % settings.DNT_CONNECT_BLOCK_SIZE) * '\0'
+    padded_text = pkcs7.encode(plaintext, len(key))
     cipher = AES.new(key, AES.MODE_ECB)
     msg = cipher.encrypt(padded_text)
     encoded = base64.b64encode(msg)
@@ -58,5 +60,6 @@ def encrypt(key, plaintext):
 def decrypt(key, encoded):
     cipher = AES.new(key, AES.MODE_ECB)
     ciphertext = base64.b64decode(encoded)
-    msg = cipher.decrypt(ciphertext).rstrip('\x00')
+    msg_padded = cipher.decrypt(ciphertext)
+    msg = pkcs7.decode(msg_padded, len(key))
     return msg
