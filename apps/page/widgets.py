@@ -145,10 +145,11 @@ def get_static_promo_context(path):
         {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'type': 'default'},
         {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'type': 'default'},
         {'name': 'Turplanlegger', 'url': '/utno/', 'template': 'ut', 'type': 'default'},
+        {'name': 'Fjelltreffen', 'url': '/fjelltreffen/', 'type': 'direct'},
     ]
 
     for promo in promos:
-        if path == promo['url']:
+        if path == promo['url'] and promo['type'] != 'direct':
             context['promo'] = {
                 'template': 'main/widgets/promo/static/%s.html' % promo['template'],
                 'type': promo.get('type'),
