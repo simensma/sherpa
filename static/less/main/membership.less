@@ -1,28 +1,22 @@
-/* Zipcode-search */
+/* Entry page for membership information */
 
-div#membership-box {
-  background-image: url('/static/img/membership/zipcode_search.png');
-  width: 940px;
-  height: 474px;
-  margin-bottom: 40px;
+div.membership-entry {
 
-  div.wrapper {
-    padding-top: 100px;
+  div.entry-box-wrapper {
+    @padding-top: 100px;
+    @image-height: 474px;
+    background-image: url('/static/img/membership/zipcode_search.png');
+    height: @image-height - @padding-top;
+    margin-bottom: 40px;
+    padding-top: @padding-top;
 
-    div#search-box {
+    div.entry-box {
       background-color: white;
       margin-left: auto;
       margin-right: auto;
       width: 470px;
       padding: 20px;
-
-      h2, p.search {
-        text-align: center;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
+      text-align: center;
 
       p.intro {
         font-family: "DTL Nobel" !important;
@@ -30,31 +24,49 @@ div#membership-box {
         line-height: 1.5em;
       }
 
-      p.search {
+      p.enrollment-button {
+        text-align: center;
+
+        margin-bottom: 20px;
+        margin-top: 20px;
+
+        a.enrollment {
+          .enrollment-button;
+        }
+      }
+
+      p.show-benefits {
+        font-size: 20px;
+        font-family: "DTL Nobel" !important;
+      }
+
+      div.benefits {
         margin-top: 12px;
-      }
 
-      input[type='text'] {
-        height: 30px;
-      }
+        p.info {
+          padding-left: 30px;
+          padding-right: 30px;
+        }
 
-      button.zipcode-search {
-        height: 40px;
+        input[type='text'] {
+          height: 30px;
+        }
+
+        button.zipcode-search {
+          height: 40px;
+        }
       }
     }
   }
-}
 
-@media (max-width: 767px) {
-  div#membership-box {
-    background-image: none;
-    width: auto;
-    height: auto;
-
-    div.wrapper {
+  @media (max-width: 767px) {
+    div.entry-box-wrapper {
+      background-image: none;
+      width: auto;
+      height: auto;
       padding-top: 0;
 
-      div#search-box {
+      div.entry-box {
         margin: 0;
         width: auto;
         border: 1px solid rgb(158, 158, 158);
@@ -66,162 +78,160 @@ div#membership-box {
 
 /* Benefits */
 
-div.benefits-highlight {
-  margin-bottom: 30px;
-}
-
-div.benefits-large {
-
-  @width: 300px;
-  @height: 210px;
-  @padding: 15px;
-
-  margin-top: 20px;
-  width: @width;
-  height: @height;
-
-  div.header {
-    font-family: "DTL Nobel" !important;
-    background-color: white;
-    position: absolute;
-    padding: 5px;
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 100;
+div.membership-benefits {
+  div.benefits-highlight {
+    margin-bottom: 30px;
   }
 
-  div.hover-content {
-    padding: @padding;
-    font-family: "DTL Nobel" !important;
-    color: rgb(255, 255, 255);
-    background-color: rgb(10, 10, 10);
-    width: @width - (@padding * 2);
-    height: @height - (@padding * 2);
-    opacity: 0.8;
-    filter: alpha(opacity=80);
-    position: relative;
-    z-index: 1000;
-  }
-}
+  div.benefits-large {
 
-div.benefits-large.key {
-  background-image: url('/static/img/membership/benefits-key.jpg');
-}
+    @width: 300px;
+    @height: 210px;
+    @padding: 15px;
 
-div.benefits-large.magazine {
-  background-image: url('/static/img/membership/benefits-magazine.jpg');
-}
+    margin-top: 20px;
+    width: @width;
+    height: @height;
 
-div.benefits-large.cabins {
-  background-image: url('/static/img/membership/benefits-cabins.jpg');
-}
-
-div.membership {
-  text-align: center;
-
-  a.membership {
-    font-size: 30px !important;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 80%;
-    height: 40px;
-    margin-bottom: 10px;
-  }
-}
-
-div.benefits {
-  h2 {
-    font-family: "DTL Nobel" !important;
-    font-size: 20px;
-    border-bottom: 1px solid rgb(220, 220, 220);
-    padding-bottom: 5px;
-  }
-
-  div.row {
-    margin-top: 30px;
-  }
-
-  dl {
-    dt {
+    div.header {
       font-family: "DTL Nobel" !important;
-      color: @profile-red;
-      font-weight: normal;
-      padding-left: 20px;
-      padding-top: 5px;
+      background-color: white;
+      position: absolute;
+      padding: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 100;
+    }
+
+    div.hover-content {
+      padding: @padding;
+      font-family: "DTL Nobel" !important;
+      color: rgb(255, 255, 255);
+      background-color: rgb(10, 10, 10);
+      width: @width - (@padding * 2);
+      height: @height - (@padding * 2);
+      opacity: 0.8;
+      filter: alpha(opacity=80);
+      position: relative;
+      z-index: 1000;
+    }
+  }
+
+  div.benefits-large.key {
+    background-image: url('/static/img/membership/benefits-key.jpg');
+  }
+
+  div.benefits-large.magazine {
+    background-image: url('/static/img/membership/benefits-magazine.jpg');
+  }
+
+  div.benefits-large.cabins {
+    background-image: url('/static/img/membership/benefits-cabins.jpg');
+  }
+
+  div.membership {
+    text-align: center;
+
+    a.enrollment {
+      .enrollment-button;
+      margin-bottom: 10px;
+    }
+  }
+
+  div.benefits {
+    h2 {
+      font-family: "DTL Nobel" !important;
+      font-size: 20px;
+      border-bottom: 1px solid rgb(220, 220, 220);
       padding-bottom: 5px;
-      line-height: 1.5;
+    }
+
+    div.row {
+      margin-top: 30px;
+    }
+
+    dl {
+      dt {
+        font-family: "DTL Nobel" !important;
+        color: @profile-red;
+        font-weight: normal;
+        padding-left: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        line-height: 1.5;
+        background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+      }
+
+      dt:hover {
+        background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      dd {
+        margin-bottom: 20px;
+        padding: 13px;
+        background-color: rgb(242, 242, 242);
+      }
+    }
+  }
+
+  table.prices {
+    td {
+      padding-top: 13px;
+      padding-bottom: 13px;
+    }
+
+    td div[data-popover] {
+      padding-left: 20px;
       background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
     }
 
-    dt:hover {
+    td div[data-popover]:hover {
       background-image: url('/static/img/icons/netlife/icon-info-hover.png');
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    dd {
-      margin-bottom: 20px;
-      padding: 13px;
-      background-color: rgb(242, 242, 242);
     }
   }
-}
 
-table.prices {
-  td {
-    padding-top: 13px;
-    padding-bottom: 13px;
-  }
+  div.price-notice-box {
+    margin-top: 20px;
 
-  td div[data-popover] {
-    padding-left: 20px;
-    background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
-  }
-
-  td div[data-popover]:hover {
-    background-image: url('/static/img/icons/netlife/icon-info-hover.png');
-  }
-}
-
-div.price-notice-box {
-  margin-top: 20px;
-
-  * {
-    font-family: "DTL Nobel" !important;
-  }
-}
-
-div.association-data {
-  margin-top: 60px;
-}
-
-iframe.map {
-  width: 100%;
-  height: 400px;
-}
-
-/* Membershipservice */
-
-div#faq {
-  dl {
-    dt {
-      color: @profile-red;
-      font-weight: normal;
-      padding-left: 40px;
-      line-height: 1.5;
-      background: url('/static/img/icons/netlife/question.png') center left 10px no-repeat;
+    * {
+      font-family: "DTL Nobel" !important;
     }
+  }
 
-    dt:hover {
-      text-decoration: underline;
-      background: url('/static/img/icons/netlife/question-hover.png') center left 10px no-repeat;
-      cursor: pointer;
-    }
+  div.association-data {
+    margin-top: 60px;
+  }
 
-    dd {
-      margin: 10px 0 20px 40px;
-      padding: 13px;
-      background-color: rgb(242, 242, 242);
+  iframe.map {
+    width: 100%;
+    height: 400px;
+  }
+
+  /* Membershipservice */
+
+  div#faq {
+    dl {
+      dt {
+        color: @profile-red;
+        font-weight: normal;
+        padding-left: 40px;
+        line-height: 1.5;
+        background: url('/static/img/icons/netlife/question.png') center left 10px no-repeat;
+      }
+
+      dt:hover {
+        text-decoration: underline;
+        background: url('/static/img/icons/netlife/question-hover.png') center left 10px no-repeat;
+        cursor: pointer;
+      }
+
+      dd {
+        margin: 10px 0 20px 40px;
+        padding: 13px;
+        background-color: rgb(242, 242, 242);
+      }
     }
   }
 }
@@ -244,11 +254,4 @@ div.memberid-sms.inline {
   display: inline;
   margin-left: 10px;
   font-weight: normal;
-}
-
-/* Box for promoting a new benefit */
-
-div.new-membership-benefit {
-  .form-border;
-  margin-bottom: 40px;
 }

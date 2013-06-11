@@ -25,13 +25,13 @@ $(document).ready(function() {
 
     zipcode_button.click(function() {
         var loader = $(this).siblings('img.ajaxloader.zipcode-search');
-        zipcode_button.hide();
+        zipcode_button.prop('disabled', true);
         loader.show();
         var zipcode = $("input[name='zipcode']").val();
-        if(zipcode == '') {
+        if(zipcode === '') {
             $("div.zipcode-modal").find("h3, p").hide().filter('.missing').show();
             $("div.zipcode-modal").modal();
-            zipcode_button.show();
+            zipcode_button.prop('disabled', false);
             loader.hide();
             return $(this);
         }
@@ -47,19 +47,19 @@ $(document).ready(function() {
                 $("strong.zipcode").text(result.zipcode);
                 $("div.zipcode-modal").find("h3, p").hide().filter('.invalid').show();
                 $("div.zipcode-modal").modal();
-                zipcode_button.show();
+                zipcode_button.prop('disabled', false);
                 loader.hide();
             } else if(result.error == 'unregistered_zipcode') {
                 $("strong.zipcode").text(result.zipcode);
                 $("div.zipcode-modal").find("h3, p").hide().filter('.unregistered').show();
                 $("div.zipcode-modal").modal();
-                zipcode_button.show();
+                zipcode_button.prop('disabled', false);
                 loader.hide();
             }
         }).fail(function(result) {
             $("div.zipcode-modal").find("h3, p").hide().filter('.fail').show();
             $("div.zipcode-modal").modal();
-            zipcode_button.show();
+            zipcode_button.prop('disabled', false);
             loader.hide();
         });
     });
