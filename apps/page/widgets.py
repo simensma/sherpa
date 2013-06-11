@@ -125,7 +125,7 @@ def get_static_promo_context(path):
             'title': 'Vinn en #vennetur til Student BaseCamp!',
             'paragraph': 'Finn ut hvordan på <a href="http://www.vennetur.no/">vennetur.no</a>'
         }, {
-            'title': 'Vinn en seiltur mellom Oslo og Bergen #vennetur',
+            'title': 'Vinn en #vennetur på seilbåt fra Bergen til Oslo!',
             'paragraph': 'Sjekk <a href="http://www.vennetur.no/">vennetur.no</a>'
         }, {
             'title': 'Vinn en #vennetur til Snøhetta',
