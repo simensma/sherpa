@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="span12">
+    <div class="{{ promo.type }} fjelltreffen">
+      {% include 'main/widgets/promo/static/menu.html' %}
+
+      <div class="content">
+        <h1>
+          Finn turfølge
+        </h1>
+
+        <p>
+          Leter du etter noen å dra på tur med?<br>
+          På Fjelltreffen kan du finne en turvenn som deler dine interesser.
+        </p>
+
+        <p class="double-button-hack">
+          <a class="btn btn-large btn-danger full" href="{% url 'fjelltreffen.views.index' %}">Gå til Fjelltreffen</a>
+          <a class="btn btn-large small" href="{% url 'fjelltreffen.views.index' %}">Gå til Fjelltreffen</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+</div>

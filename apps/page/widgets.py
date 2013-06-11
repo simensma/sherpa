@@ -145,6 +145,7 @@ def get_static_promo_context(path):
         {'name': 'Kurs og utdanning', 'url': '/kurs/', 'template': 'kurs', 'type': 'default'},
         {'name': 'Tur for alle', 'url': '/tur-for-alle/', 'template': 'tur-for-alle', 'type': 'default'},
         {'name': 'Turplanlegger', 'url': '/utno/', 'template': 'ut', 'type': 'default'},
+        {'name': 'Fjelltreffen', 'url': '/fjelltreffen2/', 'template': 'fjelltreffen', 'type': 'cover'},
     ]
 
     for promo in promos:
