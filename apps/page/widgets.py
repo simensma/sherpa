@@ -120,19 +120,19 @@ def get_static_promo_context(path):
     ROTATION_TEXTS = [
         {
             'title': 'Vil du på #vennetur til Vinjerock?',
-            'paragraph': 'Vinn billetter idag på <a href="http://www.vennetur.no/">vennetur.no</a>'
+            'paragraph': 'Vinn billetter idag på <span class="fake-link">vennetur.no</span>'
         }, {
             'title': 'Vinn en #vennetur til Student BaseCamp!',
-            'paragraph': 'Finn ut hvordan på <a href="http://www.vennetur.no/">vennetur.no</a>'
+            'paragraph': 'Finn ut hvordan på <span class="fake-link">vennetur.no</span>'
         }, {
             'title': 'Vinn en #vennetur på seilbåt fra Bergen til Oslo!',
-            'paragraph': 'Sjekk <a href="http://www.vennetur.no/">vennetur.no</a>'
+            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
         }, {
             'title': 'Vinn en #vennetur til Snøhetta',
-            'paragraph': 'Delta på <a href="http://www.vennetur.no/">vennetur.no</a>'
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
         }, {
             'title': 'Vinn en #vennetur til Camp Fjellsport Tungestølen',
-            'paragraph': 'Delta på <a href="http://www.vennetur.no/">vennetur.no</a>'
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
         }
     ]
 

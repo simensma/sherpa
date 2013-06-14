@@ -311,10 +311,12 @@ div.widget.promo {
 
       color: white;
 
-      div.wrapper {
+      a.wrapper {
+        display: block;
         padding: 10px 25px;
         background-color: @profile-red;
         text-align: left;
+        color: white;
 
         h1 {
           text-transform: none;
@@ -325,8 +327,7 @@ div.widget.promo {
           font-size: 18px;
           margin-bottom: 0;
 
-          a {
-            color: white;
+          span.fake-link {
             text-decoration: underline;
           }
         }
@@ -334,6 +335,10 @@ div.widget.promo {
         @media(max-width: 767px) {
           padding: 0;
         }
+      }
+
+      a.wrapper:hover {
+        text-decoration: none;
       }
     }
   }
