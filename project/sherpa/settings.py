@@ -118,9 +118,7 @@ MIDDLEWARE_CLASSES = (
     'sherpa.middleware.Sites',
     'sherpa.middleware.CurrentApp',
     'sherpa.middleware.DecodeQueryString',
-    # Use a monkeypatch for Djangos CommonMiddleware. See middleware.py for more info
-    'sherpa.middleware.CommonMiddlewareMonkeypatched',
-    #'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
