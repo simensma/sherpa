@@ -6,7 +6,6 @@ $(document).ready(function() {
      */
     $("input[placeholder]:not([data-no-custom-placeholder])").each(function() {
         $(this).data('placeholder', $(this).attr('placeholder'));
-        $(this).removeAttr('placeholder');
         if($(this).val() === "") {
             $(this).data('holding', true); // true when the value is actually the placeholder
             $(this).val($(this).data('placeholder'));
