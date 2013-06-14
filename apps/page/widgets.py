@@ -133,6 +133,33 @@ def get_static_promo_context(path):
         }, {
             'title': 'Vinn en #vennetur til Camp Fjellsport Tungestølen',
             'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på en #vennetur til Romsdalseggen?',
+            'paragraph': 'Finn ut hvordan på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn et brekurs på Folgefonna. #vennetur',
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn kajakkurs med overnatting. #vennetur',
+            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn et gavekort på hytteovernatting. #vennetur',
+            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn #vennetur for ferskinger over Hardangervidda!',
+            'paragraph': 'Bli med i konkurransen på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på 4-dagers #vennetur over Hardangervidda?',
+            'paragraph': 'Sjekk ut <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
+            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn #vennetur til Vinjerock og GoPro-kamera!',
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vil du på #vennetur til Camp Fjellsport Tungestølen?',
+            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
         }
     ]
 
