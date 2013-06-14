@@ -18,7 +18,7 @@ def menus(request):
             # Add final slash if missing
             if url[-1] != '/':
                 url = "%s/" % url
-            if request.get_host() + request.path == url:
+            if "%s%s" % (request.site.domain, request.path) == url:
                 menu.active = True
                 break
         return {'menus': menus}
