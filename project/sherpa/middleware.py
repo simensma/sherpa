@@ -30,15 +30,6 @@ if not model_cache.loaded:
 from django import template
 template.add_to_builtins('core.templatetags.url')
 
-class RedirectTrailingDot():
-    def process_request(self, request):
-        # If hostname contains a trailing dot, strip it with redirect
-        # - mainly to support the sites framework.
-        # This should preferably be in the nginx config, but it seems to ignore the trailing dot.
-        domain = request.get_host().split(':', 1)[0]
-        if domain.endswith('.'):
-            return redirect("http://%s%s" % (domain[:-1], request.get_full_path()), permanent=True)
-
 class Sites():
     def process_request(self, request):
         try:

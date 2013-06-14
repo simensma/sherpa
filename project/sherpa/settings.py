@@ -114,7 +114,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'sherpa.middleware.RedirectTrailingDot',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'sherpa.middleware.Sites',
     'sherpa.middleware.CurrentApp',
