@@ -33,7 +33,7 @@ template.add_to_builtins('core.templatetags.url')
 class Sites():
     def process_request(self, request):
         try:
-            request.site = Site.objects.get(domain=request.get_host().split(":")[0])
+            request.site = Site.objects.get(domain=request.get_host().lower().split(":")[0])
             request.urlconf = "sherpa.urls_%s" % request.site.template.name
             urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
