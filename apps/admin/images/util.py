@@ -253,8 +253,17 @@ def create_thumb(pil_image, extension, size):
     fp = StringIO()
     img_copy = pil_image.copy()
     img_copy.thumbnail([size, size], pil.ANTIALIAS)
-    # Actually, the caller should make the extension lowercase, but let's not trust them
-    extension = extension.lower()
-    # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
-    img_copy.save(fp, "jpeg" if extension == "jpg" else extension)
+    img_copy.save(fp, standardize_extension(extension))
     return fp.getvalue()
+
+def standardize_extension(extension):
+    # Force lowercase
+    extension = extension.lower()
+
+    # Some image types have common extensions (like .jpg) which are not recognized by PIL
+    if extension == 'jpg':
+        return 'jpeg'
+    elif extension == 'tif':
+        return 'tiff'
+    else:
+        return extension
