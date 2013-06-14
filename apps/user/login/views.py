@@ -214,6 +214,13 @@ def register(request):
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect("%s#registrering" % reverse('user.login.views.login'))
+        except SMTPException:
+            # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
+            logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            return redirect('user.views.home')
     else:
         return redirect('user.login.views.login')
 
