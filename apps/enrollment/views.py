@@ -803,7 +803,7 @@ def prepare_and_send_email(request, users, association, location, payment_method
         send_mail(subject, message, EMAIL_FROM, email_recipients)
     except SMTPException:
         # Silently log and ignore this error. The user will have to do without email receipt.
-        logger.error(u"Klarte ikke å sende innmeldingskvitteringepost",
+        logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
