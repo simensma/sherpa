@@ -11,7 +11,7 @@ from datetime import datetime
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 from core.models import County, FocusCountry, Zipcode
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -301,6 +301,33 @@ class Actor(models.Model):
                 created_by=self.memberid,
                 created_date=datetime.now())
             text.save()
+
+    # Publication statuses for foreign members
+
+    def has_foreign_postage(self):
+        if self.get_clean_address().country.code == 'NO':
+            raise Exception("It doesn't make sense to check for foreign postage on domestic members.")
+        try:
+            return self.get_services().get(code=FOREIGN_POSTAGE_SERVICE_CODE).stop_date is None
+        except ActorService.DoesNotExist:
+            return False
+
+    def has_foreign_fjellogvidde_service(self):
+        if not self.has_foreign_postage():
+            return False
+        try:
+            return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is None
+        except ActorService.DoesNotExist:
+            return False
+
+    # Again assuming that all Actors only have ONE of the yearbook services.
+    def has_foreign_yearbook_service(self):
+        if not self.has_foreign_postage():
+            return False
+        try:
+            return self.get_services().get(code__in=YEARBOOK_SERVICE_CODES).stop_date is None
+        except ActorService.DoesNotExist:
+            return False
 
     def get_clean_address(self):
         return ActorAddressClean(self.address)

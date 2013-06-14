@@ -183,6 +183,14 @@
 
                 <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
 
+              {% elif user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+
+                {% if user.get_profile.get_actor.has_foreign_fjellogvidde_service %}
+                  Du mottar Fjell og Vidde i posten.
+                {% else %}
+                  Du mottar ikke Fjell og Vidde i posten.
+                {% endif %}
+
               {% else %}
 
                 {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
@@ -212,6 +220,14 @@
                 {% endif %}
 
                 <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+
+              {% elif user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+
+                {% if user.get_profile.get_actor.has_foreign_yearbook_service %}
+                  Du mottar årboken i posten.
+                {% else %}
+                  Du mottar ikke årboken i posten.
+                {% endif %}
 
               {% else %}
 
