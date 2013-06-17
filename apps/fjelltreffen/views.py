@@ -255,11 +255,7 @@ def save(request):
 
     if 'image' in request.FILES:
         try:
-            # Uploading image, delete any existing image
-            if annonse.image != '':
-                annonse.delete_image()
-
-            # TODO: Consider streaming the file instead of reading everything into memory first.
+            # Uploading image. TODO: Consider streaming the file instead of reading everything into memory first.
             # See simples3/htstream.py
             file = request.FILES['image']
             data = file.read()
@@ -342,6 +338,7 @@ def save(request):
     annonse.email = request.POST['email']
     annonse.title = request.POST['title']
     if 'image' in request.FILES:
+        annonse.delete_image() # Delete any existing image
         annonse.image = "%s.%s" % (hash, extension)
         annonse.image_thumb = "%s.%s" % (thumb_hash, extension)
     annonse.text = request.POST['text']
