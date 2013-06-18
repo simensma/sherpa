@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from Crypto.Cipher import AES
 
 from urllib import quote_plus
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import base64
 import time
@@ -22,7 +22,10 @@ def connect(request, method):
     key = client['shared_secret']
     request_data = json.loads(decrypt(key, request.GET['data']))
 
-    # TODO check timestamp!
+    # Check the transmit datestamp
+    request_time = datetime.fromtimestamp(request_data['timestamp'])
+    if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
+        raise PermissionDenied
 
     response_data = {}
 
