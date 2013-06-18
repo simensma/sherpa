@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('connect.views',
-    url(r'^$', 'connect'),
+    url(r'^bounce/$', 'connect', kwargs={'method': 'bounce'}),
+    url(r'^signon/$', 'connect', kwargs={'method': 'signon'}),
 )

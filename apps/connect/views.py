@@ -1,43 +1,53 @@
 # encoding: utf-8
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from Crypto.Cipher import AES
 
 from urllib import quote_plus
+from datetime import datetime
 import json
 import base64
+import time
 
 from core import pkcs7
 
-def connect(request):
-
+def connect(request, method):
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
         raise PermissionDenied
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    data = None
+    key = client['shared_secret']
+    request_data = json.loads(decrypt(key, request.GET['data']))
 
-    if request.user.is_anonymous():
-        data = json.dumps({
-            'status': 'not logged on'
-        })
+    # TODO check timestamp!
+
+    response_data = {}
+
+    if method == 'bounce':
+        response_data['er_autentisert'] = request.user.is_authenticated()
+
+    if request.user.is_authenticated():
+        response_data.update(get_member_data(request.user))
     else:
-        memberdata = get_member_data(request.user)
-        return memberdata
+        if method == 'signon':
+            # TODO: Redirect to login/registration page
+            pass
+        # The only other method is bounce; in which case we'll just send the response as is
 
-    encrypted_data = encrypt(client['shared_secret'], data)
+    # Append the current timestamp
+    response_data['timestamp'] = int(time.time())
 
+    # Encrypt the complete data package
+    json_string = json.dumps(response_data)
+    encrypted_data = encrypt(client['shared_secret'], json_string)
     url_safe = quote_plus(encrypted_data)
 
+    # Redirect to provided url, or the default if none provided
     redirect_url = request.GET['redirect_url'] if request.GET.get('redirect_url') is not None else client['default_redirect_url']
-    return HttpResponseRedirect("%s?data=%s" % (redirect_url, url_safe))
-
-def receive(request):
-    key = settings.DNT_CONNECT['ut']['shared_secret']
-    decrypted = decrypt(key, request.GET['data'])
-    return HttpResponse(decrypted)
+    return redirect("%s?data=%s" % (redirect_url, url_safe))
 
 def encrypt(key, plaintext):
     padded_text = pkcs7.encode(plaintext, len(key))
