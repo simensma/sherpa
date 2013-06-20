@@ -8,7 +8,7 @@ from exceptions import BadRequest
 import error_codes
 
 supported_formats = ['json']
-versions = ['1']
+versions = ['0']
 
 def get_member_data(profile):
     if not profile.is_member():
