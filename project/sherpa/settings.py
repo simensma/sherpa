@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'conditions',
     'aktiviteter',
     'connect',
+    'api',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

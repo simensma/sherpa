@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^foremeldinger/', include('conditions.urls')),
 
     url(r'^connect/', include('connect.urls')),
+    url(r'^api/', include('api.urls')),
 
     url(r'^', include('sherpa.urls_redirects')),
     url(r'^', include('sherpa.urls_common_post')),
