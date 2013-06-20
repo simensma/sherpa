@@ -26,6 +26,9 @@ def connect(request, method):
     if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
         raise PermissionDenied
 
+    # Redirect to provided url, or the default if none provided
+    redirect_url = request.GET['redirect_url'] if request.GET.get('redirect_url') is not None else client['default_redirect_url']
+
     response_data = {}
 
     if method == 'bounce':
@@ -35,8 +38,11 @@ def connect(request, method):
         response_data.update(get_member_data(request.user))
     else:
         if method == 'signon':
-            # TODO: Redirect to login/registration page
-            pass
+            request.session['dntconnect'] = {
+                'client': client,
+                'redirect_url': redirect_url
+            }
+            return redirect('user.login.views.connect_signon')
         # The only other method is bounce; in which case we'll just send the response as is
 
     # Append the current timestamp
@@ -47,8 +53,6 @@ def connect(request, method):
     encrypted_data = encrypt(client['shared_secret'], json_string)
     url_safe = quote_plus(encrypted_data)
 
-    # Redirect to provided url, or the default if none provided
-    redirect_url = request.GET['redirect_url'] if request.GET.get('redirect_url') is not None else client['default_redirect_url']
     return redirect("%s?data=%s" % (redirect_url, url_safe))
 
 def encrypt(key, plaintext):
