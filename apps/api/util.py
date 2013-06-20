@@ -6,7 +6,7 @@ import base64
 
 from exceptions import BadRequest
 
-supported_formats = ['json', 'xml']
+supported_formats = ['json']
 versions = ['1']
 
 def get_member_data(profile):
