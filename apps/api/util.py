@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+from exceptions import BadRequest
+
 supported_formats = ['json', 'xml']
 versions = ['1']
 
