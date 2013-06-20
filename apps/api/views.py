@@ -7,10 +7,10 @@ from util import get_requested_representation
 import api
 
 @csrf_exempt
-def index(request, object):
+def index(request, resource):
     try:
         version, format = get_requested_representation(request)
-        if object == 'members':
+        if resource == 'members':
             return api.members(request, version, format)
         raise Http404
     except BadRequest as e:
