@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^fjelltreffen/', include('fjelltreffen.urls')),
     url(r'^foremeldinger/', include('conditions.urls')),
 
+    url(r'^connect/', include('connect.urls')),
+
     url(r'^', include('sherpa.urls_redirects')),
     url(r'^', include('sherpa.urls_common_post')),
 )

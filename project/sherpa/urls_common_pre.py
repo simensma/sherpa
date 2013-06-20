@@ -13,7 +13,6 @@ urlpatterns = patterns('',
     url(r'^nyhetsarkiv/', include('articles.urls_archive')),
     url(r'^s3bilder/', 'page.views.img'),
     url(r'^aktiviteter-beta/', include('aktiviteter.urls')),
-    url(r'^connect/', include('connect.urls')),
 
     # For django-simple-captcha
     url(r'^captcha/', include('captcha.urls')),
