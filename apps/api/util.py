@@ -1,5 +1,9 @@
 # encoding: utf-8
 
+from django.conf import settings
+
+import base64
+
 from exceptions import BadRequest
 
 supported_formats = ['json', 'xml']
@@ -47,6 +51,9 @@ def get_member_data(profile):
                 }
             }
         }
+
+def authenticate(request):
+    return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
 
 def get_requested_representation(request):
     version = request.GET.get('version', versions[len(versions) - 1])
