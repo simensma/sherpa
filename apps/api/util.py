@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+supported_formats = ['json', 'xml']
+versions = ['1']
+
 def get_member_data(profile):
     if not profile.is_member():
         return {
@@ -42,3 +45,14 @@ def get_member_data(profile):
                 }
             }
         }
+
+def get_requested_representation(request):
+    version = request.GET.get('version', versions[len(versions) - 1])
+    if not version in versions:
+        raise BadRequest("The provided API version '%s' is not one of the following supported versions: %s" % (version, ', '.join(versions)))
+
+    format = request.GET.get('format', supported_formats[0])
+    if not format in supported_formats:
+        raise BadRequest("The requested representation format '%s' is not one of the following supported formats: %s" % (format, ', '.join(supported_formats)))
+
+    return version, format
