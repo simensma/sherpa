@@ -20,6 +20,11 @@ def members(request, version, format):
                 raise BadRequest("You must supply either an 'sherpa_id' or 'medlemsnummer' parameter for member lookup")
             return HttpResponse(json.dumps(get_member_data(profile)))
         except Profile.DoesNotExist:
-            return HttpResponse('does not exist, what should i do?')
+            return HttpResponse(json.dumps({
+                'errors': [{
+                    'message': 'A member matching that sherpa_id, memberid, or both if both were provided, does not exist.',
+                    'code': 1,
+                }]
+            }), status=404)
     else:
         raise BadRequest("Unsupported HTTP verb")
