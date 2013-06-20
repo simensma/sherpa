@@ -1,5 +1,4 @@
 # encoding: utf-8
-from django.http import Http404, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
 from exceptions import BadRequest
