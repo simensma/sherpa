@@ -5,6 +5,7 @@ from django.conf import settings
 import base64
 
 from exceptions import BadRequest
+import error_codes
 
 supported_formats = ['json']
 versions = ['1']
@@ -58,10 +59,18 @@ def authenticate(request):
 def get_requested_representation(request):
     version = request.GET.get('version', versions[len(versions) - 1])
     if not version in versions:
-        raise BadRequest("The provided API version '%s' is not one of the following supported versions: %s" % (version, ', '.join(versions)))
+        raise BadRequest(
+            "The provided API version '%s' is not one of the following supported versions: %s" % (version, ', '.join(versions)),
+            code=error_codes.INVALID_REPRESENTATION,
+            http_code=400
+        )
 
     format = request.GET.get('format', supported_formats[0])
     if not format in supported_formats:
-        raise BadRequest("The requested representation format '%s' is not one of the following supported formats: %s" % (format, ', '.join(supported_formats)))
+        raise BadRequest(
+            "The requested representation format '%s' is not one of the following supported formats: %s" % (format, ', '.join(supported_formats)),
+            code=error_codes.INVALID_REPRESENTATION,
+            http_code=400
+        )
 
     return version, format
