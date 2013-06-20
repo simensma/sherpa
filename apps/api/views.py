@@ -14,6 +14,6 @@ def index(request, resource):
         version, format = get_requested_representation(request)
         if resource == 'members':
             return api.members(request, version, format)
-        raise Http404
+        raise Exception("Invalid URL resource specified: %s" % resource)
     except BadRequest as e:
         return HttpResponseBadRequest(e.message)
