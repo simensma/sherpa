@@ -118,7 +118,7 @@ def requested_representation_from_url(request):
 
 def invalid_authentication_exception():
     return BadRequest(
-        "Ugyldig autentiseringsnøkkel",
+        "Invalid authentication",
         code=error_codes.INVALID_AUTHENTICATION,
         http_code=403
     )
