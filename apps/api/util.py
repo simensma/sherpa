@@ -7,8 +7,9 @@ import base64
 from exceptions import BadRequest
 import error_codes
 
+vendor_media_type = 'vnd.turistforeningen'
 supported_formats = ['json']
-versions = ['0']
+supported_versions = ['v0']
 
 def get_member_data(profile):
     if not profile.is_member():
@@ -56,15 +57,56 @@ def get_member_data(profile):
 def authenticate(request):
     return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
 
-def get_requested_representation(request):
-    version = request.GET.get('version', versions[len(versions) - 1])
-    if not version in versions:
+def requested_representation_from_header(request):
+    accepted_types = request.META.get('HTTP_ACCEPT', '').split(',')
+    valid_types = []
+    for t in accepted_types:
+        type, subtype = [v.strip() for v in t.split('/')]
+
+        # Skip other media types
+        if type != 'application' or not subtype.startswith(vendor_media_type):
+            continue
+
+        # Format specified?
+        if '+' in subtype:
+            subtype, format = subtype.split('+')
+            if not format in supported_formats:
+                raise BadRequest(
+                    "The requested representation format '%s' is not one of the following supported formats: %s" % (format, ', '.join(supported_formats)),
+                    code=error_codes.INVALID_REPRESENTATION,
+                    http_code=400
+                )
+        else:
+            # No format specified, default to the first item
+            format = supported_formats[0]
+
+        if subtype == vendor_media_type:
+            # No version specified, default to the last item
+            version = supported_versions[len(supported_versions) - 1]
+        else:
+            subtype, version = subtype.rsplit('.', 1)
+
+        if version not in supported_versions:
+            print("NOT SUPPORTING %s" % version)
+            # Unsupported version, skip
+            continue
+
+        valid_types.append({
+            'version': version,
+            'format': format,
+        })
+
+    if len(valid_types) == 0:
         raise BadRequest(
-            "The provided API version '%s' is not one of the following supported versions: %s" % (version, ', '.join(versions)),
+            "You need to accept one of the following API versions in your media type: %s" % ', '.join(supported_versions),
             code=error_codes.INVALID_REPRESENTATION,
             http_code=400
         )
 
+    preferred_version = max(valid_types, key=lambda v: int(v['version'][1]))
+    return preferred_version['version'], preferred_version['format']
+
+def requested_representation_from_url(request):
     format = request.GET.get('format', supported_formats[0])
     if not format in supported_formats:
         raise BadRequest(
@@ -72,5 +114,18 @@ def get_requested_representation(request):
             code=error_codes.INVALID_REPRESENTATION,
             http_code=400
         )
+    return format
 
-    return version, format
+def invalid_authentication_exception():
+    return BadRequest(
+        "Ugyldig autentiseringsnøkkel",
+        code=error_codes.INVALID_AUTHENTICATION,
+        http_code=403
+    )
+
+def invalid_version_response(version):
+    return BadRequest(
+        "The API version '%s' does not provide the requested resource" % version,
+        code=error_codes.INVALID_REPRESENTATION,
+        http_code=400
+    ).response()
