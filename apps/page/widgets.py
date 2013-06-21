@@ -160,6 +160,39 @@ def get_static_promo_context(path):
         }, {
             'title': 'Vil du på #vennetur til Camp Fjellsport Tungestølen?',
             'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en 4-netters #vennetur på valgfri hytte',
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på en #vennetur til Fjellitteraturfestivalen på Finse?',
+            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på en #vennetur over Besseggen med overnatting?',
+            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vil du på #vennetur til Vinjerock?',
+            'paragraph': 'Finn ut mer på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en 4-netters #vennetur på valgfri hytte',
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
+            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en #vennetur til Camp Fjellsport Tungestølen',
+            'paragraph': 'Sjekk hvordan på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på en 4-dagers #vennetur i Jotunheimen?',
+            'paragraph': 'Vinn på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en #vennetur med kajakk',
+            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
+            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
+        }, {
+            'title': 'Lyst på en #vennetur over Besseggen med overnatting?',
+            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
         }
     ]
 
