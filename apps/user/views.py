@@ -386,7 +386,7 @@ def norway_bus_tickets_order(request):
         messages.info(request, 'order_success')
         return redirect('user.views.norway_bus_tickets')
     except SMTPException:
-        logger.warning(u"(Håndtert) Mail til NOR-WAY Bussekspress failet",
+        logger.warning(u"Mail til NOR-WAY Bussekspress failet",
             exc_info=sys.exc_info(),
             extra={
                 'request': request,
@@ -465,7 +465,7 @@ def fotobok_eurofoto_request(request):
             messages.error(request, 'eurofoto_api_unparseable_reply')
             return redirect('user.views.fotobok')
     except requests.ConnectionError as e:
-        logger.warning(u"(Håndtert) %s" % e.message,
+        logger.warning(e.message,
             exc_info=sys.exc_info(),
             extra={'request': request}
         )

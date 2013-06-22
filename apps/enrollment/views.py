@@ -568,7 +568,7 @@ def payment(request):
             'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
         })
     except requests.ConnectionError as e:
-        logger.warning(u"(Håndtert) %s" % e.message,
+        logger.warning(e.message,
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
@@ -730,7 +730,7 @@ def sms(request):
         # We're setting type: POST with ajaxSetup in common.js, so I really have no idea why
         # we sometimes receive GET requests, but since it is reoccuring AND I can't recreate
         # it locally, just account for it so the user actually gets their SMS.
-        logger.warning(u"(Håndtert) Fikk GET-request på innmeldings-SMS, forventet POST",
+        logger.warning(u"Fikk GET-request på innmeldings-SMS, forventet POST",
             exc_info=sys.exc_info(),
             extra={'request': request}
         )

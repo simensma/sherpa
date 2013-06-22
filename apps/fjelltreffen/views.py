@@ -104,7 +104,7 @@ def show(request, id):
                 # and context to be able to manipulate the template based on message info
                 messages.error(request, 'email_reply_failure')
                 context.update({'email_reply_failure': True})
-                logger.warning(u"(Håndtert) Klarte ikke å sende Fjelltreffen-epost",
+                logger.warning(u"Klarte ikke å sende Fjelltreffen-epost",
                     exc_info=sys.exc_info(),
                     extra={'request': request}
                 )
