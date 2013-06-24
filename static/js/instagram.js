@@ -17,6 +17,10 @@ $(document).ready(function() {
             url: wrapper.attr('data-load-url')
         }).done(function(result) {
             result = JSON.parse(result);
+            if(result.hasOwnProperty('status') && result.status === 'instagram_server_error') {
+                alert("Beklager, Instagram sendte oss ikke flere bilder. Dette skjer av og til - prøv igjen, eller oppdater siden (F5).");
+                return;
+            }
             for(var i=0; i<result.items.length; i++) {
                 var instagram = $("div.instagram").last();
                 if(iteration === 0) {

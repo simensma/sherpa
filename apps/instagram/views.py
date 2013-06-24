@@ -8,8 +8,13 @@ from django.core.cache import cache
 from itertools import cycle, islice
 import requests
 import json
+import logging
+import sys
 
 from page.models import AdPlacement
+from instagram.exceptions import InstagramServerError
+
+logger = logging.getLogger('sherpa')
 
 initial_url = 'https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s'
 
@@ -32,35 +37,47 @@ def opptur2013(request):
 def load(request):
     if not 'instagram' in request.session:
         return redirect('instagram.views.index')
-    meta = {}
-    item_lists = []
-    for tag, next_url in request.session['instagram']['tags'].items():
-        if next_url is None:
-            # This one didn't have a next_url on its last request
-            continue
+    try:
+        meta = {}
+        item_lists = []
+        for tag, next_url in request.session['instagram']['tags'].items():
+            if next_url is None:
+                # This one didn't have a next_url on its last request
+                continue
 
-        data = cache.get('instagram.url.%s' % next_url)
-        if data is None:
-            r = requests.get(next_url)
-            data = json.loads(r.content)
-            cache.set('instagram.url.%s' % next_url, data, 60 * 60)
-        item_lists.append([item for item in data['data']])
+            data = cache.get('instagram.url.%s' % next_url)
+            if data is None:
+                r = requests.get(next_url)
+                if r.status_code != 200:
+                    raise InstagramServerError(r)
+                data = json.loads(r.content)
+                cache.set('instagram.url.%s' % next_url, data, 60 * 60)
+            item_lists.append([item for item in data['data']])
 
-        if not 'next_url' in data['pagination']:
-            request.session['instagram']['tags'][tag] = None
-        else:
-            request.session['instagram']['tags'][tag] = data['pagination']['next_url']
+            if not 'next_url' in data['pagination']:
+                request.session['instagram']['tags'][tag] = None
+            else:
+                request.session['instagram']['tags'][tag] = data['pagination']['next_url']
 
-    # If there are no more 'next_url's, there are no more picturs for any tags
-    if all([x is None for x in request.session['instagram']['tags'].values()]):
-        meta['end'] = True
+        # If there are no more 'next_url's, there are no more picturs for any tags
+        if all([x is None for x in request.session['instagram']['tags'].values()]):
+            meta['end'] = True
 
-    # Merge the photos, and then render the appropriate template
-    items = list(roundrobin(*item_lists))
-    items = [next_image(request, item) for item in items]
+        # Merge the photos, and then render the appropriate template
+        items = list(roundrobin(*item_lists))
+        items = [next_image(request, item) for item in items]
 
-    request.session.modified = True
-    return HttpResponse(json.dumps({'items': items, 'meta': meta}))
+        request.session.modified = True
+        return HttpResponse(json.dumps({'items': items, 'meta': meta}))
+    except InstagramServerError as e:
+        logger.warning(u"Instagram returnerte ikke 200 OK ved request",
+            exc_info=sys.exc_info(),
+            extra={
+                'instagram_request': e.instagram_request,
+                'response_text': e.instagram_request.text
+            }
+        )
+        return HttpResponse(json.dumps({'status': 'instagram_server_error'}))
 
 iterations = ['small', 'small', 'small', 'small', 'medium', 'large', 'medium', 'small', 'small', 'small', 'small', 'medium', 'medium', 'medium', 'medium', 'small', 'small', 'large']
 def next_image(request, item):
