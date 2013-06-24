@@ -18,6 +18,7 @@ from cStringIO import StringIO
 import hashlib
 import simples3
 
+from admin.images.util import standardize_extension
 from sherpa.decorators import user_requires, user_requires_login
 from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
@@ -259,14 +260,14 @@ def save(request):
             # See simples3/htstream.py
             file = request.FILES['image']
             data = file.read()
-            extension = file.name.split(".")[-1].lower()
+            extension = standardize_extension(file.name.split(".")[-1])
 
             # Create the thumbnail
             thumb = pil.open(StringIO(data)).copy()
             fp = StringIO()
             thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
             # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
-            thumb.save(fp, "jpeg" if extension == "jpg" else extension)
+            thumb.save(fp, extension)
             thumb_data = fp.getvalue()
 
             # Calculate sha1-hashes
