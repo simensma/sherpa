@@ -45,7 +45,8 @@ $(document).ready(function() {
         method: 'address',
         control_group: address,
         input: address.find("input[name='address']"),
-        req: true
+        req: true,
+        opts: { max_length: Turistforeningen.address_field_max_length }
     });
 
     var address2 = form.find("div.control-group.address2");
@@ -53,7 +54,8 @@ $(document).ready(function() {
         method: 'address',
         control_group: address2,
         input: address2.find("input[name='address2']"),
-        req: true
+        req: true,
+        opts: { max_length: Turistforeningen.address_field_max_length }
     });
 
     var address3 = form.find("div.control-group.address3");
@@ -61,7 +63,8 @@ $(document).ready(function() {
         method: 'address',
         control_group: address3,
         input: address3.find("input[name='address3']"),
-        req: true
+        req: true,
+        opts: { max_length: Turistforeningen.address_field_max_length }
     });
 
     Validator.validateZipcode(

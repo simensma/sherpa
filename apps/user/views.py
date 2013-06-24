@@ -26,6 +26,7 @@ from focus.models import Actor
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
 
+from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from user.util import username, memberid_lookups_exceeded
 from sherpa.decorators import user_requires, user_requires_login
 
@@ -101,7 +102,10 @@ def update_account(request):
             return redirect('user.views.account')
     else:
         if request.method == 'GET':
-            return render(request, 'common/user/account/update_account.html')
+            context = {
+                'address_field_max_length': ADDRESS_FIELD_MAX_LENGTH
+            }
+            return render(request, 'common/user/account/update_account.html', context)
 
         elif request.method == 'POST':
             errors = False

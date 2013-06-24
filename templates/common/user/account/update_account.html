@@ -5,6 +5,14 @@
   <script src="{{ STATIC_URL }}js/user/update_account.js"></script>
 {% endblock %}
 
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {
+      address_field_max_length: {{ address_field_max_length }}
+    };
+  </script>
+{% endblock %}
+
 {% load advertisement %}
 
 {% block body %}

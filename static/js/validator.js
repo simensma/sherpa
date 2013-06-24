@@ -37,7 +37,13 @@
         },
         'address': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/[^\s]/) != null;
+            var res = input.match(/[^\s]/) != null;
+            if(opts !== undefined && opts.hasOwnProperty('max_length')) {
+                if(input.length >= opts.max_length) {
+                    res = false;
+                }
+            }
+            return res;
         },
         'phone': function(input, req, opts) {
             if(!req && input == '') { return true; }
