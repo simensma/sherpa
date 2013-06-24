@@ -124,10 +124,14 @@ def registration(request, user):
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
-    context = {'users': request.session['enrollment']['users'], 'person': user,
+    context = {
+        'users': request.session['enrollment']['users'],
+        'person': user,
         'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'now': now, 'new_membership_year': new_membership_year}
+        'now': now,
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/enrollment/registration.html', context)
 
 def remove(request, user):
@@ -215,7 +219,8 @@ def household(request):
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
     updateIndices(request.session)
-    context = {'users': request.session['enrollment']['users'],
+    context = {
+        'users': request.session['enrollment']['users'],
         'location': request.session['enrollment'].get('location', ''),
         'existing': request.session['enrollment'].get('existing', ''),
         'invalid_existing': invalid_existing in request.GET,
@@ -224,7 +229,9 @@ def household(request):
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'errors': errors,
-        'now': now, 'new_membership_year': new_membership_year}
+        'now': now,
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/enrollment/household.html', context)
 
 def existing(request):
@@ -384,7 +391,8 @@ def verification(request):
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'now': now,
-        'new_membership_year': new_membership_year}
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
@@ -407,8 +415,11 @@ def payment_method(request):
     now = datetime.now()
     new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
 
-    context = {'card_available': State.objects.all()[0].card,
-        'now': now, 'new_membership_year': new_membership_year}
+    context = {
+        'card_available': State.objects.all()[0].card,
+        'now': now,
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/enrollment/payment.html', context)
 
 def payment(request):
@@ -490,21 +501,40 @@ def payment(request):
     # Ok. We need the memberID of the main user, so add that user and generate its ID
     if main is not None:
         # Note, main will always be None when an existing main member is specified
-        main['id'] = add_focus_user(main['name'], main['dob'], main['age'], main['gender'],
-            request.session['enrollment']['location'], main['phone'], main['email'],
-            main['yearbook'], request.session['enrollment']['yearbook'], None,
-            request.session['enrollment']['payment_method'], request.session['enrollment']['price'])
+        main['id'] = add_focus_user(
+            main['name'],
+            main['dob'],
+            main['age'],
+            main['gender'],
+            request.session['enrollment']['location'],
+            main['phone'],
+            main['email'],
+            main['yearbook'],
+            request.session['enrollment']['yearbook'],
+            None,
+            request.session['enrollment']['payment_method'],
+            request.session['enrollment']['price']
+        )
         linked_to = main['id']
 
     # Right, let's add the rest of them
     for user in request.session['enrollment']['users']:
         if user == main:
             continue
-        user['id'] = add_focus_user(user['name'], user['dob'], user['age'], user['gender'],
-            request.session['enrollment']['location'], user['phone'], user['email'],
-            user['yearbook'], request.session['enrollment']['yearbook'],
-            linked_to, request.session['enrollment']['payment_method'],
-            request.session['enrollment']['price'])
+        user['id'] = add_focus_user(
+            user['name'],
+            user['dob'],
+            user['age'],
+            user['gender'],
+            request.session['enrollment']['location'],
+            user['phone'],
+            user['email'],
+            user['yearbook'],
+            request.session['enrollment']['yearbook'],
+            linked_to,
+            request.session['enrollment']['payment_method'],
+            request.session['enrollment']['price']
+        )
 
     # Calculate the prices and membership type
     request.session['enrollment']['price_sum'] = 0
@@ -714,11 +744,17 @@ def result(request):
 
     skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = {'users': request.session['enrollment']['users'], 'skip_header': skip_header,
-        'association': request.session['enrollment']['association'], 'proof_validity_end': proof_validity_end,
-        'emails': emails, 'location': request.session['enrollment']['location'],
+    context = {
+        'users': request.session['enrollment']['users'],
+        'skip_header': skip_header,
+        'association': request.session['enrollment']['association'],
+        'proof_validity_end': proof_validity_end,
+        'emails': emails,
+        'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
-        'now': now, 'new_membership_year': new_membership_year}
+        'now': now,
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
@@ -754,7 +790,8 @@ def sms(request):
     context = Context({
         'year': year,
         'next_year': next_year,
-        'users': request.session['enrollment']['users']})
+        'users': request.session['enrollment']['users']
+    })
     sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
 
     # Send the message
@@ -797,7 +834,8 @@ def prepare_and_send_email(request, users, association, location, payment_method
         'association': association,
         'location': location,
         'proof_validity_end': proof_validity_end,
-        'price_sum': price_sum})
+        'price_sum': price_sum
+    })
     message = render_to_string('main/enrollment/result/%s' % template, context)
     try:
         send_mail(subject, message, EMAIL_FROM, email_recipients)
@@ -1017,11 +1055,29 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         memberid = cursor.fetchone()[0]
         connections['focus'].commit_unless_managed()
 
-    user = Enrollment(member_id=memberid, last_name=last_name, first_name=first_name, dob=dob,
-        gender=gender, linked_to=linked_to, adr1=adr1, adr2=adr2, adr3=adr3,
-        country=location['country'], phone='', email=email, receive_yearbook=yearbook, type=type,
-        yearbook=yearbook_type, payment_method=payment_method, mob=phone, postnr=zipcode,
-        poststed=area, language=language, totalprice=price)
+    user = Enrollment(
+        member_id=memberid,
+        last_name=last_name,
+        first_name=first_name,
+        dob=dob,
+        gender=gender,
+        linked_to=linked_to,
+        adr1=adr1,
+        adr2=adr2,
+        adr3=adr3,
+        country=location['country'],
+        phone='',
+        email=email,
+        receive_yearbook=yearbook,
+        type=type,
+        yearbook=yearbook_type,
+        payment_method=payment_method,
+        mob=phone,
+        postnr=zipcode,
+        poststed=area,
+        language=language,
+        totalprice=price
+    )
     user.save()
     return memberid
 

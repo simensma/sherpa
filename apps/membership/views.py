@@ -60,7 +60,8 @@ def benefits(request, association_id):
         'price': price,
         'now': now,
         'enrollment_active': State.objects.all()[0].active,
-        'new_membership_year': new_membership_year}
+        'new_membership_year': new_membership_year
+    }
     return render(request, 'main/membership/benefits.html', context)
 
 def zipcode_search(request):
