@@ -22,6 +22,10 @@ MEMBERSHIP_TYPES = [
     {'code': 109, 'codename': u'lifelong_household', 'name': u'Livsvarig husstandsmedlem'}
 ]
 
+# We don't usually specify max_length on Focus models. The address model contains a field
+# length of 40 chars which is very short, so we'll specify that here and use it for validation.
+ADDRESS_FIELD_MAX_LENGTH = 40
+
 def get_membership_type_by_code(code):
     return [t for t in MEMBERSHIP_TYPES if t['code'] == code][0]
 
