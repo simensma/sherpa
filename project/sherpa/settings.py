@@ -34,6 +34,7 @@ SMS_RESTRICTION_WHITELIST = ['212.71.74.98'] # DNT administrations current publi
 NETS_REGISTER_URL = "https://epayment.bbs.no/Netaxept/Register.aspx"
 NETS_TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 NETS_PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
+NETS_QUERY_URL = "https://epayment.bbs.no/Netaxept/Query.aspx"
 
 # For now, require only a minimum password length of 6. This might need to be reconsidered.
 USER_PASSWORD_LENGTH = 6

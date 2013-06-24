@@ -675,6 +675,9 @@ def process_card(request):
 
             dom = etree.fromstring(response)
             response_code = dom.find(".//ResponseCode")
+            response_text = dom.find(".//ResponseText")
+            payment_verified = False
+
             if response_code is None:
                 # Crap, we didn't get the expected response from Nets.
                 # This has happened a few times before. We'll have to handle it ourselves.
@@ -688,7 +691,43 @@ def process_card(request):
                 )
                 request.session['enrollment']['state'] = 'payment'
                 return render(request, 'main/enrollment/payment-process-error.html')
-            if response_code.text == 'OK':
+            elif response_code.text == '99' and response_text is not None and response_text.text == 'Transaction already processed':
+                # The transaction might have already been processed if the user resends the process_card
+                # request - recheck nets with a Query request and verify those details
+                sale_response = response
+                r = requests.get(settings.NETS_QUERY_URL, params={
+                    'merchantId': settings.NETS_MERCHANT_ID,
+                    'token': settings.NETS_TOKEN,
+                    'transactionId': request.session['enrollment']['transaction_id']
+                })
+                response = r.text.encode('utf-8')
+                dom = etree.fromstring(response)
+                order_amount = int(dom.find(".//OrderInformation/Amount").text)
+                captured_amount = int(dom.find(".//Summary/AmountCaptured").text)
+                credited_amount = int(dom.find(".//Summary/AmountCredited").text)
+
+                if order_amount == (captured_amount - credited_amount) == request.session['enrollment']['price_sum'] * 100:
+                    payment_verified = True
+
+                logger.warning(u"Transaction already processed - sjekker Query istedet",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'nets_sale_response': sale_response,
+                        'nets_query_response': response,
+                        'transaction_id': request.session['enrollment']['transaction_id'],
+                        'payment_verified': payment_verified,
+                        'order_amount': order_amount,
+                        'captured_amount': captured_amount,
+                        'credited_amount': credited_amount,
+                        'price_sum_100': request.session['enrollment']['price_sum'] * 100
+                    }
+                )
+
+            elif response_code.text == 'OK':
+                payment_verified = True
+
+            if payment_verified:
                 # Register the payment in focus
                 for user in request.session['enrollment']['users']:
                     focus_user = Enrollment.objects.get(memberid=user['id'])
