@@ -183,7 +183,7 @@
 
       <p class="association-info">
         {% if users|length == 1 %}Du{% else %}Dere{% endif %} blir medlem{% if users|length > 1 %}mer{% endif %} i DNT og {{ association.name }}.
-        Medlemskapet gjelder for <strong>{% if next_year %}{{ year|add:1 }}, samt ut {% endif %}{{ year }}</strong>.
+        Medlemskapet gjelder for <strong>{% if today >= new_membership_year %}{{ today.year|add:1 }}, samt ut {% endif %}{{ today.year }}</strong>.
       </p>
 
       <p>

@@ -8,10 +8,10 @@
   <div class="span12">
     <h1>
       Bli medlem
-      {% if now.month >= new_membership_year.month %}
-        {{ now|date:"Y"|add:1 }}
+      {% if today >= new_membership_year %}
+        {{ today|date:"Y"|add:1 }}
       {% else %}
-        {{ now|date:"Y" }}
+        {{ today|date:"Y" }}
       {% endif %}
     </h1>
   </div>

@@ -11,13 +11,14 @@ from django.db import transaction, connections
 from django.contrib import messages
 
 from core import validator
+from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from focus.util import get_membership_type_by_codename
 from enrollment.models import State
 
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 import requests
 import re
 import json
@@ -121,15 +122,15 @@ def registration(request, user):
     if not errors and 'forward' in request.POST:
         return redirect("enrollment.views.household")
 
-    now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     context = {
         'users': request.session['enrollment']['users'],
         'person': user,
         'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'now': now,
+        'today': today,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/registration.html', context)
@@ -215,8 +216,8 @@ def household(request):
             main = True
             break
 
-    now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     updateIndices(request.session)
     context = {
@@ -229,7 +230,7 @@ def household(request):
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'errors': errors,
-        'now': now,
+        'today': today,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/household.html', context)
@@ -343,10 +344,8 @@ def verification(request):
         cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
 
-    now = datetime.now()
-    year = now.year
-    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     keycount = 0
     youth_or_older_count = 0
@@ -373,8 +372,6 @@ def verification(request):
         'keyprice': keyprice,
         'multiple_main': multiple_main,
         'main': main,
-        'year': year,
-        'next_year': next_year,
         'price': request.session['enrollment']['price'],
         'age_senior': AGE_SENIOR,
         'age_main': AGE_MAIN,
@@ -390,7 +387,7 @@ def verification(request):
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'now': now,
+        'today': today,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/verification.html', context)
@@ -412,12 +409,12 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
-    now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     context = {
         'card_available': State.objects.all()[0].card,
-        'now': now,
+        'today': today,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/payment.html', context)
@@ -556,7 +553,7 @@ def payment(request):
     # Paying with card, move on.
     now = datetime.now()
     year = now.year
-    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
+    next_year = now.month >= current_membership_year_start().month
 
     # Infer order details based on (poor) conventions.
     if main is not None:
@@ -739,8 +736,8 @@ def result(request):
     # Collect emails to a separate list for easier template formatting
     emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
-    now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
@@ -752,7 +749,7 @@ def result(request):
         'emails': emails,
         'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
-        'now': now,
+        'today': today,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
@@ -786,7 +783,7 @@ def sms(request):
     # Render the SMS template
     now = datetime.now()
     year = now.year
-    next_year = now.month >= settings.MEMBERSHIP_YEAR_START
+    next_year = now.month >= current_membership_year_start().month
     context = Context({
         'year': year,
         'next_year': next_year,

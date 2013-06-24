@@ -1,4 +1,7 @@
 # encoding: utf-8
+
+from datetime import date
+
 # Django settings for Sherpa.
 # See https://docs.djangoproject.com/en/1.4/ref/settings/
 
@@ -49,9 +52,15 @@ CAPTCHA_FONT_SIZE = 50
 CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
 ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
-# From the start of this month, memberships are for the remaining year AND next year
-# (1 = January, 12 = December)
-MEMBERSHIP_YEAR_START = 11
+# Define when årskravet is performed each year.
+# We may need to know when the previous years årskrav started regardless of what
+# it is this month, so keep a history.
+MEMBERSHIP_YEAR_START = [
+    date(year=2012, month=10, day=1),
+    date(year=2013, month=11, day=1)
+    # Note that if the current year is missing, we'll assume the current year's start
+    # date is the same as the latest existing year. See core.util.current_membership_year_start
+]
 
 # Pixel sizes for thumbnail images generated from uploaded images.
 # Duplicated client-side in js/admin/editor/image-utils.js

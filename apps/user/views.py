@@ -21,6 +21,7 @@ import hashlib
 
 from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
+from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
@@ -41,20 +42,20 @@ def home(request):
     if first_visit:
         request.session['minside.has_visited'] = True
 
-    now = datetime.now()
+    today = date.today()
     context = {
-        'year': now.year,
-        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START,
+        'year': today.year,
+        'next_year': today >= current_membership_year_start(),
         'first_visit': first_visit
     }
     return render(request, 'common/user/account/home.html', context)
 
 @user_requires_login()
 def account(request):
-    now = datetime.now()
+    today = date.today()
     context = {
-        'year': now.year,
-        'next_year': now.month >= settings.MEMBERSHIP_YEAR_START
+        'year': today.year,
+        'next_year': today >= current_membership_year_start()
     }
     return render(request, 'common/user/account/account.html', context)
 

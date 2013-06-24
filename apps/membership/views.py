@@ -13,10 +13,11 @@ from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
+from core.util import current_membership_year_start
 from enrollment.models import State
 from membership.models import SMSServiceRequest
 
-from datetime import datetime
+from datetime import datetime, date
 import json
 import logging
 import sys
@@ -52,13 +53,13 @@ def benefits(request, association_id):
         price = Price.objects.get(association_id=association_focus_id)
         cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
 
-    now = datetime.now()
-    new_membership_year = datetime(year=now.year, month=settings.MEMBERSHIP_YEAR_START, day=1)
+    today = date.today()
+    new_membership_year = current_membership_year_start()
 
     context = {
         'association': association,
         'price': price,
-        'now': now,
+        'today': today,
         'enrollment_active': State.objects.all()[0].active,
         'new_membership_year': new_membership_year
     }
@@ -198,7 +199,7 @@ def send_sms_receipt(request, actor):
         context = RequestContext(request, {
             'actor': actor,
             'year': datetime.now().year,
-            'next_year': datetime.now().month >= settings.MEMBERSHIP_YEAR_START,
+            'next_year': datetime.now() >= current_membership_year_start(),
             'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
         })
         sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')

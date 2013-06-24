@@ -4,6 +4,7 @@ from django.conf import settings
 
 from user.models import AssociationRole
 
+from datetime import date
 import re
 
 def use_image_thumb(url, preferred_size):
@@ -41,3 +42,12 @@ def association_profile_role(association, profile):
 
 class NoRoleRelationException(Exception):
     """Raised when the Association does not have a related role"""
+
+def current_membership_year_start():
+    today = date.today()
+    for year in settings.MEMBERSHIP_YEAR_START:
+        if year.year == today.year:
+            return year
+    # The current year isn't specified - create a new date with the month of the latest specified year
+    month = max(settings.MEMBERSHIP_YEAR_START).month
+    return date(year=today.year, month=month, day=1)
