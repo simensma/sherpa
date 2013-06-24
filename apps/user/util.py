@@ -41,20 +41,18 @@ def memberid_lookups_exceeded(ip_address):
 # potentially authenticate herself for multiple accounts, and the Django auth backend system
 # doesn't account for that (it returns exactly one user, or None).
 def authenticate_users(email, password):
-    # First add matching local users that aren't members
+    # Add matching local users that aren't members
     matches = [u.get_profile() for u in User.objects.filter(email=email) if u.check_password(password)]
 
-    # Then add matching members in Focus that have local accounts
-    # This large local-members lookup might become slow when the DB grows
-    local_members = list(Profile.objects.filter(memberid__isnull=False, user__is_active=True).values_list('memberid', flat=True))
-    focus_candidates = Actor.objects.filter(memberid__in=local_members, email=email)
+    # Add matching members with active Profile
+    focus_candidates = Actor.objects.filter(email=email)
     for a in focus_candidates:
-        p = Profile.objects.get(
-            memberid=a.memberid,
-            user__is_active=True
-        )
-        if p.user.check_password(password):
-            matches.append(p)
+        try:
+            p = Profile.objects.get(memberid=a.memberid, user__is_active=True)
+            if p.user.check_password(password):
+                matches.append(p)
+        except Profile.DoesNotExist:
+            pass
 
     # And just return these matches
     return matches
