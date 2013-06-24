@@ -29,7 +29,7 @@ def parse_widget(request, widget):
             ).order_by('-variant__article__pub_date')
 
         for tag in widget['tags']:
-            versions = versions.filter(tags__name__icontains=tag)
+            versions = versions.filter(tags__name__icontains=tag).distinct()
 
         versions = versions[:widget['count']]
         for version in versions:
