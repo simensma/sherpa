@@ -51,3 +51,14 @@ def current_membership_year_start():
     # The current year isn't specified - create a new date with the month of the latest specified year
     month = max(settings.MEMBERSHIP_YEAR_START).month
     return date(year=today.year, month=month, day=1)
+
+def previous_membership_year_start():
+    today = date.today()
+    for year in settings.MEMBERSHIP_YEAR_START:
+        if year.year == today.year - 1:
+            return year
+    # The exact year isn't defined - find the newest one before last year
+    candidates = [y for y in settings.MEMBERSHIP_YEAR_START if y.year < today.year - 1]
+    # Note that we'll intentionally let max() raise ValueError if candidates is empty
+    month = max(candidates).month
+    return date(year=(today.year - 1), month=month, day=1)

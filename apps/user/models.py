@@ -166,7 +166,10 @@ class Profile(models.Model):
         return True
 
     def norway_bus_tickets_offer_has_expired(self):
-        return self.get_actor().start_date.year < datetime.now().year
+        # Import here to avoid circular import
+        from core.util import previous_membership_year_start
+        previous_membership_year_start = previous_membership_year_start()
+        return self.get_actor().start_date.date() < previous_membership_year_start
 
     def show_norway_bus_tickets_menu_item(self):
         # Kind of complicated method, it's used in menus/navigation to show the link to
