@@ -551,9 +551,9 @@ def payment(request):
         return redirect('enrollment.views.process_invoice')
 
     # Paying with card, move on.
-    now = datetime.now()
-    year = now.year
-    next_year = now.month >= current_membership_year_start().month
+    today = date.today()
+    year = today.year
+    next_year = today >= current_membership_year_start()
 
     # Infer order details based on (poor) conventions.
     if main is not None:
@@ -781,9 +781,9 @@ def sms(request):
     number = request.session['enrollment']['users'][index]['phone']
 
     # Render the SMS template
-    now = datetime.now()
-    year = now.year
-    next_year = now.month >= current_membership_year_start().month
+    today = date.today()
+    year = today.year
+    next_year = today >= current_membership_year_start()
     context = Context({
         'year': year,
         'next_year': next_year,

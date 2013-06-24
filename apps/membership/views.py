@@ -199,7 +199,7 @@ def send_sms_receipt(request, actor):
         context = RequestContext(request, {
             'actor': actor,
             'year': datetime.now().year,
-            'next_year': datetime.now() >= current_membership_year_start(),
+            'next_year': date.today() >= current_membership_year_start(),
             'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
         })
         sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
