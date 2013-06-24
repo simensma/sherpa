@@ -135,6 +135,10 @@ def update_account(request):
                     messages.error(request, 'invalid_address')
                     errors = True
 
+                if len(request.POST['address']) >= ADDRESS_FIELD_MAX_LENGTH:
+                    messages.error(request, 'too_long_address')
+                    errors = True
+
                 try:
                     zipcode = Zipcode.objects.get(zipcode=request.POST['zipcode'])
                 except Zipcode.DoesNotExist:

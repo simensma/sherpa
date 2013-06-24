@@ -50,6 +50,10 @@
           <div class="alert alert-error">
             <strong>Du har ikke fylt inn en gyldig adresse.</strong>
           </div>
+        {% elif message.message == 'too_long_address' %}
+          <div class="alert alert-error">
+            <strong>Du kan av tekniske årsaker ikke ha mer enn {{ address_field_max_length }} tegn i adressefeltet.</strong>
+          </div>
         {% elif message.message == 'invalid_zipcode' %}
           <div class="alert alert-error">
             <strong>Du har ikke fylt inn et gyldig postnummer.</strong>
