@@ -7,11 +7,15 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from datetime import datetime
+import logging
+import sys
 
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 from core.models import County, FocusCountry, Zipcode
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
+
+logger = logging.getLogger('sherpa')
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
@@ -260,26 +264,56 @@ class Actor(models.Model):
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 
-    # This assumes that the actor *has* the F&V service, I suspect that assumption
-    # will sometimes be incorrect
+    def get_fjellogvidde_service(self):
+        services = self.get_services().filter(code=FJELLOGVIDDE_SERVICE_CODE)
+        if len(services) == 0:
+            # This assumes that the actor *has* the F&V service, I suspect that assumption
+            # will sometimes be incorrect
+            raise Exception("Expected at least one Fjell og Vidde-service to exist in Focus")
+        elif len(services) == 1:
+            return services[0]
+        else:
+            # If >1 of the same service, regard the one with newest start_date as canonical
+            return max(services, key=lambda s: s.start_date)
+
+    def get_yearbook_service(self):
+        services = self.get_services().filter(code__in=YEARBOOK_SERVICE_CODES)
+        if len(services) == 0:
+            # This assumes that the actor *has* the yearbook service, I suspect that assumption
+            # will sometimes be incorrect
+            raise Exception("Expected at least one Yearbook-service to exist in Focus")
+        elif len(services) == 1:
+            return services[0]
+        else:
+            # If >1 of the same service, regard the one with newest start_date as canonical.
+            # Note: We're disregarding the fact that there are multiple yearbook service codes.
+            # Even though no one is supposed to have that, it's technically possible - assuming
+            # that the newest one is canonical is likely wrong.
+            logger.warning(u"Kom borti et medlem med mer enn én Årbok-tjeneste, antar at den nyeste gjelder",
+                exc_info=sys.exc_info(),
+                extra={
+                    'memberid': self.memberid,
+                    'yearbook_service_ids': [s.id for s in services]
+                }
+            )
+            return max(services, key=lambda s: s.start_date)
+
     def get_reserved_against_fjellogvidde(self):
-        return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is not None
+        return self.get_fjellogvidde_service().stop_date is not None
 
     def set_reserved_against_fjellogvidde(self, reserved):
-        service = self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE)
+        service = self.get_fjellogvidde_service()
         if reserved:
             note = u'Ønsker ikke Fjell og Vidde (aktivert gjennom Min Side).'
         else:
             note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
 
-    # Note: Assuming that all Actors only have ONE of the yearbook services.
-    # This might be incorrect, Focus never fails to surprise.
     def get_reserved_against_yearbook(self):
-        return self.get_services().get(code__in=YEARBOOK_SERVICE_CODES).stop_date is not None
+        return self.get_yearbook_service().stop_date is not None
 
     def set_reserved_against_yearbook(self, reserved):
-        service = self.get_services().get(code__in=YEARBOOK_SERVICE_CODES)
+        service = self.get_yearbook_service()
         if reserved:
             note = u'Ønsker ikke tilsendt årbok (aktivert gjennom Min Side).'
         else:
@@ -316,7 +350,7 @@ class Actor(models.Model):
         if not self.has_foreign_postage():
             return False
         try:
-            return self.get_services().get(code=FJELLOGVIDDE_SERVICE_CODE).stop_date is None
+            return self.get_fjellogvidde_service().stop_date is None
         except ActorService.DoesNotExist:
             return False
 
@@ -325,7 +359,7 @@ class Actor(models.Model):
         if not self.has_foreign_postage():
             return False
         try:
-            return self.get_services().get(code__in=YEARBOOK_SERVICE_CODES).stop_date is None
+            return self.get_yearbook_service().stop_date is None
         except ActorService.DoesNotExist:
             return False
 
