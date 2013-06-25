@@ -3,6 +3,7 @@ from django.core.cache import cache
 
 from page.models import Menu
 
+from datetime import datetime
 import re
 
 def menus(request):
@@ -33,3 +34,15 @@ def admin_active_association(request):
     if request.user.is_authenticated() and request.user.has_perm('user.sherpa') and request.path.startswith('/sherpa/'):
         return {'active_association': request.session.get('active_association', '')}
     return {}
+
+def focus_downtime(request):
+    now = datetime.now()
+    for downtime in settings.FOCUS_DOWNTIME_PERIODS:
+        if now >= downtime['from'] and now < downtime['to']:
+            return {
+                'focus_downtime': {
+                    'is_currently_down': True,
+                    'period_message': downtime['period_message']
+                }
+            }
+    return {'focus_downtime': {'is_currently_down': False}}

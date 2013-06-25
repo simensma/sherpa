@@ -7,8 +7,13 @@
   <div class="span12">
     <h1>Innmelding utilgjengelig</h1>
 
+    {# This template can be rendered both by a deactivated enrollment, and by Focus being down. Render the status message slightly differently #}
     <p>
-      <strong>Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold.</strong>
+      {% if focus_downtime.is_currently_down %}
+        <strong>Online innmeldingsskjema er dessverre utilgjengelig {{ focus_downtime.period_message }} på grunn av midlertidig vedlikehold.</strong>
+      {% else %}
+        <strong>Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold.</strong>
+      {% endif %}
     </p>
 
     <p>

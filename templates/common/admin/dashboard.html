@@ -4,6 +4,16 @@
 
 <div class="row">
   <div class="span12">
+
+    {% if focus_downtime.is_currently_down %}
+      <div class="alert alert-error">
+        <strong>Focus er nede for midlertidig vedlikehold {{ focus_downtime.period_message }}.</strong><br>
+        Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her.<br>
+        Derfor er det <strong>stor sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa.<br>
+        Det er også derfor vi ikke kan vise navnet ditt oppe i høyre hjørne!
+      </div>
+    {% endif %}
+
     <nav class="dashboard">
       <ul>
 

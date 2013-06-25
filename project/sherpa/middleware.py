@@ -7,6 +7,7 @@ from django.core import urlresolvers
 from django.utils.log import getLogger
 from django.core.urlresolvers import resolve, Resolver404
 
+from datetime import datetime
 import re
 
 from core.models import Site
@@ -107,3 +108,23 @@ class DeactivatedEnrollment():
         # However, it's not really likely to change often since it's an important URL.
         if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
             return render(request, 'main/enrollment/unavailable.html')
+
+class FocusDowntime():
+    def process_request(self, request):
+        now = datetime.now()
+        focus_is_down = False
+        for downtime in settings.FOCUS_DOWNTIME_PERIODS:
+            if now >= downtime['from'] and now < downtime['to']:
+                focus_is_down = True
+
+        if focus_is_down:
+            # All these paths are hardcoded! :(
+            # These are the paths that can be directly accessed and require Focus to function
+            focus_required_paths = [
+                ('/innmelding', 'main/enrollment/unavailable.html'),
+                ('/minside', 'common/user/unavailable.html'),
+                ('/fjelltreffen', 'main/fjelltreffen/unavailable.html'),
+            ]
+            for path, template in focus_required_paths:
+                if request.path.startswith(path):
+                    return render(request, template)

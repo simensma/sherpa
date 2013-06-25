@@ -10,9 +10,9 @@
 {% block body %}
 
 <div class="membership-entry">
-  {% if display_downtime_message %}
+  {% if focus_downtime.is_currently_down %}
     <div class="alert alert-info">
-      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige torsdag 24. januar fra kl. 17:00 og ut kvelden, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper dette medfører.
+      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige {{ focus_downtime.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper dette medfører.
     </div>
   {% endif %}
 

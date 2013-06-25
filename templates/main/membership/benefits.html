@@ -20,11 +20,17 @@
   </h1>
 
   {% if not enrollment_active %}
-  <div class="alert alert-error">
-    <a class="close">&times;</a>
-    <strong>Online innmeldingsskjema er for øyeblikket ikke tilgjengelig på grunn av midlertidig vedlikehold.</strong><br>
-    For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
-  </div>
+    <div class="alert alert-error">
+      <a class="close">&times;</a>
+      <strong>Online innmeldingsskjema er for øyeblikket ikke tilgjengelig på grunn av midlertidig vedlikehold.</strong><br>
+      For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+    </div>
+  {% elif focus_downtime.is_currently_down %}
+    <div class="alert alert-error">
+      <a class="close">&times;</a>
+      <strong>Online innmeldingsskjema er dessverre ikke tilgjengelig {{ focus_downtime.period_message }} på grunn av midlertidig vedlikehold.</strong><br>
+      For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+    </div>
   {% endif %}
 
   {% if association %}
@@ -342,7 +348,7 @@
 
     </div>
     <div class="span4 membership">
-      {% if enrollment_active %}
+      {% if enrollment_active and not focus_downtime.is_currently_down %}
         <a href="{% url 'enrollment.views.index' %}" class="btn btn-danger enrollment">Bli medlem!</a><br>
         <a href="{% url 'enrollment.views_gift.index' %}">Gi bort medlemskap!</a>
       {% endif %}

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from datetime import date
+from datetime import datetime, date
 
 # Django settings for Sherpa.
 # See https://docs.djangoproject.com/en/1.4/ref/settings/
@@ -69,6 +69,22 @@ THUMB_SIZES = [1880, 940, 500, 150]
 # Require this many characters for an image search
 IMAGE_SEARCH_LENGTH = 3
 
+# Whenever Focus goes down, add the period here.
+# Note that it's not always obvious which apps/services require Focus, try to account for
+# all of them in the context processor/middleware that checks this setting.
+FOCUS_DOWNTIME_PERIODS = [
+    {
+        'from': datetime(year=2013, month=4, day=17, hour=16),
+        'to': datetime(year=2013, month=4, day=17, hour=21),
+        'period_message': 'torsdag 17. april fra kl. 16:00 til kl. 21:00'
+    },
+    {
+        'from': datetime(year=2013, month=6, day=25, hour=17),
+        'to': datetime(year=2013, month=6, day=25, hour=23, minute=59),
+        'period_message': 'tirsdag 25. juni fra kl. 17:00 og ut kvelden'
+    },
+]
+
 DEFAULT_FROM_EMAIL = 'Den Norske Turistforening <no-reply@turistforeningen.no>'
 SERVER_EMAIL = 'DNT Django <server-errors@turistforeningen.no>'
 
@@ -122,6 +138,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
     "sherpa.context_processors.admin_active_association",
+    "sherpa.context_processors.focus_downtime",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -136,4 +153,5 @@ MIDDLEWARE_CLASSES = (
     'sherpa.middleware.SetActiveAssociation',
     'sherpa.middleware.CheckSherpaPermissions',
     'sherpa.middleware.DeactivatedEnrollment',
+    'sherpa.middleware.FocusDowntime',
 )

@@ -1,0 +1,21 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Utilgjengelig</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <h1>Min side</h1>
+
+    <p class="lede">
+      Min side er dessverre utilgjengelig {{ focus_downtime.period_message }} på grunn av midlertidig vedlikehold.
+    </p>
+
+    <p>
+      Vi beklager på det sterkeste ulempene dette medfører. Hvis du har behov for å benytte deg av tjenestene vi tilbyr på Min side, vær vennlig og ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

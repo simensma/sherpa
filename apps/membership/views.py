@@ -28,13 +28,7 @@ from urllib import quote_plus
 logger = logging.getLogger('sherpa')
 
 def index(request):
-    now = datetime.now()
-    message_start = datetime(year=2013, month=4, day=17, hour=16)
-    message_end = datetime(year=2013, month=4, day=17, hour=21)
-    context = {
-        'display_downtime_message': now > message_start and now < message_end
-    }
-    return render(request, 'main/membership/index.html', context)
+    return render(request, 'main/membership/index.html')
 
 def benefits(request, association_id):
     if association_id is None:
