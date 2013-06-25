@@ -661,7 +661,7 @@ def process_card(request):
                 'merchantId': settings.NETS_MERCHANT_ID,
                 'token': settings.NETS_TOKEN,
                 'operation': 'SALE',
-                'transactionId': request.session['enrollment']['transaction_id']
+                'transaction_id': request.session['enrollment']['transaction_id']
             })
 
             # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
@@ -676,7 +676,8 @@ def process_card(request):
                     exc_info=sys.exc_info(),
                     extra={
                         'request': request,
-                        'nets_response': response
+                        'nets_response': response,
+                        'transaction_id': request.session['enrollment']['transaction_id']
                     }
                 )
                 request.session['enrollment']['state'] = 'payment'
