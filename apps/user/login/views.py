@@ -305,16 +305,23 @@ def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
 
-    # The address will match only one non-member, but may match several members
-    local_match = User.objects.filter(email=request.POST['email'])
-    local_members = list(Profile.objects.filter(memberid__isnull=False, user__is_active=True).values_list('memberid', flat=True))
-    focus_matches = Actor.objects.filter(memberid__in=local_members, email=request.POST['email'])
-    sherpa_matches = Member.objects.filter(email=request.POST['email']).exclude(memberid__in=local_members)
+    # The address will match only one non-member, but may match several members, registered or not
+    local_matches = list(Profile.objects.filter(user__email=request.POST['email']))
+    focus_unregistered_matches = False
+    for a in Actor.objects.filter(email=request.POST['email']):
+        try:
+            local_matches.append(Profile.objects.get(memberid=a.memberid))
+        except Profile.DoesNotExist:
+            focus_unregistered_matches = True
 
-    if len(local_match) == 0 and len(focus_matches) == 0 and len(sherpa_matches) == 0:
+    # Check for matching old user system members - we'll generate a password so that they can login and be imported
+    all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
+    sherpa2_matches = [m for m in all_sherpa2_matches if not Profile.objects.filter(memberid=m.memberid).exists()]
+
+    if len(local_matches) == 0 and len(sherpa2_matches) == 0:
         # No email-address matches.
-        if Actor.objects.exclude(memberid__in=local_members).filter(email=request.POST['email']).exists():
-            # Oh, the email address exists in Focus, but the user isn't in our user-base. Let them know.
+        if focus_unregistered_matches:
+            # Oh, the email address exists in Focus, but the user(s) aren't in our user-base. Let them know.
             return HttpResponse(json.dumps({'status': 'unregistered_email'}))
         else:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
@@ -334,15 +341,14 @@ def send_restore_password_email(request):
         )
         key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
 
-    # Recreate new password for all sherpa2 hits that don't have a local profile (old returning users)
-    for member in sherpa_matches:
-        sha1 = hashlib.sha1()
-        new_password = crypto.get_random_string(length=10)
-        sha1.update(new_password)
-        member.password = sha1.hexdigest()
-        member.save()
+    if len(sherpa2_matches) > 0:
+        for member in sherpa2_matches:
+            sha1 = hashlib.sha1()
+            new_password = crypto.get_random_string(length=10)
+            sha1.update(new_password)
+            member.password = sha1.hexdigest()
+            member.save()
 
-    if len(sherpa_matches) > 0:
         t = loader.get_template('common/user/login/restore-password-email-sherpa25.txt')
         c = RequestContext(request, {
             'member': member,
@@ -350,13 +356,12 @@ def send_restore_password_email(request):
         })
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
 
-    all_matches = [u.get_profile() for u in local_match] + [Profile.objects.get(memberid=a.memberid) for a in focus_matches]
-    for profile in all_matches:
-        profile.password_restore_key = key
-        profile.password_restore_date = datetime.now()
-        profile.save()
+    if len(local_matches) > 0:
+        for profile in local_matches:
+            profile.password_restore_key = key
+            profile.password_restore_date = datetime.now()
+            profile.save()
 
-    if len(all_matches) > 0:
         t = loader.get_template('common/user/login/restore-password-email.txt')
         c = RequestContext(request, {
             'found_user': profile.user,
