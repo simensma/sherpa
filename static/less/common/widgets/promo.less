@@ -417,6 +417,14 @@ div.widget.promo {
 
   div.cover.main.sequence-15 {
     background-image: url('/static/img/widgets/promo/vennetur_2506.jpg');
+    div.content {
+      @width: 450px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 190px;
+      width: @width;
+      padding-right: @padding-right;
+    }
   }
 
   div.cover.main.sequence-16 {
