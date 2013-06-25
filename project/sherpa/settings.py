@@ -80,7 +80,7 @@ FOCUS_DOWNTIME_PERIODS = [
     },
     {
         'from': datetime(year=2013, month=6, day=25, hour=17),
-        'to': datetime(year=2013, month=6, day=25, hour=23, minute=59),
+        'to': datetime(year=2013, month=6, day=25, hour=20),
         'period_message': 'tirsdag 25. juni fra kl. 17:00 og ut kvelden'
     },
 ]
