@@ -12,6 +12,7 @@ from django.utils import crypto
 from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, timedelta
+from smtplib import SMTPException
 import json
 import logging
 import sys
