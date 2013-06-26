@@ -8,11 +8,13 @@ urlpatterns = patterns('',
     # Header versioning
     url(r'^medlem/$', 'api.views.header_versioning', kwargs={
         'versions': [
-            {'version': 'v0', 'resource': 'members'}
+            {'version': 'v0', 'resource': 'members'},
+            {'version': 'v1', 'resource': 'members'}
         ]}
     ),
 
     # URL versioning
 
     url(r'^v0/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '0'}),
+    url(r'^v1/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '1'}),
 )
