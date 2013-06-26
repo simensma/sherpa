@@ -34,7 +34,6 @@ def get_member_data(profile):
             'er_medlem': True,
             'medlemsnummer': profile.memberid,
             'aktivt_medlemskap': profile.get_actor().has_paid(),
-            'etternavn': profile.get_last_name(),
             'fornavn': profile.get_first_name(),
             'etternavn': profile.get_last_name(),
             'født': profile.get_actor().birth_date.strftime("%Y-%m-%d"),
