@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 
+supported_versions = ['v0', 'v1']
+
 urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'http://docs.turistforeningen.no/'}),
 
