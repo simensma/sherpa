@@ -264,6 +264,40 @@ class Actor(models.Model):
             cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return county
 
+    # The members that can recieve publications to their household (but don't necessarliy have the actual
+    # service themselves - e.g. household members are eligible but their main member has the service)
+    def is_eligible_for_publications(self):
+        # Household members are eligible if their parents are eligible
+        if self.is_household_member():
+            return self.get_parent().is_eligible_for_publications()
+
+        # Young main members (school/child) won't recieve publications
+        if self.has_membership_type("school") or self.has_membership_type("child"):
+            return False
+
+        return True
+
+    # The kind of members that are allowed to reserve against receiving publications
+    def can_reserve_against_publications(self):
+        # Household members don't have the service; their main member does
+        if self.is_household_member():
+            return False
+
+        # Not sure why lifelong members can't reserve, but memberservice said that they shouldn't
+        if self.has_membership_type("lifelong"):
+            return False
+
+        # Foreign members can't change it here because it has extra costs associated
+        if self.get_clean_address().country.code != 'NO':
+            return False
+
+        # Young main members (school/child) won't recieve publications
+        if self.has_membership_type("school") or self.has_membership_type("child"):
+            return False
+
+        # Everyone else can reserve if they want
+        return True
+
     def get_fjellogvidde_service(self):
         services = self.get_services().filter(code=FJELLOGVIDDE_SERVICE_CODE)
         if len(services) == 0:

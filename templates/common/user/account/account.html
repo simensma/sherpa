@@ -170,82 +170,106 @@
               {% endif %}
             </td>
           </tr>
-          <tr>
-            <th>Fjell og Vidde</th>
-            <td>
-              {% if user.get_profile.get_actor.is_household_member %}
+          {% if user.get_profile.get_actor.is_eligible_for_publications %}
+            <tr>
+              <th>Fjell og Vidde</th>
+              <td>
+                {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
-                {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
-                  Din husstand mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
-                {% else %}
-                  Din husstand mottar Fjell og Vidde i posten.
-                {% endif %}
+                {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
+                {% if user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
 
-                <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+                  {% if user.get_profile.get_actor.has_foreign_fjellogvidde_service %}
+                    Du mottar Fjell og Vidde i posten.
+                  {% else %}
+                    Du mottar ikke Fjell og Vidde i posten.
+                  {% endif %}
 
-              {% elif user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+                {# Household members can see their household's status, but only their main member can change it #}
+                {% elif user.get_profile.get_actor.is_household_member %}
 
-                {% if user.get_profile.get_actor.has_foreign_fjellogvidde_service %}
-                  Du mottar Fjell og Vidde i posten.
-                {% else %}
-                  Du mottar ikke Fjell og Vidde i posten.
-                {% endif %}
+                  {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                    Din husstand mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
+                  {% else %}
+                    Din husstand mottar Fjell og Vidde i posten.
+                  {% endif %}
 
-              {% else %}
+                  <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
 
-                {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
-                  Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
-                {% else %}
-                  Du mottar Fjell og Vidde i posten.
-                {% endif %}
+                {# Lifelong members can see but not change service status, I don't remember why. #}
+                {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
 
-                {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
+                  {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
+                    Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
+                  {% else %}
+                    Du mottar Fjell og Vidde i posten.
+                  {% endif %}
+
                   <em>Du kan ikke endre dette her. <a href="{% url 'membership.views.service' %}">Kontakt medlemsservice</a>.</em>
+
                 {% else %}
+
+                  {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
+                    Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
+                  {% else %}
+                    Du mottar Fjell og Vidde i posten.
+                  {% endif %}
+
                   <a href="{% url 'user.views.reserve_publications' %}">Endre</a>
+
                 {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Årboken</th>
+              <td>
+                {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
-              {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <th>Årboken</th>
-            <td>
-              {% if user.get_profile.get_actor.is_household_member %}
+                {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
+                {% if user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
 
-                {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
-                  Din husstand mottar ikke årboken i posten, men kan lese den på nett.
-                {% else %}
-                  Din husstand mottar årboken i posten.
-                {% endif %}
+                  {% if user.get_profile.get_actor.has_foreign_yearbook_service %}
+                    Du mottar årboken i posten.
+                  {% else %}
+                    Du mottar ikke årboken i posten.
+                  {% endif %}
 
-                <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+                {# Household members can see their household's status, but only their main member can change it #}
+                {% elif user.get_profile.get_actor.is_household_member %}
 
-              {% elif user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+                  {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                    Din husstand mottar ikke årboken i posten, men kan lese den på nett.
+                  {% else %}
+                    Din husstand mottar årboken i posten.
+                  {% endif %}
 
-                {% if user.get_profile.get_actor.has_foreign_yearbook_service %}
-                  Du mottar årboken i posten.
-                {% else %}
-                  Du mottar ikke årboken i posten.
-                {% endif %}
+                  <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
 
-              {% else %}
+                {# Lifelong members can see but not change service status, I don't remember why. #}
+                {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
 
-                {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
-                  Du mottar ikke årboken i posten, men kan lese den på nett.
-                {% else %}
-                  Du mottar årboken i posten.
-                {% endif %}
+                  {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
+                    Du mottar ikke årboken i posten, men kan lese den på nett.
+                  {% else %}
+                    Du mottar årboken i posten.
+                  {% endif %}
 
-                {% if user.get_profile.get_actor|has_membership_type:"lifelong" %}
                   <em>Du kan ikke endre dette her. <a href="{% url 'membership.views.service' %}">Kontakt medlemsservice</a>.</em>
-                {% else %}
-                  <a href="{% url 'user.views.reserve_publications' %}">Endre</a>
-                {% endif %}
 
-              {% endif %}
-            </td>
-          </tr>
+                {% else %}
+
+                  {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
+                    Du mottar ikke årboken i posten, men kan lese den på nett.
+                  {% else %}
+                    Du mottar årboken i posten.
+                  {% endif %}
+
+                  <a href="{% url 'user.views.reserve_publications' %}">Endre</a>
+
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
           <tr>
             <th>Motta e-post</th>
             <td>

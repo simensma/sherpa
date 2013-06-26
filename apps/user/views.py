@@ -490,17 +490,13 @@ def fotobok_eurofoto_request(request):
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
-@user_requires(lambda u: u.get_profile().get_actor().get_clean_address().country.code == 'NO', redirect_to='user.views.home')
-@user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
-@user_requires(lambda u: u.get_profile().get_actor().get_clean_address().country.code == 'NO', redirect_to='user.views.home')
-@user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
@@ -509,9 +505,7 @@ def reserve_fjellogvidde(request):
 
 @user_requires_login()
 @user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: not u.get_profile().get_actor().is_household_member(), redirect_to='user.views.home')
-@user_requires(lambda u: u.get_profile().get_actor().get_clean_address().country.code == 'NO', redirect_to='user.views.home')
-@user_requires(lambda u: not u.get_profile().get_actor().has_membership_type('lifelong'), redirect_to='user.views.home')
+@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):
     actor = request.user.get_profile().get_actor()
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))

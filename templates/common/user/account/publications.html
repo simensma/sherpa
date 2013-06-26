@@ -13,13 +13,7 @@
 
     <h2>Publikasjoner</h2>
 
-    {% if user.get_profile.get_actor.is_household_member %}
-      {# Don't say anything, just let the account page inform that they can't change it. #}
-    {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
-      {# Don't say anything, just let the account page inform that they can't change it. #}
-    {% elif user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
-      {# Don't say anything, just let the account page inform that they can't change it. #}
-    {% else %}
+    {% if user.get_profile.get_actor.can_reserve_against_publications %}
       <p>
         <a href="{% url 'user.views.reserve_publications' %}">Hvordan vil du lese Fjell og Vidde og årboken?</a>
       </p>
