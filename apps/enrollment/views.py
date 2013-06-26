@@ -606,6 +606,8 @@ def payment(request):
     response = r.text.encode('utf-8')
 
     # Sweet, almost done, now just send the user to complete the transaction
+    # Consider handling errors here (unexpected XML response or connection error)
+    # We recieved a random "Unable to create setup string" message once, ignoring it for now
     request.session['enrollment']['transaction_id'] = etree.fromstring(response).find("TransactionId").text
 
     return redirect("%s?merchantId=%s&transactionId=%s" % (
