@@ -9,149 +9,155 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Medlemsservice</h1>
-  </div>
-</div>
+<div class="memberservice">
 
-<div class="row">
-  <div id="faq" class="span8">
-
-    <h3>Medlemskap</h3>
-
-    <dl>
-      <dt>Hvor lenge varer medlemskapet?</dt>
-      <dd>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember.</dd>
-
-      <dt>Har DNT familie- eller gruppemedlemskap?</dt>
-      <dd>Nei. Våre medlemskap gjelder per person, og hvert medlem må ha gyldig medlemskort for å få rabatter. Melder du inn hele familien (bosatt på samme adresse) kan de andre i familien få billigere medlemskap i henhold til alder og medlemstype.</dd>
-
-      <dt>Kan et medlemskap overføres til en annen person?</dt>
-      <dd>Medlemskapet er personlig og kan ikke overføres til annen person. Det finnes ingen unntak fra denne regelen.</dd>
-
-      <dt>Hvordan forandrer jeg adressen min?</dt>
-      <dd>Du endrer selv din adresse via Min side. Ta eventuelt kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Hva gjør jeg om jeg skal flytte til utlandet?</dt>
-      <dd>For medlemmer bosatt utenfor Norge må portotillegg betales for å få tilsendt Fjell og Vidde og årbok. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Jeg ønsker å gi bort et medlemskap i gave. Hvordan gjør jeg det?</dt>
-      <dd>Hvis du ønsker å gi bort medlemskap i gave, kan du bestille det via <a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a>, eller ved å kontakte medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Hvordan kan jeg bli medlem av en annen lokal turistforening?</dt>
-      <dd>Dersom du ønsker medlemskap i annen forening enn den du normalt sokner til, må du ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Jeg har vært medlem tidligere, og ønsker nå å bli medlem igjen. Hvordan fornyer jeg medlemskapet?</dt>
-      <dd>Du kan <a href="{% url 'enrollment.views.registration' %}">melde deg inn på nytt</a> eller ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så aktiverer vi medlemskapet igjen.</dd>
-
-      <dt>Jeg blir ikke medlem i rett medlemskategori, selv om jeg er innenfor aldersgrensen. Hvorfor?</dt>
-      <dd>Medlemskategorien bestemmes ut i fra din alder ved utgangen av det gjeldende medlemsåret. Hvis du for eksempel blir 19 år i løpet av året vil du bli ungdomsmedlem, selv om du er 18 år når du melder deg inn. Er du ufør må du forevise/sende oss kopi av Honnørrabattkortet ditt. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Hvordan melder jeg meg ut?</dt>
-      <dd>Ønsker du å melde deg ut, kan du gi beskjed til medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Jeg er utmeldt, men får fortsatt giro og/eller blad. Hvorfor?</dt>
-      <dd>Utmeldingen og utsending av blad kan ha krysset hverandre. Det vil si at prosessen med utsending av giro/blad allerede var i gang da vi mottok utmeldingen. Normalt vil du få Fjell og Vidde ut året du har betalt for.</dd>
-
-    </dl>
-
-    <h3>Medlemskort</h3>
-
-    <dl>
-
-      <dt>Jeg har mistet mitt gyldige medlemskort. Hvordan får jeg et nytt?</dt>
-      <dd>Bekreftelser på medlemskap må skrives ut fra datasystemet og sendes med vanlig post. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
-
-      <dt>Kan dere sende bekreftelse på medlemskapet på fax, e-post eller SMS?</dt>
-      <dd>Bekreftelser på medlemskap må skrives ut fra datasystemet og sendes med vanlig post, ikke fax eller e-post. Men vi kan sende en bekreftelse på SMS når post ikke er raskt nok.</dd>
-
-      <dt>Jeg glemte å be om oblat/kvittering i nettbanken. Hvordan kan jeg få et nytt?</dt>
-      <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så sender vi et nytt gyldig medlemskort.</dd>
-
-    </dl>
-
-    <h3>Betaling</h3>
-
-    <dl>
-
-      <dt>Hvordan kan jeg få en ny faktura for innbetaling?</dt>
-      <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så sender vi en ny faktura.</dd>
-
-      <dt>Kan jeg betale uten KID-nummer?</dt>
-      <dd>Ja, men husk å oppgi medlemsnummer og/eller navnet på den eller de medlemskapet gjelder i ”Melding til mottaker”/Betalingsinformasjon på giroen. Ved bruk av KID-nummer blir betalingen behandlet elektronisk og lest inn i medlemssystemet første virkedag etter betaling. Betalinger uten KID må behandles manuelt og tar derfor lenger tid å registrere.</dd>
-
-      <dt>Hvorfor stemmer ikke beløpet på giroen med oppgitt kontingentpris?</dt>
-      <dd>Din lokale medlemsforening kan ha en annen medlemskontingent enn standardprisene.</dd>
-
-      <dt>Hva gjør jeg dersom medlemskapet er betalt to ganger?</dt>
-      <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så vil vi  refundere beløpet. Husk å oppgi kontonummer.</dd>
-
-      <dt>Har DNT AvtaleGiro/eFaktura?</dt>
-      <dd>Ja. Bruker du nettbank kan du velge å motta <a href="http://www.avtalegiro.no/">AvtaleGiro</a> eller <a href="http://www.efaktura.no/">eFaktura</a> hos oss. Registreringen gjør du selv i nettbanken når du betaler kontingenten. Du vil da fra neste år få årskontingenten direkte i nettbanken din.</dd>
-
-      <dt>Hva gjør jeg med giroen når jeg får nytt medlemskort?</dt>
-      <dd>Har du AvtaleGiro eller eFaktura fungerer giroen kun som adressebærer for årboken.</dd>
-
-      <dt>Hvorfor er KID-nummeret og kontingenten X'et ut på giroen?</dt>
-      <dd>Når KID-nummeret og kontingenten er byttet ut med XXXXXXXX betyr det at du har inngått en AvtaleGiro eller eFaktura i nettbanken din. For å unngå dobbeltbetalinger har vi fjernet betalingsinformasjonen.</dd>
-
-      <dt>Hvordan avslutte AvtaleGiro eller eFaktura?</dt>
-      <dd>Du må selv avslutte (slette) avtalen i din nettbank.</dd>
-
-      <dt>Hva er avtalenummeret ved opprettelse av AvtaleGiro/eFaktura?</dt>
-      <dd>eFakturareferansen er en null (0) foran medlemsnummeret ditt.</dd>
-
-      <dt>Hvordan får jeg gyldig medlemskort når jeg har AvtaleGiro?</dt>
-      <dd>Med AvtaleGiro vil du i januar hvert år få tilsendt gyldig medlemskort.</dd>
-
-      <dt>Hvordan får jeg gyldig medlemskort når jeg har eFaktura?</dt>
-      <dd>Med eFaktura ber du om kvitteringsoblat fra banken din når du godkjenner dette i din nettbank. Kvitteringen påføres kortet som fulgte med adressebæreren til årboken.</dd>
-
-    </dl>
-
-    <h3>Hytter</h3>
-
-    <dl>
-
-      <dt>Hvor får jeg tak i nøkkel til hyttene?</dt>
-      <dd>Nøkkel til våre selvbetjente og ubetjente hytter deponeres i <a href="/nettbutikk/">vår nettbutikk</a>, eller hos en av DNTs turinformasjoner. Ut over det kontakter du din lokalforening. Du må være medlem i DNT for å få nøkkelen.</dd>
-
-      <dt>Kan jeg betale med kredittkort på hyttene?</dt>
-      <dd>De fleste betjente hyttene har betalingsterminal for betaling med kredittkort. På de selvbetjente og ubetjente hyttene benyttes som oftest betalingsfullmakt. Enkelte tilbyr også giro eller tilsendt faktura. Kontant betaling tilbys sjeldent.</dd>
-
-    </dl>
-
-  </div>
-
-  <div class="span4">
-    <div class="well">
-      <h3>Kontakt oss</h3>
-
-      <p>
-        Telefon: 40001870<br>
-        <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
-        Åpent alle hverdager:<br>
-        kl. 09.00 - 16.00<br>
-        Tirsdager kl. 10.00 - 16.00
-      </p>
-      <p>
-        Ta gjerne kontakt med oss via <a href="http://www.facebook.com/turistforeningen">Facebook</a> eller <a href="https://twitter.com/turistforening">Twitter</a>.
-      </p>
-    </div>
-
-    {% include 'main/membership/memberid_sms/receipt.html' %}
-
-    <div class="well">
-      <h3>Medlemsfordeler og priser</h3>
-      <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-      <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
-      <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-      <br>
-      <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
-      </form>
+  <div class="row">
+    <div class="span12">
+      <h1>Medlemsservice</h1>
     </div>
   </div>
+
+  <div class="row">
+    <div class="span8">
+      <div class="faq">
+
+        <h3>Medlemskap</h3>
+
+        <dl>
+          <dt>Hvor lenge varer medlemskapet?</dt>
+          <dd>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember.</dd>
+
+          <dt>Har DNT familie- eller gruppemedlemskap?</dt>
+          <dd>Nei. Våre medlemskap gjelder per person, og hvert medlem må ha gyldig medlemskort for å få rabatter. Melder du inn hele familien (bosatt på samme adresse) kan de andre i familien få billigere medlemskap i henhold til alder og medlemstype.</dd>
+
+          <dt>Kan et medlemskap overføres til en annen person?</dt>
+          <dd>Medlemskapet er personlig og kan ikke overføres til annen person. Det finnes ingen unntak fra denne regelen.</dd>
+
+          <dt>Hvordan forandrer jeg adressen min?</dt>
+          <dd>Du endrer selv din adresse via Min side. Ta eventuelt kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Hva gjør jeg om jeg skal flytte til utlandet?</dt>
+          <dd>For medlemmer bosatt utenfor Norge må portotillegg betales for å få tilsendt Fjell og Vidde og årbok. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Jeg ønsker å gi bort et medlemskap i gave. Hvordan gjør jeg det?</dt>
+          <dd>Hvis du ønsker å gi bort medlemskap i gave, kan du bestille det via <a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a>, eller ved å kontakte medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Hvordan kan jeg bli medlem av en annen lokal turistforening?</dt>
+          <dd>Dersom du ønsker medlemskap i annen forening enn den du normalt sokner til, må du ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Jeg har vært medlem tidligere, og ønsker nå å bli medlem igjen. Hvordan fornyer jeg medlemskapet?</dt>
+          <dd>Du kan <a href="{% url 'enrollment.views.registration' %}">melde deg inn på nytt</a> eller ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så aktiverer vi medlemskapet igjen.</dd>
+
+          <dt>Jeg blir ikke medlem i rett medlemskategori, selv om jeg er innenfor aldersgrensen. Hvorfor?</dt>
+          <dd>Medlemskategorien bestemmes ut i fra din alder ved utgangen av det gjeldende medlemsåret. Hvis du for eksempel blir 19 år i løpet av året vil du bli ungdomsmedlem, selv om du er 18 år når du melder deg inn. Er du ufør må du forevise/sende oss kopi av Honnørrabattkortet ditt. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Hvordan melder jeg meg ut?</dt>
+          <dd>Ønsker du å melde deg ut, kan du gi beskjed til medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Jeg er utmeldt, men får fortsatt giro og/eller blad. Hvorfor?</dt>
+          <dd>Utmeldingen og utsending av blad kan ha krysset hverandre. Det vil si at prosessen med utsending av giro/blad allerede var i gang da vi mottok utmeldingen. Normalt vil du få Fjell og Vidde ut året du har betalt for.</dd>
+
+        </dl>
+
+        <h3>Medlemskort</h3>
+
+        <dl>
+
+          <dt>Jeg har mistet mitt gyldige medlemskort. Hvordan får jeg et nytt?</dt>
+          <dd>Bekreftelser på medlemskap må skrives ut fra datasystemet og sendes med vanlig post. Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a></dd>
+
+          <dt>Kan dere sende bekreftelse på medlemskapet på fax, e-post eller SMS?</dt>
+          <dd>Bekreftelser på medlemskap må skrives ut fra datasystemet og sendes med vanlig post, ikke fax eller e-post. Men vi kan sende en bekreftelse på SMS når post ikke er raskt nok.</dd>
+
+          <dt>Jeg glemte å be om oblat/kvittering i nettbanken. Hvordan kan jeg få et nytt?</dt>
+          <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så sender vi et nytt gyldig medlemskort.</dd>
+
+        </dl>
+
+        <h3>Betaling</h3>
+
+        <dl>
+
+          <dt>Hvordan kan jeg få en ny faktura for innbetaling?</dt>
+          <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så sender vi en ny faktura.</dd>
+
+          <dt>Kan jeg betale uten KID-nummer?</dt>
+          <dd>Ja, men husk å oppgi medlemsnummer og/eller navnet på den eller de medlemskapet gjelder i ”Melding til mottaker”/Betalingsinformasjon på giroen. Ved bruk av KID-nummer blir betalingen behandlet elektronisk og lest inn i medlemssystemet første virkedag etter betaling. Betalinger uten KID må behandles manuelt og tar derfor lenger tid å registrere.</dd>
+
+          <dt>Hvorfor stemmer ikke beløpet på giroen med oppgitt kontingentpris?</dt>
+          <dd>Din lokale medlemsforening kan ha en annen medlemskontingent enn standardprisene.</dd>
+
+          <dt>Hva gjør jeg dersom medlemskapet er betalt to ganger?</dt>
+          <dd>Ta kontakt med medlemsservice på telefon 40001870 eller via e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> så vil vi  refundere beløpet. Husk å oppgi kontonummer.</dd>
+
+          <dt>Har DNT AvtaleGiro/eFaktura?</dt>
+          <dd>Ja. Bruker du nettbank kan du velge å motta <a href="http://www.avtalegiro.no/">AvtaleGiro</a> eller <a href="http://www.efaktura.no/">eFaktura</a> hos oss. Registreringen gjør du selv i nettbanken når du betaler kontingenten. Du vil da fra neste år få årskontingenten direkte i nettbanken din.</dd>
+
+          <dt>Hva gjør jeg med giroen når jeg får nytt medlemskort?</dt>
+          <dd>Har du AvtaleGiro eller eFaktura fungerer giroen kun som adressebærer for årboken.</dd>
+
+          <dt>Hvorfor er KID-nummeret og kontingenten X'et ut på giroen?</dt>
+          <dd>Når KID-nummeret og kontingenten er byttet ut med XXXXXXXX betyr det at du har inngått en AvtaleGiro eller eFaktura i nettbanken din. For å unngå dobbeltbetalinger har vi fjernet betalingsinformasjonen.</dd>
+
+          <dt>Hvordan avslutte AvtaleGiro eller eFaktura?</dt>
+          <dd>Du må selv avslutte (slette) avtalen i din nettbank.</dd>
+
+          <dt>Hva er avtalenummeret ved opprettelse av AvtaleGiro/eFaktura?</dt>
+          <dd>eFakturareferansen er en null (0) foran medlemsnummeret ditt.</dd>
+
+          <dt>Hvordan får jeg gyldig medlemskort når jeg har AvtaleGiro?</dt>
+          <dd>Med AvtaleGiro vil du i januar hvert år få tilsendt gyldig medlemskort.</dd>
+
+          <dt>Hvordan får jeg gyldig medlemskort når jeg har eFaktura?</dt>
+          <dd>Med eFaktura ber du om kvitteringsoblat fra banken din når du godkjenner dette i din nettbank. Kvitteringen påføres kortet som fulgte med adressebæreren til årboken.</dd>
+
+        </dl>
+
+        <h3>Hytter</h3>
+
+        <dl>
+
+          <dt>Hvor får jeg tak i nøkkel til hyttene?</dt>
+          <dd>Nøkkel til våre selvbetjente og ubetjente hytter deponeres i <a href="/nettbutikk/">vår nettbutikk</a>, eller hos en av DNTs turinformasjoner. Ut over det kontakter du din lokalforening. Du må være medlem i DNT for å få nøkkelen.</dd>
+
+          <dt>Kan jeg betale med kredittkort på hyttene?</dt>
+          <dd>De fleste betjente hyttene har betalingsterminal for betaling med kredittkort. På de selvbetjente og ubetjente hyttene benyttes som oftest betalingsfullmakt. Enkelte tilbyr også giro eller tilsendt faktura. Kontant betaling tilbys sjeldent.</dd>
+
+        </dl>
+
+      </div>
+    </div>
+
+    <div class="span4">
+      <div class="well">
+        <h3>Kontakt oss</h3>
+
+        <p>
+          Telefon: 40001870<br>
+          <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>
+          Åpent alle hverdager:<br>
+          kl. 09.00 - 16.00<br>
+          Tirsdager kl. 10.00 - 16.00
+        </p>
+        <p>
+          Ta gjerne kontakt med oss via <a href="http://www.facebook.com/turistforeningen">Facebook</a> eller <a href="https://twitter.com/turistforening">Twitter</a>.
+        </p>
+      </div>
+
+      {% include 'main/membership/memberid_sms/receipt.html' %}
+
+      <div class="well">
+        <h3>Medlemsfordeler og priser</h3>
+        <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
+        <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align">OK</button>
+        <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        <br>
+        <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% include 'main/membership/zipcode_search_modal.html' %}

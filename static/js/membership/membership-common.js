@@ -4,8 +4,8 @@ $(document).ready(function() {
 
     var zipcode_button = $("button.zipcode-search");
 
-    $("div.benefits dl dd, div#faq dl dd").hide();
-    $("div.benefits dl dt, div#faq dl dt").click(function() {
+    $("div.benefits dl dd, div.faq dl dd").hide();
+    $("div.benefits dl dt, div.faq dl dt").click(function() {
         $(this).next().slideToggle(400);
     });
 
