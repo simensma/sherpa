@@ -5,11 +5,11 @@ from django.conf import settings
 import base64
 
 from exceptions import BadRequest
+from urls import supported_versions
 import error_codes
 
 vendor_media_type = 'vnd.turistforeningen'
 supported_formats = ['json']
-supported_versions = ['v0']
 
 def get_member_data(profile):
     if not profile.is_member():
@@ -34,7 +34,6 @@ def get_member_data(profile):
             'er_medlem': True,
             'medlemsnummer': profile.memberid,
             'aktivt_medlemskap': profile.get_actor().has_paid(),
-            'etternavn': profile.get_last_name(),
             'fornavn': profile.get_first_name(),
             'etternavn': profile.get_last_name(),
             'født': profile.get_actor().birth_date.strftime("%Y-%m-%d"),
