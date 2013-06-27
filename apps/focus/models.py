@@ -271,6 +271,10 @@ class Actor(models.Model):
         if self.is_household_member():
             return self.get_parent().is_eligible_for_publications()
 
+        # This membership type is supposed to be deprecated, but error logs show it's still in use
+        if self.has_membership_type("household_without_main"):
+            return False
+
         # Young main members (school/child) won't recieve publications
         if self.has_membership_type("school") or self.has_membership_type("child"):
             return False
@@ -281,6 +285,10 @@ class Actor(models.Model):
     def can_reserve_against_publications(self):
         # Household members don't have the service; their main member does
         if self.is_household_member():
+            return False
+
+        # This membership type is supposed to be deprecated, but error logs show it's still in use
+        if self.has_membership_type("household_without_main"):
             return False
 
         # Not sure why lifelong members can't reserve, but memberservice said that they shouldn't
