@@ -4,7 +4,6 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib import messages
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
