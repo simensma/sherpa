@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from util import requested_representation_from_header, requested_representation_from_url
 from util import authenticate, invalid_authentication_exception, invalid_version_response
+from util import vendor_media_type
 from exceptions import BadRequest
 import api
 
@@ -32,5 +33,8 @@ def url_versioning(request, resource, version):
 
 def call_api(request, resource, version, format):
     if resource == 'members':
-        return api.members(request, version, format)
-    raise Exception("Invalid URL resource specified: %s" % resource)
+        response = api.members(request, version, format)
+
+    # We'll just let an unhandled KeyError be raised here if we typoed resource or something
+    response['Content-Type'] = "%s.%s+%s; charset=utf-8" % (vendor_media_type, version, format)
+    return response
