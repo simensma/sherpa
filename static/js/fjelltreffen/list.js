@@ -18,9 +18,6 @@ $(document).ready(function() {
     var no_matches = wrapper.find("div.no-matches");
     var no_further_matches = wrapper.find("div.no-further-matches");
 
-    var first_time_fjelltreffen_visitor = $("div.modal.first-time-fjelltreffen-visitor");
-    first_time_fjelltreffen_visitor.modal();
-
     input_min_age.change(filterChanged);
     input_max_age.change(filterChanged);
     input_gender.change(filterChanged);

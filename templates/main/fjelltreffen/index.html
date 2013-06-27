@@ -69,33 +69,4 @@
 
 {% advertisement %}
 
-{# Temporary #}
-{% if first_visit %}
-  <div class="modal first-time-fjelltreffen-visitor hide">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">X</button>
-      <h3>Fjelltreffen har fått ny drakt!</h3>
-    </div>
-    <div class="modal-body">
-      <p>
-        Vi har flyttet Fjelltreffen fra våre gamle til våre nye nettsider. Tjenesten ser litt annerledes ut enn før, men du kan som vanlig søke i annonser eller legge inn din egen annonse.
-      </p>
-
-      <p>
-        <a href="https://www2.turistforeningen.no/fjelltreffen">De gamle Fjelltreffen-sidene</a> vil være tilgjengelige en liten stund fremover. Her kan du finne og svare på annonser som er lagt inn tidligere.
-      </p>
-
-      <p>
-        <strong>Har du annonse på de gamle sidene?</strong><br>
-        Hvis du har annonser på de gamle Fjelltreffen-sidene vil disse bli oppdatert og flyttet over til nye Fjelltreffen når du logger deg på <a href="{% url 'user.views.home' %}">Min side</a>.
-      </p>
-    </div>
-    <div class="modal-footer">
-      <p>
-        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-      </p>
-    </div>
-  </div>
-{% endif %}
-
 {% endblock %}
