@@ -123,6 +123,36 @@ def get_static_promo_context(path):
             'name': '#vennetur',
             'start_date': date(year=2013, month=7, day=4),
             'end_date': date(year=2013, month=7, day=4),
+        },
+        {
+            'id': '10-turer-pa-topp',
+            'name': 'Klassikere',
+            'start_date': date(year=2013, month=7, day=5),
+            'end_date': date(year=2013, month=7, day=14),
+        },
+        {
+            'id': 'bli-medlem',
+            'name': 'Medlemskap',
+            'start_date': date(year=2013, month=7, day=15),
+            'end_date': date(year=2013, month=7, day=21),
+        },
+        {
+            'id': 'hyttetur',
+            'name': 'Hyttetur',
+            'start_date': date(year=2013, month=7, day=22),
+            'end_date': date(year=2013, month=7, day=28),
+        },
+        {
+            'id': '10-turer-pa-topp',
+            'name': 'Klassikere',
+            'start_date': date(year=2013, month=7, day=29),
+            'end_date': date(year=2013, month=8, day=11),
+        },
+        {
+            'id': 'kom-deg-ut',
+            'name': 'Kom deg ut',
+            'start_date': date(year=2013, month=8, day=12),
+            'end_date': date(year=2013, month=9, day=1),
         }
     ]
 
