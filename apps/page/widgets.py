@@ -120,6 +120,7 @@ def get_static_promo_context(path):
     ROTATIONS = [
         {
             'id': 'final-vennetur',
+            'name': '#vennetur',
             'start_date': date(year=2013, month=7, day=4),
             'end_date': date(year=2013, month=7, day=4),
         }
@@ -138,7 +139,7 @@ def get_static_promo_context(path):
 
     context = {}
     promos = [
-        {'name': '#vennetur', 'url': '/', 'template': 'main', 'type': 'cover', 'rotation': rotation},
+        {'name': rotation['name'], 'url': '/', 'template': 'main', 'type': 'cover', 'rotation': rotation},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
