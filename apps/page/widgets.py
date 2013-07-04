@@ -117,93 +117,28 @@ def widget_admin_context():
 # Used temporary for static promo content
 def get_static_promo_context(path):
 
-    ROTATION_TEXTS = [
+    ROTATIONS = [
         {
-            'title': 'Vil du på #vennetur til Vinjerock?',
-            'paragraph': 'Vinn billetter idag på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Student BaseCamp!',
-            'paragraph': 'Finn ut hvordan på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur på seilbåt fra Bergen til Oslo!',
-            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Snøhetta',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Camp Fjellsport Tungestølen',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på en #vennetur til Romsdalseggen?',
-            'paragraph': 'Finn ut hvordan på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn et brekurs på Folgefonna. #vennetur',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn kajakkurs med overnatting. #vennetur',
-            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn et gavekort på hytteovernatting. #vennetur',
-            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn #vennetur for ferskinger over Hardangervidda!',
-            'paragraph': 'Bli med i konkurransen på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på 4-dagers #vennetur over Hardangervidda?',
-            'paragraph': 'Sjekk ut <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
-            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn #vennetur til Vinjerock og GoPro-kamera!',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vil du på #vennetur til Camp Fjellsport Tungestølen?',
-            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en 4-netters #vennetur på valgfri hytte',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på en #vennetur til Fjellitteraturfestivalen på Finse?',
-            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på en #vennetur over Besseggen med overnatting?',
-            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vil du på #vennetur til Vinjerock?',
-            'paragraph': 'Finn ut mer på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en 4-netters #vennetur på valgfri hytte',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
-            'paragraph': 'Les mer på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Camp Fjellsport Tungestølen',
-            'paragraph': 'Sjekk hvordan på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på en 4-dagers #vennetur i Jotunheimen?',
-            'paragraph': 'Vinn på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur med kajakk',
-            'paragraph': 'Bli med på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Vinn en #vennetur til Fjellfilmfestivalen',
-            'paragraph': 'Delta på <span class="fake-link">vennetur.no</span>'
-        }, {
-            'title': 'Lyst på en #vennetur over Besseggen med overnatting?',
-            'paragraph': 'Sjekk <span class="fake-link">vennetur.no</span>'
+            'id': 'final-vennetur',
+            'start_date': date(year=2013, month=7, day=4),
+            'end_date': date(year=2013, month=7, day=4),
         }
     ]
 
-    sequence_start_date = date(year=2013, month=6, day=10)
-    main_sequence = (date.today() - sequence_start_date).days
-    # After the period, use the last defined sequence
-    if main_sequence >= len(ROTATION_TEXTS):
-        main_sequence = len(ROTATION_TEXTS) - 1
+    today = date.today()
+    rotation_hits = [r for r in ROTATIONS if r['start_date'] <= today and r['end_date'] >= today]
+    if len(rotation_hits) == 0:
+        # No direct hits, pick the latest one from the past
+        rotations_from_the_past = [r for r in ROTATIONS if r['end_date'] < today]
+        rotation = max(rotations_from_the_past, key=lambda r: r['end_date'])
+    elif len(rotation_hits) == 1:
+        rotation = rotation_hits[0]
+    else:
+        raise Exception("There shouldn't be more than one rotation hits for any day, check the dates in your ROTATIONS list.")
+
     context = {}
     promos = [
-        {'name': '#vennetur', 'url': '/', 'template': 'main', 'type': 'cover', 'sequence': main_sequence},
+        {'name': '#vennetur', 'url': '/', 'template': 'main', 'type': 'cover', 'rotation': rotation},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
@@ -222,9 +157,12 @@ def get_static_promo_context(path):
             context['promo'] = {
                 'template': 'main/widgets/promo/static/%s.html' % promo['template'],
                 'type': promo.get('type'),
-                'sequence': promo.get('sequence'),
-                'text': ROTATION_TEXTS[main_sequence]
             }
+            if 'rotation' in promo:
+                context['promo'].update({
+                    'rotation': promo['rotation'],
+                    'rotation_template': 'main/widgets/promo/static/main-rotation/%s.html' % promo['rotation']['id'],
+                })
 
     context['promos'] = promos
 
