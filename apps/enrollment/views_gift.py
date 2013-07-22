@@ -132,6 +132,8 @@ def send(request):
 def receipt(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.views_gift.index')
+    if not 'giver' in request.session['gift_membership']:
+        return redirect('enrollment.views_gift.form')
     context = {
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers'],
