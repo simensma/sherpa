@@ -89,7 +89,7 @@ def parse_widget(request, widget):
 
     data.update({
         'json': json.dumps(widget),
-        'template': 'main/widgets/%s/display.html' % widget['widget'],
+        'template': 'common/widgets/%s/display.html' % widget['widget'],
         'widget': widget['widget']})
     return data
 
@@ -186,13 +186,13 @@ def get_static_promo_context(path):
     for promo in promos:
         if path == promo['url'] and promo['type'] != 'direct':
             context['promo'] = {
-                'template': 'main/widgets/promo/static/%s.html' % promo['template'],
+                'template': 'common/widgets/promo/static/%s.html' % promo['template'],
                 'type': promo.get('type'),
             }
             if 'rotation' in promo:
                 context['promo'].update({
                     'rotation': promo['rotation'],
-                    'rotation_template': 'main/widgets/promo/static/main-rotation/%s.html' % promo['rotation']['id'],
+                    'rotation_template': 'common/widgets/promo/static/main-rotation/%s.html' % promo['rotation']['id'],
                 })
 
     context['promos'] = promos
