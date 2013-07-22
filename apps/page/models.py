@@ -31,8 +31,8 @@ def delete_content(sender, **kwargs):
         menu.save();
 
 class Page(models.Model):
-    title = models.CharField(max_length=200)
-    slug = models.CharField(max_length=50)
+    title = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey('user.Profile', related_name='pages_created')
@@ -55,7 +55,7 @@ class Variant(models.Model):
     page = models.ForeignKey('page.Page', null=True)
     article = models.ForeignKey('articles.Article', null=True)
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=255)
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
