@@ -167,8 +167,8 @@
           <div class="control-group zipcode" for="zipcode">
             <label class="control-label">Postnummer</label>
             <div class="controls">
-              <input type="text" class="input-small" name="zipcode" id="zipcode" value="{{ user.get_profile.get_actor.address.zipcode }}" maxlength="4">
-              <input type="text" class="input-medium" name="area" value="{{ user.get_profile.get_actor.address.area }}" disabled>
+              <input type="text" class="input-small" name="zipcode" id="zipcode" value="{{ user.get_profile.get_actor.get_clean_address.zipcode.zipcode }}" maxlength="4">
+              <input type="text" class="input-medium" name="area" value="{{ user.get_profile.get_actor.get_clean_address.zipcode.area }}" disabled>
               <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>

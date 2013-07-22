@@ -290,7 +290,7 @@ def verification(request):
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
         request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
         if actor.get_clean_address().country.code == 'NO':
-            request.session['enrollment']['location']['address1'] = actor.address.a1
+            request.session['enrollment']['location']['address1'] = actor.get_clean_address().field1
         elif actor.get_clean_address().country.code == 'DK' or actor.get_clean_address().country.code == 'SE':
             # Don't change the user-provided address.
             # The user might potentially provide a different address than the existing
@@ -302,9 +302,9 @@ def verification(request):
         else:
             # Uppercase the country code as Focus doesn't use consistent casing
             request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
-            request.session['enrollment']['location']['address1'] = actor.address.a1
-            request.session['enrollment']['location']['address2'] = actor.address.a2
-            request.session['enrollment']['location']['address3'] = actor.address.a3
+            request.session['enrollment']['location']['address1'] = actor.get_clean_address().field1
+            request.session['enrollment']['location']['address2'] = actor.get_clean_address().field2
+            request.session['enrollment']['location']['address3'] = actor.get_clean_address().field3
 
     # Get the area name for this zipcode
     if request.session['enrollment']['location']['country'] == 'NO':
@@ -957,7 +957,7 @@ def validate_existing(id, zipcode, country):
     if actor.get_clean_address().country.code != country:
         return False
 
-    if country == 'NO' and actor.address.zipcode != zipcode:
+    if country == 'NO' and actor.get_clean_address().zipcode.zipcode != zipcode:
         return False
 
     return True
