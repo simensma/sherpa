@@ -312,7 +312,8 @@ def publications(request):
     ).filter(access='all').order_by('title')
     context = {
         'publications_user': publications_user,
-        'publications_other': publications_other}
+        'publications_other': publications_other
+    }
     return render(request, 'common/user/account/publications.html', context)
 
 @user_requires_login()
@@ -346,7 +347,8 @@ def norway_bus_tickets(request):
     context = {
         'now': now,
         'new_ticket': new_ticket,
-        'old_ticket': old_ticket}
+        'old_ticket': old_ticket
+    }
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
 @user_requires_login()

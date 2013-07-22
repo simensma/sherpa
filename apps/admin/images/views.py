@@ -43,7 +43,8 @@ def user_images(request, profile):
         'origin': request.get_full_path(),
         'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
         'current_navigation': current_navigation,
-        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH
+    }
     return render(request, 'common/admin/images/user_images.html', context)
 
 def list_albums(request, album):
@@ -65,7 +66,8 @@ def list_albums(request, album):
         'origin': request.get_full_path(),
         'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
         'current_navigation': 'albums',
-        'image_search_length': settings.IMAGE_SEARCH_LENGTH}
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH
+    }
     return render(request, 'common/admin/images/list_albums.html', context)
 
 def image_details(request, image):
@@ -86,7 +88,8 @@ def image_details(request, image):
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
-        'current_navigation': 'albums'}
+        'current_navigation': 'albums'
+    }
     return render(request, 'common/admin/images/image_details.html', context)
 
 def move_items(request):
@@ -156,7 +159,8 @@ def update_images(request):
         context = {
             'aws_bucket': settings.AWS_BUCKET,
             'ids': json.dumps(ids),
-            'origin': request.GET.get('origin', '')}
+            'origin': request.GET.get('origin', '')
+        }
         if len(ids) == 1:
             context.update({'image': Image.objects.get(id=ids[0])})
             return render(request, 'common/admin/images/modify_single.html', context)
@@ -312,7 +316,8 @@ def album_search_json(request):
 def search(request):
     context = {
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name())}
+        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name())
+    }
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({
             'too_short_query': True,

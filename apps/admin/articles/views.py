@@ -96,7 +96,8 @@ def edit_version(request, version):
         'version': version,
         'profiles': profiles,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
-        'widget_data': widget_admin_context()}
+        'widget_data': widget_admin_context()
+    }
     return render(request, 'common/admin/articles/edit_version.html', context)
 
 def preview(request, version):

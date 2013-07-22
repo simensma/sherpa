@@ -17,7 +17,8 @@ from focus.models import Actor
 def index(request):
     context = {
         'password_length': settings.USER_PASSWORD_LENGTH,
-        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH}
+        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
+    }
     return render(request, 'common/admin/users/index.html', context)
 
 def show(request, other_user):
@@ -41,7 +42,8 @@ def show(request, other_user):
         'other_user': other_user,
         'other_user_perms': PermWrapper(other_user),
         'revokable_associations': Association.sort(revokable_associations),
-        'assignable_associations': Association.sort(assignable_associations)}
+        'assignable_associations': Association.sort(assignable_associations)
+    }
     return render(request, 'common/admin/users/show.html', context)
 
 def search(request):

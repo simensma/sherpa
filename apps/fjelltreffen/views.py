@@ -39,7 +39,8 @@ def index(request):
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'age_limits': settings.FJELLTREFFEN_AGE_LIMITS,
-        'filter': request.session.get('fjelltreffen.filter')}
+        'filter': request.session.get('fjelltreffen.filter')
+    }
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request):
@@ -54,7 +55,8 @@ def load(request):
         'maxage': filter['maxage'],
         'gender': filter['gender'], # Empty gender means both genders
         'county': filter['county'],
-        'text': filter['text']}
+        'text': filter['text']
+    }
 
     annonser, start_index, end = Annonse.get_by_filter(request.session['fjelltreffen.filter'], int(start_index))
 
@@ -129,7 +131,8 @@ def show_reply_sent(request, id):
     annonse = Annonse.objects.get(id=id, hidden=False)
     context = {
         'annonse': annonse,
-        'reply': request.session['fjelltreffen.reply']}
+        'reply': request.session['fjelltreffen.reply']
+    }
     del request.session['fjelltreffen.reply']
     return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
 
@@ -165,7 +168,8 @@ def show_report_sent(request, id):
     annonse = Annonse.objects.get(id=id, hidden=False)
     context = {
         'annonse': annonse,
-        'report': request.session['fjelltreffen.report']}
+        'report': request.session['fjelltreffen.report']
+    }
     del request.session['fjelltreffen.report']
     return render(request, 'main/fjelltreffen/show_report_sent.html', context)
 
@@ -188,7 +192,8 @@ def new(request):
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age()),
-        'other_active_annonse_exists': other_active_annonse_exists}
+        'other_active_annonse_exists': other_active_annonse_exists
+    }
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
@@ -209,7 +214,8 @@ def edit(request, id):
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
         'obscured_age': Annonse.obscure_age(request.user.get_profile().get_actor().get_age()),
-        'other_active_annonse_exists': other_active_annonse_exists}
+        'other_active_annonse_exists': other_active_annonse_exists
+    }
     return render(request, 'main/fjelltreffen/edit.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
@@ -375,7 +381,8 @@ def mine(request):
 
     context = {
         'annonser': annonser,
-        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS}
+        'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS
+    }
     return render(request, 'main/fjelltreffen/mine.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
@@ -430,5 +437,6 @@ def delete_image(request, id):
 def too_young(request):
     context = {
         'age_limit': settings.FJELLTREFFEN_AGE_LIMIT,
-        'remaining_years': settings.FJELLTREFFEN_AGE_LIMIT - request.user.get_profile().get_actor().get_age()}
+        'remaining_years': settings.FJELLTREFFEN_AGE_LIMIT - request.user.get_profile().get_actor().get_age()
+    }
     return render(request, 'main/fjelltreffen/too_young.html', context)

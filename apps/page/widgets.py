@@ -38,7 +38,8 @@ def parse_widget(request, widget):
             'title': widget['title'],
             'display_images': widget['display_images'],
             'tag_link': widget['tag_link'],
-            'versions': versions}
+            'versions': versions
+        }
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
         data = cache.get('widgets.blog.category.' + widget['category'])

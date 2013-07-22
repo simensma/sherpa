@@ -147,7 +147,8 @@ def search(request):
         'article_versions': article_versions,
         'pages': pages,
         'old_articles': old_articles,
-        'article_count': len(article_versions) + len(old_articles)}
+        'article_count': len(article_versions) + len(old_articles)
+    }
     return render(request, 'common/page/search.html', context)
 
 def ad(request, ad):

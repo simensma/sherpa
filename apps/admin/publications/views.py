@@ -18,7 +18,8 @@ def index(request):
     publications = Publication.objects.filter(association__in=request.user.get_profile().all_associations()).order_by('title')
     context = {
         'publications': publications,
-        'association_main_mappings': json.dumps(get_association_main_mappings())}
+        'association_main_mappings': json.dumps(get_association_main_mappings())
+    }
     return render(request, 'common/admin/publications/index.html', context)
 
 def edit_publication(request, publication):
@@ -34,7 +35,8 @@ def edit_publication(request, publication):
         context = {
             'publication': publication,
             'association_main_mappings': json.dumps(get_association_main_mappings()),
-            'now': datetime.now()}
+            'now': datetime.now()
+        }
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':
         publication.title = request.POST['title']
@@ -62,7 +64,8 @@ def edit_release(request, publication, release):
         context = {
             'publication': publication,
             'release': release,
-            'now': datetime.now()}
+            'now': datetime.now()
+        }
         return render(request, 'common/admin/publications/edit_release.html', context)
     elif request.method == 'POST':
         if release is None:

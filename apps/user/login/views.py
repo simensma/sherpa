@@ -127,7 +127,8 @@ def choose_authenticated_user(request):
     profiles = Profile.objects.filter(id__in=request.session['authenticated_profiles'])
     context = {
         'profiles': sorted(profiles, key=lambda p: p.get_first_name()),
-        'next': request.GET.get('next')}
+        'next': request.GET.get('next')
+    }
     return render(request, 'common/user/login/choose_authenticated_user.html', context)
 
 def login_chosen_user(request):
@@ -259,7 +260,8 @@ def register_nonmember(request):
         if errors:
             request.session['user.registration_nonmember_attempt'] = {
                 'name': request.POST['name'],
-                'email': request.POST['email']}
+                'email': request.POST['email']
+            }
             return redirect('user.login.views.register_nonmember')
 
         user = User.objects.create_user(
@@ -382,7 +384,8 @@ def restore_password(request, key):
         context = {
             'ready': True,
             'key': key,
-            'password_length': settings.USER_PASSWORD_LENGTH}
+            'password_length': settings.USER_PASSWORD_LENGTH
+        }
         return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
         if request.POST['password'] != request.POST['password-repeat'] or len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
@@ -390,7 +393,8 @@ def restore_password(request, key):
                 'ready': True,
                 'key': key,
                 'password_length': settings.USER_PASSWORD_LENGTH,
-                'unacceptable_password': True}
+                'unacceptable_password': True
+            }
             return render(request, 'common/user/login/restore-password.html', context)
 
         # Everything is in order. Reset the password.

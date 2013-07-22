@@ -30,7 +30,8 @@ def index(request):
 
     context = {
         'article_versions': article_versions,
-        'page_versions': page_versions}
+        'page_versions': page_versions
+    }
     return render(request, 'common/admin/cache/index.html', context)
 
 def delete(request):

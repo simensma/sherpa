@@ -82,7 +82,8 @@ def validate(request):
     request.session['gift_membership'] = {
         'giver': giver,
         'receivers': receivers,
-        'any_normal_memberships': any(r.type['code'] == 'normal' for r in receivers)}
+        'any_normal_memberships': any(r.type['code'] == 'normal' for r in receivers)
+    }
 
     form_valid = giver.validate()
     for receiver in receivers:

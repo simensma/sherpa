@@ -15,5 +15,6 @@ def list(request):
         'sms_requests': sms_requests,
         'sms_price': sms_price,
         'total_cost': total_cost,
-        'total_sent': total_sent}
+        'total_sent': total_sent
+    }
     return render(request, 'common/admin/memberid_sms/list.html', context)
