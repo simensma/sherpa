@@ -494,7 +494,17 @@ class ActorAddressClean:
 
         if self.country.code == 'NO':
             # Norwegians - set the actual zipcode object
-            self.zipcode = Zipcode.objects.get(zipcode=address.zipcode)
+            try:
+                self.zipcode = Zipcode.objects.get(zipcode=address.zipcode)
+            except Zipcode.DoesNotExist:
+                # Some addresses have NULL in the zipcode field for some reason.
+                # Use a dict which mimics core.models.Zipcode with empty fields.
+                self.zipcode = {
+                    'zipcode': '',
+                    'area': '',
+                    'city_code': '',
+                    'city': '',
+                }
         else:
             # Foreigners - ignore zipcode/area
             # Remove country code prefixes
