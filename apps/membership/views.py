@@ -124,7 +124,7 @@ def memberid_sms(request):
         sms_request.profile = request.user.get_profile()
 
     sms_request.count = memberid_sms_count(request.META['REMOTE_ADDR'])
-    if sms_request.count > 10:
+    if sms_request.count > 10 and request.META['REMOTE_ADDR'] not in settings.SMS_RESTRICTION_WHITELIST:
         sms_request.blocked = True
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
