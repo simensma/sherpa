@@ -28,7 +28,7 @@ $(document).ready(function() {
             error.hide();
             table.find("tr.result").remove();
             var query = search_input.val();
-            if(query.length < admin_user_search_char_length) {
+            if(query.length < Turistforeningen.admin_user_search_char_length) {
                 search_input.prop('disabled', false);
                 search_button.prop('disabled', false);
                 short_query.show();

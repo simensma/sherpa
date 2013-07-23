@@ -10,7 +10,7 @@ $(document).ready(function() {
             access.hide();
         } else {
             access.show();
-            var name = window.association_main_mappings[selected.val()];
+            var name = Turistforeningen.association_main_mappings[selected.val()];
             access_association_name.text(name);
         }
     });

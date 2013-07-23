@@ -20,8 +20,10 @@
 {% block js_globals %}
   {% if aktivitet.start_point %}
     <script>
-      window.start_point_lat = JSON.parse({{ aktivitet.get_start_point_lat_json }});
-      window.start_point_lng = JSON.parse({{ aktivitet.get_start_point_lng_json }});
+      window.Turistforeningen = {
+        start_point_lat: JSON.parse({{ aktivitet.get_start_point_lat_json }}),
+        start_point_lng: JSON.parse({{ aktivitet.get_start_point_lng_json }})
+      };
     </script>
   {% endif %}
 {% endblock %}

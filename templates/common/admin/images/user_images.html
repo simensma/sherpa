@@ -1,8 +1,10 @@
 {% extends 'common/admin/images/layout.html' %}
 {% block js_globals %}
   <script>
-    var origin = '{{ origin }}';
-    var image_search_length = '{{ image_search_length }}';
+    window.Turistforeningen = {
+      origin: '{{ origin }}',
+      image_search_length: {{ image_search_length }}
+    };
   </script>
 {% endblock %}
 {% block extra_js %}

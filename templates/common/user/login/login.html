@@ -4,7 +4,9 @@
 
 {% block js_globals %}
   <script>
-    window.user_password_length = {{ user_password_length }};
+    window.Turistforeningen = {
+      user_password_length: {{ user_password_length }}
+    };
   </script>
 {% endblock %}
 

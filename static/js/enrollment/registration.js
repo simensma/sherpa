@@ -37,14 +37,14 @@ $(document).ready(function() {
         method: 'phone',
         control_group: $("form#registration div.control-group.phone"),
         input: $("form#registration input[name='phone']"),
-        req: phone_required
+        req: Turistforeningen.phone_required
     });
 
     Validator.validate({
         method: 'email',
         control_group: $("form#registration div.control-group.email"),
         input: $("form#registration input[name='email']"),
-        req: email_required
+        req: Turistforeningen.email_required
     });
 
 

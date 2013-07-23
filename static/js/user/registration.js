@@ -17,7 +17,7 @@ $(document).ready(function() {
         control_group: registration_form.find("div.control-group.password, div.control-group.password-repeat"),
         pass1: registration_form.find("input[name='password']"),
         pass2: registration_form.find("input[name='password-repeat']"),
-        min_length: user_password_length,
+        min_length: Turistforeningen.user_password_length,
         hints: registration_form.find("div.control-group.password div.controls div.hints.validator")
     });
 

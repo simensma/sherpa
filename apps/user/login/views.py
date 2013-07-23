@@ -384,7 +384,7 @@ def restore_password(request, key):
         context = {
             'ready': True,
             'key': key,
-            'password_length': settings.USER_PASSWORD_LENGTH
+            'user_password_length': settings.USER_PASSWORD_LENGTH
         }
         return render(request, 'common/user/login/restore-password.html', context)
     elif request.method == 'POST':
@@ -392,7 +392,7 @@ def restore_password(request, key):
             context = {
                 'ready': True,
                 'key': key,
-                'password_length': settings.USER_PASSWORD_LENGTH,
+                'user_password_length': settings.USER_PASSWORD_LENGTH,
                 'unacceptable_password': True
             }
             return render(request, 'common/user/login/restore-password.html', context)

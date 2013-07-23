@@ -16,7 +16,6 @@ from focus.models import Actor
 
 def index(request):
     context = {
-        'password_length': settings.USER_PASSWORD_LENGTH,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
     return render(request, 'common/admin/users/index.html', context)

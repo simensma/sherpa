@@ -64,9 +64,7 @@
 
     function search() {
         var query = picker.find("input[name='search']").val();
-        // Setting a default hardcoded search length here, in case we forgot
-        // to provide it with js_globals - which we should rather do
-        if(query.length < (window.IMAGE_SEARCH_LENGTH || 3)) {
+        if(query.length < Turistforeningen.image_search_length) {
             picker.find("div.too-few-chars").show();
         } else {
             var url = picker.attr("data-search-url");

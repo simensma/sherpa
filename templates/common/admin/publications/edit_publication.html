@@ -4,7 +4,9 @@
 
 {% block js_globals %}
   <script>
-    window.association_main_mappings = JSON.parse("{{ association_main_mappings|escapejs }}");
+    window.Turistforeningen = {
+      association_main_mappings: JSON.parse("{{ association_main_mappings|escapejs }}")
+    };
   </script>
 {% endblock %}
 

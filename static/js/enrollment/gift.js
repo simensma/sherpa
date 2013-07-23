@@ -148,21 +148,21 @@ $(document).ready(function() {
         $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
     });
 
-    if(session_receivers.length === 0) {
+    if(Turistforeningen.session_receivers.length === 0) {
         addReceiver();
     } else {
-        for(var i=0; i<session_receivers.length; i++) {
-            var div = addReceiver(session_receivers[i].dob);
+        for(var i=0; i<Turistforeningen.session_receivers.length; i++) {
+            var div = addReceiver(Turistforeningen.session_receivers[i].dob);
 
             // Pre-insert form data
-            div.find("select[name='receiver_type'] option[value='"+ session_receivers[i].type_index + "']").prop('selected', true);
+            div.find("select[name='receiver_type'] option[value='"+ Turistforeningen.session_receivers[i].type_index + "']").prop('selected', true);
             div.find("select[name='receiver_type']").trigger("liszt:updated"); // Update chosen
-            div.find("input[name='receiver_name']").val(session_receivers[i].name);
-            div.find("input[name='receiver_address']").val(session_receivers[i].address);
-            div.find("input[name='receiver_zipcode']").val(session_receivers[i].zipcode);
-            div.find("input[name='receiver_area']").val(session_receivers[i].area);
-            div.find("input[name='receiver_phone']").val(session_receivers[i].phone);
-            div.find("input[name='receiver_email']").val(session_receivers[i].email);
+            div.find("input[name='receiver_name']").val(Turistforeningen.session_receivers[i].name);
+            div.find("input[name='receiver_address']").val(Turistforeningen.session_receivers[i].address);
+            div.find("input[name='receiver_zipcode']").val(Turistforeningen.session_receivers[i].zipcode);
+            div.find("input[name='receiver_area']").val(Turistforeningen.session_receivers[i].area);
+            div.find("input[name='receiver_phone']").val(Turistforeningen.session_receivers[i].phone);
+            div.find("input[name='receiver_email']").val(Turistforeningen.session_receivers[i].email);
         }
     }
 

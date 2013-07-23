@@ -12,8 +12,8 @@ $(document).ready(function() {
     var marker;
 
     // From js_globals
-    if(window.start_point_lat !== undefined && window.start_point_lng !== undefined) {
-        marker = new L.Marker(new L.LatLng(window.start_point_lat, window.start_point_lng), {
+    if(Turistforeningen.start_point_lat !== undefined && Turistforeningen.start_point_lng !== undefined) {
+        marker = new L.Marker(new L.LatLng(Turistforeningen.start_point_lat, Turistforeningen.start_point_lng), {
             'title': 'Turen starter her'
         }).bindPopup(popup_content).addTo(map);
     }

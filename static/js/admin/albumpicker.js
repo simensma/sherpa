@@ -117,12 +117,8 @@ $(document).ready(function() {
             children.empty();
             ajaxloader.show();
             var query = picker.find("input[name='search']").val();
-            if(typeof image_search_length === 'undefined') {
-                // A default in case it's missing, but please use the settings variable via js_globals
-                image_search_length = 3;
-            }
-            if(query.length < image_search_length) {
-                children.append('<p>Vennligst bruk minst ' + image_search_length + ' søketegn, ellers vil du få alt for mange treff.</p>');
+            if(query.length < Turistforeningen.image_search_length) {
+                children.append('<p>Vennligst bruk minst ' + Turistforeningen.image_search_length + ' søketegn, ellers vil du få alt for mange treff.</p>');
                 ajaxloader.hide();
             }
 

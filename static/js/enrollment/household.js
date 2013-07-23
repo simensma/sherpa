@@ -135,13 +135,13 @@ $(document).ready(function() {
         });
     });
 
-    if(existing) {
+    if(Turistforeningen.existing) {
         form.find("button.search").click();
     } else {
         $("div.existing-result").hide();
     }
 
-    if(window.trigger_form_validations) {
+    if(Turistforeningen.trigger_form_validations) {
         form.find("input").focusout();
         Validator.triggerZipcode(zipcode);
     }

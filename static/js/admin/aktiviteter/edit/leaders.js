@@ -40,7 +40,7 @@ $(document).ready(function() {
         table.find("tr.result").remove();
 
         var query = input.val();
-        if(query.length < admin_user_search_char_length) {
+        if(query.length < Turistforeningen.admin_user_search_char_length) {
             input.prop('disabled', false);
             button.prop('disabled', false);
             short_query.show();

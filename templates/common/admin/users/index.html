@@ -4,8 +4,9 @@
 
 {% block js_globals %}
   <script>
-    var password_length = {{ password_length }};
-    window.admin_user_search_char_length = {{ admin_user_search_char_length }};
+    window.Turistforeningen = {
+      admin_user_search_char_length: {{ admin_user_search_char_length }}
+    };
   </script>
 {% endblock %}
 

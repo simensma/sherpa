@@ -21,8 +21,8 @@ $(document).ready(function() {
                     return;
                 }
                 var agePrice = priceOf($(this).attr('data-age'));
-                if(agePrice > price_household) {
-                    totalPrice += price_household;
+                if(agePrice > Turistforeningen.price_household) {
+                    totalPrice += Turistforeningen.price_household;
                 } else {
                     totalPrice += agePrice;
                 }
@@ -111,9 +111,9 @@ function calculatePrices() {
         var price = priceOf(age);
         var type = typeOf(age);
         if(!$(this).hasClass('main') && $(this).siblings(".main").length > 0) {
-            if(price > price_household) {
-                price = price_household;
-                type = membership_type_names.household;
+            if(price > Turistforeningen.price_household) {
+                price = Turistforeningen.price_household;
+                type = Turistforeningen.membership_type_names.household;
             }
         }
         $(this).find("td.type").text(type);
@@ -124,17 +124,17 @@ function calculatePrices() {
 }
 
 function priceOf(age) {
-    if(age >= age_senior)       return price_senior;
-    else if(age >= age_main)    return price_main;
-    else if(age >= age_youth)   return price_youth;
-    else if(age >= age_school)  return price_school;
-    else                        return price_child;
+    if(age >= Turistforeningen.age_senior)       return Turistforeningen.price_senior;
+    else if(age >= Turistforeningen.age_main)    return Turistforeningen.price_main;
+    else if(age >= Turistforeningen.age_youth)   return Turistforeningen.price_youth;
+    else if(age >= Turistforeningen.age_school)  return Turistforeningen.price_school;
+    else                                         return Turistforeningen.price_child;
 }
 
 function typeOf(age) {
-    if(age >= age_senior)       return membership_type_names.senior;
-    else if(age >= age_main)    return membership_type_names.main;
-    else if(age >= age_youth)   return membership_type_names.youth;
-    else if(age >= age_school)  return membership_type_names.school;
-    else                        return membership_type_names.child;
+    if(age >= Turistforeningen.age_senior)       return Turistforeningen.membership_type_names.senior;
+    else if(age >= Turistforeningen.age_main)    return Turistforeningen.membership_type_names.main;
+    else if(age >= Turistforeningen.age_youth)   return Turistforeningen.membership_type_names.youth;
+    else if(age >= Turistforeningen.age_school)  return Turistforeningen.membership_type_names.school;
+    else                                         return Turistforeningen.membership_type_names.child;
 }

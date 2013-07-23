@@ -1,7 +1,9 @@
 {% extends 'common/admin/images/layout.html' %}
 {% block js_globals %}
   <script>
-    var origin = '{{ origin }}';
+    window.Turistforeningen = {
+      origin: '{{ origin }}'
+    };
   </script>
 {% endblock %}
 {% block extra_js %}

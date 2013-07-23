@@ -10,8 +10,10 @@
 
 {% block js_globals %}
   <script>
-    window.phone_required = {% if users|length == 0 %}true{% else %}false{% endif %};
-    window.email_required = {% if users|length == 0 %}true{% else %}false{% endif %};
+    window.Turistforeningen = {
+      phone_required: {% if users|length == 0 %}true{% else %}false{% endif %},
+      email_required: {% if users|length == 0 %}true{% else %}false{% endif %}
+    };
   </script>
 {% endblock %}
 

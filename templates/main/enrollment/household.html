@@ -5,15 +5,14 @@
 
 {% block js_globals %}
   <script>
-    var existing = {% if existing %}true{% else %}false{% endif %};
-    var invalid_existing = {% if invalid_existing %}true{% else %}false{% endif %};
+    window.Turistforeningen = {
+      existing: {% if existing %}true{% else %}false{% endif %}
+    };
+    {% if errors %}
+      Turistforeningen.trigger_form_validations = true;
+    {% endif %}
   </script>
 
-  {% if errors %}
-    <script>
-      window.trigger_form_validations = true;
-    </script>
-  {% endif %}
 {% endblock %}
 
 {% block enrollment %}
