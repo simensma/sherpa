@@ -10,8 +10,10 @@ class Article(models.Model):
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey('user.Profile', related_name='articles_created')
+    new_created_by = models.ForeignKey('user.User', related_name='new_articles_created', null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.Profile', related_name='articles_modified', null=True)
+    new_modified_by = models.ForeignKey('user.User', related_name='new_articles_modified', null=True)
     modified_date = models.DateTimeField(null=True)
 
     site = models.ForeignKey('core.Site')

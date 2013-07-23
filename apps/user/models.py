@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User as DjangoUser, Permission, AbstractBaseUser
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.context_processors import PermWrapper
@@ -9,8 +9,42 @@ from association.models import Association
 
 from itertools import groupby
 
+class User(AbstractBaseUser):
+    # The identifier will be the memberid for members, and email address for
+    # non-members.
+    identifier = models.CharField(max_length=255, unique=True, db_index=True)
+
+    # These three fields are only applicable for non-members; empty for members
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField()
+
+    # DNT-employees can use this to separate home/work email addresses
+    sherpa_email = models.EmailField()
+
+    # Memberid is the link to Actor (membersystem user). Null for non-members
+    memberid = models.IntegerField(null=True, unique=True)
+
+    # Some users haven't registered but we still have some data relating to them
+    # from various sources. They'll be created as inactive users, and registration
+    # will if possible use the inactive user and retain the related data.
+    is_active = models.BooleanField(default=True)
+
+    # Password resets
+    password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
+    password_restore_date = models.DateTimeField(null=True)
+
+    # Used in the admin-interface for association-permissions
+    associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
+    permissions = models.ManyToManyField('user.Permission', related_name='+')
+
+class Permission(models.Model):
+    # Django's Permission model is a bit more advanced than what we need,
+    # so we'll roll our own.
+    name = models.CharField(max_length=255)
+
 class Profile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(DjangoUser)
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
     password_restore_date = models.DateTimeField(null=True)
     associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
@@ -194,7 +228,7 @@ class Profile(models.Model):
         # Typically, the merge occurs when a non-member registers their membership with a
         # memberid which exists for an imported inactive user. This is not often, but it
         # *can* happen. See the Sherpa docs for more info.
-        # Whenever ForeignKeys to Profile are created, an entry needs to be created here
+        # Whenever ForeignKeys to User are created, an entry needs to be created here
         # which transfers it. This is easy to miss, so be sure to search through the codebase
         # for missed tables from time to time. Use the 'profilerelations' manage.py-command.
 
@@ -253,6 +287,7 @@ class AssociationRole(models.Model):
         ('admin', 'Administrator'),
         ('user', 'Vanlig bruker'),)
     profile = models.ForeignKey('user.Profile')
+    user = models.ForeignKey('user.User', null=True)
     association = models.ForeignKey('association.Association')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
 
@@ -263,6 +298,7 @@ class AssociationRole(models.Model):
 
 class NorwayBusTicket(models.Model):
     profile = models.OneToOneField(Profile, related_name='norway_bus_ticket')
+    user = models.OneToOneField(User, related_name='new_norway_bus_ticket', null=True)
     date_placed = models.DateTimeField(auto_now_add=True)
     date_trip = models.DateTimeField()
     distance = models.CharField(max_length=1024)
