@@ -8,7 +8,6 @@ from focus.models import Actor
 from association.models import Association
 
 from itertools import groupby
-from datetime import datetime
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
