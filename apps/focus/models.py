@@ -250,20 +250,6 @@ class Actor(models.Model):
             cache.set('actor.has_paid.%s' % self.memberid, has_paid, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return has_paid
 
-    # Get the local County object based on the Actor's zipcode
-    def get_county(self):
-        key = 'actor.%s.county' % self.memberid
-        county = cache.get(key)
-        if county is None:
-            code = FocusZipcode.objects.get(zipcode=self.address.zipcode).county_code
-            if code == '99':
-                # International addresses have county code 99 in Focus. Define this as None for now.
-                county = None
-            else:
-                county = County.objects.get(code=code)
-            cache.set(key, county, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return county
-
     # The members that can recieve publications to their household (but don't necessarliy have the actual
     # service themselves - e.g. household members are eligible but their main member has the service)
     def is_eligible_for_publications(self):
@@ -478,7 +464,8 @@ class ActorAddress(models.Model):
 
 # This is NOT a db table, but a cleaner address model, based on Focus' ActorAddress model.
 # It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
-# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode').
+# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode') and a
+# 'county' field ('core.models.County').
 # The class has utility methods for typical formatting of addresses (with newlines, and for
 # one line with commas).
 class ActorAddressClean:
@@ -500,6 +487,18 @@ class ActorAddressClean:
                 # Some addresses have NULL in the zipcode field for some reason.
                 # Use a zipcode object with empty fields.
                 self.zipcode = Zipcode()
+
+            # Set the actual County object based on the zipcode
+            if self.zipcode.zipcode != '':
+                county_code = FocusZipcode.objects.get(zipcode=self.zipcode.zipcode).county_code
+                if county_code == '99':
+                    # International addresses have county code 99 in Focus. Define the county as None for now.
+                    self.county = None
+                else:
+                    self.county = County.objects.get(code=county_code)
+            else:
+                self.county = None
+
         else:
             # Foreigners - ignore zipcode/area
             # Remove country code prefixes
