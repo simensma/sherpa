@@ -14,6 +14,8 @@ class Profile:
     pass
 
 class User(AbstractBaseUser):
+    USERNAME_FIELD = 'identifier'
+
     # The identifier will be the memberid for members, and email address for
     # non-members.
     identifier = models.CharField(max_length=255, unique=True, db_index=True)
