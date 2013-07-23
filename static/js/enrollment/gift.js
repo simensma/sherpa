@@ -82,7 +82,8 @@ $(document).ready(function() {
         );
 
         var dob = box.find("div.control-group.receiver_dob div.date");
-        dob.val(initial_date).datepicker({
+        dob.find("input[name='receiver_dob']").val(initial_date);
+        dob.datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
             startView: 'decade',
