@@ -23,7 +23,7 @@
       <table class="user-reservations sponsors" data-url="{% url 'user.views.receive_email_set' %}">
         <tr class="choice">
           <td>
-            <input type="radio" name="sponsors" value="allow"{% if user.get_profile.get_actor.receive_email %} checked{% endif %}>
+            <input type="radio" name="sponsors" value="allow"{% if user.get_actor.receive_email %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Ja, jeg ønsker å motta medlemsinformasjon fra DNT på e-post<br>
@@ -31,7 +31,7 @@
         </tr>
         <tr class="choice">
           <td>
-            <input type="radio" name="sponsors" value="reserve"{% if not user.get_profile.get_actor.receive_email %} checked{% endif %}>
+            <input type="radio" name="sponsors" value="reserve"{% if not user.get_actor.receive_email %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Nei, jeg ønsker ikke å motta medlemsinformasjon fra DNT på e-post, bortsett fra informasjon som er direkte knyttet til mitt medlemskap
@@ -67,7 +67,7 @@
     </div>
 
     <p>
-      Din lokale medlemsforening kan også sende ut egne nyhetsbrev, uavhengig av e-post fra DNT. For påmelding eller avmelding se nettsidene til <a href="{{ user.get_profile.get_actor.main_association_old.url }}">{{ user.get_profile.get_actor.main_association_old.name }}</a>.
+      Din lokale medlemsforening kan også sende ut egne nyhetsbrev, uavhengig av e-post fra DNT. For påmelding eller avmelding se nettsidene til <a href="{{ user.get_actor.main_association_old.url }}">{{ user.get_actor.main_association_old.name }}</a>.
     </p>
 
   </div>

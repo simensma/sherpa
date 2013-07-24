@@ -148,30 +148,30 @@
       Velg hvilken forening du vil se aktiviteter for:
       <select name="association_filter" data-chosen data-placeholder="Velg en forening...">
         <option value=""></option>
-        {% if user.get_profile.children_associations_sorted.central|length > 0 %}
+        {% if user.children_associations_sorted.central|length > 0 %}
           <optgroup label="Sentralt/nasjonalt">
-            {% for association in user.get_profile.children_associations_sorted.central %}
+            {% for association in user.children_associations_sorted.central %}
               <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if user.get_profile.children_associations_sorted.associations|length > 0 %}
+        {% if user.children_associations_sorted.associations|length > 0 %}
           <optgroup label="Medlemsforeninger">
-            {% for association in user.get_profile.children_associations_sorted.associations %}
+            {% for association in user.children_associations_sorted.associations %}
               <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if user.get_profile.children_associations_sorted.small_associations|length > 0 %}
+        {% if user.children_associations_sorted.small_associations|length > 0 %}
           <optgroup label="Lokale turlag">
-            {% for association in user.get_profile.children_associations_sorted.small_associations %}
+            {% for association in user.children_associations_sorted.small_associations %}
               <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if user.get_profile.children_associations_sorted.hike_groups|length > 0 %}
+        {% if user.children_associations_sorted.hike_groups|length > 0 %}
           <optgroup label="Turgrupper">
-            {% for association in user.get_profile.children_associations_sorted.hike_groups %}
+            {% for association in user.children_associations_sorted.hike_groups %}
               <option value="{{ association.id }}" data-filter-url="{% url 'admin.aktiviteter.views.index' %}?forening={{ association.id }}"{% if association_filter == association %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>

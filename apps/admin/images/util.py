@@ -43,7 +43,7 @@ def content_dialog(request):
     return HttpResponse(json.dumps({'html': render_to_string('common/admin/images/util/image-archive-picker-content.html', context)}))
 
 def mine_dialog(request):
-    images = Image.objects.filter(uploader=request.user.get_profile())
+    images = Image.objects.filter(uploader=request.user)
 
     context = RequestContext(request, {
         'images': images,
@@ -112,7 +112,7 @@ def image_upload_dialog(request):
             credits=request.POST['credits'],
             licence=request.POST['licence'],
             exif=exif_json,
-            uploader=request.user.get_profile(),
+            uploader=request.user,
             width=pil_image.size[0],
             height=pil_image.size[1])
         image.save()

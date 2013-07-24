@@ -19,7 +19,7 @@
     {% for message in messages %}
       {% if message.message == 'password_reset_success' %}
         <div class="alert alert-success">
-          Velkommen tilbake {{ user.get_profile.get_full_name }}, passordet ditt har blitt endret og du er nå innlogget.
+          Velkommen tilbake {{ user.get_full_name }}, passordet ditt har blitt endret og du er nå innlogget.
         </div>
       {% elif message.message == 'password_update_success' %}
         <div class="alert alert-success">
@@ -34,20 +34,20 @@
       <table>
         <tr>
           <th>Deg:</th>
-          <td>{{ user.get_profile.get_full_name }}</td>
+          <td>{{ user.get_full_name }}</td>
         </tr>
-        {% if user.get_profile.is_member %}
+        {% if user.is_member %}
           <tr>
             <th>Medlemsnummer:</th>
             <td>
-              {{ user.get_profile.memberid }}
+              {{ user.memberid }}
               {% include 'main/membership/memberid_sms/userpage.html' %}
             </td>
           </tr>
           <tr>
             <th>Ditt medlemskap:</th>
             <td>
-              {% if user.get_profile.get_actor.has_paid %}
+              {% if user.get_actor.has_paid %}
                 Betalt for
                 {% if next_year %}
                   {{ year|add:"1" }}
@@ -67,9 +67,9 @@
           <tr>
             <th>Din medlemsforening:</th>
             <td>
-              {% if user.get_profile.get_actor.main_association.site %}<a href="http://{{ user.get_profile.get_actor.main_association.site.domain }}/">{% endif %}
-                {{ user.get_profile.get_actor.main_association.name }}
-              {% if user.get_profile.get_actor.main_association.site %}</a>{% endif %}
+              {% if user.get_actor.main_association.site %}<a href="http://{{ user.get_actor.main_association.site.domain }}/">{% endif %}
+                {{ user.get_actor.main_association.name }}
+              {% if user.get_actor.main_association.site %}</a>{% endif %}
             </td>
           </tr>
         {% else %}
@@ -119,7 +119,7 @@
     {% endcolumn %}
 
     {% if False %}
-      {% if user.get_profile.is_member %}
+      {% if user.is_member %}
         {% column %}
           <a href="{% url 'user.views.aktiviteter' %}" class="element">
             <p class="title">Turer og aktiviteter</p>
@@ -131,7 +131,7 @@
       {% endif %}
     {% endif %}
 
-    {% if user.get_profile.leader_aktivitet_dates.count != 0 %}
+    {% if user.leader_aktivitet_dates.count != 0 %}
       {% column %}
         <a href="{% url 'user.views.leader_aktivitet_dates' %}" class="element">
           <p class="title">Dine arrangerte turer</p>
@@ -142,7 +142,7 @@
       {% endcolumn %}
     {% endif %}
 
-    {% if user.get_profile.is_member %}
+    {% if user.is_member %}
       {% column %}
         <a href="{% url 'user.views.publications' %}" class="element">
           <p class="title">Publikasjoner</p>
@@ -153,9 +153,9 @@
       {% endcolumn %}
     {% endif %}
 
-    {% if user.get_profile.is_member %}
+    {% if user.is_member %}
       {% column %}
-        <a href="{% url 'membership.views.benefits' user.get_profile.get_actor.main_association.id %}" class="element">
+        <a href="{% url 'membership.views.benefits' user.get_actor.main_association.id %}" class="element">
           <p class="title">Dine medlemsfordeler</p>
           <p>
             Se oversikt over alle fordelene du får gjennom ditt DNT-medlemskap.
@@ -164,7 +164,7 @@
       {% endcolumn %}
     {% endif %}
 
-    {% if user.get_profile.is_member %}
+    {% if user.is_member %}
       {% column %}
         <a href="{% url 'user.views.partneroffers' %}" class="element">
           <p class="title">Motta medlemsfordeler</p>
@@ -175,7 +175,7 @@
       {% endcolumn %}
     {% endif %}
 
-    {% if user.get_profile.is_member and user.get_profile.show_norway_bus_tickets_menu_item %}
+    {% if user.is_member and user.show_norway_bus_tickets_menu_item %}
       {% column %}
         <a href="{% url 'user.views.norway_bus_tickets' %}" class="element">
           <p class="title">Bestill bussbillett</p>
@@ -195,7 +195,7 @@
       </a>
     {% endcolumn %}
 
-    {% if user.get_profile.fjelltreffen_annonser.count > 0 %}
+    {% if user.fjelltreffen_annonser.count > 0 %}
       {% column %}
         <a href="{% url 'fjelltreffen.views.mine' %}" class="element">
           <p class="title">Fjelltreffen</p>
@@ -206,7 +206,7 @@
       {% endcolumn %}
     {% endif %}
 
-    {% if user.get_profile.is_member %}
+    {% if user.is_member %}
       {% column %}
         <a href="{% url 'user.views.fotobok' %}" class="element">
           <p class="title">Bestill fotoprodukter</p>

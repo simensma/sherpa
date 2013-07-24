@@ -53,7 +53,7 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-                if(!result.profile_exists) {
+                if(!result.user_exists) {
                     memberid_accepted = true;
                     var email = form.find("div.control-group.email");
                     if(result.email == '' || result.email == email.attr('data-email')) {
@@ -66,7 +66,7 @@ $(document).ready(function() {
                         email.find("span.preselected-email.focus").text(result.email);
                     }
                 } else {
-                    form.find("div.profile-exists").slideDown();
+                    form.find("div.user-exists").slideDown();
                 }
                 form.find("button[type='submit']").show();
             } else if(result.memberid_lookups_exceeded) {

@@ -42,8 +42,8 @@
     <tr>
       <th>Lastet opp av:</th>
       <td>
-        <a href="{% url 'admin.images.views.user_images' image.uploader.user.get_profile.id %}">
-          {{ image.uploader.user.get_profile.get_full_name }}
+        <a href="{% url 'admin.images.views.user_images' image.uploader.id %}">
+          {{ image.uploader.get_full_name }}
         </a><br>
         {{ image.uploaded|date:"j. F Y" }}
       </td>
@@ -104,7 +104,7 @@
     </p>
 
     {% if not image.description %}
-      <p style="text-align: center;">{{ image.uploader.user.get_profile.get_first_name }} la ikke inn noen beskrivelse for bildet.</p>
+      <p style="text-align: center;">{{ image.uploader.get_first_name }} la ikke inn noen beskrivelse for bildet.</p>
     {% else %}
       <p class="image-description form-border">{{ image.description|linebreaksbr }}</p>
     {% endif %}
@@ -114,7 +114,7 @@
       {% for tag in tags %}
         <div class="tag" data-href="{% url 'admin.images.views.search' %}?q={{ tag.name }}">{{ tag.name }}</div>
       {% empty %}
-        <p>{{ image.uploader.user.get_profile.get_first_name }} la ikke inn noen nøkkelord for bildet.</p>
+        <p>{{ image.uploader.get_first_name }} la ikke inn noen nøkkelord for bildet.</p>
       {% endfor %}
     </div>
   </div>

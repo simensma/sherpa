@@ -36,7 +36,7 @@ def connect(request, method):
         response_data['er_autentisert'] = request.user.is_authenticated()
 
     if request.user.is_authenticated():
-        response_data.update(get_member_data(request.user.get_profile()))
+        response_data.update(get_member_data(request.user))
     else:
         if method == 'signon':
             request.session['dntconnect'] = {

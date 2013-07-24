@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
-from django.contrib.auth.models import User, Permission
 from django.contrib.auth.context_processors import PermWrapper
 from django.conf import settings
 from django.db.models import Q
@@ -11,7 +10,7 @@ from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
 from association.models import Association
-from user.models import Profile, AssociationRole
+from user.models import User, Permission, AssociationRole
 from focus.models import Actor
 
 def index(request):
@@ -24,13 +23,13 @@ def show(request, other_user):
     other_user = User.objects.get(id=other_user)
 
     # Admins can assign user/admin, users can assign users
-    assignable_admin = [a for a in request.user.get_profile().all_associations() if a.role == 'admin']
-    assignable_user = [a for a in request.user.get_profile().all_associations() if a.role == 'user']
+    assignable_admin = [a for a in request.user.all_associations() if a.role == 'admin']
+    assignable_user = [a for a in request.user.all_associations() if a.role == 'user']
     # Don't let users assign new permissions for those that already have user status
     # Use AssociationRole for other_user, because we can't set permissions for associations that are
     # based on parent associations (to remove access to a child, you have to remove admin-permission
     # to the parent)
-    other_user_associations = Association.objects.filter(associationrole__profile=other_user.get_profile())
+    other_user_associations = Association.objects.filter(associationrole__user=other_user)
     assignable_user = [a for a in assignable_user if not a in other_user_associations]
     assignable_associations = assignable_admin + assignable_user
 
@@ -49,12 +48,12 @@ def search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_profiles = Profile.objects.filter(memberid__isnull=True)
+    local_users = User.objects.filter(memberid__isnull=True)
     for word in request.POST['q'].split():
-        local_profiles = local_profiles.filter(
-            Q(user__first_name__icontains=word) |
-            Q(user__last_name__icontains=word))
-    local_profiles = local_profiles.order_by('user__first_name')
+        local_users = local_users.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word))
+    local_users = local_users.order_by('first_name')
 
     actors = Actor.objects.all()
     for word in request.POST['q'].split():
@@ -64,13 +63,13 @@ def search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
-    actors_without_profile = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
-    profiles = list(local_profiles) + list(members)
+    members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+    actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
+    users = list(local_users) + list(members)
 
     context = RequestContext(request, {
-        'profiles': profiles,
-        'actors_without_profile': actors_without_profile})
+        'users': users,
+        'actors_without_user': actors_without_user})
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
@@ -96,8 +95,8 @@ def make_sherpa_admin(request, user):
     user = User.objects.get(id=user)
     permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
     user.user_permissions.add(permission)
-    cache.delete('profile.%s.all_associations' % user.get_profile().id)
-    cache.delete('profile.%s.children_associations' % user.get_profile().id)
+    cache.delete('user.%s.all_associations' % user.id)
+    cache.delete('user.%s.children_associations' % user.id)
     return redirect('admin.users.views.show', user)
 
 def add_association_permission(request):
@@ -108,7 +107,7 @@ def add_association_permission(request):
         raise PermissionDenied
 
     # Verify that the user performing this action has the required permissions
-    all_associations = request.user.get_profile().all_associations()
+    all_associations = request.user.all_associations()
     if role == 'admin':
         # Setting admin requires admin
         if not association in [a for a in all_associations if a.role == 'admin']:
@@ -119,15 +118,15 @@ def add_association_permission(request):
             raise PermissionDenied
 
     try:
-        role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
+        role = AssociationRole.objects.get(user=user, association=association)
         role.role = request.POST['role']
         role.save()
     except AssociationRole.DoesNotExist:
-        role = AssociationRole(profile=user.get_profile(), association=association, role=request.POST['role'])
+        role = AssociationRole(user=user, association=association, role=request.POST['role'])
         role.save()
 
-    cache.delete('profile.%s.all_associations' % user.get_profile().id)
-    cache.delete('profile.%s.children_associations' % user.get_profile().id)
+    cache.delete('user.%s.all_associations' % user.id)
+    cache.delete('user.%s.children_associations' % user.id)
     return redirect('admin.users.views.show', user.id)
 
 def revoke_association_permission(request):
@@ -135,12 +134,12 @@ def revoke_association_permission(request):
     association = Association.objects.get(id=request.POST['association'])
 
     # Verify that the user performing this action has the required permissions
-    admin_associations = [a for a in request.user.get_profile().all_associations() if a.role == 'admin']
+    admin_associations = [a for a in request.user.all_associations() if a.role == 'admin']
     if not association in admin_associations:
         raise PermissionDenied
 
-    role = AssociationRole.objects.get(profile=user.get_profile(), association=association)
+    role = AssociationRole.objects.get(user=user, association=association)
     role.delete()
-    cache.delete('profile.%s.all_associations' % user.get_profile().id)
-    cache.delete('profile.%s.children_associations' % user.get_profile().id)
+    cache.delete('user.%s.all_associations' % user.id)
+    cache.delete('user.%s.children_associations' % user.id)
     return redirect('admin.users.views.show', user.id)

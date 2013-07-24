@@ -64,7 +64,7 @@
         </table>
       </div>
 
-    {% elif user.get_profile.norway_bus_tickets_offer_has_expired %}
+    {% elif user.norway_bus_tickets_offer_has_expired %}
 
       {# Note that since the menus don't link to this page in this case, this text will only be read if someone somehow navigates to this URL manually. #}
 
@@ -74,7 +74,7 @@
         Beklager &mdash; dette tilbudet gjelder kun for nye medlemmer, og må benyttes innen utgangen av det året du melder deg inn.
       </p>
 
-    {% elif not user.get_profile.get_actor.has_paid %}
+    {% elif not user.get_actor.has_paid %}
 
       <h3>Ubetalt årskontingent</h3>
 
@@ -134,7 +134,7 @@
           <label class="control-label">Billetten blir sendt til:</label>
           <div class="controls">
             <div class="control-as-text">
-              {{ user.get_profile.get_actor.get_clean_address.format_for_oneline }}
+              {{ user.get_actor.get_clean_address.format_for_oneline }}
             </div>
             <div class="hints">
               Feil adresse? <a href="{% url 'user.views.update_account' %}">Endre den her</a> FØR du bestiller!

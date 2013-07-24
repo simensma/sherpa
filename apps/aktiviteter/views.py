@@ -31,7 +31,7 @@ def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     context = {
         'aktivitet_date': aktivitet_date,
-        'user_is_participating': request.user.get_profile() in aktivitet_date.participants.all()
+        'user_is_participating': request.user in aktivitet_date.participants.all()
     }
     return render(request, 'common/aktiviteter/show.html', context)
 
@@ -48,7 +48,7 @@ def signup_confirm(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
-    aktivitet_date.participants.add(request.user.get_profile())
+    aktivitet_date.participants.add(request.user)
     return redirect('aktiviteter.views.show', aktivitet_date.id)
 
 @user_requires_login()
@@ -64,6 +64,6 @@ def signup_cancel_confirm(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signup_cancels():
         raise PermissionDenied
-    aktivitet_date.participants.remove(request.user.get_profile())
+    aktivitet_date.participants.remove(request.user)
     messages.info(request, 'signup_cancel_success')
     return redirect('user.views.aktiviteter')

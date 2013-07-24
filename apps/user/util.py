@@ -1,21 +1,12 @@
 # encoding: utf-8
-from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.conf import settings
 
-import md5
 import hashlib
 
 from sherpa25.models import Member
-from user.models import Profile
+from user.models import User
 from focus.models import Actor
-
-# This returns a username value based on the email address.
-# Define it as the first 30 hex-characters of the MD5 hash of the stripped, lowercase email.
-# This is because the username field has a 30 character max length, which makes it unsuitable for
-# actual e-mail addresses. This gives a 16^30 collision chance which is acceptable.
-def username(email):
-    return md5.new(email.strip().lower()).hexdigest()[:30]
 
 # Checks whether the given IP address has performed more than the allowed amount of lookups
 # on memberid + zipcode. This is because since there are a relatively low amount of total zipcodes
@@ -42,16 +33,16 @@ def memberid_lookups_exceeded(ip_address):
 # doesn't account for that (it returns exactly one user, or None).
 def authenticate_users(email, password):
     # Add matching local users that aren't members
-    matches = [u.get_profile() for u in User.objects.filter(email=email) if u.check_password(password)]
+    matches = [u for u in User.objects.filter(email=email) if u.check_password(password)]
 
-    # Add matching members with active Profile
+    # Add matching members with active User
     focus_candidates = Actor.objects.filter(email=email)
     for a in focus_candidates:
         try:
-            p = Profile.objects.get(memberid=a.memberid, user__is_active=True)
-            if p.user.check_password(password):
-                matches.append(p)
-        except Profile.DoesNotExist:
+            u = User.objects.get(memberid=a.memberid, is_active=True)
+            if u.check_password(password):
+                matches.append(u)
+        except User.DoesNotExist:
             pass
 
     # And just return these matches
@@ -68,9 +59,7 @@ def authenticate_sherpa2_user(email, password):
 
 def create_inactive_user(memberid):
     Actor.objects.get(memberid=memberid) # Verify that the Actor exists
-    user = User.objects.create_user(memberid, password='')
-    user.is_active = False
+    user = User(identifier=memberid, memberid=memberid, is_active=False)
+    user.set_password('')
     user.save()
-    profile = Profile(user=user, memberid=memberid)
-    profile.save()
-    return profile
+    return user

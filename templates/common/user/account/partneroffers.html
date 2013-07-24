@@ -23,7 +23,7 @@
       <table class="user-reservations sponsors" data-url="{% url 'user.views.partneroffers_reserve' %}">
         <tr class="choice">
           <td>
-            <input type="radio" name="sponsors" value="allow"{% if not user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>
+            <input type="radio" name="sponsors" value="allow"{% if not user.get_actor.reserved_against_partneroffers %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Ja, jeg ønsker å motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere<br>
@@ -31,7 +31,7 @@
         </tr>
         <tr class="choice">
           <td>
-            <input type="radio" name="sponsors" value="reserve"{% if user.get_profile.get_actor.reserved_against_partneroffers %} checked{% endif %}>
+            <input type="radio" name="sponsors" value="reserve"{% if user.get_actor.reserved_against_partneroffers %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Nei, jeg vil reservere meg mot medlemsfordeler fra DNTs samarbeidspartnere

@@ -63,7 +63,7 @@ class SetActiveAssociation(object):
             if m is not None:
                 # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
                 association = Association.objects.get(id=m.groupdict()['association'])
-                if not association in request.user.get_profile().all_associations():
+                if not association in request.user.all_associations():
                     raise PermissionDenied
 
                 request.session['active_association'] = association
@@ -85,9 +85,9 @@ class CheckSherpaPermissions(object):
 
             # No active association set
             if not 'active_association' in request.session:
-                if len(request.user.get_profile().all_associations()) == 1:
+                if len(request.user.all_associations()) == 1:
                     # The user has only access to 1 association, set it automatically
-                    return redirect('/sherpa/aktiv-forening/%s/' % request.user.get_profile().all_associations()[0].id)
+                    return redirect('/sherpa/aktiv-forening/%s/' % request.user.all_associations()[0].id)
                 else:
                     # Let the user choose
                     context = {'next': request.get_full_path()}

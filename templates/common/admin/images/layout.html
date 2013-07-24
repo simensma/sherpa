@@ -54,8 +54,8 @@
   <div class="span4">
     <select name="user-images" data-placeholder="Andre brukeres bilder...">
       <option></option>
-      {% for profile in all_users %}
-        <option value="{{ profile.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ profile.user.get_profile.get_full_name }}</option>
+      {% for user in all_users %}
+        <option value="{{ user.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ user.get_full_name }}</option>
       {% endfor %}
     </select>
   </div>

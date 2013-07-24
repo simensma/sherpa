@@ -20,7 +20,7 @@
 <div class="row imagearchive-action-buttons">
   <div class="span3">
     <p>
-      <button class="btn btn-large btn-success upload"{% if active_profile != user.get_profile %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
+      <button class="btn btn-large btn-success upload"{% if active_user != user %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
         <i class="icon-picture"></i> Last opp nytt bilde
       </button>
     </p>
@@ -77,18 +77,18 @@
   </div>
 </div>
 
-{% if active_profile != user.get_profile %}
-  <h2 style="text-align: center;">{{ active_profile.user.get_profile.get_full_name }}s bilder</h2>
+{% if active_user != user %}
+  <h2 style="text-align: center;">{{ active_user.get_full_name }}s bilder</h2>
 {% else %}
   {% include 'common/admin/images/uploader.html' %}
 {% endif %}
 
 {% if not images %}
   <div class="alert alert-info">
-    {% if active_profile == user.get_profile %}
+    {% if active_user == user %}
       Du
     {% else %}
-      {{ active_profile.user.get_profile.get_full_name }}
+      {{ active_user.get_full_name }}
     {% endif %}
     har ikke lastet opp noen bilder.
   </div>

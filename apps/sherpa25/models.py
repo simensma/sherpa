@@ -108,8 +108,8 @@ class Norway(models.Model):
     class Meta:
         db_table = u'Norway'
 
-def import_fjelltreffen_annonser(profile):
-    old_member = Member.objects.get(memberid=profile.memberid)
+def import_fjelltreffen_annonser(user):
+    old_member = Member.objects.get(memberid=user.memberid)
 
     for link in Link.objects.filter(fromobject='Member', fromid=old_member.id, toobject='Classified'):
         try:
@@ -133,13 +133,13 @@ def import_fjelltreffen_annonser(profile):
             continue
 
         annonse = Annonse()
-        annonse.profile = profile
+        annonse.user = user
         annonse.title = old_annonse.title
 
         # Email is required, so make sure we find one for the old user
         if old_member.email is None or old_member.email == '':
             # Nope, it's not here. Try to get it from Focus
-            focus_email = profile.get_actor().email
+            focus_email = user.get_actor().email
             if focus_email is None or focus_email == '':
                 # Not in Focus either! We'll have to ignore this annonse.
                 continue
@@ -154,10 +154,10 @@ def import_fjelltreffen_annonser(profile):
         except KeyError:
             if old_annonse.county == 0:
                 # The entire country is no longer applicable - set it to the Actor's county
-                annonse.county = profile.get_actor().get_clean_address().county
+                annonse.county = user.get_actor().get_clean_address().county
             elif old_annonse.county == 2:
                 # Both Oslo and Akershus - set it to the Actor's county, which hopefully is one of those
-                annonse.county = profile.get_actor().get_clean_address().county
+                annonse.county = user.get_actor().get_clean_address().county
             elif old_annonse.county == 99:
                 # International annonse - defined with 'NULL'
                 annonse.county = None
@@ -176,7 +176,7 @@ def import_fjelltreffen_annonser(profile):
 
     # After adding all of them, make sure the newest one (and only the newest one) is visible
     try:
-        newest = Annonse.objects.filter(profile=profile).order_by('-date_added')[0]
+        newest = Annonse.objects.filter(user=user).order_by('-date_added')[0]
         newest.hidden = False
         newest.save()
     except IndexError:

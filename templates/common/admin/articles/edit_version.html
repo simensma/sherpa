@@ -61,8 +61,8 @@
         <p>
           Forfattere:
           <select name="authors" multiple="multiple">
-            {% for profile in profiles %}
-              <option value="{{ profile.id }}"{% if profile in version.publishers.all %} selected="selected"{% endif %}>{{ profile.user.get_profile.get_full_name }}</option>
+            {% for user in users %}
+              <option value="{{ user.id }}"{% if user in version.publishers.all %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
             {% endfor %}
           </select>
         </p>

@@ -15,7 +15,7 @@ import hashlib
 import simples3
 
 def index(request):
-    publications = Publication.objects.filter(association__in=request.user.get_profile().all_associations()).order_by('title')
+    publications = Publication.objects.filter(association__in=request.user.all_associations()).order_by('title')
     context = {
         'publications': publications,
         'association_main_mappings': json.dumps(get_association_main_mappings())
@@ -28,7 +28,7 @@ def edit_publication(request, publication):
     else:
         publication = Publication.objects.get(id=publication)
 
-    if publication.association not in request.user.get_profile().all_associations():
+    if publication.association not in request.user.all_associations():
         raise PermissionDenied
 
     if request.method == 'GET':
@@ -44,7 +44,7 @@ def edit_publication(request, publication):
         if publication.title == '':
             publication.title = '(Uten navn)'
         association = Association.objects.get(id=request.POST['association'])
-        if association in request.user.get_profile().all_associations():
+        if association in request.user.all_associations():
             publication.association = association
         if 'access' in request.POST and request.POST['access'] in [l[0] for l in Publication.ACCESS_CHOICES]:
                 publication.access = request.POST['access']
@@ -56,7 +56,7 @@ def edit_publication(request, publication):
 
 def edit_release(request, publication, release):
     publication = Publication.objects.get(id=publication)
-    if publication.association not in request.user.get_profile().all_associations():
+    if publication.association not in request.user.all_associations():
         raise PermissionDenied
 
     if request.method == 'GET':
@@ -132,7 +132,7 @@ def edit_release(request, publication, release):
 
 def delete_release(request, release):
     release = Release.objects.get(id=release)
-    if release.publication.association not in request.user.get_profile().all_associations():
+    if release.publication.association not in request.user.all_associations():
         raise PermissionDenied
 
     release.delete()
@@ -140,7 +140,7 @@ def delete_release(request, release):
 
 def delete_publication(request, publication):
     publication = Publication.objects.get(id=publication)
-    if publication.association not in request.user.get_profile().all_associations():
+    if publication.association not in request.user.all_associations():
         raise PermissionDenied
 
     publication.delete()

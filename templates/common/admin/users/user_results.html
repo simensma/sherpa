@@ -1,13 +1,13 @@
-{% for profile in profiles %}
+{% for user in users %}
   <tr class="result">
-    <td><a href="{% url 'admin.users.views.show' profile.user.id %}">{{ profile.get_full_name }}</a></td>
-    <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
+    <td><a href="{% url 'admin.users.views.show' user.id %}">{{ user.get_full_name }}</a></td>
+    <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>Ja</td>
-    <td>{% if profile.perms.user.sherpa %}Ja{% else %}Nei{% endif %}</td>
+    <td>{% if user.perms.sherpa %}Ja{% else %}Nei{% endif %}</td>
   </tr>
 {% endfor %}
 
-{% for actor in actors_without_profile %}
+{% for actor in actors_without_user %}
   <tr class="result">
     <td>{{ actor.get_full_name }}</td>
     <td>{{ actor.memberid }}</td>

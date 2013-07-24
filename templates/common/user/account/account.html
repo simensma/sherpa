@@ -25,23 +25,23 @@
         {% endif %}
       {% endfor %}
 
-      {% if not user.get_profile.is_member %}
+      {% if not user.is_member %}
 
         <h2>Brukeropplysninger</h2>
 
         <table class="account-data table table-hover">
           <tr>
             <th>Navn</th>
-            <td>{{ user.get_profile.get_full_name }}</td>
+            <td>{{ user.get_full_name }}</td>
           </tr>
           <tr>
             <th>E-post</th>
-            <td>{{ user.get_profile.get_email }}</td>
+            <td>{{ user.get_email }}</td>
           </tr>
-          {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
+          {% if perms.user.sherpa and user.sherpa_email != '' %}
             <tr>
               <th>E-post i Sherpa</th>
-              <td>{{ user.get_profile.sherpa_email }}</td>
+              <td>{{ user.sherpa_email }}</td>
             </tr>
           {% endif %}
           <tr>
@@ -70,35 +70,35 @@
         <table class="account-data table table-hover">
           <tr>
             <th>Navn</th>
-            <td>{{ user.get_profile.get_actor.get_full_name }}</td>
+            <td>{{ user.get_actor.get_full_name }}</td>
           </tr>
           <tr>
             <th>E-post</th>
-            <td>{{ user.get_profile.get_actor.email|default:"" }}</td>
+            <td>{{ user.get_actor.email|default:"" }}</td>
           </tr>
-          {% if perms.user.sherpa and user.get_profile.sherpa_email != '' %}
+          {% if perms.user.sherpa and user.sherpa_email != '' %}
             <tr>
               <th>E-post i Sherpa</th>
-              <td>{{ user.get_profile.sherpa_email }}</td>
+              <td>{{ user.sherpa_email }}</td>
             </tr>
           {% endif %}
           <tr>
             <th>Telefon</th>
-            <td>{{ user.get_profile.get_actor.phone_home|default:"" }}</td>
+            <td>{{ user.get_actor.phone_home|default:"" }}</td>
           </tr>
           <tr>
             <th>Mobiltelefon</th>
-            <td>{{ user.get_profile.get_actor.phone_mobile|default:"" }}</td>
+            <td>{{ user.get_actor.phone_mobile|default:"" }}</td>
           </tr>
           <tr>
             <th>Født</th>
-            <td>{{ user.get_profile.get_actor.birth_date|date:"j. F Y" }}</td>
+            <td>{{ user.get_actor.birth_date|date:"j. F Y" }}</td>
           </tr>
 
           <tr>
             <th>Adresse</th>
             <td>
-              {{ user.get_profile.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+              {{ user.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
             </td>
           </tr>
         </table>
@@ -109,7 +109,7 @@
           <tr>
             <th>Status</th>
             <td>
-              {% if user.get_profile.get_actor.has_paid %}
+              {% if user.get_actor.has_paid %}
                 Betalt for
                 {% if next_year %}
                   {{ year|add:"1" }}
@@ -128,31 +128,31 @@
           </tr>
           <tr>
             <th>Medlemsnummer</th>
-            <td>{{ user.get_profile.memberid }}</td>
+            <td>{{ user.memberid }}</td>
           </tr>
           <tr>
             <th>Lokalforening</th>
             <td>
-              {% if user.get_profile.get_actor.main_association.site %}<a href="http://{{ user.get_profile.get_actor.main_association.site.domain }}/">{% endif %}
-                {{ user.get_profile.get_actor.main_association.name }}
-              {% if user.get_profile.get_actor.main_association.site %}</a>{% endif %}
+              {% if user.get_actor.main_association.site %}<a href="http://{{ user.get_actor.main_association.site.domain }}/">{% endif %}
+                {{ user.get_actor.main_association.name }}
+              {% if user.get_actor.main_association.site %}</a>{% endif %}
             </td>
           </tr>
           <tr>
             <th>Medlemstype</th>
-            <td>{{ user.get_profile.get_actor.membership_type.name }}</td>
+            <td>{{ user.get_actor.membership_type.name }}</td>
           </tr>
-          {% if user.get_profile.get_actor.get_parent %}
+          {% if user.get_actor.get_parent %}
             <tr>
               <th>Ditt hovedmedlem</th>
-              <td>{{ user.get_profile.get_actor.get_parent.get_full_name }} ({{ user.get_profile.get_actor.get_parent.memberid }})</td>
+              <td>{{ user.get_actor.get_parent.get_full_name }} ({{ user.get_actor.get_parent.memberid }})</td>
             </tr>
           {% endif %}
-          {% if user.get_profile.get_actor.get_children|length > 0 %}
+          {% if user.get_actor.get_children|length > 0 %}
             <tr>
               <th>Dine husstandsmedlemmer</th>
               <td>
-                {% for child in user.get_profile.get_actor.get_children %}
+                {% for child in user.get_actor.get_children %}
                   {{ child.get_full_name }} ({{ child.memberid }}){% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
               </td>
@@ -161,45 +161,45 @@
           <tr>
             <th>Betalingsavtale</th>
             <td>
-              {% if user.get_profile.get_actor.get_invoice_type_text == 'avtalegiro' %}
+              {% if user.get_actor.get_invoice_type_text == 'avtalegiro' %}
                 AvtaleGiro
-              {% elif user.get_profile.get_actor.get_invoice_type_text == 'efaktura' %}
+              {% elif user.get_actor.get_invoice_type_text == 'efaktura' %}
                 E-faktura
               {% else %}
                 Ingen
               {% endif %}
             </td>
           </tr>
-          {% if user.get_profile.get_actor.is_eligible_for_publications %}
+          {% if user.get_actor.is_eligible_for_publications %}
             <tr>
               <th>Fjell og Vidde</th>
               <td>
                 {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
                 {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
-                {% if user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+                {% if user.get_actor.get_clean_address.country.code != 'NO' %}
 
-                  {% if user.get_profile.get_actor.has_foreign_fjellogvidde_service %}
+                  {% if user.get_actor.has_foreign_fjellogvidde_service %}
                     Du mottar Fjell og Vidde i posten.
                   {% else %}
                     Du mottar ikke Fjell og Vidde i posten.
                   {% endif %}
 
                 {# Household members can see their household's status, but only their main member can change it #}
-                {% elif user.get_profile.get_actor.is_household_member %}
+                {% elif user.get_actor.is_household_member %}
 
-                  {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                  {% if user.get_actor.get_parent.get_reserved_against_fjellogvidde %}
                     Din husstand mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
                   {% else %}
                     Din husstand mottar Fjell og Vidde i posten.
                   {% endif %}
 
-                  <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+                  <em>Ditt hovedmedlem, {{ user.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
 
                 {# Lifelong members can see but not change service status, I don't remember why. #}
-                {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
+                {% elif user.get_actor|has_membership_type:"lifelong" %}
 
-                  {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
+                  {% if user.get_actor.get_reserved_against_fjellogvidde %}
                     Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
                   {% else %}
                     Du mottar Fjell og Vidde i posten.
@@ -209,7 +209,7 @@
 
                 {% else %}
 
-                  {% if user.get_profile.get_actor.get_reserved_against_fjellogvidde %}
+                  {% if user.get_actor.get_reserved_against_fjellogvidde %}
                     Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
                   {% else %}
                     Du mottar Fjell og Vidde i posten.
@@ -226,29 +226,29 @@
                 {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
                 {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
-                {% if user.get_profile.get_actor.get_clean_address.country.code != 'NO' %}
+                {% if user.get_actor.get_clean_address.country.code != 'NO' %}
 
-                  {% if user.get_profile.get_actor.has_foreign_yearbook_service %}
+                  {% if user.get_actor.has_foreign_yearbook_service %}
                     Du mottar årboken i posten.
                   {% else %}
                     Du mottar ikke årboken i posten.
                   {% endif %}
 
                 {# Household members can see their household's status, but only their main member can change it #}
-                {% elif user.get_profile.get_actor.is_household_member %}
+                {% elif user.get_actor.is_household_member %}
 
-                  {% if user.get_profile.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+                  {% if user.get_actor.get_parent.get_reserved_against_fjellogvidde %}
                     Din husstand mottar ikke årboken i posten, men kan lese den på nett.
                   {% else %}
                     Din husstand mottar årboken i posten.
                   {% endif %}
 
-                  <em>Ditt hovedmedlem, {{ user.get_profile.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
+                  <em>Ditt hovedmedlem, {{ user.get_actor.get_parent.get_full_name }}, kan endre dette.</em>
 
                 {# Lifelong members can see but not change service status, I don't remember why. #}
-                {% elif user.get_profile.get_actor|has_membership_type:"lifelong" %}
+                {% elif user.get_actor|has_membership_type:"lifelong" %}
 
-                  {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
+                  {% if user.get_actor.get_reserved_against_yearbook %}
                     Du mottar ikke årboken i posten, men kan lese den på nett.
                   {% else %}
                     Du mottar årboken i posten.
@@ -258,7 +258,7 @@
 
                 {% else %}
 
-                  {% if user.get_profile.get_actor.get_reserved_against_yearbook %}
+                  {% if user.get_actor.get_reserved_against_yearbook %}
                     Du mottar ikke årboken i posten, men kan lese den på nett.
                   {% else %}
                     Du mottar årboken i posten.
@@ -273,7 +273,7 @@
           <tr>
             <th>Motta e-post</th>
             <td>
-              {% if user.get_profile.get_actor.receive_email %}
+              {% if user.get_actor.receive_email %}
                 Du vil motta medlemsinformasjon fra DNT på e-post.
               {% else %}
                 Du vil ikke motta medlemsinformasjon fra DNT på e-post.
@@ -284,7 +284,7 @@
           <tr>
             <th>Motta medlemsfordeler</th>
             <td>
-              {% if user.get_profile.get_actor.reserved_against_partneroffers %}
+              {% if user.get_actor.reserved_against_partneroffers %}
                 Du har reservert deg mot medlemsfordeler fra DNTs samarbeidspartnere.
               {% else %}
                 Du vil motta informasjon om medlemsfordeler fra DNTs samarbeidspartnere.

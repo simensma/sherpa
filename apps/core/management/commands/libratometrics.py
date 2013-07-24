@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission
 
 import json
 
-from user.models import Profile
+from user.models import User
 from fjelltreffen.models import Annonse
 
 class Command(BaseCommand):
@@ -12,15 +12,15 @@ class Command(BaseCommand):
     help = u"Henter sherpa-metrics for libratoappen vår, se https://github.com/Turistforeningen/librato"
 
     def handle(self, *args, **options):
-        profiles = Profile.objects.filter(user__is_active=True)
-        sherpa_profiles = profiles.filter(user__user_permissions=Permission.objects.get(codename='sherpa'))
+        users = User.objects.filter(is_active=True)
+        sherpa_users = users.filter(permissions=Permission.objects.get(name='sherpa'))
         metrics = {
             'gauges': [{
                 'name': 'sherpa.db.users',
-                'value': profiles.count()
+                'value': users.count()
             }, {
                 'name': 'sherpa.db.sherpa_users',
-                'value': sherpa_profiles.count()
+                'value': sherpa_users.count()
             }, {
                 'name': 'sherpa.db.fjelltreffen_annonser',
                 'value': Annonse.objects.count()

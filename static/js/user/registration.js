@@ -64,11 +64,11 @@ $(document).ready(function() {
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.exists) {
-                if(!result.profile_exists) {
+                if(!result.user_exists) {
                     enableStep2(result);
                 } else {
                     $("img.ajaxloader.submit").hide();
-                    $("div.profile-exists").slideDown();
+                    $("div.user-exists").slideDown();
                 }
             } else if(result.memberid_lookups_exceeded) {
                 registration_form.find("img.ajaxloader.submit").hide();

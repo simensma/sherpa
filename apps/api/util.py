@@ -11,14 +11,14 @@ import error_codes
 vendor_media_type = 'vnd.turistforeningen'
 supported_formats = ['json']
 
-def get_member_data(profile):
-    if not profile.is_member():
+def get_member_data(user):
+    if not user.is_member():
         return {
-            'sherpa_id': profile.id,
+            'sherpa_id': user.id,
             'er_medlem': False,
-            'fornavn': profile.get_first_name(),
-            'etternavn': profile.get_last_name(),
-            'epost': profile.get_email()
+            'fornavn': user.get_first_name(),
+            'etternavn': user.get_last_name(),
+            'epost': user.get_email()
         }
     else:
         # The gender definition is in norwegian
@@ -28,18 +28,18 @@ def get_member_data(profile):
             elif gender == 'f':
                 return 'K'
 
-        address = profile.get_actor().get_clean_address()
+        address = user.get_actor().get_clean_address()
         return {
-            'sherpa_id': profile.id,
+            'sherpa_id': user.id,
             'er_medlem': True,
-            'medlemsnummer': profile.memberid,
-            'aktivt_medlemskap': profile.get_actor().has_paid(),
-            'fornavn': profile.get_first_name(),
-            'etternavn': profile.get_last_name(),
-            'født': profile.get_actor().birth_date.strftime("%Y-%m-%d"),
-            'kjønn': api_gender_output(profile.get_actor().get_gender()),
-            'epost': profile.get_email(),
-            'mobil': profile.get_actor().phone_mobile,
+            'medlemsnummer': user.memberid,
+            'aktivt_medlemskap': user.get_actor().has_paid(),
+            'fornavn': user.get_first_name(),
+            'etternavn': user.get_last_name(),
+            'født': user.get_actor().birth_date.strftime("%Y-%m-%d"),
+            'kjønn': api_gender_output(user.get_actor().get_gender()),
+            'epost': user.get_email(),
+            'mobil': user.get_actor().phone_mobile,
             'address': {
                 'adresse1': address.field1,
                 'adresse2': address.field2,

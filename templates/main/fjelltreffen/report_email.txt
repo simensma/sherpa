@@ -2,7 +2,7 @@ Hei, vi har mottatt melding om en upassende annonse i Fjelltreffen.
 
 Annonsen det gjelder:
 Tittel: {{ annonse.title }}
-Annonsør: {{ annonse.profile.get_full_name }} <{{ annonse.profile.get_email }}>, medlemsnr. {{ annonse.profile.memberid }}
+Annonsør: {{ annonse.user.get_full_name }} <{{ annonse.user.get_email }}>, medlemsnr. {{ annonse.user.memberid }}
 Link: https://{{ site.domain }}{% url 'fjelltreffen.views.show' annonse.id %}
 
 Rapportert av:

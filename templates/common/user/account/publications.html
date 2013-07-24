@@ -13,7 +13,7 @@
 
     <h2>Publikasjoner</h2>
 
-    {% if user.get_profile.get_actor.can_reserve_against_publications %}
+    {% if user.get_actor.can_reserve_against_publications %}
       <p>
         <a href="{% url 'user.views.reserve_publications' %}">Hvordan vil du lese Fjell og Vidde og årboken?</a>
       </p>

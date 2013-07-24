@@ -45,7 +45,7 @@ def new(request):
         title=request.POST['title'],
         slug=request.POST['slug'],
         published=False,
-        created_by=request.user.get_profile(),
+        created_by=request.user,
         site=request.session['active_association'].site)
     page.save()
 
@@ -55,13 +55,13 @@ def new(request):
         name='Standard',
         segment=None,
         priority=1,
-        owner=request.user.get_profile())
+        owner=request.user)
     variant.save()
 
     version = Version(
         variant=variant,
         version=1,
-        owner=request.user.get_profile(),
+        owner=request.user,
         active=True,
         ads=True)
     version.save()

@@ -1,9 +1,9 @@
-Navn: {{ user.get_profile.get_full_name }}
-Medlemsnummer: {{ user.get_profile.memberid }}
+Navn: {{ user.get_full_name }}
+Medlemsnummer: {{ user.memberid }}
 Turdato: {{ ticket.date_trip|date:"j. F Y" }}
 Turstrekning: {{ ticket.distance }}
-Adresse: {{ user.get_profile.get_actor.get_clean_address.format_for_oneline }}
-E-post: {{ user.get_profile.get_email }}
-{% if user.get_profile.get_actor.phone_home %}Hjemme tlf: {{ user.get_profile.get_actor.phone_home }}
-{% endif %}{% if user.get_profile.get_actor.phone_mobile %}Mobil tlf: {{ user.get_profile.get_actor.phone_mobile }}
+Adresse: {{ user.get_actor.get_clean_address.format_for_oneline }}
+E-post: {{ user.get_email }}
+{% if user.get_actor.phone_home %}Hjemme tlf: {{ user.get_actor.phone_home }}
+{% endif %}{% if user.get_actor.phone_mobile %}Mobil tlf: {{ user.get_actor.phone_mobile }}
 {% endif %}

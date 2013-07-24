@@ -225,7 +225,7 @@
 
           </form>
 
-          <div class="hide alert alert-error profile-exists">
+          <div class="hide alert alert-error user-exists">
             <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
             <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
           </div>
@@ -257,7 +257,7 @@
                 <strong>For kort passord</strong><br>
                 Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
               </div>
-            {% elif message.message == 'profile_exists' %}
+            {% elif message.message == 'user_exists' %}
               <div class="alert alert-error">
                 <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
                 <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.

@@ -63,7 +63,7 @@
         </div>
 
         <div class="step2 hide">
-          <div class="control-group email" data-email="{{ user.get_profile.get_email }}">
+          <div class="control-group email" data-email="{{ user.get_email }}">
             <label class="control-label">E-postadresse:</label>
             <div class="controls">
               <div class="hints">
@@ -106,7 +106,7 @@
         Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
       </div>
 
-      <div class="alert alert-error profile-exists hide">
+      <div class="alert alert-error user-exists hide">
         <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
         Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
       </div>
@@ -122,7 +122,7 @@
             <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
             Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
           </div>
-        {% elif message.message == 'profile_exists' %}
+        {% elif message.message == 'user_exists' %}
           <div class="alert alert-error">
             <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
             Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du <a href="{% url 'user.login.views.logout' %}">logge ut</a> først).

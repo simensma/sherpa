@@ -5,7 +5,7 @@ from django.conf import settings
 
 from core.models import Tag
 from admin.models import Image, Album
-from user.models import Profile
+from user.models import User
 
 from core import xmp
 from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
@@ -26,22 +26,22 @@ logger = logging.getLogger('sherpa')
 # Consider using a session variable instead, including hidden form field is kind of inconvenient
 
 def index(request):
-    return redirect('admin.images.views.user_images', request.user.get_profile().id)
+    return redirect('admin.images.views.user_images', request.user.id)
 
-def user_images(request, profile):
-    profile = Profile.objects.get(id=profile)
-    images = Image.objects.filter(uploader=profile)
-    if profile == request.user.get_profile():
+def user_images(request, user):
+    user = User.objects.get(id=user)
+    images = Image.objects.filter(uploader=user)
+    if user == request.user:
         current_navigation = 'personal'
     else:
         current_navigation = ''
 
     context = {
-        'active_profile': profile,
+        'active_user': user,
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': current_navigation,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
@@ -64,7 +64,7 @@ def list_albums(request, album):
         'images': images,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
@@ -87,7 +87,7 @@ def image_details(request, image):
         'tags': tags,
         'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name()),
+        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums'
     }
     return render(request, 'common/admin/images/image_details.html', context)
@@ -253,7 +253,7 @@ def upload_image(request):
                 credits='',
                 licence='',
                 exif=exif_json,
-                uploader=request.user.get_profile(),
+                uploader=request.user,
                 width=pil_image.size[0],
                 height=pil_image.size[1])
             image.save()
@@ -316,7 +316,7 @@ def album_search_json(request):
 def search(request):
     context = {
         'origin': request.get_full_path(),
-        'all_users': sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name())
+        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     }
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({

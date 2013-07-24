@@ -67,7 +67,7 @@
     {# Skip user-data section if Focus is down because the unavailable-template extends this layout #}
     {% if not focus_downtime.is_currently_down %}
       <p class="userline">
-        <a href="{% url 'user.views.home' %}">{{ user.get_profile.get_full_name }}</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span>
+        <a href="{% url 'user.views.home' %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span>
       </p>
     {% else %}
       <p class="userline">
@@ -76,30 +76,30 @@
     {% endif %}
     <select name="user_association" data-placeholder="Velg en forening...">
       <option value=""></option>
-      {% if user.get_profile.all_associations_sorted.central|length > 0 %}
+      {% if user.all_associations_sorted.central|length > 0 %}
         <optgroup label="Sentralt/nasjonalt">
-          {% for association in user.get_profile.all_associations_sorted.central %}
+          {% for association in user.all_associations_sorted.central %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user.get_profile.all_associations_sorted.associations|length > 0 %}
+      {% if user.all_associations_sorted.associations|length > 0 %}
         <optgroup label="Medlemsforeninger">
-          {% for association in user.get_profile.all_associations_sorted.associations %}
+          {% for association in user.all_associations_sorted.associations %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user.get_profile.all_associations_sorted.small_associations|length > 0 %}
+      {% if user.all_associations_sorted.small_associations|length > 0 %}
         <optgroup label="Lokale turlag">
-        {% for association in user.get_profile.all_associations_sorted.small_associations %}
+        {% for association in user.all_associations_sorted.small_associations %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if user.get_profile.all_associations_sorted.hike_groups|length > 0 %}
+      {% if user.all_associations_sorted.hike_groups|length > 0 %}
         <optgroup label="Turgrupper">
-        {% for association in user.get_profile.all_associations_sorted.hike_groups %}
+        {% for association in user.all_associations_sorted.hike_groups %}
             <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
           {% endfor %}
         </optgroup>

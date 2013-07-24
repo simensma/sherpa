@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 
 from page.models import Page, Version, Row, Column, Content
 from page.widgets import parse_widget
-from user.models import Profile
+from user.models import User
 from core.models import Tag
 
 from datetime import datetime
@@ -122,7 +122,7 @@ def save(request, version):
             page.pub_date = date_object
 
         # Record the modification
-        page.modified_by = request.user.get_profile()
+        page.modified_by = request.user
         page.modified_date = datetime.now()
 
         version.save()
@@ -134,14 +134,14 @@ def save(request, version):
         ### Authors ###
         publisher_list = json.loads(request.POST['authors'])
         if len(publisher_list) > 0:
-            publishers = Profile.objects.filter(id__in=publisher_list)
+            publishers = User.objects.filter(id__in=publisher_list)
             version.publishers = publishers
         else:
             response['author_error'] = 'no_authors'
 
         ### Published state ###
         datetime_string = request.POST["datetime"]
-        status =  json.loads(request.POST["status"])
+        status = json.loads(request.POST["status"])
 
         #date format is this one (dd.mm.yyyy hh:mm)
         try:
@@ -157,7 +157,7 @@ def save(request, version):
             article.pub_date = date_object
 
         # Record the modification
-        article.modified_by = request.user.get_profile()
+        article.modified_by = request.user
         article.modified_date = datetime.now()
 
         version.save()

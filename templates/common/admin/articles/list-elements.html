@@ -48,7 +48,7 @@
           <th>Forfattere:</th>
           <td>
             {% for publisher in version.publishers.all %}
-              {{ publisher.user.get_profile.get_full_name }}
+              {{ publisher.get_full_name }}
               {% if not forloop.last %}<br>{% endif %}
             {% endfor %}
           </td>
@@ -56,7 +56,7 @@
         <tr>
           <th>Opprettet av:</th>
           <td>
-            {{ version.variant.article.created_by.user.get_profile.get_full_name }}<br>
+            {{ version.variant.article.created_by.get_full_name }}<br>
             {{ version.variant.article.created_date }}
           </td>
         </tr>
@@ -64,7 +64,7 @@
           <tr>
             <th>Sist endret av:</th>
             <td>
-              {{ version.variant.article.modified_by.user.get_profile.get_full_name }}<br>
+              {{ version.variant.article.modified_by.get_full_name }}<br>
               {{ version.variant.article.modified_date }}
             </td>
           </tr>

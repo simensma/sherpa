@@ -21,7 +21,7 @@
 
         <form action="{% url 'user.login.views.login_chosen_user' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal choose">
           {% csrf_token %}
-          <input type="hidden" name="profile" value="">
+          <input type="hidden" name="user" value="">
 
           <table class="table">
             <tr>
@@ -29,13 +29,13 @@
               <th>Medlemstype</th>
               <th>Medlemsnummer</th>
             </tr>
-            {% for profile in profiles %}
+            {% for user in users %}
               <tr>
                 <td>
-                  <a href="javascript:undefined" class="profile-name" data-profile-id="{{ profile.id }}">{{ profile.get_full_name }}</a>
+                  <a href="javascript:undefined" class="user-name" data-user-id="{{ user.id }}">{{ user.get_full_name }}</a>
                 </td>
-                <td>{{ profile.get_actor.membership_type.name|default:"<em>Ikke medlem</em>" }}</td>
-                <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
+                <td>{{ user.get_actor.membership_type.name|default:"<em>Ikke medlem</em>" }}</td>
+                <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
               </tr>
             {% endfor %}
           </table>

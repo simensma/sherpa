@@ -27,17 +27,17 @@ def use_image_thumb(url, preferred_size):
         appropriate_size = min(larger_than_preferred)
     return "%s-%s.%s" % (pre, appropriate_size, post)
 
-def association_profile_role(association, profile):
+def association_user_role(association, user):
     try:
-        return AssociationRole.objects.get(association=association, profile=profile).role
+        return AssociationRole.objects.get(association=association, user=user).role
     except AssociationRole.DoesNotExist:
         # This might be a related association where we're admin beacuse we're admin for a parent. Check it
-        role = AssociationRole.objects.filter(association=association, profile=profile)
+        role = AssociationRole.objects.filter(association=association, user=user)
         while not role.exists() or role[0].role != 'admin':
             association = association.parent
             if association is None:
                 raise NoRoleRelationException
-            role = AssociationRole.objects.filter(association=association, profile=profile)
+            role = AssociationRole.objects.filter(association=association, user=user)
         return role[0].role
 
 class NoRoleRelationException(Exception):

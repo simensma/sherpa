@@ -51,7 +51,7 @@
               <td>
                 <h3><a href="{% url 'fjelltreffen.views.edit' annonse.id %}">{{ annonse.title }}</a></h3>
                 <p class="details">
-                  {{ annonse.profile.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name|default:"Utlandet" }}, {{ annonse.date_added|date:"j. F Y" }}<br>
+                  {{ annonse.user.get_actor.get_gender|gender|title }}, {{ annonse.get_age }} år, {{ annonse.county.name|default:"Utlandet" }}, {{ annonse.date_added|date:"j. F Y" }}<br>
                   {% if not annonse.is_expired %}
                     Annonsen vil ligge ute i {{ annonse.expires_in_days }} dager.
                   {% endif %}

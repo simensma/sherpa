@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+
+from user.models import User
 
 class CustomBackend(ModelBackend):
     supports_inactive_user = False

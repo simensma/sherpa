@@ -4,7 +4,6 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
 from django.template import RequestContext
@@ -19,7 +18,7 @@ import sys
 import requests
 import hashlib
 
-from user.models import Profile, NorwayBusTicket, NorwayBusTicketOld
+from user.models import User, NorwayBusTicket, NorwayBusTicketOld
 from core import validator
 from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
@@ -28,7 +27,7 @@ from admin.models import Publication
 from aktiviteter.models import AktivitetDate
 
 from focus.util import ADDRESS_FIELD_MAX_LENGTH
-from user.util import username, memberid_lookups_exceeded
+from user.util import memberid_lookups_exceeded
 from sherpa.decorators import user_requires, user_requires_login
 
 logger = logging.getLogger('sherpa')
@@ -56,7 +55,7 @@ def account(request):
 
 @user_requires_login()
 def update_account(request):
-    if not request.user.get_profile().is_member():
+    if not request.user.is_member():
         if request.method == 'GET':
             context = {
                 'user_password_length': settings.USER_PASSWORD_LENGTH
@@ -78,7 +77,7 @@ def update_account(request):
                 messages.error(request, 'invalid_sherpa_email_address')
                 errors = True
 
-            if User.objects.filter(username=username(request.POST['email'])).exclude(id=request.user.id).exists():
+            if User.objects.filter(identifier=request.POST['email']).exclude(id=request.user.id).exists():
                 messages.error(request, 'duplicate_email_address')
                 errors = True
 
@@ -86,11 +85,11 @@ def update_account(request):
                 return redirect('user.views.update_account')
 
             if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
-                profile = request.user.get_profile()
-                profile.sherpa_email = request.POST['sherpa-email']
-                profile.save()
+                user = request.user
+                user.sherpa_email = request.POST['sherpa-email']
+                user.save()
 
-            request.user.username = username(request.POST['email'])
+            request.user.identifier = request.POST['email']
             request.user.email = request.POST['email']
             request.user.first_name, request.user.last_name = request.POST['name'].rsplit(' ', 1)
             request.user.save()
@@ -126,7 +125,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_profile().get_actor().get_clean_address().country.code == 'NO' and not request.user.get_profile().get_actor().is_household_member():
+            if request.user.get_actor().get_clean_address().country.code == 'NO' and not request.user.get_actor().is_household_member():
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -145,11 +144,11 @@ def update_account(request):
                 return redirect('user.views.update_account')
 
             if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
-                profile = request.user.get_profile()
-                profile.sherpa_email = request.POST['sherpa-email']
-                profile.save()
+                user = request.user
+                user.sherpa_email = request.POST['sherpa-email']
+                user.save()
 
-            actor = request.user.get_profile().get_actor()
+            actor = request.user.get_actor()
             actor.first_name, actor.last_name = request.POST['name'].rsplit(' ', 1)
             actor.email = request.POST['email']
             actor.phone_home = request.POST['phone_home']
@@ -187,7 +186,7 @@ def update_account_password(request):
 
 @user_requires_login()
 def register_membership(request):
-    if request.user.get_profile().is_member():
+    if request.user.is_member():
         return redirect('user.views.home')
 
     if request.method == 'GET':
@@ -206,9 +205,9 @@ def register_membership(request):
 
             if request.POST['email-equal'] == 'true':
                 # Focus-email is empty, or equal to this email, so just use it
-                chosen_email = request.user.get_profile().get_email()
+                chosen_email = request.user.get_email()
             elif request.POST['email-choice'] == 'sherpa':
-                chosen_email = request.user.get_profile().get_email()
+                chosen_email = request.user.get_email()
             elif request.POST['email-choice'] == 'focus':
                 chosen_email = actor.email
             elif request.POST['email-choice'] == 'custom':
@@ -221,29 +220,29 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if Profile.objects.filter(memberid=request.POST['memberid'], user__is_active=True).exists():
-                messages.error(request, 'profile_exists')
+            if User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists():
+                messages.error(request, 'user_exists')
                 return redirect('user.views.register_membership')
 
-            # Ok, registration successful, update the profile
-            profile = request.user.get_profile()
+            # Ok, registration successful, update the user
+            user = request.user
 
             # If this memberid is already an imported inactive member, merge them
             try:
-                other_profile = Profile.objects.get(memberid=request.POST['memberid'], user__is_active=False)
-                profile.merge_with(other_profile) # This will delete the other profile
-            except Profile.DoesNotExist:
+                other_user = User.objects.get(memberid=request.POST['memberid'], is_active=False)
+                user.merge_with(other_user) # This will delete the other user
+            except User.DoesNotExist:
                 pass
 
-            profile.memberid = request.POST['memberid']
-            profile.save()
+            user.memberid = request.POST['memberid']
+            user.save()
 
             # Save the chosen email in Focus
             actor.email = chosen_email
             actor.save()
 
             # Reset the User-object state, this data will come from Focus
-            request.user.username = request.POST['memberid']
+            request.user.identifier = request.POST['memberid']
             request.user.first_name = ''
             request.user.last_name = ''
             request.user.email = ''
@@ -255,54 +254,54 @@ def register_membership(request):
             return redirect('user.views.register_membership')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers(request):
     return render(request, 'common/user/account/partneroffers.html')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
-    actor = request.user.get_profile().get_actor()
+    actor = request.user.get_actor()
     actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
     actor.save()
     return HttpResponse()
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email(request):
     return render(request, 'common/user/account/receive_email.html')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
-    actor = request.user.get_profile().get_actor()
+    actor = request.user.get_actor()
     actor.receive_email = not json.loads(request.POST['reserve'])
     actor.save()
     return HttpResponse()
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def aktiviteter(request):
-    aktivitet_dates = AktivitetDate.objects.filter(participants=request.user.get_profile()).order_by('-start_date')
+    aktivitet_dates = AktivitetDate.objects.filter(participants=request.user).order_by('-start_date')
     context = {'aktivitet_dates': aktivitet_dates}
     return render(request, 'common/user/aktiviteter.html', context)
 
 @user_requires_login()
 def leader_aktivitet_dates(request):
-    aktivitet_dates = request.user.get_profile().leader_aktivitet_dates.order_by('-start_date')
+    aktivitet_dates = request.user.leader_aktivitet_dates.order_by('-start_date')
     context = {'aktivitet_dates': aktivitet_dates}
     return render(request, 'common/user/leader_aktivitet_dates.html', context)
 
 @user_requires_login()
 def leader_aktivitet_date(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, leaders=request.user.get_profile())
+    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, leaders=request.user)
     context = {'aktivitet_date': aktivitet_date}
     return render(request, 'common/user/leader_aktivitet_date.html', context)
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
-    accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
+    accessible_associations = request.user.get_actor().main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
     publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
     publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
@@ -317,9 +316,9 @@ def publications(request):
     return render(request, 'common/user/account/publications.html', context)
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
-    accessible_associations = request.user.get_profile().get_actor().main_association().get_with_children()
+    accessible_associations = request.user.get_actor().main_association().get_with_children()
     publication = Publication.objects.filter(
         # Verify that the user has access to this publication
         Q(association__type='sentral') |
@@ -330,17 +329,17 @@ def publication(request, publication):
     return render(request, 'common/user/account/publication.html', context)
 
 @user_requires_login(message='norway_bus_tickets_login_required')
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
     now = datetime.now()
 
     try:
-        new_ticket = NorwayBusTicket.objects.get(profile=request.user.get_profile())
+        new_ticket = NorwayBusTicket.objects.get(user=request.user)
     except NorwayBusTicket.DoesNotExist:
         new_ticket = None
 
     try:
-        old_ticket = NorwayBusTicketOld.objects.get(memberid=request.user.get_profile().memberid)
+        old_ticket = NorwayBusTicketOld.objects.get(memberid=request.user.memberid)
     except NorwayBusTicketOld.DoesNotExist:
         old_ticket = None
 
@@ -352,8 +351,8 @@ def norway_bus_tickets(request):
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
 def norway_bus_tickets_order(request):
     errors = False
 
@@ -376,7 +375,7 @@ def norway_bus_tickets_order(request):
         return redirect('user.views.norway_bus_tickets')
 
     ticket = NorwayBusTicket(
-        profile=request.user.get_profile(),
+        user=request.user,
         date_trip=travel_date,
         distance=distance)
     ticket.save()
@@ -396,7 +395,7 @@ def norway_bus_tickets_order(request):
             exc_info=sys.exc_info(),
             extra={
                 'request': request,
-                'profile.id': ticket.profile.id,
+                'user.id': ticket.user.id,
                 'date_trip': ticket.date_trip,
                 'distance': ticket.distance
             }
@@ -408,14 +407,14 @@ def norway_bus_tickets_order(request):
         return redirect('user.views.norway_bus_tickets')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def fotobok(request):
     return render(request, 'common/user/account/fotobok.html')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def fotobok_eurofoto_request(request):
-    profile = request.user.get_profile()
+    user = request.user
 
     # Copied descriptions about the API payload from the old user page fotobok script:
     # publickey  freetext, 36 chars UUID/KEY
@@ -438,18 +437,18 @@ def fotobok_eurofoto_request(request):
     # This needs to be ordered so unpacking it to signature becomes correct
     payload = OrderedDict([
         ('publickey', settings.EUROFOTO_PUBLIC_KEY,),
-        ('identifier', '%s@eurofoto.turistforeningen.no' % profile.memberid,),
-        ('firstname', profile.get_first_name(),),
+        ('identifier', '%s@eurofoto.turistforeningen.no' % user.memberid,),
+        ('firstname', user.get_first_name(),),
         ('middlename', '',), # We could parse this out of 'lastname', but the old API didn't do that, so whatever
-        ('lastname', profile.get_last_name(),),
-        ('address1', profile.get_actor().address.a1 if profile.get_actor().address.a1 is not None else '',),
-        ('address2', profile.get_actor().address.a2 if profile.get_actor().address.a2 is not None else '',),
-        ('zipcode', profile.get_actor().address.zipcode,),
-        ('city', profile.get_actor().address.area,),
-        ('country', profile.get_actor().get_clean_address().country.code,),
+        ('lastname', user.get_last_name(),),
+        ('address1', user.get_actor().address.a1 if user.get_actor().address.a1 is not None else '',),
+        ('address2', user.get_actor().address.a2 if user.get_actor().address.a2 is not None else '',),
+        ('zipcode', user.get_actor().address.zipcode,),
+        ('city', user.get_actor().address.area,),
+        ('country', user.get_actor().get_clean_address().country.code,),
         ('phonework', '',),
-        ('phonehome', profile.get_actor().phone_home if profile.get_actor().phone_home is not None else '',),
-        ('phonemobile', profile.get_actor().phone_mobile if profile.get_actor().phone_mobile is not None else '',),
+        ('phonehome', user.get_actor().phone_home if user.get_actor().phone_home is not None else '',),
+        ('phonemobile', user.get_actor().phone_mobile if user.get_actor().phone_mobile is not None else '',),
     ])
     sha1 = hashlib.sha1()
     sha1.update(('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, u''.join(payload.values()).encode('utf-8'))))
@@ -486,25 +485,25 @@ def fotobok_eurofoto_request(request):
         return redirect('user.views.fotobok')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
-    actor = request.user.get_profile().get_actor()
+    actor = request.user.get_actor()
     actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
     actor.save()
     return HttpResponse()
 
 @user_requires_login()
-@user_requires(lambda u: u.get_profile().is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_profile().get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):
-    actor = request.user.get_profile().get_actor()
+    actor = request.user.get_actor()
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
     actor.save()
     return HttpResponse()

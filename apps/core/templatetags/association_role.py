@@ -1,15 +1,15 @@
 from django import template
 
-from core.util import association_profile_role, NoRoleRelationException
+from core.util import association_user_role, NoRoleRelationException
 
 register = template.Library()
 
-# Finds the role for an association-profile relation,
+# Finds the role for an association-user relation,
 # Note, this is not currently in use (and neither is the util method it calls)
 # It might be useful later though, so it'll stay for now.
 @register.filter
-def role_for(association, profile):
+def role_for(association, user):
     try:
-        return association_profile_role(association, profile)
+        return association_user_role(association, user)
     except NoRoleRelationException:
         return ''

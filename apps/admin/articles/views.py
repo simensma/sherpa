@@ -12,7 +12,7 @@ import json
 from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget, widget_admin_context
-from user.models import Profile
+from user.models import User
 
 def list(request):
     context = {'versions': list_bulk(request, 0)}
@@ -43,14 +43,14 @@ def new(request):
         hide_thumbnail=False,
         published=False,
         pub_date=None,
-        created_by=request.user.get_profile(),
+        created_by=request.user,
         site=request.session['active_association'].site)
     article.save()
-    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user.get_profile())
+    variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user)
     variant.save()
-    version = Version(variant=variant, version=1, owner=request.user.get_profile(), active=True, ads=False)
+    version = Version(variant=variant, version=1, owner=request.user, active=True, ads=False)
     version.save()
-    version.publishers.add(request.user.get_profile())
+    version.publishers.add(request.user)
     create_template(request.POST['template'], version, request.POST['title'])
     return redirect('admin.articles.views.edit_version', version.id)
 
@@ -90,11 +90,11 @@ def delete(request, article):
 
 def edit_version(request, version):
     rows, version = parse_version_content(request, version)
-    profiles = sorted(Profile.sherpa_users(), key=lambda p: p.get_first_name())
+    users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
         'rows': rows,
         'version': version,
-        'profiles': profiles,
+        'users': users,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': widget_admin_context()
     }

@@ -121,7 +121,7 @@ def memberid_sms(request):
     sms_request.phone_number_input = request.POST['phone_mobile']
     sms_request.ip = request.META['REMOTE_ADDR']
     if request.user.is_authenticated():
-        sms_request.profile = request.user.get_profile()
+        sms_request.user = request.user
 
     sms_request.count = memberid_sms_count(request.META['REMOTE_ADDR'])
     if sms_request.count > 10 and request.META['REMOTE_ADDR'] not in settings.SMS_RESTRICTION_WHITELIST:
@@ -151,12 +151,12 @@ def memberid_sms(request):
 @user_requires_login()
 def memberid_sms_userpage(request):
     # Requests from the userpage
-    actor = request.user.get_profile().get_actor()
+    actor = request.user.get_actor()
 
     sms_request = SMSServiceRequest(
         phone_number_input=None,
         ip=request.META['REMOTE_ADDR'],
-        profile=request.user.get_profile(),
+        user=request.user,
         memberid=actor.memberid
     )
 

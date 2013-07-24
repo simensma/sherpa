@@ -10,7 +10,7 @@ from django.contrib.gis.geos import Point
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag
-from user.models import Profile
+from user.models import User
 from focus.models import Actor
 from association.models import Association
 
@@ -71,7 +71,7 @@ def edit_description(request, aktivitet):
         aktivitet.hidden = json.loads(request.POST['hidden'])
 
         association = Association.objects.get(id=request.POST['association'])
-        if not association in request.user.get_profile().children_associations():
+        if not association in request.user.children_associations():
             raise PermissionDenied
         if request.POST['co_association'] == '':
             co_association = None
@@ -144,12 +144,12 @@ def leader_search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_profiles = Profile.objects.all()
+    local_users = User.objects.all()
     for word in request.POST['q'].split():
-        local_profiles = local_profiles.filter(
-            Q(user__first_name__icontains=word) |
-            Q(user__last_name__icontains=word))
-    local_profiles = local_profiles.order_by('user__first_name')
+        local_users = local_users.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word))
+    local_users = local_users.order_by('first_name')
 
     actors = Actor.objects.all()
     for word in request.POST['q'].split():
@@ -159,30 +159,30 @@ def leader_search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
-    actors_without_profile = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
-    profiles = list(local_profiles) + list(members)
+    members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+    actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
+    users = list(local_users) + list(members)
 
     context = RequestContext(request, {
         'aktivitet': aktivitet,
-        'profiles': profiles[:MAX_HITS],
-        'actors_without_profile': actors_without_profile[:MAX_HITS]})
+        'users': users[:MAX_HITS],
+        'actors_without_user': actors_without_user[:MAX_HITS]})
     return HttpResponse(json.dumps({
         'results': render_to_string('common/admin/aktiviteter/edit/leader_search_results.html', context),
-        'max_hits_exceeded': len(profiles) > MAX_HITS or len(actors_without_profile) > MAX_HITS
+        'max_hits_exceeded': len(users) > MAX_HITS or len(actors_without_user) > MAX_HITS
     }))
 
 def leader_assign(request):
-    profile = Profile.objects.get(id=request.POST['profile'])
+    user = User.objects.get(id=request.POST['user'])
     for date in request.POST.getlist('aktivitet_dates'):
         date = AktivitetDate.objects.get(id=date)
-        date.leaders.add(profile)
+        date.leaders.add(user)
     return redirect('admin.aktiviteter.views.edit_leaders', request.POST['aktivitet'])
 
 def leader_remove(request):
-    profile = Profile.objects.get(id=request.POST['profile'])
+    user = User.objects.get(id=request.POST['user'])
     aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
-    aktivitet_date.leaders.remove(profile)
+    aktivitet_date.leaders.remove(user)
     return redirect('admin.aktiviteter.views.edit_leaders', aktivitet_date.aktivitet.id)
 
 def new_aktivitet_date(request):

@@ -1,13 +1,13 @@
-{% for profile in profiles %}
-  <tr class="result" data-profile-id="{{ profile.id }}" data-profile-name="{{ profile.get_full_name }}">
-    <td>{{ profile.get_full_name }}</td>
-    <td>{{ profile.memberid|default:"<em>Ikke medlem</em>" }}</td>
+{% for user in users %}
+  <tr class="result">
+    <td>{{ user.get_full_name }}</td>
+    <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
       <button class="btn btn-danger assign-leader">Gi turlederstatus</button>
       <form action="{% url 'admin.aktiviteter.views.leader_assign' %}" method="post" class="hide">
         {% csrf_token %}
         <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
-        <input type="hidden" name="profile" value="{{ profile.id }}">
+        <input type="hidden" name="user" value="{{ user.id }}">
         <strong>Velg datoer:</strong>
         {% for aktivitet_date in aktivitet.get_dates_ordered %}
           <label class="radio">
@@ -20,7 +20,7 @@
   </tr>
 {% endfor %}
 
-{% for actor in actors_without_profile %}
+{% for actor in actors_without_user %}
   <tr class="result">
     <td>{{ actor.get_full_name }}</td>
     <td>{{ actor.memberid }}</td>
