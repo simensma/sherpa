@@ -2,7 +2,7 @@
   <ul class="nav nav-list">
     <li class="nav-header">Meny</li>
     <li{% if active == 'home' %} class="active"{% endif %}><a href="{% url 'user.views.home' %}">Min side</a></li>
-    {% if perms.user.sherpa %}
+    {% if user.perms.sherpa %}
       <li><a href="{% url 'admin.views.index' %}">Sherpa</a></li>
     {% endif %}
     <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url 'user.views.account' %}">Dine opplysninger</a></li>

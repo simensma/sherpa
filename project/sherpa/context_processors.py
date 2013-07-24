@@ -31,7 +31,7 @@ def old_site(request):
     return {'old_site': settings.OLD_SITE}
 
 def admin_active_association(request):
-    if request.user.is_authenticated() and request.user.has_perm('user.sherpa') and request.path.startswith('/sherpa/'):
+    if request.user.is_authenticated() and request.user.has_perm('sherpa') and request.path.startswith('/sherpa/'):
         return {'active_association': request.session.get('active_association', '')}
     return {}
 

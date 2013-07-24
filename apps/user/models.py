@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
 from django.core.cache import cache
-from django.contrib.auth.context_processors import PermWrapper
 
 from focus.models import Actor
 from association.models import Association
@@ -40,9 +39,14 @@ class User(AbstractBaseUser):
     associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
+    ### Methods ###
+
+    def has_perm(self, perm):
+        return self.permissions.filter(name=perm).exists()
+
     # Shortcut for templates to get any user perms via User
     def perms(self):
-        return PermWrapper(self.user)
+        return {p.name: True for p in self.permissions.all()}
 
     ### Focus-related ###
 
@@ -61,25 +65,25 @@ class User(AbstractBaseUser):
 
     def get_first_name(self):
         if not self.is_member():
-            return self.user.first_name
+            return self.first_name
         else:
             return self.get_actor().first_name
 
     def get_last_name(self):
         if not self.is_member():
-            return self.user.last_name
+            return self.last_name
         else:
             return self.get_actor().last_name
 
     def get_full_name(self):
         if not self.is_member():
-            return self.user.get_full_name()
+            return "%s %s" % (self.first_name, self.last_name)
         else:
-            return "%s %s" % (self.get_actor().first_name, self.get_actor().last_name)
+            return self.get_actor().get_full_name()
 
     def get_email(self):
         if not self.is_member():
-            return self.user.email
+            return self.email
         else:
             return self.get_actor().email
 
@@ -95,7 +99,7 @@ class User(AbstractBaseUser):
     def all_associations(self):
         associations = cache.get('user.%s.all_associations' % self.id)
         if associations is None:
-            if self.user.has_perm('user.sherpa_admin'):
+            if self.has_perm('sherpa_admin'):
                 # Sherpa admins have access to all associations
                 associations = Association.objects.all()
                 for association in associations:
@@ -143,7 +147,7 @@ class User(AbstractBaseUser):
     def children_associations(self):
         associations = cache.get('user.%s.children_associations' % self.id)
         if associations is None:
-            if self.user.has_perm('user.sherpa_admin'):
+            if self.has_perm('sherpa_admin'):
                 # Sherpa admins have access to all associations
                 associations = Association.objects.all()
                 #for association in associations:

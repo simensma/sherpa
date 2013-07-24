@@ -73,7 +73,7 @@ def update_account(request):
                 messages.error(request, 'invalid_email_address')
                 errors = True
 
-            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
+            if request.user.has_perm('sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
                 messages.error(request, 'invalid_sherpa_email_address')
                 errors = True
 
@@ -84,7 +84,7 @@ def update_account(request):
             if errors:
                 return redirect('user.views.update_account')
 
-            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
+            if request.user.has_perm('sherpa') and 'sherpa-email' in request.POST:
                 user = request.user
                 user.sherpa_email = request.POST['sherpa-email']
                 user.save()
@@ -113,7 +113,7 @@ def update_account(request):
                 messages.error(request, 'invalid_email_address')
                 errors = True
 
-            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
+            if request.user.has_perm('sherpa') and 'sherpa-email' in request.POST and not validator.email(request.POST['sherpa-email'], req=False):
                 messages.error(request, 'invalid_sherpa_email_address')
                 errors = True
 
@@ -143,7 +143,7 @@ def update_account(request):
             if errors:
                 return redirect('user.views.update_account')
 
-            if request.user.has_perm('user.sherpa') and 'sherpa-email' in request.POST:
+            if request.user.has_perm('sherpa') and 'sherpa-email' in request.POST:
                 user = request.user
                 user.sherpa_email = request.POST['sherpa-email']
                 user.save()

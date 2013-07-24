@@ -89,7 +89,7 @@
 <div class="user-home-navigation">
 
   {% rowiterator 3 %}
-    {% if perms.user.sherpa %}
+    {% if user.perms.sherpa %}
       {% column %}
         <a href="{% url 'admin.views.index' %}" class="element">
           <p class="title">Gå til Sherpa</p>

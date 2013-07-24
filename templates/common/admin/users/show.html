@@ -37,9 +37,9 @@
 
   <div class="span6">
     <h3>Tilganger</h3>
-    {% if other_user_perms.user.sherpa_admin %}
+    {% if other_user.perms.sherpa_admin %}
       <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
-    {% elif other_user_perms.user.sherpa %}
+    {% elif other_user.perms.sherpa %}
 
       {% if other_user.all_associations|length == 0 %}
         <div class="alert alert-error">
@@ -120,8 +120,8 @@
     {% endif %}
 
     {% if user == other_user %}                   {# Don't let a user modify his/her own permissions #}
-    {% elif other_user_perms.user.sherpa_admin %} {# Permissions for sherpa admins aren't modifiable #}
-    {% elif not other_user_perms.user.sherpa %}
+    {% elif other_user.perms.sherpa_admin %} {# Permissions for sherpa admins aren't modifiable #}
+    {% elif not other_user.perms.sherpa %}
 
       {# Hasn't got Sherpa access at all #}
       <p><button class="btn btn-danger make-sherpa-user">Gi tilgang til Sherpa</button></p>
@@ -142,7 +142,7 @@
       {# Normal sherpa-user #}
       <h3>Endre tilganger</h3>
 
-      {% if perms.user.sherpa_admin %}
+      {% if user.perms.sherpa_admin %}
         <p class="admin-buttons">
           <button class="btn btn-danger make-sherpa-admin"><i class="icon-exclamation-sign"></i> Gjør til Sherpa-admin</button>
           <button class="btn btn-danger revoke-sherpa-access"><i class="icon-remove"></i> Ta bort Sherpa-tilgang</button>

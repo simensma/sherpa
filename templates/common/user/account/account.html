@@ -38,7 +38,7 @@
             <th>E-post</th>
             <td>{{ user.get_email }}</td>
           </tr>
-          {% if perms.user.sherpa and user.sherpa_email != '' %}
+          {% if user.perms.sherpa and user.sherpa_email != '' %}
             <tr>
               <th>E-post i Sherpa</th>
               <td>{{ user.sherpa_email }}</td>
@@ -76,7 +76,7 @@
             <th>E-post</th>
             <td>{{ user.get_actor.email|default:"" }}</td>
           </tr>
-          {% if perms.user.sherpa and user.sherpa_email != '' %}
+          {% if user.perms.sherpa and user.sherpa_email != '' %}
             <tr>
               <th>E-post i Sherpa</th>
               <td>{{ user.sherpa_email }}</td>

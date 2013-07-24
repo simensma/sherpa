@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
-from django.contrib.auth.context_processors import PermWrapper
 from django.conf import settings
 from django.db.models import Q
 from django.template import RequestContext
@@ -38,7 +37,6 @@ def show(request, other_user):
 
     context = {
         'other_user': other_user,
-        'other_user_perms': PermWrapper(other_user),
         'revokable_associations': Association.sort(revokable_associations),
         'assignable_associations': Association.sort(assignable_associations)
     }
@@ -73,28 +71,28 @@ def search(request):
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def give_sherpa_access(request, user):
-    if not request.user.has_perm('user.sherpa'):
+    if not request.user.has_perm('sherpa'):
         raise PermissionDenied
 
-    permission = Permission.objects.get(content_type__app_label='user', codename='sherpa')
-    User.objects.get(id=user).user_permissions.add(permission)
+    permission = Permission.objects.get(name='sherpa')
+    User.objects.get(id=user).permissions.add(permission)
     return redirect('admin.users.views.show', user)
 
 def revoke_sherpa_access(request, user):
-    if not request.user.has_perm('user.sherpa'):
+    if not request.user.has_perm('sherpa'):
         raise PermissionDenied
 
-    permission = Permission.objects.get(content_type__app_label='user', codename='sherpa')
-    User.objects.get(id=user).user_permissions.remove(permission)
+    permission = Permission.objects.get(name='sherpa')
+    User.objects.get(id=user).permissions.remove(permission)
     return redirect('admin.users.views.show', user)
 
 def make_sherpa_admin(request, user):
-    if not request.user.has_perm('user.sherpa_admin'):
+    if not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
 
     user = User.objects.get(id=user)
-    permission = Permission.objects.get(content_type__app_label='user', codename='sherpa_admin')
-    user.user_permissions.add(permission)
+    permission = Permission.objects.get(name='sherpa_admin')
+    user.permissions.add(permission)
     cache.delete('user.%s.all_associations' % user.id)
     cache.delete('user.%s.children_associations' % user.id)
     return redirect('admin.users.views.show', user)

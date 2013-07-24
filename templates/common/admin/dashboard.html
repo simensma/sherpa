@@ -125,7 +125,7 @@
           </li>
         {% endif %}
 
-        {% if perms.user.sherpa_admin %}
+        {% if user.perms.sherpa_admin %}
           <li>
             <a href="{% url 'admin.memberid_sms.views.list' %}">
               <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/memberid-sms.png">

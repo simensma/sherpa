@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from membership.models import SMSServiceRequest
 
 def list(request):
-    if not request.user.has_perm('user.sherpa_admin'):
+    if not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
     sms_requests = SMSServiceRequest.objects.all()
     total_sent = len(sms_requests.filter(memberid__isnull=False, blocked=False))

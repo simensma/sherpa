@@ -1,10 +1,9 @@
 # encoding: utf-8
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import Permission
 
 import json
 
-from user.models import User
+from user.models import User, Permission
 from fjelltreffen.models import Annonse
 
 class Command(BaseCommand):
