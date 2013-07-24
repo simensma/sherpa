@@ -290,7 +290,7 @@ class AssociationRole(models.Model):
         return [c[1] for c in AssociationRole.ROLE_CHOICES if c[0] == role][0]
 
 class NorwayBusTicket(models.Model):
-    user = models.OneToOneField(User, related_name='new_norway_bus_ticket')
+    user = models.OneToOneField(User, related_name='norway_bus_ticket')
     date_placed = models.DateTimeField(auto_now_add=True)
     date_trip = models.DateTimeField()
     distance = models.CharField(max_length=1024)

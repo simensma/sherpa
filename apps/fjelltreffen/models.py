@@ -15,7 +15,7 @@ default_gender = ''     # All genders - empty string is also used in the select 
 default_text = ''       # Text search, empty means no constraints
 
 class Annonse(models.Model):
-    user = models.ForeignKey('user.User', related_name='new_fjelltreffen_annonser')
+    user = models.ForeignKey('user.User', related_name='fjelltreffen_annonser')
     date_added = models.DateField(auto_now_add=True)
     date_renewed = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)

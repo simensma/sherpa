@@ -19,7 +19,7 @@ class Image(models.Model):
     licence = models.CharField(max_length=1023)
     exif = models.TextField()
     uploaded = models.DateTimeField(auto_now_add=True)
-    new_uploader = models.ForeignKey('user.User')
+    uploader = models.ForeignKey('user.User')
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
