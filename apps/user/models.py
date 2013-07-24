@@ -44,11 +44,6 @@ class User(AbstractBaseUser):
     associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
-class Permission(models.Model):
-    # Django's Permission model is a bit more advanced than what we need,
-    # so we'll roll our own.
-    name = models.CharField(max_length=255)
-
     ###
     ### Methods from the old Profile-model - clean up
     ###
@@ -277,6 +272,11 @@ class Permission(models.Model):
     def sherpa_users():
         permission = Permission.objects.get(codename='sherpa')
         return Profile.objects.filter(user__user_permissions=permission)
+
+class Permission(models.Model):
+    # Django's Permission model is a bit more advanced than what we need,
+    # so we'll roll our own.
+    name = models.CharField(max_length=255)
 
 class AssociationRole(models.Model):
     ROLE_CHOICES = (
