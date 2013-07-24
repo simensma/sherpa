@@ -195,7 +195,7 @@ def register(request):
                 user.save()
             except User.DoesNotExist:
                 # New user
-                user = User(identifier=memberid, memberid=actor.memberid)
+                user = User(identifier=actor.memberid, memberid=actor.memberid)
                 user.set_password(request.POST['password'])
                 user.save()
 
