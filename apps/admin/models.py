@@ -20,7 +20,7 @@ class Image(models.Model):
     exif = models.TextField()
     uploaded = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey('user.Profile')
-    new_uploader = models.ForeignKey('user.User', null=True)
+    new_uploader = models.ForeignKey('user.User')
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')

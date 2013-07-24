@@ -15,6 +15,13 @@ class Migration(DataMigration):
         ('page', '0024_auto__add_field_version_new_owner__add_field_variant_new_owner__add_fi'),
     )
 
+    needed_by = (
+        ('admin', '0021_auto__chg_field_image_new_uploader'),
+        ('articles', '0018_auto__chg_field_article_new_created_by'),
+        ('fjelltreffen', '0016_auto__chg_field_annonse_user'),
+        ('page', '0025_auto__chg_field_version_new_owner__chg_field_variant_new_owner__chg_fi'),
+    )
+
     def forwards(self, orm):
         # Create the new permission objects
         print("   Creating new permission objects...")

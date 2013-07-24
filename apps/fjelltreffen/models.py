@@ -16,7 +16,7 @@ default_text = ''       # Text search, empty means no constraints
 
 class Annonse(models.Model):
     profile = models.ForeignKey('user.Profile', related_name='fjelltreffen_annonser')
-    user = models.ForeignKey('user.User', related_name='new_fjelltreffen_annonser', null=True)
+    user = models.ForeignKey('user.User', related_name='new_fjelltreffen_annonser')
     date_added = models.DateField(auto_now_add=True)
     date_renewed = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)

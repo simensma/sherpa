@@ -287,7 +287,7 @@ class AssociationRole(models.Model):
         ('admin', 'Administrator'),
         ('user', 'Vanlig bruker'),)
     profile = models.ForeignKey('user.Profile')
-    user = models.ForeignKey('user.User', null=True)
+    user = models.ForeignKey('user.User')
     association = models.ForeignKey('association.Association')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
 
@@ -298,7 +298,7 @@ class AssociationRole(models.Model):
 
 class NorwayBusTicket(models.Model):
     profile = models.OneToOneField(Profile, related_name='norway_bus_ticket')
-    user = models.OneToOneField(User, related_name='new_norway_bus_ticket', null=True)
+    user = models.OneToOneField(User, related_name='new_norway_bus_ticket')
     date_placed = models.DateTimeField(auto_now_add=True)
     date_trip = models.DateTimeField()
     distance = models.CharField(max_length=1024)

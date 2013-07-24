@@ -36,7 +36,7 @@ class Page(models.Model):
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey('user.Profile', related_name='pages_created')
-    new_created_by = models.ForeignKey('user.User', related_name='new_pages_created', null=True)
+    new_created_by = models.ForeignKey('user.User', related_name='new_pages_created')
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.Profile', related_name='pages_modified', null=True)
     new_modified_by = models.ForeignKey('user.User', related_name='new_pages_modified', null=True)
@@ -62,7 +62,7 @@ class Variant(models.Model):
     priority = models.IntegerField()
     # probability
     owner = models.ForeignKey('user.Profile', related_name='+')
-    new_owner = models.ForeignKey('user.User', related_name='+', null=True)
+    new_owner = models.ForeignKey('user.User', related_name='+')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
     # the active version in the template. Not sure if there exists a better
@@ -78,7 +78,7 @@ class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
     owner = models.ForeignKey('user.Profile', related_name='+')
-    new_owner = models.ForeignKey('user.User', related_name='+', null=True)
+    new_owner = models.ForeignKey('user.User', related_name='+')
     publishers = models.ManyToManyField('user.Profile', related_name='versions')
     new_publishers = models.ManyToManyField('user.User', related_name='new_versions')
     active = models.BooleanField()
