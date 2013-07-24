@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User as DjangoUser, Permission, AbstractBaseUser
+from django.contrib.auth.models import Permission, AbstractBaseUser
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.context_processors import PermWrapper
@@ -8,6 +8,10 @@ from focus.models import Actor
 from association.models import Association
 
 from itertools import groupby
+
+# Keep this to avoid nameerrors until all usage of Profile is refactored away
+class Profile:
+    pass
 
 class User(AbstractBaseUser):
     # The identifier will be the memberid for members, and email address for
@@ -43,13 +47,9 @@ class Permission(models.Model):
     # so we'll roll our own.
     name = models.CharField(max_length=255)
 
-class Profile(models.Model):
-    user = models.OneToOneField(DjangoUser)
-    password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
-    password_restore_date = models.DateTimeField(null=True)
-    associations = models.ManyToManyField('association.Association', related_name='users', through='AssociationRole')
-    memberid = models.IntegerField(null=True, unique=True)
-    sherpa_email = models.EmailField()
+    ###
+    ### Methods from the old Profile-model - clean up
+    ###
 
     # Shortcut for templates to get any user perms via Profile
     def perms(self):
@@ -276,17 +276,10 @@ class Profile(models.Model):
         permission = Permission.objects.get(codename='sherpa')
         return Profile.objects.filter(user__user_permissions=permission)
 
-    class Meta:
-        permissions = [
-            ("sherpa_admin", "Sherpa-administrator - global access"),
-            ("sherpa", "Has general access to Sherpa"),
-        ]
-
 class AssociationRole(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Administrator'),
         ('user', 'Vanlig bruker'),)
-    profile = models.ForeignKey('user.Profile')
     user = models.ForeignKey('user.User')
     association = models.ForeignKey('association.Association')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
@@ -297,7 +290,6 @@ class AssociationRole(models.Model):
         return [c[1] for c in AssociationRole.ROLE_CHOICES if c[0] == role][0]
 
 class NorwayBusTicket(models.Model):
-    profile = models.OneToOneField(Profile, related_name='norway_bus_ticket')
     user = models.OneToOneField(User, related_name='new_norway_bus_ticket')
     date_placed = models.DateTimeField(auto_now_add=True)
     date_trip = models.DateTimeField()

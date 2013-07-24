@@ -35,10 +35,8 @@ class Page(models.Model):
     slug = models.CharField(max_length=255)
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
-    created_by = models.ForeignKey('user.Profile', related_name='pages_created')
     new_created_by = models.ForeignKey('user.User', related_name='new_pages_created')
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey('user.Profile', related_name='pages_modified', null=True)
     new_modified_by = models.ForeignKey('user.User', related_name='new_pages_modified', null=True)
     modified_date = models.DateTimeField(null=True)
     parent = models.ForeignKey('page.Page', null=True)
@@ -61,7 +59,6 @@ class Variant(models.Model):
     segment = models.ForeignKey('analytics.Segment', null=True)
     priority = models.IntegerField()
     # probability
-    owner = models.ForeignKey('user.Profile', related_name='+')
     new_owner = models.ForeignKey('user.User', related_name='+')
     # change_comment = models.TextField()
     # The active field can be set by the view in order to get a reference to
@@ -77,9 +74,7 @@ def delete_page_variant(sender, **kwargs):
 class Version(models.Model):
     variant = models.ForeignKey('page.Variant')
     version = models.IntegerField()
-    owner = models.ForeignKey('user.Profile', related_name='+')
     new_owner = models.ForeignKey('user.User', related_name='+')
-    publishers = models.ManyToManyField('user.Profile', related_name='versions')
     new_publishers = models.ManyToManyField('user.User', related_name='new_versions')
     active = models.BooleanField()
     tags = models.ManyToManyField('core.Tag', related_name='versions')
