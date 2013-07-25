@@ -4,17 +4,20 @@
 
     var uploader;
     var form;
-    var tagger;
     $(document).ready(function() {
         uploader = $("div.image-upload-dialog");
         form = uploader.find("form");
-        tagger = new TypicalTagger(form.find("input[name='tags']"), uploader.find("div.tag-box"));
+
+        TagDisplayAH.enable({
+            targetInput: form.find("input[name='tags-serialized']"),
+            tagBox: uploader.find("div.tag-box"),
+            pickerInput: form.find("input[name='tags']")
+        });
 
         uploader.find("form").submit(function(e) {
             uploader.find("div.uploading").show();
-            var tags = JSON.stringify(tagger.tags);
-            form.find("input[name='tags-serialized']").val(tags);
             uploader.find("input[type='submit']").prop('disabled', true);
+            TagDisplayAH.collect();
         });
 
         var photographer = form.find("input[name='photographer']");
