@@ -8,17 +8,14 @@ $(document).ready(function() {
         $(this).parents("td").siblings("td.keep").toggle();
     });
 
-    var tagger = new TypicalTagger($("input[name='tags']"), $("div.tag-box"));
-
-    // Collect existing tags based on the DOM and layout
-    var tags = [];
-    $("div.tag").each(function() {
-        tags.push($(this).text().trim());
+    TagDisplayAH.enable({
+        targetInput: $("input[name='tags-serialized']"),
+        tagBox: $("div.tag-box"),
+        pickerInput: $("input[name='tags']")
     });
-    tagger.tags = tags;
 
     $("form.update-images").submit(function() {
-        $("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
+        TagDisplayAH.collect();
         var fields = {
             description: $("table.multiple-metadata tr.description button.new:hidden").length > 0,
             photographer: $("table.multiple-metadata tr.photographer button.new:hidden").length > 0,
