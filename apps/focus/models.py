@@ -148,7 +148,7 @@ class Actor(models.Model):
     chdt = models.DateTimeField(db_column=u'ChDt')
 
     def __unicode__(self):
-        return self.memberid
+        return u'%s' % self.memberid
 
     def main_association(self):
         association = cache.get('focus.association.%s' % self.main_association_id)
