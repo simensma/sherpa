@@ -94,6 +94,10 @@
         return tags.length;
     };
 
+    TaggerAH.getTags = function() {
+        return tags;
+    };
+
     TaggerAH.collect = function() {
         targetInput.val(JSON.stringify(tags));
     };
@@ -161,6 +165,7 @@
     };
 
     TagDisplayAH.count = TaggerAH.count;
+    TagDisplayAH.getTags = TaggerAH.getTags;
     TagDisplayAH.collect = TaggerAH.collect;
 
     function enableTagPicker() {
