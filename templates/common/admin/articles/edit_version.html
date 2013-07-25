@@ -1,9 +1,11 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url 'admin.articles.views.list' %}">Nyheter</a>{% endblock %}
+
+{% load taglist %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-dialog.js"></script>
@@ -78,14 +80,7 @@
           </tr>
           <tr>
             <td>
-              <div class="tag-box">
-                {% for tag in version.tags.all %}
-                  <div class="tag">
-                    <a href="javascript:undefined" class="closer"></a>
-                    {{ tag.name }}
-                  </div>
-                {% endfor %}
-              </div>
+              <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
             </td>
           </tr>
         </table>

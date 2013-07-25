@@ -41,19 +41,16 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    var tagger = new TypicalTagger(tag_input, form.find("div.tag-box"));
-
-    // Collect existing tags based on the DOM and layout
-    var tags = [];
-    form.find("div.tag-box div.tag").each(function() {
-        tags.push($(this).text().trim());
+    TagDisplay.enable({
+        targetInput: tag_collection,
+        tagBox: form.find("div.tag-box"),
+        pickerInput: tag_input
     });
-    tagger.tags = tags;
 
     form.submit(function() {
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        tag_collection.val(JSON.stringify(tagger.tags));
+        TagDisplay.collect();
         images.val(JSON.stringify(ImageCarouselPicker.getImages()));
     });
 

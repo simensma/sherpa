@@ -2,17 +2,14 @@ $(document).ready(function() {
 
     /* Tags */
 
-    var tagger = new TypicalTagger($("input[name='tags']"), $("div.tag-box"));
-
-    // Collect existing tags based on the DOM and layout
-    var tags = [];
-    $("div.tag").each(function() {
-        tags.push($(this).text().trim().toLowerCase());
+    TagDisplay.enable({
+        targetInput: $("input[name='tags-serialized']"),
+        tagBox: $("div.tag-box"),
+        pickerInput: $("input[name='tags']")
     });
-    tagger.tags = tags;
 
     $("form.update-image").submit(function() {
-        $("input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
+        TagDisplay.collect();
     });
 
     var photographer = $("form.update-image input[name='photographer']");

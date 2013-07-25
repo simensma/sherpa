@@ -37,18 +37,15 @@ $(document).ready(function() {
         language: 'nb'
     });
 
-    var tagger = new TypicalTagger(form.find("input[name='tags']"), form.find("div.tag-box"));
-
-    // Collect existing tags based on the DOM and layout
-    var tags = [];
-    form.find("div.control-group.tags div.tag-box div.tag").each(function() {
-        tags.push($(this).text().trim());
+    TagDisplay.enable({
+        targetInput: form.find("div.control-group.tags input[name='tags-serialized']"),
+        tagBox: form.find("div.tag-box"),
+        pickerInput: form.find("input[name='tags']")
     });
-    tagger.tags = tags;
 
     // Send the tags with the tags-serialized input upon submit
     form.submit(function() {
-       $(this).find("div.control-group.tags input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
+       TagDisplay.collect();
     });
 
 });

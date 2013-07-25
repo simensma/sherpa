@@ -7,7 +7,11 @@ $(document).ready(function() {
         $("div.uploader").toggle('slow');
     });
 
-    var tagger = new TypicalTagger($("div.image-details input[name='tags']"), $("div.image-details div.tag-box"));
+    TagDisplay.enable({
+        targetInput: $("div.image-details input[name='tags-serialized']"),
+        tagBox: $("div.image-details div.tag-box"),
+        pickerInput: $("div.image-details input[name='tags']")
+    });
 
     /* Changing destination album */
     $("a.albumpicker-trigger").click(function() {
@@ -49,7 +53,7 @@ $(document).ready(function() {
 
     $("div.image-details form").submit(function(e) {
         if(uploadReady && userReady) {
-            $("div.image-details input[name='tags-serialized']").val(JSON.stringify(tagger.tags));
+            TagDisplay.collect();
         } else {
             e.preventDefault();
         }
