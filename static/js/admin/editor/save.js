@@ -137,7 +137,7 @@ $(document).ready(function() {
         data.contents = JSON.stringify(contents);
 
         // Tags
-        data.tags = JSON.stringify(TagDisplayAH.getTags());
+        data.tags = JSON.stringify(TagDisplay.getTags());
 
         var parent_select = $("div.editor-header.page select[name='parent']");
         if($("div.editor-header.page").length > 0) {

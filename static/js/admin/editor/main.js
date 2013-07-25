@@ -587,7 +587,7 @@ $(document).ready(function() {
 
     /* Tags, used for both pages and articles */
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         tagBox: $("div.editor-header div.tags div.tag-box"),
         pickerInput: $("div.editor-header div.tags input[name='tags']")
     });

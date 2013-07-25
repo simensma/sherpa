@@ -8,14 +8,14 @@ $(document).ready(function() {
         $(this).parents("td").siblings("td.keep").toggle();
     });
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: $("input[name='tags-serialized']"),
         tagBox: $("div.tag-box"),
         pickerInput: $("input[name='tags']")
     });
 
     $("form.update-images").submit(function() {
-        TagDisplayAH.collect();
+        TagDisplay.collect();
         var fields = {
             description: $("table.multiple-metadata tr.description button.new:hidden").length > 0,
             photographer: $("table.multiple-metadata tr.photographer button.new:hidden").length > 0,

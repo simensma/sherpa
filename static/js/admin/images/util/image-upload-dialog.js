@@ -8,7 +8,7 @@
         uploader = $("div.image-upload-dialog");
         form = uploader.find("form");
 
-        TagDisplayAH.enable({
+        TagDisplay.enable({
             targetInput: form.find("input[name='tags-serialized']"),
             tagBox: uploader.find("div.tag-box"),
             pickerInput: form.find("input[name='tags']")
@@ -17,7 +17,7 @@
         uploader.find("form").submit(function(e) {
             uploader.find("div.uploading").show();
             uploader.find("input[type='submit']").prop('disabled', true);
-            TagDisplayAH.collect();
+            TagDisplay.collect();
         });
 
         var photographer = form.find("input[name='photographer']");

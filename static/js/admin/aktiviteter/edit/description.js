@@ -41,7 +41,7 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: tag_collection,
         tagBox: form.find("div.tag-box"),
         pickerInput: tag_input
@@ -50,7 +50,7 @@ $(document).ready(function() {
     form.submit(function() {
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        TagDisplayAH.collect();
+        TagDisplay.collect();
         images.val(JSON.stringify(ImageCarouselPicker.getImages()));
     });
 

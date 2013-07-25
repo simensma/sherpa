@@ -7,58 +7,58 @@
     1. A simple tagger with manual addition/removal of tags:
 
     // taggerInput is a hidden jquery text-input-element in which a JSON list of tags will be filled
-    TaggerAH.enable({
+    Tagger.enable({
         targetInput: some_input
     });
 
-    TaggerAH.addTag('some-tag');
-    TaggerAH.removeTag('some-tag');
-    TaggerAH.count(); // gives the tag count
+    Tagger.addTag('some-tag');
+    Tagger.removeTag('some-tag');
+    Tagger.count(); // gives the tag count
 
     some_form.submit(function() {
-        TaggerAH.collect(); // This fills the targetInput with JSON for form submission
+        Tagger.collect(); // This fills the targetInput with JSON for form submission
     });
 
 
     2. Display the selected tags in a tag box
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: some_input,
         tagBox: some_container
     });
 
-    If you now use TagDisplayAH.addTag and TagDisplayAH.removeTag, DOM elements will be
-    added to the tag box. You can still call addTag/removeTag directly on TaggerAH to
+    If you now use TagDisplay.addTag and TagDisplay.removeTag, DOM elements will be
+    added to the tag box. You can still call addTag/removeTag directly on Tagger to
     add tags that are NOT displayed in the tag-box, but still included on the collect call.
 
-    Remember that you still need to call TagDisplayAH.collect() to fill the target input on
+    Remember that you still need to call TagDisplay.collect() to fill the target input on
     form submission.
 
 
     3. Enable a tag-picker with typeahead
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: some_target_input,
         tagBox: some_container,
         pickerInput: some_picker_input
     });
 
     Like 2., but adds listeners to the pickerInput which automatically adds entered tags to
-    TagDisplayAH. It also adds typeahead for existing tags.
+    TagDisplay. It also adds typeahead for existing tags.
 
  */
 
-(function(TaggerAH, $, undefined) {
+(function(Tagger, $, undefined) {
     var tags = {};
     var targetInput = {};
 
-    TaggerAH.enable = function(options) {
+    Tagger.enable = function(options) {
         var ref = typeof options.ref !== 'undefined' ? options.ref : 'default';
         tags[ref] = [];
         targetInput[ref] = options.targetInput;
     };
 
-    TaggerAH.addTag = function(tag, ref) {
+    Tagger.addTag = function(tag, ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
 
         tag = tag.trim().toLowerCase();
@@ -86,7 +86,7 @@
         };
     };
 
-    TaggerAH.removeTag = function(tag, ref) {
+    Tagger.removeTag = function(tag, ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
         for(var i=0; i<tags[ref].length; i++) {
             if(tags[ref][i] == tag) {
@@ -95,40 +95,40 @@
         }
     };
 
-    TaggerAH.count = function(ref) {
+    Tagger.count = function(ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
         return tags[ref].length;
     };
 
-    TaggerAH.getTags = function(ref) {
+    Tagger.getTags = function(ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
         return tags[ref];
     };
 
-    TaggerAH.collect = function(ref) {
+    Tagger.collect = function(ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
         targetInput[ref].val(JSON.stringify(tags[ref]));
     };
 
-    TaggerAH.reset = function(ref) {
+    Tagger.reset = function(ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
         tags[ref] = [];
     };
 
-}(window.TaggerAH = window.TaggerAH || {}, jQuery));
+}(window.Tagger = window.Tagger || {}, jQuery));
 
 
 // TagDisplay wraps the Tagger with additional functionality for showing chosen tags
-(function(TagDisplayAH, $, undefined) {
+(function(TagDisplay, $, undefined) {
 
     var tagBox = {};
     var removeCallback = {};
     var pickerInput = {};
 
-    TagDisplayAH.enable = function(options) {
+    TagDisplay.enable = function(options) {
         var ref = typeof options.ref !== 'undefined' ? options.ref : 'default';
 
-        TaggerAH.enable(options);
+        Tagger.enable(options);
         tagBox[ref] = options.tagBox;
         removeCallback[ref] = options.removeCallback;
         if(typeof options.pickerInput !== "undefined") {
@@ -138,14 +138,14 @@
         addPredefinedTags(ref);
 
         $(document).on('click', tagBox[ref].selector + ' div.tag a.closer', function() {
-            TagDisplayAH.removeTag($(this).parent().text().trim(), ref);
+            TagDisplay.removeTag($(this).parent().text().trim(), ref);
             $(this).parent("div.tag").remove();
         });
     };
 
-    TagDisplayAH.addTag = function(tag, ref) {
+    TagDisplay.addTag = function(tag, ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
-        var result = TaggerAH.addTag(tag, ref);
+        var result = Tagger.addTag(tag, ref);
         if(result.status === 'ok') {
             var tagElement = $('<div class="tag"><a href="javascript:undefined" class="closer"></a> ' + result.cleanedTag + '</div>');
             tagBox[ref].append(tagElement);
@@ -162,10 +162,10 @@
         }
     };
 
-    TagDisplayAH.removeTag = function(tag, ref) {
+    TagDisplay.removeTag = function(tag, ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
 
-        TaggerAH.removeTag(tag, ref);
+        Tagger.removeTag(tag, ref);
         tagBox[ref].find("div.tag").each(function() {
             if($(this).text().trim() == tag) {
                 $(this).remove();
@@ -176,22 +176,22 @@
         });
     };
 
-    TagDisplayAH.reset = function(ref) {
+    TagDisplay.reset = function(ref) {
         ref = typeof ref !== 'undefined' ? ref : 'default';
-        TaggerAH.reset(ref);
+        Tagger.reset(ref);
         tagBox[ref].empty();
         addPredefinedTags(ref);
     };
 
-    TagDisplayAH.count = TaggerAH.count;
-    TagDisplayAH.getTags = TaggerAH.getTags;
-    TagDisplayAH.collect = TaggerAH.collect;
+    TagDisplay.count = Tagger.count;
+    TagDisplay.getTags = Tagger.getTags;
+    TagDisplay.collect = Tagger.collect;
 
     function addPredefinedTags(ref) {
         if(typeof tagBox[ref].attr('data-predefined-tags') !== 'undefined' && typeof tagBox[ref].attr('data-predefined-tags') !== false) {
             var predefined = JSON.parse(tagBox[ref].attr('data-predefined-tags'));
             for(var i=0; i<predefined.length; i++) {
-                TagDisplayAH.addTag(predefined[i], ref);
+                TagDisplay.addTag(predefined[i], ref);
             }
         }
     }
@@ -242,7 +242,7 @@
         }
         var tags = val.split(' ');
         for(var i=0; i<tags.length; i++) {
-            TagDisplayAH.addTag(tags[i], ref);
+            TagDisplay.addTag(tags[i], ref);
         }
         pickerInput[ref].val("");
     }
@@ -255,4 +255,4 @@
         return false;
     }
 
-}(window.TagDisplayAH = window.TagDisplayAH || {}, jQuery));
+}(window.TagDisplay = window.TagDisplay || {}, jQuery));

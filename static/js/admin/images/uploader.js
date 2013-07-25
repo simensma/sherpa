@@ -7,7 +7,7 @@ $(document).ready(function() {
         $("div.uploader").toggle('slow');
     });
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: $("div.image-details input[name='tags-serialized']"),
         tagBox: $("div.image-details div.tag-box"),
         pickerInput: $("div.image-details input[name='tags']")
@@ -53,7 +53,7 @@ $(document).ready(function() {
 
     $("div.image-details form").submit(function(e) {
         if(uploadReady && userReady) {
-            TagDisplayAH.collect();
+            TagDisplay.collect();
         } else {
             e.preventDefault();
         }

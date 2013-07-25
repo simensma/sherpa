@@ -49,7 +49,7 @@ $(document).ready(function() {
         }
     });
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: form_tags,
         pickerInput: tag_input,
         tagBox: tag_box
@@ -57,10 +57,10 @@ $(document).ready(function() {
 
     subcategories_buttons.click(function() {
         if($(this).is(".btn-danger")) {
-            TaggerAH.removeTag($(this).text());
+            Tagger.removeTag($(this).text());
             $(this).removeClass("btn-danger");
         } else {
-            var result = TaggerAH.addTag($(this).text());
+            var result = Tagger.addTag($(this).text());
             if(result.status === 'ok') {
                 $(this).addClass("btn-danger");
             }
@@ -68,12 +68,12 @@ $(document).ready(function() {
     });
 
     form.submit(function(e) {
-        if(TagDisplayAH.count() === 0) {
+        if(TagDisplay.count() === 0) {
             alert("Du må legge til minst én kategori - velg fra knappene over.");
             e.preventDefault();
             return;
         }
-        TagDisplayAH.collect();
+        TagDisplay.collect();
     });
 
 });

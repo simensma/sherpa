@@ -6,7 +6,7 @@
 
     $(document).on('widget.new.articles', function() {
         widget_editor.modal();
-        TagDisplayAH.reset('article_widget');
+        TagDisplay.reset('article_widget');
     });
 
     /* Editing existing widget */
@@ -25,7 +25,7 @@
         }
         var tag_box = widget_editor.find("div.tag-box");
         tag_box.attr('data-predefined-tags', JSON.stringify(widget.tags));
-        TagDisplayAH.reset('article_widget');
+        TagDisplay.reset('article_widget');
         if(widget.tags.length > 0) {
             widget_editor.find("input[name='enable-tags']").prop('checked', true);
             widget_editor.find("input[name='tags']").prop('disabled', false);
@@ -70,7 +70,7 @@
             }
         });
 
-        TagDisplayAH.enable({
+        TagDisplay.enable({
             ref: 'article_widget',
             tagBox: widget_editor.find("div.tag-box"),
             pickerInput: widget_editor.find("input[name='tags']")
@@ -94,7 +94,7 @@
                 var tag_link = null;
             }
             if(widget_editor.find("input[name='enable-tags']:checked").length > 0) {
-                var tags = TagDisplayAH.getTags('article_widget');
+                var tags = TagDisplay.getTags('article_widget');
             } else {
                 var tags = [];
             }

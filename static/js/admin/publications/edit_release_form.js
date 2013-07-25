@@ -37,7 +37,7 @@ $(document).ready(function() {
         language: 'nb'
     });
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: form.find("div.control-group.tags input[name='tags-serialized']"),
         tagBox: form.find("div.tag-box"),
         pickerInput: form.find("input[name='tags']")
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
     // Send the tags with the tags-serialized input upon submit
     form.submit(function() {
-       TagDisplayAH.collect();
+       TagDisplay.collect();
     });
 
 });

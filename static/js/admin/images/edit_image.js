@@ -2,14 +2,14 @@ $(document).ready(function() {
 
     /* Tags */
 
-    TagDisplayAH.enable({
+    TagDisplay.enable({
         targetInput: $("input[name='tags-serialized']"),
         tagBox: $("div.tag-box"),
         pickerInput: $("input[name='tags']")
     });
 
     $("form.update-image").submit(function() {
-        TagDisplayAH.collect();
+        TagDisplay.collect();
     });
 
     var photographer = $("form.update-image input[name='photographer']");
