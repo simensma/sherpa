@@ -54,7 +54,7 @@
                 $(window).load(addScrollEvent);
             }
         } else if(triggerType === 'button') {
-            trigger.click(load);
+            trigger.on('click.infinite-scroller', load);
         }
 
         function addScrollEvent() {
@@ -70,7 +70,11 @@
     };
 
     InfiniteScroller.disable = function(opts) {
-        $(window).off('scroll.infinite-scroller');
+        if(triggerType === 'scroll') {
+            $(window).off('scroll.infinite-scroller');
+        } else if(triggerType === 'button') {
+            trigger.off('click.infinite-scroller');
+        }
     };
 
     function load() {
