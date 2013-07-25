@@ -4,6 +4,7 @@
     var trigger;
     var triggerType;
     var loader;
+    var handlers;
     var loading = false;
     var complete = false;
     var windowLoaded = false;
@@ -17,6 +18,31 @@
         trigger = opts.trigger;
         triggerType = opts.triggerType;
         loader = opts.loader;
+        if(opts.handlers !== undefined) {
+            handlers = opts.handlers;
+        } else {
+            // Default ajax handlers
+            handlers = {
+                done: function(result) {
+                    result = $(result.trim());
+                    if(result.length === 0) {
+                        loader.fadeOut();
+                        complete = true;
+                        return;
+                    }
+                    container.data('infinite-scroller-bulk', Number(container.data('infinite-scroller-bulk')) + 1);
+                    container.append(result);
+                }, fail: function(result) {
+                    alert("Beklager, det oppstod en feil når vi forsøkte å laste flere elementer. Prøv å oppdatere siden, og scrolle ned igjen.");
+                }, always: function(result) {
+                    loading = false;
+                    loader.fadeOut();
+                    if(triggerType === 'button') {
+                        trigger.show();
+                    }
+                }
+            };
+        }
         container.data('infinite-scroller-bulk', 1);
 
         if(triggerType === 'scroll') {
@@ -55,24 +81,7 @@
         $.ajaxQueue({
             url: container.attr('data-infinite-scroll-url'),
             data: { bulk: container.data('infinite-scroller-bulk') }
-        }).done(function(result) {
-            result = $(result.trim());
-            if(result.length === 0) {
-                loader.fadeOut();
-                complete = true;
-                return;
-            }
-            container.data('infinite-scroller-bulk', Number(container.data('infinite-scroller-bulk')) + 1);
-            container.append(result);
-        }).fail(function(result) {
-            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere elementer. Prøv å oppdatere siden, og scrolle ned igjen.");
-        }).always(function(result) {
-            loading = false;
-            loader.fadeOut();
-            if(triggerType === 'button') {
-                trigger.show();
-            }
-        });
+        }).done(handlers.done).fail(handlers.fail).always(handlers.always);
     }
 
 }(window.InfiniteScroller = window.InfiniteScroller || {}, jQuery ));
