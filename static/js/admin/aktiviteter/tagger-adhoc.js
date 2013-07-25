@@ -117,6 +117,13 @@
             enableTagPicker();
         }
 
+        if(tagBox.attr('data-predefined-tags') !== 'undefined' && tagBox.attr('data-predefined-tags') !== false) {
+            var predefined = JSON.parse(tagBox.attr('data-predefined-tags'));
+            for(var i=0; i<predefined.length; i++) {
+                TagDisplayAH.addTag(predefined[i]);
+            }
+        }
+
         $(document).on('click', tagBox.selector + ' div.tag a.closer', function() {
             TagDisplayAH.removeTag($(this).parent().text().trim());
             $(this).parent("div.tag").remove();
