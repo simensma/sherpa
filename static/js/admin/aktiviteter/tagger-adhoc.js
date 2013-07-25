@@ -110,6 +110,11 @@
         targetInput[ref].val(JSON.stringify(tags[ref]));
     };
 
+    TaggerAH.reset = function(ref) {
+        ref = typeof ref !== 'undefined' ? ref : 'default';
+        tags[ref] = [];
+    };
+
 }(window.TaggerAH = window.TaggerAH || {}, jQuery));
 
 
@@ -130,13 +135,7 @@
             pickerInput[ref] = options.pickerInput;
             enableTagPicker(ref);
         }
-
-        if(tagBox[ref].attr('data-predefined-tags') !== 'undefined' && tagBox[ref].attr('data-predefined-tags') !== false) {
-            var predefined = JSON.parse(tagBox[ref].attr('data-predefined-tags'));
-            for(var i=0; i<predefined.length; i++) {
-                TagDisplayAH.addTag(predefined[i], ref);
-            }
-        }
+        addPredefinedTags(ref);
 
         $(document).on('click', tagBox[ref].selector + ' div.tag a.closer', function() {
             TagDisplayAH.removeTag($(this).parent().text().trim(), ref);
@@ -177,9 +176,25 @@
         });
     };
 
+    TagDisplayAH.reset = function(ref) {
+        ref = typeof ref !== 'undefined' ? ref : 'default';
+        TaggerAH.reset(ref);
+        tagBox[ref].empty();
+        addPredefinedTags(ref);
+    };
+
     TagDisplayAH.count = TaggerAH.count;
     TagDisplayAH.getTags = TaggerAH.getTags;
     TagDisplayAH.collect = TaggerAH.collect;
+
+    function addPredefinedTags(ref) {
+        if(typeof tagBox[ref].attr('data-predefined-tags') !== 'undefined' && typeof tagBox[ref].attr('data-predefined-tags') !== false) {
+            var predefined = JSON.parse(tagBox[ref].attr('data-predefined-tags'));
+            for(var i=0; i<predefined.length; i++) {
+                TagDisplayAH.addTag(predefined[i], ref);
+            }
+        }
+    }
 
     function enableTagPicker(ref) {
         pickerInput[ref].change(function(e) {
