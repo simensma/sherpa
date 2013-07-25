@@ -1,10 +1,14 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Websider &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>{% endblock %}
+
+{% load taglist %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-timepicker-addon.js"></script>
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}js/admin/tags.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/tagger-adhoc.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/page.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
@@ -71,14 +75,7 @@
             </tr>
             <tr>
               <td>
-                <div class="tag-box">
-                  {% for tag in version.tags.all %}
-                    <div class="tag">
-                      <a href="javascript:undefined" class="closer"></a>
-                      {{ tag.name }}
-                    </div>
-                  {% endfor %}
-                </div>
+                <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
               </td>
             </tr>
           </table>

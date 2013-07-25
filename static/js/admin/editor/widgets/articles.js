@@ -6,6 +6,7 @@
 
     $(document).on('widget.new.articles', function() {
         widget_editor.modal();
+        TagDisplayAH.reset('article_widget');
     });
 
     /* Editing existing widget */
@@ -22,13 +23,9 @@
             widget_editor.find("input[name='set-tag-link']").prop('checked', false);
             widget_editor.find("input[name='tag-link']").prop('disabled', true).val("");
         }
-        article_widget_tagger.tags = widget.tags;
-        var box = widget_editor.find("div.tag-box");
-        box.empty();
-        for(var i=0; i<widget.tags.length; i++) {
-            var tag = $('<div class="tag"><a href="javascript:undefined" class="closer"></a> ' + widget.tags[i] + '</div>');
-            box.append(tag);
-        }
+        var tag_box = widget_editor.find("div.tag-box");
+        tag_box.attr('data-predefined-tags', JSON.stringify(widget.tags));
+        TagDisplayAH.reset('article_widget');
         if(widget.tags.length > 0) {
             widget_editor.find("input[name='enable-tags']").prop('checked', true);
             widget_editor.find("input[name='tags']").prop('disabled', false);
@@ -73,8 +70,11 @@
             }
         });
 
-        // Create the tagger object, make it globally accessible
-        window.article_widget_tagger = new TypicalTagger(widget_editor.find("input[name='tags']"), widget_editor.find("div.tag-box"));
+        TagDisplayAH.enable({
+            ref: 'article_widget',
+            tagBox: widget_editor.find("div.tag-box"),
+            pickerInput: widget_editor.find("input[name='tags']")
+        });
 
         /* Saving */
         widget_editor.find("button.save").click(function() {
@@ -94,7 +94,7 @@
                 var tag_link = null;
             }
             if(widget_editor.find("input[name='enable-tags']:checked").length > 0) {
-                var tags = article_widget_tagger.tags;
+                var tags = TagDisplayAH.getTags('article_widget');
             } else {
                 var tags = [];
             }
