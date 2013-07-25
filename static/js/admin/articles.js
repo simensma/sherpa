@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     var table = $("table.article-listing");
+    var container = table.children("tbody");
 
     $("a.new-article").click(function() {
         $("div.new-article").modal();
@@ -15,9 +16,20 @@ $(document).ready(function() {
         $(this).parents("form").submit();
     });
 
+    container.data('bulk', 1);
     InfiniteScroller.enable({
-        container: table.children("tbody"),
-        loader: $("div.infinite-scroll-loader")
+        url: container.attr('data-infinite-scroll-url'),
+        triggerType: 'scroll',
+        trigger: container,
+        container: container,
+        loader: $("div.infinite-scroll-loader"),
+        ajaxData: function() {
+            var bulk = Number(container.data('bulk'));
+            container.data('bulk', bulk + 1);
+            return {
+                bulk: bulk
+            };
+        }
     });
 
 });

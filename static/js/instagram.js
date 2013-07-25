@@ -10,55 +10,58 @@ $(document).ready(function() {
     var skeleton = wrapper.find("div.instagram-skeleton");
     var iteration = 0;
 
-    loader_button.click(function() {
-        loader_button.hide();
-        loading.fadeIn();
-        $.ajaxQueue({
-            url: wrapper.attr('data-load-url')
-        }).done(function(result) {
-            result = JSON.parse(result);
-            if(result.hasOwnProperty('status') && result.status === 'instagram_server_error') {
-                alert("Beklager, Instagram sendte oss ikke flere bilder. Dette skjer av og til - prøv igjen, eller oppdater siden (F5).");
-                return;
-            }
-            for(var i=0; i<result.items.length; i++) {
-                var instagram = $("div.instagram").last();
-                if(iteration === 0) {
-                    instagram = skeleton.clone();
-                    instagram.removeClass('instagram-skeleton hide').addClass('instagram').appendTo(items);
+    InfiniteScroller.enable({
+        url: wrapper.attr('data-load-url'),
+        triggerType: 'button',
+        trigger: loader_button,
+        loader: loading,
+        handlers: {
+            done: function(result) {
+                result = JSON.parse(result);
+                if(result.hasOwnProperty('status') && result.status === 'instagram_server_error') {
+                    alert("Beklager, Instagram sendte oss ikke flere bilder. Dette skjer av og til - prøv igjen, eller oppdater siden (F5).");
+                    return;
                 }
-                var item = $(result.items[i]).addClass('hide');
-                var children = instagram.children();
-                if(iteration < 5) {
-                   item.appendTo(children.first());
-                } else if(iteration < 6) {
-                   item.appendTo(children.slice(1, 2));
-                } else if(iteration < 9) {
-                   item.appendTo(children.slice(2, 3));
-                } else if(iteration < 12) {
-                   item.appendTo(children.slice(3, 4));
-                } else if(iteration < 17) {
-                   item.appendTo(children.slice(4, 5));
-                } else {
-                   item.appendTo(children.last());
+                for(var i=0; i<result.items.length; i++) {
+                    var instagram = $("div.instagram").last();
+                    if(iteration === 0) {
+                        instagram = skeleton.clone();
+                        instagram.removeClass('instagram-skeleton hide').addClass('instagram').appendTo(items);
+                    }
+                    var item = $(result.items[i]).addClass('hide');
+                    var children = instagram.children();
+                    if(iteration < 5) {
+                       item.appendTo(children.first());
+                    } else if(iteration < 6) {
+                       item.appendTo(children.slice(1, 2));
+                    } else if(iteration < 9) {
+                       item.appendTo(children.slice(2, 3));
+                    } else if(iteration < 12) {
+                       item.appendTo(children.slice(3, 4));
+                    } else if(iteration < 17) {
+                       item.appendTo(children.slice(4, 5));
+                    } else {
+                       item.appendTo(children.last());
+                    }
+                    item.filter(".display").slideDown();
+                    iteration += 1;
+                    if(iteration == 18) {
+                        iteration = 0;
+                    }
                 }
-                item.filter(".display").slideDown();
-                iteration += 1;
-                if(iteration == 18) {
-                    iteration = 0;
+                if(result.meta.end) {
+                    end = true;
+                    loader.hide();
+                    ender.show();
+                    InfiniteScroller.disable();
                 }
+            }, fail: function(result) {
+                alert("Beklager, det oppstod en feil når vi forsøkte å laste flere instagrambilder. Prøv igjen, eller oppdater siden ved å trykke på F5.");
+            }, always: function(result) {
+                loading.hide();
+                loader_button.show();
             }
-            if(result.meta.end) {
-                end = true;
-                loader.hide();
-                ender.show();
-            }
-        }).fail(function(result) {
-            alert("Beklager, det oppstod en feil når vi forsøkte å laste flere instagrambilder. Prøv igjen, eller oppdater siden ved å trykke på F5.");
-        }).always(function(result) {
-            loading.hide();
-            loader_button.show();
-        });
+        }
     });
 
     $(document).on('mouseenter', 'div.instagram div.display', function() {
