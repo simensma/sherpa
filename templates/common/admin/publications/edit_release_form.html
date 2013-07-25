@@ -1,3 +1,5 @@
+{% load taglist %}
+
 {# This may be a 'create' or an 'edit' form #}
 {% if release %}
   <form action="{% url 'admin.publications.views.edit_release' publication.id release.id %}" method="post" enctype="multipart/form-data" class="form-default form-border form-horizontal edit-release">
@@ -55,14 +57,7 @@
     <div class="controls">
       <input type="hidden" name="tags-serialized">
       <input type="text" class="input-xlarge" name="tags" id="release_tags" style="margin-bottom: 10px">
-      <div class="tag-box">
-        {% for tag in release.tags.all %}
-          <div class="tag">
-            <a href="javascript:undefined" class="closer"></a>
-            {{ tag.name }}
-          </div>
-        {% endfor %}
-      </div>
+      <div class="tag-box" data-predefined-tags="{{ release.tags.all|taglist }}"></div>
     </div>
   </div>
 
