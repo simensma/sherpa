@@ -147,6 +147,9 @@ class Actor(models.Model):
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(db_column=u'ChDt')
 
+    def __unicode__(self):
+        return self.memberid
+
     def main_association(self):
         association = cache.get('focus.association.%s' % self.main_association_id)
         if association is None:
