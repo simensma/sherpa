@@ -17,6 +17,8 @@ $(document).ready(function() {
 
     InfiniteScroller.enable({
         container: table.children("tbody"),
+        triggerType: 'scroll',
+        trigger: table.children("tbody"),
         loader: $("div.infinite-scroll-loader")
     });
 

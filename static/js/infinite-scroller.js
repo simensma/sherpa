@@ -1,6 +1,8 @@
 (function(InfiniteScroller, $, undefined) {
 
     var container;
+    var trigger;
+    var triggerType;
     var loader;
     var loading = false;
     var complete = false;
@@ -12,20 +14,26 @@
 
     InfiniteScroller.enable = function(opts) {
         container = opts.container;
+        trigger = opts.trigger;
+        triggerType = opts.triggerType;
         loader = opts.loader;
         container.data('infinite-scroller-bulk', 1);
 
-        // The enable function could be called before or after window load, so make sure the scroll
-        // event isn't added before it's loaded (for element height calculations)
-        if(windowLoaded) {
-            addScrollEvent();
-        } else {
-            $(window).load(addScrollEvent);
+        if(triggerType === 'scroll') {
+            // The enable function could be called before or after window load, so make sure the scroll
+            // event isn't added before it's loaded (for element height calculations)
+            if(windowLoaded) {
+                addScrollEvent();
+            } else {
+                $(window).load(addScrollEvent);
+            }
+        } else if(triggerType === 'button') {
+            trigger.click(load);
         }
 
         function addScrollEvent() {
             $(window).on('scroll.infinite-scroller', function() {
-                var scrollLimit = container.offset().top + container.height();
+                var scrollLimit = trigger.offset().top + trigger.height();
                 if(!loading && !complete && $(window).scrollTop() + $(window).height() > scrollLimit) {
                     loading = true;
                     load();
@@ -40,6 +48,10 @@
     };
 
     function load() {
+        loader.show();
+        if(triggerType === 'button') {
+            trigger.hide();
+        }
         $.ajaxQueue({
             url: container.attr('data-infinite-scroll-url'),
             data: { bulk: container.data('infinite-scroller-bulk') }
@@ -56,6 +68,10 @@
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere elementer. Prøv å oppdatere siden, og scrolle ned igjen.");
         }).always(function(result) {
             loading = false;
+            loader.fadeOut();
+            if(triggerType === 'button') {
+                trigger.show();
+            }
         });
     }
 
