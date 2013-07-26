@@ -1,6 +1,3 @@
-// The idea here is that we'll create a better tagger ad hoc now, and eventually
-// convert all existing use of admin/tags.js to use this tagger.
-
 /*
     Usage:
 
