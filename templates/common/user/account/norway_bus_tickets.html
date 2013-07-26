@@ -15,7 +15,7 @@
 
     <h2>Bestilling av billett med 50% rabatt fra NOR-WAY Bussekspress</h2>
 
-    {% if new_ticket %}
+    {% if ticket %}
 
       {% for message in messages %}
         {% if message.message == 'order_success' %}
@@ -31,35 +31,21 @@
         <table class="norway-busticket-order">
           <tr>
             <th>Strekning:</th>
-            <td>{{ new_ticket.distance }}</td>
+            <td>{{ ticket.distance }}</td>
           </tr>
           <tr>
             <th>Reisedato:</th>
-            <td>{{ new_ticket.date_trip|date:"j. F Y" }}</td>
+            <td>
+              {% if not ticket.is_imported %}
+                {{ ticket.date_trip|date:"j. F Y" }}
+              {% else %}
+                {{ ticket.date_trip_text }}
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <th>Bestillingsdato:</th>
-            <td>{{ new_ticket.date_placed|date:"j. F Y" }}</td>
-          </tr>
-        </table>
-      </div>
-
-    {% elif old_ticket %}
-
-      <div class="form-border">
-        <h3>Takk for din bestilling!</h3>
-        <table class="norway-busticket-order">
-          <tr>
-            <th>Strekning:</th>
-            <td>{{ old_ticket.distance }}</td>
-          </tr>
-          <tr>
-            <th>Reisedato:</th>
-            <td>{{ old_ticket.date_trip_text }}</td>
-          </tr>
-          <tr>
-            <th>Bestillingsdato:</th>
-            <td>{{ old_ticket.date_placed|date:"j. F Y" }}</td>
+            <td>{{ ticket.date_placed|date:"j. F Y" }}</td>
           </tr>
         </table>
       </div>

@@ -177,10 +177,6 @@ class User(AbstractBaseUser):
             # Only one order per member
             return False
 
-        if NorwayBusTicketOld.objects.filter(memberid=self.memberid).exists():
-            # Old, imported order. Still only one order per member
-            return False
-
         if self.norway_bus_tickets_offer_has_expired():
             # The offer applies only the same year as membership enrollment
             return False
@@ -208,10 +204,7 @@ class User(AbstractBaseUser):
             if NorwayBusTicket.objects.filter(user=self).exists():
                 return True
 
-            if NorwayBusTicketOld.objects.filter(memberid=self.memberid).exists():
-                return True
-
-            # No orders, and offer expired - hide the item
+            # No order, and offer expired - hide the item
             return False
 
     def merge_with(self, other_user):
