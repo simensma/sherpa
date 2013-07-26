@@ -263,6 +263,9 @@ def existing(request):
     if age < AGE_YOUTH:
         return HttpResponse(json.dumps({'error': 'actor.too_young', 'age': age}))
 
+    if actor.is_household_member():
+        return HttpResponse(json.dumps({'error': 'actor.is_household_member'}))
+
     return HttpResponse(json.dumps({
         'name': "%s %s" % (actor.first_name, actor.last_name),
         'address': address.a1
@@ -952,6 +955,9 @@ def validate_existing(id, zipcode, country):
         return False
 
     if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
+        return False
+
+    if actor.is_household_member():
         return False
 
     if actor.get_clean_address().country.code != country:
