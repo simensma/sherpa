@@ -118,6 +118,10 @@ $(document).ready(function() {
                 existing_result.find("span.result").text("Det angitte medlemmet er bare " + result.age + " år ved utgangen av året, og kan ikke være hovedmedlem.");
                 existing_result.find("span.description").hide();
                 existing_result.find("span.result").addClass('error');
+            } else if(result.error == 'actor.is_household_member') {
+                existing_result.find("span.result").text("Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.error == 'actoraddress.does_not_exist') {
                 existing_result.find("span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
                 existing_result.find("span.description").hide();
