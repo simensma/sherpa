@@ -1,5 +1,4 @@
 # encoding: utf-8
-from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
@@ -18,7 +17,7 @@ import sys
 import requests
 import hashlib
 
-from user.models import User, NorwayBusTicket, NorwayBusTicketOld
+from user.models import User, NorwayBusTicket
 from core import validator
 from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
@@ -334,19 +333,13 @@ def norway_bus_tickets(request):
     now = datetime.now()
 
     try:
-        new_ticket = NorwayBusTicket.objects.get(user=request.user)
+        ticket = NorwayBusTicket.objects.get(user=request.user)
     except NorwayBusTicket.DoesNotExist:
-        new_ticket = None
-
-    try:
-        old_ticket = NorwayBusTicketOld.objects.get(memberid=request.user.memberid)
-    except NorwayBusTicketOld.DoesNotExist:
-        old_ticket = None
+        ticket = None
 
     context = {
         'now': now,
-        'new_ticket': new_ticket,
-        'old_ticket': old_ticket
+        'ticket': ticket,
     }
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
