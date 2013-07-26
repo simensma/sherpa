@@ -23,7 +23,7 @@ $(document).ready(function() {
             form.find("div.yearbook").hide();
             area.prop('disabled', true);
             Validator.validateZipcode(zipcode_control_group, zipcode, area, loader);
-            if(!first || (first && zipcode.val() != '')) {
+            if(!first || (first && zipcode.val() !== '')) {
                 Validator.triggerZipcode(zipcode);
             }
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
@@ -45,7 +45,7 @@ $(document).ready(function() {
     });
 
     form.find("input[name='address1']").focusout(function() {
-        if($(this).val() == "") {
+        if($(this).val() === "") {
             $(this).parents("div.control-group").addClass('error');
         } else {
             $(this).parents("div.control-group").addClass('success');
@@ -58,7 +58,7 @@ $(document).ready(function() {
 
     zipcode.focusout(function() {
         if(form.find("select[name='country'] option:selected").val() != 'NO') {
-            if($(this).val() == '' || area.val() == '') {
+            if($(this).val() === '' || area.val() === '') {
                 zipcode_control_group.removeClass('success').addClass('error');
             } else {
                 zipcode_control_group.removeClass('error').addClass('success');
@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
 
     area.focusout(function() {
-        if($(this).val() == '' || zipcode.val() == '') {
+        if($(this).val() === '' || zipcode.val() === '') {
             zipcode_control_group.removeClass('success').addClass('error');
         } else {
             zipcode_control_group.removeClass('error').addClass('success');
@@ -75,7 +75,7 @@ $(document).ready(function() {
     });
 
     form.submit(function(e) {
-        if($(this).find("input[name='address1']").val() == '' &&
+        if($(this).find("input[name='address1']").val() === '' &&
            form.find("select[name='country'] option:selected").val() == 'NO' &&
            !confirm("Har du glemt å fylle ut gateadressen?\n\nHvis du ikke har gateadresse, klikker du bare OK for å gå videre.")) {
                 e.preventDefault();
@@ -93,7 +93,7 @@ $(document).ready(function() {
             id: form.find("input[name='existing']").val(),
             zipcode: form.find("input[name='zipcode']").val(),
             country: form.find("select[name='country'] option:selected").val()
-        }
+        };
         $("div.existing-result span.result").hide();
         $("div.existing-result span.result").removeClass('success error');
         $.ajaxQueue({
@@ -121,7 +121,7 @@ $(document).ready(function() {
                 $("div.existing-result span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
                 $("div.existing-result span.description").hide();
                 $("div.existing-result span.result").addClass('error');
-            } else if(result.name != '') {
+            } else if(result.name !== '') {
                 $("div.existing-result span.result").text(result.name + ', ' + result.address);
                 $("div.existing-result span.description").show();
                 $("div.existing-result span.result").addClass('success');
