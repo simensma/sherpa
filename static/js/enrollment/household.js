@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     var form = $("form#household");
+    var existing_result = form.find("div.existing-result");
 
     form.find("img.ajaxloader").hide();
     form.find("select[name='country']").chosen();
@@ -85,7 +86,7 @@ $(document).ready(function() {
     /* Existing */
     form.find("button.search").click(function(e) {
         e.preventDefault();
-        $("div.existing-result").show();
+        existing_result.show();
         var button = $(this);
         button.prop('disabled', true);
         form.find("img.existing.ajaxloader").show();
@@ -94,51 +95,51 @@ $(document).ready(function() {
             zipcode: form.find("input[name='zipcode']").val(),
             country: form.find("select[name='country'] option:selected").val()
         };
-        $("div.existing-result span.result").hide();
-        $("div.existing-result span.result").removeClass('success error');
+        existing_result.find("span.result").hide();
+        existing_result.find("span.result").removeClass('success error');
         $.ajaxQueue({
             url: form.attr('data-existing-url'),
             data: { data: JSON.stringify(data) }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.error == 'bad_zipcode') {
-                $("div.existing-result span.result").text("Du må oppgi riktig postnummer før du søker.");
-                $("div.existing-result span.description").hide();
-                $("div.existing-result span.result").addClass('error');
+                existing_result.find("span.result").text("Du må oppgi riktig postnummer før du søker.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.error == 'invalid_id') {
-                $("div.existing-result span.result").text("Ugyldig medlemsnummer oppgitt.");
-                $("div.existing-result span.description").hide();
-                $("div.existing-result span.result").addClass('error');
+                existing_result.find("span.result").text("Ugyldig medlemsnummer oppgitt.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.error == 'actor.does_not_exist') {
-                $("div.existing-result span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
-                $("div.existing-result span.description").hide();
-                $("div.existing-result span.result").addClass('error');
+                existing_result.find("span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.error == 'actor.too_young') {
-                $("div.existing-result span.result").text("Det angitte medlemmet er bare " + result.age + " år ved utgangen av året, og kan ikke være hovedmedlem.");
-                $("div.existing-result span.description").hide();
-                $("div.existing-result span.result").addClass('error');
+                existing_result.find("span.result").text("Det angitte medlemmet er bare " + result.age + " år ved utgangen av året, og kan ikke være hovedmedlem.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.error == 'actoraddress.does_not_exist') {
-                $("div.existing-result span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
-                $("div.existing-result span.description").hide();
-                $("div.existing-result span.result").addClass('error');
+                existing_result.find("span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
+                existing_result.find("span.description").hide();
+                existing_result.find("span.result").addClass('error');
             } else if(result.name !== '') {
-                $("div.existing-result span.result").text(result.name + ', ' + result.address);
-                $("div.existing-result span.description").show();
-                $("div.existing-result span.result").addClass('success');
+                existing_result.find("span.result").text(result.name + ', ' + result.address);
+                existing_result.find("span.description").show();
+                existing_result.find("span.result").addClass('success');
             }
         }).fail(function(result) {
             // Todo
         }).always(function() {
             button.prop('disabled', false);
             form.find("img.existing.ajaxloader").hide();
-            $("div.existing-result span.result").show();
+            existing_result.find("span.result").show();
         });
     });
 
     if(Turistforeningen.existing) {
         form.find("button.search").click();
     } else {
-        $("div.existing-result").hide();
+        existing_result.hide();
     }
 
     if(Turistforeningen.trigger_form_validations) {
