@@ -288,7 +288,7 @@ class AssociationRole(models.Model):
 class NorwayBusTicket(models.Model):
     user = models.OneToOneField(User, related_name='norway_bus_ticket')
     date_placed = models.DateTimeField(auto_now_add=True)
-    date_trip = models.DateTimeField(null=True)
+    date_trip = models.DateTimeField(null=True) # Null for imported tickets
     # The imported trip dates have arbitrary text values which are hard to parse,
     # so store them separately in their original format.
     date_trip_text = models.CharField(max_length=25)
