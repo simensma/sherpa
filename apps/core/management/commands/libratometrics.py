@@ -12,11 +12,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         users = User.objects.filter(is_active=True)
+        inactive_users = User.objects.filter(is_active=False)
         sherpa_users = users.filter(permissions=Permission.objects.get(name='sherpa'))
         metrics = {
             'gauges': [{
                 'name': 'sherpa.db.users',
                 'value': users.count()
+            }, {
+                'name': 'sherpa.db.inactive_users',
+                'value': inactive_users.count()
             }, {
                 'name': 'sherpa.db.sherpa_users',
                 'value': sherpa_users.count()
