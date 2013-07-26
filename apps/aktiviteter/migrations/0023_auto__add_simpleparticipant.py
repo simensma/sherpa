@@ -8,15 +8,20 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Aktivitet.allow_simple_signup'
-        db.add_column(u'aktiviteter_aktivitet', 'allow_simple_signup',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
+        # Adding model 'SimpleParticipant'
+        db.create_table(u'aktiviteter_simpleparticipant', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('aktivitet_date', self.gf('django.db.models.fields.related.ForeignKey')(related_name='simple_participants', to=orm['aktiviteter.AktivitetDate'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('email', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('phone', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal(u'aktiviteter', ['SimpleParticipant'])
 
 
     def backwards(self, orm):
-        # Deleting field 'Aktivitet.allow_simple_signup'
-        db.delete_column(u'aktiviteter_aktivitet', 'allow_simple_signup')
+        # Deleting model 'SimpleParticipant'
+        db.delete_table(u'aktiviteter_simpleparticipant')
 
 
     models = {
@@ -41,13 +46,13 @@ class Migration(SchemaMigration):
             'aktivitet': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dates'", 'to': u"orm['aktiviteter.Aktivitet']"}),
             'end_date': ('django.db.models.fields.DateTimeField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'leaders': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'leader_aktivitet_dates'", 'symmetrical': 'False', 'to': u"orm['user.Profile']"}),
-            'participants': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'aktiviteter'", 'symmetrical': 'False', 'to': u"orm['user.Profile']"}),
+            'participants': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'aktiviteter'", 'symmetrical': 'False', 'to': u"orm['user.User']"}),
             'signup_cancel_deadline': ('django.db.models.fields.DateField', [], {}),
             'signup_deadline': ('django.db.models.fields.DateField', [], {}),
             'signup_enabled': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'signup_start': ('django.db.models.fields.DateField', [], {}),
-            'start_date': ('django.db.models.fields.DateTimeField', [], {})
+            'start_date': ('django.db.models.fields.DateTimeField', [], {}),
+            'turledere': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'turleder_aktivitet_dates'", 'symmetrical': 'False', 'to': u"orm['user.User']"})
         },
         u'aktiviteter.aktivitetimage': {
             'Meta': {'object_name': 'AktivitetImage'},
@@ -57,6 +62,14 @@ class Migration(SchemaMigration):
             'photographer': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '1024'}),
             'url': ('django.db.models.fields.CharField', [], {'max_length': '2048'})
+        },
+        u'aktiviteter.simpleparticipant': {
+            'Meta': {'object_name': 'SimpleParticipant'},
+            'aktivitet_date': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'simple_participants'", 'to': u"orm['aktiviteter.AktivitetDate']"}),
+            'email': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         u'association.association': {
             'Meta': {'object_name': 'Association'},
@@ -76,42 +89,6 @@ class Migration(SchemaMigration):
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'visit_address': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '255'}),
             'zipcode': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Zipcode']", 'null': 'True'})
-        },
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'core.county': {
             'Meta': {'object_name': 'County'},
@@ -148,18 +125,30 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'AssociationRole'},
             'association': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['association.Association']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['user.Profile']"}),
-            'role': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'role': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['user.User']"})
         },
-        u'user.profile': {
-            'Meta': {'object_name': 'Profile'},
-            'associations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'users'", 'symmetrical': 'False', 'through': u"orm['user.AssociationRole']", 'to': u"orm['association.Association']"}),
+        u'user.permission': {
+            'Meta': {'object_name': 'Permission'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+        },
+        u'user.user': {
+            'Meta': {'object_name': 'User'},
+            'associations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'+'", 'symmetrical': 'False', 'through': u"orm['user.AssociationRole']", 'to': u"orm['association.Association']"}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
+            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'identifier': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
+            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'memberid': ('django.db.models.fields.IntegerField', [], {'unique': 'True', 'null': 'True'}),
+            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'password_restore_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'password_restore_key': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
-            'sherpa_email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'+'", 'symmetrical': 'False', 'to': u"orm['user.Permission']"}),
+            'sherpa_email': ('django.db.models.fields.EmailField', [], {'max_length': '75'})
         }
     }
 
