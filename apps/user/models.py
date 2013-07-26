@@ -287,19 +287,3 @@ class NorwayBusTicket(models.Model):
     date_trip_text = models.CharField(max_length=25)
     distance = models.CharField(max_length=1024)
     is_imported = models.BooleanField(default=False)
-
-# This model contains a bunch of imported orders from the old user system.
-# During the new user page launch year (probably 2013), we need this to know who have already
-# ordered in order to deny further orders. However, at the end of that year, this could in theory
-# be deleted (because members can only order new tickets the same year as enrollment),
-# but it's kept because we use it to show users who have already ordered information about
-# their order.
-class NorwayBusTicketOld(models.Model):
-    # Note that memberid cannot be a foreign key reference to User, as not all members
-    # who've placed orders have created their user account here at the time of import.
-    memberid = models.IntegerField(unique=True)
-    date_placed = models.DateTimeField()
-    # The imported trip dates have arbitrary text values which are hard to parse,
-    # so we'll skip that for now.
-    date_trip_text = models.CharField(max_length=25)
-    distance = models.CharField(max_length=255)
