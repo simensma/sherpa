@@ -1,5 +1,4 @@
 # encoding: utf-8
-from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
