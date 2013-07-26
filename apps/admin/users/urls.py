@@ -4,6 +4,7 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('admin.users.views',
 
     url(r'^$', 'index'),
+    url(r'^opprett-inaktiv-konto/(?P<memberid>\d+)/$', 'create_inactive'),
     url(r'^rediger/(?P<other_user>\d+)/$', 'show'),
     url(ur'^søk/$', 'search'),
 
