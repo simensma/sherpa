@@ -179,7 +179,20 @@ def turleder_search(request):
     }))
 
 def turleder_assign(request):
-    user = User.get_users().get(id=request.POST['user'])
+    if 'user' in request.POST:
+        user = User.get_users().get(id=request.POST['user'])
+    elif 'actor' in request.POST:
+        # Create the requested user as inactive
+        actor = Actor.objects.get(memberid=request.POST['actor'])
+        user = User(
+            identifier=actor.memberid,
+            memberid=actor.memberid,
+            is_active=False
+        )
+        user.save()
+    else:
+        raise Exception("Expected either 'user' or 'actor' in POST request")
+
     for date in request.POST.getlist('aktivitet_dates'):
         date = AktivitetDate.objects.get(id=date)
         date.turledere.add(user)
