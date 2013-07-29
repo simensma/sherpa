@@ -32,6 +32,11 @@ def memberid_lookups_exceeded(ip_address):
 # potentially authenticate herself for multiple accounts, and the Django auth backend system
 # doesn't account for that (it returns exactly one user, or None).
 def authenticate_users(email, password):
+    # Support this special case explicitly because it will hit a lot of Actors and
+    # check for a matching User for each of them, which takes a long time
+    if email.strip() == '':
+        return []
+
     # Add matching local users that aren't members
     matches = [u for u in User.objects.filter(email=email) if u.check_password(password)]
 
