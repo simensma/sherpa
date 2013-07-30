@@ -507,6 +507,7 @@ def payment(request):
     if main is not None:
         # Note, main will always be None when an existing main member is specified
         main['id'] = add_focus_user(
+            request,
             main['name'],
             main['dob'],
             main['age'],
@@ -527,6 +528,7 @@ def payment(request):
         if user == main:
             continue
         user['id'] = add_focus_user(
+            request,
             user['name'],
             user['dob'],
             user['age'],
@@ -1014,7 +1016,7 @@ def polite_title(str):
     else:
         return str
 
-def add_focus_user(name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
+def add_focus_user(request, name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
     first_name, last_name = name.rsplit(' ', 1)
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
@@ -1084,6 +1086,26 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         totalprice=price
     )
     user.save()
+
+    # Verify that the payment_method was successfully saved
+    payment_method_result = int(Enrollment.objects.get(member_id=memberid).payment_method)
+    if payment_method_result != payment_method:
+        # By the offchance that this occurs, it probably means that something went wrong in Focus.
+        # We've experienced some entries to have 0.0 in the payment_method field and have no idea
+        # why it happens, so I suspect the fact that the column is a float field might be the cause.
+        # Note that you MUST fix this, otherwise the member won't show up in Focus and the payment may
+        # go by unnoticed (not good).
+        logger.error(u"Focus enrollment payment_method wasn't successfully saved!",
+            exc_info=sys.exc_info(),
+            extra={
+                'request': request,
+                'session': request.session,
+                'payment_method_in_session': request.session['enrollment']['payment_method'],
+                'payment_method_code_attempted': payment_method,
+                'payment_method_code_saved': payment_method_result,
+                'transaction_id': request.session['enrollment']['transaction_id'] if 'transaction_id' in request.session['enrollment'] else None
+            }
+        )
     return memberid
 
 def focus_type_of(age, household):
