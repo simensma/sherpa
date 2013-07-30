@@ -733,12 +733,6 @@ def result(request):
                 settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
             ))
 
-    # Temporary check for old sessions - remove this after May 1. 2013
-    if request.session['enrollment']['result'] == 'success':
-        request.session['enrollment']['result'] = 'success_card'
-    elif request.session['enrollment']['result'] == 'invoice':
-        request.session['enrollment']['result'] = 'success_invoice'
-
     # Collect emails to a separate list for easier template formatting
     emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
