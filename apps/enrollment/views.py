@@ -44,6 +44,11 @@ EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
 
+FOCUS_PAYMENT_METHOD_CODES = {
+    'card': 4,
+    'invoice': 1
+}
+
 # Hardcoded ages
 AGE_SENIOR = 67
 AGE_MAIN = 27
@@ -1014,7 +1019,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to is not None)
-    payment_method = focus_payment_method_code(payment_method)
+    payment_method = FOCUS_PAYMENT_METHOD_CODES[payment_method]
     price = price_of(age, linked_to is not None, price)
     linked_to = '' if linked_to is None else str(linked_to)
     if location['country'] == 'NO':
@@ -1080,10 +1085,6 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     )
     user.save()
     return memberid
-
-def focus_payment_method_code(method):
-    if method == 'card':      return 4
-    elif method == 'invoice': return 1
 
 def focus_type_of(age, household):
     if household and age >= AGE_YOUTH:
