@@ -180,7 +180,7 @@ def create_template(template, version):
         for i in range(len(contents_lower_left)):
             content = Content(column=column, content=contents_lower_left[i]['content'], type=contents_lower_left[i]['type'], order=i)
             content.save()
-        column = Column(row=row, span=3, offset=0, order=0)
+        column = Column(row=row, span=3, offset=0, order=1)
         column.save()
         for i in range(len(contents_lower_right)):
             content = Content(column=column, content=contents_lower_right[i]['content'], type=contents_lower_right[i]['type'], order=i)
