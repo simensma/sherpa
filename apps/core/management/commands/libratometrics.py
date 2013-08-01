@@ -1,6 +1,8 @@
 # encoding: utf-8
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
+from datetime import date, timedelta
 import json
 
 from user.models import User, Permission
@@ -14,6 +16,13 @@ class Command(BaseCommand):
         users = User.objects.filter(is_active=True)
         inactive_users = User.objects.filter(is_active=False)
         sherpa_users = users.filter(permissions=Permission.objects.get(name='sherpa'))
+
+        # Fjelltreffen
+        ft_active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
+        ft_active_published = Annonse.objects.filter(date_renewed__gte=ft_active_period, hidden=False).count()
+        ft_active_hidden = Annonse.objects.filter(date_renewed__gte=ft_active_period, hidden=True).count()
+        ft_inactive = Annonse.objects.filter(date_renewed__lt=ft_active_period).count()
+
         metrics = {
             'gauges': [{
                 'name': 'sherpa.db.users',
@@ -25,11 +34,14 @@ class Command(BaseCommand):
                 'name': 'sherpa.db.sherpa_users',
                 'value': sherpa_users.count()
             }, {
-                'name': 'sherpa.db.fjelltreffen_annonser',
-                'value': Annonse.objects.count()
+                'name': 'sherpa.db.fjelltreffen.annonser.active.published',
+                'value': ft_active_published
             }, {
-                'name': 'sherpa.db.fjelltreffen_annonser_aktive',
-                'value': Annonse.get_active().count()
+                'name': 'sherpa.db.fjelltreffen.annonser.active.hidden',
+                'value': ft_active_hidden
+            }, {
+                'name': 'sherpa.db.fjelltreffen.annonser.inactive',
+                'value': ft_inactive
             }],
             'counters': []
         }
