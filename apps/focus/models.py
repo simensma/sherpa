@@ -319,14 +319,7 @@ class Actor(models.Model):
             # If >1 of the same service, regard the one with newest start_date as canonical.
             # Note: We're disregarding the fact that there are multiple yearbook service codes.
             # Even though no one is supposed to have that, it's technically possible - assuming
-            # that the newest one is canonical is likely wrong.
-            logger.warning(u"Kom borti et medlem med mer enn én Årbok-tjeneste, antar at den nyeste gjelder",
-                exc_info=sys.exc_info(),
-                extra={
-                    'memberid': self.memberid,
-                    'yearbook_service_ids': [s.id for s in services]
-                }
-            )
+            # that the newest one is canonical *might* be wrong.
             return max(services, key=lambda s: s.start_date)
 
     def get_reserved_against_fjellogvidde(self):
