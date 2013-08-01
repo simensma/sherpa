@@ -2,11 +2,12 @@ $(document).ready(function() {
 
     var header = $("div.editor-header.page");
 
-    /* Publishing-time datetimepicker */
-    header.find("div.publish input[name='page-datetime-field']").datetimepicker({
-        dateFormat: "dd.mm.yy",
-        seperator: " ",
-        timeFormat: "hh:mm"
+    /* Publishing-time datepicker */
+    header.find("div.publish div.date").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        language: 'nb'
     });
 
     /* Delete page */

@@ -105,21 +105,29 @@ def save(request, version):
         version.ads = json.loads(request.POST['ads'])
 
         ### Published state ###
-        datetime_string = request.POST["datetime"]
-        status = json.loads(request.POST["status"])
 
-        #date format is this one (dd.mm.yyyy hh:mm)
         try:
-            date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-        except:
-            #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
-            date_object = None
-
-        page.published = status
-        if date_object is None:
-            page.pub_date = datetime.now()
-        else:
-            page.pub_date = date_object
+            page.published = json.loads(request.POST['status'])
+            datetime_string = '%s %s' % (request.POST['publish_date'], request.POST['publish_time'])
+            page.pub_date = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
+        except ValueError:
+            if page.published:
+                # We're trying to publish, and an error occured.
+                if request.POST['publish_date'] == '' and request.POST['publish_time'] == '':
+                    # Well, since we didn't specify the date, set it to now - and update it clientside
+                    now = datetime.now()
+                    response['publish_error'] = 'auto_now'
+                    response['publish_date'] = now.strftime('%d.%m.%Y')
+                    response['publish_time'] = now.strftime('%H:%M')
+                    page.pub_date = now
+                else:
+                    # Parse error - inform, and don't publish
+                    response['publish_error'] = 'unparseable_datetime'
+                    page.published = False
+            else:
+                # An error occured, but we're not publishing so just nullify
+                response['publish_error'] = 'error_nullify'
+                page.pub_date = None
 
         # Record the modification
         page.modified_by = request.user
@@ -140,21 +148,28 @@ def save(request, version):
             response['author_error'] = 'no_authors'
 
         ### Published state ###
-        datetime_string = request.POST["datetime"]
-        status = json.loads(request.POST["status"])
-
-        #date format is this one (dd.mm.yyyy hh:mm)
         try:
-            date_object = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-        except:
-            #datetime could not be parsed, this means the field was empty(default) or corrupted, use now()
-            date_object = None
-
-        article.published = status
-        if date_object is None:
-            article.pub_date = datetime.now()
-        else:
-            article.pub_date = date_object
+            article.published = json.loads(request.POST['status'])
+            datetime_string = '%s %s' % (request.POST['publish_date'], request.POST['publish_time'])
+            article.pub_date = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
+        except ValueError:
+            if article.published:
+                # We're trying to publish, and an error occured.
+                if request.POST['publish_date'] == '' and request.POST['publish_time'] == '':
+                    # Well, since we didn't specify the date, set it to now - and update it clientside
+                    now = datetime.now()
+                    response['publish_error'] = 'auto_now'
+                    response['publish_date'] = now.strftime('%d.%m.%Y')
+                    response['publish_time'] = now.strftime('%H:%M')
+                    article.pub_date = now
+                else:
+                    # Parse error - inform, and don't publish
+                    response['publish_error'] = 'unparseable_datetime'
+                    article.published = False
+            else:
+                # An error occured, but we're not publishing so just nullify
+                response['publish_error'] = 'error_nullify'
+                article.pub_date = None
 
         # Record the modification
         article.modified_by = request.user

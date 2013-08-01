@@ -139,6 +139,12 @@ $(document).ready(function() {
         // Tags
         data.tags = JSON.stringify(TagDisplay.getTags());
 
+        // Publish-state
+        var publish = $("div.editor-header div.publish");
+        data.publish_date = publish.find("input[name='date']").val();
+        data.publish_time = publish.find("input[name='time']").val();
+        data.status = JSON.stringify(publish.find("input[name='publish']:checked").length > 0);
+
         var parent_select = $("div.editor-header.page select[name='parent']");
         if($("div.editor-header.page").length > 0) {
             /* Page-specific */
@@ -151,10 +157,6 @@ $(document).ready(function() {
 
             // Whether or not to display ads
             data.ads = JSON.stringify($("div.editor-header.page input[name='display-ads']:checked").length > 0);
-
-            // Publish-state
-            data.datetime= $("input[name='page-datetime-field']").val();
-            data.status= JSON.stringify($("div.editor-header input[name='publish']:checked").length > 0);
         } else if($("div.editor-header.article").length > 0) {
             /* Article-specific */
 
@@ -164,10 +166,6 @@ $(document).ready(function() {
                 authors.push($(this).val());
             });
             data.authors = JSON.stringify(authors);
-
-            // Publish-state
-            data.datetime = $("input[name='article-datetime-field']").val();
-            data.status = JSON.stringify($("div.editor-header input[name='publish']:checked").length > 0);
         }
 
         // Save content
@@ -214,6 +212,25 @@ $(document).ready(function() {
             if(result.author_error == 'no_authors') {
                 alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
             }
+
+            // Publish-state response
+            if(result.publish_error === 'unparseable_datetime') {
+                alert("Publiseringstidspunktet er ikke i rett format!\n\nBruk velgeren for å velge dato, og skriv klokkeslettet som for eksempel '08:00' for å publisere kl. 8 om morgenen.\n\nSiden vi ikke vet om du ville publisere nå eller ikke, har vi satt den til 'ikke publisert'.\n\nHusk å krysse boksen bak 'Publiseres' hvis du vil publisere nå.");
+                $("div.editor-header div.publish input[name='publish']").prop('checked', false);
+            }
+
+            if(result.publish_error === 'auto_now') {
+                var publish = $("div.editor-header div.publish");
+                publish.find("input[name='date']").val(result.publish_date);
+                publish.find("input[name='time']").val(result.publish_time);
+            }
+
+            if(result.publish_error === 'error_nullify') {
+                var publish = $("div.editor-header div.publish");
+                publish.find("input[name='date']").val('');
+                publish.find("input[name='time']").val('');
+            }
+
         }).fail(function(result) {
             statusIcon = '<i class="icon-warning-sign"></i>';
             alert("Whoops!\n\nVi klarte ikke å lagre innholdet. Er du sikker på at du har nettilgang?\n" +

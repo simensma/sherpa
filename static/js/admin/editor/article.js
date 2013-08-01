@@ -6,10 +6,11 @@ $(document).ready(function() {
 
     header.find("select[name='authors']").chosen();
 
-    header.find("input[name='article-datetime-field']").datetimepicker({
-        dateFormat: "dd.mm.yy",
-        seperator: " ",
-        timeFormat: "hh:mm"
+    header.find("div.publish div.date").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        language: 'nb'
     });
 
     //carousel, stop spinning
