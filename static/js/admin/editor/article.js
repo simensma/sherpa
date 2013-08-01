@@ -2,9 +2,11 @@
 
 $(document).ready(function() {
 
-    $("select[name='authors']").chosen();
+    var header = $("div.editor-header");
 
-    $("input[name='article-datetime-field']").datetimepicker({
+    header.find("select[name='authors']").chosen();
+
+    header.find("input[name='article-datetime-field']").datetimepicker({
         dateFormat: "dd.mm.yy",
         seperator: " ",
         timeFormat: "hh:mm"
@@ -18,54 +20,54 @@ $(document).ready(function() {
     });
 
     /* Change thumbnail-image */
-    if($("div.editor-header input[name='thumbnail'][value='default'][checked]").length > 0 ||
-        $("div.editor-header input[name='thumbnail'][value='none'][checked]").length > 0) {
-        $("div.editor-header img.article-thumbnail").hide();
+    if(header.find("input[name='thumbnail'][value='default'][checked]").length > 0 ||
+        header.find("input[name='thumbnail'][value='none'][checked]").length > 0) {
+        header.find("img.article-thumbnail").hide();
     }
 
-    $("div.editor-header input[name='thumbnail'][value='none']").change(function() {
+    header.find("input[name='thumbnail'][value='none']").change(function() {
         if($(this).is(':checked')) {
             var image = $(this);
-            $("div.editor-header img.article-thumbnail").hide();
+            header.find("img.article-thumbnail").hide();
             $.ajaxQueue({
-                url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/skjul/',
+                url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/skjul/',
                 type: 'POST'
             });
         }
     });
 
-    $("div.editor-header input[name='thumbnail'][value='default']").change(function(e) {
+    header.find("input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
             if($("article div.image").length === 0) {
                 alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
-                $("div.editor-header input[name='thumbnail'][value='none']").click();
+                header.find("input[name='thumbnail'][value='none']").click();
                 return;
             }
             var image = $(this);
-            $("div.editor-header img.article-thumbnail").hide();
+            header.find("img.article-thumbnail").hide();
             $.ajaxQueue({
-                url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/slett/',
+                url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/slett/',
                 type: 'POST'
             });
         }
     });
 
-    $("div.editor-header input[name='thumbnail'][value='new']").change(function() {
+    header.find("input[name='thumbnail'][value='new']").change(function() {
         if($(this).is(':checked')) {
             var image = $(this);
-            $("div.editor-header img.article-thumbnail").show();
+            header.find("img.article-thumbnail").show();
             saveImage();
         }
     });
 
     function saveImage() {
         $.ajaxQueue({
-            url: '/sherpa/nyheter/bilde/' + $("div.editor-header").attr('data-article-id') + '/',
-            data: { thumbnail: $("div.editor-header img.article-thumbnail").attr('src') }
+            url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/',
+            data: { thumbnail: header.find("img.article-thumbnail").attr('src') }
         });
     }
 
-    $("div.editor-header img.article-thumbnail").click(function() {
+    header.find("img.article-thumbnail").click(function() {
         var image = $(this);
         ImageDialog.openImageDialog({
             image: $(this),
@@ -77,7 +79,7 @@ $(document).ready(function() {
                 saveImage();
             },
             remove: function() {
-                $("div.editor-header input[name='thumbnail'][value='none']").click();
+                header.find("input[name='thumbnail'][value='none']").click();
             }
         });
     });
