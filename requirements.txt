@@ -4,7 +4,7 @@ South==0.7.6
 boto==2.9.4
 django-pyodbc==0.10
 django-simple-captcha==0.3.7
-eventlet==0.12.1
+gevent==0.13.8
 greenlet==0.4.0
 gunicorn==0.17.4
 ipython==0.13.2
