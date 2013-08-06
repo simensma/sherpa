@@ -697,7 +697,7 @@ def process_card(request):
             if response_code.text == 'OK':
                 # Register the payment in focus
                 for user in request.session['enrollment']['users']:
-                    focus_user = Enrollment.objects.get(member_id=user['id'])
+                    focus_user = Enrollment.objects.get(memberid=user['id'])
                     focus_user.paid = True
                     focus_user.save()
                 prepare_and_send_email(
@@ -1063,7 +1063,7 @@ def add_focus_user(request, name, dob, age, gender, location, phone, email, can_
         connections['focus'].commit_unless_managed()
 
     user = Enrollment(
-        member_id=memberid,
+        memberid=memberid,
         last_name=last_name,
         first_name=first_name,
         dob=dob,
@@ -1088,7 +1088,7 @@ def add_focus_user(request, name, dob, age, gender, location, phone, email, can_
     user.save()
 
     # Verify that the payment_method was successfully saved
-    payment_method_result = int(Enrollment.objects.get(member_id=memberid).payment_method)
+    payment_method_result = int(Enrollment.objects.get(memberid=memberid).payment_method)
     if payment_method_result != payment_method:
         # By the offchance that this occurs, it probably means that something went wrong in Focus.
         # We've experienced some entries to have 0.0 in the payment_method field and have no idea

@@ -19,7 +19,7 @@ logger = logging.getLogger('sherpa')
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
-    member_id = models.IntegerField(db_column=u'memberID', primary_key=True)
+    memberid = models.IntegerField(db_column=u'memberID', primary_key=True)
     last_name = models.CharField(db_column=u'Lastname', max_length=255)
     first_name = models.CharField(db_column=u'Firstname', max_length=255)
     dob = models.DateTimeField(db_column=u'Birthdate')
