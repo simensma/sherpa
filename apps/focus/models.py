@@ -8,7 +8,6 @@ from django.conf import settings
 
 from datetime import datetime
 import logging
-import sys
 
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
