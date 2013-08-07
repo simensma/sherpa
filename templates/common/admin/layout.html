@@ -1,3 +1,5 @@
+{% load debug %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +23,11 @@
 
   {% block extra_css %}{% endblock %}
 
-  {# Set rendered JS globals before anything else #}
+  {# Scripts - Raven comes first, then rendered globals, then the rest #}
+  {% if not debug %}
+    <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
+    <script src="{{ STATIC_URL }}js/raven.js"></script>
+  {% endif %}
   {% block js_globals %}{% endblock %}
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
   <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
