@@ -300,13 +300,13 @@ def send_restore_password_email(request):
     focus_unregistered_matches = False
     for a in Actor.objects.filter(email=request.POST['email']):
         try:
-            local_matches.append(User.objects.get(memberid=a.memberid))
+            local_matches.append(User.objects.get(memberid=a.memberid, is_active=True))
         except User.DoesNotExist:
             focus_unregistered_matches = True
 
     # Check for matching old user system members - we'll generate a password so that they can login and be imported
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
-    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid).exists()]
+    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_active=True).exists()]
 
     if len(local_matches) == 0 and len(sherpa2_matches) == 0:
         # No email-address matches.
