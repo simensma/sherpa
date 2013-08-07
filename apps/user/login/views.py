@@ -362,13 +362,20 @@ def send_restore_password_email(request):
 def restore_password(request, key):
     users = User.objects.filter(password_restore_key=key, is_active=True)
     if len(users) == 0:
-        context = {'no_such_key': True}
+        context = {
+            'no_such_key': True,
+            'user_password_length': settings.USER_PASSWORD_LENGTH
+        }
         return render(request, 'common/user/login/restore-password.html', context)
 
     date_limit = datetime.now() - timedelta(hours=settings.RESTORE_PASSWORD_VALIDITY)
     if any([u.password_restore_date < date_limit for u in users]):
         # We've passed the deadline for key validity
-        context = {'key_expired': True, 'validity_period': settings.RESTORE_PASSWORD_VALIDITY}
+        context = {
+            'key_expired': True,
+            'validity_period': settings.RESTORE_PASSWORD_VALIDITY,
+            'user_password_length': settings.USER_PASSWORD_LENGTH
+        }
         return render(request, 'common/user/login/restore-password.html', context)
 
     # Passed all tests, looks like we're ready to reset the password
