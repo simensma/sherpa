@@ -51,7 +51,7 @@
         },
         'email': function(input, req, opts) {
             if(!req && input == '') { return true; }
-            return input.match(/^\s*[^\s\,]+@[^\s,]+\.[^\s,]+\s*$/) != null;
+            return input.match(/^\s*[^\s\,\<\>]+@[^\s,\<\>]+\.[^\s,\<\>]+\s*$/) != null;
         },
         'memberid': function(input, req, opts) {
             if(!req && input == '') { return true; }
