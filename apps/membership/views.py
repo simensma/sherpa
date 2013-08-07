@@ -198,15 +198,14 @@ def send_sms_receipt(request, actor):
         })
         sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
-        status = re.findall('Status: .*', r.text)
-        if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+        if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Kunne ikke sende medlemsnummer på SMS: Ukjent status",
                 exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'number': number,
-                    'response_status': r.text,
-                    'sms_response_object': r
+                    'response_text': r.text,
+                    'sms_request_object': r
                 }
             )
             return HttpResponse(json.dumps({

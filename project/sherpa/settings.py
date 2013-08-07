@@ -27,7 +27,7 @@ BLOG_CATEGORY_API = 'api/get_category_index/'
 INSTAGRAM_CLIENT_ID = '9f849b1f6e97480ea58ee989159a597a'
 
 # Our SMS-service endpoint
-SMS_URL = "https://bedrift.telefonkatalogen.no/tk/sendsms.php?charset=utf-8&cellular=%s&msg=%s"
+SMS_URL = "http://admin.telefonkatalogen.no/smsgateway/sendSms?sender=DNT&targetNumbers=%s&sms=%s"
 SMS_RESTRICTION_WHITELIST = ['212.71.74.98'] # DNT administrations current public IP address (for memberservice)
 
 # NETS URLs used for payment

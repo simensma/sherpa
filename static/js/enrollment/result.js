@@ -30,7 +30,7 @@ $(document).ready(function() {
                 button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. ' + memberserviceBackup + '</p>');
                 button.remove();
             } else if(result.error == 'service_fail') {
-                button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. Feilmelding oppgitt er:</p><pre>' + result.message + '</pre><p class="receipt-error">' + memberserviceBackup + '</p>');
+                button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. ' + memberserviceBackup + '</p>');
                 button.remove();
             }
         }).fail(function(result) {

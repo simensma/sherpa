@@ -799,18 +799,16 @@ def sms(request):
     # Send the message
     try:
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
-        # Check and return status
-        status = re.findall('Status: .*', r.text)
-        if len(status) == 0 or status[0][8:] != 'Meldingen er sendt':
+        if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: Ukjent status",
                 exc_info=sys.exc_info(),
                 extra={
                     'request': request,
-                    'response_status': r.text,
-                    'sms_response_object': r
+                    'response_text': r.text,
+                    'sms_request_object': r
                 }
             )
-            return HttpResponse(json.dumps({'error': 'service_fail', 'message': status[0][8:]}))
+            return HttpResponse(json.dumps({'error': 'service_fail'}))
         request.session['enrollment']['users'][index]['sms_sent'] = True
         request.session.modified = True
         return HttpResponse(json.dumps({'error': 'none'}))
