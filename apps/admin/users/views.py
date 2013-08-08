@@ -11,6 +11,9 @@ from django.core.exceptions import PermissionDenied
 from association.models import Association
 from user.models import User, Permission, AssociationRole
 from focus.models import Actor
+from core.util import current_membership_year_start
+
+from datetime import date
 
 def index(request):
     context = {
@@ -35,10 +38,14 @@ def show(request, other_user):
     # Only admins can revoke association relation
     revokable_associations = [a for a in assignable_admin if a in other_user_associations]
 
+    today = date.today()
+
     context = {
         'other_user': other_user,
         'revokable_associations': Association.sort(revokable_associations),
-        'assignable_associations': Association.sort(assignable_associations)
+        'assignable_associations': Association.sort(assignable_associations),
+        'year': today.year,
+        'next_year': today >= current_membership_year_start()
     }
     return render(request, 'common/admin/users/show.html', context)
 
