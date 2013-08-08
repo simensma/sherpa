@@ -97,6 +97,6 @@ $(document).ready(function() {
 
     sherpa_user.find("a.cancel").click(function() {
         sherpa_user_button.show();
-        sherpa_user.show();
+        sherpa_user.hide();
     });
 });
