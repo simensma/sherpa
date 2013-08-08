@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.conf import settings
 from django.db.models import Q
