@@ -81,7 +81,9 @@ $(document).ready(function() {
     $("form#registration").submit(function() {
         // The adform guys advised us to defer this call even though it probably shouldn't be
         setTimeout(function() {
-            adf.track(133425,2765715,{});
+            if(typeof adf !== 'undefined') {
+                adf.track(133425,2765715,{});
+            }
         }, 0);
     });
 

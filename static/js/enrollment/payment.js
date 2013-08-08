@@ -23,7 +23,9 @@ $(document).ready(function() {
         ajaxloader.show();
         // The adform guys advised us to defer this call even though it probably shouldn't be
         setTimeout(function() {
-            adf.track(133425,2765716,{});
+            if(typeof adf !== 'undefined') {
+                adf.track(133425,2765716,{});
+            }
         }, 0);
     });
 
