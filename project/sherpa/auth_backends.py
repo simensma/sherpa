@@ -3,8 +3,6 @@ from django.contrib.auth.backends import ModelBackend
 from user.models import User
 
 class CustomBackend(ModelBackend):
-    supports_inactive_user = False
-
     # Just return the user - the authentication logic is done in a utility method instead.
     # For the reason, see the comments on 'authenticate_users' in apps/user/util.py
     def authenticate(self, user=None):
