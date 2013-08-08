@@ -2,7 +2,7 @@ Django==1.5.1
 Pillow==2.0.0
 South==0.7.6
 boto==2.9.4
-django-pyodbc==0.10
+-e git://github.com/aurorasoftware/django-pyodbc.git@ab71f242b018728bb885105c611c70fd3a32f73a#egg=django-pyodbc
 django-simple-captcha==0.3.7
 gevent==0.13.8
 greenlet==0.4.0
