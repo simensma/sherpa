@@ -27,6 +27,13 @@
   {% if not debug %}
     <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
     <script src="{{ STATIC_URL }}js/raven.js"></script>
+    {% if user.is_authenticated %}
+      <script>
+        Raven.setUser({
+            id: {{ user.id }}
+        });
+      </script>
+    {% endif %}
   {% endif %}
   {% block js_globals %}{% endblock %}
   <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
