@@ -40,4 +40,4 @@ var ravenOptions = {
     ]
 };
 
-Raven.config('https://62910e237f874b42a7d181fad2db1355@sentry.turistforeningen.no/2').install();
+Raven.config('https://d8a4a2875dba4bbba8e7d3b355d8a6a4@sentry.turistforeningen.no/6').install();
