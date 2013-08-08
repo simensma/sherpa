@@ -122,7 +122,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.objects.filter(id__in=request.session['authenticated_users'])
+    users = User.objects.filter(id__in=request.session['authenticated_users'], is_active=True)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -143,7 +143,7 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.objects.get(id=request.POST['user'])
+    user = User.objects.get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
     del request.session['authenticated_users']

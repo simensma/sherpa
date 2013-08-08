@@ -258,7 +258,7 @@ class User(AbstractBaseUser):
     @staticmethod
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
-        return User.objects.filter(permissions=permission)
+        return User.objects.filter(permissions=permission, is_active=True)
 
 class Permission(models.Model):
     # Django's Permission model is a bit more advanced than what we need,
