@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # We've already handled this error for the following memberids:
-        known_fails = [4627636, 4810742, 4960640, 4967206, 5031284, 5031291, 5096097]
+        known_fails = [4627636, 4810742, 4960640, 4967206, 5031284, 5031291, 5096097, 5105666, 5105673, 5105680, 5105687, 5105694, 5105701]
 
         # Check for new ones
         new_fails = Enrollment.objects.filter(paid=True, payment_method=0).exclude(memberid__in=known_fails)
