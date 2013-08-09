@@ -9,8 +9,6 @@ from django.conf import settings
 from datetime import datetime
 import logging
 
-from association.models import Association
-from sherpa2.models import Association as Sherpa2Association
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
 
 logger = logging.getLogger('sherpa')
@@ -147,23 +145,6 @@ class Actor(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.memberid
-
-    def main_association(self):
-        association = cache.get('focus.association.%s' % self.main_association_id)
-        if association is None:
-            association = Association.objects.get(focus_id=self.main_association_id)
-            cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
-        return association
-
-    def main_association_old(self):
-        # This sad method returns the association object from the old sherpa2 model.
-        # For now it's mostly used to get the site url because most of the new objects
-        # don't have an assigned site.
-        association = cache.get('focus.association_sherpa2.%s' % self.main_association_id)
-        if association is None:
-            association = Sherpa2Association.objects.get(focus_id=self.main_association_id)
-            cache.set('focus.association_sherpa2.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
-        return association
 
     def membership_type(self):
         now = datetime.now()

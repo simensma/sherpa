@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from focus.models import Actor
 from association.models import Association
+from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
 
@@ -184,6 +185,23 @@ class User(AbstractBaseUser):
 
     def reserved_against_partneroffers(self):
         return self.get_actor().reserved_against_partneroffers
+
+    def main_association(self):
+        association = cache.get('user.association.%s' % self.get_actor().main_association_id)
+        if association is None:
+            association = Association.objects.get(focus_id=self.get_actor().main_association_id)
+            cache.set('user.association.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def main_association_old(self):
+        # This sad method returns the association object from the old sherpa2 model.
+        # For now it's mostly used to get the site url because most of the new objects
+        # don't have an assigned site.
+        association = cache.get('user.association_sherpa2.%s' % self.get_actor().main_association_id)
+        if association is None:
+            association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
+            cache.set('user.association_sherpa2.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+        return association
 
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will

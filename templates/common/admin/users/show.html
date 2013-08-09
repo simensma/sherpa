@@ -95,9 +95,9 @@
       <tr>
         <th>Lokalforening</th>
         <td>
-          {% if other_user.get_actor.main_association.site %}<a href="http://{{ other_user.get_actor.main_association.site.domain }}/">{% endif %}
-            {{ other_user.get_actor.main_association.name }}
-          {% if other_user.get_actor.main_association.site %}</a>{% endif %}
+          {% if other_user.main_association.site %}<a href="http://{{ other_user.main_association.site.domain }}/">{% endif %}
+            {{ other_user.main_association.name }}
+          {% if other_user.main_association.site %}</a>{% endif %}
         </td>
       </tr>
       <tr>

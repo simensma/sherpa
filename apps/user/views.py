@@ -300,7 +300,7 @@ def leader_aktivitet_date(request, aktivitet_date):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
-    accessible_associations = request.user.get_actor().main_association().get_with_children()
+    accessible_associations = request.user.main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
     publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
     publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
@@ -317,7 +317,7 @@ def publications(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
-    accessible_associations = request.user.get_actor().main_association().get_with_children()
+    accessible_associations = request.user.main_association().get_with_children()
     publication = Publication.objects.filter(
         # Verify that the user has access to this publication
         Q(association__type='sentral') |
