@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from focus.models import Actor
 from association.models import Association
+from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
 
@@ -50,6 +51,9 @@ class User(AbstractBaseUser):
 
     ### Focus-related ###
 
+    def is_member(self):
+        return self.memberid is not None
+
     # Return this users' Actor (cached), or None
     def get_actor(self):
         if not self.is_member():
@@ -60,8 +64,47 @@ class User(AbstractBaseUser):
             cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
 
-    def is_member(self):
-        return self.memberid is not None
+    def get_parent(self):
+        if not self.is_household_member():
+            return None
+
+        parent_memberid = self.get_actor().get_parent_memberid()
+        if parent_memberid is None:
+            return None
+
+        parent = cache.get('user.%s.parent' % self.memberid)
+        if parent is None:
+            try:
+                parent = User.objects.get(memberid=parent_memberid)
+            except User.DoesNotExist:
+                parent = User(
+                    identifier=parent_memberid,
+                    memberid=parent_memberid,
+                    is_active=False
+                )
+                parent.save()
+                cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return parent
+
+    def get_children(self):
+        children = cache.get('user.%s.children' % self.memberid)
+        if children is None:
+            children = []
+            for actor_child in self.get_actor().get_children():
+                children.append(User.get_or_create_inactive(memberid=actor_child.memberid))
+            cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return children
+
+    def is_household_member(self):
+        return self.get_actor().is_household_member()
+
+    def membership_type(self):
+        return self.get_actor().membership_type()
+
+    def has_membership_type(self, codename):
+        # Note that you shouldn't use this to check for the 'household' membership type,
+        # use is_household_member() -- see the docs in focus.Actor.is_household_member for more info.
+        return self.get_actor().has_membership_type(codename)
 
     def get_first_name(self):
         if not self.is_member():
@@ -85,13 +128,112 @@ class User(AbstractBaseUser):
         if not self.is_member():
             return self.email
         else:
-            return self.get_actor().email
+            return self.get_actor().get_email()
 
     def get_sherpa_email(self):
         if self.sherpa_email != '':
             return self.sherpa_email
         else:
             return self.get_email()
+
+    def get_address(self):
+        return self.get_actor().get_clean_address()
+
+    def get_birth_date(self):
+        return self.get_actor().birth_date
+
+    def get_gender(self):
+        return self.get_actor().get_gender()
+
+    def get_age(self):
+        return self.get_actor().get_age()
+
+    def get_phone_home(self):
+        return self.get_actor().get_phone_home()
+
+    def get_phone_mobile(self):
+        return self.get_actor().get_phone_mobile()
+
+    def has_paid(self):
+        return self.get_actor().has_paid()
+
+    def is_eligible_for_publications(self):
+        return self.get_actor().is_eligible_for_publications()
+
+    def can_reserve_against_publications(self):
+        return self.get_actor().can_reserve_against_publications()
+
+    def get_reserved_against_fjellogvidde(self):
+        return self.get_actor().get_reserved_against_fjellogvidde()
+
+    def set_reserved_against_fjellogvidde(self, reserved):
+        self.get_actor().set_reserved_against_fjellogvidde(reserved)
+
+    def get_reserved_against_yearbook(self):
+        return self.get_actor().get_reserved_against_yearbook()
+
+    def set_reserved_against_yearbook(self, reserved):
+        self.get_actor().set_reserved_against_yearbook(reserved)
+
+    def has_foreign_fjellogvidde_service(self):
+        return self.get_actor().has_foreign_fjellogvidde_service()
+
+    def has_foreign_yearbook_service(self):
+        return self.get_actor().has_foreign_yearbook_service()
+
+    def get_invoice_type_text(self):
+        return self.get_actor().get_invoice_type_text()
+
+    def receive_email(self):
+        return self.get_actor().receive_email
+
+    def set_receive_email(self, receive):
+        actor = self.get_actor()
+        actor.receive_email = receive
+        actor.save()
+
+    def reserved_against_partneroffers(self):
+        return self.get_actor().reserved_against_partneroffers
+
+    def set_reserved_against_partneroffers(self, reserved):
+        actor = self.get_actor()
+        actor.reserved_against_partneroffers = reserved
+        actor.save()
+
+    def main_association(self):
+        association = cache.get('user.association.%s' % self.get_actor().main_association_id)
+        if association is None:
+            association = Association.objects.get(focus_id=self.get_actor().main_association_id)
+            cache.set('user.association.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def main_association_old(self):
+        # This sad method returns the association object from the old sherpa2 model.
+        # For now it's mostly used to get the site url because most of the new objects
+        # don't have an assigned site.
+        association = cache.get('user.association_sherpa2.%s' % self.get_actor().main_association_id)
+        if association is None:
+            association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
+            cache.set('user.association_sherpa2.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def update_personal_data(self, attributes, address_attributes=None):
+        """
+        Setter for updating personal data in Focus. Doesn't have a concept of accepted attributes, so they are
+        kind of 'leaked out' to the callers (e.g. the field name for address.a1). Maybe it *should* have that
+        at some point.
+        """
+
+        actor = self.get_actor()
+
+        for name, value in attributes.items():
+            actor.__setattr__(name, value)
+        actor.save()
+
+        if address_attributes is not None:
+            for name, value in address_attributes.items():
+                actor.address.__setattr__(name, value)
+            actor.address.save()
 
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
@@ -181,7 +323,7 @@ class User(AbstractBaseUser):
             # The offer applies only the same year as membership enrollment
             return False
 
-        if not self.get_actor().has_paid():
+        if not self.has_paid():
             # The offer applies only to active memberships
             return False
 
@@ -259,6 +401,14 @@ class User(AbstractBaseUser):
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
         return User.objects.filter(permissions=permission, is_active=True)
+
+    @staticmethod
+    def get_or_create_inactive(memberid):
+        try:
+            return User.objects.get(memberid=memberid)
+        except User.DoesNotExist:
+            from user.util import create_inactive_user
+            return create_inactive_user(memberid)
 
 class Permission(models.Model):
     # Django's Permission model is a bit more advanced than what we need,

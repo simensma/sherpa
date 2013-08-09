@@ -124,7 +124,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_actor().get_clean_address().country.code == 'NO' and not request.user.get_actor().is_household_member():
+            if request.user.get_address().country.code == 'NO' and not request.user.is_household_member():
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -147,22 +147,25 @@ def update_account(request):
                 user.sherpa_email = request.POST['sherpa-email']
                 user.save()
 
-            actor = request.user.get_actor()
-            actor.first_name, actor.last_name = request.POST['name'].rsplit(' ', 1)
-            actor.email = request.POST['email']
-            actor.phone_home = request.POST['phone_home']
-            actor.phone_mobile = request.POST['phone_mobile']
-            actor.save()
-
-            if actor.get_clean_address().country.code == 'NO' and not actor.is_household_member():
-                actor.address.a1 = request.POST['address']
+            first_name, last_name = request.POST['name'].rsplit(' ', 1)
+            attributes = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': request.POST['email'],
+                'phone_home': request.POST['phone_home'],
+                'phone_mobile': request.POST['phone_mobile']
+            }
+            address_attributes = None
+            if request.user.get_address().country.code == 'NO' and not request.user.is_household_member():
+                address_attributes = {}
+                address_attributes['a1'] = request.POST['address']
                 if 'address2' in request.POST:
-                    actor.address.a2 = request.POST['address2']
+                    address_attributes['a2'] = request.POST['address2']
                 if 'address3' in request.POST:
-                    actor.address.a3 = request.POST['address3']
-                actor.address.zipcode = zipcode.zipcode
-                actor.address.area = zipcode.area
-                actor.address.save()
+                    address_attributes['a3'] = request.POST['address3']
+                address_attributes['zipcode'] = zipcode.zipcode
+                address_attributes['area'] = zipcode.area
+            request.user.update_personal_data(attributes, address_attributes)
 
             messages.info(request, 'update_success')
             return redirect('user.views.account')
@@ -260,9 +263,7 @@ def partneroffers(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
-    actor = request.user.get_actor()
-    actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
-    actor.save()
+    request.user.set_reserved_against_partneroffers(json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
@@ -273,9 +274,7 @@ def receive_email(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
-    actor = request.user.get_actor()
-    actor.receive_email = not json.loads(request.POST['reserve'])
-    actor.save()
+    request.user.set_receive_email(not json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
@@ -300,7 +299,7 @@ def leader_aktivitet_date(request, aktivitet_date):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
-    accessible_associations = request.user.get_actor().main_association().get_with_children()
+    accessible_associations = request.user.main_association().get_with_children()
     publications_user_central = Publication.objects.filter(association__type='sentral')
     publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
     publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
@@ -317,7 +316,7 @@ def publications(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
-    accessible_associations = request.user.get_actor().main_association().get_with_children()
+    accessible_associations = request.user.main_association().get_with_children()
     publication = Publication.objects.filter(
         # Verify that the user has access to this publication
         Q(association__type='sentral') |
@@ -434,14 +433,14 @@ def fotobok_eurofoto_request(request):
         ('firstname', user.get_first_name(),),
         ('middlename', '',), # We could parse this out of 'lastname', but the old API didn't do that, so whatever
         ('lastname', user.get_last_name(),),
-        ('address1', user.get_actor().get_clean_address().field1,),
-        ('address2', user.get_actor().get_clean_address().field2,),
-        ('zipcode', user.get_actor().get_clean_address().zipcode.zipcode,),
-        ('city', user.get_actor().get_clean_address().zipcode.area,),
-        ('country', user.get_actor().get_clean_address().country.code,),
+        ('address1', user.get_address().field1,),
+        ('address2', user.get_address().field2,),
+        ('zipcode', user.get_address().zipcode.zipcode,),
+        ('city', user.get_address().zipcode.area,),
+        ('country', user.get_address().country.code,),
         ('phonework', '',),
-        ('phonehome', user.get_actor().phone_home if user.get_actor().phone_home is not None else '',),
-        ('phonemobile', user.get_actor().phone_mobile if user.get_actor().phone_mobile is not None else '',),
+        ('phonehome', user.get_phone_home(),),
+        ('phonemobile', user.get_phone_mobile(),),
     ])
     sha1 = hashlib.sha1()
     sha1.update(('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, u''.join(payload.values()).encode('utf-8'))))
@@ -479,24 +478,20 @@ def fotobok_eurofoto_request(request):
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
-    actor = request.user.get_actor()
-    actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
-    actor.save()
+    request.user.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):
-    actor = request.user.get_actor()
-    actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
-    actor.save()
+    request.user.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
     return HttpResponse()

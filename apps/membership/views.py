@@ -16,6 +16,7 @@ from core.models import Zipcode
 from core.util import current_membership_year_start
 from enrollment.models import State
 from membership.models import SMSServiceRequest
+from user.models import User
 
 from datetime import datetime, date
 import json
@@ -143,21 +144,21 @@ def memberid_sms(request):
     elif len(actors) > 1:
         # TODO: More than one hits, ignore for now - what should we do here?
         pass
-    actor = actors[0]
-    sms_request.memberid = actor.memberid
+    user = User.get_or_create_inactive(memberid=actors[0].memberid)
+    sms_request.memberid = user.memberid
     sms_request.save()
-    return send_sms_receipt(request, actor)
+    return send_sms_receipt(request, user)
 
 @user_requires_login()
 def memberid_sms_userpage(request):
     # Requests from the userpage
-    actor = request.user.get_actor()
+    user = request.user
 
     sms_request = SMSServiceRequest(
         phone_number_input=None,
         ip=request.META['REMOTE_ADDR'],
         user=request.user,
-        memberid=actor.memberid
+        memberid=user.memberid
     )
 
     sms_request.count = memberid_sms_count(request.META['REMOTE_ADDR'])
@@ -166,13 +167,13 @@ def memberid_sms_userpage(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    if actor.phone_mobile.strip() == '':
+    if user.get_phone_mobile() == '':
         # This shouldn't happen (it's checked client-side first) - but handle it anyway, just in case
         return HttpResponse(json.dumps({
             'status': 'missing_number'
         }))
     sms_request.save()
-    return send_sms_receipt(request, actor)
+    return send_sms_receipt(request, user)
 
 # Simple security - if the same person (IP) sends > 10 requests within 30 minutes,
 # we'll suspect something's up.
@@ -187,14 +188,14 @@ def memberid_sms_count(ip_address):
     return lookups
 
 # This is not a view
-def send_sms_receipt(request, actor):
-    number = re.sub('\s', '', actor.phone_mobile)
+def send_sms_receipt(request, user):
+    number = re.sub('\s', '', user.get_phone_mobile())
     try:
         context = RequestContext(request, {
-            'actor': actor,
+            'user': user,
             'year': datetime.now().year,
             'next_year': date.today() >= current_membership_year_start(),
-            'all_paid': all(a.has_paid() for a in [actor] + list(actor.get_children()))
+            'all_paid': all(u.has_paid() for u in [user] + list(user.get_children()))
         })
         sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))

@@ -98,9 +98,7 @@ def login(request):
                     user.save()
 
                 # Update the email on this actor, in case it were to differ from the sherpa2 email
-                actor = user.get_actor()
-                actor.email = request.POST['email']
-                actor.save()
+                user.update_personal_data({'email': request.POST['email']})
 
                 # Import any fjelltreffen-annonser from the old system
                 import_fjelltreffen_annonser(user)
@@ -286,7 +284,7 @@ def verify_memberid(request):
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
-            'email': actor.email or '',
+            'email': actor.get_email(),
             'user_exists': User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists()
         }))
     except (ValueError, Actor.DoesNotExist):

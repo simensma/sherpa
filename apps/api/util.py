@@ -28,18 +28,18 @@ def get_member_data(user):
             elif gender == 'f':
                 return 'K'
 
-        address = user.get_actor().get_clean_address()
+        address = user.get_address()
         return {
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
-            'aktivt_medlemskap': user.get_actor().has_paid(),
+            'aktivt_medlemskap': user.has_paid(),
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
-            'født': user.get_actor().birth_date.strftime("%Y-%m-%d"),
-            'kjønn': api_gender_output(user.get_actor().get_gender()),
+            'født': user.get_birth_date.strftime("%Y-%m-%d"),
+            'kjønn': api_gender_output(user.get_gender()),
             'epost': user.get_email(),
-            'mobil': user.get_actor().phone_mobile,
+            'mobil': user.get_phone_mobile(),
             'address': {
                 'adresse1': address.field1,
                 'adresse2': address.field2,

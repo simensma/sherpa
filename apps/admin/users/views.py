@@ -77,13 +77,7 @@ def search(request):
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def create_inactive(request, memberid):
-    actor = Actor.objects.get(memberid=memberid)
-    user = User(
-        identifier=actor.memberid,
-        memberid=actor.memberid,
-        is_active=False
-    )
-    user.save()
+    user = create_inactive_user(memberid)
     return redirect('admin.users.views.show', user.id)
 
 def give_sherpa_access(request, user):

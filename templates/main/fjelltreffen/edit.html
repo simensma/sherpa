@@ -93,10 +93,10 @@
               {% if annonse %}
                 <option{% if annonse.county == county %} selected="selected"{% endif %} value="{{ county.id }}">{{ county.name }}</option>
               {% else %}
-                <option{% if user.get_actor.get_clean_address.county == county %} selected="selected"{% endif %} value="{{ county.id }}">{{ county.name }}</option>
+                <option{% if user.get_address.county == county %} selected="selected"{% endif %} value="{{ county.id }}">{{ county.name }}</option>
               {% endif %}
             {% endfor %}
-            <option value="international"{% if annonse and not annonse.county %} selected{% elif not annonse and not user.get_actor.get_clean_address.county %} selected{% endif %}>Utlandet</option>
+            <option value="international"{% if annonse and not annonse.county %} selected{% elif not annonse and not user.get_address.county %} selected{% endif %}>Utlandet</option>
           </select>
         </div>
       </div>
@@ -129,7 +129,7 @@
         <div class="controls">
           <label class="radio" for="hideage_raw">
             <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
-            {{ user.get_actor.get_age }} år
+            {{ user.get_age }} år
           </label>
           <label class="radio" for="hideage_hide">
             <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>
@@ -145,7 +145,7 @@
       {# This section contains 3 parts with some duplicated code, but I prefer that to complicated inline if-statements #}
       {% if not annonse.is_expired %}
         {# Hidden state is irrelevant if the annonse is expired. #}
-        {% if annonse.hidden and not user.get_actor.has_paid %}
+        {% if annonse.hidden and not user.has_paid %}
           {# Editing existing *hidden* annonse, and user hasn't paid - don't let them show the annonse #}
           <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
             <label class="control-label">Synlighet</label>
@@ -190,7 +190,7 @@
       <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn btn-success">
-            {% if annonse.is_expired or other_active_annonse_exists or annonse.hidden and not user.get_actor.has_paid %}
+            {% if annonse.is_expired or other_active_annonse_exists or annonse.hidden and not user.has_paid %}
               Lagre annonsen
             {% else %}
               <span class="save{% if not annonse.hidden %} hide{% endif %}">Lagre annonsen</span>

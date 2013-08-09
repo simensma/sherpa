@@ -45,7 +45,7 @@ class Annonse(models.Model):
             return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
 
     def get_age(self):
-        age = self.user.get_actor().get_age()
+        age = self.user.get_age()
         if self.hideage:
             return Annonse.obscure_age(age)
         else:
@@ -139,13 +139,13 @@ class Annonse(models.Model):
             # If they weren't, a search where e.g. both min/max is 47, would have to match ages 45 through 49 for a user that
             # is within that range AND has hideage=True on their ad.
 
-            if a.user.get_actor().get_age() < minage:
+            if a.user.get_age() < minage:
                 continue
 
-            if maxage != '' and a.user.get_actor().get_age() > maxage:
+            if maxage != '' and a.user.get_age() > maxage:
                 continue
 
-            if gender != '' and a.user.get_actor().get_gender() != gender:
+            if gender != '' and a.user.get_gender() != gender:
                 continue
 
             annonse_matches.append(a)

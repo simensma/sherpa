@@ -114,8 +114,8 @@ def import_fjelltreffen_annonser(user):
         # Email is required, so make sure we find one for the old user
         if old_member.email is None or old_member.email == '':
             # Nope, it's not here. Try to get it from Focus
-            focus_email = user.get_actor().email
-            if focus_email is None or focus_email == '':
+            focus_email = user.get_email()
+            if focus_email == '':
                 # Not in Focus either! We'll have to ignore this annonse.
                 continue
             else:
@@ -129,10 +129,10 @@ def import_fjelltreffen_annonser(user):
         except KeyError:
             if old_annonse.county == 0:
                 # The entire country is no longer applicable - set it to the Actor's county
-                annonse.county = user.get_actor().get_clean_address().county
+                annonse.county = user.get_address().county
             elif old_annonse.county == 2:
                 # Both Oslo and Akershus - set it to the Actor's county, which hopefully is one of those
-                annonse.county = user.get_actor().get_clean_address().county
+                annonse.county = user.get_address().county
             elif old_annonse.county == 99:
                 # International annonse - defined with 'NULL'
                 annonse.county = None

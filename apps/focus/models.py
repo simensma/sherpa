@@ -9,9 +9,6 @@ from django.conf import settings
 from datetime import datetime
 import logging
 
-from association.models import Association
-from sherpa2.models import Association as Sherpa2Association
-from core.models import County, FocusCountry, Zipcode
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
 
 logger = logging.getLogger('sherpa')
@@ -149,23 +146,6 @@ class Actor(models.Model):
     def __unicode__(self):
         return u'%s' % self.memberid
 
-    def main_association(self):
-        association = cache.get('focus.association.%s' % self.main_association_id)
-        if association is None:
-            association = Association.objects.get(focus_id=self.main_association_id)
-            cache.set('focus.association.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
-        return association
-
-    def main_association_old(self):
-        # This sad method returns the association object from the old sherpa2 model.
-        # For now it's mostly used to get the site url because most of the new objects
-        # don't have an assigned site.
-        association = cache.get('focus.association_sherpa2.%s' % self.main_association_id)
-        if association is None:
-            association = Sherpa2Association.objects.get(focus_id=self.main_association_id)
-            cache.set('focus.association_sherpa2.%s' % self.main_association_id, association, 60 * 60 * 24 * 7)
-        return association
-
     def membership_type(self):
         now = datetime.now()
         # Supposedly, there should only be one service in this range
@@ -174,7 +154,7 @@ class Actor(models.Model):
 
     def has_membership_type(self, codename):
         # Note that you shouldn't use this to check for the 'household' membership type,
-        # use is_household_member() -- se the docs on that method for more info.
+        # use is_household_member() -- see the docs on that method for more info.
         return self.membership_type() == get_membership_type_by_codename(codename)
 
     def get_services(self):
@@ -201,6 +181,9 @@ class Actor(models.Model):
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
 
+    def get_email(self):
+        return self.email.strip() if self.email is not None else ''
+
     def get_age(self):
         return (datetime.now() - self.birth_date).days / 365
 
@@ -212,18 +195,17 @@ class Actor(models.Model):
         else:
             return None
 
-    def get_parent(self):
-        parent = self.parent
-        if not self.is_household_member():
-            return None
-        if parent == 0 or parent == self.memberid:
+    def get_phone_home(self):
+        return self.phone_home.strip() if self.phone_home is not None else ''
+
+    def get_phone_mobile(self):
+        return self.phone_mobile.strip() if self.phone_mobile is not None else ''
+
+    def get_parent_memberid(self):
+        if self.parent == 0 or self.parent == self.memberid:
             return None
         else:
-            actor = cache.get('actor.%s' % self.parent)
-            if actor is None:
-                actor = Actor.objects.get(memberid=self.parent)
-                cache.set('actor.%s' % self.parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
-            return actor
+            return self.parent
 
     def get_children(self):
         children = cache.get('actor.children.%s' % self.memberid)
@@ -257,7 +239,7 @@ class Actor(models.Model):
     def is_eligible_for_publications(self):
         # Household members are eligible if their parents are eligible
         if self.is_household_member():
-            return self.get_parent().is_eligible_for_publications()
+            return Actor.objects.get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
 
         # This membership type is supposed to be deprecated, but error logs show it's still in use
         if self.has_membership_type("household_without_main"):
@@ -331,6 +313,7 @@ class Actor(models.Model):
         else:
             note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
+        cache.delete('actor.services.%s' % self.memberid)
 
     def get_reserved_against_yearbook(self):
         return self.get_yearbook_service().stop_date is not None
@@ -342,6 +325,7 @@ class Actor(models.Model):
         else:
             note = u'Ønsker tilsendt årbok(aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
+        cache.delete('actor.services.%s' % self.memberid)
 
     def set_service_status(self, service, enable, note=None):
         if enable:
@@ -387,6 +371,7 @@ class Actor(models.Model):
             return False
 
     def get_clean_address(self):
+        from focus.abstractions import ActorAddressClean
         return ActorAddressClean(self.address)
 
     class Meta:
@@ -456,90 +441,6 @@ class ActorAddress(models.Model):
 
     class Meta:
         db_table = u'ActAd'
-
-# This is NOT a db table, but a cleaner address model, based on Focus' ActorAddress model.
-# It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
-# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode') and a
-# 'county' field ('core.models.County').
-# The class has utility methods for typical formatting of addresses (with newlines, and for
-# one line with commas).
-class ActorAddressClean:
-    def __init__(self, address):
-        # Add fields, replacing NULL values with the empty string
-        self.field1 = address.a1.strip() if address.a1 is not None else ''
-        self.field2 = address.a2.strip() if address.a2 is not None else ''
-        self.field3 = address.a3.strip() if address.a3 is not None else ''
-
-        # Set the actual country object
-        # Uppercase the country code (just in case - you never know with Focus)
-        self.country = FocusCountry.objects.get(code=address.country_code.upper())
-
-        if self.country.code == 'NO':
-            # Norwegians - set the actual zipcode object
-            try:
-                self.zipcode = Zipcode.objects.get(zipcode=address.zipcode)
-            except Zipcode.DoesNotExist:
-                # Some addresses have NULL in the zipcode field for some reason.
-                # Use a zipcode object with empty fields.
-                self.zipcode = Zipcode()
-
-            # Set the actual County object based on the zipcode
-            if self.zipcode.zipcode != '':
-                county_code = FocusZipcode.objects.get(zipcode=self.zipcode.zipcode).county_code
-                if county_code == '99':
-                    # International addresses have county code 99 in Focus. Define the county as None for now.
-                    self.county = None
-                else:
-                    self.county = County.objects.get(code=county_code)
-            else:
-                self.county = None
-
-        else:
-            # Foreigners - ignore zipcode/area
-            # Remove country code prefixes
-            if self.field1.lower().startswith("%s-" % self.country.code.lower()):
-                self.field1 = self.field1[len(self.country.code) + 1:].strip()
-            if self.field2.lower().startswith("%s-" % self.country.code.lower()):
-                self.field2 = self.field2[len(self.country.code) + 1:].strip()
-            if self.field3.lower().startswith("%s-" % self.country.code.lower()):
-                self.field3 = self.field3[len(self.country.code) + 1:].strip()
-
-    # This is adapted for user page account details right now - if norwegian,
-    # this doesn't display country, if foreigner, it does. If rewritten, account
-    # for that and add parameters or something for that usage.
-    def format_with_newlines(self):
-        if self.country.code == 'NO':
-            address_string = self.field1
-            if self.field2 != '':
-                address_string += '\n%s' % self.field2
-            if self.field3 != '':
-                address_string += '\n%s' % self.field3
-            address_string += '\n%s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
-        else:
-            address_string = ''
-            if self.field1 != '':
-                address_string += '%s\n' % self.field1
-            if self.field2 != '':
-                address_string += '%s\n' % self.field2
-            if self.field3 != '':
-                address_string += '%s\n' % self.field3
-            address_string += "%s, %s" % (self.country.name, self.country.code)
-        return address_string
-
-    # This is adapted for NOR-WAY bus tickets emails right now. If rewritten,
-    # account for that and add parameters or something for that usage.
-    def format_for_oneline(self):
-        address_string = self.field1
-        if self.field2 != '':
-            address_string += ', %s' % self.field2
-        if self.field3 != '':
-            address_string += ', %s' % self.field3
-
-        if self.country.code == 'NO':
-            address_string += ', %s %s' % (self.zipcode.zipcode, self.zipcode.area.title())
-        else:
-            address_string += ' (%s, %s)' % (self.country.name, self.country.code)
-        return address_string
 
 class ActorText(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')

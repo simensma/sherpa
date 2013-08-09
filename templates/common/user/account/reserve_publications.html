@@ -25,7 +25,7 @@
       <table class="user-reservations fjellogvidde" data-url="{% url 'user.views.reserve_fjellogvidde' %}">
         <tr class="choice">
           <td>
-            <input type="radio" name="fjellogvidde" value="allow"{% if not user.get_actor.get_reserved_against_fjellogvidde %} checked{% endif %}>
+            <input type="radio" name="fjellogvidde" value="allow"{% if not user.get_reserved_against_fjellogvidde %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Jeg ønsker Fjell og Vidde tilsendt hjem til meg
@@ -33,7 +33,7 @@
         </tr>
         <tr class="choice">
           <td>
-            <input type="radio" name="fjellogvidde" value="reserve"{% if user.get_actor.get_reserved_against_fjellogvidde %} checked{% endif %}>
+            <input type="radio" name="fjellogvidde" value="reserve"{% if user.get_reserved_against_fjellogvidde %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Jeg ønsker ikke Fjell og Vidde tilsendt, men leser det på nett
@@ -71,7 +71,7 @@
       <table class="user-reservations yearbook" data-url="{% url 'user.views.reserve_yearbook' %}">
         <tr class="choice">
           <td>
-            <input type="radio" name="yearbook" value="allow"{% if not user.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+            <input type="radio" name="yearbook" value="allow"{% if not user.get_reserved_against_yearbook %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Jeg ønsker årboken tilsendt hjem til meg
@@ -79,7 +79,7 @@
         </tr>
         <tr class="choice">
           <td>
-            <input type="radio" name="yearbook" value="reserve"{% if user.get_actor.get_reserved_against_yearbook %} checked{% endif %}>
+            <input type="radio" name="yearbook" value="reserve"{% if user.get_reserved_against_yearbook %} checked{% endif %}>
           </td>
           <td class="fake-table-label">
             Jeg ønsker ikke årboken tilsendt, men leser den på nett
