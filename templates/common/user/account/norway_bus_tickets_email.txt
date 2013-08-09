@@ -4,6 +4,6 @@ Turdato: {{ ticket.date_trip|date:"j. F Y" }}
 Turstrekning: {{ ticket.distance }}
 Adresse: {{ user.get_address.format_for_oneline }}
 E-post: {{ user.get_email }}
-{% if user.get_actor.phone_home %}Hjemme tlf: {{ user.get_actor.phone_home }}
-{% endif %}{% if user.get_actor.phone_mobile %}Mobil tlf: {{ user.get_actor.phone_mobile }}
+{% if user.get_phone_home != '' %}Hjemme tlf: {{ user.get_phone_home }}
+{% endif %}{% if user.get_phone_mobile != '' %}Mobil tlf: {{ user.get_phone_mobile }}
 {% endif %}

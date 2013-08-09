@@ -14,7 +14,7 @@
   </span>
 
   <span class="result ok hide">
-    SMS med ditt medlemsnummer har blitt sendt til <span class="number">{{ user.get_actor.phone_mobile.strip|default:"" }}</span>.
+    SMS med ditt medlemsnummer har blitt sendt til <span class="number">{{ user.get_phone_mobile }}</span>.
   </span>
 
   <span class="result error hide">

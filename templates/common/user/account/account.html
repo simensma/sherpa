@@ -84,11 +84,11 @@
           {% endif %}
           <tr>
             <th>Telefon</th>
-            <td>{{ user.get_actor.phone_home|default:"" }}</td>
+            <td>{{ user.get_phone_home }}</td>
           </tr>
           <tr>
             <th>Mobiltelefon</th>
-            <td>{{ user.get_actor.phone_mobile|default:"" }}</td>
+            <td>{{ user.get_phone_mobile }}</td>
           </tr>
           <tr>
             <th>Født</th>

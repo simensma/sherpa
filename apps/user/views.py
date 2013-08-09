@@ -440,8 +440,8 @@ def fotobok_eurofoto_request(request):
         ('city', user.get_address().zipcode.area,),
         ('country', user.get_address().country.code,),
         ('phonework', '',),
-        ('phonehome', user.get_actor().phone_home if user.get_actor().phone_home is not None else '',),
-        ('phonemobile', user.get_actor().phone_mobile if user.get_actor().phone_mobile is not None else '',),
+        ('phonehome', user.get_phone_home(),),
+        ('phonemobile', user.get_phone_mobile(),),
     ])
     sha1 = hashlib.sha1()
     sha1.update(('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, u''.join(payload.values()).encode('utf-8'))))

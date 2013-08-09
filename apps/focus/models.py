@@ -211,6 +211,12 @@ class Actor(models.Model):
         else:
             return None
 
+    def get_phone_home(self):
+        return self.phone_home.strip() if self.phone_home is not None else ''
+
+    def get_phone_mobile(self):
+        return self.phone_mobile.strip() if self.phone_mobile is not None else ''
+
     def get_parent(self):
         parent = self.parent
         if not self.is_household_member():

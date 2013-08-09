@@ -81,7 +81,7 @@
         </div>
         <div class="control-group giver_phone" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> Mobiltelefon</label>
-          <input type="text" class="input-medium" name="giver_phone" value="{% if user.is_member %}{% firstof giver.phone user.get_actor.phone_mobile user.get_actor.phone_home %}{% endif %}">
+          <input type="text" class="input-medium" name="giver_phone" value="{% if user.is_member %}{% firstof giver.phone user.get_phone_mobile user.get_phone_home %}{% endif %}">
         </div>
         <div class="control-group giver_email" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Kontaktinformasjon" data-content="Vi anbefaler at du oppgir din e-postadresse eller ditt telefonnummer, slik at vi har mulighet til å kontakte deg ved eventuelle spørsmål.">
           <label> E-post</label>

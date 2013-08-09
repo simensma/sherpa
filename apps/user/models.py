@@ -105,6 +105,12 @@ class User(AbstractBaseUser):
     def get_age(self):
         return self.get_actor().get_age()
 
+    def get_phone_home(self):
+        return self.get_actor().get_phone_home()
+
+    def get_phone_mobile(self):
+        return self.get_actor().get_phone_mobile()
+
     def has_paid(self):
         return self.get_actor().has_paid()
 

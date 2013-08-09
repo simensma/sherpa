@@ -39,7 +39,7 @@ def get_member_data(user):
             'født': user.get_birth_date.strftime("%Y-%m-%d"),
             'kjønn': api_gender_output(user.get_gender()),
             'epost': user.get_email(),
-            'mobil': user.get_actor().phone_mobile,
+            'mobil': user.get_phone_mobile(),
             'address': {
                 'adresse1': address.field1,
                 'adresse2': address.field2,

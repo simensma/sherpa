@@ -166,7 +166,7 @@ def memberid_sms_userpage(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    if actor.phone_mobile.strip() == '':
+    if actor.get_phone_mobile() == '':
         # This shouldn't happen (it's checked client-side first) - but handle it anyway, just in case
         return HttpResponse(json.dumps({
             'status': 'missing_number'
@@ -188,7 +188,7 @@ def memberid_sms_count(ip_address):
 
 # This is not a view
 def send_sms_receipt(request, actor):
-    number = re.sub('\s', '', actor.phone_mobile)
+    number = re.sub('\s', '', actor.get_phone_mobile())
     try:
         context = RequestContext(request, {
             'actor': actor,

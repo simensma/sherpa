@@ -90,14 +90,14 @@
       <div class="control-group phone_home">
         <label class="control-label" for="phone_home">Telefon</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="phone_home" id="phone_home" value="{{ user.get_actor.phone_home|default:"" }}">
+          <input type="text" class="input-medium" name="phone_home" id="phone_home" value="{{ user.get_phone_home }}">
         </div>
       </div>
 
       <div class="control-group phone_mobile">
         <label class="control-label" for="phone_mobile">Mobil</label>
         <div class="controls">
-          <input type="text" class="input-medium" name="phone_mobile" id="phone_mobile" value="{{ user.get_actor.phone_mobile|default:"" }}">
+          <input type="text" class="input-medium" name="phone_mobile" id="phone_mobile" value="{{ user.get_phone_mobile }}">
         </div>
       </div>
 
