@@ -28,7 +28,7 @@ def get_member_data(user):
             elif gender == 'f':
                 return 'K'
 
-        address = user.get_actor().get_clean_address()
+        address = user.get_address()
         return {
             'sherpa_id': user.id,
             'er_medlem': True,

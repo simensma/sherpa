@@ -51,7 +51,7 @@
       <tr>
         <th>Adresse</th>
         <td>
-          {{ other_user.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+          {{ other_user.get_address.format_with_newlines|linebreaksbr }}
         </td>
       </tr>
       <tr>
@@ -136,7 +136,7 @@
         <tr>
           <th>Fjell og Vidde</th>
           <td>
-            {% if other_user.get_actor.get_clean_address.country.code != 'NO' %}
+            {% if other_user.get_address.country.code != 'NO' %}
 
               {% if other_user.get_actor.has_foreign_fjellogvidde_service %}
                 Ja
@@ -166,7 +166,7 @@
         <tr>
           <th>Årboken</th>
           <td>
-            {% if other_user.get_actor.get_clean_address.country.code != 'NO' %}
+            {% if other_user.get_address.country.code != 'NO' %}
 
               {% if other_user.get_actor.has_foreign_yearbook_service %}
                 Ja

@@ -120,7 +120,7 @@
           <label class="control-label">Billetten blir sendt til:</label>
           <div class="controls">
             <div class="control-as-text">
-              {{ user.get_actor.get_clean_address.format_for_oneline }}
+              {{ user.get_address.format_for_oneline }}
             </div>
             <div class="hints">
               Feil adresse? <a href="{% url 'user.views.update_account' %}">Endre den her</a> FØR du bestiller!

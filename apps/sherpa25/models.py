@@ -129,10 +129,10 @@ def import_fjelltreffen_annonser(user):
         except KeyError:
             if old_annonse.county == 0:
                 # The entire country is no longer applicable - set it to the Actor's county
-                annonse.county = user.get_actor().get_clean_address().county
+                annonse.county = user.get_address().county
             elif old_annonse.county == 2:
                 # Both Oslo and Akershus - set it to the Actor's county, which hopefully is one of those
-                annonse.county = user.get_actor().get_clean_address().county
+                annonse.county = user.get_address().county
             elif old_annonse.county == 99:
                 # International annonse - defined with 'NULL'
                 annonse.county = None

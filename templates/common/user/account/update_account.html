@@ -112,13 +112,13 @@
         </div>
       </div>
 
-      {% if user.get_actor.get_clean_address.country.code != 'NO' %}
+      {% if user.get_address.country.code != 'NO' %}
 
         <div class="control-group">
           <label class="control-label">Adresse</label>
           <div class="controls">
             <div class="control-as-text">
-              {{ user.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+              {{ user.get_address.format_with_newlines|linebreaksbr }}
             </div>
             <div class="alert alert-error">
               Da du er bosatt i utlandet kan du av tekniske årsaker desverre ikke endre adresse på Min side. Vær vennlig og ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> om du har behov for å endre din adresse.
@@ -132,7 +132,7 @@
           <label class="control-label" for="address">Adresse</label>
           <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Adressen kan ikke endres" data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Ditt hovedmedlem, {{ user.get_actor.get_parent.get_full_name }}, kan endre den for dere, eller så må du kontakte medlemsservice.">
             <div class="control-as-text">
-              {{ user.get_actor.get_clean_address.format_with_newlines|linebreaksbr }}
+              {{ user.get_address.format_with_newlines|linebreaksbr }}
               <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
               <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
             </div>
@@ -144,22 +144,22 @@
           <div class="control-group address">
             <label class="control-label" for="address">Adresse</label>
             <div class="controls">
-              <input type="text" class="input-large" name="address" id="address" value="{{ user.get_actor.get_clean_address.field1 }}">
+              <input type="text" class="input-large" name="address" id="address" value="{{ user.get_address.field1 }}">
             </div>
           </div>
 
-          {% if user.get_actor.get_clean_address.field2 %}
+          {% if user.get_address.field2 %}
             <div class="control-group address2">
               <div class="controls">
-                <input type="text" class="input-large" name="address2" value="{{ user.get_actor.get_clean_address.field2 }}">
+                <input type="text" class="input-large" name="address2" value="{{ user.get_address.field2 }}">
               </div>
             </div>
           {% endif %}
 
-          {% if user.get_actor.get_clean_address.field3 %}
+          {% if user.get_address.field3 %}
             <div class="control-group address3">
               <div class="controls">
-                <input type="text" class="input-large" name="address3" value="{{ user.get_actor.get_clean_address.field3 }}">
+                <input type="text" class="input-large" name="address3" value="{{ user.get_address.field3 }}">
               </div>
             </div>
           {% endif %}
@@ -167,8 +167,8 @@
           <div class="control-group zipcode" for="zipcode">
             <label class="control-label">Postnummer</label>
             <div class="controls">
-              <input type="text" class="input-small" name="zipcode" id="zipcode" value="{{ user.get_actor.get_clean_address.zipcode.zipcode }}" maxlength="4">
-              <input type="text" class="input-medium" name="area" value="{{ user.get_actor.get_clean_address.zipcode.area }}" disabled>
+              <input type="text" class="input-small" name="zipcode" id="zipcode" value="{{ user.get_address.zipcode.zipcode }}" maxlength="4">
+              <input type="text" class="input-medium" name="area" value="{{ user.get_address.zipcode.area }}" disabled>
               <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>

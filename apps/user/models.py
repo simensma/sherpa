@@ -93,6 +93,9 @@ class User(AbstractBaseUser):
         else:
             return self.get_email()
 
+    def get_address(self):
+        return self.get_actor().get_clean_address()
+
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
     # have access to all associations

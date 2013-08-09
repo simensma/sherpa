@@ -124,7 +124,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_actor().get_clean_address().country.code == 'NO' and not request.user.get_actor().is_household_member():
+            if request.user.get_address().country.code == 'NO' and not request.user.get_actor().is_household_member():
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -434,11 +434,11 @@ def fotobok_eurofoto_request(request):
         ('firstname', user.get_first_name(),),
         ('middlename', '',), # We could parse this out of 'lastname', but the old API didn't do that, so whatever
         ('lastname', user.get_last_name(),),
-        ('address1', user.get_actor().get_clean_address().field1,),
-        ('address2', user.get_actor().get_clean_address().field2,),
-        ('zipcode', user.get_actor().get_clean_address().zipcode.zipcode,),
-        ('city', user.get_actor().get_clean_address().zipcode.area,),
-        ('country', user.get_actor().get_clean_address().country.code,),
+        ('address1', user.get_address().field1,),
+        ('address2', user.get_address().field2,),
+        ('zipcode', user.get_address().zipcode.zipcode,),
+        ('city', user.get_address().zipcode.area,),
+        ('country', user.get_address().country.code,),
         ('phonework', '',),
         ('phonehome', user.get_actor().phone_home if user.get_actor().phone_home is not None else '',),
         ('phonemobile', user.get_actor().phone_mobile if user.get_actor().phone_mobile is not None else '',),
