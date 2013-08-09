@@ -176,7 +176,7 @@
               <td>
                 {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
-                {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
+                {# Foreign members can receive it, but not change service status because it costs extra - they'll make the choice another place #}
                 {% if user.get_actor.get_clean_address.country.code != 'NO' %}
 
                   {% if user.get_actor.has_foreign_fjellogvidde_service %}
@@ -225,7 +225,7 @@
               <td>
                 {# Not using the 'can_reserve_against_publications' Actor method here because we need more granular messages #}
 
-                {# Foreign members can recieve it, but not change service status because it costs extra - they'll make the choice another place #}
+                {# Foreign members can receive it, but not change service status because it costs extra - they'll make the choice another place #}
                 {% if user.get_actor.get_clean_address.country.code != 'NO' %}
 
                   {% if user.get_actor.has_foreign_yearbook_service %}
