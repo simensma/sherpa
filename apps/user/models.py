@@ -60,6 +60,25 @@ class User(AbstractBaseUser):
             cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
 
+    def get_children(self):
+        children = cache.get('user.%s.children' % self.memberid)
+        if children is None:
+            children = []
+            for actor_child in self.get_actor().get_children():
+                try:
+                    children.append(User.objects.get(memberid=actor_child.memberid))
+                except User.DoesNotExist:
+                    # Child without a User, create as inactive
+                    child_user = User(
+                        identifier=actor_child.memberid,
+                        memberid=actor_child.memberid,
+                        is_active=False
+                    )
+                    child_user.save()
+                    children.append(child_user)
+            cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return children
+
     def is_member(self):
         return self.memberid is not None
 
