@@ -313,6 +313,7 @@ class Actor(models.Model):
         else:
             note = u'Ønsker Fjell og Vidde (aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
+        cache.delete('actor.services.%s' % self.memberid)
 
     def get_reserved_against_yearbook(self):
         return self.get_yearbook_service().stop_date is not None
@@ -324,6 +325,7 @@ class Actor(models.Model):
         else:
             note = u'Ønsker tilsendt årbok(aktivert gjennom Min Side).'
         self.set_service_status(service, not reserved, note)
+        cache.delete('actor.services.%s' % self.memberid)
 
     def set_service_status(self, service, enable, note=None):
         if enable:

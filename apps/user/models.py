@@ -176,8 +176,14 @@ class User(AbstractBaseUser):
     def get_reserved_against_fjellogvidde(self):
         return self.get_actor().get_reserved_against_fjellogvidde()
 
+    def set_reserved_against_fjellogvidde(self, reserved):
+        self.get_actor().set_reserved_against_fjellogvidde(reserved)
+
     def get_reserved_against_yearbook(self):
         return self.get_actor().get_reserved_against_yearbook()
+
+    def set_reserved_against_yearbook(self, reserved):
+        self.get_actor().set_reserved_against_yearbook(reserved)
 
     def has_foreign_fjellogvidde_service(self):
         return self.get_actor().has_foreign_fjellogvidde_service()
@@ -191,8 +197,18 @@ class User(AbstractBaseUser):
     def receive_email(self):
         return self.get_actor().receive_email
 
+    def set_receive_email(self, receive):
+        actor = self.get_actor()
+        actor.receive_email = receive
+        actor.save()
+
     def reserved_against_partneroffers(self):
         return self.get_actor().reserved_against_partneroffers
+
+    def set_reserved_against_partneroffers(self, reserved):
+        actor = self.get_actor()
+        actor.reserved_against_partneroffers = reserved
+        actor.save()
 
     def main_association(self):
         association = cache.get('user.association.%s' % self.get_actor().main_association_id)

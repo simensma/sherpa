@@ -260,9 +260,7 @@ def partneroffers(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
-    actor = request.user.get_actor()
-    actor.reserved_against_partneroffers = json.loads(request.POST['reserve'])
-    actor.save()
+    request.user.set_reserved_against_partneroffers(json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
@@ -273,9 +271,7 @@ def receive_email(request):
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
-    actor = request.user.get_actor()
-    actor.receive_email = not json.loads(request.POST['reserve'])
-    actor.save()
+    request.user.set_receive_email(not json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
@@ -487,16 +483,12 @@ def reserve_publications(request):
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
-    actor = request.user.get_actor()
-    actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
-    actor.save()
+    request.user.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):
-    actor = request.user.get_actor()
-    actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
-    actor.save()
+    request.user.set_reserved_against_yearbook(json.loads(request.POST['reserve']))
     return HttpResponse()
