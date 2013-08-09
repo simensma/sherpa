@@ -286,7 +286,7 @@ def verify_memberid(request):
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
-            'email': actor.email or '',
+            'email': actor.get_email(),
             'user_exists': User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists()
         }))
     except (ValueError, Actor.DoesNotExist):

@@ -74,7 +74,7 @@
           </tr>
           <tr>
             <th>E-post</th>
-            <td>{{ user.get_actor.email|default:"" }}</td>
+            <td>{{ user.get_email }}</td>
           </tr>
           {% if user.perms.sherpa and user.sherpa_email != '' %}
             <tr>

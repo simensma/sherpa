@@ -104,7 +104,7 @@ class User(AbstractBaseUser):
         if not self.is_member():
             return self.email
         else:
-            return self.get_actor().email
+            return self.get_actor().get_email()
 
     def get_sherpa_email(self):
         if self.sherpa_email != '':

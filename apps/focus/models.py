@@ -200,6 +200,9 @@ class Actor(models.Model):
     def get_full_name(self):
         return ("%s %s" % (self.first_name, self.last_name)).strip()
 
+    def get_email(self):
+        return self.email.strip() if self.email is not None else ''
+
     def get_age(self):
         return (datetime.now() - self.birth_date).days / 365
 

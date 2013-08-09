@@ -114,8 +114,8 @@ def import_fjelltreffen_annonser(user):
         # Email is required, so make sure we find one for the old user
         if old_member.email is None or old_member.email == '':
             # Nope, it's not here. Try to get it from Focus
-            focus_email = user.get_actor().email
-            if focus_email is None or focus_email == '':
+            focus_email = user.get_email()
+            if focus_email == '':
                 # Not in Focus either! We'll have to ignore this annonse.
                 continue
             else:
