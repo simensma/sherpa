@@ -96,6 +96,9 @@ class User(AbstractBaseUser):
     def get_address(self):
         return self.get_actor().get_clean_address()
 
+    def has_paid(self):
+        return self.get_actor().has_paid()
+
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
     # have access to all associations
@@ -184,7 +187,7 @@ class User(AbstractBaseUser):
             # The offer applies only the same year as membership enrollment
             return False
 
-        if not self.get_actor().has_paid():
+        if not self.has_paid():
             # The offer applies only to active memberships
             return False
 

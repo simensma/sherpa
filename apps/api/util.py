@@ -33,7 +33,7 @@ def get_member_data(user):
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
-            'aktivt_medlemskap': user.get_actor().has_paid(),
+            'aktivt_medlemskap': user.has_paid(),
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
             'født': user.get_actor().birth_date.strftime("%Y-%m-%d"),

@@ -71,7 +71,7 @@
       <tr>
         <th>Status</th>
         <td>
-          {% if other_user.get_actor.has_paid %}
+          {% if other_user.has_paid %}
             Betalt for
             {% if next_year %}
               {{ year|add:"1" }}
