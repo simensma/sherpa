@@ -147,22 +147,25 @@ def update_account(request):
                 user.sherpa_email = request.POST['sherpa-email']
                 user.save()
 
-            actor = request.user.get_actor()
-            actor.first_name, actor.last_name = request.POST['name'].rsplit(' ', 1)
-            actor.email = request.POST['email']
-            actor.phone_home = request.POST['phone_home']
-            actor.phone_mobile = request.POST['phone_mobile']
-            actor.save()
-
-            if actor.get_clean_address().country.code == 'NO' and not actor.is_household_member():
-                actor.address.a1 = request.POST['address']
+            first_name, last_name = request.POST['name'].rsplit(' ', 1)
+            attributes = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': request.POST['email'],
+                'phone_home': request.POST['phone_home'],
+                'phone_mobile': request.POST['phone_mobile']
+            }
+            address_attributes = None
+            if request.user.get_address().country.code == 'NO' and not request.user.is_household_member():
+                address_attributes = {}
+                address_attributes['a1'] = request.POST['address']
                 if 'address2' in request.POST:
-                    actor.address.a2 = request.POST['address2']
+                    address_attributes['a2'] = request.POST['address2']
                 if 'address3' in request.POST:
-                    actor.address.a3 = request.POST['address3']
-                actor.address.zipcode = zipcode.zipcode
-                actor.address.area = zipcode.area
-                actor.address.save()
+                    address_attributes['a3'] = request.POST['address3']
+                address_attributes['zipcode'] = zipcode.zipcode
+                address_attributes['area'] = zipcode.area
+            request.user.update_personal_data(attributes, address_attributes)
 
             messages.info(request, 'update_success')
             return redirect('user.views.account')

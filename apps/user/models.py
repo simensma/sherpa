@@ -227,6 +227,24 @@ class User(AbstractBaseUser):
             cache.set('user.association_sherpa2.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
         return association
 
+    def update_personal_data(self, attributes, address_attributes=None):
+        """
+        Setter for updating personal data in Focus. Doesn't have a concept of accepted attributes, so they are
+        kind of 'leaked out' to the callers (e.g. the field name for address.a1). Maybe it *should* have that
+        at some point.
+        """
+
+        actor = self.get_actor()
+
+        for name, value in attributes.items():
+            actor.__setattr__(name, value)
+        actor.save()
+
+        if address_attributes is not None:
+            for name, value in address_attributes.items():
+                actor.address.__setattr__(name, value)
+            actor.address.save()
+
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
     # have access to all associations
