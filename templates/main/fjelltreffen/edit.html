@@ -129,7 +129,7 @@
         <div class="controls">
           <label class="radio" for="hideage_raw">
             <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
-            {{ user.get_actor.get_age }} år
+            {{ user.get_age }} år
           </label>
           <label class="radio" for="hideage_hide">
             <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>

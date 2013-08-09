@@ -105,7 +105,7 @@
         <label class="control-label">Født</label>
         <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Fødselsdato kan ikke endres" data-content="Vennligst kontakt medlemsservice dersom denne fødselsdatoen ikke stemmer.">
           <div class="control-as-text">
-            {{ user.get_actor.birth_date|date:"j. F Y" }}
+            {{ user.get_birth_date|date:"j. F Y" }}
             <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">
             <img class="info hover" src="{{ STATIC_URL }}img/icons/netlife/icon-info-hover.png" alt="Mer informasjon">
           </div>

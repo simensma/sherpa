@@ -96,6 +96,15 @@ class User(AbstractBaseUser):
     def get_address(self):
         return self.get_actor().get_clean_address()
 
+    def get_birth_date(self):
+        return self.get_actor().birth_date
+
+    def get_gender(self):
+        return self.get_actor().get_gender()
+
+    def get_age(self):
+        return self.get_actor().get_age()
+
     def has_paid(self):
         return self.get_actor().has_paid()
 
