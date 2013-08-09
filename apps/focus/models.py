@@ -220,18 +220,11 @@ class Actor(models.Model):
     def get_phone_mobile(self):
         return self.phone_mobile.strip() if self.phone_mobile is not None else ''
 
-    def get_parent(self):
-        parent = self.parent
-        if not self.is_household_member():
-            return None
-        if parent == 0 or parent == self.memberid:
+    def get_parent_memberid(self):
+        if self.parent == 0 or self.parent == self.memberid:
             return None
         else:
-            actor = cache.get('actor.%s' % self.parent)
-            if actor is None:
-                actor = Actor.objects.get(memberid=self.parent)
-                cache.set('actor.%s' % self.parent, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
-            return actor
+            return self.parent
 
     def get_children(self):
         children = cache.get('actor.children.%s' % self.memberid)
@@ -265,7 +258,7 @@ class Actor(models.Model):
     def is_eligible_for_publications(self):
         # Household members are eligible if their parents are eligible
         if self.is_household_member():
-            return self.get_parent().is_eligible_for_publications()
+            return Actor.objects.get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
 
         # This membership type is supposed to be deprecated, but error logs show it's still in use
         if self.has_membership_type("household_without_main"):

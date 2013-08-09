@@ -126,11 +126,11 @@
           </div>
         </div>
 
-      {% elif user.get_actor.is_household_member %}
+      {% elif user.is_household_member %}
 
         <div class="control-group address">
           <label class="control-label" for="address">Adresse</label>
-          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Adressen kan ikke endres" data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Ditt hovedmedlem, {{ user.get_actor.get_parent.get_full_name }}, kan endre den for dere, eller så må du kontakte medlemsservice.">
+          <div class="controls" data-popover data-trigger="hover" data-placement="bottom" data-html="true" data-title="Adressen kan ikke endres" data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Ditt hovedmedlem, {{ user.get_parent.get_full_name }}, kan endre den for dere, eller så må du kontakte medlemsservice.">
             <div class="control-as-text">
               {{ user.get_address.format_with_newlines|linebreaksbr }}
               <img class="info nohover" src="{{ STATIC_URL }}img/icons/netlife/icon-info.png" alt="Mer informasjon">

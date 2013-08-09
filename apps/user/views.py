@@ -124,7 +124,7 @@ def update_account(request):
                 messages.error(request, 'invalid_phone_mobile')
                 errors = True
 
-            if request.user.get_address().country.code == 'NO' and not request.user.get_actor().is_household_member():
+            if request.user.get_address().country.code == 'NO' and not request.user.is_household_member():
                 if not validator.address(request.POST['address']):
                     messages.error(request, 'invalid_address')
                     errors = True
@@ -479,13 +479,13 @@ def fotobok_eurofoto_request(request):
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
     actor = request.user.get_actor()
     actor.set_reserved_against_fjellogvidde(json.loads(request.POST['reserve']))
@@ -494,7 +494,7 @@ def reserve_fjellogvidde(request):
 
 @user_requires_login()
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.get_actor().can_reserve_against_publications(), redirect_to='user.views.home')
+@user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):
     actor = request.user.get_actor()
     actor.set_reserved_against_yearbook(json.loads(request.POST['reserve']))

@@ -104,17 +104,17 @@
         <th>Medlemstype</th>
         <td>{{ other_user.get_actor.membership_type.name }}</td>
       </tr>
-      {% if other_user.get_actor.get_parent %}
+      {% if other_user.get_parent %}
         <tr>
           <th>Hovedmedlem</th>
-          <td>{{ other_user.get_actor.get_parent.get_full_name }} ({{ other_user.get_actor.get_parent.memberid }})</td>
+          <td>{{ other_user.get_parent.get_full_name }} ({{ other_user.get_parent.memberid }})</td>
         </tr>
       {% endif %}
-      {% if other_user.get_actor.get_children|length > 0 %}
+      {% if other_user.get_children|length > 0 %}
         <tr>
           <th>Husstandsmedlemmer</th>
           <td>
-            {% for child in other_user.get_actor.get_children %}
+            {% for child in other_user.get_children %}
               {{ child.get_full_name }} ({{ child.memberid }}){% if not forloop.last %}<br>{% endif %}
             {% endfor %}
           </td>
@@ -123,30 +123,30 @@
       <tr>
         <th>Betalingsavtale</th>
         <td>
-          {% if other_user.get_actor.get_invoice_type_text == 'avtalegiro' %}
+          {% if other_user.get_invoice_type_text == 'avtalegiro' %}
             AvtaleGiro
-          {% elif other_user.get_actor.get_invoice_type_text == 'efaktura' %}
+          {% elif other_user.get_invoice_type_text == 'efaktura' %}
             E-faktura
           {% else %}
             Ingen
           {% endif %}
         </td>
       </tr>
-      {% if other_user.get_actor.is_eligible_for_publications %}
+      {% if other_user.is_eligible_for_publications %}
         <tr>
           <th>Fjell og Vidde</th>
           <td>
             {% if other_user.get_address.country.code != 'NO' %}
 
-              {% if other_user.get_actor.has_foreign_fjellogvidde_service %}
+              {% if other_user.has_foreign_fjellogvidde_service %}
                 Ja
               {% else %}
                 Nei
               {% endif %}
 
-            {% elif other_user.get_actor.is_household_member %}
+            {% elif other_user.is_household_member %}
 
-              {% if other_user.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+              {% if other_user.get_parent.get_reserved_against_fjellogvidde %}
                 Nei (husstanden)
               {% else %}
                 Ja (husstanden)
@@ -154,7 +154,7 @@
 
             {% else %}
 
-              {% if other_user.get_actor.get_reserved_against_fjellogvidde %}
+              {% if other_user.get_reserved_against_fjellogvidde %}
                 Nei
               {% else %}
                 Ja
@@ -168,15 +168,15 @@
           <td>
             {% if other_user.get_address.country.code != 'NO' %}
 
-              {% if other_user.get_actor.has_foreign_yearbook_service %}
+              {% if other_user.has_foreign_yearbook_service %}
                 Ja
               {% else %}
                 Nei
               {% endif %}
 
-            {% elif other_user.get_actor.is_household_member %}
+            {% elif other_user.is_household_member %}
 
-              {% if other_user.get_actor.get_parent.get_reserved_against_fjellogvidde %}
+              {% if other_user.get_parent.get_reserved_against_fjellogvidde %}
                 Nei (husstanden)
               {% else %}
                 Ja (husstanden)
@@ -184,7 +184,7 @@
 
             {% else %}
 
-              {% if other_user.get_actor.get_reserved_against_yearbook %}
+              {% if other_user.get_reserved_against_yearbook %}
                 Nei
               {% else %}
                 Ja
@@ -197,7 +197,7 @@
       <tr>
         <th>E-post fra DNT</th>
         <td>
-          {% if other_user.get_actor.receive_email %}
+          {% if other_user.receive_email %}
             Ja
           {% else %}
             Nei
@@ -207,7 +207,7 @@
       <tr>
         <th>Medlemsfordeler fra partnere</th>
         <td>
-          {% if other_user.get_actor.reserved_against_partneroffers %}
+          {% if other_user.reserved_against_partneroffers %}
             Nei
           {% else %}
             Ja

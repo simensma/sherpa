@@ -50,6 +50,9 @@ class User(AbstractBaseUser):
 
     ### Focus-related ###
 
+    def is_member(self):
+        return self.memberid is not None
+
     # Return this users' Actor (cached), or None
     def get_actor(self):
         if not self.is_member():
@@ -59,6 +62,28 @@ class User(AbstractBaseUser):
             actor = Actor.objects.get(memberid=self.memberid)
             cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return actor
+
+    def get_parent(self):
+        if not self.is_household_member():
+            return None
+
+        parent_memberid = self.get_actor().get_parent_memberid()
+        if parent_memberid is None:
+            return None
+
+        parent = cache.get('user.%s.parent' % self.memberid)
+        if parent is None:
+            try:
+                parent = User.objects.get(memberid=parent_memberid)
+            except User.DoesNotExist:
+                parent = User(
+                    identifier=parent_memberid,
+                    memberid=parent_memberid,
+                    is_active=False
+                )
+                parent.save()
+                cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return parent
 
     def get_children(self):
         children = cache.get('user.%s.children' % self.memberid)
@@ -79,8 +104,8 @@ class User(AbstractBaseUser):
             cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
-    def is_member(self):
-        return self.memberid is not None
+    def is_household_member(self):
+        return self.get_actor().is_household_member()
 
     def get_first_name(self):
         if not self.is_member():
@@ -132,6 +157,33 @@ class User(AbstractBaseUser):
 
     def has_paid(self):
         return self.get_actor().has_paid()
+
+    def is_eligible_for_publications(self):
+        return self.get_actor().is_eligible_for_publications()
+
+    def can_reserve_against_publications(self):
+        return self.get_actor().can_reserve_against_publications()
+
+    def get_reserved_against_fjellogvidde(self):
+        return self.get_actor().get_reserved_against_fjellogvidde()
+
+    def get_reserved_against_yearbook(self):
+        return self.get_actor().get_reserved_against_yearbook()
+
+    def has_foreign_fjellogvidde_service(self):
+        return self.get_actor().has_foreign_fjellogvidde_service()
+
+    def has_foreign_yearbook_service(self):
+        return self.get_actor().has_foreign_yearbook_service()
+
+    def get_invoice_type_text(self):
+        return self.get_actor().get_invoice_type_text()
+
+    def receive_email(self):
+        return self.get_actor().receive_email
+
+    def reserved_against_partneroffers(self):
+        return self.get_actor().reserved_against_partneroffers
 
     # Returns associations this user has access to.
     # Note that this also takes permissions into account, e.g. sherpa admins will
