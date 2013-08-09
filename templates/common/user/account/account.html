@@ -142,10 +142,10 @@
             <th>Medlemstype</th>
             <td>{{ user.membership_type.name }}</td>
           </tr>
-          {% if user.get_actor.get_parent %}
+          {% if user.get_parent %}
             <tr>
               <th>Ditt hovedmedlem</th>
-              <td>{{ user.get_actor.get_parent.get_full_name }} ({{ user.get_actor.get_parent.memberid }})</td>
+              <td>{{ user.get_parent.get_full_name }} ({{ user.get_parent.memberid }})</td>
             </tr>
           {% endif %}
           {% if user.get_children|length > 0 %}
