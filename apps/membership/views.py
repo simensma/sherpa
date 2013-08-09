@@ -144,15 +144,7 @@ def memberid_sms(request):
     elif len(actors) > 1:
         # TODO: More than one hits, ignore for now - what should we do here?
         pass
-    try:
-        user = User.objects.get(memberid=actors[0].memberid)
-    except User.DoesNotExist:
-        user = User(
-            identifier=actors[0].memberid,
-            memberid=actors[0].memberid,
-            is_active=False
-        )
-        user.save()
+    user = User.get_or_create_inactive(memberid=actors[0].memberid)
     sms_request.memberid = user.memberid
     sms_request.save()
     return send_sms_receipt(request, user)

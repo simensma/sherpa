@@ -91,17 +91,7 @@ class User(AbstractBaseUser):
         if children is None:
             children = []
             for actor_child in self.get_actor().get_children():
-                try:
-                    children.append(User.objects.get(memberid=actor_child.memberid))
-                except User.DoesNotExist:
-                    # Child without a User, create as inactive
-                    child_user = User(
-                        identifier=actor_child.memberid,
-                        memberid=actor_child.memberid,
-                        is_active=False
-                    )
-                    child_user.save()
-                    children.append(child_user)
+                children.append(User.get_or_create_inactive(memberid=actor_child.memberid))
             cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
@@ -411,6 +401,14 @@ class User(AbstractBaseUser):
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
         return User.objects.filter(permissions=permission, is_active=True)
+
+    @staticmethod
+    def get_or_create_inactive(memberid):
+        try:
+            return User.objects.get(memberid=memberid)
+        except User.DoesNotExist:
+            from user.util import create_inactive_user
+            return create_inactive_user(memberid)
 
 class Permission(models.Model):
     # Django's Permission model is a bit more advanced than what we need,

@@ -18,15 +18,10 @@ def members(request, version, format):
                 user = User.objects.get(id=request.GET['sherpa_id'])
             elif 'medlemsnummer' in request.GET:
                 try:
-                    user = User.objects.get(memberid=request.GET['medlemsnummer'])
-                except User.DoesNotExist as e:
-                    try:
-                        # Create an inactive user if the memberid is valid
-                        actor = Actor.objects.get(memberid=request.GET['medlemsnummer'])
-                        user = create_inactive_user(actor.memberid)
-                    except Actor.DoesNotExist:
-                        # Nope, just re-raise the original User.DoesNotExist
-                        raise e
+                    user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'])
+                except Actor.DoesNotExist:
+                    # No such member
+                    raise User.DoesNotExist
             else:
                 raise BadRequest(
                     "You must supply either an 'sherpa_id' or 'medlemsnummer' parameter for member lookup",
