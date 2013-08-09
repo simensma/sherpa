@@ -108,6 +108,14 @@ class User(AbstractBaseUser):
     def is_household_member(self):
         return self.get_actor().is_household_member()
 
+    def membership_type(self):
+        return self.get_actor().membership_type()
+
+    def has_membership_type(self, codename):
+        # Note that you shouldn't use this to check for the 'household' membership type,
+        # use is_household_member() -- see the docs in focus.Actor.is_household_member for more info.
+        return self.get_actor().has_membership_type(codename)
+
     def get_first_name(self):
         if not self.is_member():
             return self.first_name

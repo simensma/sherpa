@@ -140,7 +140,7 @@
           </tr>
           <tr>
             <th>Medlemstype</th>
-            <td>{{ user.get_actor.membership_type.name }}</td>
+            <td>{{ user.membership_type.name }}</td>
           </tr>
           {% if user.get_actor.get_parent %}
             <tr>
@@ -197,7 +197,7 @@
                   <em>Ditt hovedmedlem, {{ user.get_parent.get_full_name }}, kan endre dette.</em>
 
                 {# Lifelong members can see but not change service status, I don't remember why. #}
-                {% elif user.get_actor|has_membership_type:"lifelong" %}
+                {% elif user|has_membership_type:"lifelong" %}
 
                   {% if user.get_reserved_against_fjellogvidde %}
                     Du mottar ikke Fjell og Vidde i posten, men kan lese det på nett.
@@ -246,7 +246,7 @@
                   <em>Ditt hovedmedlem, {{ user.get_parent.get_full_name }}, kan endre dette.</em>
 
                 {# Lifelong members can see but not change service status, I don't remember why. #}
-                {% elif user.get_actor|has_membership_type:"lifelong" %}
+                {% elif user|has_membership_type:"lifelong" %}
 
                   {% if user.get_reserved_against_yearbook %}
                     Du mottar ikke årboken i posten, men kan lese den på nett.

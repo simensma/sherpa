@@ -154,7 +154,7 @@ class Actor(models.Model):
 
     def has_membership_type(self, codename):
         # Note that you shouldn't use this to check for the 'household' membership type,
-        # use is_household_member() -- se the docs on that method for more info.
+        # use is_household_member() -- see the docs on that method for more info.
         return self.membership_type() == get_membership_type_by_codename(codename)
 
     def get_services(self):
