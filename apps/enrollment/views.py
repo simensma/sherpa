@@ -610,12 +610,10 @@ def payment(request):
         messages.error(request, 'nets_register_connection_error')
         return redirect('enrollment.views.payment_method')
 
-    # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
-    response = r.text.encode('utf-8')
-
     # Sweet, almost done, now just send the user to complete the transaction
     # Consider handling errors here (unexpected XML response or connection error)
     # We recieved a random "Unable to create setup string" message once, ignoring it for now
+    response = r.text.encode('utf-8')
     request.session['enrollment']['transaction_id'] = etree.fromstring(response).find("TransactionId").text
 
     return redirect("%s?merchantId=%s&transactionId=%s" % (
@@ -673,8 +671,6 @@ def process_card(request):
                 'operation': 'SALE',
                 'transactionId': request.session['enrollment']['transaction_id']
             })
-
-            # TODO: Assuming utf-8, should check the XML header, might be a method for this in lxml
             response = r.text.encode('utf-8')
 
             dom = etree.fromstring(response)
