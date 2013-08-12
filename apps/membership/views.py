@@ -192,7 +192,7 @@ def send_sms_receipt(request, user):
     number = re.sub('\s', '', user.get_phone_mobile())
     try:
         context = RequestContext(request, {
-            'user': user,
+            'mob_user': user,
             'year': datetime.now().year,
             'next_year': date.today() >= current_membership_year_start(),
             'all_paid': all(u.has_paid() for u in [user] + list(user.get_children()))

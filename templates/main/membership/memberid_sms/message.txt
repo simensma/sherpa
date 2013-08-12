@@ -1,8 +1,8 @@
 Medlemsnummer for:
 
-{{ user.get_full_name }}: {{ user.memberid }}, årskontingent {% if user.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{{ mob_user.get_full_name }}: {{ mob_user.memberid }}, årskontingent {% if mob_user.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
 
-{% for child in user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, årskontingent {% if child.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{% for child in mob_user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, årskontingent {% if child.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
 
 {% endfor %}{% if all_paid %}Denne SMSen er gyldig som kvittering på betalt årskontingent.{% else %}Kontakt oss for å fornye medlemskapet.{% endif %}
 
