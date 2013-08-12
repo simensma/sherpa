@@ -1,12 +1,9 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse
 from django.conf import settings
 from django.contrib import messages
 
 from datetime import datetime
-import json
 import hashlib
 import simples3
 
