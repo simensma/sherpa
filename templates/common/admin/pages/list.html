@@ -103,22 +103,27 @@
   </div>
 </div>
 
-<div class="dialog menu-dialog" data-title="Lagre menylink" data-width="auto">
-  <table class="table">
-  <tr>
-    <td>Navn på linken:</td>
-    <td><input type="text" name="name" class="input-large"></td>
-  </tr>
-  <tr>
-    <td>Adresse:</td>
-    <td><input type="text" name="url" class="input-xxlarge"></td>
-  </tr>
-  </table>
-
-  <p>
-    <button class="btn btn-success btn-large save-menu"><i class="icon-ok"></i> Lagre</button>
-    <button class="btn btn-danger btn-large delete-menu"><i class="icon-warning-sign"></i> Slett linken</button>
-  </p>
+<div class="modal hide menu" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Lagre menylink</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+    <tr>
+      <td>Navn på linken:</td>
+      <td><input type="text" name="name" class="input-large"></td>
+    </tr>
+    <tr>
+      <td>Adresse:</td>
+      <td><input type="text" name="url" class="input-xxlarge"></td>
+    </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success save-menu"><i class="icon-ok"></i> Lagre</button>
+    <button class="btn btn-danger delete-menu"><i class="icon-warning-sign"></i> Slett linken</button>
+  </div>
 </div>
 
 {% endblock %}
