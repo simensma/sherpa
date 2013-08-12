@@ -173,8 +173,9 @@ $(document).ready(function() {
 
     var menus = $("nav#menus");
     var menu_modal = $("div.modal.menu");
+    var menu_add = $("a.add-menu-element");
 
-    menus.find("a.new").click(function() {
+    menu_add.click(function() {
         activeMenu = undefined;
         menu_modal.find("input[name='name']").val('');
         menu_modal.find("input[name='url']").val('');
@@ -193,10 +194,11 @@ $(document).ready(function() {
     }
 
     menus.find("ul").sortable({
-        items: 'li:not(.new)',
-        update: function() {
+        vertical: false,
+        nested: false,
+        onDrop: function ($item, container, _super) {
+            _super($item, container);
             var list = $(this);
-            list.sortable('disable');
             var i = 0;
             var items = [];
             menus.find("a.edit").each(function() {
@@ -210,9 +212,7 @@ $(document).ready(function() {
                 url: menus.attr('data-reorder-url'),
                 data: { menus: JSON.stringify(items) }
             }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                list.sortable('enable');
+                alert("Klarte ikke å lagre ny menyposisjon, vennligst oppdater siden (F5) og prøv igjen.");
             });
         }
     });
@@ -240,7 +240,7 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
                 item.find("a.edit").click(edit);
-                menus.find("li").last().before(item);
+                menus.find("li").last().after(item);
             } else {
                 activeMenu.text(name);
                 activeMenu.attr('data-href', url);
