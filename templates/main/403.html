@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ikke tilgang &mdash; Den Norske Turistforening</title>
+  <style>
+    body {
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      text-align: center;
+      margin-top: 80px;
+    }
+
+    @media (max-width: 979px) {
+      body {
+        margin-top: 20px;
+      }
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: normal;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    p, ul {
+      width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    p {
+      font-size: 20px;
+    }
+
+    ul {
+      font-size: 16px;
+      text-align: left;
+    }
+
+    ul li {
+      margin-bottom: 14px;
+    }
+
+    img {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Nei, hopp i havet—</h2>
+  <h1>Dette har du ikke lov til å gjøre!</h1>
+  <img src="{{ STATIC_URL }}img/turbo_stuper.jpg" alt="Turbo hopper i havet">
+  <p>
+    Det kan være mange grunner til det.
+  </p>
+  <ul>
+    <li>
+      Hvis du forsøkte deg på noe muffens, kan du vente deg et besøk og en alvorsprat fra Turbo i nærmeste fremtid.
+    </li>
+    <li>
+      Hvis ikke, må du kontakte noen du tror kan hjelpe deg — dette kan være medlemsservice, ledelsen i din lokale turistforening, eller teknisk avdeling ved DNTs administrasjon.
+    </li>
+  </ul>
+
+  <p>
+    <a href="javascript:history.back();">Gå tilbake dit du kom fra</a>,<br>
+    eller<br>
+    <a href="http://www.turistforeningen.no/">start på nytt</a>.
+  </p>
+
+</body>
+</html>

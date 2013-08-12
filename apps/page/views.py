@@ -195,6 +195,9 @@ def redirect_index(request):
         return redirect('membership.views.benefits')
     raise Http404
 
+def permission_denied(request, template_name='main/403.html'):
+    return render(request, template_name)
+
 def page_not_found(request, template_name='main/404.html'):
     # Record the attempted 404-path
     nf = NotFound(
