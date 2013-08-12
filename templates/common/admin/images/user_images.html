@@ -24,7 +24,7 @@
       </button>
     </p>
     <p>
-      <button class="btn btn-large btn-success dialog-button" data-dialog=".album-dialog" disabled data-tooltip="Du kan ikke opprette album her.">
+      <button class="btn btn-large btn-success add-album" disabled data-tooltip="Du kan ikke opprette album her.">
         <i class="icon-folder-open"></i> Opprett nytt album
       </button>
     </p>
@@ -61,16 +61,16 @@
     </form>
   </div>
   <div class="span3">
-    <button class="btn btn-large btn-danger delete albums dialog-button hide" data-dialog=".delete-dialog">
+    <button class="btn btn-large btn-danger delete albums hide">
       <i class="icon-remove"></i> Slett album
     </button>
-    <button class="btn btn-large btn-danger delete images dialog-button hide" data-dialog=".delete-dialog">
+    <button class="btn btn-large btn-danger delete images hide">
       <i class="icon-remove"></i> Slett bilder
     </button>
-    <button class="btn btn-large btn-danger delete both dialog-button hide" data-dialog=".delete-dialog">
+    <button class="btn btn-large btn-danger delete both hide">
       <i class="icon-remove"></i> Slett album og bilder
     </button>
-    <button class="btn btn-large btn-danger delete dummy dialog-button" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
+    <button class="btn btn-large btn-danger delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
       <i class="icon-remove"></i> Slett bilder
     </button>
   </div>
@@ -113,6 +113,6 @@
 </div>
 <div style="clear: both;"></div>
 
-{% include 'common/admin/images/dialogs.html' %}
+{% include 'common/admin/images/modals.html' %}
 {% include 'common/admin/images/albumpicker.html' %}
 {% endblock %}
