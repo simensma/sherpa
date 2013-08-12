@@ -1,6 +1,12 @@
 $(document).ready(function() {
 
     var form_placement = $("form.placement");
+    var table_placements_time = $("table.placements.time");
+    var table_placements_view = $("table.placements.view");
+    var table_ads = $("table.ads");
+    var modal_placement_time = $("div.modal.placement.time");
+    var modal_placement_view = $("div.modal.placement.view");
+    var modal_ad = $("div.modal.ad");
 
     $("a.toggle-old-placements").click(function() {
         $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
@@ -29,8 +35,8 @@ $(document).ready(function() {
     form_placement.find("div.date").datepicker(dp_options);
     $("div.placement-dialog.time form div.date").datepicker(dp_options);
 
-    $("table.placements.time tr.placement").click(function() {
-        var form = $("div.placement-dialog.time form");
+    table_placements_time.find("tr.placement").click(function() {
+        var form = modal_placement_time.find("form");
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
         form.find("input[name='start_date']").val($(this).attr('data-start-date'));
@@ -39,22 +45,25 @@ $(document).ready(function() {
         // https://github.com/eternicode/bootstrap-datepicker/issues/240
         // Just remove and recreate it for now.
         form.find("div.date").datepicker('remove').datepicker(dp_options);
+        modal_placement_time.modal();
     });
 
-    $("table.placements.view tr.placement").click(function() {
-        var form = $("div.placement-dialog.view form");
+    table_placements_view.find("tr.placement").click(function() {
+        var form = modal_placement_view.find("form");
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
         form.find("input[name='view_limit']").val($(this).attr('data-view-limit'));
+        modal_placement_view.modal();
     });
 
-    $("table.ads td.ad").click(function() {
-        var form = $("div.ad-dialog form");
+    table_ads.find("td.ad").click(function() {
+        var form = modal_ad.find("form");
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("input[name='name']").val($(this).attr('data-name'));
         form.find("input[name='destination']").val($(this).attr('data-destination'));
         form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
         form.find("input[name='width']").val($(this).attr('data-width'));
         form.find("input[name='height']").val($(this).attr('data-height'));
+        modal_ad.modal();
     });
 });
