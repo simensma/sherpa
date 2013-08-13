@@ -166,15 +166,10 @@ $(document).ready(function() {
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
             var content = $("div.insertion-templates div.content.html").clone();
             content.insertAfter($(event.target));
-            refreshSort();
             setEmpties();
             enableToolbar();
             $("article .insertable").remove();
-            if(sortState == 'formatting') {
-                content.attr('contenteditable', 'true').focus();
-            } else {
-                content.trigger('focusout');
-            }
+            content.attr('contenteditable', 'true').focus();
         });
     });
 
@@ -194,7 +189,6 @@ $(document).ready(function() {
             image.css("overflow", "hidden");
             image.insertAfter($(event.target));
             image.find("img").click();
-            refreshSort();
             setEmpties();
             $("article .insertable").remove();
             enableToolbar();
@@ -271,7 +265,6 @@ $(document).ready(function() {
             setEmpty(content.parent());
         }
         content.remove();
-        refreshSort();
     }
 
 
@@ -388,8 +381,6 @@ $(document).ready(function() {
                 $(this).attr("data-id", ids[i++]);
                 setEmpty($(this));
             });
-            wrapper.sortable({disabled: true});
-            refreshSort();
         }).fail(function(result) {
             // Todo
         }).always(function(result) {
@@ -436,67 +427,12 @@ $(document).ready(function() {
                 }).fail(function(result) {
                     // Todo
                 }).always(function(result) {
-                    refreshSort();
                     doneRemoving();
                     disableOverlay();
                 });
             });
         });
     });
-
-    // Change edit mode - formatting, swap rows, swap columns
-    var sortState = 'formatting';
-    $("article").sortable({ disabled: true });
-    $("article > div.row-fluid").sortable({ disabled: true });
-    toolbar.find("button.formatting").button('toggle');
-
-    toolbar.find("button.formatting").click(function() {
-        disableSort($("article"));
-        disableSort($("article > div.row-fluid"));
-        $("article .editable").attr('contenteditable', 'true');
-        sortState = 'formatting';
-    });
-
-    toolbar.find("button.horizontal").click(function() {
-        disableSort($("article"));
-        enableSort($("article > div.row-fluid"), 'horizontal');
-        $("article .editable").removeAttr('contenteditable');
-        sortState = 'horizontal';
-    });
-
-    toolbar.find("button.vertical").click(function() {
-        enableSort($("article"), 'vertical');
-        disableSort($("article > div.row-fluid"));
-        $("article .editable").removeAttr('contenteditable');
-        sortState = 'vertical';
-    });
-
-    function disableSort(el) {
-        el.sortable('disable');
-        el.children().off('mouseenter');
-        el.children().off('mouseleave');
-    }
-
-    function enableSort(el, alignment) {
-        el.sortable('enable');
-        el.children().on('mouseenter', function() {
-            $(this).addClass('moveable ' + alignment);
-        });
-        el.children().on('mouseleave', function() {
-            $(this).removeClass('moveable ' + alignment);
-        });
-    }
-
-    window.refreshSort = refreshSort;
-    function refreshSort() {
-        $("article").sortable('refresh');
-        $("article > div.row-fluid").sortable('refresh');
-        if(sortState == 'vertical') {
-            enableSort($("article"), sortState);
-        } else if(sortState == 'horizontal') {
-            enableSort($("article > div.row-fluid"), sortState);
-        }
-    }
 
     /**
      * Small, logical code snippets
