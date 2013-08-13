@@ -2,10 +2,6 @@
 {% block extra_js %}
   <script src="https://track.adform.net/serving/scripts/trackpoint"></script>
   <script src="{{ STATIC_URL }}js/enrollment/registration.js"></script>
-  <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.9.2.custom.min.js"></script>
-{% endblock %}
-{% block extra_css %}
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.9.2.custom.min.css" media="screen">
 {% endblock %}
 
 {% block js_globals %}
@@ -90,7 +86,12 @@
       </div>
       <div class="control-group dob">
         <label>Fødselsdato (dd.mm.åååå) <span class="asterisk red">*</span></label>
-        <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
+        <div class="date input-append">
+          <input type="text" class="input-medium dob" name="dob" value="{{ person.dob|date:"d.m.Y" }}">
+          <span class="add-on">
+            <i class="icon-th"></i>
+          </span>
+        </div>
       </div>
       <div class="control-group gender">
         <label> Kjønn <span class="asterisk red">*</span></label>

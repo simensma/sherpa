@@ -2,26 +2,19 @@ $(document).ready(function() {
 
     var form = $("form#registration");
 
-    form.find("input[name='dob']").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        firstDay: 1,
-        yearRange: "1900:c", // Based on earliest possible mssql smalldatetime value
-        dateFormat: 'dd.mm.yy',
-        dayNames: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-        dayNamesShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-        dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-        monthNames: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August',
-          'September', 'Oktober', 'November', 'Desember'],
-        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',
-          'Nov', 'Des'],
-        defaultDate: '-15y',
-        showOn: 'both',
-        buttonImage: '/static/img/calendar.png',
-        buttonImageOnly: true,
-        buttonText: 'Velg dato...',
-        onClose: validateDatepicker
-    });
+    // startDate is based on the earliest possible mssql smalldatetime value
+    var now = new Date();
+    var startDate = new Date(1900, 0, 1, 0, 0, 0, 0);
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    form.find("div.date").datepicker({
+        format: 'dd.mm.yyyy',
+        startDate: startDate,
+        endDate: today,
+        startView: 'decade',
+        weekStart: 1,
+        autoclose: true,
+        language: 'nb',
+    }).on('hide', validateDatepicker);
 
     // Clear input validation-status upon focus
     form.find("input").focus(function() {
