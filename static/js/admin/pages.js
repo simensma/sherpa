@@ -168,36 +168,37 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 
-    // Set when a dialog is opened (undefined for new items, or the anchor element for editing)
+    // Set when a modal is opened (undefined for new items, or the anchor element for editing)
     var activeMenu;
 
     var menus = $("nav#menus");
+    var menu_modal = $("div.modal.menu");
+    var menu_add = $("a.add-menu-element");
 
-    menus.find("a.new").click(function() {
+    menu_add.click(function() {
         activeMenu = undefined;
-        var dialog = $("div.menu-dialog");
-        dialog.find("input[name='name']").val('');
-        dialog.find("input[name='url']").val('');
-        $("div.menu-dialog button.delete-menu").hide();
-        dialog.dialog('open');
+        menu_modal.find("input[name='name']").val('');
+        menu_modal.find("input[name='url']").val('');
+        menu_modal.find("button.delete-menu").hide();
+        menu_modal.modal();
     });
 
     menus.find("a.edit").click(edit);
 
     function edit() {
         activeMenu = $(this);
-        var dialog = $("div.menu-dialog");
-        dialog.find("input[name='name']").val($(this).text());
-        dialog.find("input[name='url']").val($(this).attr('data-href'));
-        $("div.menu-dialog button.delete-menu").show();
-        dialog.dialog('open');
+        menu_modal.find("input[name='name']").val($(this).text());
+        menu_modal.find("input[name='url']").val($(this).attr('data-href'));
+        menu_modal.find("button.delete-menu").show();
+        menu_modal.modal();
     }
 
     menus.find("ul").sortable({
-        items: 'li:not(.new)',
-        update: function() {
+        vertical: false,
+        nested: false,
+        onDrop: function ($item, container, _super) {
+            _super($item, container);
             var list = $(this);
-            list.sortable('disable');
             var i = 0;
             var items = [];
             menus.find("a.edit").each(function() {
@@ -211,16 +212,14 @@ $(document).ready(function() {
                 url: menus.attr('data-reorder-url'),
                 data: { menus: JSON.stringify(items) }
             }).fail(function(result) {
-                // Todo
-            }).always(function(result) {
-                list.sortable('enable');
+                alert("Klarte ikke å lagre ny menyposisjon, vennligst oppdater siden (F5) og prøv igjen.");
             });
         }
     });
 
-    $("div.menu-dialog button.save-menu").click(function() {
-        var name = $("div.menu-dialog input[name='name']").val();
-        var url = $("div.menu-dialog input[name='url']").val().trim();
+    menu_modal.find("button.save-menu").click(function() {
+        var name = menu_modal.find("input[name='name']").val();
+        var url = menu_modal.find("input[name='url']").val().trim();
         if(!url.match(/^https?:\/\//)) {
             url = "http://" + url;
         }
@@ -241,7 +240,7 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
                 item.find("a.edit").click(edit);
-                menus.find("li").last().before(item);
+                menus.find("li").last().after(item);
             } else {
                 activeMenu.text(name);
                 activeMenu.attr('data-href', url);
@@ -249,11 +248,11 @@ $(document).ready(function() {
         }).fail(function(result) {
             // Todo
         }).always(function(result) {
-            $("div.menu-dialog").dialog('close');
+            menu_modal.modal('hide');
         });
     });
 
-    $("div.menu-dialog button.delete-menu").click(function() {
+    menu_modal.find("button.delete-menu").click(function() {
         if(!confirm('Er du sikker på at du vil slette denne linken fra hovedmenyen?')) {
             return;
         }
@@ -265,7 +264,7 @@ $(document).ready(function() {
         }).fail(function(result) {
             // Todo
         }).always(function(result) {
-            $("div.menu-dialog").dialog('close');
+            menu_modal.modal('hide');
         });
     });
 });

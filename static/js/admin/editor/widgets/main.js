@@ -51,7 +51,6 @@ function saveWidget(widget, content) {
             widget.empty().hide().append(result);
             widget.slideDown();
             disableIframes(widget);
-            refreshSort();
         });
     }
 }
