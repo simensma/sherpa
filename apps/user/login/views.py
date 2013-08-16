@@ -315,21 +315,6 @@ def send_restore_password_email(request):
         else:
             return HttpResponse(json.dumps({'status': 'unknown_email'}))
 
-    key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-    while User.objects.filter(password_restore_key=key).exists():
-        # Ensure that the key isn't already in use. With the current key length of 40, we'll have
-        # ~238 bits of entropy which means that this will never ever happen, ever.
-        # You will win the lottery before this happens. And I want to know if it does, so log it.
-        logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
-            exc_info=sys.exc_info(),
-            extra={
-                'request': request,
-                'should_you_play_the_lottery': True,
-                'key': key
-            }
-        )
-        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-
     if len(sherpa2_matches) > 0:
         for member in sherpa2_matches:
             sha1 = hashlib.sha1()
@@ -346,6 +331,21 @@ def send_restore_password_email(request):
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
 
     if len(local_matches) > 0:
+        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+        while User.objects.filter(password_restore_key=key).exists():
+            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+            # ~238 bits of entropy which means that this will never ever happen, ever.
+            # You will win the lottery before this happens. And I want to know if it does, so log it.
+            logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'should_you_play_the_lottery': True,
+                    'key': key
+                }
+            )
+            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+
         for user in local_matches:
             user.password_restore_key = key
             user.password_restore_date = datetime.now()
