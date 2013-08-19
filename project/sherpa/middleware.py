@@ -4,16 +4,19 @@ from django.conf import settings
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
-from django.utils.log import getLogger
 from django.core.urlresolvers import resolve, Resolver404
+from django.contrib.auth import logout
 
 from datetime import datetime
 import re
+import logging
+import sys
 
 from core.models import Site
 from association.models import Association
+from focus.models import Actor
 
-logger = getLogger('django.request')
+logger = logging.getLogger('sherpa')
 
 # Make sure models are loaded. This fixes a TypeError that
 # occurs when restarting the gunicorn server.
@@ -128,3 +131,22 @@ class FocusDowntime():
             for path, template in focus_required_paths:
                 if request.path.startswith(path):
                     return render(request, template)
+
+class ActorDoesNotExist():
+    def process_request(self, request):
+        if request.user.is_authenticated() and request.user.is_member():
+            try:
+                # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
+                request.user.get_actor()
+            except Actor.DoesNotExist:
+                logger.warning(u"Pålogget bruker mangler tilsvarende medlemsnummer i Actor",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'memberid': request.user.memberid
+                    }
+                )
+                request.user.is_expired = True
+                request.user.save()
+                logout(request)
+                return render(request, 'common/user/memberid_does_not_exist.html')
