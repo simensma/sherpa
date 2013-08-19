@@ -32,6 +32,10 @@ class User(AbstractBaseUser):
     # will if possible use the inactive user and retain the related data.
     is_active = models.BooleanField(default=True)
 
+    # Actors can be deleted from Focus for various reasons. Whenever discovered,
+    # we'll set this to True to mark them as expired.
+    is_expired = models.BooleanField(default=False)
+
     # Password resets
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
     password_restore_date = models.DateTimeField(null=True)
