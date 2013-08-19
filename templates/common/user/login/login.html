@@ -230,6 +230,11 @@
             <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
           </div>
 
+          <div class="hide alert alert-error user-is-expired">
+            <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
+            Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
+          </div>
+
           <div class="hide alert alert-error no-memberid-match">
             <strong>Ukjent bruker</strong><br>
             Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
@@ -261,6 +266,11 @@
               <div class="alert alert-error">
                 <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
                 <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+              </div>
+            {% elif message.message == 'expired_user_exists' %}
+              <div class="alert alert-error">
+                <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
+                Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
               </div>
             {% elif message.message == 'invalid_email' %}
               <div class="alert alert-error">

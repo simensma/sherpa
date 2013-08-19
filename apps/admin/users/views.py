@@ -21,7 +21,7 @@ def index(request):
     return render(request, 'common/admin/users/index.html', context)
 
 def show(request, other_user):
-    other_user = User.objects.get(id=other_user)
+    other_user = User.get_users().get(id=other_user)
 
     # Admins can assign user/admin, users can assign users
     assignable_admin = [a for a in request.user.all_associations() if a.role == 'admin']
@@ -52,7 +52,7 @@ def search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_users = User.objects.filter(memberid__isnull=True)
+    local_users = User.get_users().filter(memberid__isnull=True)
     for word in request.POST['q'].split():
         local_users = local_users.filter(
             Q(first_name__icontains=word) |
@@ -67,7 +67,7 @@ def search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+    members = User.get_users().filter(memberid__in=[a.memberid for a in actors])
     actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
     users = list(local_users) + list(members)
 
@@ -85,7 +85,7 @@ def give_sherpa_access(request, user):
         raise PermissionDenied
 
     permission = Permission.objects.get(name='sherpa')
-    User.objects.get(id=user).permissions.add(permission)
+    User.get_users().get(id=user).permissions.add(permission)
     return redirect('admin.users.views.show', user)
 
 def revoke_sherpa_access(request, user):
@@ -93,14 +93,14 @@ def revoke_sherpa_access(request, user):
         raise PermissionDenied
 
     permission = Permission.objects.get(name='sherpa')
-    User.objects.get(id=user).permissions.remove(permission)
+    User.get_users().get(id=user).permissions.remove(permission)
     return redirect('admin.users.views.show', user)
 
 def make_sherpa_admin(request, user):
     if not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
 
-    user = User.objects.get(id=user)
+    user = User.get_users().get(id=user)
     permission = Permission.objects.get(name='sherpa_admin')
     user.permissions.add(permission)
     cache.delete('user.%s.all_associations' % user.id)
@@ -108,7 +108,7 @@ def make_sherpa_admin(request, user):
     return redirect('admin.users.views.show', user)
 
 def add_association_permission(request):
-    user = User.objects.get(id=request.POST['user'])
+    user = User.get_users().get(id=request.POST['user'])
     association = Association.objects.get(id=request.POST['association'])
 
     if not request.POST['role'] in [role[0] for role in AssociationRole.ROLE_CHOICES]:
@@ -138,7 +138,7 @@ def add_association_permission(request):
     return redirect('admin.users.views.show', user.id)
 
 def revoke_association_permission(request):
-    user = User.objects.get(id=request.POST['user'])
+    user = User.get_users().get(id=request.POST['user'])
     association = Association.objects.get(id=request.POST['association'])
 
     # Verify that the user performing this action has the required permissions

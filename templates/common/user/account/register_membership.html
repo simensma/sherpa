@@ -111,6 +111,11 @@
         Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
       </div>
 
+      <div class="alert alert-error user-is-expired hide">
+        <strong>Dette medlemmet har allerede en bruker, men den er markert som inaktiv!</strong><br>
+        Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
+      </div>
+
       {% for message in messages %}
         {% if message.message == 'invalid_memberid' %}
           <div class="alert alert-error">
@@ -126,6 +131,11 @@
           <div class="alert alert-error">
             <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
             Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du <a href="{% url 'user.login.views.logout' %}">logge ut</a> først).
+          </div>
+        {% elif message.message == 'expired_user_exists' %}
+          <div class="alert alert-error">
+            <strong>Dette medlemmet har allerede en bruker, men den er markert som inaktiv!</strong><br>
+            Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
           </div>
         {% elif message.message == 'invalid_email' %}
           <div class="alert alert-error">

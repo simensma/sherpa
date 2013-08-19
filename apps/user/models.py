@@ -79,7 +79,7 @@ class User(AbstractBaseUser):
         parent = cache.get('user.%s.parent' % self.memberid)
         if parent is None:
             try:
-                parent = User.objects.get(memberid=parent_memberid)
+                parent = User.get_users().get(memberid=parent_memberid)
             except User.DoesNotExist:
                 parent = User(
                     identifier=parent_memberid,
@@ -402,14 +402,18 @@ class User(AbstractBaseUser):
         other_user.delete()
 
     @staticmethod
+    def get_users():
+        return User.objects.filter(is_expired=False)
+
+    @staticmethod
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
-        return User.objects.filter(permissions=permission, is_active=True)
+        return User.get_users().filter(permissions=permission, is_active=True)
 
     @staticmethod
     def get_or_create_inactive(memberid):
         try:
-            return User.objects.get(memberid=memberid)
+            return User.get_users().get(memberid=memberid)
         except User.DoesNotExist:
             from user.util import create_inactive_user
             return create_inactive_user(memberid)

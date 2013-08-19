@@ -68,7 +68,11 @@ $(document).ready(function() {
                     enableStep2(result);
                 } else {
                     $("img.ajaxloader.submit").hide();
-                    $("div.user-exists").slideDown();
+                    if(!result.user_is_expired) {
+                        $("div.user-exists").slideDown();
+                    } else {
+                        $("div.user-is-expired").slideDown();
+                    }
                 }
             } else if(result.memberid_lookups_exceeded) {
                 registration_form.find("img.ajaxloader.submit").hide();

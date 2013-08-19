@@ -13,8 +13,9 @@ class Command(BaseCommand):
     help = u"Henter sherpa-metrics for libratoappen vår, se https://github.com/Turistforeningen/librato"
 
     def handle(self, *args, **options):
-        users = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_active=True, is_expired=False)
         inactive_users = User.objects.filter(is_active=False)
+        expired_users = User.objects.filter(is_expired=True)
         sherpa_users = users.filter(permissions=Permission.objects.get(name='sherpa'))
 
         # Fjelltreffen
@@ -30,6 +31,9 @@ class Command(BaseCommand):
             }, {
                 'name': 'sherpa.db.inactive_users',
                 'value': inactive_users.count()
+            }, {
+                'name': 'sherpa.db.expired_users',
+                'value': expired_users.count()
             }, {
                 'name': 'sherpa.db.sherpa_users',
                 'value': sherpa_users.count()
