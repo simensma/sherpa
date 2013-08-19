@@ -144,7 +144,7 @@ def leader_search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_users = User.objects.all()
+    local_users = User.objects.filter(memberid__isnull=True)
     for word in request.POST['q'].split():
         local_users = local_users.filter(
             Q(first_name__icontains=word) |

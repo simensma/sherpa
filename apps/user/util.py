@@ -38,7 +38,7 @@ def authenticate_users(email, password):
         return []
 
     # Add matching local users that aren't members
-    matches = [u for u in User.objects.filter(email=email) if u.check_password(password)]
+    matches = [u for u in User.objects.filter(memberid__isnull=True, email=email) if u.check_password(password)]
 
     # Add matching members with active User
     focus_candidates = Actor.objects.filter(email=email)
