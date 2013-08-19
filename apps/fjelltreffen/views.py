@@ -266,7 +266,6 @@ def save(request):
             thumb = pil.open(StringIO(data)).copy()
             fp = StringIO()
             thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
-            # JPEG-files are very often named '.jpg', but PIL doesn't recognize that format
             thumb.save(fp, extension)
             thumb_data = fp.getvalue()
 
