@@ -18,7 +18,7 @@ $(document).ready(function() {
     revoke_sherpa_button.click(function() {
         admin_buttons.hide();
         admin_revoke_wrapper.show();
-    })
+    });
 
     admin_revoke_wrapper.find("a.cancel").click(function() {
         admin_buttons.show();
@@ -49,7 +49,7 @@ $(document).ready(function() {
         'allow_single_deselect': true
     }).change(function() {
         var selected = association_revoke_select.find("option:selected");
-        if(selected.val() == "") {
+        if(selected.val() === "") {
             association_revoke_verify.hide();
         } else {
             association_revoke_verify.show();
