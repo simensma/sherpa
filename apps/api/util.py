@@ -36,7 +36,7 @@ def get_member_data(user):
             'aktivt_medlemskap': user.has_paid(),
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
-            'født': user.get_birth_date.strftime("%Y-%m-%d"),
+            'født': user.get_birth_date().strftime("%Y-%m-%d"),
             'kjønn': api_gender_output(user.get_gender()),
             'epost': user.get_email(),
             'mobil': user.get_phone_mobile(),
