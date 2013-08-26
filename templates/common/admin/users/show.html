@@ -36,8 +36,8 @@
         <tr>
           <th>E-post</th>
           <td>
-            {% if other_user.get_sherpa_email %}
-              <a href="mailto:{{ other_user.get_sherpa_email }}">{{ other_user.get_sherpa_email }}</a>
+            {% if other_user.get_email %}
+              <a href="mailto:{{ other_user.get_email }}">{{ other_user.get_email }}</a>
             {% else %}
               <em>Ikke oppgitt</em>
             {% endif %}
