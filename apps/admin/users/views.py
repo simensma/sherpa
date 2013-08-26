@@ -91,8 +91,10 @@ def create_inactive(request, memberid):
     return redirect('admin.users.views.show', user.id)
 
 def check_memberid(request):
-    user_to_change = User.objects.get(id=request.POST['user'])
+    if not request.user.can_modify_user_memberid():
+        raise PermissionDenied
 
+    user_to_change = User.objects.get(id=request.POST['user'])
     memberid_is_equal = str(user_to_change.memberid) == request.POST['memberid'].strip()
 
     try:
@@ -119,6 +121,9 @@ def check_memberid(request):
     }))
 
 def change_memberid(request):
+    if not request.user.can_modify_user_memberid():
+        raise PermissionDenied
+
     # The Actor was already checked client-side, but verify here
     if not Actor.objects.filter(memberid=request.POST['new-memberid']).exists():
         raise PermissionDenied

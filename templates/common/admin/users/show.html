@@ -245,7 +245,7 @@
 
     {% endif %}
 
-    {% if other_user.is_member %}
+    {% if other_user.is_member and user.can_modify_user_memberid %}
 
       <div class="change-memberid">
         <a href="javascript:undefined" class="change-memberid">Endre brukerens medlemsnummer</a>
