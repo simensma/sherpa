@@ -1,0 +1,57 @@
+{% if memberid_is_equal %}
+
+  <p>
+    Dette er det samme medlemsnummeret som brukeren du er inne på.
+  </p>
+
+{% elif actor and not existing_user %}
+
+  <p>
+    Dagens medlemsnummer: <strong>{{ user_to_change.memberid }}</strong><br>
+    Nytt medlemsnummer: <strong>{{ actor.memberid }}</strong>
+  </p>
+
+  <p>
+    Det nye medlemsnummeret tilhører <strong>{{ actor.get_full_name }}</strong>.
+  </p>
+
+  <p>
+    Brukeren vil få <strong>full</strong> tilgang til {{ actor.get_full_name }}'s konto! Er du helt sikker på at det er samme person?
+  </p>
+
+  <p>
+    <button class="btn btn-danger">Ja, dette er samme person. Endre medlemsnummeret.</button>
+  </p>
+
+{% elif actor and existing_user %}
+
+  <p>
+    Dagens medlemsnummer: <strong>{{ user_to_change.memberid }}</strong><br>
+    Nytt medlemsnummer: <strong>{{ actor.memberid }}</strong>
+  </p>
+
+  <p>
+    Det nye medlemsnummeret tilhører <strong>{{ actor.get_full_name }}</strong>, og han/henne <a href="{% url 'admin.users.views.show' existing_user.id %}">har allerede en bruker på Min side</a>.
+  </p>
+
+  <p>
+    Du kan likevel overføre brukerens historikk, men dette vil <strong>slette</strong> den gamle brukeren. Er du helt sikker på at det er samme person?
+  </p>
+
+  <p>
+    <button class="btn btn-danger">Ja, dette er samme person. Overfør historikk og slå sammen brukerne.</button>
+  </p>
+
+{% elif not actor and existing_user %}
+
+  <p>
+    Medlemsnummer <strong>{{ existing_user.memberid }}</strong> er ikke oppført i medlemsregisteret, men har en eksisterende utgått bruker på Min side.
+  </p>
+
+{% else %}
+
+  <p>
+    Medlemsnummer <strong>{{ memberid }}</strong> er ikke oppført i medlemsregisteret.
+  </p>
+
+{% endif %}

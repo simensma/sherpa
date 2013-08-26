@@ -58,6 +58,12 @@ class User(AbstractBaseUser):
     def is_member(self):
         return self.memberid is not None
 
+    def should_be_expired(self):
+        """
+        Regardless of is_expired is set or not, check if this user should be expired.
+        """
+        return not Actor.objects.filter(memberid=self.memberid).exists()
+
     # Return this users' Actor (cached), or None
     def get_actor(self):
         if not self.is_member():
@@ -354,14 +360,19 @@ class User(AbstractBaseUser):
             return False
 
     def merge_with(self, other_user):
-        # This method transfers ALL objects related to the other user object
-        # over to this one. ANY relation to the user object needs to be added here.
-        # Typically, the merge occurs when a non-member registers their membership with a
-        # memberid which exists for an imported inactive user. This is not often, but it
-        # *can* happen. See the Sherpa docs for more info.
-        # Whenever ForeignKeys to User are created, an entry needs to be created here
-        # which transfers it. This is easy to miss, so be sure to search through the codebase
-        # for missed tables from time to time. Use the 'userrelations' manage.py-command.
+        """
+        This method transfers ALL objects related to the other user object
+        over to this one. This occurs:
+        - When a non-member registers their membership with a memberid which already exists
+          for an inactive user
+        - When someone decides to change a users' memberid to another, which already has another
+          user
+        See the Sherpa docs for more info.
+
+        Whenever relations to User are created, an entry needs to be created here
+        which transfers it. This is easy to miss, so be sure to search through the codebase
+        for missed tables from time to time. Use the 'userrelations' manage.py-command.
+        """
 
         from admin.models import Image
         from aktiviteter.models import AktivitetDate
