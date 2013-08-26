@@ -1,8 +1,9 @@
 # encoding: utf-8
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponseNotFound, HttpResponseServerError
+from django.http import Http404, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -196,7 +197,8 @@ def redirect_index(request):
     raise Http404
 
 def permission_denied(request, template_name='main/403.html'):
-    return render(request, template_name)
+    context = RequestContext(request)
+    return HttpResponseForbidden(render_to_string(template_name, context))
 
 def page_not_found(request, template_name='main/404.html'):
     # Record the attempted 404-path
