@@ -44,16 +44,10 @@ class User(AbstractBaseUser):
     associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
-    ### Methods ###
 
-    def has_perm(self, perm):
-        return self.permissions.filter(name=perm).exists()
-
-    # Shortcut for templates to get any user perms via User
-    def perms(self):
-        return {p.name: True for p in self.permissions.all()}
-
-    ### Focus-related ###
+    #
+    # Membership/Focus
+    #
 
     def is_member(self):
         return self.memberid is not None
@@ -112,9 +106,15 @@ class User(AbstractBaseUser):
         return self.get_actor().membership_type()
 
     def has_membership_type(self, codename):
-        # Note that you shouldn't use this to check for the 'household' membership type,
-        # use is_household_member() -- see the docs in focus.Actor.is_household_member for more info.
+        """
+        Note that you shouldn't use this to check for the 'household' membership type,
+        use is_household_member() -- see the docs in focus.Actor.is_household_member for more info.
+        """
         return self.get_actor().has_membership_type(codename)
+
+    #
+    # Personalia and Focus queries
+    #
 
     def get_first_name(self):
         if not self.is_member():
@@ -218,14 +218,53 @@ class User(AbstractBaseUser):
         return association
 
     def main_association_old(self):
-        # This sad method returns the association object from the old sherpa2 model.
-        # For now it's mostly used to get the site url because most of the new objects
-        # don't have an assigned site.
+        """
+        This sad method returns the association object from the old sherpa2 model.
+        For now it's mostly used to get the site url because most of the new objects
+        don't have an assigned site.
+        """
         association = cache.get('user.association_sherpa2.%s' % self.get_actor().main_association_id)
         if association is None:
             association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
             cache.set('user.association_sherpa2.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
         return association
+
+    def is_eligible_for_norway_bus_tickets(self):
+        if NorwayBusTicket.objects.filter(user=self).exists():
+            # Only one order per member
+            return False
+
+        if self.norway_bus_tickets_offer_has_expired():
+            # The offer applies only the same year as membership enrollment
+            return False
+
+        if not self.has_paid():
+            # The offer applies only to active memberships
+            return False
+
+        return True
+
+    def norway_bus_tickets_offer_has_expired(self):
+        # Import here to avoid circular import
+        from core.util import previous_membership_year_start
+        return self.get_actor().start_date.date() < previous_membership_year_start()
+
+    def show_norway_bus_tickets_menu_item(self):
+        """
+        Kind of complicated method, it's used in menus/navigation to show the link to
+        the order page - show it if the offer hasn't expired, but also if they have ordered before
+        even if it is expired.
+        """
+        if not self.norway_bus_tickets_offer_has_expired():
+            # Offer hasn't expired - show the item regardless of anything
+            return True
+        else:
+            # Offer has expired - showing is only applicable if we HAVE made an order
+            if NorwayBusTicket.objects.filter(user=self).exists():
+                return True
+
+            # No order, and offer expired - hide the item
+            return False
 
     def update_personal_data(self, attributes, address_attributes=None):
         """
@@ -245,10 +284,25 @@ class User(AbstractBaseUser):
                 actor.address.__setattr__(name, value)
             actor.address.save()
 
-    # Returns associations this user has access to.
-    # Note that this also takes permissions into account, e.g. sherpa admins will
-    # have access to all associations
+    #
+    # Permissions and association permissions, for Sherpa users
+    #
+
+    def has_perm(self, perm):
+        return self.permissions.filter(name=perm).exists()
+
+    def perms(self):
+        """
+        Shortcut for templates to get any user perms via User
+        """
+        return {p.name: True for p in self.permissions.all()}
+
     def all_associations(self):
+        """
+        Returns associations this user has access to.
+        Note that this also takes permissions into account, e.g. sherpa admins will
+        have access to all associations
+        """
         associations = cache.get('user.%s.all_associations' % self.id)
         if associations is None:
             if self.has_perm('sherpa_admin'):
@@ -293,10 +347,12 @@ class User(AbstractBaseUser):
     def all_associations_sorted(self):
         return Association.sort(self.all_associations())
 
-    # Returns this users' associations, with all their children, regardless of role.
-    # Used with aktiviteter where users can list their associations' children if desired
-    # and set aktivitet-association to those too.
     def children_associations(self):
+        """
+        Returns this users' associations, with all their children, regardless of role.
+        Used with aktiviteter where users can list their associations' children if desired
+        and set aktivitet-association to those too.
+        """
         associations = cache.get('user.%s.children_associations' % self.id)
         if associations is None:
             if self.has_perm('sherpa_admin'):
@@ -323,41 +379,6 @@ class User(AbstractBaseUser):
 
     def children_associations_sorted(self):
         return Association.sort(self.children_associations())
-
-    def is_eligible_for_norway_bus_tickets(self):
-        if NorwayBusTicket.objects.filter(user=self).exists():
-            # Only one order per member
-            return False
-
-        if self.norway_bus_tickets_offer_has_expired():
-            # The offer applies only the same year as membership enrollment
-            return False
-
-        if not self.has_paid():
-            # The offer applies only to active memberships
-            return False
-
-        return True
-
-    def norway_bus_tickets_offer_has_expired(self):
-        # Import here to avoid circular import
-        from core.util import previous_membership_year_start
-        return self.get_actor().start_date.date() < previous_membership_year_start()
-
-    def show_norway_bus_tickets_menu_item(self):
-        # Kind of complicated method, it's used in menus/navigation to show the link to
-        # the order page - show it if the offer hasn't expired, but also if they have ordered before
-        # even if it is expired.
-        if not self.norway_bus_tickets_offer_has_expired():
-            # Offer hasn't expired - show the item regardless of anything
-            return True
-        else:
-            # Offer has expired - showing is only applicable if we HAVE made an order
-            if NorwayBusTicket.objects.filter(user=self).exists():
-                return True
-
-            # No order, and offer expired - hide the item
-            return False
 
     def merge_with(self, other_user):
         """
@@ -412,6 +433,10 @@ class User(AbstractBaseUser):
         # will be deleted.
         other_user.delete()
 
+    #
+    # Static methods
+    #
+
     @staticmethod
     def get_users():
         return User.objects.filter(is_expired=False)
@@ -430,8 +455,10 @@ class User(AbstractBaseUser):
             return create_inactive_user(memberid)
 
 class Permission(models.Model):
-    # Django's Permission model is a bit more advanced than what we need,
-    # so we'll roll our own.
+    """
+    Django's Permission model is a bit more advanced than what we need,
+    so we'll roll our own.
+    """
     name = models.CharField(max_length=255)
 
 class AssociationRole(models.Model):
