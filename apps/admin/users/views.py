@@ -11,6 +11,7 @@ from association.models import Association
 from user.models import User, Permission, AssociationRole
 from focus.models import Actor
 from core.util import current_membership_year_start
+from user.util import create_inactive_user
 
 from datetime import date
 
