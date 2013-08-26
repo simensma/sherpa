@@ -19,9 +19,7 @@ $(document).ready(function() {
     var currentImage;
 
     // Make toolbar draggable
-    toolbar.draggable({
-        containment: 'window'
-    });
+    toolbar.draggable();
 
     // Draggable will set position relative, so make sure it is fixed before the user drags it
     toolbar.css('position', 'fixed');
