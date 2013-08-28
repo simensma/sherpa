@@ -29,7 +29,7 @@ def index(request):
     return redirect('admin.images.views.user_images', request.user.id)
 
 def user_images(request, user):
-    user = User.objects.get(id=user)
+    user = User.get_users().get(id=user)
     images = Image.objects.filter(uploader=user)
     if user == request.user:
         current_navigation = 'personal'

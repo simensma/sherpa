@@ -13,6 +13,8 @@ class Command(BaseCommand):
             for field in (model._meta.fields + model._meta.local_many_to_many):
                 if hasattr(field, 'related') and field.rel.get_related_field().model._meta.object_name == 'User':
                     output_fields.append("%s: %s" % (field.name, field))
+                if hasattr(field, 'related') and model._meta.module_name == 'user' and model._meta.object_name == 'User':
+                    output_fields.append("%s: %s" % (field.name, field))
             if len(output_fields) > 0:
                 formatted_output["%s.%s" % (model._meta.app_label, model._meta.object_name)] = output_fields
 

@@ -69,7 +69,7 @@ def login(request):
             old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
             if old_member is not None:
                 # Actually, it is! Let's try to import them.
-                if User.objects.filter(memberid=old_member.memberid, is_active=True).exists():
+                if User.get_users().filter(memberid=old_member.memberid, is_active=True).exists():
                     messages.error(request, 'old_memberid_but_memberid_exists')
                     context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
@@ -87,7 +87,7 @@ def login(request):
                 # Create the new user
                 try:
                     # Check if the user's already created as inactive
-                    user = User.objects.get(memberid=old_member.memberid, is_active=False)
+                    user = User.get_users().get(memberid=old_member.memberid, is_active=False)
                     user.is_active = True
                     user.set_password(request.POST['password'])
                     user.save()
@@ -120,7 +120,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.objects.filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users().filter(id__in=request.session['authenticated_users'], is_active=True)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -141,7 +141,7 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.objects.get(id=request.POST['user'], is_active=True)
+    user = User.get_users().get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
     del request.session['authenticated_users']
@@ -178,8 +178,15 @@ def register(request):
             actor = actor.get()
 
             # Check that the user doesn't already have an account
-            if User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists():
+            if User.get_users().filter(memberid=request.POST['memberid'], is_active=True).exists():
                 messages.error(request, 'user_exists')
+                return redirect("%s#registrering" % reverse('user.login.views.login'))
+
+            # Check that the memberid isn't expired.
+            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
+            # but we'll check for it anyway.
+            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
+                messages.error(request, 'expired_user_exists')
                 return redirect("%s#registrering" % reverse('user.login.views.login'))
 
             actor.email = request.POST['email']
@@ -187,7 +194,7 @@ def register(request):
 
             try:
                 # Check if the user's already created as inactive
-                user = User.objects.get(memberid=request.POST['memberid'], is_active=False)
+                user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
                 user.is_active = True
                 user.set_password(request.POST['password'])
                 user.save()
@@ -281,11 +288,21 @@ def verify_memberid(request):
         if request.POST['country'] == 'NO':
             actor = actor.filter(address__zipcode=request.POST['zipcode'])
         actor = actor.get()
+
+        try:
+            user = User.objects.get(memberid=request.POST['memberid'], is_active=True)
+            user_exists = True
+            user_is_expired = user.is_expired
+        except User.DoesNotExist:
+            user_exists = False
+            user_is_expired = False
+
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
             'email': actor.get_email(),
-            'user_exists': User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists()
+            'user_exists': user_exists,
+            'user_is_expired': user_is_expired
         }))
     except (ValueError, Actor.DoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
@@ -299,12 +316,14 @@ def send_restore_password_email(request):
     focus_unregistered_matches = False
     for a in Actor.objects.filter(email=request.POST['email']):
         try:
-            local_matches.append(User.objects.get(memberid=a.memberid, is_active=True))
+            local_matches.append(User.get_users().get(memberid=a.memberid, is_active=True))
         except User.DoesNotExist:
             focus_unregistered_matches = True
 
     # Check for matching old user system members - we'll generate a password so that they can login and be imported
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
+    # Include expired users when excluding sherpa2 matches - if their current user object is expired,
+    # it's irrelevant whether or not the old user account matches
     sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_active=True).exists()]
 
     if len(local_matches) == 0 and len(sherpa2_matches) == 0:
@@ -359,7 +378,7 @@ def send_restore_password_email(request):
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    users = User.objects.filter(password_restore_key=key, is_active=True)
+    users = User.get_users().filter(password_restore_key=key, is_active=True)
     if len(users) == 0:
         context = {
             'no_such_key': True,

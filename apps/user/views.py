@@ -222,8 +222,15 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if User.objects.filter(memberid=request.POST['memberid'], is_active=True).exists():
+            if User.get_users().filter(memberid=request.POST['memberid'], is_active=True).exists():
                 messages.error(request, 'user_exists')
+                return redirect('user.views.register_membership')
+
+            # Check that the memberid isn't expired.
+            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
+            # but we'll check for it anyway.
+            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
+                messages.error(request, 'expired_user_exists')
                 return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the user
@@ -231,8 +238,8 @@ def register_membership(request):
 
             # If this memberid is already an imported inactive member, merge them
             try:
-                other_user = User.objects.get(memberid=request.POST['memberid'], is_active=False)
-                user.merge_with(other_user) # This will delete the other user
+                other_user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
+                user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
                 pass
 
@@ -331,14 +338,8 @@ def publication(request, publication):
 def norway_bus_tickets(request):
     now = datetime.now()
 
-    try:
-        ticket = NorwayBusTicket.objects.get(user=request.user)
-    except NorwayBusTicket.DoesNotExist:
-        ticket = None
-
     context = {
         'now': now,
-        'ticket': ticket,
     }
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 

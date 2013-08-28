@@ -156,4 +156,5 @@ MIDDLEWARE_CLASSES = (
     'sherpa.middleware.CheckSherpaPermissions',
     'sherpa.middleware.DeactivatedEnrollment',
     'sherpa.middleware.FocusDowntime',
+    'sherpa.middleware.ActorDoesNotExist',
 )

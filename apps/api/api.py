@@ -13,9 +13,9 @@ def members(request, version, format):
     if request.method == 'GET':
         try:
             if 'sherpa_id' in request.GET and 'medlemsnummer' in request.GET:
-                user = User.objects.get(id=request.GET['sherpa_id'], memberid=request.GET['medlemsnummer'])
+                user = User.get_users().get(id=request.GET['sherpa_id'], memberid=request.GET['medlemsnummer'])
             elif 'sherpa_id' in request.GET:
-                user = User.objects.get(id=request.GET['sherpa_id'])
+                user = User.get_users().get(id=request.GET['sherpa_id'])
             elif 'medlemsnummer' in request.GET:
                 try:
                     user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'])

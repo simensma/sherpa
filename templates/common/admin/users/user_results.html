@@ -13,3 +13,13 @@
     <td>Nei</td>
   </tr>
 {% endfor %}
+
+{% for user in expired_users %}
+  <tr class="result">
+    <td><a href="{% url 'admin.users.views.show' user.id %}">{{ user.memberid }}</a></td>
+    <td>
+      <em>Mangler bruker i Focus - utgått medlemsnummer</em>
+    </td>
+    <td>{% if user.perms.sherpa %}Ja{% else %}Nei{% endif %}</td>
+  </tr>
+{% endfor %}

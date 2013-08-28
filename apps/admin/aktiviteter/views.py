@@ -144,7 +144,7 @@ def leader_search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_users = User.objects.filter(memberid__isnull=True)
+    local_users = User.get_users().filter(memberid__isnull=True)
     for word in request.POST['q'].split():
         local_users = local_users.filter(
             Q(first_name__icontains=word) |
@@ -159,7 +159,7 @@ def leader_search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+    members = User.get_users().filter(memberid__in=[a.memberid for a in actors])
     actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
     users = list(local_users) + list(members)
 
@@ -173,14 +173,14 @@ def leader_search(request):
     }))
 
 def leader_assign(request):
-    user = User.objects.get(id=request.POST['user'])
+    user = User.get_users().get(id=request.POST['user'])
     for date in request.POST.getlist('aktivitet_dates'):
         date = AktivitetDate.objects.get(id=date)
         date.leaders.add(user)
     return redirect('admin.aktiviteter.views.edit_leaders', request.POST['aktivitet'])
 
 def leader_remove(request):
-    user = User.objects.get(id=request.POST['user'])
+    user = User.get_users().get(id=request.POST['user'])
     aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
     aktivitet_date.leaders.remove(user)
     return redirect('admin.aktiviteter.views.edit_leaders', aktivitet_date.aktivitet.id)

@@ -11,8 +11,10 @@ from association.models import Association
 from user.models import User, Permission, AssociationRole
 from focus.models import Actor
 from core.util import current_membership_year_start
+from user.util import create_inactive_user
 
 from datetime import date
+import json
 
 def index(request):
     context = {
@@ -52,7 +54,7 @@ def search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_users = User.objects.filter(memberid__isnull=True)
+    local_users = User.get_users().filter(memberid__isnull=True)
     for word in request.POST['q'].split():
         local_users = local_users.filter(
             Q(first_name__icontains=word) |
@@ -67,18 +69,83 @@ def search(request):
             Q(memberid__icontains=word))
     actors = actors.order_by('first_name')
 
-    members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+    # Match expired users only on memberid
+    expired_users = User.objects.all()
+    for word in request.POST['q'].split():
+        expired_users = expired_users.filter(memberid__icontains=word)
+    expired_users = [u for u in expired_users if not Actor.objects.filter(memberid=u.memberid).exists()]
+
+    members = User.get_users().filter(memberid__in=[a.memberid for a in actors])
     actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
     users = list(local_users) + list(members)
 
     context = RequestContext(request, {
         'users': users,
-        'actors_without_user': actors_without_user})
+        'actors_without_user': actors_without_user,
+        'expired_users': expired_users
+    })
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def create_inactive(request, memberid):
     user = create_inactive_user(memberid)
     return redirect('admin.users.views.show', user.id)
+
+def check_memberid(request):
+    if not request.user.can_modify_user_memberid():
+        raise PermissionDenied
+
+    user_to_change = User.objects.get(id=request.POST['user'])
+    memberid_is_equal = str(user_to_change.memberid) == request.POST['memberid'].strip()
+
+    try:
+        existing_user = User.objects.get(memberid=request.POST['memberid'])
+    except (User.DoesNotExist, ValueError):
+        existing_user = None
+
+    try:
+        actor = Actor.objects.get(memberid=request.POST['memberid'])
+    except (Actor.DoesNotExist, ValueError):
+        actor = None
+
+    context = RequestContext(request, {
+        'user_to_change': user_to_change,
+        'existing_user': existing_user,
+        'actor': actor,
+        'memberid': request.POST['memberid'],
+        'memberid_is_equal': memberid_is_equal
+    })
+    html = render_to_string('common/admin/users/check_memberid.html', context)
+    return HttpResponse(json.dumps({
+        'valid': actor is not None and not memberid_is_equal,
+        'html': html
+    }))
+
+def change_memberid(request):
+    if not request.user.can_modify_user_memberid():
+        raise PermissionDenied
+
+    # The Actor was already checked client-side, but verify here
+    if not Actor.objects.filter(memberid=request.POST['new-memberid']).exists():
+        raise PermissionDenied
+
+    old_user = User.objects.get(id=request.POST['old-user'])
+    try:
+        new_user = User.objects.get(memberid=request.POST['new-memberid'])
+        # Ah, the new memberid already has a user - merge them, but keep the password
+        # of the new user
+        new_user.merge_with(old_user) # This will delete the old user
+        resulting_user = new_user
+    except User.DoesNotExist:
+        # Allright, just update the memberid to the new one
+        old_user.identifier = request.POST['new-memberid']
+        old_user.memberid = request.POST['new-memberid']
+        old_user.is_expired = False
+        old_user.save()
+        resulting_user = old_user
+    if 'purge-busticket' in request.POST:
+        ticket = resulting_user.norway_bus_ticket
+        ticket.delete()
+    return redirect('admin.users.views.show', resulting_user.id)
 
 def give_sherpa_access(request, user):
     if not request.user.has_perm('sherpa'):

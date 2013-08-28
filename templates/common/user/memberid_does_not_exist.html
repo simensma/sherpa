@@ -1,0 +1,51 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Din bruker er utgått &mdash; Min side{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Din bruker er utgått</em>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+    <div class="memberid-does-not-exist">
+
+      <h1>Din bruker er utgått</h1>
+
+      <p class="lede">
+        Dine medlemsopplysninger har blitt slettet fra våre systemer, og du har blitt logget ut fra Min side.
+      </p>
+
+      <ul>
+        <li>
+
+          <h3>Kanskje du har fått nytt medlemsnummer?</h3>
+          <p>
+            Hvis du nettopp har fornyet ditt medlemskap, kan det hende at du har blitt tildelt et nytt medlemsnummer. I så fall kan du registrere en ny Min side-bruker med det nye medlemsnummeret.
+          </p>
+
+        </li>
+        <li>
+
+          <h3>Kanskje du har vært utmeldt for lenge?</h3>
+          <p>
+            Vi sletter dine medlemsopplysninger hvis du har vært utmeldt i 2 år eller mer.
+          </p>
+
+        </li>
+
+        <li>
+          <h3>Din historikk tas vare på</h3>
+          <p>
+            Selv om personopplysningene om deg slettes, blir din anonyme historikk (annonser i Fjelltreffen, turer og aktiviteter du har deltatt på og så videre) arkivert og tatt vare på. Dersom du oppretter ny bruker og ønsker å bevare denne historikken, må du kontakte medlemsservice og oppgi både ditt gamle og nye medlemsnummer, så kan vi manuelt overføre historikken.
+          </p>
+        </li>
+      </ul>
+
+      <p>
+        <a class="btn btn-danger" href="/">Tilbake til Forsiden</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

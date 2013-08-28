@@ -142,7 +142,7 @@ def save(request, version):
         ### Authors ###
         publisher_list = json.loads(request.POST['authors'])
         if len(publisher_list) > 0:
-            publishers = User.objects.filter(id__in=publisher_list)
+            publishers = User.get_users().filter(id__in=publisher_list)
             version.publishers = publishers
         else:
             response['author_error'] = 'no_authors'
