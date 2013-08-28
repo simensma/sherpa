@@ -338,14 +338,8 @@ def publication(request, publication):
 def norway_bus_tickets(request):
     now = datetime.now()
 
-    try:
-        ticket = NorwayBusTicket.objects.get(user=request.user)
-    except NorwayBusTicket.DoesNotExist:
-        ticket = None
-
     context = {
         'now': now,
-        'ticket': ticket,
     }
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
