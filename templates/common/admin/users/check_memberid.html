@@ -19,6 +19,14 @@
     Brukeren vil få <strong>full</strong> tilgang til {{ actor.get_full_name }}'s konto! Er du helt sikker på at det er samme person?
   </p>
 
+  {% if user_to_change.norway_bus_ticket %}
+    <label class="checkbox">
+      <input type="checkbox" name="purge-busticket"> Slett bussbilletten<br>
+      Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
+      (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
+    </label>
+  {% endif %}
+
   <p>
     <button class="btn btn-danger">Ja, dette er samme person. Endre medlemsnummeret.</button>
   </p>
@@ -37,6 +45,19 @@
   <p>
     Du kan likevel overføre brukerens historikk, men dette vil <strong>slette</strong> den gamle brukeren. Er du helt sikker på at det er samme person?
   </p>
+
+  {% if user_to_change.norway_bus_ticket or existing_user.norway_bus_ticket %}
+    <label class="checkbox">
+      <input type="checkbox" name="purge-busticket"> Slett bussbilletten{% if user_to_change.norway_bus_ticket and existing_user.norway_bus_ticket %}e{% endif %}<br>
+      {% if user_to_change.norway_bus_ticket %}
+        Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
+      {% endif %}
+      {% if existing_user.norway_bus_ticket %}
+        Bestilt <strong>{{ existing_user.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ existing_user.memberid }}</strong><br>
+      {% endif %}
+      (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
+    </label>
+  {% endif %}
 
   <p>
     <button class="btn btn-danger">Ja, dette er samme person. Overfør historikk og slå sammen brukerne.</button>

@@ -142,6 +142,9 @@ def change_memberid(request):
         old_user.is_expired = False
         old_user.save()
         resulting_user = old_user
+    if 'purge-busticket' in request.POST:
+        ticket = resulting_user.norway_bus_ticket
+        ticket.delete()
     return redirect('admin.users.views.show', resulting_user.id)
 
 def give_sherpa_access(request, user):
