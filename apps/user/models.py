@@ -99,6 +99,9 @@ class User(AbstractBaseUser):
             cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
+    def get_membership_start_date(self):
+        return self.get_actor().start_date.date()
+
     def is_household_member(self):
         return self.get_actor().is_household_member()
 
@@ -247,7 +250,7 @@ class User(AbstractBaseUser):
     def norway_bus_tickets_offer_has_expired(self):
         # Import here to avoid circular import
         from core.util import previous_membership_year_start
-        return self.get_actor().start_date.date() < previous_membership_year_start()
+        return self.get_membership_start_date() < previous_membership_year_start()
 
     def show_norway_bus_tickets_menu_item(self):
         """

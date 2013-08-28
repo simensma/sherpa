@@ -130,6 +130,10 @@
             <th>Medlemstype</th>
             <td>{{ other_user.membership_type.name }}</td>
           </tr>
+          <tr>
+            <th>Innmeldt</th>
+            <td>{{ other_user.get_membership_start_date|date:"j. F Y" }}</td>
+          </tr>
           {% if other_user.get_parent %}
             <tr>
               <th>Hovedmedlem</th>
@@ -237,6 +241,28 @@
                 Nei
               {% else %}
                 Ja
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>Bussbillett fra NOR-WAY</th>
+            <td>
+              {% if other_user.norway_bus_ticket %}
+                <strong>Bestilt:</strong> {{ other_user.norway_bus_ticket.date_placed|date:"j. F Y" }}<br>
+                <strong>Reisedato:</strong>
+                {% if not other_user.norway_bus_ticket.is_imported %}
+                  {{ other_user.norway_bus_ticket.date_trip|date:"j. F Y" }}
+                {% else %}
+                  {{ other_user.norway_bus_ticket.date_trip_text }}
+                {% endif %}
+                <br>
+                <strong>Strekning:</strong> {{ other_user.norway_bus_ticket.distance }}
+              {% elif other_user.norway_bus_tickets_offer_has_expired %}
+                Ikke bestilt; tilbudet er utgått
+              {% elif not other_user.has_paid %}
+                Ikke bestilt; kan ikke bestille uten betalt medlemskap
+              {% else %}
+                Ikke bestilt; kan bestille i år
               {% endif %}
             </td>
           </tr>
