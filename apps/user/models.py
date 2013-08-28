@@ -414,21 +414,9 @@ class User(AbstractBaseUser):
         from membership.models import SMSServiceRequest
         from page.models import Page, Variant, Version
 
-        Annonse.objects.filter(user=other_user).update(user=self)
-        Article.objects.filter(created_by=other_user).update(created_by=self)
-        Article.objects.filter(modified_by=other_user).update(modified_by=self)
-        AssociationRole.objects.filter(user=other_user).update(user=self)
-        Image.objects.filter(uploader=other_user).update(uploader=self)
-        NorwayBusTicket.objects.filter(user=other_user).update(user=self)
-        Page.objects.filter(created_by=other_user).update(created_by=self)
-        Page.objects.filter(modified_by=other_user).update(modified_by=self)
-        SMSServiceRequest.objects.filter(user=other_user).update(user=self)
-        Variant.objects.filter(owner=other_user).update(owner=self)
-        Version.objects.filter(owner=other_user).update(owner=self)
+        # Ordered alphabetically (and so is 'userrelations')
 
-        for version in Version.objects.filter(publishers=other_user):
-            version.publishers.remove(other_user)
-            version.publishers.add(self)
+        # aktiviteter.AktivitetDate:
         for aktivitet_date in AktivitetDate.objects.filter(leaders=other_user):
             aktivitet_date.leaders.remove(other_user)
             aktivitet_date.leaders.add(self)
@@ -436,9 +424,51 @@ class User(AbstractBaseUser):
             aktivitet_date.participants.remove(other_user)
             aktivitet_date.participants.add(self)
 
-        # Merge user-permissions.
-        for p in other_user.permissions.all():
-            self.permissions.add(p)
+        # fjelltreffen.Annonse:
+        Annonse.objects.filter(user=other_user).update(user=self)
+
+        # articles.Article:
+        Article.objects.filter(created_by=other_user).update(created_by=self)
+        Article.objects.filter(modified_by=other_user).update(modified_by=self)
+
+        # user.AssociationRole:
+        AssociationRole.objects.filter(user=other_user).update(user=self)
+
+        # admin.Image:
+        Image.objects.filter(uploader=other_user).update(uploader=self)
+
+        # user.NorwayBusTicket:
+        # Note that this is a OneToOneField.
+        old_ticket = NorwayBusTicket.objects.get(user=other_user)
+        new_ticket = self.norway_bus_ticket
+        if old_ticket is not None and new_ticket is not None:
+            # Well, both users have a ticket. Not sure which we want, it kind of depends on the
+            # context of which the merge was called. Let's just keep the newest one for now.
+            # This might need to be reviewed later.
+            pass
+        elif old_ticket is not None:
+            old_ticket.user = self
+            old_ticket.save()
+
+        # page.Page:
+        Page.objects.filter(created_by=other_user).update(created_by=self)
+        Page.objects.filter(modified_by=other_user).update(modified_by=self)
+
+        # membership.SMSServiceRequest:
+        SMSServiceRequest.objects.filter(user=other_user).update(user=self)
+
+        # user.User:
+        # The 'associations' relation is already handled through AssociationRole
+        self.permissions = other_user.permissions.all()
+
+        # page.Variant:
+        Variant.objects.filter(owner=other_user).update(owner=self)
+
+        # page.Version:
+        Version.objects.filter(owner=other_user).update(owner=self)
+        for version in Version.objects.filter(publishers=other_user):
+            version.publishers.remove(other_user)
+            version.publishers.add(self)
 
         # That should be everything. Since all objects should have been transferred, it's safe
         # to delete the other user. Note that if we forgot to transfer any objects, they
