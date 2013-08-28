@@ -239,7 +239,7 @@ def register_membership(request):
             # If this memberid is already an imported inactive member, merge them
             try:
                 other_user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
-                user.merge_with(other_user) # This will delete the other user
+                user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
                 pass
 

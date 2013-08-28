@@ -392,7 +392,7 @@ class User(AbstractBaseUser):
     def children_associations_sorted(self):
         return Association.sort(self.children_associations())
 
-    def merge_with(self, other_user):
+    def merge_with(self, other_user, move_password=False):
         """
         This method transfers ALL objects related to the other user object
         over to this one. This occurs:
@@ -470,9 +470,14 @@ class User(AbstractBaseUser):
             version.publishers.remove(other_user)
             version.publishers.add(self)
 
+        # Move the hashed password
+        if move_password:
+            self.password = other_user.password
+
         # That should be everything. Since all objects should have been transferred, it's safe
         # to delete the other user. Note that if we forgot to transfer any objects, they
         # will be deleted.
+        self.save()
         other_user.delete()
 
     #
