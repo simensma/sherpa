@@ -88,7 +88,8 @@ $(document).ready(function() {
             weekStart: 1,
             startView: 'decade',
             autoclose: true,
-            language: 'nb'
+            language: 'nb',
+            forceParse: false
         }).on('changeDate', function() {
             Validator.performValidation({
                 method: 'date',

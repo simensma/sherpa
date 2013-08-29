@@ -7,7 +7,8 @@ $(document).ready(function() {
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
-        language: 'nb'
+        language: 'nb',
+        forceParse: false
     });
 
     /* Delete page */

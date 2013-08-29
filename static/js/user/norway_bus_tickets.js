@@ -11,7 +11,8 @@ $(document).ready(function() {
         autoclose: true,
         language: 'nb',
         startDate: today,
-        endDate: nextYear
+        endDate: nextYear,
+        forceParse: false
     }).on('changeDate', function(e) {
         if(e.date.valueOf() < five_days_from_now.valueOf()) {
             alert("Det er få dager igjen til avreisedatoen du valgte - vær obs på at vi ikke garantere at du mottar billetten i tide!");

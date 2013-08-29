@@ -30,7 +30,8 @@ $(document).ready(function() {
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
-        language: 'nb'
+        language: 'nb',
+        forceParse: false
     };
     form_placement.find("div.date").datepicker(dp_options);
     $("div.placement-dialog.time form div.date").datepicker(dp_options);
