@@ -13,10 +13,13 @@ class Command(BaseCommand):
     help = u"Henter sherpa-metrics for libratoappen vår, se https://github.com/Turistforeningen/librato"
 
     def handle(self, *args, **options):
-        users = User.objects.filter(is_active=True, is_expired=False)
-        inactive_users = User.objects.filter(is_active=False)
-        expired_users = User.objects.filter(is_expired=True)
-        sherpa_users = users.filter(permissions=Permission.objects.get(name='sherpa'))
+        users = User.objects.all()
+        inactive_users = users.filter(is_active=False, is_expired=False)
+        expired_users = users.filter(is_expired=True, is_active=True)
+        inactive_expired_users = users.filter(is_active=False, is_expired=True)
+        active_users = users.filter(is_active=True, is_expired=False)
+        normal_users = active_users.exclude(permissions=Permission.objects.get(name='sherpa'))
+        sherpa_users = active_users.filter(permissions=Permission.objects.get(name='sherpa'))
 
         # Fjelltreffen
         ft_active_period = date.today() - timedelta(days=settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS)
@@ -27,13 +30,16 @@ class Command(BaseCommand):
         metrics = {
             'gauges': [{
                 'name': 'sherpa.db.users',
-                'value': users.count()
+                'value': normal_users.count()
             }, {
                 'name': 'sherpa.db.inactive_users',
                 'value': inactive_users.count()
             }, {
                 'name': 'sherpa.db.expired_users',
                 'value': expired_users.count()
+            }, {
+                'name': 'sherpa.db.inactive_expired_users',
+                'value': inactive_expired_users.count()
             }, {
                 'name': 'sherpa.db.sherpa_users',
                 'value': sherpa_users.count()
