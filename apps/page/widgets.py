@@ -154,6 +154,12 @@ def get_static_promo_context(path):
             'name': 'Kom deg ut',
             'start_date': date(year=2013, month=8, day=12),
             'end_date': date(year=2013, month=9, day=1),
+        },
+        {
+            'id': 'fjellfilm',
+            'name': 'Fjellfilm',
+            'start_date': date(year=2013, month=9, day=2),
+            'end_date': date(year=2013, month=10, day=1),
         }
     ]
 
