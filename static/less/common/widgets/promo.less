@@ -465,13 +465,34 @@ div.widget.promo {
     background-image: url('/static/img/widgets/promo/rotation-fjellfilm.png');
 
     div.content {
-      height: 480px;
 
-      a {
+      a.link-box {
         display: block;
         height: 480px;
       }
 
+      div.mobile-content {
+        display: none;
+
+        a {
+          color: white;
+          text-decoration: underline;
+        }
+
+        a:hover {
+          color: rgb(180, 180, 180);
+        }
+      }
+
+      @media(max-width: 767px) {
+        a.link-box {
+          display: none;
+        }
+
+        div.mobile-content {
+          display: block;
+        }
+      }
     }
   }
 
