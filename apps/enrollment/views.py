@@ -390,6 +390,7 @@ def verification(request):
             'main': get_membership_type_by_codename('main')['name'],
             'youth': get_membership_type_by_codename('youth')['name'],
             'school': get_membership_type_by_codename('school')['name'],
+            'child': get_membership_type_by_codename('child')['name'],
             'household': get_membership_type_by_codename('household')['name'],
         },
         'yearbook': request.session['enrollment']['yearbook'],
