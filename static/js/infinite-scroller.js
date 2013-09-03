@@ -7,6 +7,8 @@
     var triggerType;
     var container;
     var loader;
+    var beforeLoad;
+    var afterLoad;
     var handlers = { // default ajax handlers
         done: function(result) {
             result = $.parseHTML(result.trim());
@@ -47,6 +49,8 @@
         triggerType = opts.triggerType;
         container = opts.container;
         loader = opts.loader;
+        beforeLoad = opts.beforeLoad;
+        afterLoad = opts.afterLoad;
         if(opts.handlers !== undefined) {
             if(opts.handlers.done !== undefined) {
                 handlers.done = opts.handlers.done;
@@ -103,6 +107,9 @@
     };
 
     function load() {
+        if(beforeLoad !== undefined) {
+            beforeLoad();
+        }
         if(loader !== undefined) {
             loader.show();
         }
@@ -117,6 +124,10 @@
         ).fail(
             handlers.fail
         ).always(function(result) {
+            if(afterLoad !== undefined) {
+                afterLoad();
+            }
+
             loading = false;
             handlers.always(result);
         });
