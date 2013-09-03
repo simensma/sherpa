@@ -19,22 +19,10 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Finn brukere/medlemmer</h2>
-  </div>
-</div>
 
-<div class="row">
-  <div class="span6">
-    <input type="text" name="user-search" class="input-xlarge" placeholder="Navn eller medlemsnummer">
+    <input type="text" name="user-search" class="input-xxlarge" placeholder="Søk etter medlemmer (navn eller medlemsnummer)...">
     <button class="btn input-button-align"><i class="icon-search"></i></button>
-  </div>
 
-  <div class="span6">
-  </div>
-</div>
-
-<div class="row">
-  <div class="span12">
     <table class="table user-search-list" data-search-url="{% url 'admin.users.views.search' %}">
       <tr>
         <th>Navn</th>
@@ -68,7 +56,17 @@
         </td>
       </tr>
     </table>
+
+    <div class="user-search-turlederregister">
+      <h3>Turlederregister</h3>
+      <p>
+        For å opprette nye turledere, søk etter brukere på denne siden. Han/henne må ha registrert seg på Min side.<br>
+        For å søke <strong>kun</strong> etter turledere, gå til <a href="{% url 'admin.users.turledere.views.index' %}">turlederregisteret</a>.
+      </p>
+    </div>
+
   </div>
 </div>
+
 
 {% endblock %}

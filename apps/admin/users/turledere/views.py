@@ -14,7 +14,7 @@ import json
 from association.models import Association
 from user.models import User, Turleder
 from focus.models import Actor
-from admin.turledere.models import UserWrapper
+from admin.users.turledere.models import UserWrapper
 from user.util import create_inactive_user
 
 def index(request):
@@ -24,7 +24,7 @@ def index(request):
         'total_count': total_count,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
-    return render(request, 'common/admin/turledere/index.html', context)
+    return render(request, 'common/admin/users/turledere/index.html', context)
 
 def edit(request, user):
     user = User.objects.get(id=user)
@@ -48,7 +48,7 @@ def edit(request, user):
             'five_years_from_now': five_years_from_now,
         }
 
-        return render(request, 'common/admin/turledere/edit.html', context)
+        return render(request, 'common/admin/users/turledere/edit.html', context)
 
     elif request.method == 'POST':
 
@@ -76,14 +76,14 @@ def edit(request, user):
             turleder.save()
 
         messages.info(request, "success")
-        return redirect('admin.turledere.views.edit', user.id)
+        return redirect('admin.users.turledere.views.edit', user.id)
 
     else:
-        return redirect('admin.turledere.views.edit')
+        return redirect('admin.users.turledere.views.edit')
 
 def create_and_edit(request, memberid):
     user = create_inactive_user(memberid)
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
     if request.POST['search_type'] != 'all' and len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
@@ -112,4 +112,4 @@ def search(request):
         'search_type': request.POST['search_type'],
         'query': request.POST['query']
     })
-    return HttpResponse(render_to_string('common/admin/turledere/search_results.html', context))
+    return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))

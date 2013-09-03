@@ -3,9 +3,9 @@
     <tr class="result">
       <td>
         {% if user.is_wrapper %}
-          <a href="{% url 'admin.turledere.views.create_and_edit' user.memberid %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
+          <a href="{% url 'admin.users.turledere.views.create_and_edit' user.memberid %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
         {% else %}
-          <a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
+          <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
         {% endif %}
       </td>
       <td colspan="4">
@@ -17,7 +17,7 @@
       <tr class="result{% if not forloop.first %} hide-border{% endif %}">
         <td>
           {% if forloop.first %}
-            <a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
+            <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
           {% endif %}
         </td>
         <td>

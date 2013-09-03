@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.users.turledere.views.index' %}">Turlederregister</a>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/turledere/edit.js"></script>
@@ -18,7 +18,7 @@
         {% if message.message == 'success' %}
           <div class="alert alert-success">
             <strong>Endringene har blitt lagret.</strong><br>
-            <a href="{% url 'admin.turledere.views.index' %}">Tilbake til turlederregisteret</a>
+            <a href="{% url 'admin.users.turledere.views.index' %}">Tilbake til turlederregisteret</a>
           </div>
         {% endif %}
       {% endfor %}
@@ -33,12 +33,12 @@
         </tr>
         {% for turleder in user.turledere.all %}
           <tr data-turleder="{{ turleder.id }}">
-            {% include 'common/admin/turledere/edit_row.html' %}
+            {% include 'common/admin/users/turledere/edit_row.html' %}
           </tr>
         {% endfor %}
 
         <tr class="hide new">
-          {% include 'common/admin/turledere/edit_row.html' %}
+          {% include 'common/admin/users/turledere/edit_row.html' %}
         </tr>
         <tr class="add">
           <td colspan="5">
@@ -47,7 +47,7 @@
         </tr>
       </table>
 
-      <form action="{% url 'admin.turledere.views.edit' user.id %}" method="post" class="save">
+      <form action="{% url 'admin.users.turledere.views.edit' user.id %}" method="post" class="save">
         {% csrf_token %}
         <input type="hidden" name="turledere" value="">
         <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>
