@@ -19,16 +19,6 @@
         <option value="{{ association.id }}"{% if turleder.association == association %} selected{% endif %}>{{ association.name }}</option>
       {% endfor %}
     </optgroup>
-    <optgroup label="Lokale turlag">
-      {% for association in all_associations.small_associations %}
-        <option value="{{ association.id }}"{% if turleder.association == association %} selected{% endif %}>{{ association.name }}</option>
-      {% endfor %}
-    </optgroup>
-    <optgroup label="Turgrupper">
-      {% for association in all_associations.hike_groups %}
-        <option value="{{ association.id }}"{% if turleder.association == association %} selected{% endif %}>{{ association.name }}</option>
-      {% endfor %}
-    </optgroup>
   </select>
 </td>
 <td>

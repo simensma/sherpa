@@ -48,20 +48,6 @@
                 {% endfor %}
               </optgroup>
             {% endif %}
-            {% if user.all_associations_sorted.small_associations|length > 0 %}
-              <optgroup label="Lokale turlag">
-                {% for association in user.all_associations_sorted.small_associations %}
-                  <option value="{{ association.id }}">{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if user.all_associations_sorted.hike_groups|length > 0 %}
-              <optgroup label="Turgrupper">
-                {% for association in user.all_associations_sorted.hike_groups %}
-                  <option value="{{ association.id }}">{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
           </select>
         </p>
       </div>
