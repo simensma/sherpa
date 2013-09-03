@@ -9,8 +9,8 @@
     var loader;
     var handlers = { // default ajax handlers
         done: function(result) {
-            result = $(result.trim());
-            if(result.length === 0) {
+            result = $.parseHTML(result.trim());
+            if(result === null) {
                 if(loader !== undefined) {
                     loader.fadeOut();
                 }
