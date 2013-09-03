@@ -32,7 +32,7 @@
           <br>
           Vis turledere godkjent av
 
-          <select name="association" class="chosen" data-placeholder="velg en forening...">
+          <select name="association" class="chosen" data-placeholder="velg en forening..." data-placeholder-wait="(vent mens siden laster...)">
             <option value=""></option>
             {% if user.all_associations_sorted.central|length > 0 %}
               <optgroup label="Sentralt/nasjonalt">

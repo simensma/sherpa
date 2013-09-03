@@ -31,8 +31,7 @@ $(document).ready(function() {
         }
         loading.show();
 
-        turleder_search_input.prop('disabled', true);
-        turleder_search_button.prop('disabled', true);
+        setInputDisabled(true);
 
         $.ajaxQueue({
             url: register.attr('data-search-url'),
@@ -49,8 +48,7 @@ $(document).ready(function() {
             error.show();
         }).always(function() {
             loading.hide();
-            turleder_search_input.prop('disabled', false);
-            turleder_search_button.prop('disabled', false);
+            setInputDisabled(false);
         });
     });
 
@@ -70,7 +68,11 @@ $(document).ready(function() {
                 turleder_association: turleder_association.find("option:selected").val()
             };
         },
-        handlers: {
+        beforeLoad: function() {
+            setInputDisabled(true);
+        }, afterLoad: function() {
+            setInputDisabled(false);
+        }, handlers: {
             done: function(result) {
                 result = JSON.parse(result);
                 if(result.complete) {
@@ -88,5 +90,15 @@ $(document).ready(function() {
         InfiniteScroller.reset();
         InfiniteScroller.trigger();
     });
+
+    function setInputDisabled(disabled) {
+        turleder_search_input.prop('disabled', disabled);
+        turleder_search_button.prop('disabled', disabled);
+        turleder_association.find("option").prop('disabled', disabled);
+        var tmp = turleder_association.attr('data-placeholder-wait');
+        turleder_association.attr('data-placeholder-wait', turleder_association.attr('data-placeholder'));
+        turleder_association.attr('data-placeholder', tmp);
+        turleder_association.trigger('liszt:updated');
+    }
 
 });
