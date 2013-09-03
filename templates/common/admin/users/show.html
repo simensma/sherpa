@@ -562,6 +562,16 @@
       {% endif %}
 
     {% endif %}
+
+    <h3>Turlederstatus</h3>
+
+    <p>
+      {% for turleder in other_user.turledere.all %}
+        {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
+      {% empty %}
+        Ikke turleder. <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
+      {% endfor %}
+    </p>
   </div>
 </div>
 
