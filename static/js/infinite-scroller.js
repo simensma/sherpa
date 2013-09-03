@@ -78,6 +78,10 @@
         load();
     };
 
+    InfiniteScroller.reset = function() {
+        complete = false;
+    };
+
     InfiniteScroller.disable = function(opts) {
         if(triggerType === 'scroll') {
             $(window).off('scroll.infinite-scroller');
