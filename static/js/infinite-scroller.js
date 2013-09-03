@@ -87,6 +87,7 @@
 
     InfiniteScroller.end = function() {
         complete = true;
+        loader.fadeOut();
     };
 
     InfiniteScroller.reset = function() {

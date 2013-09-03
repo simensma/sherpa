@@ -105,7 +105,10 @@ def search(request):
             'query': request.POST['query'],
             'search_type': request.POST['search_type']
         })
-        return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))
+        return HttpResponse(json.dumps({
+            'complete': len(users) == 0,
+            'html': render_to_string('common/admin/users/turledere/search_results.html', context)
+        }))
 
     elif request.POST['search_type'] == 'infinite':
         BULK_COUNT = 40
@@ -114,11 +117,20 @@ def search(request):
 
         # We want to sort on name, which is in Focus. Actors are cached, so this will only be slow once.
         # Note that the *first request* will be slow, after sorting all turledere once.
-        turledere = User.objects.filter(turledere__isnull=False).distinct().prefetch_related('turledere', 'turledere__association')
+        turledere = User.objects.filter(turledere__isnull=False)
+        association = None
+        if request.POST['turleder_association'] != '':
+            association = Association.objects.get(id=request.POST['turleder_association'])
+            turledere = turledere.filter(turledere__association=association)
+        turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association')
         users = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
 
         context = RequestContext(request, {
             'users': users,
-            'search_type': request.POST['search_type']
+            'search_type': request.POST['search_type'],
+            'association': association
         })
-        return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))
+        return HttpResponse(json.dumps({
+            'complete': len(users) == 0,
+            'html': render_to_string('common/admin/users/turledere/search_results.html', context)
+        }))

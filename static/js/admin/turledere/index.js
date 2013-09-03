@@ -4,6 +4,11 @@ $(document).ready(function() {
 
     var turleder_search_input = register.find("input[name='turleder']");
     var turleder_search_button = register.find("button.turleder-search");
+    var turleder_association = register.find("select[name='association']");
+
+    turleder_association.chosen({
+        'allow_single_deselect': true
+    });
 
     var short_query = table.find("tr.short-query");
     var loading = table.find("tr.loading");
@@ -39,7 +44,7 @@ $(document).ready(function() {
             // Remove again, because the infinite scroller may have added results after the call
             // was initiated.
             table.find("tr.result").remove();
-            table.append($.parseHTML(result));
+            table.append($.parseHTML(JSON.parse(result).html));
         }).fail(function() {
             error.show();
         }).always(function() {
@@ -55,16 +60,33 @@ $(document).ready(function() {
         triggerType: 'scroll',
         trigger: table,
         container: table,
-        loader: $("div.infinite-scroll-loader"),
+        loader: register.find("div.infinite-scroll-loader"),
         ajaxData: function() {
             var bulk = Number(table.data('bulk'));
             table.data('bulk', bulk + 1);
             return {
                 bulk: bulk,
                 search_type: 'infinite',
+                turleder_association: turleder_association.find("option:selected").val()
             };
+        },
+        handlers: {
+            done: function(result) {
+                result = JSON.parse(result);
+                if(result.complete) {
+                    InfiniteScroller.end();
+                }
+                table.append($.parseHTML(result.html.trim()));
+            }
         }
     });
     InfiniteScroller.trigger();
+
+    turleder_association.change(function() {
+        table.data('bulk', 0);
+        table.find("tr.result").remove();
+        InfiniteScroller.reset();
+        InfiniteScroller.trigger();
+    });
 
 });

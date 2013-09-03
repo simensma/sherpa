@@ -26,8 +26,44 @@
   <div class="search-area">
     <div class="row">
       <div class="span12">
-        <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
-        <button class="btn input-button-align turleder-search"><i class="icon-search"></i></button>
+        <p>
+          <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
+          <button class="btn input-button-align turleder-search"><i class="icon-search"></i></button>
+          <br>
+          Vis turledere godkjent av
+
+          <select name="association" class="chosen" data-placeholder="velg en forening...">
+            <option value=""></option>
+            {% if user.all_associations_sorted.central|length > 0 %}
+              <optgroup label="Sentralt/nasjonalt">
+                {% for association in user.all_associations_sorted.central %}
+                  <option value="{{ association.id }}" data-type="sentral">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.all_associations_sorted.associations|length > 0 %}
+              <optgroup label="Medlemsforeninger">
+                {% for association in user.all_associations_sorted.associations %}
+                  <option value="{{ association.id }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.all_associations_sorted.small_associations|length > 0 %}
+              <optgroup label="Lokale turlag">
+                {% for association in user.all_associations_sorted.small_associations %}
+                  <option value="{{ association.id }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+            {% if user.all_associations_sorted.hike_groups|length > 0 %}
+              <optgroup label="Turgrupper">
+                {% for association in user.all_associations_sorted.hike_groups %}
+                  <option value="{{ association.id }}">{{ association.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+          </select>
+        </p>
       </div>
     </div>
   </div>

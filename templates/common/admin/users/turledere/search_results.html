@@ -43,5 +43,19 @@
         Du kan søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
       </td>
     </tr>
+  {% elif search_type == 'infinite' %}
+    <tr class="result no-results">
+      <td colspan="5">
+        {% if not association %}
+        <strong>
+          <em>
+            Det er ingen flere turledere i registeret &mdash; du har bladd deg gjennom alle. Godt gjort!
+          </em>
+        </strong>
+        {% else %}
+          <strong>{{ association.name }}</strong> har ikke godkjent noen turledere ennå.
+        {% endif %}
+      </td>
+    </tr>
   {% endif %}
 {% endfor %}
