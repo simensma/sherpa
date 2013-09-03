@@ -86,21 +86,39 @@ def create_and_edit(request, memberid):
     return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
-    if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
-        raise PermissionDenied
+    if request.POST['search_type'] == 'query':
+        if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+            raise PermissionDenied
 
-    actors = Actor.objects.all()
-    for word in request.POST['query'].split():
-        actors = actors.filter(
-            Q(first_name__icontains=word) |
-            Q(last_name__icontains=word) |
-            Q(memberid__icontains=word))
+        actors = Actor.objects.all()
+        for word in request.POST['query'].split():
+            actors = actors.filter(
+                Q(first_name__icontains=word) |
+                Q(last_name__icontains=word) |
+                Q(memberid__icontains=word))
 
-    turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct().prefetch_related('turledere', 'turledere__association')
-    users = sorted(turledere, key=lambda u: u.get_full_name())
+        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct().prefetch_related('turledere', 'turledere__association')
+        users = sorted(turledere, key=lambda u: u.get_full_name())
 
-    context = RequestContext(request, {
-        'users': users,
-        'query': request.POST['query']
-    })
-    return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))
+        context = RequestContext(request, {
+            'users': users,
+            'query': request.POST['query'],
+            'search_type': request.POST['search_type']
+        })
+        return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))
+
+    elif request.POST['search_type'] == 'infinite':
+        BULK_COUNT = 40
+        start = int(request.POST['bulk']) * BULK_COUNT
+        end = start + BULK_COUNT
+
+        # We want to sort on name, which is in Focus. Actors are cached, so this will only be slow once.
+        # Note that the *first request* will be slow, after sorting all turledere once.
+        turledere = User.objects.filter(turledere__isnull=False).distinct().prefetch_related('turledere', 'turledere__association')
+        users = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
+
+        context = RequestContext(request, {
+            'users': users,
+            'search_type': request.POST['search_type']
+        })
+        return HttpResponse(render_to_string('common/admin/users/turledere/search_results.html', context))

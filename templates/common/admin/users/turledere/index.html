@@ -34,7 +34,7 @@
 
   <div class="row">
     <div class="span12">
-      <table class="table turledere">
+      <table class="table turledere" data-infinite-scroll-url="{% url 'admin.users.turledere.views.search' %}">
         <tr>
           <th>Medlem</th>
           <th>Turlederroller</th>
@@ -49,7 +49,7 @@
         </tr>
         <tr class="loading hide">
           <td colspan="5">
-            Sjekker turleder- og medlemsregisteret, vennligst vent...<br>
+            Søker i turlederregisteret, vennligst vent...<br>
             <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
           </td>
         </tr>
@@ -62,6 +62,11 @@
           </td>
         </tr>
       </table>
+
+      <div class="infinite-scroll-loader hide">
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+        Søker i turlederregisteret, vennligst vent...
+      </div>
     </div>
   </div>
 </div>

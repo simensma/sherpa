@@ -36,10 +36,12 @@
     {% endfor %}
   {% endif %}
 {% empty %}
-  <tr class="result no-results">
-    <td colspan="5">
-      Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
-      Du kan søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
-    </td>
-  </tr>
+  {% if search_type == 'query' %}
+    <tr class="result no-results">
+      <td colspan="5">
+        Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
+        Du kan søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
+      </td>
+    </tr>
+  {% endif %}
 {% endfor %}

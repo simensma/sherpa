@@ -16,13 +16,10 @@ $(document).ready(function() {
     });
 
     turleder_search_button.click(function() {
-        perform_search('turledere', turleder_search_input.val());
-    });
-
-    function perform_search(search_type, query) {
+        var query = turleder_search_input.val();
         short_query.hide();
         error.hide();
-        if(search_type !== 'all' && query.length < admin_user_search_char_length) {
+        if(query.length < admin_user_search_char_length) {
             short_query.show();
             return;
         }
@@ -35,10 +32,13 @@ $(document).ready(function() {
         $.ajaxQueue({
             url: register.attr('data-search-url'),
             data: {
-                search_type: search_type,
+                search_type: 'query',
                 query: query
             }
         }).done(function(result) {
+            // Remove again, because the infinite scroller may have added results after the call
+            // was initiated.
+            table.find("tr.result").remove();
             table.append($.parseHTML(result));
         }).fail(function() {
             error.show();
@@ -47,5 +47,24 @@ $(document).ready(function() {
             turleder_search_input.prop('disabled', false);
             turleder_search_button.prop('disabled', false);
         });
-    }
+    });
+
+    table.data('bulk', 0);
+    InfiniteScroller.enable({
+        url: table.attr('data-infinite-scroll-url'),
+        triggerType: 'scroll',
+        triggerOnEnabled: true,
+        trigger: table,
+        container: table,
+        loader: $("div.infinite-scroll-loader"),
+        ajaxData: function() {
+            var bulk = Number(table.data('bulk'));
+            table.data('bulk', bulk + 1);
+            return {
+                bulk: bulk,
+                search_type: 'infinite',
+            };
+        }
+    });
+
 });
