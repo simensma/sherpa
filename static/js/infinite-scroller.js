@@ -72,9 +72,10 @@
         } else if(triggerType === 'button') {
             trigger.on('click.infinite-scroller', load);
         }
-        if(opts.triggerOnEnabled !== undefined && opts.triggerOnEnabled) {
-            load();
-        }
+    };
+
+    InfiniteScroller.trigger = function() {
+        load();
     };
 
     InfiniteScroller.disable = function(opts) {

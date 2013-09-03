@@ -53,7 +53,6 @@ $(document).ready(function() {
     InfiniteScroller.enable({
         url: table.attr('data-infinite-scroll-url'),
         triggerType: 'scroll',
-        triggerOnEnabled: true,
         trigger: table,
         container: table,
         loader: $("div.infinite-scroll-loader"),
@@ -66,5 +65,6 @@ $(document).ready(function() {
             };
         }
     });
+    InfiniteScroller.trigger();
 
 });
