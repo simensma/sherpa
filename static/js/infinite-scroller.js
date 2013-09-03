@@ -21,7 +21,6 @@
         }, fail: function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere elementer. Prøv å oppdatere siden, og scrolle ned igjen.");
         }, always: function(result) {
-            loading = false;
             if(loader !== undefined) {
                 loader.fadeOut();
             }
@@ -100,7 +99,14 @@
         $.ajaxQueue({
             url: url,
             data: ajaxData()
-        }).done(handlers.done).fail(handlers.fail).always(handlers.always);
+        }).done(
+            handlers.done
+        ).fail(
+            handlers.fail
+        ).always(function(result) {
+            loading = false;
+            handlers.always(result);
+        });
     }
 
 }(window.InfiniteScroller = window.InfiniteScroller || {}, jQuery ));
