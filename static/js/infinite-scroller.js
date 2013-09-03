@@ -48,7 +48,15 @@
         container = opts.container;
         loader = opts.loader;
         if(opts.handlers !== undefined) {
-            handlers = opts.handlers;
+            if(opts.handlers.done !== undefined) {
+                handlers.done = opts.handlers.done;
+            }
+            if(opts.handlers.fail !== undefined) {
+                handlers.fail = opts.handlers.fail;
+            }
+            if(opts.handlers.always !== undefined) {
+                handlers.always = opts.handlers.always;
+            }
         }
 
         if(triggerType === 'scroll') {
