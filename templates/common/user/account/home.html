@@ -72,11 +72,11 @@
               {% if user.main_association.site %}</a>{% endif %}
             </td>
           </tr>
-          {% if user.get_profile.turledere.count > 0 %}
+          {% if user.turledere.count > 0 %}
             <tr>
-              <th>Turlederrolle{% if user.get_profile.turledere.count > 1 %}r{% endif %}:</th>
+              <th>Turlederrolle{% if user.turledere.count > 1 %}r{% endif %}:</th>
               <td>
-                {% for turleder in user.get_profile.turledere.all %}
+                {% for turleder in user.turledere.all %}
                   {{ turleder.get_role }} til {{ turleder.date_end|date:"j. F Y" }}
                   {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}

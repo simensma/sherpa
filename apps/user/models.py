@@ -462,7 +462,7 @@ class User(AbstractBaseUser):
             old_ticket.save()
 
         # user.Turleder:
-        Turleder.objects.filter(profile=other_profile).update(profile=self)
+        Turleder.objects.filter(user=other_user).update(user=self)
 
         # page.Page:
         Page.objects.filter(created_by=other_user).update(created_by=self)
@@ -552,7 +552,7 @@ class Turleder(models.Model):
         (u'nærmiljø', u'Nærmiljøturleder'),
         (u'ambassadør', u'DNT Ambassadør'),
         (u'kursleder', u'Kursleder'),)
-    profile = models.ForeignKey(Profile, related_name='turledere')
+    user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
     association = models.ForeignKey('association.Association', related_name='+')
     date_start = models.DateField(null=True)

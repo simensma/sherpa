@@ -12,13 +12,13 @@ from datetime import datetime, date
 import json
 
 from association.models import Association
-from user.models import Profile, Turleder
+from user.models import User, Turleder
 from focus.models import Actor
-from admin.turledere.models import ProfileWrapper
+from admin.turledere.models import UserWrapper
 from user.util import create_inactive_user
 
 def index(request):
-    total_count = Profile.objects.filter(turledere__isnull=False).distinct().count()
+    total_count = User.objects.filter(turledere__isnull=False).distinct().count()
 
     context = {
         'total_count': total_count,
@@ -26,8 +26,8 @@ def index(request):
     }
     return render(request, 'common/admin/turledere/index.html', context)
 
-def edit(request, profile):
-    profile = Profile.objects.get(id=profile)
+def edit(request, user):
+    user = User.objects.get(id=user)
 
     if request.method == 'GET':
 
@@ -41,7 +41,7 @@ def edit(request, profile):
             five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
 
         context = {
-            'profile': profile,
+            'user': user,
             'turleder_roles': Turleder.TURLEDER_CHOICES,
             'all_associations': Association.sort(Association.objects.all()),
             'today': today,
@@ -53,7 +53,7 @@ def edit(request, profile):
     elif request.method == 'POST':
 
         turledere = json.loads(request.POST['turledere'])
-        profile.turledere.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
+        user.turledere.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
         for turleder in turledere:
             role = turleder['role']
             if turleder['role'] not in [c[0] for c in Turleder.TURLEDER_CHOICES]:
@@ -68,7 +68,7 @@ def edit(request, profile):
             else:
                 turleder = Turleder()
 
-            turleder.profile = profile
+            turleder.user = user
             turleder.role = role
             turleder.association = association
             turleder.date_start = date_start
@@ -76,14 +76,14 @@ def edit(request, profile):
             turleder.save()
 
         messages.info(request, "success")
-        return redirect('admin.turledere.views.edit', profile.id)
+        return redirect('admin.turledere.views.edit', user.id)
 
     else:
         return redirect('admin.turledere.views.edit')
 
 def create_and_edit(request, memberid):
-    profile = create_inactive_user(memberid)
-    return redirect('admin.turledere.views.edit', profile.id)
+    user = create_inactive_user(memberid)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def search(request):
     if request.POST['search_type'] != 'all' and len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
@@ -97,18 +97,18 @@ def search(request):
             Q(memberid__icontains=word))
 
     if request.POST['search_type'] == 'turledere':
-        turledere = Profile.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors])
-        profiles = sorted(turledere, key=lambda p: p.get_full_name())
+        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors])
+        users = sorted(turledere, key=lambda u: u.get_full_name())
     elif request.POST['search_type'] == 'members':
-        members = Profile.objects.filter(memberid__in=[a.memberid for a in actors])
-        actors_without_profile = [ProfileWrapper(a, a.memberid) for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
-        profiles = sorted(list(members) + list(actors_without_profile), key=lambda p: p.get_full_name())
+        members = User.objects.filter(memberid__in=[a.memberid for a in actors])
+        actors_without_user = [UserWrapper(a, a.memberid) for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
+        users = sorted(list(members) + list(actors_without_user), key=lambda u: u.get_full_name())
     elif request.POST['search_type'] == 'all':
-        turledere = Profile.objects.filter(turledere__isnull=False).distinct().prefetch_related('turledere', 'turledere__association')
-        profiles = sorted(list(turledere), key=lambda p: p.get_actor().get_full_name())
+        turledere = User.objects.filter(turledere__isnull=False).distinct().prefetch_related('turledere', 'turledere__association')
+        users = sorted(list(turledere), key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
-        'profiles': profiles,
+        'users': users,
         'search_type': request.POST['search_type'],
         'query': request.POST['query']
     })

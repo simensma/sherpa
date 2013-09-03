@@ -1,11 +1,11 @@
-{% for profile in profiles %}
-  {% if profile.is_wrapper or profile.turledere.count == 0 %}
+{% for user in users %}
+  {% if user.is_wrapper or user.turledere.count == 0 %}
     <tr class="result">
       <td>
-        {% if profile.is_wrapper %}
-          <a href="{% url 'admin.turledere.views.create_and_edit' profile.memberid %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
+        {% if user.is_wrapper %}
+          <a href="{% url 'admin.turledere.views.create_and_edit' user.memberid %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
         {% else %}
-          <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
+          <a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
         {% endif %}
       </td>
       <td colspan="4">
@@ -13,11 +13,11 @@
       </td>
     </tr>
   {% else %}
-    {% for turleder in profile.turledere.all %}
+    {% for turleder in user.turledere.all %}
       <tr class="result{% if not forloop.first %} hide-border{% endif %}">
         <td>
           {% if forloop.first %}
-            <a href="{% url 'admin.turledere.views.edit' profile.id %}">{{ profile.get_full_name }} ({{ profile.memberid }})</a>
+            <a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
           {% endif %}
         </td>
         <td>
