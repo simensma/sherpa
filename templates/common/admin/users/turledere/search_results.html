@@ -38,12 +38,8 @@
 {% empty %}
   <tr class="result no-results">
     <td colspan="5">
-      {% if search_type == 'turledere' %}
-        Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
-        Prøv søkeboksen i midten for å se om han/henne finnes, men ikke er turleder.
-      {% elif search_type == 'members' %}
-        Beklager, fant ingen medlemmer med navn eller medlemsnummer <span class="query">{{ query }}</span>.
-      {% endif %}
+      Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
+      Du kan søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
     </td>
   </tr>
 {% endfor %}

@@ -25,16 +25,9 @@
 
   <div class="search-area">
     <div class="row">
-      <div class="span4">
-        <input type="text" name="turleder" placeholder="Søk etter turledere..." class="input-large">
+      <div class="span12">
+        <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
         <button class="btn input-button-align turleder-search"><i class="icon-search"></i></button>
-      </div>
-      <div class="span4">
-        <input type="text" name="member" placeholder="Opprett ny turleder..." class="input-large">
-        <button class="btn input-button-align member-search"><i class="icon-search"></i></button>
-      </div>
-      <div class="span4">
-        <button class="btn list-all">Vis alle turledere i én liste</button>
       </div>
     </div>
   </div>
@@ -48,27 +41,6 @@
           <th>Godkjent av</th>
           <th>Startdato</th>
           <th>Sluttdato</th>
-        </tr>
-        <tr class="instructions">
-          <td colspan="5">
-            <div class="row-fluid">
-              <div class="span4">
-                <div class="alert alert-info">
-                  Bruk søkeboksen til venstre til å finne turledere.
-                </div>
-              </div>
-              <div class="span4">
-                <div class="alert alert-info">
-                  Bruk søkeboksen i midten til å finne medlemmer du vil opprette turlederstatus på. Den søker blant alle medlemmene i DNT.
-                </div>
-              </div>
-              <div class="span4">
-                <div class="alert alert-info">
-                  Bruk knappen til høyre til å liste ut alle {{ total_count }} turlederne &mdash; dette tar litt tid.
-                </div>
-              </div>
-            </div>
-          </td>
         </tr>
         <tr class="short-query hide">
           <td colspan="5">
