@@ -128,7 +128,8 @@ def search(request):
         context = RequestContext(request, {
             'users': users,
             'search_type': request.POST['search_type'],
-            'association': association
+            'association': association,
+            'first_bulk': request.POST['bulk'] == '0'
         })
         return HttpResponse(json.dumps({
             'complete': len(users) == 0,
