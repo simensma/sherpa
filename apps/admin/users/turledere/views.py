@@ -97,7 +97,7 @@ def search(request):
             Q(memberid__icontains=word))
 
     if request.POST['search_type'] == 'turledere':
-        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors])
+        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct()
         users = sorted(turledere, key=lambda u: u.get_full_name())
     elif request.POST['search_type'] == 'members':
         members = User.objects.filter(memberid__in=[a.memberid for a in actors])
