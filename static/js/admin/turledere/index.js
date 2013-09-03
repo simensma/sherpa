@@ -16,6 +16,7 @@ $(document).ready(function() {
     });
 
     turleder_search_button.click(function() {
+        table.find("tr.result").remove();
         var query = turleder_search_input.val();
         short_query.hide();
         error.hide();
@@ -24,7 +25,6 @@ $(document).ready(function() {
             return;
         }
         loading.show();
-        table.find("tr.result").remove();
 
         turleder_search_input.prop('disabled', true);
         turleder_search_button.prop('disabled', true);
