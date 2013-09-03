@@ -85,6 +85,10 @@
         load();
     };
 
+    InfiniteScroller.end = function() {
+        complete = true;
+    };
+
     InfiniteScroller.reset = function() {
         complete = false;
     };
