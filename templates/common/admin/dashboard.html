@@ -73,14 +73,17 @@
 
         {% endif %}
 
-        <li>
-          <a href="{% url 'admin.images.views.index' %}">
-            <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
-          </a>
-          <h2><a href="{% url 'admin.images.views.index' %}">Bildearkiv</a></h2>
-          <p>Finn bilder eller last opp nye. Det gamle bildearkivet finner du foreløpig i <a href="https://{{ old_site }}/admin/">gamle sherpa</a>, mens vi jobber med å flytte dem hit.</p>
-          <div style="clear: both;"></div>
-        </li>
+        {# Explicitly hide images for non-central users for now #}
+        {% if active_association.id == 56 %}{# DNT Central #}
+          <li>
+            <a href="{% url 'admin.images.views.index' %}">
+              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
+            </a>
+            <h2><a href="{% url 'admin.images.views.index' %}">Bildearkiv</a></h2>
+            <p>Finn bilder eller last opp nye. Det gamle bildearkivet finner du foreløpig i <a href="https://{{ old_site }}/admin/">gamle sherpa</a>, mens vi jobber med å flytte dem hit.</p>
+            <div style="clear: both;"></div>
+          </li>
+        {% endif %}
 
         {% if active_association.site %}
           <li>
