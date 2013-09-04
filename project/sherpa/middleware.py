@@ -102,7 +102,7 @@ class CheckSherpaPermissions(object):
                     u'/sherpa/cms/',
                     u'/sherpa/nyheter/',
                     u'/sherpa/annonser/',
-                    u'/sherpa/analyse/søk/'
+                    u'/sherpa/analyse/'
                 ]
                 for path in site_required_paths:
                     if request.path.startswith(path):
