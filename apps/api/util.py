@@ -86,7 +86,6 @@ def requested_representation_from_header(request):
             subtype, version = subtype.rsplit('.', 1)
 
         if version not in supported_versions:
-            print("NOT SUPPORTING %s" % version)
             # Unsupported version, skip
             continue
 
