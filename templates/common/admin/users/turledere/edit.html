@@ -12,7 +12,7 @@
   <div class="row">
     <div class="span12">
 
-      <h2>{{ user.get_full_name }}, medlemsnr. {{ user.memberid }}</h2>
+      <h2>{{ turleder.get_full_name }}, medlemsnr. {{ turleder.memberid }}</h2>
 
       {% for message in messages %}
         {% if message.message == 'success' %}
@@ -31,7 +31,7 @@
           <th>Sluttdato</th>
           <th>Slett</th>
         </tr>
-        {% for turleder in user.turledere.all %}
+        {% for turleder in turleder.turledere.all %}
           <tr data-turleder="{{ turleder.id }}">
             {% include 'common/admin/users/turledere/edit_row.html' %}
           </tr>
@@ -47,7 +47,7 @@
         </tr>
       </table>
 
-      <form action="{% url 'admin.users.turledere.views.edit' user.id %}" method="post" class="save">
+      <form action="{% url 'admin.users.turledere.views.edit' turleder.id %}" method="post" class="save">
         {% csrf_token %}
         <input type="hidden" name="turledere" value="">
         <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>

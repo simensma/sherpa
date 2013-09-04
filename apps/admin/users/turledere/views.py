@@ -27,7 +27,7 @@ def index(request):
     return render(request, 'common/admin/users/turledere/index.html', context)
 
 def edit(request, user):
-    user = User.objects.get(id=user)
+    turleder = User.objects.get(id=user)
 
     if request.method == 'GET':
 
@@ -41,7 +41,7 @@ def edit(request, user):
             five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
 
         context = {
-            'user': user,
+            'turleder': turleder,
             'turleder_roles': Turleder.TURLEDER_CHOICES,
             'all_associations': Association.sort(Association.objects.all()),
             'today': today,
