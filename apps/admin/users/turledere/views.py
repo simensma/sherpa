@@ -57,7 +57,7 @@ def edit(request, user):
             if turleder['role'] not in [c[0] for c in Turleder.TURLEDER_CHOICES]:
                 raise PermissionDenied
 
-            association = Association.objects.get(id=turleder['association'])
+            association_approved = Association.objects.get(id=turleder['association_approved'])
             date_start = datetime.strptime(turleder['date_start'], '%d.%m.%Y').date()
             date_end = datetime.strptime(turleder['date_end'], '%d.%m.%Y').date()
 
@@ -68,7 +68,7 @@ def edit(request, user):
 
             turleder.user = user
             turleder.role = role
-            turleder.association = association
+            turleder.association_approved = association_approved
             turleder.date_start = date_start
             turleder.date_end = date_end
             turleder.save()
@@ -95,7 +95,7 @@ def search(request):
                 Q(last_name__icontains=word) |
                 Q(memberid__icontains=word))
 
-        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct().prefetch_related('turledere', 'turledere__association')
+        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct().prefetch_related('turledere', 'turledere__association_approved')
         users = sorted(turledere, key=lambda u: u.get_full_name())
 
         context = RequestContext(request, {
@@ -117,10 +117,10 @@ def search(request):
         # Note that the *first request* will be slow, after sorting all turledere once.
         turledere = User.objects.filter(turledere__isnull=False)
         association = None
-        if request.POST['turleder_association'] != '':
-            association = Association.objects.get(id=request.POST['turleder_association'])
-            turledere = turledere.filter(turledere__association=association)
-        turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association')
+        if request.POST['turleder_association_approved'] != '':
+            association = Association.objects.get(id=request.POST['turleder_association_approved'])
+            turledere = turledere.filter(turledere__association_approved=association)
+        turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association_approved')
         users = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
 
         context = RequestContext(request, {

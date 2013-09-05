@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     function addHandlers(item) {
         item.find("select[name='role']").chosen({disable_search: true});
-        item.find("select[name='association']").chosen();
+        item.find("select[name='association_approved']").chosen();
         item.find("div.input-append.date").datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
@@ -30,7 +30,7 @@ $(document).ready(function() {
         var turledere = [];
         table.find("tr[data-turleder]").each(function() {
             var role = $(this).find("select[name='role'] option:selected").val();
-            var association = $(this).find("select[name='association'] option:selected").val();
+            var association_approved = $(this).find("select[name='association_approved'] option:selected").val();
             var date_start = $(this).find("input[name='date_start']").val();
             var date_end = $(this).find("input[name='date_end']").val();
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
                 e.preventDefault();
             }
 
-            if(association === '') {
+            if(association_approved === '') {
                 alert("Du må angi hvilken forening som godkjente turlederen.");
                 e.preventDefault();
             }
@@ -47,7 +47,7 @@ $(document).ready(function() {
             turledere.push({
                 id: $(this).attr('data-turleder'),
                 role: role,
-                association: association,
+                association_approved: association_approved,
                 date_start: date_start,
                 date_end: date_end
             });

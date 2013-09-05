@@ -7,16 +7,16 @@
   </select>
 </td>
 <td>
-  <select name="association" data-placeholder="Velg foreningen som godkjente turlederen...">
+  <select name="association_approved" data-placeholder="Velg foreningen som godkjente turlederen...">
     <option value=""></option>
     <optgroup label="Sentralt/nasjonalt">
       {% for association in all_associations.central %}
-        <option value="{{ association.id }}"{% if turleder.association == association %} selected{% endif %}>{{ association.name }}</option>
+        <option value="{{ association.id }}"{% if turleder.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
       {% endfor %}
     </optgroup>
     <optgroup label="Medlemsforeninger">
       {% for association in all_associations.associations %}
-        <option value="{{ association.id }}"{% if turleder.association == association %} selected{% endif %}>{{ association.name }}</option>
+        <option value="{{ association.id }}"{% if turleder.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
       {% endfor %}
     </optgroup>
   </select>

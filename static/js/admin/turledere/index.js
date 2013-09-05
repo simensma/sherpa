@@ -4,9 +4,9 @@ $(document).ready(function() {
 
     var turleder_search_input = register.find("input[name='turleder']");
     var turleder_search_button = register.find("button.turleder-search");
-    var turleder_association = register.find("select[name='association']");
+    var turleder_association_approved = register.find("select[name='association_approved']");
 
-    turleder_association.chosen({
+    turleder_association_approved.chosen({
         'allow_single_deselect': true
     });
 
@@ -65,7 +65,7 @@ $(document).ready(function() {
             return {
                 bulk: bulk,
                 search_type: 'infinite',
-                turleder_association: turleder_association.find("option:selected").val()
+                turleder_association_approved: turleder_association_approved.find("option:selected").val()
             };
         },
         beforeLoad: function() {
@@ -84,7 +84,7 @@ $(document).ready(function() {
     });
     InfiniteScroller.trigger();
 
-    turleder_association.change(function() {
+    turleder_association_approved.change(function() {
         table.data('bulk', 0);
         table.find("tr.result").remove();
         InfiniteScroller.reset();
@@ -94,11 +94,11 @@ $(document).ready(function() {
     function setInputDisabled(disabled) {
         turleder_search_input.prop('disabled', disabled);
         turleder_search_button.prop('disabled', disabled);
-        turleder_association.find("option").prop('disabled', disabled);
-        var tmp = turleder_association.attr('data-placeholder-wait');
-        turleder_association.attr('data-placeholder-wait', turleder_association.attr('data-placeholder'));
-        turleder_association.attr('data-placeholder', tmp);
-        turleder_association.trigger('liszt:updated');
+        turleder_association_approved.find("option").prop('disabled', disabled);
+        var tmp = turleder_association_approved.attr('data-placeholder-wait');
+        turleder_association_approved.attr('data-placeholder-wait', turleder_association_approved.attr('data-placeholder'));
+        turleder_association_approved.attr('data-placeholder', tmp);
+        turleder_association_approved.trigger('liszt:updated');
     }
 
 });

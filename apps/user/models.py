@@ -554,7 +554,7 @@ class Turleder(models.Model):
         (u'kursleder', u'Kursleder'),)
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
-    association = models.ForeignKey('association.Association', related_name='+')
+    association_approved = models.ForeignKey('association.Association', related_name='turledere_approved')
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
 
