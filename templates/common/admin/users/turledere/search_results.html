@@ -1,5 +1,12 @@
 {% load sort_by_turleder_role %}
 
+{% if first_bulk and users|length > 0 %}
+  <tr class="result no-results">
+    <td colspan="5">
+      Totalt <strong>{{ total_count }}</strong> turledere i dette søket.
+    </td>
+  </tr>
+{% endif %}
 {% for user in users %}
   {% for turleder in user.turledere.all|sort_by_turleder_role %}
     <tr class="result{% if not forloop.first %} hide-border{% endif %}">

@@ -15,66 +15,76 @@
 {% block body %}
 
 <div class="turlederregister">
-  <div class="row">
-    <div class="span12">
-      <div class="count">
-        Totalt {{ total_count }} turledere i registeret.
-      </div>
-    </div>
-  </div>
-
   <div class="search-area">
     <div class="row">
       <div class="span12">
 
-        <div class="form-border filters">
+        <div class="form-border form-default form-horizontal filters">
+          {% csrf_token %}
 
-          <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)...">
-          <br>
+          <div class="control-group">
+            <label class="control-label">Navn/medlemsnummer</label>
+            <div class="controls">
+              <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
+            </div>
+          </div>
 
-          Vis turledere som er aktive i
-          <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
-            <option value=""></option>
-            <optgroup label="Medlemsforeninger">
-              {% for association in user.all_associations_sorted.associations %}
-                <option value="{{ association.id }}">{{ association.name }}</option>
-              {% endfor %}
-            </optgroup>
-          </select>
+          <div class="control-group">
+            <label class="control-label">Turledere som er aktive i</label>
+            <div class="controls">
+              <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
+                <option value=""></option>
+                <optgroup label="Medlemsforeninger">
+                  {% for association in user.all_associations_sorted.associations %}
+                    <option value="{{ association.id }}">{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+          </div>
 
-          <p>
-            Vis turledere som har
-            <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
-              <option value=""></option>
-              {% for role in turleder_roles %}
-                <option value="{{ role.0 }}">{{ role.1 }}</option>
-              {% endfor %}
-            </select>
-
-            <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også sommerturledere og vinterturledere.">
-              <input type="checkbox" name="include_all_certificates" checked>
-              Inkluder sertifikat med høyere nivå
-            </label>
-            <br>
-
-            Ett av sertifikatene må være godkjent av
-            <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
-              <option value=""></option>
-              <optgroup label="Sentralt/nasjonalt">
-                {% for association in user.all_associations_sorted.central %}
-                  <option value="{{ association.id }}">{{ association.name }}</option>
+          <div class="control-group">
+            <label class="control-label">Turledere som har</label>
+            <div class="controls">
+              <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
+                <option value=""></option>
+                {% for role in turleder_roles %}
+                  <option value="{{ role.0 }}">{{ role.1 }}</option>
                 {% endfor %}
-              </optgroup>
-              <optgroup label="Medlemsforeninger">
-                {% for association in user.all_associations_sorted.associations %}
-                  <option value="{{ association.id }}">{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            </select>
-            <br>
-          </p>
+              </select>
 
-          <button class="btn search">Søk etter turledere med dette filteret...</button>
+              <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også sommerturledere og vinterturledere.">
+                <input type="checkbox" name="include_all_certificates" checked>
+                Inkluder sertifikat med høyere nivå
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Ett av sertifikatene må være godkjent av</label>
+            <div class="controls">
+              <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
+                <option value=""></option>
+                <optgroup label="Sentralt/nasjonalt">
+                  {% for association in user.all_associations_sorted.central %}
+                    <option value="{{ association.id }}">{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+                <optgroup label="Medlemsforeninger">
+                  {% for association in user.all_associations_sorted.associations %}
+                    <option value="{{ association.id }}">{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="controls">
+              <button class="btn search"><i class="icon-search"></i> Søk etter turledere med dette filteret...</button>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

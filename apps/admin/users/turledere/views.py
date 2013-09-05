@@ -15,10 +15,7 @@ from user.models import User, Turleder
 from focus.models import Actor
 
 def index(request):
-    total_count = User.objects.filter(turledere__isnull=False).distinct().count()
-
     context = {
-        'total_count': total_count,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
         'turleder_roles': Turleder.TURLEDER_CHOICES
     }
@@ -130,11 +127,13 @@ def search(request):
     start = int(request.POST['bulk']) * BULK_COUNT
     end = start + BULK_COUNT
     turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association_approved')
+    total_count = turledere.count()
     turledere = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
 
     context = RequestContext(request, {
         'users': turledere,
-        'first_bulk': request.POST['bulk'] == '0'
+        'first_bulk': request.POST['bulk'] == '0',
+        'total_count': total_count
     })
     return HttpResponse(json.dumps({
         'complete': len(turledere) == 0,
