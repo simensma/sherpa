@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -14,7 +13,6 @@ import json
 from association.models import Association
 from user.models import User, Turleder
 from focus.models import Actor
-from admin.users.turledere.models import UserWrapper
 from user.util import create_inactive_user
 
 def index(request):
