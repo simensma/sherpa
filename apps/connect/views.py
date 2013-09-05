@@ -28,7 +28,7 @@ def connect(request, method):
         raise PermissionDenied
 
     # Redirect to provided url, or the default if none provided
-    redirect_url = request.GET['redirect_url'] if request.GET.get('redirect_url') is not None else client['default_redirect_url']
+    redirect_url = request_data['redirect_url'] if 'redirect_url' in request_data else client['default_redirect_url']
 
     response_data = {}
 
