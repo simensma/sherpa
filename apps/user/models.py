@@ -46,6 +46,10 @@ class User(AbstractBaseUser):
     associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
+    # If turleder, where this turleder is active. The user.Turleder model defines certificates.
+    # It's possible, but not correct, that this field has references when there are none in user.Turleder.
+    turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
+
 
     #
     # Membership/Focus
