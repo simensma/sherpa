@@ -7,8 +7,19 @@ div.turlederregister {
   }
 
   div.search-area {
-    div.span4 {
-      text-align: center;
+    div.filters, div.filters * {
+      font-family: "DTL Nobel" !important;
+    }
+
+    div.filters {
+      input[name='turleder'] {
+        width: 820px;
+        max-width: 100%;
+      }
+
+      label.include-all-certificates {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -23,7 +34,7 @@ div.turlederregister {
       }
     }
 
-    tr.short-query, tr.loading, tr.technical-error, tr.no-results {
+    tr.short-query, tr.no-results {
       td {
         padding-top: 10px;
         text-align: center;

@@ -20,7 +20,8 @@ def index(request):
 
     context = {
         'total_count': total_count,
-        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
+        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
+        'turleder_roles': Turleder.TURLEDER_CHOICES
     }
     return render(request, 'common/admin/users/turledere/index.html', context)
 
@@ -88,7 +89,9 @@ def create_and_edit(request, memberid):
     return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
-    if request.POST['search_type'] == 'query':
+    turledere = User.objects.filter(turledere__isnull=False)
+
+    if len(request.POST['query']) > 0:
         if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
             raise PermissionDenied
 
@@ -99,41 +102,46 @@ def search(request):
                 Q(last_name__icontains=word) |
                 Q(memberid__icontains=word))
 
-        turledere = User.objects.filter(turledere__isnull=False, memberid__in=[a.memberid for a in actors]).distinct().prefetch_related('turledere', 'turledere__association_approved')
-        users = sorted(turledere, key=lambda u: u.get_full_name())
+        turledere = turledere.filter(memberid__in=[a.memberid for a in actors])
 
-        context = RequestContext(request, {
-            'users': users,
-            'query': request.POST['query'],
-            'search_type': request.POST['search_type']
-        })
-        return HttpResponse(json.dumps({
-            'complete': len(users) == 0,
-            'html': render_to_string('common/admin/users/turledere/search_results.html', context)
-        }))
+    # Filter on associations where the turleder is active
+    active_associations = json.loads(request.POST['turleder_associations_active'])
+    if len(active_associations) > 0:
+        turledere = turledere.filter(turleder_active_associations__in=active_associations)
 
-    elif request.POST['search_type'] == 'infinite':
-        BULK_COUNT = 40
-        start = int(request.POST['bulk']) * BULK_COUNT
-        end = start + BULK_COUNT
+    turleder_role = request.POST['turleder_role']
+    if turleder_role != '':
+        if json.loads(request.POST['turleder_role_include']):
+            roles = []
+            found = False
+            for i in reversed(range(0, len(Turleder.TURLEDER_CHOICES) - 1)):
+                if Turleder.TURLEDER_CHOICES[i][0] == turleder_role:
+                    found = True
+                if found:
+                    roles.append(Turleder.TURLEDER_CHOICES[i][0])
+        else:
+            roles = [request.POST['turleder_role']]
+        turledere = turledere.filter(turledere__role__in=roles)
 
-        # We want to sort on name, which is in Focus. Actors are cached, so this will only be slow once.
-        # Note that the *first request* will be slow, after sorting all turledere once.
-        turledere = User.objects.filter(turledere__isnull=False)
-        association = None
-        if request.POST['turleder_association_approved'] != '':
-            association = Association.objects.get(id=request.POST['turleder_association_approved'])
-            turledere = turledere.filter(turledere__association_approved=association)
-        turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association_approved')
-        users = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
+    # Filter on certificates approved by some association
+    association_approved = None
+    if request.POST['turleder_association_approved'] != '':
+        association_approved = Association.objects.get(id=request.POST['turleder_association_approved'])
+        turledere = turledere.filter(turledere__association_approved=association_approved)
 
-        context = RequestContext(request, {
-            'users': users,
-            'search_type': request.POST['search_type'],
-            'association': association,
-            'first_bulk': request.POST['bulk'] == '0'
-        })
-        return HttpResponse(json.dumps({
-            'complete': len(users) == 0,
-            'html': render_to_string('common/admin/users/turledere/search_results.html', context)
-        }))
+    # Clean up, prefetch and sort by name. Names must be fetched from Focus for each hit,
+    # hence slow. Actors are cached, so it will only be slow once.
+    BULK_COUNT = 40
+    start = int(request.POST['bulk']) * BULK_COUNT
+    end = start + BULK_COUNT
+    turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association_approved')
+    turledere = sorted(turledere, key=lambda u: u.get_full_name())[start:end]
+
+    context = RequestContext(request, {
+        'users': turledere,
+        'first_bulk': request.POST['bulk'] == '0'
+    })
+    return HttpResponse(json.dumps({
+        'complete': len(turledere) == 0,
+        'html': render_to_string('common/admin/users/turledere/search_results.html', context)
+    }))

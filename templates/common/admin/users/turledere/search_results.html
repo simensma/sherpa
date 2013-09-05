@@ -38,29 +38,17 @@
     {% endfor %}
   {% endif %}
 {% empty %}
-  {% if search_type == 'query' %}
+  {% if first_bulk %}
     <tr class="result no-results">
       <td colspan="5">
-        Beklager, fant ingen turledere med navn eller medlemsnummer <span class="query">{{ query }}</span>.<br>
-        Du kan søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
+        Beklager, fant ingen turledere på dette søket.<br>
+        Du kan prøve å søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
       </td>
     </tr>
-  {% elif search_type == 'infinite' %}
+  {% else %}
     <tr class="result no-results">
       <td colspan="5">
-        {% if not association %}
-        <strong>
-          <em>
-            Det er ingen flere turledere i registeret &mdash; du har bladd deg gjennom alle. Godt gjort!
-          </em>
-        </strong>
-        {% else %}
-          {% if first_bulk %}
-            <strong>{{ association.name }}</strong> har ikke godkjent noen turledere ennå.
-          {% else %}
-            Dette var alle turlederne godkjent av <strong>{{ association.name }}</strong>.
-          {% endif %}
-        {% endif %}
+        Dette var alle turlederne som matchet søket ditt.
       </td>
     </tr>
   {% endif %}

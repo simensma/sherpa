@@ -14,7 +14,7 @@
 
 {% block body %}
 
-<div class="turlederregister" data-search-url="{% url 'admin.users.turledere.views.search' %}">
+<div class="turlederregister">
   <div class="row">
     <div class="span12">
       <div class="count">
@@ -26,30 +26,56 @@
   <div class="search-area">
     <div class="row">
       <div class="span12">
-        <p>
-          <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
-          <button class="btn input-button-align turleder-search"><i class="icon-search"></i></button>
-          <br>
-          Vis turledere godkjent av
 
-          <select name="association_approved" class="chosen" data-placeholder="velg en forening..." data-placeholder-wait="(vent mens siden laster...)">
+        <div class="form-border filters">
+
+          <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)...">
+          <br>
+
+          Vis turledere som er aktive i
+          <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
             <option value=""></option>
-            {% if user.all_associations_sorted.central|length > 0 %}
+            <optgroup label="Medlemsforeninger">
+              {% for association in user.all_associations_sorted.associations %}
+                <option value="{{ association.id }}">{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          </select>
+
+          <p>
+            Vis turledere som har
+            <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
+              <option value=""></option>
+              {% for role in turleder_roles %}
+                <option value="{{ role.0 }}">{{ role.1 }}</option>
+              {% endfor %}
+            </select>
+
+            <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også sommerturledere og vinterturledere.">
+              <input type="checkbox" name="include_all_certificates" checked>
+              Inkluder sertifikat med høyere nivå
+            </label>
+            <br>
+
+            Ett av sertifikatene må være godkjent av
+            <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
+              <option value=""></option>
               <optgroup label="Sentralt/nasjonalt">
                 {% for association in user.all_associations_sorted.central %}
-                  <option value="{{ association.id }}" data-type="sentral">{{ association.name }}</option>
+                  <option value="{{ association.id }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
-            {% endif %}
-            {% if user.all_associations_sorted.associations|length > 0 %}
               <optgroup label="Medlemsforeninger">
                 {% for association in user.all_associations_sorted.associations %}
                   <option value="{{ association.id }}">{{ association.name }}</option>
                 {% endfor %}
               </optgroup>
-            {% endif %}
-          </select>
-        </p>
+            </select>
+            <br>
+          </p>
+
+          <button class="btn search">Søk etter turledere med dette filteret...</button>
+
       </div>
     </div>
   </div>
@@ -67,12 +93,6 @@
         <tr class="short-query hide">
           <td colspan="5">
             Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
-          </td>
-        </tr>
-        <tr class="loading hide">
-          <td colspan="5">
-            Søker i turlederregisteret, vennligst vent...<br>
-            <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
           </td>
         </tr>
         <tr class="technical-error hide">
