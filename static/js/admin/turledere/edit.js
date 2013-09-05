@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var register = $("div.turlederregister");
     var table = register.find("table.edit");
+    var active_associations = register.find("select[name='active_associations']");
     var form = register.find("form.save");
 
     function addHandlers(item) {
@@ -27,6 +28,11 @@ $(document).ready(function() {
     });
 
     form.submit(function(e) {
+        var active_association_ids = [];
+        active_associations.find("option:selected").each(function() {
+            active_association_ids.push($(this).val());
+        });
+        form.find("input[name='active_association_ids']").val(JSON.stringify(active_association_ids));
         var turledere = [];
         table.find("tr[data-turleder]").each(function() {
             var role = $(this).find("select[name='role'] option:selected").val();

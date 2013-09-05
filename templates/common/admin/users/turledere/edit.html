@@ -8,7 +8,7 @@
 
 {% block body %}
 
-<div class="turlederregister">
+<div class="turlederregister turlederregister-edit">
   <div class="row">
     <div class="span12">
 
@@ -22,6 +22,18 @@
           </div>
         {% endif %}
       {% endfor %}
+
+      <h3>Aktiv i følgende foreninger:</h3>
+      <p>
+        <select name="active_associations" data-chosen data-placeholder="Velg foreninger som denne turlederen er aktiv i..." multiple>
+          <option value=""></option>
+          <optgroup label="Medlemsforeninger">
+            {% for association in all_associations.associations %}
+              <option value="{{ association.id }}"{% if association in turleder.turleder_active_associations.all %} selected{% endif %}>{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        </select>
+      </p>
 
       <table class="table edit">
         <tr>
@@ -49,6 +61,7 @@
 
       <form action="{% url 'admin.users.turledere.views.edit' turleder.id %}" method="post" class="save">
         {% csrf_token %}
+        <input type="hidden" name="active_association_ids" value="">
         <input type="hidden" name="turledere" value="">
         <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>
       </form>

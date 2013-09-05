@@ -50,6 +50,10 @@ def edit(request, user):
 
     elif request.method == 'POST':
 
+        user.turleder_active_associations.clear()
+        for association_id in json.loads(request.POST['active_association_ids']):
+            user.turleder_active_associations.add(Association.objects.get(id=association_id))
+
         turledere = json.loads(request.POST['turledere'])
         user.turledere.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
         for turleder in turledere:
