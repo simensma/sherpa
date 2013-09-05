@@ -8,6 +8,7 @@
 
 {% load association_role %}
 {% load friendlyrole %}
+{% load sort_by_turleder_role %}
 
 {% block body %}
 
@@ -566,7 +567,7 @@
     <h3>Turledersertifikat</h3>
 
     <p>
-      {% for turleder in other_user.turledere.all %}
+      {% for turleder in other_user.turledere.all|sort_by_turleder_role %}
         {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
       {% empty %}
         Ingen turledersertifikat. <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">Registrer som turleder</a>

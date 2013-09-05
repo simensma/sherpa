@@ -1,3 +1,5 @@
+{% load sort_by_turleder_role %}
+
 {% for user in users %}
   {% if user.is_wrapper or user.turledere.count == 0 %}
     <tr class="result">
@@ -13,7 +15,7 @@
       </td>
     </tr>
   {% else %}
-    {% for turleder in user.turledere.all %}
+    {% for turleder in user.turledere.all|sort_by_turleder_role %}
       <tr class="result{% if not forloop.first %} hide-border{% endif %}">
         <td>
           {% if forloop.first %}
