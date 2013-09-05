@@ -13,7 +13,6 @@ import json
 from association.models import Association
 from user.models import User, Turleder
 from focus.models import Actor
-from user.util import create_inactive_user
 
 def index(request):
     total_count = User.objects.filter(turledere__isnull=False).distinct().count()
@@ -83,10 +82,6 @@ def edit(request, user):
 
     else:
         return redirect('admin.users.turledere.views.edit')
-
-def create_and_edit(request, memberid):
-    user = create_inactive_user(memberid)
-    return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
     turledere = User.objects.filter(turledere__isnull=False)

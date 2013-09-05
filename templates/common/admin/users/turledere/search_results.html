@@ -1,42 +1,27 @@
 {% load sort_by_turleder_role %}
 
 {% for user in users %}
-  {% if user.is_wrapper or user.turledere.count == 0 %}
-    <tr class="result">
+  {% for turleder in user.turledere.all|sort_by_turleder_role %}
+    <tr class="result{% if not forloop.first %} hide-border{% endif %}">
       <td>
-        {% if user.is_wrapper %}
-          <a href="{% url 'admin.users.turledere.views.create_and_edit' user.memberid %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
-        {% else %}
+        {% if forloop.first %}
           <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
         {% endif %}
       </td>
-      <td colspan="4">
-        <em>Ikke turleder</em>
+      <td>
+        {{ turleder.get_role }}
+      </td>
+      <td>
+        {{ turleder.association_approved.name }}
+      </td>
+      <td>
+        {{ turleder.date_start|date:"d.m.Y" }}
+      </td>
+      <td{% if turleder.is_expired %} class="expired"{% endif %}>
+        {{ turleder.date_end|date:"d.m.Y" }}
       </td>
     </tr>
-  {% else %}
-    {% for turleder in user.turledere.all|sort_by_turleder_role %}
-      <tr class="result{% if not forloop.first %} hide-border{% endif %}">
-        <td>
-          {% if forloop.first %}
-            <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
-          {% endif %}
-        </td>
-        <td>
-          {{ turleder.get_role }}
-        </td>
-        <td>
-          {{ turleder.association_approved.name }}
-        </td>
-        <td>
-          {{ turleder.date_start|date:"d.m.Y" }}
-        </td>
-        <td{% if turleder.is_expired %} class="expired"{% endif %}>
-          {{ turleder.date_end|date:"d.m.Y" }}
-        </td>
-      </tr>
-    {% endfor %}
-  {% endif %}
+  {% endfor %}
 {% empty %}
   {% if first_bulk %}
     <tr class="result no-results">
