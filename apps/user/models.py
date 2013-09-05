@@ -563,3 +563,8 @@ class Turleder(models.Model):
 
     def is_expired(self):
         return self.date_end <= date.today()
+
+    @staticmethod
+    def sort_by_role(roles):
+        order = {i[0]: Turleder.TURLEDER_CHOICES.index(i) for i in Turleder.TURLEDER_CHOICES}
+        return sorted(roles, key=lambda t: order[t.role])
