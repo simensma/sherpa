@@ -3,7 +3,6 @@ from django.http import HttpResponse
 import json
 
 from user.models import User
-from user.util import create_inactive_user
 from focus.models import Actor
 from exceptions import BadRequest
 from util import get_member_data
