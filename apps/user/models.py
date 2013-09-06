@@ -558,11 +558,11 @@ class NorwayBusTicket(models.Model):
 
 class Turleder(models.Model):
     TURLEDER_CHOICES = (
+        (u'kursleder', u'Kursleder'),
         (u'vinter', u'Vinterturleder'),
         (u'sommer', u'Sommerturleder'),
         (u'nærmiljø', u'Nærmiljøturleder'),
-        (u'ambassadør', u'DNT Ambassadør'),
-        (u'kursleder', u'Kursleder'),)
+        (u'ambassadør', u'DNT Ambassadør'),)
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
     association_approved = models.ForeignKey('association.Association', related_name='turledere_approved')
