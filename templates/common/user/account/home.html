@@ -74,7 +74,7 @@
           </tr>
           {% if user.turledere.count > 0 %}
             <tr>
-              <th>Turlederrolle{% if user.turledere.count > 1 %}r{% endif %}:</th>
+              <th>Turledersertifikat:</th>
               <td>
                 {% for turleder in user.turledere.all %}
                   {{ turleder.get_role }} til {{ turleder.date_end|date:"j. F Y" }}

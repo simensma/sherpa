@@ -1,5 +1,5 @@
 <td>
-  <select name="role" data-placeholder="Velg turlederrolle...">
+  <select name="role" data-placeholder="Velg sertifikat...">
     <option value=""></option>
     {% for role in turleder_roles %}
       <option value="{{ role.0 }}"{% if turleder.role == role.0 %} selected{% endif %}>{{ role.1 }}</option>
