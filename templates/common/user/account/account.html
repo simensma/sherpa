@@ -329,7 +329,7 @@
                     {{ turleder.association_approved.name }}
                   {% if turleder.is_expired %}</s>{% endif %}
                 </td>
-                <td{% if turleder.is_expired %} class="expired"{% endif %}>
+                <td>
                   {{ turleder.date_start|date:"d.m.Y" }}
                 </td>
                 <td{% if turleder.is_expired %} class="expired"{% endif %}>
