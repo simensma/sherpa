@@ -22,7 +22,7 @@ def index(request):
     return render(request, 'common/admin/users/turledere/index.html', context)
 
 def edit(request, user):
-    user = User.objects.get(id=user)
+    user = User.get_users().get(id=user)
 
     if request.method == 'GET':
 
@@ -81,7 +81,7 @@ def edit(request, user):
         return redirect('admin.users.turledere.views.edit')
 
 def search(request):
-    turledere = User.objects.filter(turledere__isnull=False)
+    turledere = User.get_users().filter(turledere__isnull=False)
 
     if len(request.POST['query']) > 0:
         if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
