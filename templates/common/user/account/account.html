@@ -8,6 +8,7 @@
 
 {% load has_membership_type %}
 {% load advertisement %}
+{% load sort_by_turleder_role %}
 
 {% block body %}
 
@@ -298,22 +299,37 @@
 
           <h2>Turledersertifikat</h2>
 
-          <table class="table">
+          <p>
+            {% if user.turleder_active_associations.count > 0 %}
+              <em>Du er registrert som aktiv turleder i:</em>
+              {% for association in user.turleder_active_associations.all %}
+                <strong>{{ association.name }}</strong>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              <em>Du er ikke registrert som aktiv turleder i noen medlemsforeninger.</em>
+            {% endif %}
+          </p>
+
+          <table class="table turleder-certificates">
             <tr>
               <th>Sertifikat</th>
               <th>Godkjent av</th>
               <th>Startdato</th>
               <th>Sluttdato</th>
             </tr>
-            {% for turleder in user.turledere.all %}
+            {% for turleder in user.turledere.all|sort_by_turleder_role %}
               <tr>
                 <td>
-                  {{ turleder.get_role }}
+                  {% if turleder.is_expired %}<s>{% endif %}
+                    {{ turleder.get_role }}
+                  {% if turleder.is_expired %}</s>{% endif %}
                 </td>
                 <td>
-                  {{ turleder.association_approved.name }}
+                  {% if turleder.is_expired %}<s>{% endif %}
+                    {{ turleder.association_approved.name }}
+                  {% if turleder.is_expired %}</s>{% endif %}
                 </td>
-                <td>
+                <td{% if turleder.is_expired %} class="expired"{% endif %}>
                   {{ turleder.date_start|date:"d.m.Y" }}
                 </td>
                 <td{% if turleder.is_expired %} class="expired"{% endif %}>

@@ -52,6 +52,13 @@ class User(AbstractBaseUser):
 
 
     #
+    # Turleder-stuff
+    #
+
+    def get_highest_turleder_role(self):
+        return Turleder.sort_by_role(self.turledere.all())[0]
+
+    #
     # Membership/Focus
     #
 

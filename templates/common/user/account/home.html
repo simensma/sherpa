@@ -76,10 +76,11 @@
             <tr>
               <th>Turledersertifikat:</th>
               <td>
-                {% for turleder in user.turledere.all %}
-                  {{ turleder.get_role }} til {{ turleder.date_end|date:"j. F Y" }}
-                  {% if not forloop.last %}<br>{% endif %}
-                {% endfor %}
+                {% if user.get_highest_turleder_role.is_expired %}
+                  <a class="turleder-certificate-expired" href="{% url 'user.views.account' %}">Utgått</a>
+                {% else %}
+                  {{ user.get_highest_turleder_role.get_role }} til {{ user.get_highest_turleder_role.date_end|date:"Y" }}
+                {% endif %}
               </td>
             </tr>
           {% endif %}
