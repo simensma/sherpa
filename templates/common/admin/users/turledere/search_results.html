@@ -16,7 +16,9 @@
       {% for turleder in user.turledere.all|sort_by_turleder_role %}
         <div class="row-fluid">
           <div class="span6 no-min-height">
-            {{ turleder.get_role }}
+            {% if turleder.is_expired %}<s>{% endif %}
+              {{ turleder.get_role }}
+            {% if turleder.is_expired %}</s>{% endif %}
           </div>
           <div class="span6 no-min-height{% if turleder.is_expired %} expired{% endif %}">
             {{ turleder.date_start|date:"Y"|default:"?" }}-{{ turleder.date_end|date:"Y"|default:"?" }}
