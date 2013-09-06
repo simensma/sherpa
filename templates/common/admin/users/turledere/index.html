@@ -94,19 +94,16 @@
     <div class="span12">
       <table class="table turledere" data-infinite-scroll-url="{% url 'admin.users.turledere.views.search' %}">
         <tr>
-          <th>Medlem</th>
-          <th>Turledersertifikat</th>
-          <th>Godkjent av</th>
-          <th>Startdato</th>
-          <th>Sluttdato</th>
+          <th>Turleder</th>
+          <th>Aktiv i</th>
         </tr>
         <tr class="short-query hide">
-          <td colspan="5">
+          <td colspan="2">
             Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
           </td>
         </tr>
         <tr class="technical-error hide">
-          <td colspan="5">
+          <td colspan="2">
             <div class="alert alert-error">
               Beklager, det oppstod en teknisk feil!<br>
               Feilen har blitt logget og vi vil fikse den så snart som mulig.

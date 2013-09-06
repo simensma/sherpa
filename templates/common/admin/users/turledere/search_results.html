@@ -2,44 +2,47 @@
 
 {% if first_bulk and users|length > 0 %}
   <tr class="result no-results">
-    <td colspan="5">
+    <td colspan="2">
       Totalt <strong>{{ total_count }}</strong> turledere i dette søket.
     </td>
   </tr>
 {% endif %}
 {% for user in users %}
-  {% for turleder in user.turledere.all|sort_by_turleder_role %}
-    <tr class="result{% if not forloop.first %} hide-border{% endif %}">
-      <td>
-        {% if forloop.first %}
-          <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
-        {% endif %}
-      </td>
-      <td>
-        {{ turleder.get_role }}
-      </td>
-      <td>
-        {{ turleder.association_approved.name }}
-      </td>
-      <td>
-        {{ turleder.date_start|date:"d.m.Y" }}
-      </td>
-      <td{% if turleder.is_expired %} class="expired"{% endif %}>
-        {{ turleder.date_end|date:"d.m.Y" }}
-      </td>
-    </tr>
-  {% endfor %}
+  <tr class="result">
+    <td>
+      <p>
+        <a href="{% url 'admin.users.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
+      </p>
+      {% for turleder in user.turledere.all|sort_by_turleder_role %}
+        <div class="row-fluid">
+          <div class="span6 no-min-height">
+            {{ turleder.get_role }}
+          </div>
+          <div class="span6 no-min-height{% if turleder.is_expired %} expired{% endif %}">
+            {{ turleder.date_start|date:"Y"|default:"?" }}-{{ turleder.date_end|date:"Y"|default:"?" }}
+          </div>
+        </div>
+      {% endfor %}
+    </td>
+    <td>
+      {% for association in user.turleder_active_associations.all %}
+        {{ association.name }}{% if not forloop.last %}<br>{% endif %}
+      {% empty %}
+        <em>Ikke aktiv i noen foreninger.</em>
+      {% endfor %}
+    </td>
+  </tr>
 {% empty %}
   {% if first_bulk %}
     <tr class="result no-results">
-      <td colspan="5">
+      <td colspan="2">
         Beklager, fant ingen turledere på dette søket.<br>
         Du kan prøve å søke på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> for å se om han/henne finnes, men ikke er turleder.
       </td>
     </tr>
   {% else %}
     <tr class="result no-results">
-      <td colspan="5">
+      <td colspan="2">
         Dette var alle turlederne som matchet søket ditt.
       </td>
     </tr>
