@@ -8,453 +8,457 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    {% for message in messages %}
-      {% if message.message == 'invalid_date' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          <strong>Ugyldig datoformat, vennligst prøv igjen!</strong>
-        </div>
-      {% elif message.message == 'unparseable_script' %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          <strong>Klarte ikke å hente ut nødvendig informasjon fra adform-scriptet.</strong><br>
-          Kanskje har formatet endret seg, eller så tok du ikke med riktig del av scriptet?<br>
-          Her er et eksempel på hvordan scriptet bør se ut:<br><br>
-          <pre>
+<div class="advertisement-management">
+
+  <div class="row">
+    <div class="span12">
+      {% for message in messages %}
+        {% if message.message == 'invalid_date' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Ugyldig datoformat, vennligst prøv igjen!</strong>
+          </div>
+        {% elif message.message == 'unparseable_script' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Klarte ikke å hente ut nødvendig informasjon fra adform-scriptet.</strong><br>
+            Kanskje har formatet endret seg, eller så tok du ikke med riktig del av scriptet?<br>
+            Her er et eksempel på hvordan scriptet bør se ut:<br><br>
+            <pre>
 &lt;script language=&quot;javascript&quot; src=&quot;http://track.adform.net/adfscript/?bn=2576249&quot;&gt;&lt;/script&gt;
 &lt;noscript&gt;
   &lt;a href=&quot;http://track.adform.net/C/?bn=2576249;C=0&quot; target=&quot;_blank&quot;&gt;
     &lt;img src=&quot;http://track.adform.net/adfserve/?bn=2576249;srctype=4;ord=[timestamp]&quot; border=&quot;0&quot; width=&quot;940&quot; height=&quot;300&quot; alt=&quot;&quot;/&gt;
   &lt;/a&gt;
 &lt;/noscript&gt;
-          </pre>
-        </div>
-      {% endif %}
-    {% endfor %}
-
-    {% if time_placements|length == 0 %}
-      <p>Ingen tidsbaserte annonser er lagt ut.</p>
-    {% else %}
-      <table class="table placements time">
-        <tr>
-          <th>Annonse</th>
-          <th>Fra og med</th>
-          <th>Til og med</th>
-          <th>Visninger</th>
-          <th>Klikk</th>
-          <th>Status</th>
-        </tr>
-        {% for placement in time_placements %}
-          <tr class="placement {{ placement.time_state }}{% if placement.is_old %} hide{% endif %}"
-            data-id="{{ placement.id }}"
-            data-ad="{{ placement.ad.id }}"
-            data-start-date="{{ placement.start_date|date:"d.m.Y" }}"
-            data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
-            <td>{{ placement.ad.name }}</td>
-            <td>{{ placement.start_date|date:"j. F Y" }}</td>
-            <td>{{ placement.end_date|date:"j. F Y" }}</td>
-            <td>{{ placement.views }}</td>
-            <td>{{ placement.clicks }}</td>
-            <td>
-              {% if placement.is_old %}Utgått{% endif %}
-              {% if placement.is_current %}Aktiv{% endif %}
-              {% if placement.is_new %}På vent{% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-        <tr>
-          <td colspan="6">
-            <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul gamle visninger</a>
-          </td>
-        </tr>
-      </table>
-    {% endif %}
-
-    {% if view_placements|length == 0 %}
-      <p>Ingen visningsbaserte annonser er lagt ut.</p>
-    {% else %}
-      <table class="table placements view">
-        <tr>
-          <th>Annonse</th>
-          <th>Maks visninger</th>
-          <th>Visninger</th>
-          <th>Klikk</th>
-          <th>Status</th>
-        </tr>
-        {% for placement in view_placements %}
-          <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} hide{% endif %}"
-            data-id="{{ placement.id }}"
-            data-ad="{{ placement.ad.id }}"
-            data-view-limit="{{ placement.view_limit }}">
-            <td>{{ placement.ad.name }}</td>
-            <td>{{ placement.view_limit }}</td>
-            <td>{{ placement.views }}</td>
-            <td>{{ placement.clicks }}</td>
-            <td>
-              {% if placement.view_state == 'active' %}Aktiv{% else %}Inaktiv{% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-        <tr>
-          <td colspan="6">
-            <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul inaktive visninger</a>
-          </td>
-        </tr>
-      </table>
-    {% endif %}
-
-    <form class="placement" method="post" action="{% url 'admin.ads.views.create_placement' %}">
-      {% csrf_token %}
-      <table>
-        <tr>
-          <td colspan="2">Annonse</td>
-          <td>
-            <select name="ad" data-chosen>
-              {% for ad in ads %}
-                <option value="{{ ad.id }}">{{ ad.name }}</option>
-              {% endfor %}
-            </select>
-          </td>
-        </tr>
-        <tr class="time">
-          <td><input type="radio" name="adplacement_type" value="time"></td>
-          <td>Start/stopp visning:</td>
-          <td>
-            <div class="input-append date">
-              <input type="text" name="start_date" class="input-medium">
-              <span class="add-on"><i class="icon-th"></i></span>
-            </div>
-            <div class="input-append date">
-              <input type="text" name="end_date" class="input-medium">
-              <span class="add-on"><i class="icon-th"></i></span>
-            </div>
-          </td>
-        </tr>
-        <tr class="view">
-          <td><input type="radio" name="adplacement_type" value="views"></td>
-          <td>Antall visninger:</td>
-          <td>
-            <input type="text" name="view_limit">
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td><button type="submit" class="btn">Legg til annonsevisning</button></td>
-        </tr>
-      </table>
-    </form>
-
-    <h2>Last opp ny annonse</h2>
-
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#fil" data-toggle="tab">Flash/bildefil</a></li>
-      <li><a href="#script" data-toggle="tab">Adform-script</a></li>
-    </ul>
-
-    <div class="tab-content tab-content-visible">
-      <div class="tab-pane active" id="fil">
-
-        <form method="post" action="{% url 'admin.ads.views.create_ad' %}" enctype="multipart/form-data" class="form-default form-horizontal">
-          {% csrf_token %}
-          <input type="hidden" name="type" value="file">
-
-          <div class="control-group">
-            <label class="control-label">Navn:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" name="name">
-            </div>
+            </pre>
           </div>
-
-          <div class="control-group">
-            <label class="control-label">Lenker til (URL):</label>
-            <div class="controls">
-              <input type="text" name="destination" value="http://" class="input-xxlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Last opp fil:</label>
-            <div class="controls">
-              <input type="file" name="ad">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Bilde-fallback for flash:</label>
-            <div class="controls">
-              <input type="file" name="ad_fallback" class="input-xlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Visningsteller-bilde (valgfritt):</label>
-            <div class="controls">
-              <input type="text" name="viewcounter" class="input-xxlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Lenker til (URL):</label>
-            <div class="controls">
-              <input type="text" name="destination" value="http://" class="input-xxlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Bredde x Høyde (kun hvis Flash):</label>
-            <div class="controls">
-              <input type="text" name="width" class="input-small"> x
-              <input type="text" name="height" class="input-small"> (typisk 940 x 300)
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn">Last opp</button>
-            </div>
-          </div>
-
-        </form>
-
-      </div>
-      <div class="tab-pane" id="script">
-
-        <form method="post" action="{% url 'admin.ads.views.create_ad' %}" class="form-default form-horizontal">
-          {% csrf_token %}
-          <input type="hidden" name="type" value="adform-script">
-
-          <div class="control-group">
-            <label class="control-label">Navn:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" name="name">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Lim inn script-kode:</label>
-            <div class="controls">
-              <textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Visningsteller-bilde (valgfritt):</label>
-            <div class="controls">
-              <input type="text" name="viewcounter" class="input-xxlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn">Lagre</button>
-            </div>
-          </div>
-
-        </form>
-
-      </div>
-    </div>
-
-    <table class="table ads">
-      <tr>
-        <th>Navn</th>
-        <th>Lenker til</th>
-        <th>Innhold</th>
-      </tr>
-      {% for ad in ads %}
-        <tr>
-          {% if not ad.is_adform_script %}
-
-            <td class="ad file" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-viewcounter="{{ ad.viewcounter }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">
-              {{ ad.name }}
-            </td>
-            <td>
-              <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
-            </td>
-            <td>
-              <a href="{{ ad.url }}">{{ ad.extension }}</a>
-              {% if ad.fallback_sha1_hash %}
-                <a href="{{ ad.fallback_url }}">{{ ad.fallback_extension }}</a>
-              {% endif %}
-              {% if ad.width and ad.height %}
-                ({{ ad.width }} x {{ ad.height }})
-              {% endif %}
-            </td>
-
-          {% else %}
-
-            <td class="ad adform-script" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-script="{{ ad.content_script }}" data-viewcounter="{{ ad.viewcounter }}">
-              {{ ad.name }}
-            </td>
-            <td>
-              <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
-            </td>
-            <td>
-              Adform-script
-            </td>
-
-          {% endif %}
-        </tr>
+        {% endif %}
       {% endfor %}
-    </table>
-  </div>
-</div>
 
-{# Modals #}
-<div class="modal hide placement time" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Annonsevisning</h3>
-  </div>
-  <div class="modal-body">
-    <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
-      {% csrf_token %}
-      <input type="hidden" name="id" value="">
-      <table>
-        <tr>
-          <td>Annonse</td>
-          <td>
-            <select name="ad" data-chosen>
-              {% for ad in ads %}
-                <option value="{{ ad.id }}">{{ ad.name }}</option>
-              {% endfor %}
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Start/stopp visning:</td>
-          <td>
-            <div class="input-append date">
-              <input type="text" name="start_date" class="input-medium date">
-              <span class="add-on"><i class="icon-th"></i></span>
+      {% if time_placements|length == 0 %}
+        <p>Ingen tidsbaserte annonser er lagt ut.</p>
+      {% else %}
+        <table class="table placements time">
+          <tr>
+            <th>Annonse</th>
+            <th>Fra og med</th>
+            <th>Til og med</th>
+            <th>Visninger</th>
+            <th>Klikk</th>
+            <th>Status</th>
+          </tr>
+          {% for placement in time_placements %}
+            <tr class="placement {{ placement.time_state }}{% if placement.is_old %} hide{% endif %}"
+              data-id="{{ placement.id }}"
+              data-ad="{{ placement.ad.id }}"
+              data-start-date="{{ placement.start_date|date:"d.m.Y" }}"
+              data-end-date="{{ placement.end_date|date:"d.m.Y" }}">
+              <td>{{ placement.ad.name }}</td>
+              <td>{{ placement.start_date|date:"j. F Y" }}</td>
+              <td>{{ placement.end_date|date:"j. F Y" }}</td>
+              <td>{{ placement.views }}</td>
+              <td>{{ placement.clicks }}</td>
+              <td>
+                {% if placement.is_old %}Utgått{% endif %}
+                {% if placement.is_current %}Aktiv{% endif %}
+                {% if placement.is_new %}På vent{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="6">
+              <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul gamle visninger</a>
+            </td>
+          </tr>
+        </table>
+      {% endif %}
+
+      {% if view_placements|length == 0 %}
+        <p>Ingen visningsbaserte annonser er lagt ut.</p>
+      {% else %}
+        <table class="table placements view">
+          <tr>
+            <th>Annonse</th>
+            <th>Maks visninger</th>
+            <th>Visninger</th>
+            <th>Klikk</th>
+            <th>Status</th>
+          </tr>
+          {% for placement in view_placements %}
+            <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} hide{% endif %}"
+              data-id="{{ placement.id }}"
+              data-ad="{{ placement.ad.id }}"
+              data-view-limit="{{ placement.view_limit }}">
+              <td>{{ placement.ad.name }}</td>
+              <td>{{ placement.view_limit }}</td>
+              <td>{{ placement.views }}</td>
+              <td>{{ placement.clicks }}</td>
+              <td>
+                {% if placement.view_state == 'active' %}Aktiv{% else %}Inaktiv{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="6">
+              <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul inaktive visninger</a>
+            </td>
+          </tr>
+        </table>
+      {% endif %}
+
+      <form class="placement" method="post" action="{% url 'admin.ads.views.create_placement' %}">
+        {% csrf_token %}
+        <table>
+          <tr>
+            <td colspan="2">Annonse</td>
+            <td>
+              <select name="ad" data-chosen>
+                {% for ad in ads %}
+                  <option value="{{ ad.id }}">{{ ad.name }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr class="time">
+            <td><input type="radio" name="adplacement_type" value="time"></td>
+            <td>Start/stopp visning:</td>
+            <td>
+              <div class="input-append date">
+                <input type="text" name="start_date" class="input-medium">
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+              <div class="input-append date">
+                <input type="text" name="end_date" class="input-medium">
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+            </td>
+          </tr>
+          <tr class="view">
+            <td><input type="radio" name="adplacement_type" value="views"></td>
+            <td>Antall visninger:</td>
+            <td>
+              <input type="text" name="view_limit">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td><button type="submit" class="btn">Legg til annonsevisning</button></td>
+          </tr>
+        </table>
+      </form>
+
+      <h2>Last opp ny annonse</h2>
+
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#fil" data-toggle="tab">Flash/bildefil</a></li>
+        <li><a href="#script" data-toggle="tab">Adform-script</a></li>
+      </ul>
+
+      <div class="tab-content tab-content-visible">
+        <div class="tab-pane active" id="fil">
+
+          <form method="post" action="{% url 'admin.ads.views.create_ad' %}" enctype="multipart/form-data" class="form-default form-horizontal">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="file">
+
+            <div class="control-group">
+              <label class="control-label">Navn:</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" name="name">
+              </div>
             </div>
-            <div class="input-append date">
-              <input type="text" name="end_date" class="input-medium date">
-              <span class="add-on"><i class="icon-th"></i></span>
+
+            <div class="control-group">
+              <label class="control-label">Lenker til (URL):</label>
+              <div class="controls">
+                <input type="text" name="destination" value="http://" class="input-xxlarge">
+              </div>
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Oppdater visning</button></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-</div>
 
-<div class="modal hide placement view" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Annonsevisning</h3>
-  </div>
-  <div class="modal-body">
-    <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
-      {% csrf_token %}
-      <input type="hidden" name="id" value="">
-      <table>
-        <tr>
-          <td>Annonse</td>
-          <td>
-            <select name="ad" data-chosen>
-              {% for ad in ads %}
-                <option value="{{ ad.id }}">{{ ad.name }}</option>
-              {% endfor %}
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Antall visninger:</td>
-          <td>
-            <input type="text" name="view_limit" class="input-medium">
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Oppdater visning</button></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-</div>
+            <div class="control-group">
+              <label class="control-label">Last opp fil:</label>
+              <div class="controls">
+                <input type="file" name="ad">
+              </div>
+            </div>
 
-<div class="modal hide ad file" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Annonsedetaljer</h3>
-  </div>
-  <div class="modal-body">
-    <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input type="hidden" name="id" value="">
-      <table>
-        <tr>
-          <td>Navn</td>
-          <td><input type="text" name="name" class="input-xlarge"></td>
-        </tr>
-        <tr>
-          <td>Lenker til (URL):</td>
-          <td><input type="text" name="destination" class="input-xxlarge"></td>
-        </tr>
-        <tr>
-          <td>Ny fil</td>
-          <td><input type="file" name="ad"></td>
-        </tr>
-        <tr>
-          <td>Ny fallback</td>
-          <td><input type="file" name="ad_fallback"></td>
-        </tr>
-        <tr>
-          <td>Visningsteller-bilde</td>
-          <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
-        </tr>
-        <tr>
-          <td>Bredde x Høyde (kun hvis Flash)</td>
-          <td>
-            <input type="text" name="width" class="input-small"> x
-            <input type="text" name="height" class="input-small">
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Last opp</button></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-</div>
+            <div class="control-group">
+              <label class="control-label">Bilde-fallback for flash:</label>
+              <div class="controls">
+                <input type="file" name="ad_fallback" class="input-xlarge">
+              </div>
+            </div>
 
-<div class="modal hide ad adform-script" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Annonsedetaljer</h3>
-  </div>
-  <div class="modal-body">
-    <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input type="hidden" name="id" value="">
-      <table>
+            <div class="control-group">
+              <label class="control-label">Visningsteller-bilde (valgfritt):</label>
+              <div class="controls">
+                <input type="text" name="viewcounter" class="input-xxlarge">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Lenker til (URL):</label>
+              <div class="controls">
+                <input type="text" name="destination" value="http://" class="input-xxlarge">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Bredde x Høyde (kun hvis Flash):</label>
+              <div class="controls">
+                <input type="text" name="width" class="input-small"> x
+                <input type="text" name="height" class="input-small"> (typisk 940 x 300)
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn">Last opp</button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+        <div class="tab-pane" id="script">
+
+          <form method="post" action="{% url 'admin.ads.views.create_ad' %}" class="form-default form-horizontal">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="adform-script">
+
+            <div class="control-group">
+              <label class="control-label">Navn:</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" name="name">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Lim inn script-kode:</label>
+              <div class="controls">
+                <textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Visningsteller-bilde (valgfritt):</label>
+              <div class="controls">
+                <input type="text" name="viewcounter" class="input-xxlarge">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn">Lagre</button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <table class="table ads">
         <tr>
-          <td>Navn</td>
-          <td><input type="text" name="name" class="input-xlarge"></td>
+          <th>Navn</th>
+          <th>Lenker til</th>
+          <th>Innhold</th>
         </tr>
-        <tr>
-          <td>Lim inn script-kode:</td>
-          <td><textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea></td>
-        </tr>
-        <tr>
-          <td>Visningsteller-bilde</td>
-          <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Lagre</button></td>
-        </tr>
+        {% for ad in ads %}
+          <tr>
+            {% if not ad.is_adform_script %}
+
+              <td class="ad file" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-viewcounter="{{ ad.viewcounter }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">
+                {{ ad.name }}
+              </td>
+              <td>
+                <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
+              </td>
+              <td>
+                <a href="{{ ad.url }}">{{ ad.extension }}</a>
+                {% if ad.fallback_sha1_hash %}
+                  <a href="{{ ad.fallback_url }}">{{ ad.fallback_extension }}</a>
+                {% endif %}
+                {% if ad.width and ad.height %}
+                  ({{ ad.width }} x {{ ad.height }})
+                {% endif %}
+              </td>
+
+            {% else %}
+
+              <td class="ad adform-script" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-script="{{ ad.content_script }}" data-viewcounter="{{ ad.viewcounter }}">
+                {{ ad.name }}
+              </td>
+              <td>
+                <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
+              </td>
+              <td>
+                Adform-script
+              </td>
+
+            {% endif %}
+          </tr>
+        {% endfor %}
       </table>
-    </form>
+    </div>
   </div>
+
+  {# Modals #}
+  <div class="modal hide placement time" data-width="auto">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Annonsevisning</h3>
+    </div>
+    <div class="modal-body">
+      <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+        <table>
+          <tr>
+            <td>Annonse</td>
+            <td>
+              <select name="ad" data-chosen>
+                {% for ad in ads %}
+                  <option value="{{ ad.id }}">{{ ad.name }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Start/stopp visning:</td>
+            <td>
+              <div class="input-append date">
+                <input type="text" name="start_date" class="input-medium date">
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+              <div class="input-append date">
+                <input type="text" name="end_date" class="input-medium date">
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button type="submit" class="btn">Oppdater visning</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hide placement view" data-width="auto">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Annonsevisning</h3>
+    </div>
+    <div class="modal-body">
+      <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+        <table>
+          <tr>
+            <td>Annonse</td>
+            <td>
+              <select name="ad" data-chosen>
+                {% for ad in ads %}
+                  <option value="{{ ad.id }}">{{ ad.name }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Antall visninger:</td>
+            <td>
+              <input type="text" name="view_limit" class="input-medium">
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button type="submit" class="btn">Oppdater visning</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hide ad file" data-width="auto">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Annonsedetaljer</h3>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+        <table>
+          <tr>
+            <td>Navn</td>
+            <td><input type="text" name="name" class="input-xlarge"></td>
+          </tr>
+          <tr>
+            <td>Lenker til (URL):</td>
+            <td><input type="text" name="destination" class="input-xxlarge"></td>
+          </tr>
+          <tr>
+            <td>Ny fil</td>
+            <td><input type="file" name="ad"></td>
+          </tr>
+          <tr>
+            <td>Ny fallback</td>
+            <td><input type="file" name="ad_fallback"></td>
+          </tr>
+          <tr>
+            <td>Visningsteller-bilde</td>
+            <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
+          </tr>
+          <tr>
+            <td>Bredde x Høyde (kun hvis Flash)</td>
+            <td>
+              <input type="text" name="width" class="input-small"> x
+              <input type="text" name="height" class="input-small">
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button type="submit" class="btn">Last opp</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hide ad adform-script" data-width="auto">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Annonsedetaljer</h3>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+        <table>
+          <tr>
+            <td>Navn</td>
+            <td><input type="text" name="name" class="input-xlarge"></td>
+          </tr>
+          <tr>
+            <td>Lim inn script-kode:</td>
+            <td><textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea></td>
+          </tr>
+          <tr>
+            <td>Visningsteller-bilde</td>
+            <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button type="submit" class="btn">Lagre</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}
