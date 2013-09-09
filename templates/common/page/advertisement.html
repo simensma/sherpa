@@ -1,33 +1,33 @@
 <div class="row ad">
   <div class="span12">
-      <p class="ad-label">Annonse</p>
-      {% if advertisement.ad.is_adform_script %}
-        {{ advertisement.render_adform_script|safe }}
-      {% elif advertisement.ad.content_type == 'application/x-shockwave-flash' %}
-        <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
-        <script>
-          var flashvars = {
-            // Account for some unfortunate variations in clicktag capitalization
-            clickTAG: "{% url 'page.views.ad' advertisement.id %}",
-            clickTag: "{% url 'page.views.ad' advertisement.id %}"
-          };
-          {# Require flash version 9, not sure if this is reasonable? #}
-          swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
-        </script>
-        <div id="ad">
-          {% if advertisement.ad.has_fallback %}
-            <a href="{% url 'page.views.ad' advertisement.id %}">
-              <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
-            </a>
-          {% endif %}
-        </div>
-      {% else %}
-        <a href="{% url 'page.views.ad' advertisement.id %}">
-          <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
-        </a>
-      {% endif %}
-      {% if advertisement.ad.viewcounter %}
-        <img class="viewcounter" src="{{ advertisement.ad.viewcounter }}" alt="Annonseteller">
-      {% endif %}
+    <p class="ad-label">Annonse</p>
+    {% if advertisement.ad.is_adform_script %}
+      {{ advertisement.render_adform_script|safe }}
+    {% elif advertisement.ad.content_type == 'application/x-shockwave-flash' %}
+      <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
+      <script>
+        var flashvars = {
+          // Account for some unfortunate variations in clicktag capitalization
+          clickTAG: "{% url 'page.views.ad' advertisement.id %}",
+          clickTag: "{% url 'page.views.ad' advertisement.id %}"
+        };
+        {# Require flash version 9, not sure if this is reasonable? #}
+        swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
+      </script>
+      <div id="ad">
+        {% if advertisement.ad.has_fallback %}
+          <a href="{% url 'page.views.ad' advertisement.id %}">
+            <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
+          </a>
+        {% endif %}
+      </div>
+    {% else %}
+      <a href="{% url 'page.views.ad' advertisement.id %}">
+        <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
+      </a>
+    {% endif %}
+    {% if advertisement.ad.viewcounter %}
+      <img class="viewcounter" src="{{ advertisement.ad.viewcounter }}" alt="Annonseteller">
+    {% endif %}
   </div>
 </div>
