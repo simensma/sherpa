@@ -27,11 +27,15 @@
       {% endfor %}
     </td>
     <td>
-      {% for association in user.turleder_active_associations.all %}
-        {{ association.name }}{% if not forloop.last %}<br>{% endif %}
-      {% empty %}
-        <em>Ikke aktiv i noen foreninger.</em>
-      {% endfor %}
+      {% if user.turleder_active_associations.count == association_count %}
+        <em>Aktiv i <strong>alle</strong> medlemsforeninger</em>
+      {% else %}
+        {% for association in user.turleder_active_associations.all %}
+          {{ association.name }}{% if not forloop.last %}<br>{% endif %}
+        {% empty %}
+          <em>Ikke aktiv i noen foreninger.</em>
+        {% endfor %}
+      {% endif %}
     </td>
   </tr>
 {% empty %}

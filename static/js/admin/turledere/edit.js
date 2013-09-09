@@ -2,7 +2,9 @@ $(document).ready(function() {
     var register = $("div.turlederregister");
     var table = register.find("table.edit");
     var active_associations = register.find("select[name='active_associations']");
+    var active_associations_all_checkbox = register.find("input[name='active_associations_all_checkbox']");
     var form = register.find("form.save");
+    var active_associations_all_form = form.find("input[name='active_associations_all']");
 
     function addHandlers(item) {
         item.find("select[name='role']").chosen({disable_search: true});
@@ -33,6 +35,7 @@ $(document).ready(function() {
             active_association_ids.push($(this).val());
         });
         form.find("input[name='active_association_ids']").val(JSON.stringify(active_association_ids));
+        active_associations_all_form.val(JSON.stringify(active_associations_all_checkbox.is(":checked")));
         var turledere = [];
         table.find("tr[data-turleder]").each(function() {
             var role = $(this).find("select[name='role'] option:selected").val();
@@ -60,4 +63,13 @@ $(document).ready(function() {
         });
         form.find("input[name='turledere']").val(JSON.stringify(turledere));
     });
+
+    active_associations_all_checkbox.change(function() {
+        var disabled = active_associations_all_checkbox.is(":checked");
+        active_associations.prop("disabled", disabled);
+        active_associations.find("option").prop("disabled", disabled);
+        active_associations.trigger('liszt:updated');
+    });
+    active_associations_all_checkbox.change();
+
 });

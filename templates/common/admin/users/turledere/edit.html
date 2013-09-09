@@ -29,10 +29,14 @@
           <option value=""></option>
           <optgroup label="Medlemsforeninger">
             {% for association in all_associations.associations %}
-              <option value="{{ association.id }}"{% if association in turleder.turleder_active_associations.all %} selected{% endif %}>{{ association.name }}</option>
+              <option value="{{ association.id }}"{% if association in turleder.turleder_active_associations.all and turleder.turleder_active_associations.count != all_associations.associations|length %} selected{% endif %}>{{ association.name }}</option>
             {% endfor %}
           </optgroup>
         </select>
+        <label class="checkbox">
+          <input type="checkbox" name="active_associations_all_checkbox"{% if turleder.turleder_active_associations.count == all_associations.associations|length %} checked{% endif %}>
+          Aktiv i <strong>alle</strong> foreninger
+        </label>
       </p>
 
       <table class="table edit">
@@ -62,6 +66,7 @@
       <form action="{% url 'admin.users.turledere.views.edit' turleder.id %}" method="post" class="save">
         {% csrf_token %}
         <input type="hidden" name="active_association_ids" value="">
+        <input type="hidden" name="active_associations_all" value="">
         <input type="hidden" name="turledere" value="">
         <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>
       </form>
