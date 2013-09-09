@@ -96,7 +96,7 @@
         <tr>
           <td colspan="2">Annonse</td>
           <td>
-            <select name="ad">
+            <select name="ad" data-chosen>
               {% for ad in ads %}
                 <option value="{{ ad.id }}">{{ ad.name }}</option>
               {% endfor %}
@@ -215,7 +215,7 @@
         <tr>
           <td>Annonse</td>
           <td>
-            <select name="ad">
+            <select name="ad" data-chosen>
               {% for ad in ads %}
                 <option value="{{ ad.id }}">{{ ad.name }}</option>
               {% endfor %}
@@ -257,7 +257,7 @@
         <tr>
           <td>Annonse</td>
           <td>
-            <select name="ad">
+            <select name="ad" data-chosen>
               {% for ad in ads %}
                 <option value="{{ ad.id }}">{{ ad.name }}</option>
               {% endfor %}
