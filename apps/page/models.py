@@ -153,10 +153,18 @@ def delete_content(sender, **kwargs):
 ### Advertisements
 
 class Ad(models.Model):
+    """
+    We now have 3 types of ads; images, flash and adform scripts. They are separated by content_type.
+    An adform script will have content type 'application/vnd.turistforeningen.adform' and content_script
+    will contain its pasted script tags.
+    Flash will be application/x-shockwave-flash, and all other content types are images. They're uploaded
+    to S3, with sha1_hash as their key.
+    """
     name = models.CharField(max_length=200)
     extension = models.CharField(max_length=4)
     destination = models.CharField(max_length=2048)
     sha1_hash = models.CharField(max_length=40)
+    content_script = models.CharField(max_length=1023, default='') # Empty for image/flash. Used for adform scripts.
     content_type = models.CharField(max_length=200)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
