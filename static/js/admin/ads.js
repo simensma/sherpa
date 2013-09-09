@@ -6,7 +6,8 @@ $(document).ready(function() {
     var table_ads = $("table.ads");
     var modal_placement_time = $("div.modal.placement.time");
     var modal_placement_view = $("div.modal.placement.view");
-    var modal_ad = $("div.modal.ad");
+    var modal_ad_file = $("div.modal.ad.file");
+    var modal_ad_adform_script = $("div.modal.ad.adform-script");
 
     $("a.toggle-old-placements").click(function() {
         $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
@@ -58,13 +59,21 @@ $(document).ready(function() {
     });
 
     table_ads.find("td.ad").click(function() {
-        var form = modal_ad.find("form");
-        form.find("input[name='id']").val($(this).attr('data-id'));
-        form.find("input[name='name']").val($(this).attr('data-name'));
-        form.find("input[name='destination']").val($(this).attr('data-destination'));
-        form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
-        form.find("input[name='width']").val($(this).attr('data-width'));
-        form.find("input[name='height']").val($(this).attr('data-height'));
-        modal_ad.modal();
+        if($(this).is(".file")) {
+            var form = modal_ad_file.find("form");
+            form.find("input[name='id']").val($(this).attr('data-id'));
+            form.find("input[name='name']").val($(this).attr('data-name'));
+            form.find("input[name='destination']").val($(this).attr('data-destination'));
+            form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
+            form.find("input[name='width']").val($(this).attr('data-width'));
+            form.find("input[name='height']").val($(this).attr('data-height'));
+            modal_ad_file.modal();
+        } else {
+            var form = modal_ad_adform_script.find("form");
+            form.find("input[name='id']").val($(this).attr('data-id'));
+            form.find("input[name='name']").val($(this).attr('data-name'));
+            form.find("textarea[name='script']").val($(this).attr('data-script'));
+            modal_ad_adform_script.modal();
+        }
     });
 });

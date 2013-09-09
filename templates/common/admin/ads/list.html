@@ -16,6 +16,21 @@
           <a class="close">x</a>
           <strong>Ugyldig datoformat, vennligst prøv igjen!</strong>
         </div>
+      {% elif message.message == 'unparseable_script' %}
+        <div class="alert alert-error">
+          <a class="close">x</a>
+          <strong>Klarte ikke å hente ut nødvendig informasjon fra adform-scriptet.</strong><br>
+          Kanskje har formatet endret seg, eller så tok du ikke med riktig del av scriptet?<br>
+          Her er et eksempel på hvordan scriptet bør se ut:<br><br>
+          <pre>
+&lt;script language=&quot;javascript&quot; src=&quot;http://track.adform.net/adfscript/?bn=2576249&quot;&gt;&lt;/script&gt;
+&lt;noscript&gt;
+  &lt;a href=&quot;http://track.adform.net/C/?bn=2576249;C=0&quot; target=&quot;_blank&quot;&gt;
+    &lt;img src=&quot;http://track.adform.net/adfserve/?bn=2576249;srctype=4;ord=[timestamp]&quot; border=&quot;0&quot; width=&quot;940&quot; height=&quot;300&quot; alt=&quot;&quot;/&gt;
+  &lt;/a&gt;
+&lt;/noscript&gt;
+          </pre>
+        </div>
       {% endif %}
     {% endfor %}
 
@@ -132,42 +147,115 @@
     </form>
 
     <h2>Last opp ny annonse</h2>
-    <form id="upload" method="post" action="{% url 'admin.ads.views.create_ad' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <table>
-        <tr>
-          <td>Navn</td>
-          <td><input type="text" name="name" class="input-xlarge"></td>
-        </tr>
-        <tr>
-          <td>Lenker til (URL):</td>
-          <td><input type="text" name="destination" value="http://" class="input-xxlarge"></td>
-        </tr>
-        <tr>
-          <td>Fil</td>
-          <td><input type="file" name="ad"></td>
-        </tr>
-        <tr>
-          <td>Bilde-fallback for flash</td>
-          <td><input type="file" name="ad_fallback" class="input-xlarge"></td>
-        </tr>
-        <tr>
-          <td>Visningsteller-bilde (valgfritt):</td>
-          <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
-        </tr>
-        <tr>
-          <td>Bredde x Høyde (kun hvis Flash)</td>
-          <td>
-            <input type="text" name="width" class="input-small"> x
-            <input type="text" name="height" class="input-small">
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button type="submit" class="btn">Last opp</button></td>
-        </tr>
-      </table>
-    </form>
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#fil" data-toggle="tab">Flash/bildefil</a></li>
+      <li><a href="#script" data-toggle="tab">Adform-script</a></li>
+    </ul>
+
+    <div class="tab-content tab-content-visible">
+      <div class="tab-pane active" id="fil">
+
+        <form method="post" action="{% url 'admin.ads.views.create_ad' %}" enctype="multipart/form-data" class="form-default form-horizontal">
+          {% csrf_token %}
+          <input type="hidden" name="type" value="file">
+
+          <div class="control-group">
+            <label class="control-label">Navn:</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" name="name">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Lenker til (URL):</label>
+            <div class="controls">
+              <input type="text" name="destination" value="http://" class="input-xxlarge">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Last opp fil:</label>
+            <div class="controls">
+              <input type="file" name="ad">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Bilde-fallback for flash:</label>
+            <div class="controls">
+              <input type="file" name="ad_fallback" class="input-xlarge">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Visningsteller-bilde (valgfritt):</label>
+            <div class="controls">
+              <input type="text" name="viewcounter" class="input-xxlarge">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Lenker til (URL):</label>
+            <div class="controls">
+              <input type="text" name="destination" value="http://" class="input-xxlarge">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Bredde x Høyde (kun hvis Flash):</label>
+            <div class="controls">
+              <input type="text" name="width" class="input-small"> x
+              <input type="text" name="height" class="input-small"> (typisk 940 x 300)
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn">Last opp</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+      <div class="tab-pane" id="script">
+
+        <form method="post" action="{% url 'admin.ads.views.create_ad' %}" class="form-default form-horizontal">
+          {% csrf_token %}
+          <input type="hidden" name="type" value="adform-script">
+
+          <div class="control-group">
+            <label class="control-label">Navn:</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" name="name">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Lim inn script-kode:</label>
+            <div class="controls">
+              <textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Visningsteller-bilde (valgfritt):</label>
+            <div class="controls">
+              <input type="text" name="viewcounter" class="input-xxlarge">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn">Lagre</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
 
     <table class="table ads">
       <tr>
@@ -177,24 +265,37 @@
       </tr>
       {% for ad in ads %}
         <tr>
-          <td class="ad"
-            data-id="{{ ad.id }}"
-            data-name="{{ ad.name }}"
-            data-destination="{{ ad.destination }}"
-            data-viewcounter="{{ ad.viewcounter }}"
-            data-width="{{ ad.width|default_if_none:"" }}"
-            data-height="{{ ad.height|default_if_none:"" }}">
-            {{ ad.name }}</td>
-          <td><a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a></td>
-          <td>
-            <a href="{{ ad.url }}">{{ ad.extension }}</a>
-            {% if ad.fallback_sha1_hash %}
-              <a href="{{ ad.fallback_url }}">{{ ad.fallback_extension }}</a>
-            {% endif %}
-            {% if ad.width and ad.height %}
-              ({{ ad.width }} x {{ ad.height }})
-            {% endif %}
-          </td>
+          {% if not ad.is_adform_script %}
+
+            <td class="ad file" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-destination="{{ ad.destination }}" data-viewcounter="{{ ad.viewcounter }}" data-width="{{ ad.width|default_if_none:"" }}" data-height="{{ ad.height|default_if_none:"" }}">
+              {{ ad.name }}
+            </td>
+            <td>
+              <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
+            </td>
+            <td>
+              <a href="{{ ad.url }}">{{ ad.extension }}</a>
+              {% if ad.fallback_sha1_hash %}
+                <a href="{{ ad.fallback_url }}">{{ ad.fallback_extension }}</a>
+              {% endif %}
+              {% if ad.width and ad.height %}
+                ({{ ad.width }} x {{ ad.height }})
+              {% endif %}
+            </td>
+
+          {% else %}
+
+            <td class="ad adform-script" data-id="{{ ad.id }}" data-name="{{ ad.name }}" data-script="{{ ad.content_script }}" data-viewcounter="{{ ad.viewcounter }}">
+              {{ ad.name }}
+            </td>
+            <td>
+              <a href="{{ ad.destination }}" title="{{ ad.destination }}">{{ ad.destination|truncatechars:"40" }}</a>
+            </td>
+            <td>
+              Adform-script
+            </td>
+
+          {% endif %}
         </tr>
       {% endfor %}
     </table>
@@ -279,7 +380,7 @@
   </div>
 </div>
 
-<div class="modal hide ad" data-width="auto">
+<div class="modal hide ad file" data-width="auto">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Annonsedetaljer</h3>
@@ -319,6 +420,37 @@
         <tr>
           <td></td>
           <td><button type="submit" class="btn">Last opp</button></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
+
+<div class="modal hide ad adform-script" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Annonsedetaljer</h3>
+  </div>
+  <div class="modal-body">
+    <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="">
+      <table>
+        <tr>
+          <td>Navn</td>
+          <td><input type="text" name="name" class="input-xlarge"></td>
+        </tr>
+        <tr>
+          <td>Lim inn script-kode:</td>
+          <td><textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea></td>
+        </tr>
+        <tr>
+          <td>Visningsteller-bilde</td>
+          <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><button type="submit" class="btn">Lagre</button></td>
         </tr>
       </table>
     </form>

@@ -1,4 +1,5 @@
 from django.db.models.signals import pre_delete, post_delete
+from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db import models
 from django.db.models import Min, Q, F
@@ -9,6 +10,7 @@ import random
 import json
 import re
 import simples3
+import time
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)
@@ -155,11 +157,14 @@ def delete_content(sender, **kwargs):
 class Ad(models.Model):
     """
     We now have 3 types of ads; images, flash and adform scripts. They are separated by content_type.
-    An adform script will have content type 'application/vnd.turistforeningen.adform' and content_script
+    An adform script will have the content type in ADFORM_SCRIPT_CONTENT_TYPE and content_script
     will contain its pasted script tags.
     Flash will be application/x-shockwave-flash, and all other content types are images. They're uploaded
     to S3, with sha1_hash as their key.
     """
+
+    ADFORM_SCRIPT_CONTENT_TYPE = 'application/vnd.turistforeningen.adform'
+
     name = models.CharField(max_length=200)
     extension = models.CharField(max_length=4)
     destination = models.CharField(max_length=2048)
@@ -181,6 +186,22 @@ class Ad(models.Model):
 
     def fallback_url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
+
+    def is_adform_script(self):
+        return self.content_type == Ad.ADFORM_SCRIPT_CONTENT_TYPE
+
+    def render_adform_script(self, placement):
+        script = self.content_script
+
+        # Change the URL to go via our counter
+        url = reverse('page.views.ad', args=[placement.id])
+        pat = r'(\<a href=\")(.+?)(\")'
+        rep = r'\1%s\3' % url
+        script = re.sub(pat, rep, script)
+
+        # Set timestamp to current unix time
+        script = re.sub(r'\[timestamp\]', str(int(time.time())), script)
+        return script
 
     def delete_file(self):
         # Check that other ads aren't using the same image file
@@ -222,6 +243,9 @@ class AdPlacement(models.Model):
     def view_state(self):
         if self.views < self.view_limit: return 'active'
         else: return 'inactive'
+
+    def render_adform_script(self):
+        return self.ad.render_adform_script(self)
 
     @staticmethod
     def get_active_ad():

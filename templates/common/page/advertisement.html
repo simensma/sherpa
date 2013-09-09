@@ -1,7 +1,9 @@
 <div class="row ad">
   <div class="span12">
       <p class="ad-label">Annonse</p>
-      {% if advertisement.ad.content_type == 'application/x-shockwave-flash' %}
+      {% if advertisement.ad.is_adform_script %}
+        {{ advertisement.render_adform_script|safe }}
+      {% elif advertisement.ad.content_type == 'application/x-shockwave-flash' %}
         <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
         <script>
           var flashvars = {

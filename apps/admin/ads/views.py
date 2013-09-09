@@ -7,6 +7,7 @@ from datetime import datetime
 import hashlib
 import simples3
 
+from admin.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement
 
 def list(request):
@@ -17,41 +18,88 @@ def list(request):
     return render(request, 'common/admin/ads/list.html', context)
 
 def create_ad(request):
-    if not 'ad' in request.FILES:
-        return redirect('admin.ads.views.list')
 
-    hash, extension, content_type = upload(request.FILES['ad'])
-    fallback_hash = None
-    fallback_extension = None
-    fallback_content_type = None
+    if request.POST['type'] == 'file':
 
-    if 'ad_fallback' in request.FILES:
-        fallback_hash, fallback_extension, fallback_content_type = upload(request.FILES['ad_fallback'])
-    width = None if request.POST['width'] == '' else request.POST['width'].strip()
-    height = None if request.POST['height'] == '' else request.POST['height'].strip()
+        if not 'ad' in request.FILES:
+            return redirect('admin.ads.views.list')
 
-    ad = Ad(name=request.POST['name'].strip(), extension=extension,
-        destination=request.POST['destination'].strip(), viewcounter=request.POST['viewcounter'].strip(),
-        sha1_hash=hash, width=width, height=height, content_type=content_type,
-        fallback_extension=fallback_extension, fallback_sha1_hash=fallback_hash,
-        fallback_content_type=fallback_content_type)
-    ad.save()
+        hash, extension, content_type = upload(request.FILES['ad'])
+        fallback_hash = None
+        fallback_extension = None
+        fallback_content_type = None
+
+        if 'ad_fallback' in request.FILES:
+            fallback_hash, fallback_extension, fallback_content_type = upload(request.FILES['ad_fallback'])
+        width = None if request.POST['width'] == '' else request.POST['width'].strip()
+        height = None if request.POST['height'] == '' else request.POST['height'].strip()
+
+        ad = Ad(
+            name=request.POST['name'].strip(),
+            extension=extension,
+            destination=request.POST['destination'].strip(),
+            viewcounter=request.POST['viewcounter'].strip(),
+            sha1_hash=hash,
+            width=width,
+            height=height,
+            content_type=content_type,
+            fallback_extension=fallback_extension,
+            fallback_sha1_hash=fallback_hash,
+            fallback_content_type=fallback_content_type
+        )
+        ad.save()
+
+    elif request.POST['type'] == 'adform-script':
+
+        try:
+            script = request.POST['script'].strip()
+            destination = parse_adform_script_destination(script)
+
+            ad = Ad(
+                name=request.POST['name'].strip(),
+                extension='',
+                destination=destination,
+                viewcounter=request.POST['viewcounter'].strip(),
+                sha1_hash='',
+                width=None,
+                height=None,
+                content_script=script,
+                content_type=Ad.ADFORM_SCRIPT_CONTENT_TYPE,
+                fallback_extension=None,
+                fallback_sha1_hash=None,
+                fallback_content_type=None
+            )
+            ad.save()
+        except IndexError:
+            messages.error(request, 'unparseable_script')
+
     return redirect('admin.ads.views.list')
 
 def update_ad(request):
-    ad = Ad.objects.get(id=request.POST['id'])
-    ad.name = request.POST['name']
-    ad.destination = request.POST['destination'].strip()
-    ad.viewcounter = request.POST['viewcounter']
-    if ad.width is not None: ad.width = request.POST['width']
-    if ad.height is not None: ad.height = request.POST['height']
-    if 'ad' in request.FILES:
-        ad.delete_file()
-        ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
-    if 'ad_fallback' in request.FILES:
-        ad.delete_fallback_file()
-        ad.fallback_sha1_hash, ad.fallback_extension, ad.fallback_content_type = upload(request.FILES['ad_fallback'])
-    ad.save()
+    try:
+        ad = Ad.objects.get(id=request.POST['id'])
+        ad.name = request.POST['name']
+        ad.viewcounter = request.POST['viewcounter']
+
+        if not ad.is_adform_script():
+            ad.destination = request.POST['destination'].strip()
+            if ad.width is not None: ad.width = request.POST['width']
+            if ad.height is not None: ad.height = request.POST['height']
+            if 'ad' in request.FILES:
+                ad.delete_file()
+                ad.sha1_hash, ad.extension, ad.content_type = upload(request.FILES['ad'])
+            if 'ad_fallback' in request.FILES:
+                ad.delete_fallback_file()
+                ad.fallback_sha1_hash, ad.fallback_extension, ad.fallback_content_type = upload(request.FILES['ad_fallback'])
+        else:
+            script = request.POST['script'].strip()
+            ad.destination = parse_adform_script_destination(script)
+            ad.content_script = script
+
+        ad.save()
+    except IndexError:
+        messages.error(request, 'unparseable_script')
+
     return redirect('admin.ads.views.list')
 
 def create_placement(request):
