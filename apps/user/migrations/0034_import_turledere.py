@@ -53,10 +53,12 @@ class Migration(DataMigration):
                     association = orm['association.Association'].objects.get(name='Ålesund-Sunnmøre Turistforening')
                 elif turleder.association_id == 7000:
                     association = orm['association.Association'].objects.get(name='Trondhjems Turistforening')
+                # These guys didn't have a specified association. I'll just set it
+                # to the one that added the entry in Focus (STF), I'm 80% sure it's correct and if it
+                # isn't they can easily change it later.
+                elif turleder.association_id == 0 and turleder.memberid == 4231366:
+                    association = orm['association.Association'].objects.get(name='Stavanger Turistforening')
                 elif turleder.association_id == 3481050:
-                    # This guy was the *only* one who didn't have a specified association. I'll just set it
-                    # to the one that added the entry in Focus (STF), I'm 80% sure it's correct and if it
-                    # isn't they can easily change it later.
                     association = orm['association.Association'].objects.get(name='Stavanger Turistforening')
                 else:
                     raise Exception("Unkown association id connection: %s for memberid %s" % (turleder.association_id, turleder.memberid))
