@@ -1,14 +1,17 @@
 $(document).ready(function() {
 
-    var form_placement = $("form.placement");
-    var table_placements_time = $("table.placements.time");
-    var table_placements_view = $("table.placements.view");
-    var table_ads = $("table.ads");
-    var modal_placement_time = $("div.modal.placement.time");
-    var modal_placement_view = $("div.modal.placement.view");
-    var modal_ad = $("div.modal.ad");
+    var ads = $("div.advertisement-management");
 
-    $("a.toggle-old-placements").click(function() {
+    var form_placement = ads.find("form.placement");
+    var table_placements_time = ads.find("table.placements.time");
+    var table_placements_view = ads.find("table.placements.view");
+    var table_ads = ads.find("table.ads");
+    var modal_placement_time = ads.find("div.modal.placement.time");
+    var modal_placement_view = ads.find("div.modal.placement.view");
+    var modal_ad_file = ads.find("div.modal.ad.file");
+    var modal_ad_adform_script = ads.find("div.modal.ad.adform-script");
+
+    ads.find("a.toggle-old-placements").click(function() {
         $(this).parents("tr").siblings("tr.inactive, tr.old").toggle();
     });
 
@@ -34,7 +37,7 @@ $(document).ready(function() {
         forceParse: false
     };
     form_placement.find("div.date").datepicker(dp_options);
-    $("div.placement-dialog.time form div.date").datepicker(dp_options);
+    ads.find("div.placement-dialog.time form div.date").datepicker(dp_options);
 
     table_placements_time.find("tr.placement").click(function() {
         var form = modal_placement_time.find("form");
@@ -58,13 +61,21 @@ $(document).ready(function() {
     });
 
     table_ads.find("td.ad").click(function() {
-        var form = modal_ad.find("form");
-        form.find("input[name='id']").val($(this).attr('data-id'));
-        form.find("input[name='name']").val($(this).attr('data-name'));
-        form.find("input[name='destination']").val($(this).attr('data-destination'));
-        form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
-        form.find("input[name='width']").val($(this).attr('data-width'));
-        form.find("input[name='height']").val($(this).attr('data-height'));
-        modal_ad.modal();
+        if($(this).is(".file")) {
+            var form = modal_ad_file.find("form");
+            form.find("input[name='id']").val($(this).attr('data-id'));
+            form.find("input[name='name']").val($(this).attr('data-name'));
+            form.find("input[name='destination']").val($(this).attr('data-destination'));
+            form.find("input[name='viewcounter']").val($(this).attr('data-viewcounter'));
+            form.find("input[name='width']").val($(this).attr('data-width'));
+            form.find("input[name='height']").val($(this).attr('data-height'));
+            modal_ad_file.modal();
+        } else {
+            var form = modal_ad_adform_script.find("form");
+            form.find("input[name='id']").val($(this).attr('data-id'));
+            form.find("input[name='name']").val($(this).attr('data-name'));
+            form.find("textarea[name='script']").val($(this).attr('data-script'));
+            modal_ad_adform_script.modal();
+        }
     });
 });
