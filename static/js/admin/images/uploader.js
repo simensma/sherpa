@@ -63,7 +63,7 @@ $(document).ready(function() {
         userReady = true;
         if(!uploadReady) {
             e.preventDefault();
-            $("div.image-details input[type='submit']").prop('disabled', true);
+            $(this).prop('disabled', true);
             $("div.image-details p.waiting").show();
         }
     });
