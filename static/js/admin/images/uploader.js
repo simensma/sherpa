@@ -54,6 +54,8 @@ $(document).ready(function() {
                 // Well, the iframe loaded but callback-success wasn't set. Maybe a timeout or something happened,
                 // we didn't render the expected result at least. Show an error.
                 uploading.hide();
+                image_details.hide();
+                form_image.show();
                 uploader.find("div.upload-iframe-render-failed").show();
             }
         }, 1000);
