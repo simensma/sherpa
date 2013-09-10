@@ -23,14 +23,14 @@
     }
 
     Validator.performValidation = function(opts) {
-        if(methods[opts.method](opts.input.val(), opts.req, opts.opts)) {
+        if(Validator.check[opts.method](opts.input.val(), opts.req, opts.opts)) {
             opts.control_group.removeClass('error').addClass('success');
         } else {
             opts.control_group.removeClass('success').addClass('error');
         }
     }
 
-    var methods = {
+    Validator.check = {
         'full_name': function(input, req, opts) {
             if(!req && input == '') { return true; }
             return input.match(/^.+\s.+$/) != null;

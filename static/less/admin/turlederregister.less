@@ -51,6 +51,29 @@ div.turlederregister {
     }
   }
 
+  form.save {
+    text-align: center;
+  }
+}
+
+div.turlederregister-edit {
+  select[name='active_associations'] {
+    width: 100%;
+  }
+
+  h3 {
+    margin-top: 30px;
+    margin-bottom: 0;
+  }
+
+  h3.has-role {
+    color: rgb(10, 200, 10);
+
+    span.expired {
+      color: @profile-red;
+    }
+  }
+
   table.edit {
     th, td {
       font-family: "DTL Nobel" !important;
@@ -67,15 +90,5 @@ div.turlederregister {
     select[name='association'] {
       width: 300px;
     }
-  }
-
-  form.save {
-    text-align: center;
-  }
-}
-
-div.turlederregister-edit {
-  select[name='active_associations'] {
-    width: 100%;
   }
 }

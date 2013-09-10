@@ -24,64 +24,62 @@ def index(request):
 def edit(request, user):
     user = User.get_users().get(id=user)
 
-    if request.method == 'GET':
+    today = date.today()
+    # We can't just add 365*5 timedelta days because that doesn't account for leap years,
+    # this does.
+    try:
+        five_years_from_now = date(year=(today.year + 5), month=today.month, day=today.day)
+    except ValueError:
+        # This will only occur when today is February 29th during a leap year (right?)
+        five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
 
-        today = date.today()
-        # We can't just add 365*5 timedelta days because that doesn't account for leap years,
-        # this does.
-        try:
-            five_years_from_now = date(year=(today.year + 5), month=today.month, day=today.day)
-        except ValueError:
-            # This will only occur when today is February 29th during a leap year (right?)
-            five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
+    context = {
+        'turleder': user,
+        'turleder_roles': Turleder.TURLEDER_CHOICES,
+        'all_associations': Association.sort(Association.objects.all()),
+        'today': today,
+        'five_years_from_now': five_years_from_now,
+    }
 
-        context = {
-            'turleder': user,
-            'turleder_roles': Turleder.TURLEDER_CHOICES,
-            'all_associations': Association.sort(Association.objects.all()),
-            'today': today,
-            'five_years_from_now': five_years_from_now,
-        }
+    return render(request, 'common/admin/users/turledere/edit.html', context)
 
-        return render(request, 'common/admin/users/turledere/edit.html', context)
+def edit_certificate(request, user):
+    user = User.get_users().get(id=user)
 
-    elif request.method == 'POST':
-
-        user.turleder_active_associations.clear()
-        if json.loads(request.POST['active_associations_all']):
-            user.turleder_active_associations = Association.objects.filter(type='forening')
-        else:
-            for association_id in json.loads(request.POST['active_association_ids']):
-                user.turleder_active_associations.add(Association.objects.get(id=association_id))
-
-        turledere = json.loads(request.POST['turledere'])
-        user.turledere.exclude(id__in=[t['id'] for t in turledere if t['id'] != '']).delete()
-        for turleder in turledere:
-            role = turleder['role']
-            if turleder['role'] not in [c[0] for c in Turleder.TURLEDER_CHOICES]:
-                raise PermissionDenied
-
-            association_approved = Association.objects.get(id=turleder['association_approved'])
-            date_start = datetime.strptime(turleder['date_start'], '%d.%m.%Y').date()
-            date_end = datetime.strptime(turleder['date_end'], '%d.%m.%Y').date()
-
-            if turleder['id'] != '':
-                turleder = Turleder.objects.get(id=turleder['id'])
-            else:
-                turleder = Turleder()
-
-            turleder.user = user
-            turleder.role = role
-            turleder.association_approved = association_approved
-            turleder.date_start = date_start
-            turleder.date_end = date_end
-            turleder.save()
-
-        messages.info(request, "success")
-        return redirect('admin.users.turledere.views.edit', user.id)
-
+    if request.POST['turleder'] != '':
+        turleder = Turleder.objects.get(id=request.POST['turleder'])
     else:
-        return redirect('admin.users.turledere.views.edit')
+        turleder = Turleder(
+            user=user,
+            role=request.POST['role'],
+        )
+
+    turleder.association_approved = Association.objects.get(id=request.POST['association_approved'])
+    turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
+    turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+    turleder.save()
+
+    messages.info(request, "success")
+    return redirect('admin.users.turledere.views.edit', user.id)
+
+def edit_active_associations(request, user):
+    user = User.get_users().get(id=user)
+
+    user.turleder_active_associations.clear()
+    if json.loads(request.POST['active_associations_all']):
+        user.turleder_active_associations = Association.objects.filter(type='forening')
+    else:
+        for association_id in json.loads(request.POST['active_association_ids']):
+            user.turleder_active_associations.add(Association.objects.get(id=association_id))
+
+    messages.info(request, "success")
+    return redirect('admin.users.turledere.views.edit', user.id)
+
+def remove(request, turleder):
+    turleder = Turleder.objects.get(id=turleder)
+    user = turleder.user
+    turleder.delete()
+    return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
     turledere = User.get_users().filter(turledere__isnull=False)

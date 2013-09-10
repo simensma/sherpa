@@ -6,6 +6,8 @@
   <script src="{{ STATIC_URL }}js/admin/turledere/edit.js"></script>
 {% endblock %}
 
+{% load get_turleder_role %}
+
 {% block body %}
 
 <div class="turlederregister turlederregister-edit">
@@ -23,53 +25,116 @@
         {% endif %}
       {% endfor %}
 
-      <h3>Aktiv i følgende foreninger:</h3>
-      <p>
-        <select name="active_associations" data-chosen data-placeholder="Velg foreninger som denne turlederen er aktiv i..." multiple>
-          <option value=""></option>
-          <optgroup label="Medlemsforeninger">
-            {% for association in all_associations.associations %}
-              <option value="{{ association.id }}"{% if association in turleder.turleder_active_associations.all and turleder.turleder_active_associations.count != all_associations.associations|length %} selected{% endif %}>{{ association.name }}</option>
-            {% endfor %}
-          </optgroup>
-        </select>
-        <label class="checkbox">
-          <input type="checkbox" name="active_associations_all_checkbox"{% if turleder.turleder_active_associations.count == all_associations.associations|length %} checked{% endif %}>
-          Aktiv i <strong>alle</strong> foreninger
-        </label>
-      </p>
-
-      <table class="table edit">
-        <tr>
-          <th>Sertifikat</th>
-          <th>Godkjent av</th>
-          <th>Startdato</th>
-          <th>Sluttdato</th>
-          <th>Slett</th>
-        </tr>
-        {% for turleder in turleder.turledere.all %}
-          <tr data-turleder="{{ turleder.id }}">
-            {% include 'common/admin/users/turledere/edit_row.html' %}
-          </tr>
-        {% endfor %}
-
-        <tr class="hide new">
-          {% include 'common/admin/users/turledere/edit_row.html' %}
-        </tr>
-        <tr class="add">
-          <td colspan="5">
-            <a href="javascript:undefined">Legg til et nytt turledersertifikat...</a>
-          </td>
-        </tr>
-      </table>
-
-      <form action="{% url 'admin.users.turledere.views.edit' turleder.id %}" method="post" class="save">
+      <form action="{% url 'admin.users.turledere.views.edit_active_associations' turleder.id %}" method="post" class="active-associations">
         {% csrf_token %}
         <input type="hidden" name="active_association_ids" value="">
         <input type="hidden" name="active_associations_all" value="">
-        <input type="hidden" name="turledere" value="">
-        <button type="submit" class="btn btn-large btn-success"><i class="icon-white icon-ok"></i> Lagre endringene</button>
+
+        <h3>Aktiv i følgende foreninger:</h3>
+        <p>
+          <select name="active_associations" data-chosen data-placeholder="Velg foreninger som denne turlederen er aktiv i..." multiple>
+            <option value=""></option>
+            <optgroup label="Medlemsforeninger">
+              {% for association in all_associations.associations %}
+                <option value="{{ association.id }}"{% if association in turleder.turleder_active_associations.all and turleder.turleder_active_associations.count != all_associations.associations|length %} selected{% endif %}>{{ association.name }}</option>
+              {% endfor %}
+            </optgroup>
+          </select>
+          <label class="checkbox">
+            <input type="checkbox" name="active_associations_all_checkbox"{% if turleder.turleder_active_associations.count == all_associations.associations|length %} checked{% endif %}>
+            Aktiv i <strong>alle</strong> foreninger
+          </label>
+          <button type="submit" class="btn"><i class="icon-ok"></i> Lagre aktive foreninger</button>
+        </p>
       </form>
+
+      {% for role in turleder_roles %}
+
+        <div class="role">
+
+          {% with turleder_role=turleder|get_turleder_role:role.0 %}
+
+            <h3 class="{% if turleder_role %}has-role{% endif %}">
+              {{ role.1 }}
+              {% if turleder_role.is_expired %}
+                <span class="expired">(utgått)</span>
+              {% endif %}
+            </h3>
+
+            {% if not turleder_role %}
+
+              <p class="status-empty">
+                Ikke registrert sertifikat.<br>
+                <a href="javascript:undefined" class="create">Registrer</a>
+              </p>
+
+            {% else %}
+
+              <p class="status-exists">
+                Godkjent av <strong>{{ turleder_role.association_approved.name }}</strong>.<br>
+                Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder_role.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
+                <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.users.turledere.views.remove' turleder_role.id %}" class="remove" data-certificate-name="{{ role.0 }}">slett</a>
+              </p>
+
+            {% endif %}
+
+            <form action="{% url 'admin.users.turledere.views.edit_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+              {% csrf_token %}
+              <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
+              <input type="hidden" name="role" value="{{ role.0 }}">
+
+              <div class="control-group">
+                <label class="control-label">Godkjent av:</label>
+                <div class="controls">
+                  <select name="association_approved" data-chosen data-placeholder="Velg foreningen som godkjente turledersertifikatet...">
+                    <option value=""></option>
+                    <optgroup label="Sentralt/nasjonalt">
+                      {% for association in all_associations.central %}
+                        <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
+                      {% endfor %}
+                    </optgroup>
+                    <optgroup label="Medlemsforeninger">
+                      {% for association in all_associations.associations %}
+                        <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
+                      {% endfor %}
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Ble godkjent:</label>
+                <div class="controls">
+                  <div class="input-append date">
+                    <input type="text" class="input-medium" name="date_start" value="{% if turleder_role %}{{ turleder_role.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
+                    <span class="add-on"><i class="icon-th"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Løper ut:</label>
+                <div class="controls">
+                  <div class="input-append date">
+                    <input type="text" class="input-medium" name="date_end" value="{% if turleder_role %}{{ turleder_role.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
+                    <span class="add-on"><i class="icon-th"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="controls">
+                  <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
+                </div>
+              </div>
+
+            </form>
+
+          {% endwith %}
+
+        </div>
+
+      {% endfor %}
 
     </div>
   </div>
