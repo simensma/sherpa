@@ -14,6 +14,10 @@
       <a class="close">x</a>
       Beklager, det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
+    <div class="alert alert-error upload-iframe-render-failed hide">
+      <a class="close">x</a>
+      Beklager, det oppstod en ukjent feil! Bildene er sannsynligvis ikke blitt lastet opp. Dette kan skje når du laster opp kjempemange bilder på en gang, og serveren kommer ut av tellingen. Grunnet feilens tekniske natur er det dessverre ikke sikkert at feilen har blitt logget, så om dette skjer ofte kan det være en god idé å kontakte teknisk avdeling ved DNT sentralt og opplyse om problemet.
+    </div>
 
     <form class="image-uploader" action="{% url 'admin.images.views.upload_image' %}" method="post" enctype="multipart/form-data" target="iframe">
       {% csrf_token %}
