@@ -439,8 +439,16 @@ class User(AbstractBaseUser):
 
         # user.NorwayBusTicket:
         # Note that this is a OneToOneField.
-        old_ticket = NorwayBusTicket.objects.get(user=other_user)
-        new_ticket = self.norway_bus_ticket
+        try:
+            old_ticket = NorwayBusTicket.objects.get(user=other_user)
+        except NorwayBusTicket.DoesNotExist:
+            old_ticket = None
+
+        try:
+            new_ticket = self.norway_bus_ticket
+        except NorwayBusTicket.DoesNotExist:
+            new_ticket = None
+
         if old_ticket is not None and new_ticket is not None:
             # Well, both users have a ticket. Not sure which we want, it kind of depends on the
             # context of which the merge was called. Let's just keep the newest one for now.
