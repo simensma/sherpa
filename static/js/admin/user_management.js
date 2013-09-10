@@ -155,4 +155,10 @@ $(document).ready(function() {
         });
     });
 
+    form.submit(function(e) {
+        if(!confirm("Er du helt sikker på at du vil flytte all informasjon over til det nye medlemsnummeret, og slette det gamle?")) {
+            e.preventDefault();
+        }
+    });
+
 });
