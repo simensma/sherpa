@@ -499,27 +499,28 @@ div.widget.promo {
   /* Other cover-promos */
 
   div.cover.ung {
-    background-image: url('/static/img/widgets/promo/dntung_basecamp_promobilde.jpg');
+    background-image: url('/static/img/widgets/promo/dntung_basecamp_hyttebilde.jpg');
 
     div.content {
-      @width: 690px;
-      @padding-right: 40px;
+      @width: 260px;
+      @padding-right: 500px;
       padding-left: 940px - @width - @padding-right;
-      padding-top: 220px;
+      padding-top: 135px;
 
       width: @width;
       padding-right: @padding-right;
 
-      color: white;
+      color: black;
       text-align: left;
 
       h1 {
         margin-bottom: 0;
       }
 
-      p {
-        font-size: 18px;
-        margin-bottom: 45px;
+      p:not(.double-button-hack) {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
       }
     }
   }
@@ -568,6 +569,7 @@ div.widget.promo {
 
         p {
           font-size: 16px !important;
+          font-weight: normal !important;
         }
 
         p.double-button-hack {
