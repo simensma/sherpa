@@ -159,7 +159,13 @@ def get_static_promo_context(path):
             'id': 'fjellfilm',
             'name': 'Fjellfilm',
             'start_date': date(year=2013, month=9, day=2),
-            'end_date': date(year=2013, month=10, day=1),
+            'end_date': date(year=2013, month=9, day=15),
+        },
+        {
+            'id': 'bli-medlem',
+            'name': 'Medlemskap',
+            'start_date': date(year=2013, month=9, day=16),
+            'end_date': date(year=2013, month=9, day=16),
         }
     ]
 
