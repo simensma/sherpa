@@ -107,7 +107,7 @@ def search(request):
         if json.loads(request.POST['turleder_role_include']):
             roles = []
             found = False
-            for i in reversed(range(0, len(Turleder.TURLEDER_CHOICES) - 1)):
+            for i in reversed(range(0, len(Turleder.TURLEDER_CHOICES))):
                 if Turleder.TURLEDER_CHOICES[i][0] == turleder_role:
                     found = True
                 if found:
