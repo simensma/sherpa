@@ -496,6 +496,55 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-host {
+    background-image: url('/static/img/widgets/promo/host2.jpg');
+
+    div.content {
+      @width: 520px;
+      @padding-right: 10px;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 40px;
+      width: @width;
+      padding-right: @padding-right;
+
+      h1 {
+        margin-bottom: 0;
+        font-size: 72px;
+        color: rgb(252, 179, 70);
+      }
+
+      p {
+        color: white;
+      }
+
+      p.lede {
+        font-size: 44px;
+      }
+
+      p.bottom {
+        margin-top: 190px;
+        font-size: 30px;
+      }
+
+      p.photo {
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        font-size: 13px;
+      }
+
+      @media(max-width: 767px) {
+        p.bottom {
+          margin-top: auto;
+        }
+
+        p.photo {
+          display: none;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {
