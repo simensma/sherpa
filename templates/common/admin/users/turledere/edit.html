@@ -61,7 +61,11 @@
 
           <p class="status-empty">
             Ikke registrert sertifikat.<br>
-            <a href="javascript:undefined" class="create">Registrer</a>
+            {% if user.can_modify_kursleder_status %}
+              <a href="javascript:undefined" class="create">Registrer</a>
+            {% else %}
+              <em>Kurslederstatus forvaltes av DNT sentralt.</em>
+            {% endif %}
           </p>
 
         {% else %}
@@ -69,43 +73,49 @@
           <p class="status-exists">
             Godkjent av <strong>Den Norske Turistforening</strong>.<br>
             Fra <strong>{{ turleder.kursleder.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder.kursleder.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
-            <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.users.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
+            {% if user.can_modify_kursleder_status %}
+              <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.users.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
+            {% else %}
+              <em>Kurslederstatus forvaltes av DNT sentralt.</em>
+            {% endif %}
           </p>
 
         {% endif %}
 
-        <form action="{% url 'admin.users.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
-          {% csrf_token %}
-          <input type="hidden" name="kursleder" value="{{ turleder.kursleder.id }}">
-          <input type="hidden" name="role" value="kursleder">
+        {% if user.can_modify_kursleder_status %}
+          <form action="{% url 'admin.users.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+            {% csrf_token %}
+            <input type="hidden" name="kursleder" value="{{ turleder.kursleder.id }}">
+            <input type="hidden" name="role" value="kursleder">
 
-          <div class="control-group">
-            <label class="control-label">Ble godkjent:</label>
-            <div class="controls">
-              <div class="input-append date">
-                <input type="text" class="input-medium" name="date_start" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
-                <span class="add-on"><i class="icon-th"></i></span>
+            <div class="control-group">
+              <label class="control-label">Ble godkjent:</label>
+              <div class="controls">
+                <div class="input-append date">
+                  <input type="text" class="input-medium" name="date_start" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
+                  <span class="add-on"><i class="icon-th"></i></span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="control-group">
-            <label class="control-label">Løper ut:</label>
-            <div class="controls">
-              <div class="input-append date">
-                <input type="text" class="input-medium" name="date_end" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
-                <span class="add-on"><i class="icon-th"></i></span>
+            <div class="control-group">
+              <label class="control-label">Løper ut:</label>
+              <div class="controls">
+                <div class="input-append date">
+                  <input type="text" class="input-medium" name="date_end" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
+                  <span class="add-on"><i class="icon-th"></i></span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
+              </div>
             </div>
-          </div>
 
-        </form>
+          </form>
+        {% endif %}
 
       </div>
 

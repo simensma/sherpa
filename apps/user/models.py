@@ -322,6 +322,13 @@ class User(AbstractBaseUser):
         dnt_central = Association.objects.get(name='Den Norske Turistforening')
         return dnt_central in self.all_associations()
 
+    def can_modify_kursleder_status(self):
+        """
+        Users who have access to DNT's central association can assign kursleder-status
+        """
+        dnt_central = Association.objects.get(name='Den Norske Turistforening')
+        return dnt_central in self.all_associations()
+
     def all_associations(self):
         """
         Returns associations this user has access to.

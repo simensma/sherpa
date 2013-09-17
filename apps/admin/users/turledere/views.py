@@ -63,6 +63,9 @@ def edit_turleder_certificate(request, user):
     return redirect('admin.users.turledere.views.edit', user.id)
 
 def edit_kursleder_certificate(request, user):
+    if not request.user.can_modify_kursleder_status():
+        raise PermissionDenied
+
     user = User.get_users().get(id=user)
 
     if request.POST['kursleder'] != '':
@@ -97,6 +100,9 @@ def remove_turleder(request, turleder):
     return redirect('admin.users.turledere.views.edit', user.id)
 
 def remove_kursleder(request, kursleder):
+    if not request.user.can_modify_kursleder_status():
+        raise PermissionDenied
+
     kursleder = Kursleder.objects.get(id=kursleder)
     user = kursleder.user
     kursleder.delete()
