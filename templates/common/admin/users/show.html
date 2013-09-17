@@ -568,9 +568,9 @@
 
     <p>
       {% for turleder in other_user.turledere.all|sort_by_turleder_role %}
-        {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
+        {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
       {% empty %}
-        Ingen turledersertifikat. <a href="{% url 'admin.users.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
+        Ingen turledersertifikat. <a href="{% url 'admin.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
       {% endfor %}
     </p>
   </div>

@@ -16,6 +16,4 @@ urlpatterns = patterns('admin.users.views',
     url(ur'^gi-tilgang/$', 'add_association_permission'),
     url(ur'^ta-bort-tilgang/$', 'revoke_association_permission'),
 
-    url(r'^turlederregister/', include('admin.users.turledere.urls')),
-
 )

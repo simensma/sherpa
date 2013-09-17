@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.users.turledere.views.index' %}">Turlederregister</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -92,7 +92,7 @@
 
   <div class="row">
     <div class="span12">
-      <table class="table turledere" data-infinite-scroll-url="{% url 'admin.users.turledere.views.search' %}">
+      <table class="table turledere" data-infinite-scroll-url="{% url 'admin.turledere.views.search' %}">
         <tr>
           <th>Turleder</th>
           <th>Aktiv i</th>

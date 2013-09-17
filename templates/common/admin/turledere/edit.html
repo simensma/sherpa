@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.users.turledere.views.index' %}">Turlederregister</a>{% endblock %}
+{% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/turledere/edit.js"></script>
@@ -20,12 +20,12 @@
         {% if message.message == 'success' %}
           <div class="alert alert-success">
             <strong>Endringene har blitt lagret.</strong><br>
-            <a href="{% url 'admin.users.turledere.views.index' %}">Tilbake til turlederregisteret</a>
+            <a href="{% url 'admin.turledere.views.index' %}">Tilbake til turlederregisteret</a>
           </div>
         {% endif %}
       {% endfor %}
 
-      <form action="{% url 'admin.users.turledere.views.edit_active_associations' turleder.id %}" method="post" class="active-associations">
+      <form action="{% url 'admin.turledere.views.edit_active_associations' turleder.id %}" method="post" class="active-associations">
         {% csrf_token %}
         <input type="hidden" name="active_association_ids" value="">
         <input type="hidden" name="active_associations_all" value="">
@@ -74,7 +74,7 @@
             Godkjent av <strong>Den Norske Turistforening</strong>.<br>
             Fra <strong>{{ turleder.kursleder.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder.kursleder.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
             {% if user.can_modify_kursleder_status %}
-              <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.users.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
+              <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
             {% else %}
               <em>Kurslederstatus forvaltes av DNT sentralt.</em>
             {% endif %}
@@ -83,7 +83,7 @@
         {% endif %}
 
         {% if user.can_modify_kursleder_status %}
-          <form action="{% url 'admin.users.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+          <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
             {% csrf_token %}
             <input type="hidden" name="kursleder" value="{{ turleder.kursleder.id }}">
             <input type="hidden" name="role" value="kursleder">
@@ -144,12 +144,12 @@
               <p class="status-exists">
                 Godkjent av <strong>{{ turleder_role.association_approved.name }}</strong>.<br>
                 Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder_role.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
-                <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.users.turledere.views.remove_turleder' turleder_role.id %}" class="remove" data-certificate-name="{{ role.0 }}">slett</a>
+                <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_turleder' turleder_role.id %}" class="remove" data-certificate-name="{{ role.0 }}">slett</a>
               </p>
 
             {% endif %}
 
-            <form action="{% url 'admin.users.turledere.views.edit_turleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+            <form action="{% url 'admin.turledere.views.edit_turleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
               {% csrf_token %}
               <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
               <input type="hidden" name="role" value="{{ role.0 }}">

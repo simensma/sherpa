@@ -19,7 +19,7 @@ def index(request):
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
         'turleder_roles': Turleder.TURLEDER_CHOICES
     }
-    return render(request, 'common/admin/users/turledere/index.html', context)
+    return render(request, 'common/admin/turledere/index.html', context)
 
 def edit(request, user):
     user = User.get_users().get(id=user)
@@ -41,7 +41,7 @@ def edit(request, user):
         'five_years_from_now': five_years_from_now,
     }
 
-    return render(request, 'common/admin/users/turledere/edit.html', context)
+    return render(request, 'common/admin/turledere/edit.html', context)
 
 def edit_turleder_certificate(request, user):
     user = User.get_users().get(id=user)
@@ -60,7 +60,7 @@ def edit_turleder_certificate(request, user):
     turleder.save()
 
     messages.info(request, "success")
-    return redirect('admin.users.turledere.views.edit', user.id)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def edit_kursleder_certificate(request, user):
     if not request.user.can_modify_kursleder_status():
@@ -78,7 +78,7 @@ def edit_kursleder_certificate(request, user):
     kursleder.save()
 
     messages.info(request, "success")
-    return redirect('admin.users.turledere.views.edit', user.id)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def edit_active_associations(request, user):
     user = User.get_users().get(id=user)
@@ -91,13 +91,13 @@ def edit_active_associations(request, user):
             user.turleder_active_associations.add(Association.objects.get(id=association_id))
 
     messages.info(request, "success")
-    return redirect('admin.users.turledere.views.edit', user.id)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def remove_turleder(request, turleder):
     turleder = Turleder.objects.get(id=turleder)
     user = turleder.user
     turleder.delete()
-    return redirect('admin.users.turledere.views.edit', user.id)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def remove_kursleder(request, kursleder):
     if not request.user.can_modify_kursleder_status():
@@ -106,7 +106,7 @@ def remove_kursleder(request, kursleder):
     kursleder = Kursleder.objects.get(id=kursleder)
     user = kursleder.user
     kursleder.delete()
-    return redirect('admin.users.turledere.views.edit', user.id)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def search(request):
     turledere = User.get_users().filter(turledere__isnull=False)
@@ -166,5 +166,5 @@ def search(request):
     })
     return HttpResponse(json.dumps({
         'complete': len(turledere) == 0,
-        'html': render_to_string('common/admin/users/turledere/search_results.html', context)
+        'html': render_to_string('common/admin/turledere/search_results.html', context)
     }))
