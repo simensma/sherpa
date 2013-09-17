@@ -13,6 +13,7 @@ import json
 from association.models import Association
 from user.models import User, Turleder, Kursleder
 from focus.models import Actor
+from user.util import create_inactive_user
 
 def index(request):
     context = {
@@ -20,6 +21,10 @@ def index(request):
         'turleder_roles': Turleder.TURLEDER_CHOICES
     }
     return render(request, 'common/admin/turledere/index.html', context)
+
+def edit_inactive(request, memberid):
+    user = create_inactive_user(memberid)
+    return redirect('admin.turledere.views.edit', user.id)
 
 def edit(request, user):
     user = User.get_users().get(id=user)
@@ -108,7 +113,7 @@ def remove_kursleder(request, kursleder):
     kursleder.delete()
     return redirect('admin.turledere.views.edit', user.id)
 
-def search(request):
+def turleder_search(request):
     turledere = User.get_users().filter(turledere__isnull=False)
 
     if len(request.POST['query']) > 0:
@@ -166,5 +171,27 @@ def search(request):
     })
     return HttpResponse(json.dumps({
         'complete': len(turledere) == 0,
-        'html': render_to_string('common/admin/turledere/search_results.html', context)
+        'html': render_to_string('common/admin/turledere/turleder_search_results.html', context)
     }))
+
+def member_search(request):
+    if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+        raise PermissionDenied
+
+    actors = Actor.objects.all()
+    for word in request.POST['query'].split():
+        actors = actors.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word))
+    actors = actors.order_by('first_name')
+
+    users = User.get_users().filter(memberid__in=[a.memberid for a in actors])
+    actors_without_user = [a for a in actors if a.memberid not in list(users.values_list('memberid', flat=True))]
+    users = sorted(users, key=lambda u: u.get_full_name())
+
+    context = RequestContext(request, {
+        'users': users,
+        'actors_without_user': actors_without_user,
+    })
+    return HttpResponse(render_to_string('common/admin/turledere/member_search_results.html', context))

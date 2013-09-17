@@ -97,4 +97,62 @@ $(document).ready(function() {
         return active;
     }
 
+    // Member-search
+
+    var member_search = register.find("div.member-search");
+    var member_search_input = member_search.find("input[name='member-search']");
+    var member_search_button = member_search.find("button.member-search");
+
+    var member_search_table = member_search.find("table.member-search-list");
+    var member_search_loader = member_search_table.find("tr.loader");
+    var member_search_short_query = member_search_table.find("tr.short-query");
+    var member_search_error = member_search_table.find("tr.technical-error");
+    var member_search_no_hits = member_search_table.find("tr.no-hits");
+
+    member_search_input.keyup(function(e) {
+        if(e.which == 13) { // Enter
+            member_search_button.click();
+        }
+    });
+
+    member_search_button.click(function() {
+        var reset = function() {
+            member_search_loader.hide();
+            member_search_input.prop('disabled', false);
+            member_search_button.prop('disabled', false);
+        };
+
+        member_search_table.show();
+
+        member_search_input.prop('disabled', true);
+        member_search_button.prop('disabled', true);
+        member_search_table.find("tr.result").remove();
+        member_search_short_query.hide();
+        member_search_error.hide();
+        member_search_loader.show();
+
+        var query = member_search_input.val();
+        if(query.length < Turistforeningen.admin_user_search_char_length) {
+            member_search_short_query.show();
+            reset();
+            return;
+        }
+
+        $.ajaxQueue({
+            url: member_search_table.attr('data-search-url'),
+            data: { query: query }
+        }).done(function(result) {
+            member_search_table.find("tr.result").remove();
+            if(result.trim() === '') {
+                member_search_no_hits.show();
+            } else {
+                var html = $.parseHTML(result.trim());
+                member_search_table.append(html);
+            }
+        }).fail(function(result) {
+            member_search_table.find("tr.result").remove();
+            member_search_error.show();
+        }).always(reset);
+    });
+
 });
