@@ -558,7 +558,6 @@ class NorwayBusTicket(models.Model):
 
 class Turleder(models.Model):
     TURLEDER_CHOICES = (
-        (u'kursleder', u'Kursleder'),
         (u'vinter', u'Vinterturleder'),
         (u'sommer', u'Sommerturleder'),
         (u'nærmiljø', u'Nærmiljøturleder'),
@@ -579,3 +578,11 @@ class Turleder(models.Model):
     def sort_by_role(roles):
         order = {i[0]: Turleder.TURLEDER_CHOICES.index(i) for i in Turleder.TURLEDER_CHOICES}
         return sorted(roles, key=lambda t: order[t.role])
+
+class Kursleder(models.Model):
+    user = models.OneToOneField(User, related_name='kursleder')
+    date_start = models.DateField(null=True)
+    date_end = models.DateField(null=True)
+
+    def is_expired(self):
+        return self.date_end <= date.today()
