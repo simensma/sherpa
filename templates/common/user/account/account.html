@@ -300,7 +300,9 @@
           <h2>Turledersertifikat</h2>
 
           <p>
-            {% if user.turleder_active_associations.count > 0 %}
+            {% if user.turleder_active_associations.count == association_count %}
+              <em>Du er registrert som aktiv turleder i <strong>alle</strong> DNTs medlemsforeninger.</em>
+            {% elif user.turleder_active_associations.count > 0 %}
               <em>Du er registrert som aktiv turleder i:</em>
               {% for association in user.turleder_active_associations.all %}
                 <strong>{{ association.name }}</strong>{% if not forloop.last %}, {% endif %}
