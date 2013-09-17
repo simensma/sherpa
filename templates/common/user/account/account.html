@@ -295,7 +295,7 @@
           </tr>
         </table>
 
-        {% if user.turledere.count > 0 %}
+        {% if user.turledere.count > 0 or user.kursleder %}
 
           <h2>Turledersertifikat</h2>
 
@@ -319,6 +319,25 @@
               <th>Startdato</th>
               <th>Sluttdato</th>
             </tr>
+            {% if user.kursleder %}
+              <tr>
+                <td>
+                  {% if user.kursleder.is_expired %}<s>{% endif %}
+                    <em>Kursleder</em>
+                  {% if user.kursleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {% if user.kursleder.is_expired %}<s>{% endif %}
+                    Den Norske Turistforening
+                  {% if user.kursleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {{ user.kursleder.date_start|date:"d.m.Y" }}
+                </td>
+                <td{% if user.kursleder.is_expired %} class="expired"{% endif %}>
+                  {{ user.kursleder.date_end|date:"d.m.Y" }}
+                </td>
+            {% endif %}
             {% for turleder in user.turledere.all|sort_by_turleder_role %}
               <tr>
                 <td>
