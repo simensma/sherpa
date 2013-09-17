@@ -97,12 +97,16 @@ class CheckSherpaPermissions(object):
                     return render(request, 'common/admin/set_active_association.html', context)
 
             # Accessing CMS-functionality, but no site set
-            if request.session['active_association'].site is None and (
-                request.path.startswith('/sherpa/cms/') or
-                request.path.startswith('/sherpa/nyheter/') or
-                request.path.startswith('/sherpa/annonser/') or
-                request.path.startswith(u'/sherpa/analyse/søk/')):
-                return render(request, 'common/admin/no_association_site.html')
+            if request.session['active_association'].site is None:
+                site_required_paths = [
+                    u'/sherpa/cms/',
+                    u'/sherpa/nyheter/',
+                    u'/sherpa/annonser/',
+                    u'/sherpa/analyse/'
+                ]
+                for path in site_required_paths:
+                    if request.path.startswith(path):
+                        return render(request, 'common/admin/no_association_site.html')
 
 class DeactivatedEnrollment():
     def process_request(self, request):

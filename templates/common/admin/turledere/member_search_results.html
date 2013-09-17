@@ -1,0 +1,29 @@
+{% load sort_by_turleder_role %}
+
+{% for user in users %}
+  <tr class="result">
+    <td><a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }}</a></td>
+    <td>{{ user.memberid }}</td>
+    <td>
+      {% for turleder in user.turledere.all|sort_by_turleder_role %}
+        {% if turleder.is_expired %}<s>{% endif %}
+          {{ turleder.get_role }}
+        {% if turleder.is_expired %}</s>{% endif %}
+        {{ turleder.date_start|date:"Y"|default:"?" }}-{% if turleder.is_expired %}<s>{% endif %}{{ turleder.date_end|date:"Y"|default:"?" }}{% if turleder.is_expired %}</s>{% endif %}
+        {% if not forloop.last %}
+          <br>
+        {% endif %}
+      {% empty %}
+        <em>Ikke turleder</em>
+      {% endfor %}
+    </td>
+  </tr>
+{% endfor %}
+
+{% for actor in actors_without_user %}
+  <tr class="result">
+    <td><a href="{% url 'admin.turledere.views.edit_inactive' actor.memberid %}">{{ actor.get_full_name }}</a></td>
+    <td>{{ actor.memberid }}</td>
+    <td><em>Ikke turleder</em></td>
+  </tr>
+{% endfor %}

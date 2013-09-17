@@ -72,6 +72,18 @@
               {% if user.main_association.site %}</a>{% endif %}
             </td>
           </tr>
+          {% if user.turledere.count > 0 %}
+            <tr>
+              <th>Turledersertifikat:</th>
+              <td>
+                {% if user.get_highest_turleder_role.is_expired %}
+                  <a class="turleder-certificate-expired" href="{% url 'user.views.account' %}">Utgått</a>
+                {% else %}
+                  {{ user.get_highest_turleder_role.get_role }} til {{ user.get_highest_turleder_role.date_end|date:"Y" }}
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
         {% else %}
           <tr>
             <th>Ditt medlemskap:</th>

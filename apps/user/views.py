@@ -24,6 +24,7 @@ from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
+from association.models import Association
 
 from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from user.util import memberid_lookups_exceeded
@@ -48,7 +49,8 @@ def account(request):
     today = date.today()
     context = {
         'year': today.year,
-        'next_year': today >= current_membership_year_start()
+        'next_year': today >= current_membership_year_start(),
+        'association_count': Association.objects.filter(type='forening').count()
     }
     return render(request, 'common/user/account/account.html', context)
 

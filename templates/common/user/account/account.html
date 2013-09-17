@@ -8,6 +8,7 @@
 
 {% load has_membership_type %}
 {% load advertisement %}
+{% load sort_by_turleder_role %}
 
 {% block body %}
 
@@ -293,6 +294,73 @@
             </td>
           </tr>
         </table>
+
+        {% if user.turledere.count > 0 or user.kursleder %}
+
+          <h2>Turledersertifikat</h2>
+
+          <p>
+            {% if user.turleder_active_associations.count == association_count %}
+              <em>Du er registrert som aktiv turleder i <strong>alle</strong> DNTs medlemsforeninger.</em>
+            {% elif user.turleder_active_associations.count > 0 %}
+              <em>Du er registrert som aktiv turleder i:</em>
+              {% for association in user.turleder_active_associations.all %}
+                <strong>{{ association.name }}</strong>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              <em>Du er ikke registrert som aktiv turleder i noen medlemsforeninger.</em>
+            {% endif %}
+          </p>
+
+          <table class="table turleder-certificates">
+            <tr>
+              <th>Sertifikat</th>
+              <th>Godkjent av</th>
+              <th>Startdato</th>
+              <th>Sluttdato</th>
+            </tr>
+            {% if user.kursleder %}
+              <tr>
+                <td>
+                  {% if user.kursleder.is_expired %}<s>{% endif %}
+                    <em>Kursleder</em>
+                  {% if user.kursleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {% if user.kursleder.is_expired %}<s>{% endif %}
+                    Den Norske Turistforening
+                  {% if user.kursleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {{ user.kursleder.date_start|date:"d.m.Y" }}
+                </td>
+                <td{% if user.kursleder.is_expired %} class="expired"{% endif %}>
+                  {{ user.kursleder.date_end|date:"d.m.Y" }}
+                </td>
+            {% endif %}
+            {% for turleder in user.turledere.all|sort_by_turleder_role %}
+              <tr>
+                <td>
+                  {% if turleder.is_expired %}<s>{% endif %}
+                    {{ turleder.get_role }}
+                  {% if turleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {% if turleder.is_expired %}<s>{% endif %}
+                    {{ turleder.association_approved.name }}
+                  {% if turleder.is_expired %}</s>{% endif %}
+                </td>
+                <td>
+                  {{ turleder.date_start|date:"d.m.Y" }}
+                </td>
+                <td{% if turleder.is_expired %} class="expired"{% endif %}>
+                  {{ turleder.date_end|date:"d.m.Y" }}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+
+        {% endif %}
 
       {% endif %}
 

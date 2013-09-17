@@ -1,0 +1,112 @@
+div.turlederregister {
+
+  div.count {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  div.search-area, div.search-area * {
+    font-family: "DTL Nobel" !important;
+  }
+
+  div.search-area {
+    label.include-all-certificates {
+      margin-bottom: 0;
+    }
+  }
+
+  table.turledere {
+    td, th, td p {
+      font-family: "DTL Nobel" !important;
+    }
+
+    tr.hide-border {
+      td {
+        border-top: none;
+      }
+    }
+
+    tr.short-query, tr.no-results {
+      td {
+        padding-top: 10px;
+        text-align: center;
+      }
+    }
+
+    tr.no-results {
+      span.query {
+        font-weight: bold;
+      }
+    }
+
+    div.expired {
+      color: @profile-red;
+    }
+
+    div.no-min-height {
+      min-height: 0 !important;
+    }
+  }
+
+  form.save {
+    text-align: center;
+  }
+
+  div.member-search {
+    p {
+      font-family: "DTL Nobel" !important;
+    }
+
+    table.member-search-list {
+      tr {
+        th, td {
+          font-family: "DTL Nobel" !important;
+        }
+      }
+
+      tr.no-hits, tr.short-query, tr.technical-error, tr.loader {
+        td {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+div.turlederregister-edit {
+  select[name='active_associations'] {
+    width: 100%;
+  }
+
+  h3 {
+    margin-top: 30px;
+    margin-bottom: 0;
+  }
+
+  h3.has-role {
+    color: rgb(10, 200, 10);
+
+    span.expired {
+      color: @profile-red;
+    }
+  }
+
+  table.edit {
+    th, td {
+      font-family: "DTL Nobel" !important;
+    }
+    td.delete {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    select[name='role'] {
+      width: 200px;
+    }
+
+    select[name='association'] {
+      width: 300px;
+    }
+  }
+}

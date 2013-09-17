@@ -1,0 +1,63 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Velkommen til nye Sherpa!{% endblock %}
+{% block header %}<a href="{% url 'admin.views.intro' %}">Nye Sherpa</a>{% endblock %}
+
+{% block body %}
+
+<div class="velkomsthilsen">
+  <div class="row">
+    <div class="span12">
+
+      <h1 class="sherpa">Velkommen til nye Sherpa!</h1>
+
+      <h3>Hva er dette? Hvorfor har vi en ny Sherpa?</h3>
+      <p>
+        Siden 2011 har vi arbeidet med å flytte hele vår infrastruktur på web over på en ny og bedre teknisk platform. Mens vi jobber med det, vil både den gamle og nye platformen være i drift. Du finner fremdeles gamle sherpa på <a href="http://www2.turistforeningen.no/admin/">http://www2.turistforeningen.no/admin/</a>.
+      </p>
+
+      <h3>Hva kan jeg gjøre her?</h3>
+      <p>
+        Turlederregisteret er nå lansert på nye Sherpa, og du kan gjøre oppslag i medlemsdatabasen. Foreløpig er det ikke så mye mer her, men litt etter litt kommer vi til å flytte all funksjonalitet fra gamle Sherpa over hit.
+      </p>
+
+      <h3>Hvem har tilgang til nye Sherpa?</h3>
+      <p>
+        Alle engasjerte i medlemsforeningene som trenger det. Hvis noen i din forening trenger tilgang, kan du selv gi de samme tilgangene som du har. Han/henne må være registrert på Min side, så kan du søke dem opp på <a href="{% url 'admin.users.views.index' %}">brukersiden</a> og gi dem tilgangene de trenger.
+      </p>
+
+      <h3>Hvor lenge har nye Sherpa vært i drift?</h3>
+      <p>
+        I juni 2012, rundt landsmøtet, lanserte vi turistforeningens sentrale sider; turistforeningen.no, på den nye platformen. Siden da har redaksjonen i DNT sentralt benyttet nye Sherpa for å legge ut innhold på disse sidene.
+      </p>
+
+      <h3>Hvorfor kan ikke min medlemsforening flytte over på den nye platformen?</h3>
+      <p>
+        Dette jobber vi med, men fra et teknisk perspektiv er det svært stor forskjell på å kjøre ett nettsted, og flere enn ett. Akkurat nå er vår største prioritet på teknisk avdeling i DNT sentralt å ferdigstille systemet slik at dere kan begynne å flytte nettstedene deres over på den nye platformen.
+      </p>
+
+      <h3>Når er det klart for å flytte over?</h3>
+      <p>
+        I løpet av høsten 2013 skal vi lansere beta-sider for medlemsforeningene, og da kan de så smått begynne å flytte over innhold. Etter en periode med testing, tilbakemeldinger, utvikling og iterasjoner, samt flytting av innhold, vil vi i samarbeid med foreningene lansere de nye nettsidene offentlig.
+      </p>
+
+      <h3>Hva gjør vi når vi skal flytte over? Blir innhold, artikler og slikt automatisk flyttet?</h3>
+      <p>
+        Nei, mye vil måtte flyttes manuelt. Dere kan beholde de gamle sidene så lenge som det trengs mens innhold flyttes over. Dette er en glimrende sjanse for å ta en skikkelig opprydning på nettopp <strong>deres</strong> nettsted! Når vi nærmer oss kommer vi til å gi mer detaljert informasjon og veiledning om hvordan overgangen bør gripes an.
+      </p>
+
+      <h3>Hvordan får vi gitt tilbakemeldinger i overgangsperioden?</h3>
+      <p>
+        Tilbakemeldinger er veldig viktig &mdash; Sherpa er jo et verktøy som dere i medlemsforeningene bruker daglig, og det er viktig at ting går så smertefritt som mulig. Vi ønsker å få i gang rutiner for en god prosess med lansering, tilbakemelding, utvikling og iterasjon, og vurderer å ta i bruk verktøy som for eksempel <a href="https://userecho.com/">userecho</a> eller <a href="https://www.uservoice.com/">uservoice</a> til dette.
+      </p>
+
+      <p>
+        <em>
+          For å komme tilbake til Sherpas forside, kan du alltid klikke på DNT-logoen oppe til venstre.
+        </em>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

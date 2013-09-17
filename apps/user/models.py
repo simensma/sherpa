@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
@@ -8,6 +9,7 @@ from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
+from datetime import date
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'
@@ -44,6 +46,17 @@ class User(AbstractBaseUser):
     associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
+    # If turleder, where this turleder is active. The user.Turleder model defines certificates.
+    # It's possible, but not correct, that this field has references when there are none in user.Turleder.
+    turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
+
+
+    #
+    # Turleder-stuff
+    #
+
+    def get_highest_turleder_role(self):
+        return Turleder.sort_by_role(self.turledere.all())[0]
 
     #
     # Membership/Focus
@@ -309,6 +322,13 @@ class User(AbstractBaseUser):
         dnt_central = Association.objects.get(name='Den Norske Turistforening')
         return dnt_central in self.all_associations()
 
+    def can_modify_kursleder_status(self):
+        """
+        Users who have access to DNT's central association can assign kursleder-status
+        """
+        dnt_central = Association.objects.get(name='Den Norske Turistforening')
+        return dnt_central in self.all_associations()
+
     def all_associations(self):
         """
         Returns associations this user has access to.
@@ -413,6 +433,7 @@ class User(AbstractBaseUser):
         from fjelltreffen.models import Annonse
         from membership.models import SMSServiceRequest
         from page.models import Page, Variant, Version
+        from user.models import Turleder
 
         # Ordered alphabetically (and so is 'userrelations')
 
@@ -457,6 +478,9 @@ class User(AbstractBaseUser):
         elif old_ticket is not None:
             old_ticket.user = self
             old_ticket.save()
+
+        # user.Turleder:
+        Turleder.objects.filter(user=other_user).update(user=self)
 
         # page.Page:
         Page.objects.filter(created_by=other_user).update(created_by=self)
@@ -538,3 +562,34 @@ class NorwayBusTicket(models.Model):
     date_trip_text = models.CharField(max_length=25)
     distance = models.CharField(max_length=1024)
     is_imported = models.BooleanField(default=False)
+
+class Turleder(models.Model):
+    TURLEDER_CHOICES = (
+        (u'vinter', u'Vinterturleder'),
+        (u'sommer', u'Sommerturleder'),
+        (u'nærmiljø', u'Nærmiljøturleder'),
+        (u'ambassadør', u'DNT Ambassadør'),)
+    user = models.ForeignKey(User, related_name='turledere')
+    role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
+    association_approved = models.ForeignKey('association.Association', related_name='turledere_approved')
+    date_start = models.DateField(null=True)
+    date_end = models.DateField(null=True)
+
+    def get_role(self):
+        return [c[1] for c in self.TURLEDER_CHOICES if c[0] == self.role][0]
+
+    def is_expired(self):
+        return self.date_end <= date.today()
+
+    @staticmethod
+    def sort_by_role(roles):
+        order = {i[0]: Turleder.TURLEDER_CHOICES.index(i) for i in Turleder.TURLEDER_CHOICES}
+        return sorted(roles, key=lambda t: order[t.role])
+
+class Kursleder(models.Model):
+    user = models.OneToOneField(User, related_name='kursleder')
+    date_start = models.DateField(null=True)
+    date_end = models.DateField(null=True)
+
+    def is_expired(self):
+        return self.date_end <= date.today()

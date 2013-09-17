@@ -7,10 +7,12 @@
     var triggerType;
     var container;
     var loader;
+    var beforeLoad;
+    var afterLoad;
     var handlers = { // default ajax handlers
         done: function(result) {
-            result = $(result.trim());
-            if(result.length === 0) {
+            result = $.parseHTML(result.trim());
+            if(result === null) {
                 if(loader !== undefined) {
                     loader.fadeOut();
                 }
@@ -21,7 +23,6 @@
         }, fail: function(result) {
             alert("Beklager, det oppstod en feil når vi forsøkte å laste flere elementer. Prøv å oppdatere siden, og scrolle ned igjen.");
         }, always: function(result) {
-            loading = false;
             if(loader !== undefined) {
                 loader.fadeOut();
             }
@@ -48,8 +49,18 @@
         triggerType = opts.triggerType;
         container = opts.container;
         loader = opts.loader;
+        beforeLoad = opts.beforeLoad;
+        afterLoad = opts.afterLoad;
         if(opts.handlers !== undefined) {
-            handlers = opts.handlers;
+            if(opts.handlers.done !== undefined) {
+                handlers.done = opts.handlers.done;
+            }
+            if(opts.handlers.fail !== undefined) {
+                handlers.fail = opts.handlers.fail;
+            }
+            if(opts.handlers.always !== undefined) {
+                handlers.always = opts.handlers.always;
+            }
         }
 
         if(triggerType === 'scroll') {
@@ -74,6 +85,19 @@
         }
     };
 
+    InfiniteScroller.trigger = function() {
+        load();
+    };
+
+    InfiniteScroller.end = function() {
+        complete = true;
+        loader.fadeOut();
+    };
+
+    InfiniteScroller.reset = function() {
+        complete = false;
+    };
+
     InfiniteScroller.disable = function(opts) {
         if(triggerType === 'scroll') {
             $(window).off('scroll.infinite-scroller');
@@ -83,6 +107,9 @@
     };
 
     function load() {
+        if(beforeLoad !== undefined) {
+            beforeLoad();
+        }
         if(loader !== undefined) {
             loader.show();
         }
@@ -92,7 +119,18 @@
         $.ajaxQueue({
             url: url,
             data: ajaxData()
-        }).done(handlers.done).fail(handlers.fail).always(handlers.always);
+        }).done(
+            handlers.done
+        ).fail(
+            handlers.fail
+        ).always(function(result) {
+            if(afterLoad !== undefined) {
+                afterLoad();
+            }
+
+            loading = false;
+            handlers.always(result);
+        });
     }
 
 }(window.InfiniteScroller = window.InfiniteScroller || {}, jQuery ));

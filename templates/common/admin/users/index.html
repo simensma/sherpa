@@ -19,22 +19,10 @@
 
 <div class="row">
   <div class="span12">
-    <h2>Finn brukere/medlemmer</h2>
-  </div>
-</div>
 
-<div class="row">
-  <div class="span6">
-    <input type="text" name="user-search" class="input-xlarge" placeholder="Navn eller medlemsnummer">
+    <input type="text" name="user-search" class="input-xxlarge" placeholder="Søk etter medlemmer (navn eller medlemsnummer)...">
     <button class="btn input-button-align"><i class="icon-search"></i></button>
-  </div>
 
-  <div class="span6">
-  </div>
-</div>
-
-<div class="row">
-  <div class="span12">
     <table class="table user-search-list" data-search-url="{% url 'admin.users.views.search' %}">
       <tr>
         <th>Navn</th>
@@ -68,7 +56,9 @@
         </td>
       </tr>
     </table>
+
   </div>
 </div>
+
 
 {% endblock %}
