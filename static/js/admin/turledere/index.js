@@ -41,7 +41,7 @@ $(document).ready(function() {
         short_query.hide();
         table.find("tr.result").remove();
         var query = turleder_search_input.val();
-        if(query.length !== 0 && query.length < admin_user_search_char_length) {
+        if(query.length !== 0 && query.length < Turistforeningen.admin_user_search_char_length) {
             short_query.show();
             return;
         }
