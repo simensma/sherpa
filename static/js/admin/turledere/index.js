@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var register = $("div.turlederregister");
-    var filters = register.find("div.filters");
+    var filters = register.find("div.search-area");
     var filters_content = filters.find("div.content");
     var filters_button = filters.find("button.search");
     var table = register.find("table.turledere");

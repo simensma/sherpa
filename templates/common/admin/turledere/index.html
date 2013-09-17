@@ -15,106 +15,116 @@
 {% block body %}
 
 <div class="turlederregister">
-  <div class="search-area">
-    <div class="row">
-      <div class="span12">
-
-        <div class="form-border form-default form-horizontal filters">
-          {% csrf_token %}
-
-          <div class="control-group">
-            <label class="control-label">Navn/medlemsnummer</label>
-            <div class="controls">
-              <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Turledere som er aktive i en av</label>
-            <div class="controls">
-              <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
-                <option value=""></option>
-                <optgroup label="Medlemsforeninger">
-                  {% for association in user.all_associations_sorted.associations %}
-                    <option value="{{ association.id }}">{{ association.name }}</option>
-                  {% endfor %}
-                </optgroup>
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Turledere som har</label>
-            <div class="controls">
-              <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
-                <option value=""></option>
-                {% for role in turleder_roles %}
-                  <option value="{{ role.0 }}">{{ role.1 }}</option>
-                {% endfor %}
-              </select>
-
-              <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også de som har sommerturleder- og vinterturledersertifikat.">
-                <input type="checkbox" name="include_all_certificates" checked>
-                Inkluder de som har sertifikat med høyere nivå
-              </label>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label">Ett av sertifikatene må være godkjent av</label>
-            <div class="controls">
-              <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
-                <option value=""></option>
-                <optgroup label="Sentralt/nasjonalt">
-                  {% for association in user.all_associations_sorted.central %}
-                    <option value="{{ association.id }}">{{ association.name }}</option>
-                  {% endfor %}
-                </optgroup>
-                <optgroup label="Medlemsforeninger">
-                  {% for association in user.all_associations_sorted.associations %}
-                    <option value="{{ association.id }}">{{ association.name }}</option>
-                  {% endfor %}
-                </optgroup>
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="controls">
-              <button class="btn search"><i class="icon-search"></i> Søk etter turledere med dette filteret...</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
   <div class="row">
     <div class="span12">
-      <table class="table turledere" data-infinite-scroll-url="{% url 'admin.turledere.views.search' %}">
-        <tr>
-          <th>Turleder</th>
-          <th>Aktiv i</th>
-        </tr>
-        <tr class="short-query hide">
-          <td colspan="2">
-            Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
-          </td>
-        </tr>
-        <tr class="technical-error hide">
-          <td colspan="2">
-            <div class="alert alert-error">
-              Beklager, det oppstod en teknisk feil!<br>
-              Feilen har blitt logget og vi vil fikse den så snart som mulig.
-            </div>
-          </td>
-        </tr>
-      </table>
 
-      <div class="infinite-scroll-loader hide">
-        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
-        Søker i turlederregisteret, vennligst vent...
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#search" data-toggle="tab">Søk etter turledere</a></li>
+        <li><a href="#create" data-toggle="tab">Tilordne nytt turledersertifikat</a></li>
+      </ul>
+
+      <div class="tab-content tab-content-visible">
+        <div class="tab-pane active" id="search">
+
+          <div class="form-border form-default form-horizontal search-area">
+            {% csrf_token %}
+
+            <div class="control-group">
+              <label class="control-label">Navn/medlemsnummer</label>
+              <div class="controls">
+                <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Turledere som er aktive i en av</label>
+              <div class="controls">
+                <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
+                  <option value=""></option>
+                  <optgroup label="Medlemsforeninger">
+                    {% for association in user.all_associations_sorted.associations %}
+                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Turledere som har</label>
+              <div class="controls">
+                <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
+                  <option value=""></option>
+                  {% for role in turleder_roles %}
+                    <option value="{{ role.0 }}">{{ role.1 }}</option>
+                  {% endfor %}
+                </select>
+
+                <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også de som har sommerturleder- og vinterturledersertifikat.">
+                  <input type="checkbox" name="include_all_certificates" checked>
+                  Inkluder de som har sertifikat med høyere nivå
+                </label>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Ett av sertifikatene må være godkjent av</label>
+              <div class="controls">
+                <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
+                  <option value=""></option>
+                  <optgroup label="Sentralt/nasjonalt">
+                    {% for association in user.all_associations_sorted.central %}
+                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                  <optgroup label="Medlemsforeninger">
+                    {% for association in user.all_associations_sorted.associations %}
+                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="controls">
+                <button class="btn search"><i class="icon-search"></i> Søk etter turledere med dette filteret...</button>
+              </div>
+            </div>
+          </div>
+
+          <table class="table turledere" data-infinite-scroll-url="{% url 'admin.turledere.views.search' %}">
+            <tr>
+              <th>Turleder</th>
+              <th>Aktiv i</th>
+            </tr>
+            <tr class="short-query hide">
+              <td colspan="2">
+                Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
+              </td>
+            </tr>
+            <tr class="technical-error hide">
+              <td colspan="2">
+                <div class="alert alert-error">
+                  Beklager, det oppstod en teknisk feil!<br>
+                  Feilen har blitt logget og vi vil fikse den så snart som mulig.
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <div class="infinite-scroll-loader hide">
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+            Søker i turlederregisteret, vennligst vent...
+          </div>
+
+        </div>
+
+        <div class="tab-pane" id="create">
+
+          TBD
+
+        </div>
       </div>
     </div>
   </div>
