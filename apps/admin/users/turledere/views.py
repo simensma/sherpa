@@ -11,7 +11,7 @@ from datetime import datetime, date
 import json
 
 from association.models import Association
-from user.models import User, Turleder
+from user.models import User, Turleder, Kursleder
 from focus.models import Actor
 
 def index(request):
@@ -43,7 +43,7 @@ def edit(request, user):
 
     return render(request, 'common/admin/users/turledere/edit.html', context)
 
-def edit_certificate(request, user):
+def edit_turleder_certificate(request, user):
     user = User.get_users().get(id=user)
 
     if request.POST['turleder'] != '':
@@ -62,6 +62,21 @@ def edit_certificate(request, user):
     messages.info(request, "success")
     return redirect('admin.users.turledere.views.edit', user.id)
 
+def edit_kursleder_certificate(request, user):
+    user = User.get_users().get(id=user)
+
+    if request.POST['kursleder'] != '':
+        kursleder = Kursleder.objects.get(id=request.POST['kursleder'])
+    else:
+        kursleder = Kursleder(user=user)
+
+    kursleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
+    kursleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+    kursleder.save()
+
+    messages.info(request, "success")
+    return redirect('admin.users.turledere.views.edit', user.id)
+
 def edit_active_associations(request, user):
     user = User.get_users().get(id=user)
 
@@ -75,10 +90,16 @@ def edit_active_associations(request, user):
     messages.info(request, "success")
     return redirect('admin.users.turledere.views.edit', user.id)
 
-def remove(request, turleder):
+def remove_turleder(request, turleder):
     turleder = Turleder.objects.get(id=turleder)
     user = turleder.user
     turleder.delete()
+    return redirect('admin.users.turledere.views.edit', user.id)
+
+def remove_kursleder(request, kursleder):
+    kursleder = Kursleder.objects.get(id=kursleder)
+    user = kursleder.user
+    kursleder.delete()
     return redirect('admin.users.turledere.views.edit', user.id)
 
 def search(request):
