@@ -33,7 +33,7 @@
             {% if turleder.is_expired %}</s>{% endif %}
           </div>
           <div class="span6 no-min-height{% if turleder.is_expired %} expired{% endif %}">
-            {{ turleder.date_start|date:"Y"|default:"?" }}-{{ turleder.date_end|date:"Y"|default:"?" }}
+            {{ turleder.date_start|date:"Y"|default:"?" }}{% if turleder.role != 'ambassadør' %}-{{ turleder.date_end|date:"Y"|default:"?" }}{% endif %}
           </div>
         </div>
       {% endfor %}

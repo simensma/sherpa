@@ -354,7 +354,11 @@
                   {{ turleder.date_start|date:"d.m.Y" }}
                 </td>
                 <td{% if turleder.is_expired %} class="expired"{% endif %}>
-                  {{ turleder.date_end|date:"d.m.Y" }}
+                  {% if turleder.role != 'ambassadør' %}
+                    {{ turleder.date_end|date:"d.m.Y" }}
+                  {% else %}
+                    <em>-</em>
+                  {% endif %}
                 </td>
               </tr>
             {% endfor %}

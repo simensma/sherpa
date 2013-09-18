@@ -9,7 +9,8 @@
         {% if turleder.is_expired %}<s>{% endif %}
           {{ turleder.get_role }}
         {% if turleder.is_expired %}</s>{% endif %}
-        {{ turleder.date_start|date:"Y"|default:"?" }}-{% if turleder.is_expired %}<s>{% endif %}{{ turleder.date_end|date:"Y"|default:"?" }}{% if turleder.is_expired %}</s>{% endif %}
+        {# Ugh, this line is ugly with inline ifs because we don't want spaces in the text #}
+        {{ turleder.date_start|date:"Y"|default:"?" }}{% if turleder.role != 'ambassadør' %}-{% if turleder.is_expired %}<s>{% endif %}{{ turleder.date_end|date:"Y"|default:"?" }}{% if turleder.is_expired %}</s>{% endif %}{% endif %}
         {% if not forloop.last %}
           <br>
         {% endif %}

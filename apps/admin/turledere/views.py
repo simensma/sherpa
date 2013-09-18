@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -61,7 +62,10 @@ def edit_turleder_certificate(request, user):
 
     turleder.association_approved = Association.objects.get(id=request.POST['association_approved'])
     turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
-    turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+    if turleder.role == u'ambassadør':
+        turleder.date_end = None
+    else:
+        turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     turleder.save()
 
     messages.info(request, "success")
