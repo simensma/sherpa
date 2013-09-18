@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -11,14 +12,15 @@ from datetime import datetime, date
 import json
 
 from association.models import Association
-from user.models import User, Turleder, Kursleder
+from user.models import User, Turleder, Kursleder, Instruktor
 from focus.models import Actor
 from user.util import create_inactive_user
 
 def index(request):
     context = {
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
-        'turleder_roles': Turleder.TURLEDER_CHOICES
+        'turleder_roles': Turleder.TURLEDER_CHOICES,
+        'instruktor_roles': Instruktor.ROLE_CHOICES
     }
     return render(request, 'common/admin/turledere/index.html', context)
 
@@ -61,7 +63,10 @@ def edit_turleder_certificate(request, user):
 
     turleder.association_approved = Association.objects.get(id=request.POST['association_approved'])
     turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
-    turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+    if turleder.role == u'ambassadør':
+        turleder.date_end = None
+    else:
+        turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     turleder.save()
 
     messages.info(request, "success")
@@ -81,6 +86,18 @@ def edit_kursleder_certificate(request, user):
     kursleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
     kursleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     kursleder.save()
+
+    messages.info(request, "success")
+    return redirect('admin.turledere.views.edit', user.id)
+
+def edit_instruktor_roles(request, user):
+    user = User.get_users().get(id=user)
+
+    Instruktor.objects.filter(user=user).delete()
+    for role in Instruktor.ROLE_CHOICES:
+        if role['key'] in request.POST:
+            instruktor = Instruktor(user=user, role=role['key'])
+            instruktor.save()
 
     messages.info(request, "success")
     return redirect('admin.turledere.views.edit', user.id)
@@ -147,6 +164,9 @@ def turleder_search(request):
         else:
             roles = [request.POST['turleder_role']]
         turledere = turledere.filter(turledere__role__in=roles)
+
+    for role in json.loads(request.POST['instruktor_roles']):
+        turledere = turledere.filter(instruktor__role=role)
 
     # Filter on certificates approved by some association
     association_approved = None

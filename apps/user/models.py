@@ -10,6 +10,7 @@ from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
 from datetime import date
+import json
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'
@@ -57,6 +58,17 @@ class User(AbstractBaseUser):
 
     def get_highest_turleder_role(self):
         return Turleder.sort_by_role(self.turledere.all())[0]
+
+    def get_instruktor_roles(self):
+        current_roles = [i.role for i in self.instruktor.all()]
+        return [{
+            'key': role['key'],
+            'name': role['name'],
+            'active': role['key'] in current_roles
+        } for role in Instruktor.ROLE_CHOICES]
+
+    def get_active_instruktor_roles(self):
+        return [r for r in self.get_instruktor_roles() if r['active']]
 
     #
     # Membership/Focus
@@ -567,7 +579,7 @@ class Turleder(models.Model):
     TURLEDER_CHOICES = (
         (u'vinter', u'Vinterturleder'),
         (u'sommer', u'Sommerturleder'),
-        (u'nærmiljø', u'Nærmiljøturleder'),
+        (u'grunnleggende', u'Grunnleggende turleder'),
         (u'ambassadør', u'DNT Ambassadør'),)
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
@@ -593,3 +605,21 @@ class Kursleder(models.Model):
 
     def is_expired(self):
         return self.date_end <= date.today()
+
+class Instruktor(models.Model):
+    # Instruktør-roles - like turleder, but a bit more casual
+    ROLE_CHOICES = [
+        {'key': u'klatre', 'name': u'Klatreinstruktør'},
+        {'key': u'bre', 'name': u'Breinstruktør'},
+        {'key': u'padle', 'name': u'Padleinstruktør'},
+        {'key': u'skred', 'name': u'Skredinstruktør'},
+        {'key': u'telemark', 'name': u'Telemarkinstruktør'},
+        {'key': u'snowboard', 'name': u'Snowboardinstruktør'},
+        {'key': u'senior', 'name': u'Seniorturleder'},
+        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
+        {'key': u'barn', 'name': u'Barnas turleder'},
+        {'key': u'politi', 'name': u'Godkjent politiattest'},
+    ]
+
+    user = models.ForeignKey(User, related_name='instruktor')
+    role = models.CharField(max_length=255)

@@ -64,7 +64,12 @@ def authenticate_sherpa2_user(email, password):
 
 def create_inactive_user(memberid):
     Actor.objects.get(memberid=memberid) # Verify that the Actor exists
-    user = User(identifier=memberid, memberid=memberid, is_active=False)
-    user.set_unusable_password()
-    user.save()
-    return user
+    try:
+        # Check if it already exists first, e.g. if two simultaneous pageloads
+        # link to creating the same inactive users and both of them click.
+        return User.get_users().get(memberid=memberid, is_active=False)
+    except User.DoesNotExist:
+        user = User(identifier=memberid, memberid=memberid, is_active=False)
+        user.set_unusable_password()
+        user.save()
+        return user

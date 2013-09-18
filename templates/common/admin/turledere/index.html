@@ -22,7 +22,7 @@
 
       <ul class="nav nav-tabs">
         <li class="active"><a href="#search" data-toggle="tab">Søk etter turledere</a></li>
-        <li><a href="#create" data-toggle="tab">Opprett nytt turledersertifikat</a></li>
+        <li><a href="#create" data-toggle="tab">Legg inn nye turledere</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible">
@@ -55,14 +55,14 @@
             <div class="control-group">
               <label class="control-label">Turledere som har</label>
               <div class="controls">
-                <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat..." data-placeholder-wait="(vent mens siden laster...)">
+                <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat...">
                   <option value=""></option>
                   {% for role in turleder_roles %}
                     <option value="{{ role.0 }}">{{ role.1 }}</option>
                   {% endfor %}
                 </select>
 
-                <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter nærmiljøturledere, får du også de som har sommerturleder- og vinterturledersertifikat.">
+                <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
                   <input type="checkbox" name="include_all_certificates" checked>
                   Inkluder de som har sertifikat med høyere nivå
                 </label>
@@ -70,9 +70,21 @@
             </div>
 
             <div class="control-group">
+              <label class="control-label">Instruktører som er</label>
+              <div class="controls">
+                <select name="instruktor_roles" data-chosen data-placeholder="følgende instruktørtype(r)..." multiple>
+                  <option value=""></option>
+                  {% for role in instruktor_roles %}
+                    <option value="{{ role.key }}">{{ role.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
               <label class="control-label">Ett av sertifikatene må være godkjent av</label>
               <div class="controls">
-                <select name="association_approved" class="chosen" data-placeholder="følgende forening..." data-placeholder-wait="(vent mens siden laster...)">
+                <select name="association_approved" class="chosen" data-placeholder="følgende forening...">
                   <option value=""></option>
                   <optgroup label="Sentralt/nasjonalt">
                     {% for association in user.all_associations_sorted.central %}
@@ -138,7 +150,7 @@
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>
-                <th>Turledersertifikater</th>
+                <th>Turledersertifikater/instruktørroller</th>
               </tr>
 
               <tr class="no-hits hide">
