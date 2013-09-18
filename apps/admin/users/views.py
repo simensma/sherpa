@@ -172,7 +172,7 @@ def make_sherpa_admin(request, user):
     user.permissions.add(permission)
     cache.delete('user.%s.all_associations' % user.id)
     cache.delete('user.%s.children_associations' % user.id)
-    return redirect('admin.users.views.show', user)
+    return redirect('admin.users.views.show', user.id)
 
 def add_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
