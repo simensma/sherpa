@@ -37,6 +37,18 @@
           </div>
         </div>
       {% endfor %}
+
+      {% for role in user.get_active_instruktor_roles %}
+        {% if forloop.first %}
+          <br>
+        {% endif %}
+
+        {{ role.name }}
+
+        {% if not forloop.last %}
+          <br>
+        {% endif %}
+      {% endfor %}
     </td>
     <td>
       {% if user.turleder_active_associations.count == association_count %}

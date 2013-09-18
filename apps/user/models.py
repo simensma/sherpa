@@ -82,6 +82,9 @@ class User(AbstractBaseUser):
             'active': current_roles[role['key']]
         } for role in User.INSTRUKTOR_ROLES_VALUES]
 
+    def get_active_instruktor_roles(self):
+        return [r for r in self.get_instruktor_roles() if r['active']]
+
     #
     # Membership/Focus
     #

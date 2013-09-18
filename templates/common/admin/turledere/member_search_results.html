@@ -14,9 +14,23 @@
         {% if not forloop.last %}
           <br>
         {% endif %}
-      {% empty %}
-        <em>Ikke turleder</em>
       {% endfor %}
+
+      {% for role in user.get_active_instruktor_roles %}
+        {% if forloop.first %}
+          <br>
+        {% endif %}
+
+        {{ role.name }}
+
+        {% if not forloop.last %}
+          <br>
+        {% endif %}
+      {% endfor %}
+
+      {% if user.turledere.count == 0 and user.get_active_instruktor_roles|length == 0 %}
+        <em>Ikke turleder</em>
+      {% endif %}
     </td>
   </tr>
 {% endfor %}
