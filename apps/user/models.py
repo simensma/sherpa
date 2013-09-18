@@ -52,19 +52,19 @@ class User(AbstractBaseUser):
     turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
 
     # Instruktør-roles - like turleder, but a bit more casual. Stored as a json object
-    INSTRUKTOR_ROLES_VALUES = {
-        u'klatre': u'Klatreinstruktør',
-        u'bre': u'Breinstruktør',
-        u'padle': u'Padleinstruktør',
-        u'skred': u'Skredinstruktør',
-        u'telemark': u'Telemarkinstruktør',
-        u'snowboard': u'Snowboardinstruktør',
-        u'ungdom': u'Ungdomsturleder',
-        u'politi': u'Godkjent politiattest',
-        u'senior': u'Seniorturleder',
-        u'barn': u'Barnas turleder',
-    }
-    instruktor_roles = models.CharField(max_length=4095, default=json.dumps({key: False for key, value in INSTRUKTOR_ROLES_VALUES.items()}))
+    INSTRUKTOR_ROLES_VALUES = [
+        {'key': u'klatre', 'name': u'Klatreinstruktør'},
+        {'key': u'bre', 'name': u'Breinstruktør'},
+        {'key': u'padle', 'name': u'Padleinstruktør'},
+        {'key': u'skred', 'name': u'Skredinstruktør'},
+        {'key': u'telemark', 'name': u'Telemarkinstruktør'},
+        {'key': u'snowboard', 'name': u'Snowboardinstruktør'},
+        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
+        {'key': u'politi', 'name': u'Godkjent politiattest'},
+        {'key': u'senior', 'name': u'Seniorturleder'},
+        {'key': u'barn', 'name': u'Barnas turleder'},
+    ]
+    instruktor_roles = models.CharField(max_length=4095, default=json.dumps({role['key']: False for role in INSTRUKTOR_ROLES_VALUES}))
 
 
     #
@@ -73,6 +73,14 @@ class User(AbstractBaseUser):
 
     def get_highest_turleder_role(self):
         return Turleder.sort_by_role(self.turledere.all())[0]
+
+    def get_instruktor_roles(self):
+        current_roles = json.loads(self.instruktor_roles)
+        return [{
+            'key': role['key'],
+            'name': role['name'],
+            'active': current_roles[role['key']]
+        } for role in User.INSTRUKTOR_ROLES_VALUES]
 
     #
     # Membership/Focus

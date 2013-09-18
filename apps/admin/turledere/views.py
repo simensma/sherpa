@@ -89,6 +89,16 @@ def edit_kursleder_certificate(request, user):
     messages.info(request, "success")
     return redirect('admin.turledere.views.edit', user.id)
 
+def edit_instruktor_roles(request, user):
+    user = User.get_users().get(id=user)
+
+    roles = {role['key']: role['key'] in request.POST for role in User.INSTRUKTOR_ROLES_VALUES}
+    user.instruktor_roles = json.dumps(roles)
+    user.save()
+
+    messages.info(request, "success")
+    return redirect('admin.turledere.views.edit', user.id)
+
 def edit_active_associations(request, user):
     user = User.get_users().get(id=user)
 

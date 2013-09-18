@@ -79,34 +79,41 @@ div.turlederregister-edit {
     width: 100%;
   }
 
-  h3 {
+  div.edit-area {
     margin-top: 30px;
-    margin-bottom: 0;
-  }
 
-  h3.has-role {
-    color: rgb(10, 200, 10);
-
-    span.expired {
-      color: @profile-red;
-    }
-  }
-
-  table.edit {
-    th, td {
-      font-family: "DTL Nobel" !important;
-    }
-    td.delete {
-      text-align: center;
-      vertical-align: middle;
+    div.role {
+      margin-bottom: 20px;
     }
 
-    select[name='role'] {
-      width: 200px;
+    h3 {
+      margin-bottom: 0;
     }
 
-    select[name='association'] {
-      width: 300px;
+    h3.has-role {
+      color: rgb(10, 200, 10);
+
+      span.expired {
+        color: @profile-red;
+      }
+    }
+
+    table.edit {
+      th, td {
+        font-family: "DTL Nobel" !important;
+      }
+      td.delete {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      select[name='role'] {
+        width: 200px;
+      }
+
+      select[name='association'] {
+        width: 300px;
+      }
     }
   }
 }

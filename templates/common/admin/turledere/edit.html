@@ -48,172 +48,196 @@
         </p>
       </form>
 
-      <div class="role">
+      <div class="edit-area form-border">
+        <div class="row-fluid">
+          <div class="span6">
 
-        <h3 class="{% if turleder.kursleder %}has-role{% endif %}">
-          Kursleder
-          {% if turleder.kursleder.is_expired %}
-            <span class="expired">(utgått)</span>
-          {% endif %}
-        </h3>
+            <div class="role">
 
-        {% if not turleder.kursleder %}
-
-          <p class="status-empty">
-            Ikke registrert sertifikat.<br>
-            {% if user.can_modify_kursleder_status %}
-              <a href="javascript:undefined" class="create">Registrer</a>
-            {% else %}
-              <em>Kurslederstatus forvaltes av DNT sentralt.</em>
-            {% endif %}
-          </p>
-
-        {% else %}
-
-          <p class="status-exists">
-            Godkjent av <strong>Den Norske Turistforening</strong>.<br>
-            Fra <strong>{{ turleder.kursleder.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder.kursleder.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
-            {% if user.can_modify_kursleder_status %}
-              <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
-            {% else %}
-              <em>Kurslederstatus forvaltes av DNT sentralt.</em>
-            {% endif %}
-          </p>
-
-        {% endif %}
-
-        {% if user.can_modify_kursleder_status %}
-          <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
-            {% csrf_token %}
-            <input type="hidden" name="kursleder" value="{{ turleder.kursleder.id }}">
-            <input type="hidden" name="role" value="kursleder">
-
-            <div class="control-group">
-              <label class="control-label">Ble godkjent:</label>
-              <div class="controls">
-                <div class="input-append date">
-                  <input type="text" class="input-medium" name="date_start" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
-                  <span class="add-on"><i class="icon-th"></i></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <label class="control-label">Løper ut:</label>
-              <div class="controls">
-                <div class="input-append date">
-                  <input type="text" class="input-medium" name="date_end" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
-                  <span class="add-on"><i class="icon-th"></i></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
-              </div>
-            </div>
-
-          </form>
-        {% endif %}
-
-      </div>
-
-      {% for role in turleder_roles %}
-
-        <div class="role">
-
-          {% with turleder_role=turleder|get_turleder_role:role.0 %}
-
-            <h3 class="{% if turleder_role %}has-role{% endif %}">
-              {{ role.1 }}
-              {% if turleder_role.is_expired %}
-                <span class="expired">(utgått)</span>
-              {% endif %}
-            </h3>
-
-            {% if not turleder_role %}
-
-              <p class="status-empty">
-                Ikke registrert sertifikat.<br>
-                <a href="javascript:undefined" class="create">Registrer</a>
-              </p>
-
-            {% else %}
-
-              <p class="status-exists">
-                Godkjent av <strong>{{ turleder_role.association_approved.name }}</strong>.<br>
-                {% if turleder_role.role != 'ambassadør' %}
-                  Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder_role.date_end|date:"j. F Y"|default:"?" }}</strong>.
-                {% else %}
-                  Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong>.
+              <h3 class="{% if turleder.kursleder %}has-role{% endif %}">
+                Kursleder
+                {% if turleder.kursleder.is_expired %}
+                  <span class="expired">(utgått)</span>
                 {% endif %}
-                  <br>
-                <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_turleder' turleder_role.id %}" class="remove" data-certificate-name="{{ role.0 }}">slett</a>
-              </p>
+              </h3>
 
-            {% endif %}
+              {% if not turleder.kursleder %}
 
-            <form action="{% url 'admin.turledere.views.edit_turleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
-              {% csrf_token %}
-              <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
-              <input type="hidden" name="role" value="{{ role.0 }}">
+                <p class="status-empty">
+                  Ikke registrert sertifikat.<br>
+                  {% if user.can_modify_kursleder_status %}
+                    <a href="javascript:undefined" class="create">Registrer</a>
+                  {% else %}
+                    <em>Kurslederstatus forvaltes av DNT sentralt.</em>
+                  {% endif %}
+                </p>
 
-              <div class="control-group">
-                <label class="control-label">Godkjent av:</label>
-                <div class="controls">
-                  <select name="association_approved" data-chosen data-placeholder="Velg foreningen som godkjente turledersertifikatet...">
-                    <option value=""></option>
-                    <optgroup label="Sentralt/nasjonalt">
-                      {% for association in all_associations.central %}
-                        <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
-                      {% endfor %}
-                    </optgroup>
-                    <optgroup label="Medlemsforeninger">
-                      {% for association in all_associations.associations %}
-                        <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
-                      {% endfor %}
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
+              {% else %}
 
-              <div class="control-group">
-                <label class="control-label">Ble godkjent:</label>
-                <div class="controls">
-                  <div class="input-append date">
-                    <input type="text" class="input-medium" name="date_start" value="{% if turleder_role %}{{ turleder_role.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
-                    <span class="add-on"><i class="icon-th"></i></span>
-                  </div>
-                </div>
-              </div>
+                <p class="status-exists">
+                  Godkjent av <strong>Den Norske Turistforening</strong>.<br>
+                  Fra <strong>{{ turleder.kursleder.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder.kursleder.date_end|date:"j. F Y"|default:"?" }}</strong>.<br>
+                  {% if user.can_modify_kursleder_status %}
+                    <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_kursleder' turleder.kursleder.id %}" class="remove" data-certificate-name="kursleder">slett</a>
+                  {% else %}
+                    <em>Kurslederstatus forvaltes av DNT sentralt.</em>
+                  {% endif %}
+                </p>
 
-              {% if turleder_role.role != 'ambassadør' %}
-                <div class="control-group">
-                  <label class="control-label">Løper ut:</label>
-                  <div class="controls">
-                    <div class="input-append date">
-                      <input type="text" class="input-medium" name="date_end" value="{% if turleder_role %}{{ turleder_role.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
-                      <span class="add-on"><i class="icon-th"></i></span>
+              {% endif %}
+
+              {% if user.can_modify_kursleder_status %}
+                <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+                  {% csrf_token %}
+                  <input type="hidden" name="kursleder" value="{{ turleder.kursleder.id }}">
+                  <input type="hidden" name="role" value="kursleder">
+
+                  <div class="control-group">
+                    <label class="control-label">Ble godkjent:</label>
+                    <div class="controls">
+                      <div class="input-append date">
+                        <input type="text" class="input-medium" name="date_start" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
+                        <span class="add-on"><i class="icon-th"></i></span>
+                      </div>
                     </div>
                   </div>
-                </div>
+
+                  <div class="control-group">
+                    <label class="control-label">Løper ut:</label>
+                    <div class="controls">
+                      <div class="input-append date">
+                        <input type="text" class="input-medium" name="date_end" value="{% if turleder.kursleder %}{{ turleder.kursleder.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
+                        <span class="add-on"><i class="icon-th"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <div class="controls">
+                      <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
+                    </div>
+                  </div>
+
+                </form>
               {% endif %}
 
-              <div class="control-group">
-                <div class="controls">
-                  <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
-                </div>
+            </div>
+
+            {% for role in turleder_roles %}
+
+              <div class="role">
+
+                {% with turleder_role=turleder|get_turleder_role:role.0 %}
+
+                  <h3 class="{% if turleder_role %}has-role{% endif %}">
+                    {{ role.1 }}
+                    {% if turleder_role.is_expired %}
+                      <span class="expired">(utgått)</span>
+                    {% endif %}
+                  </h3>
+
+                  {% if not turleder_role %}
+
+                    <p class="status-empty">
+                      Ikke registrert sertifikat.<br>
+                      <a href="javascript:undefined" class="create">Registrer</a>
+                    </p>
+
+                  {% else %}
+
+                    <p class="status-exists">
+                      Godkjent av <strong>{{ turleder_role.association_approved.name }}</strong>.<br>
+                      {% if turleder_role.role != 'ambassadør' %}
+                        Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder_role.date_end|date:"j. F Y"|default:"?" }}</strong>.
+                      {% else %}
+                        Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong>.
+                      {% endif %}
+                        <br>
+                      <a href="javascript:undefined" class="edit">Endre</a> eller <a href="{% url 'admin.turledere.views.remove_turleder' turleder_role.id %}" class="remove" data-certificate-name="{{ role.0 }}">slett</a>
+                    </p>
+
+                  {% endif %}
+
+                  <form action="{% url 'admin.turledere.views.edit_turleder_certificate' turleder.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+                    {% csrf_token %}
+                    <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
+                    <input type="hidden" name="role" value="{{ role.0 }}">
+
+                    <div class="control-group">
+                      <label class="control-label">Godkjent av:</label>
+                      <div class="controls">
+                        <select name="association_approved" data-chosen data-placeholder="Velg foreningen som godkjente turledersertifikatet...">
+                          <option value=""></option>
+                          <optgroup label="Sentralt/nasjonalt">
+                            {% for association in all_associations.central %}
+                              <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
+                            {% endfor %}
+                          </optgroup>
+                          <optgroup label="Medlemsforeninger">
+                            {% for association in all_associations.associations %}
+                              <option value="{{ association.id }}"{% if turleder_role.association_approved == association %} selected{% endif %}>{{ association.name }}</option>
+                            {% endfor %}
+                          </optgroup>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label">Ble godkjent:</label>
+                      <div class="controls">
+                        <div class="input-append date">
+                          <input type="text" class="input-medium" name="date_start" value="{% if turleder_role %}{{ turleder_role.date_start|date:"d.m.Y" }}{% else %}{{ today|date:"d.m.Y" }}{% endif %}">
+                          <span class="add-on"><i class="icon-th"></i></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {% if turleder_role.role != 'ambassadør' %}
+                      <div class="control-group">
+                        <label class="control-label">Løper ut:</label>
+                        <div class="controls">
+                          <div class="input-append date">
+                            <input type="text" class="input-medium" name="date_end" value="{% if turleder_role %}{{ turleder_role.date_end|date:"d.m.Y" }}{% else %}{{ five_years_from_now|date:"d.m.Y" }}{% endif %}">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    <div class="control-group">
+                      <div class="controls">
+                        <button type="submit" class="btn"><i class="icon-ok"></i> Lagre sertifikat</button>
+                      </div>
+                    </div>
+
+                  </form>
+
+                {% endwith %}
+
               </div>
 
+            {% endfor %}
+
+          </div>
+          <div class="span6">
+
+            <h3>Andre instruktørroller</h3>
+
+            <form method="post" action="{% url 'admin.turledere.views.edit_instruktor_roles' turleder.id %}">
+              {% csrf_token %}
+
+              {% for role in turleder.get_instruktor_roles %}
+                <label class="checkbox">
+                  <input type="checkbox" name="{{ role.key }}"{% if role.active %} checked{% endif %}> {{ role.name }}
+                </label>
+              {% endfor %}
+
+              <button type="submit" class="btn"><i class="icon-ok"></i> Lagre instruktørroller</button>
             </form>
 
-          {% endwith %}
-
+          </div>
         </div>
-
-      {% endfor %}
-
+      </div>
     </div>
   </div>
 </div>
