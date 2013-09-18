@@ -12,7 +12,7 @@ from datetime import datetime, date
 import json
 
 from association.models import Association
-from user.models import User, Turleder, Kursleder
+from user.models import User, Turleder, Kursleder, Instruktor
 from focus.models import Actor
 from user.util import create_inactive_user
 
@@ -92,9 +92,11 @@ def edit_kursleder_certificate(request, user):
 def edit_instruktor_roles(request, user):
     user = User.get_users().get(id=user)
 
-    roles = {role['key']: role['key'] in request.POST for role in User.INSTRUKTOR_ROLES_VALUES}
-    user.instruktor_roles = json.dumps(roles)
-    user.save()
+    Instruktor.objects.filter(user=user).delete()
+    for role in Instruktor.ROLE_CHOICES:
+        if role['key'] in request.POST:
+            instruktor = Instruktor(user=user, role=role['key'])
+            instruktor.save()
 
     messages.info(request, "success")
     return redirect('admin.turledere.views.edit', user.id)

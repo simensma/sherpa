@@ -51,21 +51,6 @@ class User(AbstractBaseUser):
     # It's possible, but not correct, that this field has references when there are none in user.Turleder.
     turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
 
-    # Instruktør-roles - like turleder, but a bit more casual. Stored as a json object
-    INSTRUKTOR_ROLES_VALUES = [
-        {'key': u'klatre', 'name': u'Klatreinstruktør'},
-        {'key': u'bre', 'name': u'Breinstruktør'},
-        {'key': u'padle', 'name': u'Padleinstruktør'},
-        {'key': u'skred', 'name': u'Skredinstruktør'},
-        {'key': u'telemark', 'name': u'Telemarkinstruktør'},
-        {'key': u'snowboard', 'name': u'Snowboardinstruktør'},
-        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
-        {'key': u'politi', 'name': u'Godkjent politiattest'},
-        {'key': u'senior', 'name': u'Seniorturleder'},
-        {'key': u'barn', 'name': u'Barnas turleder'},
-    ]
-    instruktor_roles = models.CharField(max_length=4095, default=json.dumps({role['key']: False for role in INSTRUKTOR_ROLES_VALUES}))
-
 
     #
     # Turleder-stuff
@@ -75,12 +60,12 @@ class User(AbstractBaseUser):
         return Turleder.sort_by_role(self.turledere.all())[0]
 
     def get_instruktor_roles(self):
-        current_roles = json.loads(self.instruktor_roles)
+        current_roles = [i.role for i in self.instruktor.all()]
         return [{
             'key': role['key'],
             'name': role['name'],
-            'active': current_roles[role['key']]
-        } for role in User.INSTRUKTOR_ROLES_VALUES]
+            'active': role['key'] in current_roles
+        } for role in Instruktor.ROLE_CHOICES]
 
     def get_active_instruktor_roles(self):
         return [r for r in self.get_instruktor_roles() if r['active']]
@@ -620,3 +605,21 @@ class Kursleder(models.Model):
 
     def is_expired(self):
         return self.date_end <= date.today()
+
+class Instruktor(models.Model):
+    # Instruktør-roles - like turleder, but a bit more casual
+    ROLE_CHOICES = [
+        {'key': u'klatre', 'name': u'Klatreinstruktør'},
+        {'key': u'bre', 'name': u'Breinstruktør'},
+        {'key': u'padle', 'name': u'Padleinstruktør'},
+        {'key': u'skred', 'name': u'Skredinstruktør'},
+        {'key': u'telemark', 'name': u'Telemarkinstruktør'},
+        {'key': u'snowboard', 'name': u'Snowboardinstruktør'},
+        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
+        {'key': u'politi', 'name': u'Godkjent politiattest'},
+        {'key': u'senior', 'name': u'Seniorturleder'},
+        {'key': u'barn', 'name': u'Barnas turleder'},
+    ]
+
+    user = models.ForeignKey(User, related_name='instruktor')
+    role = models.CharField(max_length=255)
