@@ -615,10 +615,10 @@ class Instruktor(models.Model):
         {'key': u'skred', 'name': u'Skredinstruktør'},
         {'key': u'telemark', 'name': u'Telemarkinstruktør'},
         {'key': u'snowboard', 'name': u'Snowboardinstruktør'},
-        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
-        {'key': u'politi', 'name': u'Godkjent politiattest'},
         {'key': u'senior', 'name': u'Seniorturleder'},
+        {'key': u'ungdom', 'name': u'Ungdomsturleder'},
         {'key': u'barn', 'name': u'Barnas turleder'},
+        {'key': u'politi', 'name': u'Godkjent politiattest'},
     ]
 
     user = models.ForeignKey(User, related_name='instruktor')
