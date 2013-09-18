@@ -17,7 +17,7 @@
       {% endfor %}
 
       {% for role in user.get_active_instruktor_roles %}
-        {% if forloop.first %}
+        {% if forloop.first and user.turledere.count != 0 %}
           <br>
         {% endif %}
 
