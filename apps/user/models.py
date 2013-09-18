@@ -567,7 +567,7 @@ class Turleder(models.Model):
     TURLEDER_CHOICES = (
         (u'vinter', u'Vinterturleder'),
         (u'sommer', u'Sommerturleder'),
-        (u'nærmiljø', u'Nærmiljøturleder'),
+        (u'grunnleggende', u'Grunnleggende turleder'),
         (u'ambassadør', u'DNT Ambassadør'),)
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
