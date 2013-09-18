@@ -19,7 +19,8 @@ from user.util import create_inactive_user
 def index(request):
     context = {
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
-        'turleder_roles': Turleder.TURLEDER_CHOICES
+        'turleder_roles': Turleder.TURLEDER_CHOICES,
+        'instruktor_roles': Instruktor.ROLE_CHOICES
     }
     return render(request, 'common/admin/turledere/index.html', context)
 
@@ -163,6 +164,9 @@ def turleder_search(request):
         else:
             roles = [request.POST['turleder_role']]
         turledere = turledere.filter(turledere__role__in=roles)
+
+    for role in json.loads(request.POST['instruktor_roles']):
+        turledere = turledere.filter(instruktor__role=role)
 
     # Filter on certificates approved by some association
     association_approved = None

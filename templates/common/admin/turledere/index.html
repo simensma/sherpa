@@ -70,6 +70,18 @@
             </div>
 
             <div class="control-group">
+              <label class="control-label">Instruktører som er</label>
+              <div class="controls">
+                <select name="instruktor_roles" data-chosen data-placeholder="følgende instruktørtype(r)..." multiple>
+                  <option value=""></option>
+                  {% for role in instruktor_roles %}
+                    <option value="{{ role.key }}">{{ role.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
               <label class="control-label">Ett av sertifikatene må være godkjent av</label>
               <div class="controls">
                 <select name="association_approved" class="chosen" data-placeholder="følgende forening...">
