@@ -130,6 +130,7 @@ $(document).ready(function() {
         member_search_short_query.hide();
         member_search_error.hide();
         member_search_loader.show();
+        member_search_no_hits.hide();
 
         var query = member_search_input.val();
         if(query.length < Turistforeningen.admin_user_search_char_length) {
