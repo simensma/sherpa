@@ -10,6 +10,7 @@ from sherpa2.models import Association as Sherpa2Association
 
 from itertools import groupby
 from datetime import date
+import json
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'
@@ -49,6 +50,21 @@ class User(AbstractBaseUser):
     # If turleder, where this turleder is active. The user.Turleder model defines certificates.
     # It's possible, but not correct, that this field has references when there are none in user.Turleder.
     turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
+
+    # Instruktør-roles - like turleder, but a bit more casual. Stored as a json object
+    INSTRUKTOR_ROLES_VALUES = {
+        u'klatre': u'Klatreinstruktør',
+        u'bre': u'Breinstruktør',
+        u'padle': u'Padleinstruktør',
+        u'skred': u'Skredinstruktør',
+        u'telemark': u'Telemarkinstruktør',
+        u'snowboard': u'Snowboardinstruktør',
+        u'ungdom': u'Ungdomsturleder',
+        u'politi': u'Godkjent politiattest',
+        u'senior': u'Seniorturleder',
+        u'barn': u'Barnas turleder',
+    }
+    instruktor_roles = models.CharField(max_length=4095, default=json.dumps({key: False for key, value in INSTRUKTOR_ROLES_VALUES.items()}))
 
 
     #
