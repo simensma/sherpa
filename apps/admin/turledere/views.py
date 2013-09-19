@@ -220,7 +220,13 @@ def member_search(request):
     actors = actors.order_by('first_name')
 
     users = User.get_users().filter(memberid__in=[a.memberid for a in actors])
-    actors_without_user = [a for a in actors if a.memberid not in list(users.values_list('memberid', flat=True))]
+    memberids = [u.memberid for u in users]
+    actors_without_user = [a for a in actors if a.memberid not in memberids]
+
+    # To sort users by name, we need the Actor data - go through the already-fetched bulk and cache them
+    for actor in actors:
+        cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+
     users = sorted(users, key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
