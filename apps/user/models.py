@@ -610,6 +610,8 @@ class Instruktor(models.Model):
     # Instruktør-roles - like turleder, but a bit more casual
     ROLE_CHOICES = [
         {'key': u'klatre', 'name': u'Klatreinstruktør'},
+        {'key': u'klatre_inne', 'name': u'Klatreinstruktør inne'},
+        {'key': u'klatre_sport', 'name': u'Klatreinstruktør sport'},
         {'key': u'bre', 'name': u'Breinstruktør'},
         {'key': u'padle', 'name': u'Padleinstruktør'},
         {'key': u'skred', 'name': u'Skredinstruktør'},
