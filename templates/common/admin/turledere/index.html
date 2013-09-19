@@ -138,11 +138,12 @@
 
           <div class="member-search">
             <p>
-              Den du vil opprette sertifikat for må være medlem i DNT. Søk etter navn eller medlemsnummer her:
+              Turledere må være medlem i DNT, men du kan også søke etter instruktører som ikke nødvendigvis er medlemmer.<br>
+              Da må de ha registrert seg her først: <a href="{% url 'user.login.views.register_nonmember' %}">http://{{ site.domain }}{% url 'user.login.views.register_nonmember' %}</a>
             </p>
 
             <p>
-              <input type="text" name="member-search" placeholder="Søk etter medlemmer (navn eller medlemsnummer)..." class="input-xxlarge">
+              <input type="text" name="member-search" placeholder="Søk etter brukere (navn eller medlemsnummer)..." class="input-xxlarge">
               <button class="btn member-search input-button-align"><i class="icon-search"></i></button>
             </p>
 

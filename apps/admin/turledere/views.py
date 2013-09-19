@@ -54,6 +54,9 @@ def edit(request, user):
 def edit_turleder_certificate(request, user):
     user = User.get_users().get(id=user)
 
+    if not user.is_member():
+        raise PermissionDenied
+
     if request.POST['turleder'] != '':
         turleder = Turleder.objects.get(id=request.POST['turleder'])
     else:
@@ -211,12 +214,21 @@ def member_search(request):
     if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
+    local_users = User.get_users().filter(memberid__isnull=True)
+    for word in request.POST['query'].split():
+        local_users = local_users.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word)
+        )
+    local_users = local_users.order_by('first_name')
+
     actors = Actor.objects.all()
     for word in request.POST['query'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |
             Q(last_name__icontains=word) |
-            Q(memberid__icontains=word))
+            Q(memberid__icontains=word)
+        )
     actors = actors.order_by('first_name')
 
     users = User.get_users().filter(memberid__in=[a.memberid for a in actors])
@@ -232,5 +244,6 @@ def member_search(request):
     context = RequestContext(request, {
         'users': users,
         'actors_without_user': actors_without_user,
+        'local_users': local_users,
     })
     return HttpResponse(render_to_string('common/admin/turledere/member_search_results.html', context))

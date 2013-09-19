@@ -42,3 +42,21 @@
     <td><em>Ikke turleder</em></td>
   </tr>
 {% endfor %}
+
+{% for user in local_users %}
+  <tr class="result">
+    <td><a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }}</a></td>
+    <td><em>Ikke medlem i DNT</em></td>
+    <td>
+      {% for role in user.get_active_instruktor_roles %}
+        {{ role.name }}
+
+        {% if not forloop.last %}
+          <br>
+        {% endif %}
+      {% empty %}
+        <em>Ikke turleder</em>
+      {% endfor %}
+    </td>
+  </tr>
+{% endfor %}
