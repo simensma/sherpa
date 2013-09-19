@@ -54,6 +54,8 @@ CAPTCHA_FONT_SIZE = 50
 CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
 ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
+MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
+
 # Define when årskravet is performed each year.
 # We may need to know when the previous years årskrav started regardless of what
 # it is this month, so keep a history.
