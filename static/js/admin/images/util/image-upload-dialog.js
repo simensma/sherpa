@@ -53,7 +53,7 @@
     window.iframeUploadComplete = iframeUploadComplete;
     function iframeUploadComplete(result) {
         if(result.status === "success") {
-            var description = uploader.find("input[name='credits']").val();
+            var description = uploader.find("textarea[name='description']").val();
             var photographer = uploader.find("input[name='photographer']").val();
             uploader.find("div.uploading").hide();
             uploader.modal('hide');
