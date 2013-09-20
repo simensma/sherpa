@@ -1,0 +1,116 @@
+	ungdomsturledere						kategori							
+							Grunnleggende	Sommer	vinter	klatreinstr inne	klatreinstr sport	kajakkinstruktør	telemark instr	snowboard
+jaan	Aanonsen Julie	97181604,00			0767 Oslo		x							
+aals	Alstad Anders	92614388,00			2013 Skjetten			x						
+jade	Andersen, Jannicke			40 20 26 85	0458 Oslo		x							
+saan	Antell Sanna	98176329,00	00358442230597 (priv	98176329,00	1389 Heggedal		x							
+håau	Ausen Håvard			99 10 93 76	7049 Trondheim			x						
+iban	Bang Isak			93864805,00	3520 Jevnaker				x					
+svbe	Berg, Susann V.	22679392,00	98239480 8 mor)	41088015,00	1182 Oslo		x							
+onbe	Bertelsen Ola Njå	47623114,00			4025 Stavanger				x				x	
+vbjø	Bjørnstad Vidar	93299535,00			0767 Oslo				x	x				
+sbøy	Bøyum Siv Kristiansdotter	48 10 65 73			0956 OSLO			x			x			
+DBRE	Brækkan Dag Olav	63 96 49 02	22 82 28 00		2080 Eidsvoll				x	x				
+gbræ	Brækkan Geir	63964902,00		99126236,00	2080 Eidsvoll		x							
+bmbu	Buchman Benjamin Martin			48352114,00	661,00				x			x		
+abug	Bugge, Anders	48117797,00			Oslo		x							
+clar	Charlotte Larsåsen			95852451,00	3035 Drammen		x							
+ydah	Dahle, Ylva	95559677,00			1472 Fjellhamar		x							
+thda	Damm-Johnsen, Thale			95461617,00	0672 OSLO		x							
+jeid	Eidse Jonathan	40034758,00						x						
+MELI	Eliassen Merete	90899811,00		90899811,00	3158 Andebu				x		x			
+eøde	Emilie Ødegaard			90272707,00	0559 Oslo		x							
+ewar	Erik Warmestad			90559306,00				x						
+feri	Eriksen Frode	98840806,00			1923 Sørum		x							
+heri	Eriksson Hanna	93872086,00		93872086,00	0196 Oslo		x							
+hmer	Erlandsen, Hans Martin			97530936,00	1341 SLEPENDEN				x					
+seve	Evensen, Sigmund	45872524,00					x							
+HFÆR	Færden Hedda	48264883,00	21945010,00		0760 Oslo				x					
+mafa	Falao, Mats Anker			91525727,00	0682 Oslo		x			x				
+ufla	Flaata Una			95825890,00	0751 Oslo 				x		x			
+mfla	Flatland, Margretha			91170175,00	5470 Rosendal  				x					
+mfog	Fogh, Mads				3800 Bø, Telemark				x					
+JFON	Fonder Jon	66808966,00	93257038,00	93 25 70 38	1413 Tårnåsen									
+ofre	Fredenlund Ola	22741677,00		920 72795	1176 OSLO			x						
+fmon	Fredrikke Monsen			97704491,00	0659 OSLO			x				x		
+gfre	Fredriksen, Gjermund			41528978,00	1481 HAgan									x
+aage	Gerken Anna Andrea				3800 Bø i Telemark			x						
+egjs	Gjessing, Espen _	93079659,00			4885 Grimstad			x						
+kgrø	Grønlund, Kristine	32133365,00		47300694,00	3514 Hønefoss		x							
+anhø	Heggøy, Anette			91881593,00	1338 Sandvika		x							
+ehei	Heintz Eirik	90022514,00			0684 Oslo		x							
+hhel	Helberg, Henrik			99787043,00			x							
+hnæs	Henrik Næss			99726661,00	1354 Bærums Verk			x						
+mher	Herholdt Mari			48124428,00	5515 haugesund			x						
+ehes	Hernes, Erik (ung)	95771924,00			0271 Oslo		x							
+shøi	Høivangli Silje			93493597,00	1487 Hakadal				x					
+mhol	Holmgren, Martin			97791546,00	2009 Nordby			x						
+JBHO	Houge, Jørgen Blystad	40 24 57 04		40 24 57 04	5081 Bergen 				x					
+krhy	Hytten, Kristine Roberg	33070752,00		41511969,00	3185 Skoppum		x							
+iesø	 Sørbye Ida Eri			92095786,00			x							
+irnæ	Nærum Ida Rydland 			97076313,00	3715 SKIEN				x					
+irha	Haug Irja Lie 			41086855,00	0860 Oslo			x						
+ljåt	Jåthun, Linn			404 00 899	0862 Oslo		x							
+Dkar	Karpenko, Dmytro	95776417,00			0361 Oslo		x							
+nkin	Kingsley, Nikolai	48299008,00			0254 Oslo		x							
+mkgk	Knudsen Maria Kristine Grande			97503575,00	1430 ås				x			x		
+elko	Kolstad, Elisabeth Larsen			450 71 874 	3800 Bø i Telemark				x					
+KDAV	Kristin Raastad Davies			91167334,00	1430 Ås		x							
+hmkr	Kristoffersen, Håkon Mathias	98842137,00			3046 Drammen		x							
+kåkv	Kvangarsnes, Kåre			948 92 596	6013 Ålesund		x							
+jvli	Lie Jo Vebjørn	99409611,00			3580 Geilo			x						
+slha	Lima Sondre Haugen	64944979,00		97646368,00	1430 Ås			x						
+oløg	Løge, Oda Siebke	97423218,00		97423218,00	1166 OSLO		x					x		
+jvlø	Løkstad Juel Victor	66914182,00	98833541,00	98833541,00	0770 Oslo				x			x		
+aplo	Lorentzen, Andreas Pippidis	47327716,00			7050 Trondheim			x						
+jlor	Lorentzen, Johannes			47367741,00	0686 Oslo		x							
+msva	Malene Svaland			99241092,00	1367 Snarøya		x							
+ilma	Malmquist, Ingrid Lie	97650071,00			3181 Horten			x						
+mmal	Malmquist, Magnus Lie			47712432,00	3181 Horten				x					
+sima	Martinsen, Silje 			40013242,00	1432 Ås			x						
+tmat	Mathisen, Thea	41456582,00			1621 Gressvik									
+smat	Matsen, Steinar	22610239,00	22067456,00	40043938,00			x							
+omod	Modalsli, Oda			95464611,00	1361 Østerås		x			x				
+temø	Møller, Tor Einar			98 61 88 05	3960 Stathelle 		x							
+rmør	Mørk, Regine	66991991,00		95256771,00	1415 Oppegård		x							
+ebnæ	Næsheim Erlend Berge	926 27 872			0862 OSLO				x					
+mnæs	Næss, Mari	32157635,00		97717605,00	3538 Sollihøgda		x							
+håne	Neset, Håkon			92 82 66 86	0556 Oslo 						x			
+knes	Nestegard, Karianne			95871782,00	0482 Oslo 		x							
+mnie	Nielsen Martin Alex	4146 65 32	+45 60888490	4146 65 32	0567 Oslo			x						
+mhni	Nilsen, Martin Hauge			90122311,00	6020 Ålesund			x						
+onis	Nissen Oda			466 80 948	1430 Ås		x							
+nøde	Njål Ødegård			48358890,00	0363 Oslo		x			x				
+køde	Ødeby Kristine	91349618 			2662 Dovre					x				
+SMPA	Paulsen Sandra Marie	22263588,00	92084838,00		0690 Oslo			x						
+mreh	Rehn Mathias			47956474,00	0458 OSLO									
+arei	Reis, Anita	92261810,00			0565 Oslo		x							
+jgre	Reiten Johanne Grue			95021594,00	0493 Oslo		x							
+løre	Reksten Lina Øygard			47642209,00				x						
+mren	Reneflot Magnus	99623814,00			1404 Siggerud									
+hroa	Roald, Hedda Bjøralt			993 60 039	0572 Oslo		x							
+håro	Roald, Håkon	92213652,00												
+arøe	Røe, Amund			41 52 60 97	0858 Oslo									
+khsa	Sannæs, Katrine Helgeland	35289328,00		97639774,00	3942 Porsgrunn									
+hsei	Seiertun, Håkon			97538847,00	2016 Frogner				x					
+kskv	Skjelsvik Karoline	612 89 996		90995830,00	2618 Lillehammer		x							
+ajsk	Skjetne Anne Juul			970 11 836	1482 Nittedal		x							
+tsom	Sommarset Tonje Aarre			98610965,00	1259 OSLO		x							
+Søya	Sophie Stol Øyan			91823335,00					x					
+chsø	Sørensen Charlotte Halkier			41730969,00	3800 Bø i Telemark				x					
+ksti	Stigen, Kaja	95405842,00			3800 Bø I TELEMARK			x						
+spst	Stolsmo Sylvia Pal			94846202,00	1430 Ås			x						
+LCST	Strandenæs Liv Christine		92854752,00	92854752,00	0858 Oslo 			x		x				
+jsty	Stykket, Jeanette			41042447,00			x							
+ktei	Teien Karoline B.			91241191,00	3070 Sande			x						
+bvth	Thon, Bjørn Verde	90720830,00			3014 Drammen			x						
+pton	Toney Philip	22508434,00		97799916,00	0283 Oslo			x			x			
+ttor	Torke, Trond	41426143,00			0491 Oslo		x							
+lkjt	Trangrud Lise Katrine Jepsen	99 63 44 88			2407 Elverum				x					
+lcun	Unger Lars-Christian			90780659,00	0484 Oslo				x					
+tuts	Utstumo Trygve			922 09 841 	0650 Oslo		x							
+wmva	Vangen, William Monsen	22155008,00		91393747,00	0491 Oslo		x							
+cvil	Vilming Christian	95063095,00		48601472,00	1351 RUD			x				x		
+mawe	Wethal Magnus	90 58 69 29		90 58 69 29	2010 Strømmen				x		x	x		
+swik	Wike Stine	99737988,00			0165 OSLO				x					
+gmwy	Wyller Guro Marie	22298024,00		95829324,00	1170 Oslo		x							
