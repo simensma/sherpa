@@ -69,8 +69,12 @@ class Migration(DataMigration):
 
             try:
                 actor = orm['focus.Actor'].objects.get(first_name__iexact=first_name, last_name__iexact=last_name)
-                save_turleder(actor)
-                continue
+                # Skip some specific cases that I'm unsure of
+                if actor.memberid == 1163184 or actor.memberid == 4616170 or actor.memberid == 2497216:
+                    pass
+                else:
+                    save_turleder(actor)
+                    continue
             except orm['focus.Actor'].DoesNotExist:
                 pass
             except orm['focus.Actor'].MultipleObjectsReturned:
