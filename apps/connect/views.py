@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 
 from urllib import quote_plus
 from datetime import datetime, timedelta
@@ -41,7 +41,7 @@ def connect(request, method):
                 'client': client,
                 'redirect_url': redirect_url
             }
-            return redirect('user.login.views.connect_signon')
+            return redirect('connect.views.signon_login')
         # The only other method is bounce; in which case we'll just send the response as is
 
     # Append the current timestamp
@@ -53,3 +53,11 @@ def connect(request, method):
     url_safe = quote_plus(encrypted_data)
 
     return redirect("%s?data=%s" % (redirect_url, url_safe))
+
+def signon_login(request):
+    if not 'dntconnect' in request.session:
+        # Use a friendlier error message here?
+        raise PermissionDenied
+
+    context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
+    return render(request, 'main/connect/signon.html', context)

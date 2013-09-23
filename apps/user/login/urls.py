@@ -14,6 +14,4 @@ urlpatterns = patterns('user.login.views',
     url(r'^registrer/$', 'register'),
     url(r'^registrer/ikke-medlemmer/$', 'register_nonmember'),
     url(r'^sjekk-medlemsnummer/$', 'verify_memberid'),
-
-    url(r'^dnt-connect/$', 'connect_signon'),
 )

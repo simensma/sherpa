@@ -426,11 +426,3 @@ def restore_password(request, key):
         log_user_in(request, user)
         messages.info(request, 'password_reset_success')
         return redirect('user.views.home')
-
-def connect_signon(request):
-    if not 'dntconnect' in request.session:
-        # Use a friendlier error message here?
-        raise PermissionDenied
-
-    context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
-    return render(request, 'common/user/login/connect-signon.html', context)
