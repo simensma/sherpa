@@ -1,19 +1,19 @@
 $(document).ready(function() {
 
-    var editor = $("div.edit-aktivitet-leaders");
+    var editor = $("div.edit-aktivitet-turledere");
 
-    var leader_table = editor.find("div.date table.leaders");
+    var turleder_table = editor.find("div.date table.turledere");
 
-    leader_table.find("form.remove-leader a.remove").click(function() {
+    turleder_table.find("form.remove-turleder a.remove").click(function() {
         var name = $(this).parent().text().trim();
         if(confirm("Er du sikker på at du vil ta bort turleder-tilgangen fra " + name + "?")) {
             $(this).parent().submit();
         }
     });
 
-    var search = editor.find("div.leader-search");
-    var input = search.find("input[name='leader-search']");
-    var button = search.find("button.leader-search");
+    var search = editor.find("div.turleder-search");
+    var input = search.find("input[name='turleder-search']");
+    var button = search.find("button.turleder-search");
     var table = search.find("table.search-results");
     var loader = table.find("tr.loader");
     var no_hits = table.find("tr.no-hits");
@@ -76,7 +76,7 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('click', table.selector + ' tr.result button.assign-leader', function() {
+    $(document).on('click', table.selector + ' tr.result button.assign-turleder', function() {
         var form = $(this).siblings("form");
         if(form.find("input[name='aktivitet_dates']").length == 1) {
             // Only one date, submit it automatically

@@ -16,6 +16,27 @@
 
       {% include 'common/admin/aktiviteter/edit/navigation.html' with active='dates' %}
 
+      {# This form will never be submitted, but we're using the form element because of the styles #}
+      <form action="{% url 'admin.aktiviteter.views.edit_simple_signup' aktivitet.id %}" method="post" class="simple-signup form-default form-horizontal">
+        {% csrf_token %}
+        <div class="control-group">
+          <label class="control-label">Enkel påmelding:</label>
+          <div class="controls">
+            <div class="btn-group" data-toggle="buttons-radio">
+              <button class="btn allow-simple-signup{% if aktivitet.allow_simple_signup %} active{% endif %}">Tillat enkel påmelding</button>
+              <button class="btn deny-simple-signup{% if not aktivitet.allow_simple_signup %} active{% endif %}">Krev Min side-bruker</button>
+            </div>
+            <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+            <span class="saved hide">Lagret.</span>
+            <span class="error hide">Kunne ikke lagre! Vennligst prøv igjen.</span>
+            <div class="hints">
+              Enkel påmelding lar brukere melde seg på med <strong>kun navn og e-post eller telefonnummer</strong>. Fordelen er at påmeldingen er enklere, ulempen er at de ikke får se sin aktivitetshistorikk på Min side.<br>
+              Husk at selv om du krever en Min side-bruker betyr ikke det at du krever medlemskap i DNT.
+            </div>
+          </div>
+        </div>
+      </form>
+
       {# TODO: Client-side validations #}
 
       <div class="date-list">
@@ -24,16 +45,12 @@
         {% endfor %}
       </div>
 
-      <div class="control-group">
-        <div class="controls">
-          <div class="control-as-text">
-            <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url 'admin.aktiviteter.views.new_aktivitet_date' %}">
-              Legg til flere datoer
-            </a>
-            <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
-          </div>
-        </div>
-      </div>
+      <p>
+        <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url 'admin.aktiviteter.views.new_aktivitet_date' %}">
+          Legg til flere datoer
+        </a>
+        <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
+      </p>
 
     </div>
   </div>

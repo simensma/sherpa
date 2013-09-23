@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/leaders.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/turledere.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -19,11 +19,11 @@
 <div class="row">
   <div class="span12">
 
-    <div class="edit-aktivitet-leaders" data-aktivitet-id="{{ aktivitet.id }}">
+    <div class="edit-aktivitet-turledere" data-aktivitet-id="{{ aktivitet.id }}">
 
       <h2>Rediger aktivitet</h2>
 
-      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='leaders' %}
+      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='turledere' %}
 
       <p>
         Her kan du gi turledere tilgang til påmeldtlisten. Det trenger ikke nødvendigvis være en turleder, du kan hente ut hvem som helst fra medlemsregisteret, men han/henne <strong>må ha en bruker på Min side</strong>.
@@ -42,16 +42,16 @@
           Hvis aktiviteten har flere datoer, velger du hvilke datoer turlederen har tilgang til. Husk derfor å gjøre deg ferdig med <a href="{% url 'admin.aktiviteter.views.edit_dates' aktivitet.id %}">datoer og påmelding</a> først.
         </p>
 
-        <div class="leader-management form-border">
+        <div class="turleder-management form-border">
 
           {% for date in aktivitet.get_dates_ordered %}
             <div class="date" data-date-id="{{ date.id }}">
               <h3>Turledere {{ date.start_date|date:"j. F Y" }} - {{ date.end_date|date:"j. F Y" }}</h3>
-              <table class="leaders">
-                {% for user in date.leaders.all %}
+              <table class="turledere">
+                {% for user in date.turledere.all %}
                   <tr data-user-id="{{ user.id }}">
                     <td>
-                      <form action="{% url 'admin.aktiviteter.views.leader_remove' %}" method="post" class="remove-leader">
+                      <form action="{% url 'admin.aktiviteter.views.turleder_remove' %}" method="post" class="remove-turleder">
                         {% csrf_token %}
                         <input type="hidden" name="aktivitet_date" value="{{ date.id }}">
                         <input type="hidden" name="user" value="{{ user.id }}">
@@ -69,12 +69,12 @@
             </div>
           {% endfor %}
 
-          <div class="leader-search">
+          <div class="turleder-search">
             <h3>Finn nye turledere:</h3>
-            <input type="text" class="input-xlarge" name="leader-search" placeholder="Navn eller medlemsnummer...">
-            <button class="btn leader-search input-button-align"><i class="icon-search"></i></button>
+            <input type="text" class="input-xlarge" name="turleder-search" placeholder="Navn eller medlemsnummer...">
+            <button class="btn turleder-search input-button-align"><i class="icon-search"></i></button>
 
-            <table class="table search-results hide" data-search-url="{% url 'admin.aktiviteter.views.leader_search' %}">
+            <table class="table search-results hide" data-search-url="{% url 'admin.aktiviteter.views.turleder_search' %}">
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>

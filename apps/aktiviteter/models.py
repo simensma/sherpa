@@ -35,6 +35,7 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
+    allow_simple_signup = models.BooleanField()
     hidden = models.BooleanField(default=False)
 
     def get_dates_ordered(self):
@@ -152,7 +153,7 @@ class AktivitetDate(models.Model):
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
-    leaders = models.ManyToManyField('user.User', related_name='leader_aktivitet_dates')
+    turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
 
     def get_signup_enabled_json(self):
@@ -164,7 +165,11 @@ class AktivitetDate(models.Model):
 
     def will_accept_signups(self):
         today = date.today()
-        return self.signup_enabled and self.signup_start > today
+        return self.signup_enabled and self.signup_start >= today
+
+    def signup_deadline_passed(self):
+        today = date.today()
+        return self.signup_enabled and self.signup_deadline < today
 
     def accepts_signup_cancels(self):
         today = date.today()
@@ -176,8 +181,8 @@ class AktivitetDate(models.Model):
     def get_other_dates_ordered(self):
         return self.other_dates().order_by('-start_date')
 
-    def get_leaders_ordered(self):
-        return sorted(self.leaders.all(), key=lambda p: p.get_first_name())
+    def get_turledere_ordered(self):
+        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     @staticmethod
     def get_published():
@@ -190,3 +195,9 @@ class AktivitetImage(models.Model):
     text = models.CharField(max_length=1024)
     photographer = models.CharField(max_length=255)
     order = models.IntegerField()
+
+class SimpleParticipant(models.Model):
+    aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
+    name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)

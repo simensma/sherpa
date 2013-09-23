@@ -52,12 +52,28 @@ div.aktivitet {
     margin-bottom: 15px;
     font-family: "DTL Nobel" !important;
 
-    div.signup-countdown {
-      font-style: italic;
-    }
+    div.signup {
+      div.no-signup {
+        font-style: italic;
+      }
 
-    div.already-participating {
-      font-weight: bold;
+      div.already-participating {
+        font-weight: bold;
+      }
+
+      div.accepts-signups {
+        span.deadline {
+          font-style: italic;
+        }
+      }
+
+      div.signup-countdown {
+        font-style: italic;
+      }
+
+      div.signup-passed {
+        font-style: italic;
+      }
     }
 
     table {
@@ -82,6 +98,42 @@ div.aktivitet {
     div.carousel-caption {
       p {
         font-family: "DTL Nobel" !important;
+      }
+    }
+  }
+}
+
+div.aktivitet-signup {
+  div.choices {
+    div.choice {
+      margin-bottom: 20px;
+      cursor: pointer;
+
+      p.title {
+        font-size: 22px;
+      }
+
+      p.action {
+        color: @profile-red;
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+
+      div.inline-choice {
+        border: 1px solid rgb(190, 190, 190);
+        padding: 15px;
+        min-height: 60px;
+      }
+    }
+
+    div.choice.active {
+      cursor: auto;
+    }
+
+    div.choice:hover {
+      p.action a {
+        text-decoration: underline;
+        color: rgb(255, 0, 21);
       }
     }
   }

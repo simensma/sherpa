@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 {% block title %}Dine turer og aktiviteter &mdash; Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Dine turer og aktiviteter</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.turleder_aktivitet_dates' %}">Dine arrangerte turer og aktiviteter</a> / <em>{{ aktivitet_date.aktivitet.title }}</em>{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
   </div>
 
   <div class="span3">
-    {% include 'common/user/navigation.html' with active='leader_aktiviteter' %}
+    {% include 'common/user/account/navigation.html' with active='turleder_aktiviteter' %}
   </div>
 </div>
 

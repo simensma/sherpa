@@ -5,7 +5,8 @@ from django.contrib import messages
 import json
 
 from sherpa.decorators import user_requires_login
-from aktiviteter.models import Aktivitet, AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant
+from core import validator
 
 def index(request):
     aktivitet_dates = AktivitetDate.get_published().exclude(
@@ -31,17 +32,74 @@ def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     context = {
         'aktivitet_date': aktivitet_date,
-        'user_is_participating': request.user in aktivitet_date.participants.all()
+        'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
     }
     return render(request, 'common/aktiviteter/show.html', context)
 
-@user_requires_login()
 def signup(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
+    if request.user.is_authenticated():
+        return redirect('aktiviteter.views.signup_logged_on', aktivitet_date.id)
+    else:
+        return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
+
+def signup_not_logged_on(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if request.user.is_authenticated():
+        return redirect('aktiviteter.views.signup_logged_on', aktivitet_date.id)
+    if not aktivitet_date.accepts_signups():
+        raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
-    return render(request, 'common/aktiviteter/signup.html', context)
+    return render(request, 'common/aktiviteter/signup_not_logged_on.html', context)
+
+def signup_simple(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signups() or not aktivitet_date.aktivitet.allow_simple_signup:
+        raise PermissionDenied
+
+    errors = False
+
+    name = request.POST['name'].strip()
+    phone = request.POST['phone'].strip()
+    email = request.POST['email'].strip()
+
+    if not validator.name(name):
+        messages.error(request, 'simple_signup_name_invalid')
+        errors = True
+
+    if not validator.phone(phone, req=False):
+        messages.error(request, 'simple_signup_phone_invalid')
+        errors = True
+
+    if not validator.email(email, req=False):
+        messages.error(request, 'simple_signup_email_invalid')
+        errors = True
+
+    if phone == '' and email == '':
+        messages.error(request, 'simple_signup_phone_or_email_required')
+        errors = True
+
+    if errors:
+        return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
+
+    participant = SimpleParticipant(
+        aktivitet_date=aktivitet_date,
+        name=request.POST['name'],
+        email=request.POST['name'],
+        phone=request.POST['name']
+    )
+    participant.save()
+    return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
+
+@user_requires_login()
+def signup_logged_on(request, aktivitet_date):
+    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    if not aktivitet_date.accepts_signups():
+        raise PermissionDenied
+    context = {'aktivitet_date': aktivitet_date}
+    return render(request, 'common/aktiviteter/signup_logged_on.html', context)
 
 @user_requires_login()
 def signup_confirm(request, aktivitet_date):
