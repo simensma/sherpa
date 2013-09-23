@@ -83,8 +83,10 @@ class User(AbstractBaseUser):
         """
         return not Actor.objects.filter(memberid=self.memberid).exists()
 
-    # Return this users' Actor (cached)
     def get_actor(self):
+        """
+        Return this users' Actor (cached)
+        """
         actor = cache.get('actor.%s' % self.memberid)
         if actor is None:
             actor = Actor.objects.get(memberid=self.memberid)
