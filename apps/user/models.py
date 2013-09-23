@@ -39,6 +39,11 @@ class User(AbstractBaseUser):
     # we'll set this to True to mark them as expired.
     is_expired = models.BooleanField(default=False)
 
+    # After enrollment, the Actor won't exist until the enrollment is validated by
+    # medlemsservice, but in order to give the new member a preliminary User we'll
+    # create a pending one which uses 'focus.models.Enrollment'.
+    is_pending = models.BooleanField(default=False)
+
     # Password resets
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
     password_restore_date = models.DateTimeField(null=True)
