@@ -2,15 +2,13 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-from Crypto.Cipher import AES
 
 from urllib import quote_plus
 from datetime import datetime, timedelta
 import json
-import base64
 import time
 
-from core import pkcs7
+from connect.util import encrypt, decrypt
 from api.util import get_member_data
 
 def connect(request, method):
@@ -55,17 +53,3 @@ def connect(request, method):
     url_safe = quote_plus(encrypted_data)
 
     return redirect("%s?data=%s" % (redirect_url, url_safe))
-
-def encrypt(key, plaintext):
-    padded_text = pkcs7.encode(plaintext, len(key))
-    cipher = AES.new(key, AES.MODE_ECB)
-    msg = cipher.encrypt(padded_text)
-    encoded = base64.b64encode(msg)
-    return encoded
-
-def decrypt(key, encoded):
-    cipher = AES.new(key, AES.MODE_ECB)
-    ciphertext = base64.b64decode(encoded)
-    msg_padded = cipher.decrypt(ciphertext)
-    msg = pkcs7.decode(msg_padded, len(key))
-    return msg
