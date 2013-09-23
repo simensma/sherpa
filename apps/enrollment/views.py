@@ -423,6 +423,7 @@ def payment_method(request):
 
     context = {
         'card_available': State.objects.all()[0].card,
+        'card_required': 'innmelding.aktivitet' in request.session,
         'today': today,
         'new_membership_year': new_membership_year
     }
@@ -436,6 +437,10 @@ def payment(request):
 
     # If for some reason the user managed to POST 'card' as payment_method
     if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
+        return redirect('enrollment.views.payment_method')
+
+    # Enrollments through ordering require card payment
+    if 'innmelding.aktivitet' in request.session and request.POST.get('payment_method', '') != 'card':
         return redirect('enrollment.views.payment_method')
 
     if request.session['enrollment']['state'] == 'registration':
@@ -791,7 +796,8 @@ def result(request):
         'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
         'today': today,
-        'new_membership_year': new_membership_year
+        'new_membership_year': new_membership_year,
+        'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
     return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 

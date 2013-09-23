@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 
 from connect.util import get_request_data, prepare_response
 from api.util import get_member_data
@@ -22,6 +23,10 @@ def signon(request):
             'client': client,
             'redirect_url': redirect_url
         }
+        request.session['innmelding.aktivitet'] = {
+            'aktivitet': True, # TODO: Set to the relevant aktivitet-object
+            'redirect_url': reverse('connect.views.signon_login'),
+        }
         return redirect('connect.views.signon_login')
 
     response_data = get_member_data(request.user)
@@ -38,6 +43,7 @@ def signon_login(request):
         response_data = get_member_data(request.user)
         redirect_url = request.session['dntconnect']['redirect_url']
         del request.session['dntconnect']
+        del request.session['innmelding.aktivitet']
         return prepare_response(
             client,
             response_data,

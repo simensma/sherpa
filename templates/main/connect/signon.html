@@ -14,7 +14,7 @@
       <ul>
         <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}">logg på med din Min side-bruker</a></li>
         <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}#registrering">registrer deg på Min side</a></li>
-        <li>meld deg inn i DNT</li>
+        <li><a href="{% url 'enrollment.views.index' %}">meld deg inn i DNT</a> (krever betaling over nett)</li>
         <li><a href="{% url 'user.login.views.register_nonmember' %}?next={% url 'connect.views.signon_login' %}">registrer deg uten medlemskap</a></li>
       </ul>
 
