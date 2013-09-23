@@ -32,5 +32,17 @@ def signon_login(request):
         # Use a friendlier error message here?
         raise PermissionDenied
 
-    context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
-    return render(request, 'main/connect/signon.html', context)
+    if request.user.is_authenticated():
+        # The user is redirected back here after authenticating for continuation
+        client = request.session['dntconnect']['client']
+        response_data = get_member_data(request.user)
+        redirect_url = request.session['dntconnect']['redirect_url']
+        del request.session['dntconnect']
+        return prepare_response(
+            client,
+            response_data,
+            redirect_url
+        )
+    else:
+        context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
+        return render(request, 'main/connect/signon.html', context)
