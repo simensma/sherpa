@@ -209,7 +209,7 @@ def register(request):
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-            return redirect('user.views.home')
+            return redirect(request.GET.get('next', reverse('user.views.home')))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect("%s#registrering" % reverse('user.login.views.login'))
@@ -232,7 +232,8 @@ def register_nonmember(request):
 
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH,
-            'user_data': user_data
+            'user_data': user_data,
+            'next': request.GET.get('next'),
         }
         return render(request, 'common/user/login/registration_nonmember.html', context)
     elif request.method == 'POST':
@@ -274,7 +275,7 @@ def register_nonmember(request):
         t = loader.get_template('common/user/login/registered_nonmember_email.html')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-        return redirect('user.views.home')
+        return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):

@@ -30,7 +30,7 @@
       </ul>
     </div>
 
-    <form action="{% url 'user.login.views.register_nonmember' %}" method="post" class="registration hide form-default form-border form-horizontal">
+    <form action="{% url 'user.login.views.register_nonmember' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration hide form-default form-border form-horizontal">
       {% csrf_token %}
 
       <div class="row-fluid">
