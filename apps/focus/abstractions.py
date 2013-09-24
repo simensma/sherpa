@@ -1,13 +1,16 @@
 from core.models import County, FocusCountry, Zipcode
 from focus.models import FocusZipcode
 
-# This is a cleaner interface to an Actors address, based on Focus' ActorAddress model.
-# It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
-# If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode') and a
-# 'county' field ('core.models.County').
-# The class has utility methods for typical formatting of addresses (with newlines, and for
-# one line with commas).
 class ActorAddressClean:
+    """
+    This is a cleaner interface to an Actors address, based on Focus' ActorAddress model.
+    It has three address fields (field{1,3}), a 'country' field ('core.models.FocusCountry').
+    If the country is Norway, it also has a 'zipcode' field ('core.models.Zipcode') and a
+    'county' field ('core.models.County').
+    The class has utility methods for typical formatting of addresses (with newlines, and for
+    one line with commas).
+    """
+
     def __init__(self, address):
         # Add fields, replacing NULL values with the empty string
         self.field1 = address.a1.strip() if address.a1 is not None else ''
