@@ -3,8 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
 from django.core.cache import cache
+from django.utils import crypto
 
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
 from focus.abstractions import ActorProxy
@@ -578,6 +579,34 @@ class User(AbstractBaseUser):
         except User.DoesNotExist:
             from user.util import create_inactive_user
             return create_inactive_user(memberid)
+
+    @staticmethod
+    def create_pending(memberid):
+        Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
+        user = User(
+            identifier='%s' % memberid,
+            memberid=memberid,
+            is_active=False,
+            is_pending=True
+        )
+        user.set_unusable_password()
+        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+        while User.objects.filter(pending_registration_key=key).exists():
+            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+            # ~238 bits of entropy which means that this will never ever happen, ever.
+            # You will win the lottery before this happens. And I want to know if it does, so log it.
+            logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'should_you_play_the_lottery': True,
+                    'key': key
+                }
+            )
+            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+        user.pending_registration_key = key
+        user.save()
+        return user
 
 class Permission(models.Model):
     """

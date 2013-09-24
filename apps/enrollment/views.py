@@ -17,6 +17,7 @@ from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.models import State
+from user.models import User
 
 from datetime import datetime, date, timedelta
 import requests
@@ -636,6 +637,10 @@ def process_invoice(request):
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
+    for user in request.session['enrollment']['users']:
+        pending_user = User.create_pending(user['id'])
+        user['pending_registration_key'] = pending_user.pending_registration_key
+
     prepare_and_send_email(
         request,
         request.session['enrollment']['users'],
@@ -734,6 +739,8 @@ def process_card(request):
                     focus_user = Enrollment.objects.get(memberid=user['id'])
                     focus_user.paid = True
                     focus_user.save()
+                    pending_user = User.create_pending(user['id'])
+                    user['pending_registration_key'] = pending_user.pending_registration_key
                 prepare_and_send_email(
                     request,
                     request.session['enrollment']['users'],
