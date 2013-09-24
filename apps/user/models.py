@@ -44,6 +44,7 @@ class User(AbstractBaseUser):
     # medlemsservice, but in order to give the new member a preliminary User we'll
     # create a pending one which uses 'focus.models.Enrollment'.
     is_pending = models.BooleanField(default=False)
+    pending_registration_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
 
     # Password resets
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
