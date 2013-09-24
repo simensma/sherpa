@@ -77,6 +77,14 @@ def login(request):
                     context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
 
+                # Check if a pending user exists. This shouldn't ever happen (a pending user is recently
+                # enrolled, and an existing user will have been member for a long time).
+                if User.objects.filter(memberid=old_member.memberid, is_pending=True).exists():
+                    # Give the same error ("user exists, you need to use your new password")
+                    messages.error(request, 'old_memberid_but_memberid_exists')
+                    context['email'] = request.POST['email']
+                    return render(request, 'common/user/login/login.html', context)
+
                 # Verify that they exist in the membersystem (this turned out to be an incorrect assumption)
                 if not Actor.objects.filter(memberid=old_member.memberid).exists():
                     # We're not quite sure why this can happen, so we'll just give them the invalid
@@ -185,7 +193,7 @@ def register(request):
             actor = actor.get()
 
             # Check that the user doesn't already have an account
-            if User.get_users().filter(memberid=request.POST['memberid'], is_active=True).exists():
+            if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
                 messages.error(request, 'user_exists')
                 return redirect("%s#registrering" % reverse('user.login.views.login'))
 
@@ -201,7 +209,7 @@ def register(request):
 
             try:
                 # Check if the user's already created as inactive
-                user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
+                user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
                 user.is_active = True
                 user.set_password(request.POST['password'])
                 user.save()

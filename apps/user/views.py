@@ -238,12 +238,19 @@ def register_membership(request):
             # Ok, registration successful, update the user
             user = request.user
 
-            # If this memberid is already an imported inactive member, merge them
             try:
+                # If this memberid is already an imported inactive member, merge them
                 other_user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
                 user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
-                pass
+                # It could be a pending user. If inactive, that's fine. If active, they already
+                # gave it a password - but they authenticated anyway, so we should still merge them.
+                try:
+                    other_user = User.objects.get(memberid=request.POST['memberid'], is_pending=True)
+                    user.merge_with(other_user, move_password=True) # This will delete the other user
+                except User.DoesNotExist:
+                    # All right then, the user doesn't exist.
+                    pass
 
             user.memberid = request.POST['memberid']
             user.save()

@@ -534,8 +534,16 @@ class User(AbstractBaseUser):
     #
 
     @staticmethod
-    def get_users():
-        return User.objects.filter(is_expired=False)
+    def get_users(include_pending=False):
+        """
+        Filter on what we consider the 'current' userbase, i.e. not expired users.
+        Typically this shouldn't include pending users (until they're accepted), but
+        in some rare cases we *do* want them too, hence the include_pending parameter.
+        """
+        users = User.objects.filter(is_expired=False)
+        if not include_pending:
+            users = users.filter(is_pending=False)
+        return users
 
     @staticmethod
     def sherpa_users():
