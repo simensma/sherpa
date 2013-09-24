@@ -141,7 +141,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.get_users().filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -162,7 +162,7 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.get_users().get(id=request.POST['user'], is_active=True)
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
     if 'dntconnect' in request.session:

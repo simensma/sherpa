@@ -6,7 +6,8 @@ import hashlib
 
 from sherpa25.models import Member
 from user.models import User
-from focus.models import Actor
+from focus.models import Actor, Enrollment
+from focus.util import PAYMENT_METHOD_CODES
 
 # Checks whether the given IP address has performed more than the allowed amount of lookups
 # on memberid + zipcode. This is because since there are a relatively low amount of total zipcodes
@@ -41,10 +42,27 @@ def authenticate_users(email, password):
     matches = [u for u in User.get_users().filter(memberid__isnull=True, email=email) if u.check_password(password)]
 
     # Add matching members with active User
-    focus_candidates = Actor.objects.filter(email=email)
-    for a in focus_candidates:
+    actor_candidates = Actor.objects.filter(email=email)
+    for a in actor_candidates:
         try:
             u = User.get_users().get(memberid=a.memberid, is_active=True)
+            if u.check_password(password):
+                matches.append(u)
+        except User.DoesNotExist:
+            pass
+
+    # Add matching members with pending User
+    # Soo, it seems the focus.models.Enrollment.email field is of the 'ntext' type, which is completely wrong.
+    # We can't perform lookups on it without casting it to nvarchar, so we'll have to do this with a raw query.
+    # Yes, this is truly truly horrible, especially here in the authentication method. However, at least Django
+    # still takes care of SQL injection, so as long as the query is correct, this *should* be all right.
+    # The current query would look like this with ORM: Enrollment.get_active().filter(email=email)
+    query = 'select * from %s where (("Paymethod" = %s or "Paymethod" = %s ) and "SubmittedDt" is null and Cast(Email as nvarchar(max)) = %s )' % (Enrollment._meta.db_table, '%s', '%s', '%s')
+    params = [PAYMENT_METHOD_CODES['card'], PAYMENT_METHOD_CODES['invoice'], email]
+    enrollment_candidates = Enrollment.objects.raw(query, params)
+    for e in enrollment_candidates:
+        try:
+            u = User.get_users(include_pending=True).get(memberid=e.memberid, is_active=True)
             if u.check_password(password):
                 matches.append(u)
         except User.DoesNotExist:
