@@ -7,6 +7,7 @@ from django.core.cache import cache
 from focus.models import Actor
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
+from focus.abstractions import ActorProxy
 
 from itertools import groupby
 from datetime import date
@@ -86,17 +87,20 @@ class User(AbstractBaseUser):
         """
         Regardless of is_expired is set or not, check if this user should be expired.
         """
-        return not Actor.objects.filter(memberid=self.memberid).exists()
+        return not self.is_pending and not Actor.objects.filter(memberid=self.memberid).exists()
 
     def get_actor(self):
         """
-        Return this users' Actor (cached)
+        Return this users' Actor (cached), or an ActorProxy if this is a pending user
         """
-        actor = cache.get('actor.%s' % self.memberid)
-        if actor is None:
-            actor = Actor.objects.get(memberid=self.memberid)
-            cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return actor
+        if self.is_pending:
+            return ActorProxy(self.memberid)
+        else:
+            actor = cache.get('actor.%s' % self.memberid)
+            if actor is None:
+                actor = Actor.objects.get(memberid=self.memberid)
+                cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            return actor
 
     def get_parent(self):
         if not self.is_household_member():
@@ -153,13 +157,13 @@ class User(AbstractBaseUser):
         if not self.is_member():
             return self.first_name
         else:
-            return self.get_actor().first_name
+            return self.get_actor().get_first_name()
 
     def get_last_name(self):
         if not self.is_member():
             return self.last_name
         else:
-            return self.get_actor().last_name
+            return self.get_actor().get_last_name()
 
     def get_full_name(self):
         if not self.is_member():
@@ -183,7 +187,7 @@ class User(AbstractBaseUser):
         return self.get_actor().get_clean_address()
 
     def get_birth_date(self):
-        return self.get_actor().birth_date
+        return self.get_actor().get_birth_date()
 
     def get_gender(self):
         return self.get_actor().get_gender()

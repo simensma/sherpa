@@ -26,6 +26,12 @@ MEMBERSHIP_TYPES = [
 # length of 40 chars which is very short, so we'll specify that here and use it for validation.
 ADDRESS_FIELD_MAX_LENGTH = 40
 
+# Payment method codes for the field in focus.models.Enrollment.payment_method
+PAYMENT_METHOD_CODES = {
+    'card': 4,
+    'invoice': 1
+}
+
 def get_membership_type_by_code(code):
     return [t for t in MEMBERSHIP_TYPES if t['code'] == code][0]
 

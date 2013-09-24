@@ -9,43 +9,49 @@ from django.conf import settings
 from datetime import datetime
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, PAYMENT_METHOD_CODES
 
 logger = logging.getLogger('sherpa')
 
 class Enrollment(models.Model):
     tempid = models.FloatField(db_column=u'tempID', null=True, default=None)
     memberid = models.IntegerField(db_column=u'memberID', primary_key=True)
-    last_name = models.CharField(db_column=u'Lastname', max_length=255)
     first_name = models.CharField(db_column=u'Firstname', max_length=255)
-    dob = models.DateTimeField(db_column=u'Birthdate')
+    last_name = models.CharField(db_column=u'Lastname', max_length=255)
+    birth_date = models.DateTimeField(db_column=u'Birthdate')
     gender = models.CharField(db_column=u'Gender', max_length=1, choices=(('M', 'Mann'), ('K', 'Kvinne')))
-    linked_to = models.CharField(db_column=u'LinkedTo', max_length=255)
-    enlisted_by = models.CharField(db_column=u'EnlistedBy', max_length=255, default=0)
-    enlisted_article = models.CharField(db_column=u'EnlistedArticle', max_length=255, default=None)
+    phone_home = models.CharField(db_column=u'Phone', max_length=255)
+    phone_mobile = models.CharField(db_column=u'Mob', max_length=255)
+    email = models.TextField(db_column=u'Email')
+
     adr1 = models.CharField(db_column=u'Adr1', max_length=255)
     adr2 = models.CharField(db_column=u'Adr2', max_length=255)
     adr3 = models.CharField(db_column=u'Adr3', max_length=255)
-    country = models.CharField(max_length=255, db_column=u'Country')
-    phone = models.CharField(db_column=u'Phone', max_length=255)
-    email = models.TextField(db_column=u'Email')
+    zipcode = models.CharField(db_column=u'Postnr', max_length=255)
+    area = models.CharField(db_column=u'Poststed', max_length=255)
+    country_code = models.CharField(max_length=255, db_column=u'Country')
+
+    payment_method = models.FloatField(db_column=u'Paymethod')
+    paid = models.BooleanField(db_column=u'Payed', default=False)
+    totalprice = models.FloatField(db_column=u'TotalPrice')
+
+    linked_to = models.CharField(db_column=u'LinkedTo', max_length=255)
+    enlisted_by = models.CharField(db_column=u'EnlistedBy', max_length=255, default=0)
+    enlisted_article = models.CharField(db_column=u'EnlistedArticle', max_length=255, default=None)
     receive_yearbook = models.BooleanField(db_column=u'ReceiveYearbook')
     type = models.FloatField(db_column=u'Type')
     yearbook = models.CharField(db_column=u'Yearbook', max_length=255)
-    payment_method = models.FloatField(db_column=u'Paymethod')
     contract_giro = models.BooleanField(db_column=u'ContractGiro', default=False)
-    mob = models.CharField(db_column=u'Mob', max_length=255)
-    postnr = models.CharField(db_column=u'Postnr', max_length=255)
-    poststed = models.CharField(db_column=u'Poststed', max_length=255)
     language = models.CharField(max_length=255)
-    totalprice = models.FloatField(db_column=u'TotalPrice')
-    paid = models.BooleanField(db_column=u'Payed', default=False)
     reg_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
     receive_email = models.BooleanField(db_column=u'ReceiveEmail', default=True)
     receive_sms = models.BooleanField(db_column=u'ReceiveSms', default=True)
     submitted_by = models.CharField(db_column=u'SubmittedBy', max_length=255, null=True, default=None)
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
+
+    def has_paid(self):
+        return self.payment_method == PAYMENT_METHOD_CODES['card'] and self.paid == True
 
     class Meta:
         db_table = u'CustTurist_members'
@@ -178,14 +184,23 @@ class Actor(models.Model):
         else:
             return ''
 
+    def get_first_name(self):
+        return self.first_name.strip()
+
+    def get_last_name(self):
+        return self.last_name.strip()
+
     def get_full_name(self):
-        return ("%s %s" % (self.first_name, self.last_name)).strip()
+        return ("%s %s" % (self.get_first_name(), self.get_last_name())).strip()
 
     def get_email(self):
         return self.email.strip() if self.email is not None else ''
 
+    def get_birth_date(self):
+        return self.birth_date
+
     def get_age(self):
-        return (datetime.now() - self.birth_date).days / 365
+        return (datetime.now() - self.get_birth_date()).days / 365
 
     def get_gender(self):
         if self.gender.lower() == 'm':

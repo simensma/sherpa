@@ -15,7 +15,7 @@ from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
-from focus.util import get_membership_type_by_codename
+from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.models import State
 
 from datetime import datetime, date, timedelta
@@ -43,11 +43,6 @@ invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
-
-FOCUS_PAYMENT_METHOD_CODES = {
-    'card': 4,
-    'invoice': 1
-}
 
 # Hardcoded ages
 AGE_SENIOR = 67
@@ -1059,7 +1054,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to is not None)
-    payment_method = FOCUS_PAYMENT_METHOD_CODES[payment_method]
+    payment_method = PAYMENT_METHOD_CODES[payment_method]
     price = price_of(age, linked_to is not None, price)
     linked_to = '' if linked_to is None else str(linked_to)
     if location['country'] == 'NO':
@@ -1104,22 +1099,22 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         memberid=memberid,
         last_name=last_name,
         first_name=first_name,
-        dob=dob,
+        birth_date=dob,
         gender=gender,
         linked_to=linked_to,
         adr1=adr1,
         adr2=adr2,
         adr3=adr3,
-        country=location['country'],
-        phone='',
+        country_code=location['country'],
+        phone_home='',
         email=email,
         receive_yearbook=yearbook,
         type=type,
         yearbook=yearbook_type,
         payment_method=payment_method,
-        mob=phone,
-        postnr=zipcode,
-        poststed=area,
+        phone_mobile=phone,
+        zipcode=zipcode,
+        area=area,
         language=language,
         totalprice=price
     )

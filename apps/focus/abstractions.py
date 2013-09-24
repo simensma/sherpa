@@ -1,5 +1,10 @@
+from django.core.cache import cache
+from django.conf import settings
+
 from core.models import County, FocusCountry, Zipcode
-from focus.models import FocusZipcode
+from focus.models import FocusZipcode, Enrollment
+
+from datetime import datetime
 
 class ActorAddressClean:
     """
@@ -87,3 +92,78 @@ class ActorAddressClean:
         else:
             address_string += ' (%s, %s)' % (self.country.name, self.country.code)
         return address_string
+
+class ActorProxy:
+    """
+    A simulated Actor-class which implements most of Actor's methods.
+
+    Used for pending users - enrolled users who aren't accepted by medlemsservice yet,
+    hence don't exist in the Actor table.
+    """
+
+    def __init__(self, memberid):
+        enrollment = cache.get('focus.enrollment.%s' % memberid)
+        if enrollment is None:
+            enrollment = Enrollment.objects.get(memberid=memberid)
+            cache.set('focus.enrollment.%s' % memberid, enrollment, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        self.enrollment = enrollment
+
+    def __unicode__(self):
+        return u'%s' % self.enrollment.memberid
+
+    def get_first_name(self):
+        return self.enrollment.first_name.strip()
+
+    def get_last_name(self):
+        return self.enrollment.last_name.strip()
+
+    def get_full_name(self):
+        return ("%s %s" % (self.get_first_name(), self.get_last_name())).strip()
+
+    def get_email(self):
+        return self.enrollment.email.strip() if self.enrollment.email is not None else ''
+
+    def get_birth_date(self):
+        return self.enrollment.birth_date
+
+    def get_age(self):
+        return (datetime.now() - self.enrollment.birth_date).days / 365
+
+    def get_gender(self):
+        if self.enrollment.gender.lower() == 'm':
+            return 'm'
+        elif self.enrollment.gender.lower() == 'k':
+            return 'f'
+        else:
+            return None
+
+    def get_phone_home(self):
+        return self.enrollment.phone_home.strip() if self.enrollment.phone_home is not None else ''
+
+    def get_phone_mobile(self):
+        return self.enrollment.phone_mobile.strip() if self.enrollment.phone_mobile is not None else ''
+
+    def get_parent_memberid(self):
+        if self.enrollment.linked_to == 0 or self.enrollment.linked_to == self.enrollment.memberid:
+            return None
+        else:
+            return self.enrollment.linked_to
+
+    def has_paid(self):
+        return self.enrollment.has_paid()
+
+    def get_clean_address(self):
+        return ActorAddressClean(ActorAddressProxy(self.enrollment))
+
+class ActorAddressProxy:
+    """
+    A simulated ActorAddress-class which represents an address in kind of the same way.
+    Used by ActorAddressClean for ActorProxy.
+    """
+
+    def __init__(self, enrollment):
+        self.a1 = enrollment.adr1
+        self.a2 = enrollment.adr2
+        self.a3 = enrollment.adr3
+        self.country_code = enrollment.country_code
+        self.zipcode = enrollment.zipcode
