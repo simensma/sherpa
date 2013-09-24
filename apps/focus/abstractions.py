@@ -3,6 +3,7 @@ from django.conf import settings
 
 from core.models import County, FocusCountry, Zipcode
 from focus.models import FocusZipcode, Enrollment
+from focus.util import PAYMENT_METHOD_CODES
 
 from datetime import datetime
 
@@ -154,6 +155,16 @@ class ActorProxy:
 
     def get_clean_address(self):
         return ActorAddressClean(ActorAddressProxy(self.enrollment))
+
+    #
+    # Specific methods for pending users - not available on normal Actors
+    #
+
+    def get_payment_method_text(self):
+        return [p[0] for p in PAYMENT_METHOD_CODES.items() if p[1] == self.enrollment.payment_method][0]
+
+    def get_enrollment_registration_date(self):
+        return self.enrollment.registration_date
 
 class ActorAddressProxy:
     """

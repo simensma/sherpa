@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 
 from association.models import Association
 from user.models import User, Permission, AssociationRole
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 from core.util import current_membership_year_start
 from user.util import create_inactive_user
 
@@ -75,9 +75,19 @@ def search(request):
         expired_users = expired_users.filter(memberid__icontains=word)
     expired_users = [u for u in expired_users if not Actor.objects.filter(memberid=u.memberid).exists()]
 
+    # Pending users
+    pending_enrollment = Enrollment.get_active()
+    for word in request.POST['q'].split():
+        pending_enrollment = pending_enrollment.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word))
+    pending_enrollment = pending_enrollment.order_by('first_name')
+
     members = User.get_users().filter(memberid__in=[a.memberid for a in actors])
+    pending_users = User.get_users(include_pending=True).filter(memberid__in=[e.memberid for e in pending_enrollment])
     actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
-    users = list(local_users) + list(members)
+    users = list(local_users) + list(members) + list(pending_users)
 
     context = RequestContext(request, {
         'users': users,
@@ -140,6 +150,7 @@ def change_memberid(request):
         old_user.identifier = request.POST['new-memberid']
         old_user.memberid = request.POST['new-memberid']
         old_user.is_expired = False
+        old_user.is_pending = False
         old_user.save()
         resulting_user = old_user
     if 'purge-busticket' in request.POST:

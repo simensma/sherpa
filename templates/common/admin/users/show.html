@@ -26,6 +26,113 @@
         Brukeren er merket som <em>utgått</em> og kan ikke logge på Min side. Dersom brukeren har fått nytt medlemsnummer kan du endre det under.
       </p>
 
+    {% elif other_user.is_pending %}
+
+      <h3>Personopplysninger</h3>
+      <table class="table">
+        <tr>
+          <th>Navn</th>
+          <td>{{ other_user.get_full_name }}</td>
+        </tr>
+        <tr>
+          <th>E-post</th>
+          <td>
+            {% if other_user.get_email %}
+              <a href="mailto:{{ other_user.get_email }}">{{ other_user.get_email }}</a>
+            {% else %}
+              <em>Ikke oppgitt</em>
+            {% endif %}
+          </td>
+        </tr>
+        {% if other_user.perms.sherpa and other_user.sherpa_email != '' %}
+          <tr>
+            <th>E-post i Sherpa</th>
+            <td>{{ other_user.sherpa_email }}</td>
+          </tr>
+        {% endif %}
+
+        <tr>
+          <th>Telefon</th>
+          <td>{{ other_user.get_phone_home }}</td>
+        </tr>
+        <tr>
+          <th>Mobiltelefon</th>
+          <td>{{ other_user.get_phone_mobile }}</td>
+        </tr>
+        <tr>
+          <th>Født</th>
+          <td>{{ other_user.get_birth_date|date:"j. F Y" }}</td>
+        </tr>
+
+        <tr>
+          <th>Adresse</th>
+          <td>
+            {{ other_user.get_address.format_with_newlines|linebreaksbr }}
+          </td>
+        </tr>
+
+        <tr>
+          <th>Min side-bruker</th>
+          <td>
+            {% if other_user.is_active %}
+              Ja
+            {% else %}
+              Nei
+            {% endif %}
+          </td>
+        </tr>
+      </table>
+
+      <h3>Medlemsinformasjon</h3>
+      <table class="table">
+        <tr>
+          <th>Status</th>
+          <td>
+            <em>Nylig innmeldt; venter på godkjenning av medlemsservice</em>
+          </td>
+        </tr>
+        <tr>
+          <th>Betalingsmåte</th>
+          <td>
+            {% if other_user.get_payment_method_text == 'card' %}
+              {% if other_user.has_paid %}
+                Bekreftet betalt over nett
+              {% else %}
+                Forsøkt betalt over nett, <strong>ikke bekreftet</strong>.
+              {% endif %}
+            {% else %}
+              Faktura
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Medlemsnummer</th>
+          <td>{{ other_user.memberid }}</td>
+        </tr>
+        <tr>
+          <th>Innmelding registrert</th>
+          <td>{{ other_user.get_enrollment_registration_date|date:"H:i, j. F Y" }}</td>
+        </tr>
+        <tr>
+          <th>Bussbillett fra NOR-WAY</th>
+          <td>
+            {% if other_user.norway_bus_ticket %}
+              <strong>Bestilt:</strong> {{ other_user.norway_bus_ticket.date_placed|date:"j. F Y" }}<br>
+              <strong>Reisedato:</strong>
+              {% if not other_user.norway_bus_ticket.is_imported %}
+                {{ other_user.norway_bus_ticket.date_trip|date:"j. F Y" }}
+              {% else %}
+                {{ other_user.norway_bus_ticket.date_trip_text }}
+              {% endif %}
+              <br>
+              <strong>Strekning:</strong> {{ other_user.norway_bus_ticket.distance }}
+            {% else %}
+              Ikke bestilt; kan ikke bestille før innmeldingen blir godkjent av medlemsservice.
+            {% endif %}
+          </td>
+        </tr>
+      </table>
+
     {% else %}
 
       <h3>Personopplysninger</h3>
@@ -570,7 +677,12 @@
       {% for turleder in other_user.turledere.all|sort_by_turleder_role %}
         {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
       {% empty %}
-        Ingen turledersertifikat. <a href="{% url 'admin.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
+        Ingen turledersertifikat.
+        {% if not other_user.is_pending %}
+          <a href="{% url 'admin.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
+        {% else %}
+          <em>Kan ikke registreres som turleder før innmeldingen blir godkjent av medlemsservice (vanligvis 1-2 virkedager).</em>
+        {% endif %}
       {% endfor %}
     </p>
   </div>

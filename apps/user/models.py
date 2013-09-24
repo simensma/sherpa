@@ -150,6 +150,22 @@ class User(AbstractBaseUser):
         return self.get_actor().has_membership_type(codename)
 
     #
+    # Specific to pending users - checks focus.models.Enrollment
+    #
+
+    def get_payment_method_text(self):
+        if not self.is_pending:
+            raise Exception("Can't check payment method for non-pending users, check your logic.")
+
+        return self.get_actor().get_payment_method_text()
+
+    def get_enrollment_registration_date(self):
+        if not self.is_pending:
+            raise Exception("Can't check enrollment registration for non-pending users, check your logic.")
+
+        return self.get_actor().get_enrollment_registration_date()
+
+    #
     # Personalia and Focus queries
     #
 

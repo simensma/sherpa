@@ -35,6 +35,8 @@ class Enrollment(models.Model):
     paid = models.BooleanField(db_column=u'Payed', default=False)
     totalprice = models.FloatField(db_column=u'TotalPrice')
 
+    registration_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
+
     linked_to = models.CharField(db_column=u'LinkedTo', max_length=255)
     enlisted_by = models.CharField(db_column=u'EnlistedBy', max_length=255, default=0)
     enlisted_article = models.CharField(db_column=u'EnlistedArticle', max_length=255, default=None)
@@ -43,7 +45,6 @@ class Enrollment(models.Model):
     yearbook = models.CharField(db_column=u'Yearbook', max_length=255)
     contract_giro = models.BooleanField(db_column=u'ContractGiro', default=False)
     language = models.CharField(max_length=255)
-    reg_date = models.DateTimeField(db_column=u'Regdate', auto_now_add=True)
     receive_email = models.BooleanField(db_column=u'ReceiveEmail', default=True)
     receive_sms = models.BooleanField(db_column=u'ReceiveSms', default=True)
     submitted_by = models.CharField(db_column=u'SubmittedBy', max_length=255, null=True, default=None)
@@ -52,6 +53,14 @@ class Enrollment(models.Model):
 
     def has_paid(self):
         return self.payment_method == PAYMENT_METHOD_CODES['card'] and self.paid == True
+
+    @staticmethod
+    def get_active():
+        return Enrollment.objects.filter(
+            Q(payment_method=PAYMENT_METHOD_CODES['card']) |
+            Q(payment_method=PAYMENT_METHOD_CODES['invoice']),
+            submitted_date__isnull=True
+        )
 
     class Meta:
         db_table = u'CustTurist_members'

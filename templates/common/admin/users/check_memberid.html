@@ -66,7 +66,7 @@
 {% elif not actor and existing_user %}
 
   <p>
-    Medlemsnummer <strong>{{ existing_user.memberid }}</strong> er ikke oppført i medlemsregisteret, men har en eksisterende utgått bruker på Min side.
+    Medlemsnummer <strong>{{ existing_user.memberid }}</strong> er ikke oppført i medlemsregisteret, men har en eksisterende bruker (<strong>{{ existing_user.get_full_name }}</strong>) på Min side.
   </p>
 
 {% else %}
