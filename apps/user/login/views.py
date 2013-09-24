@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login as log_user_in, logout as lo
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 
 from datetime import datetime, timedelta
 from smtplib import SMTPException
@@ -18,7 +18,7 @@ import sys
 import hashlib
 
 from user.models import User
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 from user.util import memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
 from core import validator
 from core.models import FocusCountry
@@ -44,6 +44,14 @@ def login(request):
         if request.user.is_authenticated():
             # User is already authenticated, skip login
             return redirect(request.GET.get('next', reverse('user.views.home')))
+
+        if 'registreringsnokkel' in request.GET:
+            try:
+                user = User.get_users(include_pending=True).get(pending_registration_key=request.GET['registreringsnokkel'])
+                context['user_to_register'] = user
+            except User.DoesNotExist:
+                pass
+
         context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
 
@@ -190,7 +198,18 @@ def register(request):
                 address__country_code=request.POST['country'])
             if request.POST['country'] == 'NO':
                 actor = actor.filter(address__zipcode=request.POST['zipcode'])
-            actor = actor.get()
+            if actor.exists():
+                actor = actor.get()
+            else:
+                # No matching actors, check for pending users
+                enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
+                if request.POST['country'] == 'NO':
+                    enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
+                if enrollment.exists():
+                    actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+                else:
+                    # Give up
+                    raise ObjectDoesNotExist
 
             # Check that the user doesn't already have an account
             if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
@@ -204,8 +223,7 @@ def register(request):
                 messages.error(request, 'expired_user_exists')
                 return redirect("%s#registrering" % reverse('user.login.views.login'))
 
-            actor.email = request.POST['email']
-            actor.save()
+            actor.set_email(request.POST['email'].strip())
 
             try:
                 # Check if the user's already created as inactive
@@ -227,7 +245,7 @@ def register(request):
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
             return redirect(request.GET.get('next', reverse('user.views.home')))
-        except (Actor.DoesNotExist, ValueError):
+        except (ObjectDoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect("%s#registrering" % reverse('user.login.views.login'))
         except SMTPException:
@@ -307,7 +325,18 @@ def verify_memberid(request):
             address__country_code=request.POST['country'])
         if request.POST['country'] == 'NO':
             actor = actor.filter(address__zipcode=request.POST['zipcode'])
-        actor = actor.get()
+        if actor.exists():
+            actor = actor.get()
+        else:
+            # No matching actors, check for pending users
+            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
+            if request.POST['country'] == 'NO':
+                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
+            if enrollment.exists():
+                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+            else:
+                # Give up
+                raise ObjectDoesNotExist
 
         try:
             user = User.objects.get(memberid=request.POST['memberid'], is_active=True)
@@ -324,7 +353,7 @@ def verify_memberid(request):
             'user_exists': user_exists,
             'user_is_expired': user_is_expired
         }))
-    except (ValueError, Actor.DoesNotExist):
+    except (ValueError, ObjectDoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):

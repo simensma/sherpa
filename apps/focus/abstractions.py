@@ -124,6 +124,10 @@ class ActorProxy:
     def get_email(self):
         return self.enrollment.email.strip() if self.enrollment.email is not None else ''
 
+    def set_email(self, email):
+        self.enrollment.email = email
+        self.enrollment.save()
+
     def get_birth_date(self):
         return self.enrollment.birth_date
 

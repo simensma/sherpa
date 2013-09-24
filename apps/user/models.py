@@ -195,6 +195,13 @@ class User(AbstractBaseUser):
         else:
             return self.get_actor().get_email()
 
+    def set_email(self, email):
+        if not self.is_member():
+            self.email = email
+            self.save()
+        else:
+            self.get_actor().set_email(email)
+
     def get_sherpa_email(self):
         if self.sherpa_email != '':
             return self.sherpa_email

@@ -205,6 +205,10 @@ class Actor(models.Model):
     def get_email(self):
         return self.email.strip() if self.email is not None else ''
 
+    def set_email(self, email):
+        self.email = email
+        self.save()
+
     def get_birth_date(self):
         return self.birth_date
 

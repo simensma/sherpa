@@ -103,14 +103,27 @@ $(document).ready(function() {
             step2.find("div.hints.email-not-found").show();
         }
 
-        step1.fadeOut(function() {
-            // Wait for fadeOut to complete before fadeIn
-            step2.fadeIn();
-        });
+        if(window.Turistforeningen.preregistered_user === undefined) {
+            step1.fadeOut(function() {
+                // Wait for fadeOut to complete before fadeIn
+                step2.fadeIn();
+            });
+        } else {
+            // We're automatically going to step2 - skip the fade-effects
+            step1.hide();
+            step2.show();
+        }
     }
 
     $("a.trigger-memberid-hint").click(function() {
         $("div.memberid-hint-modal").modal();
     });
+
+    // Check if a pre-registrated user is filled out
+    if(window.Turistforeningen.preregistered_user !== undefined) {
+        registration_form.find("input[name='memberid']").val(window.Turistforeningen.preregistered_user.memberid);
+        registration_form.find("input[name='zipcode']").val(window.Turistforeningen.preregistered_user.zipcode);
+        registration_form.submit();
+    }
 
 });
