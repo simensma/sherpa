@@ -42,7 +42,7 @@ def prepare_response(client, response_data, redirect_url):
     return redirect("%s?data=%s" % (redirect_url, url_safe))
 
 def encrypt(key, plaintext):
-    padded_text = pkcs7.encode(plaintext, len(key))
+    padded_text = pkcs7.encode(plaintext, settings.DNT_CONNECT_BLOCK_SIZE)
     cipher = AES.new(key, AES.MODE_ECB)
     msg = cipher.encrypt(padded_text)
     encoded = base64.b64encode(msg)
@@ -53,7 +53,7 @@ def decrypt(key, encoded):
         cipher = AES.new(key, AES.MODE_ECB)
         ciphertext = base64.b64decode(encoded)
         msg_padded = cipher.decrypt(ciphertext)
-        msg = pkcs7.decode(msg_padded, len(key))
+        msg = pkcs7.decode(msg_padded, settings.DNT_CONNECT_BLOCK_SIZE)
         return msg
     except TypeError:
         # Can e.g. be incorrect padding if they forgot to URLEncode the data
