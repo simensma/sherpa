@@ -584,7 +584,7 @@ class User(AbstractBaseUser):
         """
         users = User.objects.filter(is_expired=False)
         if not include_pending:
-            users = users.filter(is_pending=False)
+            users = users.exclude(is_pending=True)
         return users
 
     @staticmethod
