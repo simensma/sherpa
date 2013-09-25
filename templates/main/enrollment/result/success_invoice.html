@@ -40,6 +40,13 @@
       {# "Where to go next" - hide if enrolling for an aktivitet #}
       <div class="next-step">
 
+        {% if users|length == 1 %}
+          <h3>Registrer deg på Min side</h3>
+          <p>
+            Registrer deg på <a href="{% url 'user.login.views.login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
+          </p>
+        {% endif %}
+
         <h3>Planlegg turen på UT.no</h3>
         <p>
           På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
