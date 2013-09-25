@@ -40,7 +40,7 @@ def get_member_data(user):
             'kjønn': api_gender_output(user.get_gender()),
             'epost': user.get_email(),
             'mobil': user.get_phone_mobile(),
-            'address': {
+            'adresse': {
                 'adresse1': address.field1,
                 'adresse2': address.field2,
                 'adresse3': address.field3,
