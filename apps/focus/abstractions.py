@@ -149,7 +149,7 @@ class ActorProxy:
         return self.enrollment.phone_mobile.strip() if self.enrollment.phone_mobile is not None else ''
 
     def get_parent_memberid(self):
-        if self.enrollment.linked_to == 0 or self.enrollment.linked_to == self.enrollment.memberid:
+        if self.enrollment.linked_to == 0 or self.enrollment.linked_to == self.enrollment.memberid or self.enrollment.linked_to == '':
             return None
         else:
             return self.enrollment.linked_to
