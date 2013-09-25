@@ -864,7 +864,6 @@ def sms(request):
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
-    email_recipients = [u['email'] for u in users if u['email'] != '']
     if len(users) == 1:
         subject = EMAIL_SUBJECT_SINGLE
         template = 'email-%s-single.html' % payment_method
@@ -873,22 +872,24 @@ def prepare_and_send_email(request, users, association, location, payment_method
         template = 'email-%s-multiple.html' % payment_method
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = Context({
-        'users': users,
-        'association': association,
-        'location': location,
-        'proof_validity_end': proof_validity_end,
-        'price_sum': price_sum
-    })
-    message = render_to_string('main/enrollment/result/%s' % template, context)
-    try:
-        send_mail(subject, message, EMAIL_FROM, email_recipients)
-    except SMTPException:
-        # Silently log and ignore this error. The user will have to do without email receipt.
-        logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
+    for user in users:
+        try:
+            context = Context({
+                'user': user,
+                'users': users,
+                'association': association,
+                'location': location,
+                'proof_validity_end': proof_validity_end,
+                'price_sum': price_sum
+            })
+            message = render_to_string('main/enrollment/result/%s' % template, context)
+            send_mail(subject, message, EMAIL_FROM, [user['email']])
+        except SMTPException:
+            # Silently log and ignore this error. The user will have to do without email receipt.
+            logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
 
 def updateIndices(session):
     i = 0
