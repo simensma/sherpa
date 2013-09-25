@@ -37,14 +37,18 @@ NORWAY_EMAIL_RECIPIENT = 'NOR-WAY Bussekspress AS <post@nor-way.no>'
 
 @user_requires_login()
 def home(request):
-    today = date.today()
-    context = {
-        'year': today.year,
-        'next_year': today >= current_membership_year_start(),
-    }
-    return render(request, 'common/user/account/home.html', context)
+    if request.user.is_pending:
+        return render(request, 'common/user/account/home_pending.html')
+    else:
+        today = date.today()
+        context = {
+            'year': today.year,
+            'next_year': today >= current_membership_year_start(),
+        }
+        return render(request, 'common/user/account/home.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def account(request):
     today = date.today()
     context = {
@@ -55,6 +59,7 @@ def account(request):
     return render(request, 'common/user/account/account.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def update_account(request):
     if not request.user.is_member():
         if request.method == 'GET':
@@ -173,11 +178,13 @@ def update_account(request):
             return redirect('user.views.account')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def account_password(request):
     context = {'user_password_length': settings.USER_PASSWORD_LENGTH}
     return render(request, 'common/user/account/update_account_password.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
@@ -189,6 +196,7 @@ def update_account_password(request):
         return redirect('user.views.home')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def register_membership(request):
     if request.user.is_member():
         return redirect('user.views.home')
@@ -272,28 +280,33 @@ def register_membership(request):
             return redirect('user.views.register_membership')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers(request):
     return render(request, 'common/user/account/partneroffers.html')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def partneroffers_reserve(request):
     request.user.set_reserved_against_partneroffers(json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email(request):
     return render(request, 'common/user/account/receive_email.html')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def receive_email_set(request):
     request.user.set_receive_email(not json.loads(request.POST['reserve']))
     return HttpResponse()
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def aktiviteter(request):
     aktivitet_dates = AktivitetDate.objects.filter(participants=request.user).order_by('-start_date')
@@ -301,18 +314,21 @@ def aktiviteter(request):
     return render(request, 'common/user/account/aktiviteter.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def turleder_aktivitet_dates(request):
     aktivitet_dates = request.user.turleder_aktivitet_dates.order_by('-start_date')
     context = {'aktivitet_dates': aktivitet_dates}
     return render(request, 'common/user/account/turleder_aktivitet_dates.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def turleder_aktivitet_date(request, aktivitet_date):
     aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date, turledere=request.user)
     context = {'aktivitet_date': aktivitet_date}
     return render(request, 'common/user/account/turleder_aktivitet_date.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
     accessible_associations = request.user.main_association().get_with_children()
@@ -330,6 +346,7 @@ def publications(request):
     return render(request, 'common/user/account/publications.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
     accessible_associations = request.user.main_association().get_with_children()
@@ -343,6 +360,7 @@ def publication(request, publication):
     return render(request, 'common/user/account/publication.html', context)
 
 @user_requires_login(message='norway_bus_tickets_login_required')
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
     now = datetime.now()
@@ -353,6 +371,7 @@ def norway_bus_tickets(request):
     return render(request, 'common/user/account/norway_bus_tickets.html', context)
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.is_eligible_for_norway_bus_tickets(), redirect_to='user.views.home')
 def norway_bus_tickets_order(request):
@@ -409,11 +428,13 @@ def norway_bus_tickets_order(request):
         return redirect('user.views.norway_bus_tickets')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def fotobok(request):
     return render(request, 'common/user/account/fotobok.html')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def fotobok_eurofoto_request(request):
     user = request.user
@@ -487,12 +508,14 @@ def fotobok_eurofoto_request(request):
         return redirect('user.views.fotobok')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_publications(request):
     return render(request, 'common/user/account/reserve_publications.html')
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_fjellogvidde(request):
@@ -500,6 +523,7 @@ def reserve_fjellogvidde(request):
     return HttpResponse()
 
 @user_requires_login()
+@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.can_reserve_against_publications(), redirect_to='user.views.home')
 def reserve_yearbook(request):

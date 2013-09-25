@@ -105,7 +105,7 @@ class User(AbstractBaseUser):
             return actor
 
     def get_parent(self):
-        if not self.is_household_member():
+        if not self.is_pending and not self.is_household_member():
             return None
 
         parent_memberid = self.get_actor().get_parent_memberid()

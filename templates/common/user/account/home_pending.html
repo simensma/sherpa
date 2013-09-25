@@ -1,0 +1,104 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Min side{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'user.views.home' %}">Min side</a></em>{% endblock %}
+
+{% load advertisement %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <h2>Min side</h2>
+
+    {% for message in messages %}
+      {% if message.message == 'password_update_success' %}
+        <div class="alert alert-success">
+          <a class="close">x</a>
+          <strong>Passordet ditt har blitt endret.</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <p>
+      Hei, {{ user.get_first_name }}!
+    </p>
+
+    <p>
+      Takk for at du vil bli med i Den Norske Turistforening! Din innmelding ligger inne til behandling, dette vil vanligvis ikke ta mer enn 1-2 virkedager.
+
+      {% if user.get_payment_method_text == 'card' %}
+        Du vil få tilgang til medlemstjenestene på Min side så snart innmeldingen er behandlet.
+      {% elif user.get_payment_method_text == 'invoice' %}
+        Når innmeldingen er behandlet vil du kunne se og endre dine opplysninger, og når fakturaen er betalt og medlemskapet godkjent vil du også få tilgang til medlemstjenestene.
+      {% endif %}
+    </p>
+
+    <p>
+      Om du har noen spørsmål kan du <a href="{% url 'membership.views.service' %}">gå til medlemsservice</a>.
+    </p>
+
+    <div class="user-home-account-pending form-border form-horizontal">
+
+      <table class="user-data">
+        <tr>
+          <th>Navn</th>
+          <td>{{ user.get_full_name }}</td>
+        </tr>
+        <tr>
+          <th>Medlemsnummer</th>
+          <td>
+            {{ user.memberid }}
+          </td>
+        </tr>
+        <tr>
+          <th>E-postadresse</th>
+          <td>
+            <a href="mailto:{{ user.get_email }}">{{ user.get_email }}</a>
+          </td>
+        </tr>
+        <tr>
+          <th>Mobiltelefon</th>
+          <td>{{ user.get_phone_mobile }}</td>
+        </tr>
+        <tr>
+          <th>Født</th>
+          <td>{{ user.get_birth_date|date:"j. F Y" }}</td>
+        </tr>
+        <tr>
+          <th>Adresse</th>
+          <td>
+            {{ user.get_address.format_with_newlines|linebreaksbr }}
+          </td>
+        </tr>
+        <tr>
+          <th>Betaling</th>
+          <td>
+            {% if user.get_payment_method_text == 'card' %}
+              {% if user.has_paid %}
+                Bekreftet betalt over nett.
+              {% else %}
+                Forsøkt betalt over nett, men <strong>ikke bekreftet</strong>.
+              {% endif %}
+            {% else %}
+              Du vil få tilsendt faktura.
+            {% endif %}
+          </td>
+        </tr>
+        {% if user.get_parent %}
+          <tr>
+            <th>Hovedmedlem</th>
+            <td>
+              {{ user.get_parent.get_full_name }} ({{ user.get_parent.memberid }})
+            </td>
+          </tr>
+        {% endif %}
+
+      </table>
+    </div>
+  </div>
+</div>
+
+{% advertisement %}
+
+{% endblock %}
