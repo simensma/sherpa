@@ -1,71 +1,78 @@
 # encoding: utf-8
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
-from Crypto.Cipher import AES
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 
-from urllib import quote_plus
-from datetime import datetime, timedelta
-import json
-import base64
-import time
-
-from core import pkcs7
+from connect.util import get_request_data, prepare_response
 from api.util import get_member_data
 
-def connect(request, method):
-    if not request.GET.get('client', '') in settings.DNT_CONNECT:
-        raise PermissionDenied
-    else:
-        client = settings.DNT_CONNECT[request.GET['client']]
+import logging
 
-    key = client['shared_secret']
-    request_data = json.loads(decrypt(key, request.GET['data']))
+logger = logging.getLogger('sherpa')
 
-    # Check the transmit datestamp
-    request_time = datetime.fromtimestamp(request_data['timestamp'])
-    if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
-        raise PermissionDenied
+def bounce(request):
+    client, request_data, redirect_url = get_request_data(request)
 
-    # Redirect to provided url, or the default if none provided
-    redirect_url = request_data['redirect_url'] if 'redirect_url' in request_data else client['default_redirect_url']
-
-    response_data = {}
-
-    if method == 'bounce':
-        response_data['er_autentisert'] = request.user.is_authenticated()
-
+    response_data = {'er_autentisert': request.user.is_authenticated()}
     if request.user.is_authenticated():
         response_data.update(get_member_data(request.user))
+
+    return prepare_response(client, response_data, redirect_url)
+
+def signon(request):
+    client, request_data, redirect_url = get_request_data(request)
+
+    if not request.user.is_authenticated():
+        request.session['dntconnect'] = {
+            'client': client,
+            'redirect_url': redirect_url
+        }
+        request.session['innmelding.aktivitet'] = {
+            'aktivitet': True, # TODO: Set to the relevant aktivitet-object
+            'redirect_url': reverse('connect.views.signon_login'),
+        }
+        return redirect('connect.views.signon_login')
+
+    response_data = {
+        'er_autentisert': request.user.is_authenticated(),
+        'signon': u'pålogget',
+    }
+    response_data.update(get_member_data(request.user))
+    return prepare_response(client, response_data, redirect_url)
+
+def signon_login(request):
+    if not 'dntconnect' in request.session:
+        # Use a friendlier error message here?
+        raise PermissionDenied
+
+    if request.user.is_authenticated():
+        # The user is redirected back here after authenticating for continuation
+
+        # The signon field should be set in session by whatever service the user used,
+        # but it could be missed so check and log any exceptions
+        if not 'signon' in request.session['dntconnect']:
+            logger.error(u"Mangler 'signon' field i session etter vellykket signon",
+                extra={
+                    'request': request,
+                    'session': request.session,
+                    'dntconnect': request.session['dntconnect']
+                }
+            )
+
+        client = request.session['dntconnect']['client']
+        response_data = {
+            'er_autentisert': request.user.is_authenticated(),
+            'signon': request.session['dntconnect'].get('signon', u'ukjent')
+        }
+        response_data.update(get_member_data(request.user))
+        redirect_url = request.session['dntconnect']['redirect_url']
+        del request.session['dntconnect']
+        del request.session['innmelding.aktivitet']
+        return prepare_response(
+            client,
+            response_data,
+            redirect_url
+        )
     else:
-        if method == 'signon':
-            request.session['dntconnect'] = {
-                'client': client,
-                'redirect_url': redirect_url
-            }
-            return redirect('user.login.views.connect_signon')
-        # The only other method is bounce; in which case we'll just send the response as is
-
-    # Append the current timestamp
-    response_data['timestamp'] = int(time.time())
-
-    # Encrypt the complete data package
-    json_string = json.dumps(response_data)
-    encrypted_data = encrypt(client['shared_secret'], json_string)
-    url_safe = quote_plus(encrypted_data)
-
-    return redirect("%s?data=%s" % (redirect_url, url_safe))
-
-def encrypt(key, plaintext):
-    padded_text = pkcs7.encode(plaintext, len(key))
-    cipher = AES.new(key, AES.MODE_ECB)
-    msg = cipher.encrypt(padded_text)
-    encoded = base64.b64encode(msg)
-    return encoded
-
-def decrypt(key, encoded):
-    cipher = AES.new(key, AES.MODE_ECB)
-    ciphertext = base64.b64decode(encoded)
-    msg_padded = cipher.decrypt(ciphertext)
-    msg = pkcs7.decode(msg_padded, len(key))
-    return msg
+        context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
+        return render(request, 'main/connect/signon.html', context)

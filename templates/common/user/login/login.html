@@ -124,7 +124,7 @@
         </div>
         <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-          <form action="{% url 'user.login.views.register' %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
+          <form action="{% url 'user.login.views.register' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
             {% csrf_token %}
 
             <div class="step1">

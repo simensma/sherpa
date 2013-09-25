@@ -1,0 +1,28 @@
+{% extends site.template.name|add:"/layout.html" %}
+{% block title %}Logg på{% endblock %}
+
+{% block body %}
+
+<div class="connect-signon">
+  <div class="row">
+    <div class="span12">
+      <h1>Logg på</h1>
+      <div class="alert alert-info">
+        {{ client_name }} ber deg om å bekrefte ditt DNT-medlemskap.
+      </div>
+
+      <ul>
+        <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}">logg på med din Min side-bruker</a></li>
+        <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}#registrering">registrer deg på Min side</a></li>
+        <li><a href="{% url 'enrollment.views.index' %}">meld deg inn i DNT</a> (krever betaling over nett)</li>
+        <li><a href="{% url 'user.login.views.register_nonmember' %}?next={% url 'connect.views.signon_login' %}">registrer deg uten medlemskap</a></li>
+      </ul>
+
+      <p>
+        Funksjonalitet TBD.
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

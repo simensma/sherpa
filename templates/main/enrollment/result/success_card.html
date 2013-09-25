@@ -68,27 +68,39 @@
       {% endfor %}
     {% endif %}
 
-    {% if location.country == 'NO' %}
-      <div class="row-fluid result-subheader">
-        <div class="span6">
-          <h3>Planlegg turen på UT.no?</h3>
-          <p>
-            På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
-          </p>
-        </div>
+    {% if innmelding_aktivitet %}
 
-        <div class="span6">
-          <h3>Hva skjer der du bor</h3>
-          <p>
-            <a href="{{ association.url }}">{{ association.name }}</a> arrangerer fellesturer og aktiviteter hele året.
-          </p>
-        </div>
-      </div>
-    {% else %}
-      <h3 class="result-subheader">Planlegg turen på UT.no</h3>
       <p>
-        På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+        <a href="{{ innmelding_aktivitet.redirect_url }}" class="btn btn-large btn-danger">Videre til påmelding til tur <i class="icon-white icon-share-alt"></i></a>
       </p>
+
+    {% else %}
+
+      {# "Where to go next" - hide if enrolling for an aktivitet #}
+
+      {% if location.country == 'NO' %}
+        <div class="row-fluid result-subheader">
+          <div class="span6">
+            <h3>Planlegg turen på UT.no?</h3>
+            <p>
+              På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+            </p>
+          </div>
+
+          <div class="span6">
+            <h3>Hva skjer der du bor</h3>
+            <p>
+              <a href="{{ association.url }}">{{ association.name }}</a> arrangerer fellesturer og aktiviteter hele året.
+            </p>
+          </div>
+        </div>
+      {% else %}
+        <h3 class="result-subheader">Planlegg turen på UT.no</h3>
+        <p>
+          På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+        </p>
+      {% endif %}
+
     {% endif %}
   </div>
 

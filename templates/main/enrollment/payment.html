@@ -27,7 +27,21 @@
       {% endif %}
     {% endfor %}
 
-    {% if not card_available %}
+    {% if not card_available and not card_required %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
+        Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av oktober.<br><br>
+
+        Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
+      </div>
+    {% elif card_available and card_required %}
+      <div class="alert alert-error">
+        <a class="close">x</a>
+        <strong><i class="icon-info-sign"></i> Du må betale med kort</strong><br>
+        Siden du melder deg inn i forbindelse med at du skal melde deg på en aktivitet i regi av DNT, må du betale over nettet slik at vi kan bekrefte innbetalingen.
+      </div>
+    {% elif not card_available and card_required %}
       <div class="alert alert-error">
         <a class="close">x</a>
         <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
@@ -42,21 +56,12 @@
       <input type="hidden" name="main-member" value="">
       <h2> Velg betalingsmåte:</h2>
       <div class="control-group">
-        {% if card_available %}
-          <label class="radio">
-            <input type="radio" name="payment_method" value="card" checked> VISA / MASTERCARD
-          </label>
-          <label class="radio">
-            <input type="radio" name="payment_method" value="invoice"> Få tilsendt faktura
-          </label>
-        {% else %}
-          <label class="radio">
-            <input type="radio" name="payment_method" value="card" disabled> VISA / MASTERCARD
-          </label>
-          <label class="radio">
-            <input type="radio" name="payment_method" value="invoice" checked> Få tilsendt faktura
-          </label>
-        {% endif %}
+        <label class="radio">
+          <input type="radio" name="payment_method" value="card" {% if card_available %}checked{% else %}disabled{% endif %}> VISA / MASTERCARD
+        </label>
+        <label class="radio">
+          <input type="radio" name="payment_method" value="invoice"{% if card_required %} disabled{% elif not card_required and not card_available %} checked{% endif %}> Få tilsendt faktura
+        </label>
       </div>
 
       <div class="alert alert-info invoice-info hide">

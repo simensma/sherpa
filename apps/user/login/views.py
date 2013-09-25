@@ -23,6 +23,7 @@ from user.util import memberid_lookups_exceeded, authenticate_sherpa2_user, auth
 from core import validator
 from core.models import FocusCountry
 from sherpa25.models import Member, import_fjelltreffen_annonser
+from connect.util import add_signon_session_value
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
@@ -53,6 +54,8 @@ def login(request):
             # Exactly one match, cool, just authenticate the user
             user = authenticate(user=matches[0])
             log_user_in(request, user)
+            if 'dntconnect' in request.session:
+                add_signon_session_value(request, 'logget_inn')
             return redirect(request.GET.get('next', reverse('user.views.home')))
 
         elif len(matches) > 1:
@@ -105,6 +108,8 @@ def login(request):
 
                 authenticate(user=user)
                 log_user_in(request, user)
+                if 'dntconnect' in request.session:
+                    add_signon_session_value(request, 'logget_inn')
                 return redirect(request.GET.get('next', reverse('user.views.home')))
 
             else:
@@ -144,6 +149,8 @@ def login_chosen_user(request):
     user = User.get_users().get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
+    if 'dntconnect' in request.session:
+        add_signon_session_value(request, 'logget_inn')
     del request.session['authenticated_users']
     return redirect(request.GET.get('next', reverse('user.views.home')))
 
@@ -206,10 +213,12 @@ def register(request):
 
             authenticate(user=user)
             log_user_in(request, user)
+            if 'dntconnect' in request.session:
+                add_signon_session_value(request, 'registrert')
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-            return redirect('user.views.home')
+            return redirect(request.GET.get('next', reverse('user.views.home')))
         except (Actor.DoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect("%s#registrering" % reverse('user.login.views.login'))
@@ -232,7 +241,8 @@ def register_nonmember(request):
 
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH,
-            'user_data': user_data
+            'user_data': user_data,
+            'next': request.GET.get('next'),
         }
         return render(request, 'common/user/login/registration_nonmember.html', context)
     elif request.method == 'POST':
@@ -271,10 +281,12 @@ def register_nonmember(request):
         user.save()
         authenticate(user=user)
         log_user_in(request, user)
+        if 'dntconnect' in request.session:
+            add_signon_session_value(request, 'registrert')
         t = loader.get_template('common/user/login/registered_nonmember_email.html')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-        return redirect('user.views.home')
+        return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
@@ -426,11 +438,3 @@ def restore_password(request, key):
         log_user_in(request, user)
         messages.info(request, 'password_reset_success')
         return redirect('user.views.home')
-
-def connect_signon(request):
-    if not 'dntconnect' in request.session:
-        # Use a friendlier error message here?
-        raise PermissionDenied
-
-    context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
-    return render(request, 'common/user/login/connect-signon.html', context)
