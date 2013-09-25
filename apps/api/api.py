@@ -18,7 +18,7 @@ def members(request, version, format):
             elif 'medlemsnummer' in request.GET:
                 try:
                     user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'])
-                except Actor.DoesNotExist:
+                except (Actor.DoesNotExist, ValueError):
                     # No such member
                     raise User.DoesNotExist
             else:
@@ -28,7 +28,7 @@ def members(request, version, format):
                     http_code=400
                 )
             return HttpResponse(json.dumps(get_member_data(user)))
-        except User.DoesNotExist:
+        except (User.DoesNotExist, ValueError):
             raise BadRequest(
                 "A member matching that sherpa_id, memberid, or both if both were provided, does not exist.",
                 code=error_codes.RESOURCE_NOT_FOUND,
