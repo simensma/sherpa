@@ -46,7 +46,7 @@
           </tr>
           <tr>
             <th>Ditt medlemskap:</th>
-            <td>
+            <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="top" data-title="Ubetalt årskontingent" data-content="Du har ikke betalt årskontingenten, og får ikke tilgang til medlemstjenester på Min side før den blir betalt."{% endif %}>
               {% if user.has_paid %}
                 Betalt for
                 {% if next_year %}
@@ -61,6 +61,7 @@
                 {% else %}
                   {{ year }}
                 {% endif %}
+                <i class="info-hover"></i>
               {% endif %}
             </td>
           </tr>
