@@ -29,7 +29,8 @@ def signon(request):
         }
         return redirect('connect.views.signon_login')
 
-    response_data = get_member_data(request.user)
+    response_data = {'er_autentisert': request.user.is_authenticated()}
+    response_data.update(get_member_data(request.user))
     return prepare_response(client, response_data, redirect_url)
 
 def signon_login(request):
@@ -40,7 +41,8 @@ def signon_login(request):
     if request.user.is_authenticated():
         # The user is redirected back here after authenticating for continuation
         client = request.session['dntconnect']['client']
-        response_data = get_member_data(request.user)
+        response_data = {'er_autentisert': request.user.is_authenticated()}
+        response_data.update(get_member_data(request.user))
         redirect_url = request.session['dntconnect']['redirect_url']
         del request.session['dntconnect']
         del request.session['innmelding.aktivitet']
