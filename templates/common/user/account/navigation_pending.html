@@ -1,0 +1,8 @@
+{# Copied from navigation.html - use a seperate file, the original is starting to have a *lot* of ifs and buts #}
+<div class="well nav-container">
+  <ul class="nav nav-list">
+    <li class="nav-header">Meny</li>
+    <li{% if active == 'home' %} class="active"{% endif %}><a href="{% url 'user.views.home' %}">Min side</a></li>
+    <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url 'user.views.account_password' %}">Endre passord</a></li>
+  </ul>
+</div>

@@ -178,13 +178,11 @@ def update_account(request):
             return redirect('user.views.account')
 
 @user_requires_login()
-@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def account_password(request):
     context = {'user_password_length': settings.USER_PASSWORD_LENGTH}
     return render(request, 'common/user/account/update_account_password.html', context)
 
 @user_requires_login()
-@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def update_account_password(request):
     if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
         messages.error(request, 'password_too_short')
