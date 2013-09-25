@@ -399,30 +399,38 @@ def send_restore_password_email(request):
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
 
     if len(local_matches) > 0:
-        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        while User.objects.filter(password_restore_key=key).exists():
-            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
-            # ~238 bits of entropy which means that this will never ever happen, ever.
-            # You will win the lottery before this happens. And I want to know if it does, so log it.
-            logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
-                exc_info=sys.exc_info(),
-                extra={
-                    'request': request,
-                    'should_you_play_the_lottery': True,
-                    'key': key
-                }
-            )
-            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-
         for user in local_matches:
+            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+            while User.objects.filter(password_restore_key=key).exists():
+                # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+                # ~238 bits of entropy which means that this will never ever happen, ever.
+                # You will win the lottery before this happens. And I want to know if it does, so log it.
+                logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'should_you_play_the_lottery': True,
+                        'key': key
+                    }
+                )
+                key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+
             user.password_restore_key = key
             user.password_restore_date = datetime.now()
             user.save()
 
-        t = loader.get_template('common/user/login/restore-password-email.txt')
-        c = RequestContext(request, {
-            'found_user': user,
-            'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
+        if len(local_matches) == 1:
+            t = loader.get_template('common/user/login/restore-password-email.txt')
+            c = RequestContext(request, {
+                'found_user': user,
+                'validity_period': settings.RESTORE_PASSWORD_VALIDITY
+            })
+        else:
+            t = loader.get_template('common/user/login/restore-password-email-multiple.txt')
+            c = RequestContext(request, {
+                'users': local_matches,
+                'validity_period': settings.RESTORE_PASSWORD_VALIDITY
+            })
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
