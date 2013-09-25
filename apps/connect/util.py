@@ -58,3 +58,7 @@ def decrypt(key, encoded):
     except TypeError:
         # Can e.g. be incorrect padding if they forgot to URLEncode the data
         raise PermissionDenied
+
+def add_signon_session_value(request, value):
+    request.session['dntconnect']['signon'] = value
+    request.session.modified = True
