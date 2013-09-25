@@ -49,8 +49,12 @@ def encrypt(key, plaintext):
     return encoded
 
 def decrypt(key, encoded):
-    cipher = AES.new(key, AES.MODE_ECB)
-    ciphertext = base64.b64decode(encoded)
-    msg_padded = cipher.decrypt(ciphertext)
-    msg = pkcs7.decode(msg_padded, len(key))
-    return msg
+    try:
+        cipher = AES.new(key, AES.MODE_ECB)
+        ciphertext = base64.b64decode(encoded)
+        msg_padded = cipher.decrypt(ciphertext)
+        msg = pkcs7.decode(msg_padded, len(key))
+        return msg
+    except TypeError:
+        # Can e.g. be incorrect padding if they forgot to URLEncode the data
+        raise PermissionDenied
