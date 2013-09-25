@@ -434,6 +434,7 @@ def fotobok(request):
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
+@user_requires(lambda u: u.has_paid(), redirect_to='user.views.fotobok')
 def fotobok_eurofoto_request(request):
     user = request.user
 
