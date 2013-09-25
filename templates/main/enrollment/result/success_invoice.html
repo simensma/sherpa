@@ -2,66 +2,62 @@
 
 {% block enrollment %}
 
-<div class="row">
-  <div class="span12">
-    <h2>Velkommen som medlem{% if users|length == 1 %}, {{ users.0.name }}{% else %}mer{% endif %}!</h2>
+<div class="enrollment-result enrollment-success-invoice">
+  <div class="row">
+    <div class="span12">
+      <h2>Velkommen som medlem{% if users|length == 1 %}, {{ users.0.name }}{% else %}mer{% endif %}!</h2>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div id="result" class="span8">
+  <div class="row">
+    <div id="result" class="span8">
 
-    {% if users|length == 1 %}
-      <p>
-        Du blir medlem i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
-      </p>
-    {% else %}
-      <p>
-        Dere blir medlemmer i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
-      </p>
-    {% endif %}
-
-    <p>
-      {% if users|length == 1 %}Du{% else %}Dere{% endif %} vil i løpet av kort tid motta medlemskort og faktura på kr. {{ price_sum }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
-    </p>
-
-    <p>
       {% if users|length == 1 %}
-        Kvittering på denne registreringen er sendt på e-post til <strong>{{ users.0.email }}</strong>.
+        <p>
+          Du blir medlem i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
+        </p>
       {% else %}
-        Kvittering på denne registreringen er sendt på e-post til følgende adresser:
-        {% for email in emails %}
-          <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
-        {% endfor %}
+        <p>
+          Dere blir medlemmer i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
+        </p>
       {% endif %}
-    </p>
 
-    {% if location.country == 'NO' %}
-      <div class="row-fluid result-subheader">
-        <div class="span6">
-          <h3>Planlegg turen på UT.no</h3>
-          <p>
-            På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
-          </p>
-        </div>
+      <p>
+        {% if users|length == 1 %}Du{% else %}Dere{% endif %} vil i løpet av kort tid motta medlemskort og faktura på kr. {{ price_sum }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
+      </p>
 
-        <div class="span6">
+      <p>
+        {% if users|length == 1 %}
+          Kvittering på denne registreringen er sendt på e-post til <strong>{{ users.0.email }}</strong>.
+        {% else %}
+          Kvittering på denne registreringen er sendt på e-post til følgende adresser:
+          {% for email in emails %}
+            <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
+          {% endfor %}
+        {% endif %}
+      </p>
+
+      {# "Where to go next" - hide if enrolling for an aktivitet #}
+      <div class="next-step">
+
+        <h3>Planlegg turen på UT.no</h3>
+        <p>
+          På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+        </p>
+
+        {% if location.country == 'NO' %}
           <h3>Hva skjer der du bor</h3>
           <p>
             <a href="{{ association.url }}">{{ association.name }}</a> arrangerer fellesturer og aktiviteter hele året.
           </p>
-        </div>
-      </div>
-    {% else %}
-      <h3 class="result-subheader">Planlegg turen på UT.no</h3>
-      <p>
-        På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
-      </p>
-    {% endif %}
-  </div>
+        {% endif %}
 
-  <div class="span4">
-    {% include 'main/membership/infobox.html' %}
+      </div>
+    </div>
+
+    <div class="span4">
+      {% include 'main/membership/infobox.html' %}
+    </div>
   </div>
 </div>
 
