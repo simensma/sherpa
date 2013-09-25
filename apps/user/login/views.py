@@ -18,8 +18,9 @@ import sys
 import hashlib
 
 from user.models import User
-from focus.models import Actor, Enrollment
 from user.util import memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
+from focus.models import Actor, Enrollment
+from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
 from sherpa25.models import Member, import_fjelltreffen_annonser
@@ -365,9 +366,17 @@ def send_restore_password_email(request):
     focus_unregistered_matches = False
     for a in Actor.objects.filter(email=request.POST['email']):
         try:
-            local_matches.append(User.get_users().get(memberid=a.memberid, is_active=True))
+            # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
+            # but *before* we've checked if they should still be pending.
+            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_active=True))
         except User.DoesNotExist:
             focus_unregistered_matches = True
+
+    for e in get_enrollment_email_matches(request.POST['email']):
+        try:
+            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_active=True))
+        except User.DoesNotExist:
+            pass
 
     # Check for matching old user system members - we'll generate a password so that they can login and be imported
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
@@ -435,7 +444,7 @@ def send_restore_password_email(request):
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    users = User.get_users().filter(password_restore_key=key, is_active=True)
+    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_active=True)
     if len(users) == 0:
         context = {
             'no_such_key': True,

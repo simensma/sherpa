@@ -12,7 +12,11 @@
     <h2>Min side</h2>
 
     {% for message in messages %}
-      {% if message.message == 'password_update_success' %}
+      {% if message.message == 'password_reset_success' %}
+        <div class="alert alert-success">
+          Velkommen tilbake {{ user.get_first_name }}, passordet ditt har blitt endret og du er nå innlogget.
+        </div>
+      {% elif message.message == 'password_update_success' %}
         <div class="alert alert-success">
           <a class="close">x</a>
           <strong>Passordet ditt har blitt endret.</strong>
