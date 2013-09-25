@@ -37,7 +37,7 @@ NORWAY_EMAIL_RECIPIENT = 'NOR-WAY Bussekspress AS <post@nor-way.no>'
 
 @user_requires_login()
 def home(request):
-    if request.user.is_pending:
+    if request.user.is_pending and request.user.verify_still_pending():
         return render(request, 'common/user/account/home_pending.html')
     else:
         today = date.today()

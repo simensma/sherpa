@@ -155,6 +155,19 @@ class User(AbstractBaseUser):
     # Specific to pending users - checks focus.models.Enrollment
     #
 
+    def verify_still_pending(self):
+        # Cache the check for an hour
+        if cache.get('user.%s.checked_for_pending' % self.memberid) is not None:
+            return True
+        cache.set('user.%s.checked_for_pending' % self.memberid, True, 60 * 60)
+
+        if Actor.objects.filter(memberid=self.memberid).exists():
+            self.is_pending = False
+            self.save()
+            return False
+        else:
+            return True
+
     def get_payment_method_text(self):
         if not self.is_pending:
             raise Exception("Can't check payment method for non-pending users, check your logic.")
