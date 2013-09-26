@@ -14,7 +14,7 @@ import sys
 
 from core.models import Site
 from association.models import Association
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 
 logger = logging.getLogger('sherpa')
 
@@ -142,8 +142,33 @@ class ActorDoesNotExist():
             try:
                 # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
                 request.user.get_actor()
-            except Actor.DoesNotExist:
+            except Actor.DoesNotExist as e:
+                if request.user.is_pending:
+                    # The user is pending - no idea why Actor.DoesNotExist is raised, just re-raise it
+                    raise e
+
                 logger.warning(u"Pålogget bruker mangler tilsvarende medlemsnummer i Actor",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'memberid': request.user.memberid
+                    }
+                )
+                request.user.is_expired = True
+                request.user.save()
+                logout(request)
+                return render(request, 'common/user/memberid_does_not_exist.html')
+            except Enrollment.DoesNotExist as e:
+                if not request.user.is_pending:
+                    # The user isn't pending - no idea why Enrollment.DoesNotExist is raised, just re-raise it
+                    raise e
+
+                if not request.user.verify_still_pending(ignore_cache=True):
+                    # Ah, they *just* got an Actor. That's fine, but redirect to the home page since they could
+                    # be headed to some view that requires a pending user.
+                    return redirect('user.views.home')
+
+                logger.warning(u"Pålogget pending-bruker mangler tilsvarende medlemsnummer i Enrollment",
                     exc_info=sys.exc_info(),
                     extra={
                         'request': request,

@@ -155,9 +155,9 @@ class User(AbstractBaseUser):
     # Specific to pending users - checks focus.models.Enrollment
     #
 
-    def verify_still_pending(self):
+    def verify_still_pending(self, ignore_cache=False):
         # Cache the check for an hour
-        if cache.get('user.%s.checked_for_pending' % self.memberid) is not None:
+        if not ignore_cache and cache.get('user.%s.checked_for_pending' % self.memberid) is not None:
             return True
         cache.set('user.%s.checked_for_pending' % self.memberid, True, 60 * 60)
 
