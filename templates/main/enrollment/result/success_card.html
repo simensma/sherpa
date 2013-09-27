@@ -71,9 +71,52 @@
 
       {% if innmelding_aktivitet %}
 
-        <p>
-          <a href="{{ innmelding_aktivitet.redirect_url }}" class="btn btn-large btn-danger">Videre til påmelding til tur <i class="icon-white icon-share-alt"></i></a>
-        </p>
+        <hr>
+
+        <h3>Fortsett til påmeldig til (TODO: turnavn)</h3>
+
+        {% if users|length == 1 %}
+
+          <p>
+            Du er nå innmeldt, og kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side.
+
+          </p>
+
+        {% else %}
+
+          <p>
+            Dere er nå innmeldt, og du kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
+          </p>
+
+        {% endif %}
+
+        {% if users|length == 1 %}
+
+          <p>
+            <a class="btn btn-danger" href="{% url 'user.login.views.login' %}?next={{ innmelding_aktivitet.redirect_url }}&registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+          </p>
+
+        {% else %}
+
+          <div class="choose-user">
+
+            <p class="user-list">
+              {% for user in users %}
+                <label class="checkbox">
+                  <input type="radio" name="user" value="{{ user.id }}"> {{ user.name }}
+                </label>
+              {% endfor %}
+            </p>
+
+            <p>
+              <a class="btn btn-danger user" href="" disabled>Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+              {% for user in users %}
+                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'user.login.views.login' %}?next={{ innmelding_aktivitet.redirect_url }}&registreringsnokkel={{ user.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+              {% endfor %}
+            </p>
+
+          </div>
+        {% endif %}
 
       {% else %}
 

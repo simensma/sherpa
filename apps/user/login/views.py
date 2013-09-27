@@ -241,7 +241,10 @@ def register(request):
             authenticate(user=user)
             log_user_in(request, user)
             if 'dntconnect' in request.session:
-                add_signon_session_value(request, 'registrert')
+                if 'innmelding.aktivitet' in request.session:
+                    add_signon_session_value(request, 'innmeldt')
+                else:
+                    add_signon_session_value(request, 'registrert')
             t = loader.get_template('common/user/login/registered_email.html')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])

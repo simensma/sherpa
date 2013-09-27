@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
-    var button = $("button.phone-receipt");
+    var result = $("div.enrollment-result");
+    var button = result.find("button.phone-receipt");
+    var choose_user = result.find("div.choose-user");
 
     button.click(function() {
         $(this).prop('disabled', true);
@@ -37,6 +39,15 @@ $(document).ready(function() {
             button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
             button.remove();
         });
+    });
+
+    choose_user.find("input[name='user']").change(function() {
+        choose_user.find("a.user").hide();
+        choose_user.find("a.user[data-user-id='" + $(this).val() + "']").show();
+    });
+
+    choose_user.find("a[disabled]").click(function(e) {
+        e.preventDefault();
     });
 
 });
