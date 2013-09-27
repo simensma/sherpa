@@ -15,8 +15,9 @@ from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
-from focus.util import get_membership_type_by_codename
+from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.models import State
+from user.models import User
 
 from datetime import datetime, date, timedelta
 import requests
@@ -43,11 +44,6 @@ invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
 EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
 EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
-
-FOCUS_PAYMENT_METHOD_CODES = {
-    'card': 4,
-    'invoice': 1
-}
 
 # Hardcoded ages
 AGE_SENIOR = 67
@@ -641,6 +637,10 @@ def process_invoice(request):
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
+    for user in request.session['enrollment']['users']:
+        pending_user = User.create_pending(user['id'])
+        user['pending_registration_key'] = pending_user.pending_registration_key
+
     prepare_and_send_email(
         request,
         request.session['enrollment']['users'],
@@ -739,6 +739,8 @@ def process_card(request):
                     focus_user = Enrollment.objects.get(memberid=user['id'])
                     focus_user.paid = True
                     focus_user.save()
+                    pending_user = User.create_pending(user['id'])
+                    user['pending_registration_key'] = pending_user.pending_registration_key
                 prepare_and_send_email(
                     request,
                     request.session['enrollment']['users'],
@@ -862,7 +864,6 @@ def sms(request):
         return HttpResponse(json.dumps({'error': 'connection_error'}))
 
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
-    email_recipients = [u['email'] for u in users if u['email'] != '']
     if len(users) == 1:
         subject = EMAIL_SUBJECT_SINGLE
         template = 'email-%s-single.html' % payment_method
@@ -871,22 +872,24 @@ def prepare_and_send_email(request, users, association, location, payment_method
         template = 'email-%s-multiple.html' % payment_method
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    context = Context({
-        'users': users,
-        'association': association,
-        'location': location,
-        'proof_validity_end': proof_validity_end,
-        'price_sum': price_sum
-    })
-    message = render_to_string('main/enrollment/result/%s' % template, context)
-    try:
-        send_mail(subject, message, EMAIL_FROM, email_recipients)
-    except SMTPException:
-        # Silently log and ignore this error. The user will have to do without email receipt.
-        logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
+    for user in users:
+        try:
+            context = Context({
+                'user': user,
+                'users': users,
+                'association': association,
+                'location': location,
+                'proof_validity_end': proof_validity_end,
+                'price_sum': price_sum
+            })
+            message = render_to_string('main/enrollment/result/%s' % template, context)
+            send_mail(subject, message, EMAIL_FROM, [user['email']])
+        except SMTPException:
+            # Silently log and ignore this error. The user will have to do without email receipt.
+            logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
 
 def updateIndices(session):
     i = 0
@@ -1059,7 +1062,7 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
     gender = 'M' if gender == 'm' else 'K'
     language = 'nb_no'
     type = focus_type_of(age, linked_to is not None)
-    payment_method = FOCUS_PAYMENT_METHOD_CODES[payment_method]
+    payment_method = PAYMENT_METHOD_CODES[payment_method]
     price = price_of(age, linked_to is not None, price)
     linked_to = '' if linked_to is None else str(linked_to)
     if location['country'] == 'NO':
@@ -1104,22 +1107,22 @@ def add_focus_user(name, dob, age, gender, location, phone, email, can_have_year
         memberid=memberid,
         last_name=last_name,
         first_name=first_name,
-        dob=dob,
+        birth_date=dob,
         gender=gender,
         linked_to=linked_to,
         adr1=adr1,
         adr2=adr2,
         adr3=adr3,
-        country=location['country'],
-        phone='',
+        country_code=location['country'],
+        phone_home='',
         email=email,
         receive_yearbook=yearbook,
         type=type,
         yearbook=yearbook_type,
         payment_method=payment_method,
-        mob=phone,
-        postnr=zipcode,
-        poststed=area,
+        phone_mobile=phone,
+        zipcode=zipcode,
+        area=area,
         language=language,
         totalprice=price
     )

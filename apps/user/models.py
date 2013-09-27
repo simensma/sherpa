@@ -3,10 +3,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
 from django.core.cache import cache
+from django.utils import crypto
 
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 from association.models import Association
 from sherpa2.models import Association as Sherpa2Association
+from focus.abstractions import ActorProxy
 
 from itertools import groupby
 from datetime import date
@@ -38,6 +40,12 @@ class User(AbstractBaseUser):
     # Actors can be deleted from Focus for various reasons. Whenever discovered,
     # we'll set this to True to mark them as expired.
     is_expired = models.BooleanField(default=False)
+
+    # After enrollment, the Actor won't exist until the enrollment is validated by
+    # medlemsservice, but in order to give the new member a preliminary User we'll
+    # create a pending one which uses 'focus.models.Enrollment'.
+    is_pending = models.BooleanField(default=False)
+    pending_registration_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
 
     # Password resets
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
@@ -81,20 +89,23 @@ class User(AbstractBaseUser):
         """
         Regardless of is_expired is set or not, check if this user should be expired.
         """
-        return not Actor.objects.filter(memberid=self.memberid).exists()
+        return not self.is_pending and not Actor.objects.filter(memberid=self.memberid).exists()
 
     def get_actor(self):
         """
-        Return this users' Actor (cached)
+        Return this users' Actor (cached), or an ActorProxy if this is a pending user
         """
-        actor = cache.get('actor.%s' % self.memberid)
-        if actor is None:
-            actor = Actor.objects.get(memberid=self.memberid)
-            cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
-        return actor
+        if self.is_pending:
+            return ActorProxy(self.memberid)
+        else:
+            actor = cache.get('actor.%s' % self.memberid)
+            if actor is None:
+                actor = Actor.objects.get(memberid=self.memberid)
+                cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            return actor
 
     def get_parent(self):
-        if not self.is_household_member():
+        if not self.is_pending and not self.is_household_member():
             return None
 
         parent_memberid = self.get_actor().get_parent_memberid()
@@ -141,6 +152,35 @@ class User(AbstractBaseUser):
         return self.get_actor().has_membership_type(codename)
 
     #
+    # Specific to pending users - checks focus.models.Enrollment
+    #
+
+    def verify_still_pending(self, ignore_cache=False):
+        # Cache the check for an hour
+        if not ignore_cache and cache.get('user.%s.checked_for_pending' % self.memberid) is not None:
+            return True
+        cache.set('user.%s.checked_for_pending' % self.memberid, True, 60 * 60)
+
+        if Actor.objects.filter(memberid=self.memberid).exists():
+            self.is_pending = False
+            self.save()
+            return False
+        else:
+            return True
+
+    def get_payment_method_text(self):
+        if not self.is_pending:
+            raise Exception("Can't check payment method for non-pending users, check your logic.")
+
+        return self.get_actor().get_payment_method_text()
+
+    def get_enrollment_registration_date(self):
+        if not self.is_pending:
+            raise Exception("Can't check enrollment registration for non-pending users, check your logic.")
+
+        return self.get_actor().get_enrollment_registration_date()
+
+    #
     # Personalia and Focus queries
     #
 
@@ -148,13 +188,13 @@ class User(AbstractBaseUser):
         if not self.is_member():
             return self.first_name
         else:
-            return self.get_actor().first_name
+            return self.get_actor().get_first_name()
 
     def get_last_name(self):
         if not self.is_member():
             return self.last_name
         else:
-            return self.get_actor().last_name
+            return self.get_actor().get_last_name()
 
     def get_full_name(self):
         if not self.is_member():
@@ -168,6 +208,13 @@ class User(AbstractBaseUser):
         else:
             return self.get_actor().get_email()
 
+    def set_email(self, email):
+        if not self.is_member():
+            self.email = email
+            self.save()
+        else:
+            self.get_actor().set_email(email)
+
     def get_sherpa_email(self):
         if self.sherpa_email != '':
             return self.sherpa_email
@@ -178,7 +225,7 @@ class User(AbstractBaseUser):
         return self.get_actor().get_clean_address()
 
     def get_birth_date(self):
-        return self.get_actor().birth_date
+        return self.get_actor().get_birth_date()
 
     def get_gender(self):
         return self.get_actor().get_gender()
@@ -529,8 +576,16 @@ class User(AbstractBaseUser):
     #
 
     @staticmethod
-    def get_users():
-        return User.objects.filter(is_expired=False)
+    def get_users(include_pending=False):
+        """
+        Filter on what we consider the 'current' userbase, i.e. not expired users.
+        Typically this shouldn't include pending users (until they're accepted), but
+        in some rare cases we *do* want them too, hence the include_pending parameter.
+        """
+        users = User.objects.filter(is_expired=False)
+        if not include_pending:
+            users = users.exclude(is_pending=True)
+        return users
 
     @staticmethod
     def sherpa_users():
@@ -544,6 +599,34 @@ class User(AbstractBaseUser):
         except User.DoesNotExist:
             from user.util import create_inactive_user
             return create_inactive_user(memberid)
+
+    @staticmethod
+    def create_pending(memberid):
+        Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
+        user = User(
+            identifier='%s' % memberid,
+            memberid=memberid,
+            is_active=False,
+            is_pending=True
+        )
+        user.set_unusable_password()
+        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+        while User.objects.filter(pending_registration_key=key).exists():
+            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+            # ~238 bits of entropy which means that this will never ever happen, ever.
+            # You will win the lottery before this happens. And I want to know if it does, so log it.
+            logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
+                exc_info=sys.exc_info(),
+                extra={
+                    'request': request,
+                    'should_you_play_the_lottery': True,
+                    'key': key
+                }
+            )
+            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+        user.pending_registration_key = key
+        user.save()
+        return user
 
 class Permission(models.Model):
     """

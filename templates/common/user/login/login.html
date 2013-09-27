@@ -8,6 +8,14 @@
       user_password_length: {{ user_password_length }}
     };
   </script>
+  {% if user_to_register %}
+  <script>
+    window.Turistforeningen.preregistered_user = {
+      memberid: {{ user_to_register.memberid }},
+      zipcode: {{ user_to_register.get_address.zipcode.zipcode }}
+    };
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block extra_js %}

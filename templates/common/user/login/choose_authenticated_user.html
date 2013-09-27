@@ -34,7 +34,13 @@
                 <td>
                   <a href="javascript:undefined" class="user-name" data-user-id="{{ user.id }}">{{ user.get_full_name }}</a>
                 </td>
-                <td>{{ user.membership_type.name|default:"<em>Ikke medlem</em>" }}</td>
+                <td>
+                  {% if not user.is_pending %}
+                    {{ user.membership_type.name|default:"<em>Ikke medlem</em>" }}
+                  {% else %}
+                    <em>Venter godkjennelse av medlemsservice</em>
+                  {% endif %}
+                </td>
                 <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
               </tr>
             {% endfor %}

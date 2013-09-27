@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login as log_user_in, logout as lo
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 
 from datetime import datetime, timedelta
 from smtplib import SMTPException
@@ -18,8 +18,9 @@ import sys
 import hashlib
 
 from user.models import User
-from focus.models import Actor
 from user.util import memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
+from focus.models import Actor, Enrollment
+from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
 from sherpa25.models import Member, import_fjelltreffen_annonser
@@ -44,6 +45,14 @@ def login(request):
         if request.user.is_authenticated():
             # User is already authenticated, skip login
             return redirect(request.GET.get('next', reverse('user.views.home')))
+
+        if 'registreringsnokkel' in request.GET:
+            try:
+                user = User.get_users(include_pending=True).get(pending_registration_key=request.GET['registreringsnokkel'])
+                context['user_to_register'] = user
+            except User.DoesNotExist:
+                pass
+
         context['next'] = request.GET.get('next')
         return render(request, 'common/user/login/login.html', context)
 
@@ -73,6 +82,14 @@ def login(request):
             if old_member is not None:
                 # Actually, it is! Let's try to import them.
                 if User.get_users().filter(memberid=old_member.memberid, is_active=True).exists():
+                    messages.error(request, 'old_memberid_but_memberid_exists')
+                    context['email'] = request.POST['email']
+                    return render(request, 'common/user/login/login.html', context)
+
+                # Check if a pending user exists. This shouldn't ever happen (a pending user is recently
+                # enrolled, and an existing user will have been member for a long time).
+                if User.objects.filter(memberid=old_member.memberid, is_pending=True).exists():
+                    # Give the same error ("user exists, you need to use your new password")
                     messages.error(request, 'old_memberid_but_memberid_exists')
                     context['email'] = request.POST['email']
                     return render(request, 'common/user/login/login.html', context)
@@ -125,7 +142,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.get_users().filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -146,7 +163,7 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.get_users().get(id=request.POST['user'], is_active=True)
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
     if 'dntconnect' in request.session:
@@ -182,10 +199,21 @@ def register(request):
                 address__country_code=request.POST['country'])
             if request.POST['country'] == 'NO':
                 actor = actor.filter(address__zipcode=request.POST['zipcode'])
-            actor = actor.get()
+            if actor.exists():
+                actor = actor.get()
+            else:
+                # No matching actors, check for pending users
+                enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
+                if request.POST['country'] == 'NO':
+                    enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
+                if enrollment.exists():
+                    actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+                else:
+                    # Give up
+                    raise ObjectDoesNotExist
 
             # Check that the user doesn't already have an account
-            if User.get_users().filter(memberid=request.POST['memberid'], is_active=True).exists():
+            if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
                 messages.error(request, 'user_exists')
                 return redirect("%s#registrering" % reverse('user.login.views.login'))
 
@@ -196,12 +224,11 @@ def register(request):
                 messages.error(request, 'expired_user_exists')
                 return redirect("%s#registrering" % reverse('user.login.views.login'))
 
-            actor.email = request.POST['email']
-            actor.save()
+            actor.set_email(request.POST['email'].strip())
 
             try:
                 # Check if the user's already created as inactive
-                user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
+                user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
                 user.is_active = True
                 user.set_password(request.POST['password'])
                 user.save()
@@ -219,7 +246,7 @@ def register(request):
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
             return redirect(request.GET.get('next', reverse('user.views.home')))
-        except (Actor.DoesNotExist, ValueError):
+        except (ObjectDoesNotExist, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect("%s#registrering" % reverse('user.login.views.login'))
         except SMTPException:
@@ -299,7 +326,18 @@ def verify_memberid(request):
             address__country_code=request.POST['country'])
         if request.POST['country'] == 'NO':
             actor = actor.filter(address__zipcode=request.POST['zipcode'])
-        actor = actor.get()
+        if actor.exists():
+            actor = actor.get()
+        else:
+            # No matching actors, check for pending users
+            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
+            if request.POST['country'] == 'NO':
+                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
+            if enrollment.exists():
+                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+            else:
+                # Give up
+                raise ObjectDoesNotExist
 
         try:
             user = User.objects.get(memberid=request.POST['memberid'], is_active=True)
@@ -316,7 +354,7 @@ def verify_memberid(request):
             'user_exists': user_exists,
             'user_is_expired': user_is_expired
         }))
-    except (ValueError, Actor.DoesNotExist):
+    except (ValueError, ObjectDoesNotExist):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
@@ -328,9 +366,17 @@ def send_restore_password_email(request):
     focus_unregistered_matches = False
     for a in Actor.objects.filter(email=request.POST['email']):
         try:
-            local_matches.append(User.get_users().get(memberid=a.memberid, is_active=True))
+            # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
+            # but *before* we've checked if they should still be pending.
+            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_active=True))
         except User.DoesNotExist:
             focus_unregistered_matches = True
+
+    for e in get_enrollment_email_matches(request.POST['email']):
+        try:
+            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_active=True))
+        except User.DoesNotExist:
+            pass
 
     # Check for matching old user system members - we'll generate a password so that they can login and be imported
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
@@ -362,35 +408,43 @@ def send_restore_password_email(request):
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
 
     if len(local_matches) > 0:
-        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        while User.objects.filter(password_restore_key=key).exists():
-            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
-            # ~238 bits of entropy which means that this will never ever happen, ever.
-            # You will win the lottery before this happens. And I want to know if it does, so log it.
-            logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
-                exc_info=sys.exc_info(),
-                extra={
-                    'request': request,
-                    'should_you_play_the_lottery': True,
-                    'key': key
-                }
-            )
-            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-
         for user in local_matches:
+            key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+            while User.objects.filter(password_restore_key=key).exists():
+                # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+                # ~238 bits of entropy which means that this will never ever happen, ever.
+                # You will win the lottery before this happens. And I want to know if it does, so log it.
+                logger.warning(u"Noen fikk en random-generert password-restore-key som allerede finnes!",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'should_you_play_the_lottery': True,
+                        'key': key
+                    }
+                )
+                key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+
             user.password_restore_key = key
             user.password_restore_date = datetime.now()
             user.save()
 
-        t = loader.get_template('common/user/login/restore-password-email.txt')
-        c = RequestContext(request, {
-            'found_user': user,
-            'validity_period': settings.RESTORE_PASSWORD_VALIDITY})
+        if len(local_matches) == 1:
+            t = loader.get_template('common/user/login/restore-password-email.txt')
+            c = RequestContext(request, {
+                'found_user': user,
+                'validity_period': settings.RESTORE_PASSWORD_VALIDITY
+            })
+        else:
+            t = loader.get_template('common/user/login/restore-password-email-multiple.txt')
+            c = RequestContext(request, {
+                'users': local_matches,
+                'validity_period': settings.RESTORE_PASSWORD_VALIDITY
+            })
         send_mail("Nytt passord på Min side", t.render(c), settings.DEFAULT_FROM_EMAIL, [request.POST['email']])
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    users = User.get_users().filter(password_restore_key=key, is_active=True)
+    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_active=True)
     if len(users) == 0:
         context = {
             'no_such_key': True,

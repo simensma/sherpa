@@ -20,8 +20,8 @@ form.account-info div.control-group:hover div.controls {
 
 /* User homepage dashboard */
 
-div.user-home-account {
-  table {
+div.user-home-account, div.user-home-account-pending {
+  table.user-data {
     th {
       text-align: right;
       font-weight: normal;
@@ -30,6 +30,20 @@ div.user-home-account {
 
     td {
       font-weight: bold;
+
+      i.info-hover {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+      }
+
+    }
+
+    td:hover {
+      i.info-hover {
+        background: url('/static/img/icons/netlife/icon-info-hover.png') center left no-repeat;
+      }
     }
 
     th, td {

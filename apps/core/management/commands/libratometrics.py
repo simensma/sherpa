@@ -13,11 +13,15 @@ class Command(BaseCommand):
     help = u"Henter sherpa-metrics for libratoappen vår, se https://github.com/Turistforeningen/librato"
 
     def handle(self, *args, **options):
+
+        # Count all expired users as expired (regardless of pending etc),
+        # and all non-expired pending users as pending (regardless of active/inactive).
+
         users = User.objects.all()
-        inactive_users = users.filter(is_active=False, is_expired=False)
-        expired_users = users.filter(is_expired=True, is_active=True)
-        inactive_expired_users = users.filter(is_active=False, is_expired=True)
-        active_users = users.filter(is_active=True, is_expired=False)
+        active_users = users.filter(is_active=True, is_expired=False, is_pending=False)
+        inactive_users = users.filter(is_active=False, is_expired=False, is_pending=False)
+        pending_users = users.filter(is_expired=False, is_pending=True)
+        expired_users = users.filter(is_expired=True)
         normal_users = active_users.exclude(permissions=Permission.objects.get(name='sherpa'))
         sherpa_users = active_users.filter(permissions=Permission.objects.get(name='sherpa'))
 
@@ -38,8 +42,8 @@ class Command(BaseCommand):
                 'name': 'sherpa.db.expired_users',
                 'value': expired_users.count()
             }, {
-                'name': 'sherpa.db.inactive_expired_users',
-                'value': inactive_expired_users.count()
+                'name': 'sherpa.db.pending_users',
+                'value': pending_users.count()
             }, {
                 'name': 'sherpa.db.sherpa_users',
                 'value': sherpa_users.count()

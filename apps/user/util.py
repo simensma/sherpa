@@ -7,6 +7,7 @@ import hashlib
 from sherpa25.models import Member
 from user.models import User
 from focus.models import Actor
+from focus.util import get_enrollment_email_matches
 
 # Checks whether the given IP address has performed more than the allowed amount of lookups
 # on memberid + zipcode. This is because since there are a relatively low amount of total zipcodes
@@ -41,10 +42,19 @@ def authenticate_users(email, password):
     matches = [u for u in User.get_users().filter(memberid__isnull=True, email=email) if u.check_password(password)]
 
     # Add matching members with active User
-    focus_candidates = Actor.objects.filter(email=email)
-    for a in focus_candidates:
+    actor_candidates = Actor.objects.filter(email=email)
+    for a in actor_candidates:
         try:
             u = User.get_users().get(memberid=a.memberid, is_active=True)
+            if u.check_password(password):
+                matches.append(u)
+        except User.DoesNotExist:
+            pass
+
+    # Add matching members with pending User
+    for e in get_enrollment_email_matches(email):
+        try:
+            u = User.get_users(include_pending=True).get(memberid=e.memberid, is_active=True)
             if u.check_password(password):
                 matches.append(u)
         except User.DoesNotExist:
@@ -65,9 +75,26 @@ def authenticate_sherpa2_user(email, password):
 def create_inactive_user(memberid):
     Actor.objects.get(memberid=memberid) # Verify that the Actor exists
     try:
-        # Check if it already exists first, e.g. if two simultaneous pageloads
-        # link to creating the same inactive users and both of them click.
-        return User.get_users().get(memberid=memberid, is_active=False)
+        # Check if the user already exists first.
+        existing_user = User.objects.get(memberid=memberid)
+
+        # Note that we don't check if this user is inactive or not.
+        # If they are, maybe someone double-clicked some link or something.
+        # It doesn't matter, let this user pass as the created one.
+
+        if existing_user.is_pending:
+            # Well, we saw that they're not pending anymore since we checked the
+            # actor, so fix that and let them pass.
+            existing_user.is_pending = False
+            existing_user.save()
+
+        if existing_user.is_expired:
+            # Oh, what happened here? Well, they're not expired anymore since we
+            # the actor exists, so fix that and let them pass.
+            existing_user.is_expired = False
+            existing_user.save()
+
+        return existing_user
     except User.DoesNotExist:
         user = User(identifier=memberid, memberid=memberid, is_active=False)
         user.set_unusable_password()
