@@ -21,4 +21,12 @@ $(document).ready(function() {
         choose_creation.fadeOut(200, complete);
     });
 
+    $.fn.Hashtag('bind', 'ikkemedlem', {
+        'match': function() {
+            choose_creation.hide();
+            registration_form_nonmember_wrapper.show();
+            loginpage.find("ul.nav li a[href='#registration']").tab('show');
+        }
+    });
+
 });

@@ -158,3 +158,49 @@ def attempt_registration(request):
 
     except (ObjectDoesNotExist, ValueError):
         return None, 'invalid_memberid'
+
+def attempt_registration_nonmember(request):
+    error_messages = []
+
+    # Check that name is provided
+    if not validator.name(request.POST['name']):
+        error_messages.append('invalid_name')
+
+    # Check that the email address is valid
+    if not validator.email(request.POST['email']):
+        error_messages.append('invalid_email')
+
+    # Check that the email address isn't in use
+    if User.objects.filter(identifier=request.POST['email']).exists():
+        error_messages.append('email_exists')
+
+    # Check that the password is long enough
+    if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+        error_messages.append('too_short_password')
+
+    if len(error_messages) > 0:
+        request.session['user.registration_nonmember_attempt'] = {
+            'name': request.POST['name'],
+            'email': request.POST['email']
+        }
+        return None, error_messages
+
+    user = User(identifier=request.POST['email'], email=request.POST['email'])
+    user.first_name, user.last_name = request.POST['name'].rsplit(' ', 1)
+    user.set_password(request.POST['password'])
+    user.save()
+    authenticate(user=user)
+    log_user_in(request, user)
+
+    try:
+        t = loader.get_template('common/user/login/registered_nonmember_email.html')
+        c = RequestContext(request)
+        send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
+    except SMTPException:
+        # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
+        logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+
+    return user, None

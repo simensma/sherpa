@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login as log_user_in
 
 from connect.util import get_request_data, prepare_response, add_signon_session_value
 from api.util import get_member_data
-from user.login.util import attempt_login, attempt_registration
+from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from user.models import User
 from core.models import FocusCountry
 
@@ -122,7 +122,26 @@ def signon_register(request):
             add_signon_session_value(request, 'innmeldt')
         else:
             add_signon_session_value(request, 'registrert')
-    return redirect('connect.views.signon_complete')
+        return redirect('connect.views.signon_complete')
+
+def signon_register_nonmember(request):
+    if request.method != 'POST' or not 'dntconnect' in request.session:
+        raise PermissionDenied
+
+    user, error_messages = attempt_registration_nonmember(request)
+
+    if user is None:
+        for message in error_messages:
+            messages.error(request, message)
+
+        request.session['user.registration_nonmember_attempt'] = {
+            'name': request.POST['name'],
+            'email': request.POST['email']
+        }
+        return redirect("%s#ikkemedlem" % (reverse('connect.views.signon_login')))
+    else:
+        add_signon_session_value(request, 'registrert')
+        return redirect('connect.views.signon_complete')
 
 def signon_complete(request):
     if not 'dntconnect' in request.session or not request.user.is_authenticated():

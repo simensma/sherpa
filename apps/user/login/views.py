@@ -18,7 +18,7 @@ import hashlib
 
 from user.models import User
 from user.util import memberid_lookups_exceeded
-from user.login.util import attempt_login, attempt_registration, EMAIL_REGISTERED_SUBJECT
+from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember, EMAIL_REGISTERED_SUBJECT
 from focus.models import Actor, Enrollment
 from focus.util import get_enrollment_email_matches
 from core import validator
@@ -137,47 +137,19 @@ def register_nonmember(request):
         }
         return render(request, 'common/user/login/registration_nonmember.html', context)
     elif request.method == 'POST':
-        errors = False
+        user, error_messages = attempt_registration_nonmember(request)
 
-        # Check that name is provided
-        if not validator.name(request.POST['name']):
-            messages.error(request, 'invalid_name')
-            errors = True
+        if user is None:
+            for message in error_messages:
+                messages.error(request, message)
 
-        # Check that the email address is valid
-        if not validator.email(request.POST['email']):
-            messages.error(request, 'invalid_email')
-            errors = True
-
-        # Check that the email address isn't in use
-        if User.objects.filter(identifier=request.POST['email']).exists():
-            messages.error(request, 'email_exists')
-            errors = True
-
-        # Check that the password is long enough
-        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            messages.error(request, 'too_short_password')
-            errors = True
-
-        if errors:
             request.session['user.registration_nonmember_attempt'] = {
                 'name': request.POST['name'],
                 'email': request.POST['email']
             }
             return redirect('user.login.views.register_nonmember')
-
-        user = User(identifier=request.POST['email'], email=request.POST['email'])
-        user.first_name, user.last_name = request.POST['name'].rsplit(' ', 1)
-        user.set_password(request.POST['password'])
-        user.save()
-        authenticate(user=user)
-        log_user_in(request, user)
-        if 'dntconnect' in request.session:
-            add_signon_session_value(request, 'registrert')
-        t = loader.get_template('common/user/login/registered_nonmember_email.html')
-        c = RequestContext(request)
-        send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-        return redirect(request.GET.get('next', reverse('user.views.home')))
+        else:
+            return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
