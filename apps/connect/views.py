@@ -10,6 +10,7 @@ from connect.util import get_request_data, prepare_response, add_signon_session_
 from api.util import get_member_data
 from user.login.util import attempt_login
 from user.models import User
+from core.models import FocusCountry
 
 import logging
 
@@ -54,6 +55,7 @@ def signon_login(request):
     else:
         context = {
             'user_password_length': settings.USER_PASSWORD_LENGTH,
+            'countries': FocusCountry.get_sorted(),
         }
         if request.method == 'GET':
             return render(request, 'main/connect/signon.html', context)
