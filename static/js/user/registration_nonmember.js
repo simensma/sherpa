@@ -1,30 +1,35 @@
 $(document).ready(function() {
 
-    $("a.confirm").click(function() {
+    var wrapper = $("div.registration-form-nonmember-wrapper");
+    var confirmation = wrapper.find("a.confirm");
+    var form_wrapper = wrapper.find("div.form-wrapper");
+    var form = wrapper.find("form.registration-nonmember");
+
+    confirmation.click(function() {
         $(this).parents("div.alert").hide();
-        $("form.registration").fadeIn();
+        form_wrapper.fadeIn();
     });
 
     Validator.validate({
         method: 'full_name',
-        control_group: $("div.control-group.name"),
-        input: $("input[name='name']"),
+        control_group: form.find("div.control-group.name"),
+        input: form.find("input[name='name']"),
         req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: $("div.control-group.email"),
-        input: $("input[name='email']"),
+        control_group: form.find("div.control-group.email"),
+        input: form.find("input[name='email']"),
         req: true
     });
 
     Validator.validatePasswords({
-        control_group: $("div.control-group.password, div.control-group.password-repeat"),
-        pass1: $("input[name='password']"),
-        pass2: $("input[name='password-repeat']"),
+        control_group: form.find("div.control-group.password, div.control-group.password-repeat"),
+        pass1: form.find("input[name='password']"),
+        pass2: form.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
-        hints: $("div.form-hints div.password-hint")
+        hints: form.find("div.form-elements div.password-hint")
     });
 
 });
