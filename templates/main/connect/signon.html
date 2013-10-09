@@ -16,6 +16,7 @@
   <script src="{{ STATIC_URL }}js/user/util/toggle-loginpage-tabs.js"></script>
   <script src="{{ STATIC_URL }}js/user/util/login.js"></script>
   <script src="{{ STATIC_URL }}js/user/util/registration.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/registration_nonmember.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -67,7 +68,8 @@
 
           <div class="registration-form-nonmember-wrapper hide">
 
-            <p>TBD</p>
+            {% url 'user.login.views.register_nonmember' as action %}
+            {% include 'common/user/login/util/registration_form_nonmember.html' %}
 
           </div>
 
