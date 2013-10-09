@@ -4,15 +4,17 @@ $(document).ready(function() {
         'match': toggleRegistration
     });
 
-    $("a.toggle-registration-tab").click(toggleRegistration);
-    $("a.toggle-login-tab").click(toggleLogin);
+    var wrapper = $("div.loginpage-wrapper");
+
+    wrapper.find("a.toggle-registration-tab").click(toggleRegistration);
+    wrapper.find("a.toggle-login-tab").click(toggleLogin);
 
     function toggleLogin() {
-        $("ul.nav li a[href='#login']").tab('show');
+        wrapper.find("ul.nav li a[href='#login']").tab('show');
     }
 
     function toggleRegistration() {
-        $("ul.nav li a[href='#registration']").tab('show');
+        wrapper.find("ul.nav li a[href='#registration']").tab('show');
     }
 
 });
