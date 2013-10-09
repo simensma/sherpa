@@ -1,10 +1,25 @@
 # encoding: utf-8
 from django.contrib.auth import authenticate, login as log_user_in
+from django.conf import settings
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.template import RequestContext, loader
+from django.core.mail import send_mail
 
+from smtplib import SMTPException
+import logging
+import sys
+
+from core.models import FocusCountry
 from user.models import User
 from user.util import authenticate_sherpa2_user, authenticate_users
-from focus.models import Actor
+from focus.models import Actor, Enrollment
 from sherpa25.models import import_fjelltreffen_annonser
+from core import validator
+from user.util import memberid_lookups_exceeded
+
+EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
+
+logger = logging.getLogger('sherpa')
 
 def attempt_login(request):
     matches = authenticate_users(request.POST['email'], request.POST['password'])
@@ -66,3 +81,80 @@ def attempt_login(request):
         else:
             # No luck, just provide the error message
             return matches, 'invalid_credentials'
+
+def attempt_registration(request):
+    try:
+        # Check that the password is long enough
+        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+            return None, 'too_short_password'
+
+        # Check that the email address is valid
+        if not validator.email(request.POST['email']):
+            return None, 'invalid_email'
+
+        # Check that the memberid is correct (and retrieve the Actor-entry)
+        if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
+            return None, 'memberid_lookups_exceeded'
+        if not FocusCountry.objects.filter(code=request.POST['country']).exists():
+            raise PermissionDenied
+        actor = Actor.objects.filter(
+            memberid=request.POST['memberid'],
+            address__country_code=request.POST['country']
+        )
+        if request.POST['country'] == 'NO':
+            actor = actor.filter(address__zipcode=request.POST['zipcode'])
+        if actor.exists():
+            actor = actor.get()
+        else:
+            # No matching actors, check for pending users
+            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
+            if request.POST['country'] == 'NO':
+                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
+            if enrollment.exists():
+                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+            else:
+                # Give up
+                raise ObjectDoesNotExist
+
+        # Check that the user doesn't already have an account
+        if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
+            return None, 'user_exists'
+
+        # Check that the memberid isn't expired.
+        # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
+        # but we'll check for it anyway.
+        if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
+            return None, 'expired_user_exists'
+
+        actor.set_email(request.POST['email'].strip())
+
+        try:
+            # Check if the user's already created as inactive
+            user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
+            user.is_active = True
+            user.set_password(request.POST['password'])
+            user.save()
+        except User.DoesNotExist:
+            # New user
+            user = User(identifier=actor.memberid, memberid=actor.memberid)
+            user.set_password(request.POST['password'])
+            user.save()
+
+        authenticate(user=user)
+        log_user_in(request, user)
+
+        try:
+            t = loader.get_template('common/user/login/registered_email.html')
+            c = RequestContext(request)
+            send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
+        except SMTPException:
+            # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
+            logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+
+        return user, None
+
+    except (ObjectDoesNotExist, ValueError):
+        return None, 'invalid_memberid'

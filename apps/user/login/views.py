@@ -11,7 +11,6 @@ from django.utils import crypto
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 
 from datetime import datetime, timedelta
-from smtplib import SMTPException
 import json
 import logging
 import sys
@@ -19,16 +18,13 @@ import hashlib
 
 from user.models import User
 from user.util import memberid_lookups_exceeded
-from user.login.util import attempt_login
+from user.login.util import attempt_login, attempt_registration, EMAIL_REGISTERED_SUBJECT
 from focus.models import Actor, Enrollment
 from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
 from sherpa25.models import Member
 from connect.util import add_signon_session_value
-
-EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
-EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
 
 logger = logging.getLogger('sherpa')
 
@@ -117,91 +113,15 @@ def logout(request):
     return redirect('page.views.page')
 
 def register(request):
-    if request.method == 'POST':
-        try:
-            # Check that the password is long enough
-            if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-                messages.error(request, 'too_short_password')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the email address is valid
-            if not validator.email(request.POST['email']):
-                messages.error(request, 'invalid_email')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the memberid is correct (and retrieve the Actor-entry)
-            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-                messages.error(request, 'memberid_lookups_exceeded')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-            if not FocusCountry.objects.filter(code=request.POST['country']).exists():
-                raise PermissionDenied
-            actor = Actor.objects.filter(
-                memberid=request.POST['memberid'],
-                address__country_code=request.POST['country'])
-            if request.POST['country'] == 'NO':
-                actor = actor.filter(address__zipcode=request.POST['zipcode'])
-            if actor.exists():
-                actor = actor.get()
-            else:
-                # No matching actors, check for pending users
-                enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
-                if request.POST['country'] == 'NO':
-                    enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
-                if enrollment.exists():
-                    actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
-                else:
-                    # Give up
-                    raise ObjectDoesNotExist
-
-            # Check that the user doesn't already have an account
-            if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
-                messages.error(request, 'user_exists')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the memberid isn't expired.
-            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
-            # but we'll check for it anyway.
-            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
-                messages.error(request, 'expired_user_exists')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            actor.set_email(request.POST['email'].strip())
-
-            try:
-                # Check if the user's already created as inactive
-                user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
-                user.is_active = True
-                user.set_password(request.POST['password'])
-                user.save()
-            except User.DoesNotExist:
-                # New user
-                user = User(identifier=actor.memberid, memberid=actor.memberid)
-                user.set_password(request.POST['password'])
-                user.save()
-
-            authenticate(user=user)
-            log_user_in(request, user)
-            if 'dntconnect' in request.session:
-                if 'innmelding.aktivitet' in request.session:
-                    add_signon_session_value(request, 'innmeldt')
-                else:
-                    add_signon_session_value(request, 'registrert')
-            t = loader.get_template('common/user/login/registered_email.html')
-            c = RequestContext(request)
-            send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-            return redirect(request.GET.get('next', reverse('user.views.home')))
-        except (ObjectDoesNotExist, ValueError):
-            messages.error(request, 'invalid_memberid')
-            return redirect("%s#registrering" % reverse('user.login.views.login'))
-        except SMTPException:
-            # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
-            logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
-                exc_info=sys.exc_info(),
-                extra={'request': request}
-            )
-            return redirect('user.views.home')
-    else:
+    if request.method != 'POST':
         return redirect('user.login.views.login')
+    else:
+        user, message = attempt_registration(request)
+        if user is None:
+            messages.error(request, message)
+            return redirect("%s#registrering" % reverse('user.login.views.login'))
+        else:
+            return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def register_nonmember(request):
     if request.method == 'GET':
