@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login as log_user_in
 
 from connect.util import get_request_data, prepare_response, add_signon_session_value
 from api.util import get_member_data
-from user.login.util import attempt_login
+from user.login.util import attempt_login, attempt_registration
 from user.models import User
 from core.models import FocusCountry
 
@@ -105,6 +105,23 @@ def signon_login_chosen_user(request):
     log_user_in(request, user)
     add_signon_session_value(request, 'logget_inn')
     del request.session['authenticated_users']
+    return redirect('connect.views.signon_complete')
+
+def signon_register(request):
+    if request.method != 'POST' or not 'dntconnect' in request.session:
+        raise PermissionDenied
+
+    user, message = attempt_registration(request)
+    if user is None:
+        messages.error(request, message)
+        return redirect("%s#registrering" % reverse('connect.views.signon_login'))
+    else:
+        # The user will be sent to registration after enrollment, so both will come
+        # this way - check which one it is
+        if 'innmelding.aktivitet' in request.session:
+            add_signon_session_value(request, 'innmeldt')
+        else:
+            add_signon_session_value(request, 'registrert')
     return redirect('connect.views.signon_complete')
 
 def signon_complete(request):
