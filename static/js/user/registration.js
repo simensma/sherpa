@@ -1,38 +1,40 @@
 $(document).ready(function() {
 
     var memberid_accepted = false;
-    var no_memberid_match = $("div.no-memberid-match");
-    var registration_form = $("div.registration-form-wrapper form");
-    var country_select = registration_form.find("select[name='country']");
-    var zipcode_control_group = registration_form.find("div.control-group.zipcode");
+    var memberid_hint_modal = $("div.memberid-hint-modal");
+    var registration = $("div.registration-form-wrapper");
+    var registration_form = registration.find("form");
+    var no_memberid_match = registration.find("div.no-memberid-match");
+    var country_select = registration.find("select[name='country']");
+    var zipcode_control_group = registration.find("div.control-group.zipcode");
 
     Validator.validate({
         method: 'email',
-        control_group: registration_form.find("div.control-group.email"),
-        input: registration_form.find("input[name='email']"),
+        control_group: registration.find("div.control-group.email"),
+        input: registration.find("input[name='email']"),
         req: true
     });
 
     Validator.validatePasswords({
-        control_group: registration_form.find("div.control-group.password, div.control-group.password-repeat"),
-        pass1: registration_form.find("input[name='password']"),
-        pass2: registration_form.find("input[name='password-repeat']"),
+        control_group: registration.find("div.control-group.password, div.control-group.password-repeat"),
+        pass1: registration.find("input[name='password']"),
+        pass2: registration.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
-        hints: registration_form.find("div.control-group.password div.controls div.hints.validator")
+        hints: registration.find("div.control-group.password div.controls div.hints.validator")
     });
 
     Validator.validate({
         method: 'memberid',
-        control_group: registration_form.find("div.control-group.memberid"),
-        input: registration_form.find("input[name='memberid']"),
+        control_group: registration.find("div.control-group.memberid"),
+        input: registration.find("input[name='memberid']"),
         req: true
     });
 
     Validator.validateZipcode(
-        $("div.control-group.zipcode"),
-        $("input[name='zipcode']"),
-        $("input[name='area']"),
-        $("img.ajaxloader.zipcode")
+        registration.find("div.control-group.zipcode"),
+        registration.find("input[name='zipcode']"),
+        registration.find("input[name='area']"),
+        registration.find("img.ajaxloader.zipcode")
     );
 
     country_select.chosen();
@@ -57,9 +59,9 @@ $(document).ready(function() {
         $.ajaxQueue({
             url: registration_form.attr('data-memberid-url'),
             data: {
-                memberid: registration_form.find("input[name='memberid']").val(),
+                memberid: registration.find("input[name='memberid']").val(),
                 country: country_select.val(),
-                zipcode: registration_form.find("input[name='zipcode']").val()
+                zipcode: registration.find("input[name='zipcode']").val()
             }
         }).done(function(result) {
             result = JSON.parse(result);
@@ -67,20 +69,20 @@ $(document).ready(function() {
                 if(!result.user_exists) {
                     enableStep2(result);
                 } else {
-                    $("img.ajaxloader.submit").hide();
+                    registration.find("img.ajaxloader.submit").hide();
                     if(!result.user_is_expired) {
-                        $("div.user-exists").slideDown();
+                        registration.find("div.user-exists").slideDown();
                     } else {
-                        $("div.user-is-expired").slideDown();
+                        registration.find("div.user-is-expired").slideDown();
                     }
                 }
             } else if(result.memberid_lookups_exceeded) {
-                registration_form.find("img.ajaxloader.submit").hide();
-                $("div.memberid-lookups-exceeded").slideDown();
+                registration.find("img.ajaxloader.submit").hide();
+                registration.find("div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.slideDown();
                 step1.find("button[type='submit']").show();
-                registration_form.find("img.ajaxloader.submit").hide();
+                registration.find("img.ajaxloader.submit").hide();
             }
         }).fail(function() {
             alert("Beklager, det oppstod en teknisk feil ved sjekk av medlemsnummeret. Vennligst prøv igjen senere.");
@@ -89,8 +91,8 @@ $(document).ready(function() {
         });
     });
 
-    var step1 = registration_form.find("div.step1");
-    var step2 = registration_form.find("div.step2");
+    var step1 = registration.find("div.step1");
+    var step2 = registration.find("div.step2");
 
     function enableStep2(result) {
         memberid_accepted = true;
@@ -115,8 +117,8 @@ $(document).ready(function() {
         }
     }
 
-    $("a.trigger-memberid-hint").click(function() {
-        $("div.memberid-hint-modal").modal();
+    registration.find("a.trigger-memberid-hint").click(function() {
+        memberid_hint_modal.modal();
     });
 
     // Check if a pre-registrated user is filled out
