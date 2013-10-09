@@ -52,11 +52,10 @@ def signon_login(request):
         # Shouldn't happen, but handle it just in case.
         return redirect('connect.views.signon_complete')
     else:
+        context = {
+            'user_password_length': settings.USER_PASSWORD_LENGTH,
+        }
         if request.method == 'GET':
-            context = {
-                'client_name': request.session['dntconnect']['client']['friendly_name'],
-                'user_password_length': settings.USER_PASSWORD_LENGTH,
-            }
             return render(request, 'main/connect/signon.html', context)
         else:
             matches, message = attempt_login(request)
@@ -72,9 +71,7 @@ def signon_login(request):
 
             else:
                 messages.error(request, message)
-                context = {
-                    'email': request.POST['email']
-                }
+                context['email'] = request.POST['email']
                 return render(request, 'main/connect/signon.html', context)
 
 def signon_choose_authenticated_user(request):
