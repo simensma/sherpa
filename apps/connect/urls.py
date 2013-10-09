@@ -4,4 +4,5 @@ urlpatterns = patterns('connect.views',
     url(r'^bounce/$', 'bounce'),
     url(r'^signon/$', 'signon'),
     url(r'^signon/login/$', 'signon_login'),
+    url(r'^signon/videre/$', 'signon_complete'),
 )
