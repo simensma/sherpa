@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
+    var wrapper = $("div.loginpage-wrapper");
+
     $.fn.Hashtag('bind', 'registrering', {
         'match': toggleRegistration
     });
-
-    var wrapper = $("div.loginpage-wrapper");
 
     wrapper.find("a.toggle-registration-tab").click(toggleRegistration);
     wrapper.find("a.toggle-login-tab").click(toggleLogin);
