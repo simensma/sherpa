@@ -1,6 +1,6 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends "connect/layout.html" %}
 {% block title %}Logg inn{% endblock %}
-{% block breadcrumb %}<a href="{% url 'user.login.views.login' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'connect.views.signon' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/user/util/choose-authenticated-user.js"></script>
@@ -8,7 +8,7 @@
 
 {% block body %}
 
-{% url 'user.login.views.login_chosen_user' as action %}
+{% url 'connect.views.signon_login_chosen_user' as action %}
 {% include 'common/user/login/util/choose_authenticated_user.html' %}
 
 {% endblock %}

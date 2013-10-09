@@ -109,8 +109,6 @@ def login_chosen_user(request):
     user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
     user = authenticate(user=user)
     log_user_in(request, user)
-    if 'dntconnect' in request.session:
-        add_signon_session_value(request, 'logget_inn')
     del request.session['authenticated_users']
     return redirect(request.GET.get('next', reverse('user.views.home')))
 

@@ -2,9 +2,14 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as log_user_in
 
-from connect.util import get_request_data, prepare_response
+from connect.util import get_request_data, prepare_response, add_signon_session_value
 from api.util import get_member_data
+from user.login.util import attempt_login
+from user.models import User
 
 import logging
 
@@ -47,8 +52,61 @@ def signon_login(request):
         # Shouldn't happen, but handle it just in case.
         return redirect('connect.views.signon_complete')
     else:
-        context = {'client_name': request.session['dntconnect']['client']['friendly_name']}
-        return render(request, 'main/connect/signon.html', context)
+        if request.method == 'GET':
+            context = {
+                'client_name': request.session['dntconnect']['client']['friendly_name'],
+                'user_password_length': settings.USER_PASSWORD_LENGTH,
+            }
+            return render(request, 'main/connect/signon.html', context)
+        else:
+            matches, message = attempt_login(request)
+
+            if len(matches) == 1:
+                add_signon_session_value(request, 'logget_inn')
+                return redirect('connect.views.signon_complete')
+
+            elif len(matches) > 1:
+                # Multiple matches, offer a choice between all matches
+                request.session['authenticated_users'] = [u.id for u in matches]
+                return redirect('connect.views.signon_choose_authenticated_user')
+
+            else:
+                messages.error(request, message)
+                context = {
+                    'email': request.POST['email']
+                }
+                return render(request, 'main/connect/signon.html', context)
+
+def signon_choose_authenticated_user(request):
+    if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:
+        raise PermissionDenied
+
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
+    context = {
+        'users': sorted(users, key=lambda u: u.get_first_name())
+    }
+    return render(request, 'main/connect/signon_choose_authenticated_user.html', context)
+
+def signon_login_chosen_user(request):
+    if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:
+        raise PermissionDenied
+
+    if not 'user' in request.POST:
+        del request.session['authenticated_users']
+        return redirect('connect.views.signon_login')
+
+    # Verify that the user authenticated for this user
+    if not int(request.POST['user']) in request.session['authenticated_users']:
+        del request.session['authenticated_users']
+        return redirect('connect.views.signon_login')
+
+    # All is swell, log the user in
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
+    user = authenticate(user=user)
+    log_user_in(request, user)
+    add_signon_session_value(request, 'logget_inn')
+    del request.session['authenticated_users']
+    return redirect('connect.views.signon_complete')
 
 def signon_complete(request):
     if not 'dntconnect' in request.session or not request.user.is_authenticated():
