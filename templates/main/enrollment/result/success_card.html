@@ -62,9 +62,15 @@
       {% if location.country == 'NO' %}
         {% for user in users %}
           {% if user.phone != '' and not user.sms_sent %}
-            <p class="sms"><button class="btn btn-danger phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
-              Send gratis kvittering på SMS til {{ user.phone }}
-            </button></p>
+            <p class="sms">
+              <a href="javascript:undefined" class="phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
+                Send gratis kvittering på SMS til {{ user.phone }}
+              </a>
+              <span class="sending hide">
+                <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+                Sender SMS, vennligst vent...
+              </span>
+            </p>
           {% endif %}
         {% endfor %}
       {% endif %}
