@@ -1,6 +1,9 @@
 {% extends "main/connect/layouts/columbus.html" %}
-{% block title %}Logg inn{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">Logg inn</a></em>{% endblock %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Logg inn" %}{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">{% trans "Logg inn" %}</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -33,15 +36,15 @@
 
   <div class="row">
     <div class="span12">
-      <h2>Logg inn</h2>
+      <h2>{% trans "Logg inn" %}</h2>
     </div>
   </div>
 
   <div class="row">
     <div class="span7">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
-        <li><a href="#registration" data-toggle="tab">Opprett ny bruker</a></li>
+        <li class="active"><a href="#login" data-toggle="tab">{% trans "Logg inn" %}</a></li>
+        <li><a href="#registration" data-toggle="tab">{% trans "Opprett ny bruker" %}</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible">
@@ -73,14 +76,14 @@
 
             <ul>
               <li>
-                <a href="javascript:undefined" class="member">Jeg er allerede medlem i DNT</a>
+                <a href="javascript:undefined" class="member">{% trans "Jeg er allerede medlem i DNT" %}</a>
               </li>
               <li>
-                <a href="{% url 'enrollment.views.index' %}" class="enroll">Jeg vil melde meg inn i DNT</a>
-                (må betales på nett)
+                <a href="{% url 'enrollment.views.index' %}" class="enroll">{% trans "Jeg vil melde meg inn i DNT" %}</a>
+                {% trans "(må betales på nett)" %}
               </li>
               <li>
-                <a href="javascript:undefined" class="nonmember">Jeg er ikke klar for å bli medlem ennå</a>
+                <a href="javascript:undefined" class="nonmember">{% trans "Jeg er ikke klar for å bli medlem ennå" %}</a>
               </li>
             </ul>
 
@@ -95,11 +98,11 @@
       <div class="usersite-benefits">
 
         <p>
-          <strong>Lurer du på noe?</strong>
+          <strong>{% trans "Lurer du på noe?" %}</strong>
         </p>
 
         <p>
-          Ved behov for teknisk støtte, ring:<br>
+          {% trans "Ved behov for teknisk støtte, ring:" %}<br>
           22 82 28 20
         </p>
 
@@ -118,12 +121,12 @@
     </p>
     {% include 'main/membership/memberid_sms/forgotten.html' %}
     <p>
-      Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:
+      {% trans "Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:" %}
     </p>
-    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet">
+    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="{% trans "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet" %}">
   </div>
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
   </div>
 </div>
 

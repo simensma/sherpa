@@ -1,0 +1,397 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-10 17:34+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/common/user/login/util/login_form.html:6
+#: templates/common/user/login/util/login_form.html:11
+msgid "Feil e-postadresse eller passord"
+msgstr "Wrong e-mail address or password"
+
+#: templates/common/user/login/util/login_form.html:7
+msgid "Har du ikke Min side-konto?"
+msgstr "Don't have an account?"
+
+#: templates/common/user/login/util/login_form.html:7
+msgid "Opprett din bruker her!"
+msgstr "Create a user here!"
+
+#: templates/common/user/login/util/login_form.html:12
+msgid ""
+"Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din "
+"nye e-postadresse."
+msgstr ""
+"You logged on with your old user! You need to enter your new password or "
+"your new e-mail address."
+
+#: templates/common/user/login/util/login_form.html:13
+msgid "Hvis du har glemt passordet, klikk på \"Glemt passord\"-lenken under."
+msgstr "If you forgot your password, click the \"Forgot password\"-link below."
+
+#: templates/common/user/login/util/login_form.html:22
+msgid "E-post"
+msgstr "E-mail"
+
+#: templates/common/user/login/util/login_form.html:29
+#: templates/common/user/login/util/registration_form.html:72
+#: templates/common/user/login/util/registration_form_nonmember.html:49
+msgid "Passord:"
+msgstr "Password:"
+
+#: templates/common/user/login/util/login_form.html:37
+#: templates/main/connect/signon.html:5 templates/main/connect/signon.html:6
+#: templates/main/connect/signon.html:39 templates/main/connect/signon.html:46
+msgid "Logg inn"
+msgstr "Log on"
+
+#: templates/common/user/login/util/login_form.html:44
+msgid "Jeg har glemt passordet mitt!"
+msgstr "I forgot my password!"
+
+#: templates/common/user/login/util/login_form.html:46
+msgid "Fyll ut din e-post adresse..."
+msgstr "Enter your e-mail address..."
+
+#: templates/common/user/login/util/login_form.html:48
+msgid "Gjenopprett passord"
+msgstr "Restore password"
+
+#: templates/common/user/login/util/login_form.html:49
+msgid "Sender e-post, vennligst vent..."
+msgstr "Sending e-mail, please wait..."
+
+#: templates/common/user/login/util/login_form.html:52
+msgid ""
+"En e-post har blitt sendt til adressen du oppgav med ytterligere "
+"instruksjoner for å få gjenopprettet passordet."
+msgstr ""
+"An e-mail has been sent to your provided address with further instructions "
+"for restoring your password."
+
+#: templates/common/user/login/util/login_form.html:55
+msgid ""
+"Denne e-postadressen er ikke registrert på noen av våre brukere. Er det "
+"denne adressen du er registrert med? Sjekk også at du har skrevet adressen "
+"riktig."
+msgstr ""
+"This e-mail address isn't registered on any of our users. Are you sure that "
+"this is your registered address? Please check your spelling too."
+
+#: templates/common/user/login/util/login_form.html:58
+msgid "Du har ikke opprettet brukerkonto ennå. Du kan"
+msgstr "You haven't created a user account yet. You can"
+
+#: templates/common/user/login/util/login_form.html:58
+msgid "opprette din bruker her"
+msgstr "create your user here"
+
+#: templates/common/user/login/util/login_form.html:58
+msgid "det er kjapt, enkelt og gratis!"
+msgstr "it's quick, simple and free!"
+
+#: templates/common/user/login/util/login_form.html:61
+msgid ""
+"Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre "
+"systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller "
+"kontakt medlemsservice dersom feilen vedvarer."
+msgstr ""
+"We're sorry, we experienced a technical error! The error has been logged, "
+"and we'll check it out as soon as possible. Please try again, or contect "
+"memberservice if the error persists."
+
+#: templates/common/user/login/util/registration_form.html:8
+msgid "Medlemsnummer:"
+msgstr "Member ID:"
+
+#: templates/common/user/login/util/registration_form.html:12
+msgid "Glemt medlemsnummeret?"
+msgstr "Forgot your member ID?"
+
+#: templates/common/user/login/util/registration_form.html:18
+msgid "Land:"
+msgstr "Country:"
+
+#: templates/common/user/login/util/registration_form.html:21
+msgid "Skandinavia"
+msgstr "Scandinavia"
+
+#: templates/common/user/login/util/registration_form.html:27
+msgid "Resten av verden"
+msgstr "Rest of world"
+
+#: templates/common/user/login/util/registration_form.html:37
+msgid "Postnummer:"
+msgstr "Zipcode:"
+
+#: templates/common/user/login/util/registration_form.html:41
+msgid "Laster poststed..."
+msgstr "Loading area..."
+
+#: templates/common/user/login/util/registration_form.html:47
+msgid "Gå videre"
+msgstr "Continue"
+
+#: templates/common/user/login/util/registration_form.html:48
+msgid "Sjekker medlemsnummer, vennligst vent..."
+msgstr "Checking member ID, please wait..."
+
+#: templates/common/user/login/util/registration_form.html:55
+msgid "Velkommen"
+msgstr "Welcome"
+
+#: templates/common/user/login/util/registration_form.html:55
+msgid ""
+"Nå trenger vi bare e-postadressen din og et passord, så er du ferdig "
+"registrert."
+msgstr ""
+"Now we just need your e-mail address and a password to complete the "
+"registration."
+
+#: templates/common/user/login/util/registration_form.html:59
+msgid "E-post:"
+msgstr "E-mail:"
+
+#: templates/common/user/login/util/registration_form.html:63
+msgid "Er din e-postadresse"
+msgstr "Is your e-mail address"
+
+#: templates/common/user/login/util/registration_form.html:63
+msgid "Hvis ikke kan du endre den i feltet over."
+msgstr "If not, correct it in the field above."
+
+#: templates/common/user/login/util/registration_form.html:66
+msgid "Her må du oppgi e-postadressen din."
+msgstr "Please provide your e-mail address here."
+
+#: templates/common/user/login/util/registration_form.html:76
+#, python-format
+msgid "Her må du velge et passord på minst %(user_password_length)s tegn."
+msgstr ""
+"Please select a password with at least %(user_password_length)s characters."
+
+#: templates/common/user/login/util/registration_form.html:79
+#: templates/common/user/login/util/registration_form_nonmember.html:53
+#, python-format
+msgid "Passordet er for kort, det må være minst %(user_password_length)s tegn."
+msgstr ""
+"Your password is too short, it needs to have at least "
+"%(user_password_length)s characters."
+
+#: templates/common/user/login/util/registration_form.html:82
+#: templates/common/user/login/util/registration_form_nonmember.html:62
+msgid "Passordene er ikke like, har du skrevet feil?"
+msgstr "The passwords aren't equal, did you misspell it?"
+
+#: templates/common/user/login/util/registration_form.html:88
+msgid "Gjenta passord:"
+msgstr "Repeat password:"
+
+#: templates/common/user/login/util/registration_form.html:96
+#: templates/common/user/login/util/registration_form_nonmember.html:69
+msgid "Registrer deg"
+msgstr "Register"
+
+#: templates/common/user/login/util/registration_form.html:97
+msgid "Laster, vennligst vent..."
+msgstr "Loading, please wait..."
+
+#: templates/common/user/login/util/registration_form.html:105
+#: templates/common/user/login/util/registration_form.html:143
+msgid "Hmmm... det ser ut som om du allerede har en bruker!"
+msgstr "Hmmm... it looks like you already have a user!"
+
+#: templates/common/user/login/util/registration_form.html:106
+#: templates/common/user/login/util/registration_form.html:144
+msgid "Logg inn her"
+msgstr "Log on here"
+
+#: templates/common/user/login/util/registration_form.html:106
+#: templates/common/user/login/util/registration_form.html:144
+msgid "Hvis du har glemt passordet kan du gjenopprette det der."
+msgstr "If you forgot your password, you'll be able to restore it there."
+
+#: templates/common/user/login/util/registration_form.html:110
+#: templates/common/user/login/util/registration_form.html:148
+msgid "Du har allerede en bruker, men den er markert som inaktiv!"
+msgstr "You already have a user, but it's marked as expired!"
+
+#: templates/common/user/login/util/registration_form.html:111
+#: templates/common/user/login/util/registration_form.html:149
+msgid "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med"
+msgstr "This could be an error in our memberregister. Please contact"
+
+#: templates/common/user/login/util/registration_form.html:111
+#: templates/common/user/login/util/registration_form.html:116
+#: templates/common/user/login/util/registration_form.html:121
+#: templates/common/user/login/util/registration_form.html:129
+#: templates/common/user/login/util/registration_form.html:134
+#: templates/common/user/login/util/registration_form.html:149
+msgid "medlemsservice"
+msgstr "memberservice"
+
+#: templates/common/user/login/util/registration_form.html:115
+#: templates/common/user/login/util/registration_form.html:128
+msgid "Ukjent bruker"
+msgstr "Unknown user"
+
+#: templates/common/user/login/util/registration_form.html:116
+#: templates/common/user/login/util/registration_form.html:129
+msgid ""
+"Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv "
+"igjen, eller kontakt"
+msgstr ""
+"Sorry, we have no members with these credentials. Please try again, or "
+"contact"
+
+#: templates/common/user/login/util/registration_form.html:116
+#: templates/common/user/login/util/registration_form.html:129
+msgid "hvis du mener at dette skal være rett."
+msgstr "if you think this should be correct."
+
+#: templates/common/user/login/util/registration_form.html:120
+#: templates/common/user/login/util/registration_form.html:133
+msgid "Du kan ikke gjøre flere oppslag på medlemsnummer!"
+msgstr "You can't perform any more member ID lookups!"
+
+#: templates/common/user/login/util/registration_form.html:121
+#: templates/common/user/login/util/registration_form.html:134
+#, python-format
+msgid ""
+"Du har alt gjort %(memberid_lookups_limit)s oppslag på medlemsnummer! Prøver "
+"du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva "
+"ditt medlemsnummer eller postnummer er, må du kontakte"
+msgstr ""
+"You already made %(memberid_lookups_limit)s memberID lookups! Are you trying "
+"to guyss someones zipcode? If you're unsure about your registered member ID "
+"or zipcode, please contact"
+
+#: templates/common/user/login/util/registration_form.html:121
+#: templates/common/user/login/util/registration_form.html:134
+msgid "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen."
+msgstr ""
+"We can't let you make any more lookups right now, but you can try again "
+"tomorrow."
+
+#: templates/common/user/login/util/registration_form.html:138
+#: templates/common/user/login/util/registration_form_nonmember.html:28
+msgid "For kort passord"
+msgstr "Too short password"
+
+#: templates/common/user/login/util/registration_form.html:139
+#: templates/common/user/login/util/registration_form_nonmember.html:29
+#, python-format
+msgid ""
+"Du må ha minst %(user_password_length)s tegn i passordet ditt. Vennligst "
+"velg et lengre passord."
+msgstr ""
+"Your password needs at least %(user_password_length)s characters. Please "
+"select a longer password."
+
+#: templates/common/user/login/util/registration_form.html:153
+#: templates/common/user/login/util/registration_form_nonmember.html:18
+msgid "E-postadressen din er ikke gyldig!"
+msgstr "Your e-mail address is invalid!"
+
+#: templates/common/user/login/util/registration_form.html:154
+#: templates/common/user/login/util/registration_form_nonmember.html:19
+msgid "Vennligst oppgi en gyldig e-postadresse."
+msgstr "Please provide a valid e-mail address."
+
+#: templates/common/user/login/util/registration_form_nonmember.html:7
+msgid ""
+"Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et "
+"passord som du bruker sammen med e-postadressen til å logge inn."
+msgstr ""
+"You only need to provide your name and an e-mail address for now. You'll "
+"also need to select a password, which you'll use to login, together with "
+"your e-mail address."
+
+#: templates/common/user/login/util/registration_form_nonmember.html:13
+msgid "Du har ikke oppgitt fullt navn!"
+msgstr "You haven't provided your full name!"
+
+#: templates/common/user/login/util/registration_form_nonmember.html:14
+msgid "Vennligst oppgi navnet ditt, både fornavn og etternavn."
+msgstr "Please provide your full name, both first name and surname."
+
+#: templates/common/user/login/util/registration_form_nonmember.html:23
+msgid "E-postadressen din er allerede i bruk!"
+msgstr "Your e-mail address is already registered!"
+
+#: templates/common/user/login/util/registration_form_nonmember.html:24
+msgid ""
+"Hvis du allerede har en bruker, men har glemt passordet ditt, kan du "
+"opprette nytt passord på"
+msgstr ""
+"If you already have a user, but forgot your password, you can reset your "
+"password on"
+
+#: templates/common/user/login/util/registration_form_nonmember.html:24
+msgid "innloggingssiden"
+msgstr "the login page"
+
+#: templates/common/user/login/util/registration_form_nonmember.html:37
+msgid "Fullt navn:"
+msgstr "Full name:"
+
+#: templates/common/user/login/util/registration_form_nonmember.html:43
+msgid "E-postadresse:"
+msgstr "E-mail address:"
+
+#: templates/main/connect/signon.html:47
+msgid "Opprett ny bruker"
+msgstr "Create user"
+
+#: templates/main/connect/signon.html:79
+msgid "Jeg er allerede medlem i DNT"
+msgstr "I'm already a member of DNT"
+
+#: templates/main/connect/signon.html:82
+msgid "Jeg vil melde meg inn i DNT"
+msgstr "I want to become a DNT member"
+
+#: templates/main/connect/signon.html:83
+msgid "(må betales på nett)"
+msgstr "(must be paid online)"
+
+#: templates/main/connect/signon.html:86
+msgid "Jeg er ikke klar for å bli medlem ennå"
+msgstr "I'm not ready to become a member yet"
+
+#: templates/main/connect/signon.html:101
+msgid "Lurer du på noe?"
+msgstr "Questions?"
+
+#: templates/main/connect/signon.html:105
+msgid "Ved behov for teknisk støtte, ring:"
+msgstr "If you require technical support, please call:"
+
+#: templates/main/connect/signon.html:124
+msgid ""
+"Du finner også nummeret på giroen fra forrige årskontingent, og på "
+"medlemskortet ditt som vist med rød ring på bildet:"
+msgstr ""
+"You'll also find your ID on your previous invoice, and on your membership "
+"card as shown with a red circle on the following photo:"
+
+#: templates/main/connect/signon.html:126
+msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
+msgstr "Illustration of the member ID's placement on the membership card"
+
+#: templates/main/connect/signon.html:129
+msgid "Lukk vindu"
+msgstr "Close window"

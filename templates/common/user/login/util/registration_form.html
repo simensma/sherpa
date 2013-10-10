@@ -1,28 +1,30 @@
+{% load i18n %}
+
 <form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
   {% csrf_token %}
 
   <div class="step1">
     <div class="control-group memberid">
-      <label class="control-label" for="registration_memberid">Medlemsnummer:</label>
+      <label class="control-label" for="registration_memberid">{% trans "Medlemsnummer:" %}</label>
       <div class="controls">
         <input type="text" class="input-xlarge" name="memberid" id="registration_memberid">
         <div class="hints">
-          <a href="javascript:undefined" class="trigger-memberid-hint">Glemt medlemsnummeret?</a>
+          <a href="javascript:undefined" class="trigger-memberid-hint">{% trans "Glemt medlemsnummeret?" %}</a>
         </div>
       </div>
     </div>
 
     <div class="control-group country">
-      <label class="control-label" for="registration_country">Land:</label>
+      <label class="control-label" for="registration_country">{% trans "Land:" %}</label>
       <div class="controls">
         <select name="country" id="registration_country">
-          <optgroup id="scandinavia" label="Scandinavia">
+          <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
             <option value="{{ countries.norway.code }}" selected>{{ countries.norway.name }}</option>
             {% for c in countries.scandinavia %}
               <option value="{{ c.code }}">{{ c.name }}</option>
             {% endfor %}
           </optgroup>
-          <optgroup id="world" label="Rest of world">
+          <optgroup id="world" label="{% trans "Resten av verden" %}">
             {% for c in countries.other %}
               <option value="{{ c.code }}">{{ c.name }}</option>
             {% endfor %}
@@ -32,58 +34,58 @@
     </div>
 
     <div class="control-group zipcode">
-      <label class="control-label" for="registration_zipcode">Postnummer:</label>
+      <label class="control-label" for="registration_zipcode">{% trans "Postnummer:" %}</label>
       <div class="controls">
         <input type="text" class="input-small" name="zipcode" id="registration_zipcode" maxlength="4">
         <input type="text" class="input-medium" name="area" disabled>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn btn-danger">Gå videre <i class="icon-arrow-right icon-white"></i></button>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+        <button type="submit" class="btn btn-danger">{% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i></button>
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="{% trans "Sjekker medlemsnummer, vennligst vent..." %}">
       </div>
     </div>
   </div>
 
   <div class="step2 hide">
     <div class="control-group">
-      <p>Velkommen, <span class="name"></span>! Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert.</p>
+      <p>{% trans "Velkommen" %}, <span class="name"></span>! {% trans "Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert." %}</p>
     </div>
 
     <div class="control-group email">
-      <label class="control-label" for="registration_email">E-post:</label>
+      <label class="control-label" for="registration_email">{% trans "E-post:" %}</label>
       <div class="controls">
         <input type="text" class="input-xlarge" name="email" id="registration_email">
         <div class="hints email-found hide">
-          Er din e-postadresse <a class="email" href=""></a>? Hvis ikke kan du endre den i feltet over.
+          {% trans "Er din e-postadresse" %} <a class="email" href=""></a>? {% trans "Hvis ikke kan du endre den i feltet over." %}
         </div>
         <div class="hints email-not-found hide">
-          Her må du oppgi e-postadressen din.
+          {% trans "Her må du oppgi e-postadressen din." %}
         </div>
       </div>
     </div>
 
     <div class="control-group password">
-      <label class="control-label" for="registration_password">Passord:</label>
+      <label class="control-label" for="registration_password">{% trans "Passord:" %}</label>
       <div class="controls">
         <input type="password" class="input-xlarge" name="password" id="registration_password">
         <div class="hints">
-          Her må du velge et passord på minst {{ user_password_length }} tegn.
+          {% blocktrans %}Her må du velge et passord på minst {{ user_password_length }} tegn.{% endblocktrans %}
         </div>
         <div class="hints error validator short hide">
-          Passordet er for kort, det må være minst {{ user_password_length }} tegn.
+          {% blocktrans %}Passordet er for kort, det må være minst {{ user_password_length }} tegn.{% endblocktrans %}
         </div>
         <div class="hints error validator unequal hide">
-          Passordene er ikke like, har du skrevet feil?
+          {% trans "Passordene er ikke like, har du skrevet feil?" %}
         </div>
       </div>
     </div>
 
     <div class="control-group password-repeat">
-      <label class="control-label" for="registration_password-repeat">Gjenta passord:</label>
+      <label class="control-label" for="registration_password-repeat">{% trans "Gjenta passord:" %}</label>
       <div class="controls">
         <input type="password" class="input-xlarge" name="password-repeat" id="registration_password-repeat">
       </div>
@@ -91,8 +93,8 @@
 
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-        <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> {% trans "Registrer deg" %}</button>
+        <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
       </div>
     </div>
   </div>
@@ -100,56 +102,56 @@
 </form>
 
 <div class="hide alert alert-error user-exists">
-  <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-  <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+  <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
+  <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
 </div>
 
 <div class="hide alert alert-error user-is-expired">
-  <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
-  Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
+  <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
+  {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
 </div>
 
 <div class="hide alert alert-error no-memberid-match">
-  <strong>Ukjent bruker</strong><br>
-  Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
+  <strong>{% trans "Ukjent bruker" %}</strong><br>
+  {% trans "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du mener at dette skal være rett." %}
 </div>
 
 <div class="hide alert alert-error memberid-lookups-exceeded">
-  <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-  Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+  <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
+  {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
 </div>
 
 {% for message in messages %}
   {% if message.message == 'invalid_memberid' %}
     {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
     <div class="alert alert-error">
-      <strong>Ukjent bruker</strong><br>
-      Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
+      <strong>{% trans "Ukjent bruker" %}</strong><br>
+      {% trans "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du mener at dette skal være rett." %}
     </div>
   {% elif message.message == 'memberid_lookups_exceeded' %}
     <div class="alert alert-error">
-      <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-      Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+      <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
+      {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
     </div>
   {% elif message.message == 'too_short_password' %}
     <div class="alert alert-error">
-      <strong>For kort passord</strong><br>
-      Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
+      <strong>{% trans "For kort passord" %}</strong><br>
+      {% blocktrans %}Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.{% endblocktrans %}
     </div>
   {% elif message.message == 'user_exists' %}
     <div class="alert alert-error">
-      <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-      <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
+      <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
+      <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
     </div>
   {% elif message.message == 'expired_user_exists' %}
     <div class="alert alert-error">
-      <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
-      Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
+      <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
+      {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
     </div>
   {% elif message.message == 'invalid_email' %}
     <div class="alert alert-error">
-      <strong>E-postadressen din er ikke gyldig!</strong><br>
-      Vennligst oppgi en gyldig e-postadresse.
+      <strong>{% trans "E-postadressen din er ikke gyldig!" %}</strong><br>
+      {% trans "Vennligst oppgi en gyldig e-postadresse." %}
     </div>
   {% endif %}
 {% endfor %}
