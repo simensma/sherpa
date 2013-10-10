@@ -79,18 +79,18 @@
 
         <hr>
 
-        <h3>Fortsett til påmeldig til (TODO: turnavn)</h3>
+        <h3>Fortsett til påmeldig for tur/aktivitet</h3>
 
         {% if users|length == 1 %}
 
           <p>
-            Du er nå innmeldt, og kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side.
+            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side.
           </p>
 
         {% else %}
 
           <p>
-            Dere er nå innmeldt, og du kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
+            Dere er nå innmeldt, og du kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
           </p>
 
         {% endif %}
@@ -98,7 +98,7 @@
         {% if users|length == 1 %}
 
           <p>
-            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Gå videre <i class="icon-white icon-share-alt"></i></a>
           </p>
 
         {% else %}
@@ -114,9 +114,9 @@
             </p>
 
             <p>
-              <a class="btn btn-danger user" href="" disabled>Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+              <a class="btn btn-danger user" href="" disabled>Gå videre <i class="icon-white icon-share-alt"></i></a>
               {% for user in users %}
-                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_registration_key }}#registrering">Gå videre <i class="icon-white icon-share-alt"></i></a>
               {% endfor %}
             </p>
 
