@@ -18,20 +18,16 @@
 
 <div class="container">
 
+{# We'll use some hacks to make this design look like the original, since we're not modifying the css for this template. If this becomes too ugly, just remove everything and redesign based on the original. #}
+
 <header>
-  <div class="row">
-    <div class="span6">
+  <div class="row" style="height: 70px">
+    <div class="span12">
       <div class="association-logo left">
         <a href="{% url 'page.views.page' %}">
           DNT Oslo og Omegn
         </a>
       </div>
-    </div>
-    <div class="span6 search">
-      <form action="{% url 'page.views.search' %}" method="get" class="form-search">
-        <input type="text" name="q" value="{{ search_query }}" class="input-medium">
-        <button type="submit" class="btn">Søk</button>
-      </form>
     </div>
   </div>
 
@@ -42,46 +38,19 @@
           Meny <b class="caret"></b>
         </a>
       </p>
-      <p class="display-search">
-        <a href="javascript:undefined">
-          <b class="caret"></b> Søk
-        </a>
-      </p>
       <div style="clear: both;"></div>
     </div>
   </div>
 
   <div class="row">
-    <div class="span12">
-      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
-        <input type="text" name="q" value="{{ search_query }}">
-        <button type="submit" class="btn">Søk</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="span9 menu-container">
+    <div class="span12 menu-container">
       <nav id="menus">
         <ul>
-          {% for menu in menus %}
-          <li{% if menu.active %} class="active"{% endif %}>
-            <a href="{{ menu.url }}" class="noexternal">{{ menu.name }}</a>
+          <li>
+            <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">Avbryt og gå tilbake</a>
           </li>
-          {% endfor %}
         </ul>
       </nav>
-    </div>
-    <div class="span3 login-container">
-      <div class="login">
-        {% if user.is_authenticated %}
-          {% if user.perms.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
-          <a href="{% url 'user.views.home' %}">Min side</a>
-          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
-        {% else %}
-          <a href="{% url 'user.views.home' %}">Min side</a>
-        {% endif %}
-      </div>
     </div>
   </div>
 
@@ -90,8 +59,7 @@
   <div class="row">
     <div class="span10 breadcrumb-container">
       <div class="menu-breadcrumb">
-        <a href="/">Forsiden</a>
-          {# Too much template logic, but can't see a better way to do this. #}
+        <a href="{% url 'connect.views.signon_cancel' %}">{{ dntconnect.client.friendly_name }}</a>
           {% if page_hierarchy %}
             {% for page in page_hierarchy %}
               /
@@ -99,16 +67,6 @@
                 <a href="/{{ page.url }}/">{{ page.title }}</a>
               {% if forloop.last %}</em>{% endif %}
             {% endfor %}
-          {% elif version.variant.page %}
-            {% if version.variant.page.slug != '' %}
-              / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
-            {% endif %}
-          {% elif version.variant.article %}
-            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
-            / <em><a href="">{{ version.title.content|striptags }}</a></em>
-          {% elif article %}
-            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
-            / <em><a href="">{{ article.title }}</a></em>
           {% else %}
             {# Fall back to the static title #}
             / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
@@ -142,95 +100,34 @@
 
 </div>
 
-<div class="container social-icons">
-  <div class="row">
-    <div class="span3">
-      <a href="/kontakt/">
-        <img class="social" src="{{ STATIC_URL }}img/icons/social/turistforeningen.png" alt="Kontakt oss">
-      </a>
-      <h1>
-        <a href="/kontakt/">Kontakt oss</a>
-      </h1>
-      <a href="/kontakt/">E-post eller telefon</a>
-    </div>
-    <div class="span3">
-      <a class="noexternal" href="http://www.facebook.com/turistforeningen">
-        <img class="social" src="{{ STATIC_URL }}img/icons/social/facebook.png" alt="Facebook">
-      </a>
-      <h1>
-        <a class="noexternal" href="http://www.facebook.com/turistforeningen">Facebook</a>
-      </h1>
-      <a class="noexternal" href="http://www.facebook.com/turistforeningen">Følg oss</a>
-    </div>
-    <div class="span3">
-      <a class="noexternal" href="https://twitter.com/turistforening">
-        <img class="social" src="{{ STATIC_URL }}img/icons/social/twitter.png" alt="Twitter">
-      </a>
-      <h1>
-        <a class="noexternal" href="https://twitter.com/turistforening">Twitter</a>
-      </h1>
-      <a class="noexternal" href="https://twitter.com/turistforening">Snakk med oss</a>
-    </div>
-    <div class="span3">
-      <a href="http://www.youtube.com/user/turistforeningen">
-        <img class="social" src="{{ STATIC_URL }}img/icons/social/youtube.png" alt="Youtube">
-      </a>
-      <h1>
-        <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Youtube</a>
-      </h1>
-      <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Se våre filmer</a>
-    </div>
-  </div>
-</div>
-
 <footer class="main">
   <div class="container">
     <div class="row services">
-      <div class="span3">
-        <h2>Vårt tilbud</h2>
+      <div class="span4">
+        <h2>DNT Oslo og Omegn</h2>
         <ul>
-          <li><a href="/fellesturer/">Fellesturer</a></li>
-          <li><a href="/hytter/">Hytter og ruter</a></li>
-          <li><a href="/kurs/">Kurs og utdanning</a></li>
-          <li><a href="/skole/">Skole</a></li>
-          <li><a href="http://www.nettbutikken.dntoslo.no/">Turutstyr og kart</a></li>
-          <li><a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a></li>
-          <li><a href="http://ut.no">UT.no</a></li>
+          <li>Postboks 7 Sentrum</li>
+          <li>0101 Oslo</li>
+          <li>&nbsp;</li>
+          <li><a href="mailto:turinfo@dntoslo.no" class="noexternal">turinfo@dntoslo.no</a></li>
+          <li><a href="http://www.dntoslo.no" class="noexternal">http://www.dntoslo.no</a></li>
         </ul>
       </div>
-      <div class="span3">
-        <h2>Turgrupper</h2>
+      <div class="span4">
+        <h2>Åpningstider tlf.</h2>
         <ul>
-          <li><a href="/barn/">Barnas Turlag</a></li>
-          <li><a href="/ung/">DNT ung</a></li>
-          <li><a href="/fjellsport/">DNT fjellsport</a></li>
-          <li><a href="/senior/">DNT senior</a></li>
-          <li><a href="{% url 'association.views.index' %}">DNT der du bor</a></li>
+          <li>Man-fre.: kl. 08:30-16:00</li>
+          <li>Sentralbord: 22 82 28 00</li>
+          <li>Turinfo: 22 82 28 22</li>
+          <li>E-post: <a href="mailto:turinfo@dntoslo.no">turinfo@dntoslo.no</a></li>
         </ul>
       </div>
-      <div class="span3">
-        <h2>Medlemskap</h2>
+      <div class="span4">
+        <h2>Åpningstider turinfo</h2>
         <ul>
-          <li><a href="{% url 'membership.views.index' %}">Bli medlem</a></li>
-          <li><a href="{% url 'membership.views.service' %}">Medlemsservice</a></li>
-          <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
-          <li><a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a></li>
-          <li><a href="http://{{ old_site }}/form2.php?form=verving">Verv en venn</a></li>
-          <li><a href="{% url 'user.views.home' %}">Min side</a></li>
-        </ul>
-      </div>
-      <div class="span3">
-        <h2>Turistforeningen</h2>
-        <ul>
-          <li><a href="/kontakt/">Kontakt oss</a></li>
-          <li><a href="/nyheter/">Nyheter</a></li>
-          <li><a href="/presse/">For presse</a></li>
-          <li><a href="/samfunnsansvar/">Vårt samfunnsansvar</a></li>
-          <li><a href="/organisasjonen/">Organisasjonen</a></li>
-          <li><a href="/jobb/">Ledige stillinger</a></li>
-          <li><a href="/publikasjoner/">Publikasjoner</a></li>
-          <li><a href="/partnere/">Våre partnere</a></li>
-          <li><a href="/personvern/">Personvernerklæring</a></li>
+          <li>Mandag-fredag: 10-17</li>
+          <li>Torsdag: 10-18</li>
+          <li>Lørdag: 10-15</li>
         </ul>
       </div>
     </div>
