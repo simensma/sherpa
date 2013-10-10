@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 17:34+0200\n"
+"POT-Creation-Date: 2013-10-10 17:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,6 +118,7 @@ msgid "Medlemsnummer:"
 msgstr "Member ID:"
 
 #: templates/common/user/login/util/registration_form.html:12
+#: templates/main/membership/memberid_sms/forgotten.html:5
 msgid "Glemt medlemsnummeret?"
 msgstr "Forgot your member ID?"
 
@@ -206,6 +207,7 @@ msgid "Registrer deg"
 msgstr "Register"
 
 #: templates/common/user/login/util/registration_form.html:97
+#: templates/main/membership/memberid_sms/forgotten.html:13
 msgid "Laster, vennligst vent..."
 msgstr "Loading, please wait..."
 
@@ -395,3 +397,45 @@ msgstr "Illustration of the member ID's placement on the membership card"
 #: templates/main/connect/signon.html:129
 msgid "Lukk vindu"
 msgstr "Close window"
+
+#: templates/main/membership/memberid_sms/forgotten.html:8
+msgid "Få medlemsnummeret tilsendt gratis på SMS."
+msgstr "Recieve a free SMS with your member ID."
+
+#: templates/main/membership/memberid_sms/forgotten.html:11
+msgid "Ditt mobilnummer..."
+msgstr "Your phone number..."
+
+#: templates/main/membership/memberid_sms/forgotten.html:12
+msgid "Send"
+msgstr "Send"
+
+#: templates/main/membership/memberid_sms/forgotten.html:17
+msgid "SMS med ditt medlemsnummer har blitt sendt til"
+msgstr "SMS with your member ID has been sent to"
+
+#: templates/main/membership/memberid_sms/forgotten.html:20
+#, python-format
+msgid ""
+"Vi fant ikke mobilnummer %(number)s i vårt medlemssystem. Vennligst kontakt "
+"DNTs medlemsservice på %(email)s for å registrere ditt mobilnummer."
+msgstr ""
+"We couldn't find the phone number %(number)s in our memberregister. Please "
+"contact DNT memberservice on %(email)s to register your phone number."
+
+#: templates/main/membership/memberid_sms/forgotten.html:23
+#, python-format
+msgid ""
+"Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta "
+"kontakt med medlemsservice på %(email)s dersom feilen vedvarer."
+msgstr ""
+"We're sorry, we experienced a technical error! Please try again, or contect "
+"memberservice on %(email)s if the error persists."
+
+#: templates/main/membership/memberid_sms/forgotten.html:26
+msgid ""
+"Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund "
+"før du prøver igjen."
+msgstr ""
+"You've sent too many SMS requests in a short time! Please wait a while "
+"before you try again."
