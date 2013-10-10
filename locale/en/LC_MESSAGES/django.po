@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 17:57+0200\n"
+"POT-Creation-Date: 2013-10-10 18:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,6 +163,7 @@ msgstr ""
 "registration."
 
 #: templates/common/user/login/util/registration_form.html:59
+#: templates/main/connect/layouts/columbus.html:124
 msgid "E-post:"
 msgstr "E-mail:"
 
@@ -397,6 +398,42 @@ msgstr "Illustration of the member ID's placement on the membership card"
 #: templates/main/connect/signon.html:129
 msgid "Lukk vindu"
 msgstr "Close window"
+
+#: templates/main/connect/layouts/columbus.html:51
+msgid "Avbryt og gå tilbake"
+msgstr "Cancel and return"
+
+#: templates/main/connect/layouts/columbus.html:119
+msgid "Åpningstider tlf."
+msgstr "Calling hours"
+
+#: templates/main/connect/layouts/columbus.html:121
+msgid "Man-fre."
+msgstr "Mon-fri."
+
+#: templates/main/connect/layouts/columbus.html:122
+msgid "Sentralbord"
+msgstr "Operator"
+
+#: templates/main/connect/layouts/columbus.html:123
+msgid "Turinfo"
+msgstr "Tour information"
+
+#: templates/main/connect/layouts/columbus.html:128
+msgid "Åpningstider turinfo"
+msgstr "Opening hours"
+
+#: templates/main/connect/layouts/columbus.html:130
+msgid "Mandag-fredag"
+msgstr "Monday-friday"
+
+#: templates/main/connect/layouts/columbus.html:131
+msgid "Torsdag"
+msgstr "Thursday"
+
+#: templates/main/connect/layouts/columbus.html:132
+msgid "Lørdag"
+msgstr "Saturday"
 
 #: templates/main/membership/memberid_sms/forgotten.html:8
 msgid "Få medlemsnummeret tilsendt gratis på SMS."

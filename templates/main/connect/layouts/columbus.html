@@ -1,5 +1,6 @@
 {% load advertisement %}
 {% load debug %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html>
@@ -47,7 +48,7 @@
       <nav id="menus">
         <ul>
           <li>
-            <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">Avbryt og gå tilbake</a>
+            <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">{% trans "Avbryt og gå tilbake" %}</a>
           </li>
         </ul>
       </nav>
@@ -115,20 +116,20 @@
         </ul>
       </div>
       <div class="span4">
-        <h2>Åpningstider tlf.</h2>
+        <h2>{% trans "Åpningstider tlf." %}</h2>
         <ul>
-          <li>Man-fre.: kl. 08:30-16:00</li>
-          <li>Sentralbord: 22 82 28 00</li>
-          <li>Turinfo: 22 82 28 22</li>
-          <li>E-post: <a href="mailto:turinfo@dntoslo.no">turinfo@dntoslo.no</a></li>
+          <li>{% trans "Man-fre." %}: kl. 08:30-16:00</li>
+          <li>{% trans "Sentralbord" %}: 22 82 28 00</li>
+          <li>{% trans "Turinfo" %}: 22 82 28 22</li>
+          <li>{% trans "E-post:" %} <a href="mailto:turinfo@dntoslo.no">turinfo@dntoslo.no</a></li>
         </ul>
       </div>
       <div class="span4">
-        <h2>Åpningstider turinfo</h2>
+        <h2>{% trans "Åpningstider turinfo" %}</h2>
         <ul>
-          <li>Mandag-fredag: 10-17</li>
-          <li>Torsdag: 10-18</li>
-          <li>Lørdag: 10-15</li>
+          <li>{% trans "Mandag-fredag" %}: 10-17</li>
+          <li>{% trans "Torsdag" %}: 10-18</li>
+          <li>{% trans "Lørdag" %}: 10-15</li>
         </ul>
       </div>
     </div>
