@@ -9,22 +9,19 @@ $(document).ready(function() {
     var registration_form_nonmember_wrapper = registration.find("div.registration-form-nonmember-wrapper");
 
     choose_creation.find("a.member, a.nonmember").click(function() {
-        var complete;
+        choose_creation.find("hr").show();
         if($(this).is('.member')) {
-            complete = function() {
-                registration_form_wrapper.fadeIn(200);
-            };
+            registration_form_nonmember_wrapper.hide();
+            registration_form_wrapper.slideDown();
         } else if($(this).is('.nonmember')) {
-            complete = function() {
-                registration_form_nonmember_wrapper.fadeIn(200);
-            };
+            registration_form_wrapper.hide();
+            registration_form_nonmember_wrapper.slideDown();
         }
-        choose_creation.fadeOut(200, complete);
     });
 
     $.fn.Hashtag('bind', 'ikkemedlem', {
         'match': function() {
-            choose_creation.hide();
+            choose_creation.find("hr").show();
             registration_form_nonmember_wrapper.show();
             registration_tab.tab('show');
         }
@@ -33,7 +30,7 @@ $(document).ready(function() {
     // Note that this overwrites the bind in toggle-loginpage-tabs.js
     $.fn.Hashtag('bind', 'registrering', {
         'match': function() {
-            choose_creation.hide();
+            choose_creation.find("hr").show();
             registration_form_wrapper.show();
             registration_tab.tab('show');
         }
