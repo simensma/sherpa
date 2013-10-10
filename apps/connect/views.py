@@ -57,6 +57,13 @@ def signon_login(request):
             'user_password_length': settings.USER_PASSWORD_LENGTH,
             'countries': FocusCountry.get_sorted(),
         }
+        if 'registreringsnokkel' in request.GET:
+            try:
+                user = User.get_users(include_pending=True).get(pending_registration_key=request.GET['registreringsnokkel'])
+                context['prefilled_user'] = user
+            except User.DoesNotExist:
+                pass
+
         if request.method == 'GET':
             return render(request, 'main/connect/signon.html', context)
         else:

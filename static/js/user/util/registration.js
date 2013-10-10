@@ -105,7 +105,7 @@ $(document).ready(function() {
             step2.find("div.hints.email-not-found").show();
         }
 
-        if(window.Turistforeningen.preregistered_user === undefined) {
+        if(window.Turistforeningen.prefilled_user === undefined) {
             step1.fadeOut(function() {
                 // Wait for fadeOut to complete before fadeIn
                 step2.fadeIn();
@@ -122,9 +122,9 @@ $(document).ready(function() {
     });
 
     // Check if a pre-registrated user is filled out
-    if(window.Turistforeningen.preregistered_user !== undefined) {
-        registration_form.find("input[name='memberid']").val(window.Turistforeningen.preregistered_user.memberid);
-        registration_form.find("input[name='zipcode']").val(window.Turistforeningen.preregistered_user.zipcode);
+    if(window.Turistforeningen.prefilled_user !== undefined) {
+        registration_form.find("input[name='memberid']").val(window.Turistforeningen.prefilled_user.memberid);
+        registration_form.find("input[name='zipcode']").val(window.Turistforeningen.prefilled_user.zipcode);
         registration_form.submit();
     }
 

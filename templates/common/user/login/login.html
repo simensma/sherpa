@@ -8,11 +8,11 @@
       user_password_length: {{ user_password_length }}
     };
   </script>
-  {% if user_to_register %}
+  {% if prefilled_user %}
   <script>
-    window.Turistforeningen.preregistered_user = {
-      memberid: {{ user_to_register.memberid }},
-      zipcode: {{ user_to_register.get_address.zipcode.zipcode }}
+    window.Turistforeningen.prefilled_user = {
+      memberid: {{ prefilled_user.memberid }},
+      zipcode: {{ prefilled_user.get_address.zipcode.zipcode }}
     };
   </script>
   {% endif %}

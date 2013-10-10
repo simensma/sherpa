@@ -18,13 +18,12 @@ import hashlib
 
 from user.models import User
 from user.util import memberid_lookups_exceeded
-from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember, EMAIL_REGISTERED_SUBJECT
+from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from focus.models import Actor, Enrollment
 from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
 from sherpa25.models import Member
-from connect.util import add_signon_session_value
 
 logger = logging.getLogger('sherpa')
 
@@ -46,7 +45,7 @@ def login(request):
         if 'registreringsnokkel' in request.GET:
             try:
                 user = User.get_users(include_pending=True).get(pending_registration_key=request.GET['registreringsnokkel'])
-                context['user_to_register'] = user
+                context['prefilled_user'] = user
             except User.DoesNotExist:
                 pass
 

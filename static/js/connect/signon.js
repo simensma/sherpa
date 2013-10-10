@@ -4,6 +4,7 @@ $(document).ready(function() {
 
     var registration = loginpage.find("div#registration.tab-pane");
     var choose_creation = registration.find("div.choose-creation");
+    var registration_tab = loginpage.find("ul.nav li a[href='#registration']");
     var registration_form_wrapper = registration.find("div.registration-form-wrapper");
     var registration_form_nonmember_wrapper = registration.find("div.registration-form-nonmember-wrapper");
 
@@ -25,7 +26,16 @@ $(document).ready(function() {
         'match': function() {
             choose_creation.hide();
             registration_form_nonmember_wrapper.show();
-            loginpage.find("ul.nav li a[href='#registration']").tab('show');
+            registration_tab.tab('show');
+        }
+    });
+
+    // Note that this overwrites the bind in toggle-loginpage-tabs.js
+    $.fn.Hashtag('bind', 'registrering', {
+        'match': function() {
+            choose_creation.hide();
+            registration_form_wrapper.show();
+            registration_tab.tab('show');
         }
     });
 
