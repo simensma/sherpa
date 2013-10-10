@@ -34,11 +34,6 @@
   <div class="row">
     <div class="span12">
       <h2>Logg inn</h2>
-
-      <p>
-        For å melde deg på en aktivitet, må du ha en bruker på DNTs nettsted. Hvis du ikke har en fra før, kan du velge "Opprett ny bruker" under.
-      </p>
-
     </div>
   </div>
 
@@ -61,9 +56,16 @@
           <div class="choose-creation">
 
             <ul>
-              <li><a href="javascript:undefined" class="member">Jeg er allerede medlem i DNT</a></li>
-              <li><a href="{% url 'enrollment.views.index' %}" class="enroll">Jeg vil melde meg inn i DNT</a></li>
-              <li><a href="javascript:undefined" class="nonmember">Jeg er ikke klar for å bli medlem ennå</a></li>
+              <li>
+                <a href="javascript:undefined" class="member">Jeg er allerede medlem i DNT</a>
+              </li>
+              <li>
+                <a href="{% url 'enrollment.views.index' %}" class="enroll">Jeg vil melde meg inn i DNT</a>
+                (må betales på nett)
+              </li>
+              <li>
+                <a href="javascript:undefined" class="nonmember">Jeg er ikke klar for å bli medlem ennå</a>
+              </li>
             </ul>
 
           </div>
@@ -90,25 +92,13 @@
       <div class="usersite-benefits">
 
         <p>
-          <strong>På Min side kan du:</strong>
+          <strong>Lurer du på noe?</strong>
         </p>
 
-        <ul>
-          <li>
-            Se din medlemsinformasjon
-          </li>
-          <li>
-            Endre dine kontaktopplysninger
-          </li>
-          <li>
-            Lese Fjell og Vidde, UT og årboken
-          </li>
-          <li>
-            Legge ut annonser på Fjelltreffen
-          </li>
-        </ul>
-
-        <p>Du må ha gyldig medlemskap i DNT for å få tilgang til tjenestene.</p>
+        <p>
+          Ved behov for teknisk støtte, ring:<br>
+          22 82 28 20
+        </p>
 
       </div>
     </div>
