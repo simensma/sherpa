@@ -10,15 +10,7 @@
   <title>{% block title %}DNT Connect{% endblock %} &mdash; Turistforeningen</title>
   <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-modal/css/bootstrap-modal.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
-  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
-  <!--[if IE 7]><link rel="stylesheet" href="{{ STATIC_URL }}css/ie7.css"><![endif]-->
+  {% include 'global_layout/css.html' %}
   {% block extra_css %}{% endblock %}
 
 </head>
@@ -242,72 +234,14 @@
         </ul>
       </div>
     </div>
-
-    <div class="row">
-      <div class="span12 sponsors">
-        <a href="http://www.onecall.no/"><img src="{{ STATIC_URL }}img/sponsors/onecall.png" alt="One Call" class="onecall"></a>
-        <a href="http://www.bergans.no/"><img src="{{ STATIC_URL }}img/sponsors/bergans.png" alt="Bergans"></a>
-        <a href="https://norsk-tipping.no/"><img src="{{ STATIC_URL }}img/sponsors/norsk-tipping.png" alt="Norsk Tipping"></a>
-        <a href="https://www.gjensidige.no/"><img src="{{ STATIC_URL }}img/sponsors/gjensidige.png" alt="Gjensidige"></a>
-        <a href="http://www.devold.com/"><img src="{{ STATIC_URL }}img/sponsors/devold.png" alt="Devold of Norway"></a>
-        <a href="http://www.kvikklunsj.no/"><img src="{{ STATIC_URL }}img/sponsors/kvikk-lunsj.png" alt="Kvikk Lunsj"></a>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="span12">
-        <div class="sponsors-underline">
-          <div class="main">
-            Hovedsamarbeidspartner
-          </div>
-          <div class="tour">
-            Turpartnere
-          </div>
-          <div class="other">
-            Samarbeidspartnere
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </footer>
 
 {# "Global" csrf_token for AJAX-requests #}
 {% csrf_token %}
 
-{# Scripts - Raven comes first, then rendered globals, then the rest #}
-{% if not debug %}
-  <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
-  <script src="{{ STATIC_URL }}js/raven.js"></script>
-  {% if user.is_authenticated %}
-    <script>
-      Raven.setUser({
-          id: {{ user.id }}
-      });
-    </script>
-  {% endif %}
-{% endif %}
 {% block js_globals %}{% endblock %}
-<!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
-<script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
-<script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
-<script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
-<script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
-<!--[if lte IE 9]><script src="{{ STATIC_URL }}js/ie/placeholder.js"></script><![endif]-->
-<!--[if lt IE 9]><script src="{{ STATIC_URL }}js/ie/trim.js"></script><![endif]-->
-<!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
-<script src="{{ STATIC_URL }}js/main.js"></script>
-<script src="{{ STATIC_URL }}js/common.js"></script>
-<script src="{{ STATIC_URL }}js/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/ga.js"></script>
-<script src="{{ STATIC_URL }}js/validator.js"></script>
-<script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
+{% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}
 
 </body>
