@@ -24,7 +24,7 @@
   <div class="row" style="height: 70px">
     <div class="span12">
       <div class="association-logo left">
-        <a href="{% url 'page.views.page' %}">
+        <a href="">
           DNT Oslo og Omegn
         </a>
       </div>
@@ -59,7 +59,7 @@
   <div class="row">
     <div class="span10 breadcrumb-container">
       <div class="menu-breadcrumb">
-        <a href="{% url 'connect.views.signon_cancel' %}">{{ dntconnect.client.friendly_name }}</a>
+        {{ dntconnect.client.friendly_name }}
           {% if page_hierarchy %}
             {% for page in page_hierarchy %}
               /
