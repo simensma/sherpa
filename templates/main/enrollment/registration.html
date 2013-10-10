@@ -15,6 +15,17 @@
 
 {% block enrollment %}
 
+{% if dntconnect %}
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-info">
+        <strong>Innmelding i Den Norske Turistforening</strong><br>
+        Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen.
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {# Hardcode for 2013 - however, we'll likely want this message to reoccur at the appropriate time next year #}
 {% if display_membership_year_warning %}
   <div class="row">
