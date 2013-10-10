@@ -17,6 +17,7 @@ from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.models import State
+from enrollment.util import current_template_layout
 from user.models import User
 
 from datetime import datetime, date, timedelta
@@ -138,6 +139,7 @@ def registration(request, user):
         'display_membership_year_warning': display_membership_year_warning,
         'new_membership_year': new_membership_year
     }
+    context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)
 
 def remove(request, user):
@@ -238,6 +240,7 @@ def household(request):
         'today': today,
         'new_membership_year': new_membership_year
     }
+    context.update(current_template_layout(request))
     return render(request, 'main/enrollment/household.html', context)
 
 def existing(request):
@@ -399,6 +402,7 @@ def verification(request):
         'today': today,
         'new_membership_year': new_membership_year
     }
+    context.update(current_template_layout(request))
     return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
@@ -427,6 +431,7 @@ def payment_method(request):
         'today': today,
         'new_membership_year': new_membership_year
     }
+    context.update(current_template_layout(request))
     return render(request, 'main/enrollment/payment.html', context)
 
 def payment(request):
@@ -700,7 +705,8 @@ def process_card(request):
                     }
                 )
                 request.session['enrollment']['state'] = 'payment'
-                return render(request, 'main/enrollment/payment-process-error.html')
+                context = current_template_layout(request)
+                return render(request, 'main/enrollment/payment-process-error.html', context)
             elif response_code.text == '99' and response_text is not None and response_text.text == 'Transaction already processed':
                 # The transaction might have already been processed if the user resends the process_card
                 # request - recheck nets with a Query request and verify those details
@@ -761,7 +767,8 @@ def process_card(request):
                 extra={'request': request}
             )
             request.session['enrollment']['state'] = 'payment'
-            return render(request, 'main/enrollment/payment-process-error.html')
+            context = current_template_layout(request)
+            return render(request, 'main/enrollment/payment-process-error.html', context)
 
     else:
         request.session['enrollment']['state'] = 'registration'
@@ -805,6 +812,7 @@ def result(request):
         'new_membership_year': new_membership_year,
         'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
+    context.update(current_template_layout(request))
     return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
 
 def sms(request):
