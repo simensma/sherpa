@@ -153,6 +153,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.old_site",
     "sherpa.context_processors.admin_active_association",
     "sherpa.context_processors.focus_downtime",
+    "sherpa.context_processors.dntconnect",
 )
 
 MIDDLEWARE_CLASSES = (
