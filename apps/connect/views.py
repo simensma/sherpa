@@ -44,6 +44,13 @@ def signon(request):
         request.session['dntconnect']['signon'] = u'pålogget'
         return redirect('connect.views.signon_complete')
 
+def signon_cancel(request):
+    if not 'dntconnect' in request.session:
+        raise PermissionDenied
+
+    add_signon_session_value(request, 'avbrutt')
+    return redirect('connect.views.signon_complete')
+
 def signon_login(request):
     if not 'dntconnect' in request.session:
         # Use a friendlier error message here?
@@ -151,7 +158,7 @@ def signon_register_nonmember(request):
         return redirect('connect.views.signon_complete')
 
 def signon_complete(request):
-    if not 'dntconnect' in request.session or not request.user.is_authenticated():
+    if not 'dntconnect' in request.session:
         # Use a friendlier error message here?
         raise PermissionDenied
 
@@ -171,7 +178,8 @@ def signon_complete(request):
         'er_autentisert': request.user.is_authenticated(),
         'signon': request.session['dntconnect'].get('signon', u'ukjent')
     }
-    response_data.update(get_member_data(request.user))
+    if request.user.is_authenticated():
+        response_data.update(get_member_data(request.user))
     redirect_url = request.session['dntconnect']['redirect_url']
     del request.session['dntconnect']
     if 'innmelding.aktivitet' in request.session:
