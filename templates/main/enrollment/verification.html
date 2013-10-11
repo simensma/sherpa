@@ -34,90 +34,122 @@
 
 {% block enrollment %}
 
-<div class="row">
-  <div class="span8">
+<div class="enrollment-verification">
 
-    {% include 'main/enrollment/progress.html' with step=3 %}
+  <div class="row">
+    <div class="span8">
 
-    <div class="errors">
+      {% include 'main/enrollment/progress.html' with step=3 %}
 
-      {% for message in messages %}
-        {% if message.message == 'invalid_main_member' %}
-          <div class="alert alert-error">
+      <div class="errors">
+
+        {% for message in messages %}
+          {% if message.message == 'invalid_main_member' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <strong><i class="icon-warning-sign"></i> Ugyldig hovedmedlem</strong><br>
+              En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+            </div>
+          {% elif message.message == 'no_main_member' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <strong><i class="icon-warning-sign"></i> Mangler hovedmedlem</strong><br>
+              En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn ungdomsmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+            </div>
+          {% elif message.message == 'nonexistent_main_member' %}
+            <div class="alert alert-error">
+              <a class="close">x</a>
+              <strong><i class="icon-warning-sign"></i> Ikke-eksisterende hovedmedlem</strong><br>
+              En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% if attempted_yearbook %}
+          <div class="alert alert-warning">
             <a class="close">x</a>
-            <strong><i class="icon-warning-sign"></i> Ugyldig hovedmedlem</strong><br>
-            En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-          </div>
-        {% elif message.message == 'no_main_member' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            <strong><i class="icon-warning-sign"></i> Mangler hovedmedlem</strong><br>
-            En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn ungdomsmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-          </div>
-        {% elif message.message == 'nonexistent_main_member' %}
-          <div class="alert alert-error">
-            <a class="close">x</a>
-            <strong><i class="icon-warning-sign"></i> Ikke-eksisterende hovedmedlem</strong><br>
-            En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+            <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
+            Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
           </div>
         {% endif %}
-      {% endfor %}
 
-      {% if attempted_yearbook %}
-        <div class="alert alert-warning">
-          <a class="close">x</a>
-          <strong><i class="icon-info-sign"></i> Årbok og Fjell og Vidde må bestilles separat</strong><br>
-          Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
+        <div class="alert alert-info cheaper-mainmember-hint hide">
+          <a class="close">x</a><strong>
+          <img src="/static/img/icons/glyph/original/glyphicons_195_circle_info.png"> Rabattmulighet!</strong><br>
+          Siden <span class="name"></span> er <span class="type"></span>, har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da det vil være billigst. Du kan endre dette hvis du ønsker.
         </div>
-      {% endif %}
 
-    </div>
+      </div>
 
-    <form id="verification" action="{% url 'enrollment.views.payment_method' %}" method="post">
-      <div class="form-border">
-        {% csrf_token %}
-        <input type="hidden" name="main-member" value="">
-        <h2>Registrerte opplysninger</h2>
-        <table class="table prices">
-          <thead>
-            <tr>
-              {% if multiple_main and not existing %}
-                <th>
-                  <div data-popover data-trigger="hover" data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_youth }} år.">Hoved-<br>medlem</div>
-                </th>
-              {% endif %}
-              <th>Personopplysninger</th>
-              <th>Medlemstype</th>
-              <th data-popover data-trigger="hover" data-title="Priser kan variere" data-content="Dette er prisene i din medlemsforening. Prisene kan variere mellom foreningene.">Pris</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% if existing %}
-            <tr class="main">
-              <td>{{ existing_name }}</td>
-              <td>Hovedmedlem</td>
-              <td>-</td>
-            </tr>
-            {% endif %}
-            {% for user in users %}
-              <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
-                {% if multiple_main and not existing and user.age >= age_youth %}
-                  <td class="choose-main">
-                    <input type="radio" name="main" value="{{ user.index }}">
-                  </td>
+      <form id="verification" action="{% url 'enrollment.views.payment_method' %}" method="post">
+        <div class="form-border">
+          {% csrf_token %}
+          <input type="hidden" name="main-member" value="">
+          <h2>Registrerte opplysninger</h2>
+          <table class="table prices">
+            <thead>
+              <tr>
+                {% if multiple_main and not existing %}
+                  <th>
+                    <div data-popover data-trigger="hover" data-title="Hovedmedlem" data-content="Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_youth }} år.">Hoved-<br>medlem</div>
+                  </th>
                 {% endif %}
-                {% if multiple_main and not existing and user.age < age_youth %}
+                <th>Personopplysninger</th>
+                <th>Medlemstype</th>
+                <th data-popover data-trigger="hover" data-title="Priser kan variere" data-content="Dette er prisene i din medlemsforening. Prisene kan variere mellom foreningene.">Pris</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if existing %}
+              <tr class="main">
+                <td>{{ existing_name }}</td>
+                <td>Hovedmedlem</td>
+                <td>-</td>
+              </tr>
+              {% endif %}
+              {% for user in users %}
+                <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
+                  {% if multiple_main and not existing and user.age >= age_youth %}
+                    <td class="choose-main">
+                      <input type="radio" name="main" value="{{ user.index }}">
+                    </td>
+                  {% endif %}
+                  {% if multiple_main and not existing and user.age < age_youth %}
+                    <td></td>
+                  {% endif %}
+                  <td>
+                    {{ user.name }}<br>
+                    {% if user.gender == 'm' %}
+                      Mann
+                    {% elif user.gender == 'f' %}
+                      Kvinne
+                    {% endif %}<br>
+                    {{ user.dob|date:"j. F Y" }}<br>
+                    {% if users|length == 1 and not existing %}
+                      {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
+                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                        {{ location.zipcode }} {{ location.area }}<br>
+                      {% else %}
+                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
+                        {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
+                        {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
+                      {% endif %}
+                      {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
+                    {% endif %}
+                    {% if user.phone %}{{ user.phone }}<br>{% endif %}
+                    {% if user.email %}{{ user.email }}{% endif %}
+                  </td>
+                  <td class="type"></td>
+                  <td><span class="price"></span>,-</td>
+                </tr>
+              {% endfor %}
+              {% if users|length > 1 or existing %}
+              <tr>
+                {% if multiple_main and not existing %}
                   <td></td>
                 {% endif %}
                 <td>
-                  {{ user.name }}<br>
-                  {% if user.gender == 'm' %}
-                    Mann
-                  {% elif user.gender == 'f' %}
-                    Kvinne
-                  {% endif %}<br>
-                  {{ user.dob|date:"j. F Y" }}<br>
-                  {% if users|length == 1 and not existing %}
+                  <strong>Deres adresse:</strong><br>
                     {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
                       {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
                       {{ location.zipcode }} {{ location.area }}<br>
@@ -126,80 +158,58 @@
                       {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
                       {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
                     {% endif %}
-                    {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
-                  {% endif %}
-                  {% if user.phone %}{{ user.phone }}<br>{% endif %}
-                  {% if user.email %}{{ user.email }}{% endif %}
+                    {% if country.code != 'NO' %}{{ country.name }}{% endif %}
                 </td>
-                <td class="type"></td>
-                <td><span class="price"></span>,-</td>
+                <td colspan="2"></td>
               </tr>
-            {% endfor %}
-            {% if users|length > 1 or existing %}
-            <tr>
-              {% if multiple_main and not existing %}
-                <td></td>
               {% endif %}
-              <td>
-                <strong>Deres adresse:</strong><br>
-                  {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
-                    {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                    {{ location.zipcode }} {{ location.area }}<br>
-                  {% else %}
-                    {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                    {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
-                    {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
-                  {% endif %}
-                  {% if country.code != 'NO' %}{{ country.name }}{% endif %}
-              </td>
-              <td colspan="2"></td>
-            </tr>
-            {% endif %}
-            {% if keycount > 0 %}
-            <tr>
-              {% if multiple_main and not existing %}
-                <td></td>
-              {% endif %}
-              <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
-              <td><span class="keyprice">{{ keyprice }}</span>,-</td>
-            </tr>
-            {% endif %}
-            {% if yearbook %}
+              {% if keycount > 0 %}
               <tr>
                 {% if multiple_main and not existing %}
                   <td></td>
                 {% endif %}
-                <td colspan="2">Årbok og Fjell og Vidde</td>
-                <td><span class="yearbook-price">{{ foreign_shipment_price }}</span>,-</td>
+                <td colspan="2">Depositum {{ keycount }} {% if keycount > 1 %}DNT-nøkler{% else %}DNT-nøkkel{% endif %}</td>
+                <td><span class="keyprice">{{ keyprice }}</span>,-</td>
               </tr>
-            {% endif %}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
-              <th><span class="totalprice"></span>,-</th>
-            </tr>
-          </tfoot>
-        </table>
+              {% endif %}
+              {% if yearbook %}
+                <tr>
+                  {% if multiple_main and not existing %}
+                    <td></td>
+                  {% endif %}
+                  <td colspan="2">Årbok og Fjell og Vidde</td>
+                  <td><span class="yearbook-price">{{ foreign_shipment_price }}</span>,-</td>
+                </tr>
+              {% endif %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">Totalt</th>
+                <th><span class="totalprice"></span>,-</th>
+              </tr>
+            </tfoot>
+          </table>
 
-      </div>
+        </div>
 
-      <p class="association-info">
-        {% if users|length == 1 %}Du{% else %}Dere{% endif %} blir medlem{% if users|length > 1 %}mer{% endif %} i DNT og {{ association.name }}.
-        Medlemskapet gjelder for <strong>{% if today >= new_membership_year %}{{ today.year|add:1 }}, samt ut {% endif %}{{ today.year }}</strong>.
-      </p>
+        <p class="association-info">
+          {% if users|length == 1 %}Du{% else %}Dere{% endif %} blir medlem{% if users|length > 1 %}mer{% endif %} i DNT og {{ association.name }}.
+          Medlemskapet gjelder for <strong>{% if today >= new_membership_year %}{{ today.year|add:1 }}, samt ut {% endif %}{{ today.year }}</strong>.
+        </p>
 
-      <p>
-        <a class="btn btn-large" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> Tilbake</a>
-        <a href="javascript:undefined" class="btn btn-danger btn-large verify">Bekreft <i class="icon-arrow-right"></i></a>
-      </p>
+        <p>
+          <a class="btn btn-large" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> Tilbake</a>
+          <a href="javascript:undefined" class="btn btn-danger btn-large verify">Bekreft <i class="icon-arrow-right"></i></a>
+        </p>
 
-    </form>
+      </form>
+    </div>
+
+    <div class="span4">
+      {% include 'main/membership/infobox.html' %}
+    </div>
   </div>
 
-  <div class="span4">
-    {% include 'main/membership/infobox.html' %}
-  </div>
 </div>
 
 {% endblock %}
