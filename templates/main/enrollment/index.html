@@ -1,13 +1,16 @@
 {% extends current_layout %}
-{% block title %}Innmelding{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'enrollment.views.registration' %}">Innmelding</a></em>{% endblock %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Innmelding" %}{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'enrollment.views.registration' %}">{% trans "Innmelding" %}</a></em>{% endblock %}
 {% block body %}
 
 {% if not skip_header %}
 <div class="row">
   <div class="span12">
     <h1>
-      Bli medlem
+      {% trans "Bli medlem" %}
       {% if today >= new_membership_year %}
         {{ today|date:"Y"|add:1 }}
       {% else %}

@@ -1,23 +1,25 @@
+{% load i18n %}
+
 {# Use table because I couldn't achieve 100% width with an ordered list :( #}
 <table class="registration-progress">
   <tr>
     <td class="step{% if step == 1 %} current{% endif %}">
       {% if step > 1 %}<a href="{% url 'enrollment.views.registration' %}">{% endif %}
-        Personopplysninger
+        {% trans "Personopplysninger" %}
       {% if step > 1 %}</a>{% endif %}
     </td>
     <td class="step{% if step == 2 %} current{% endif %}">
       {% if step > 2 %}<a href="{% url 'enrollment.views.household' %}">{% endif %}
-        Adresse
+        {% trans "Adresse" %}
       {% if step > 2 %}</a>{% endif %}
     </td>
     <td class="step{% if step == 3 %} current{% endif %}">
       {% if step > 3 %}<a href="{% url 'enrollment.views.verification' %}">{% endif %}
-        Bekreftelse
+        {% trans "Bekreftelse" %}
       {% if step > 3 %}</a>{% endif %}
     </td>
     <td class="step{% if step == 4 %} final{% endif %}">
-      Betaling
+      {% trans "Betaling" %}
     </td>
   </tr>
 </table>
@@ -26,21 +28,21 @@
   <p>
     {% if step == 1 %}<strong>{% endif %}
       {% if step > 1 %}<a href="{% url 'enrollment.views.registration' %}">{% endif %}
-        Personopplysninger
+        {% trans "Personopplysninger" %}
       {% if step > 1 %}</a>{% endif %}
     {% if step == 1 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
     {% if step == 2 %}<strong>{% endif %}
       {% if step > 2 %}<a href="{% url 'enrollment.views.household' %}">{% endif %}
-        Adresse
+        {% trans "Adresse" %}
       {% if step > 2 %}</a>{% endif %}
     {% if step == 2 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
     {% if step == 3 %}<strong>{% endif %}
       {% if step > 3 %}<a href="{% url 'enrollment.views.verification' %}">{% endif %}
-        Bekreftelse
+        {% trans "Bekreftelse" %}
       {% if step > 3 %}</a>{% endif %}
     {% if step == 3 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
     {% if step == 4 %}<strong>{% endif %}
-        Betaling
+        {% trans "Betaling" %}
     {% if step == 4 %}</strong>{% endif %}
   </p>
 </div>

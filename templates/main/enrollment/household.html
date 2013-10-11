@@ -1,4 +1,7 @@
 {% extends 'main/enrollment/index.html' %}
+
+{% load i18n %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/household.js"></script>
 {% endblock %}
@@ -25,43 +28,51 @@
     {% for message in messages %}
       {% if message.message == 'focus_zipcode_missing' %}
         <div class="alert alert-error">
-          <a class="close">x</a><strong>Dette postnummeret er ikke tilknyttet noen forening</strong><br>
-          Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå.<br>
-          Vi har logget feilen, og vil knytte postnummer <strong>{{ location.zipcode }}</strong> til rett forening så snart som mulig.<br>
-          I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig.
+          <a class="close">x</a><strong>{% trans "Dette postnummeret er ikke tilknyttet noen forening" %}</strong><br>
+          {% trans "Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå." %}<br>
+          {% blocktrans %}
+            Vi har logget feilen, og vil knytte postnummer <strong>{{ location.zipcode }}</strong> til rett forening så snart som mulig.
+          {% endblocktrans %}<br>
+          {% trans "I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig." %}
         </div>
       {% endif %}
     {% endfor %}
 
     {% if invalid_existing %}
       <div class="alert alert-error">
-        <a class="close">x</a><strong>Ugyldig medlemsnummer</strong><br>
-        Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at medlemmet bor på samme adresse som dere.
+        <a class="close">x</a><strong>{% trans "Ugyldig medlemsnummer" %}</strong><br>
+        {% trans "Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at medlemmet bor på samme adresse som dere." %}
       </div>
     {% endif %}
 
     {% if errors %}
       <div class="alert alert-error">
-        <a class="close">x</a><strong>Noen av opplysningene du oppgav er ugyldige.</strong><br>
-        Vennligst se gjennom skjemaet, og rett alle felter som er markert røde.
+        <a class="close">x</a><strong>{% trans "Noen av opplysningene du oppgav er ugyldige." %}</strong><br>
+        {% trans "Vennligst se gjennom skjemaet, og rett alle felter som er markert røde." %}
       </div>
     {% endif %}
 
-    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}" data-confirm-no-address="Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre.">
+    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}" data-confirm-no-address="{% trans "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre." %}">
       {% csrf_token %}
 
       <div class="form-border">
-        <h2 style="margin-bottom: 15px;">Hvor bor {% if users|length > 1 %}dere{% else %}du{% endif %}?</h2>
+        <h2 style="margin-bottom: 15px;">
+          {% blocktrans count users=users|length %}
+            Hvor bor du?
+          {% plural %}
+            Hvor bor dere?
+          {% endblocktrans %}
+        </h2>
         <div class="control-group country">
-          <label> Land <span class="asterisk red">*</span></label>
+          <label>{% trans "Land" %} <span class="asterisk red">*</span></label>
           <select name="country">
-            <optgroup id="scandinavia" label="Scandinavia">
+            <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
               <option value="{{ countries.norway.code }}"{% if location.country == countries.norway.code or not location %} selected{% endif %}>{{ countries.norway.name }}</option>
               {% for c in countries.scandinavia %}
                 <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
               {% endfor %}
             </optgroup>
-            <optgroup id="world" label="Rest of world">
+            <optgroup id="world" label="{% trans "Resten av verden" %}">
             {% for c in countries.other %}
               <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
             {% endfor %}
@@ -69,72 +80,81 @@
           </select>
         </div>
         <div class="control-group address1">
-          <label> Adresse <span class="asterisk red">*</span></label>
+          <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
           <input type="text" class="input-large" name="address1" value="{{ location.address1 }}">
         </div>
         <div class="scandinavia">
           <div class="control-group zipcode">
-            <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
+            <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
             <input type="text" class="input-small" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
             <input type="text" class="input-medium" name="area" value="{{ location.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader hide" alt="Laster poststed..." title="Laster poststed...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
           </div>
         </div>
         <div class="world">
           <div class="control-group address2">
-            <label> Adresse 2</label>
+            <label>{% trans "Adresse 2" %}</label>
             <input type="text" class="input-large" name="address2" value="{{ location.address2 }}">
           </div>
           <div class="control-group address3">
-            <label> Adresse 3</label>
+            <label>{% trans "Adresse 3" %}</label>
             <input type="text" class="input-large" name="address3" value="{{ location.address3 }}">
           </div>
         </div>
         {% if main %}
         <div class="control-group yearbook">
           <label class="checkbox">
-            <input type="checkbox" name="yearbook"{% if yearbook %} checked{% endif %}> Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+            <input type="checkbox" name="yearbook"{% if yearbook %} checked{% endif %}>
+            {% blocktrans %}
+              Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+            {% endblocktrans %}
           </label>
         </div>
         {% endif %}
       </div>
 
       <div class="well">
-        <h2>Husstandsmedlemskap</h2>
+        <h2>{% trans "Husstandsmedlemskap" %}</h2>
         <p>
-          Bor {% if users|length > 1 %}dere{% else %}du{% endif %} sammen med et <strong>eksisterende</strong> hovedmedlem, kan {% if users|length > 1 %}dere{% else %}du{% endif %} få billigere medlemskap som husstandsmedlem{% if users|length > 1 %}mer{% endif %}.
+          {% blocktrans count users=users|length %}
+            Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, kan du få billigere medlemskap som husstandsmedlem.
+          {% plural %}
+            Bor dere sammen med et <strong>eksisterende</strong> hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.
+          {% endblocktrans %}
         </p>
         <p>
-          <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
-          <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> Søk</a>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader hide" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
+          <input type="text" name="existing" value="{{ existing }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
+          <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
         </p>
 
         <div class="existing-result hide">
           <span class="success hide">
-            Hovedmedlem: <span class="result"></span>
+            {% trans "Hovedmedlem:" %} <span class="result"></span>
           </span>
-          <span class="bad-zipcode error hide">Du må oppgi riktig postnummer før du søker.</span>
-          <span class="invalid-id error hide">Ugyldig medlemsnummer oppgitt.</span>
-          <span class="actor-does-not-exist error hide">Fant ingen medlemmer med dette medlemsnummeret.</span>
+          <span class="bad-zipcode error hide">{% trans "Du må oppgi riktig postnummer før du søker." %}</span>
+          <span class="invalid-id error hide">{% trans "Ugyldig medlemsnummer oppgitt." %}</span>
+          <span class="actor-does-not-exist error hide">{% trans "Fant ingen medlemmer med dette medlemsnummeret." %}</span>
           <span class="too-young error hide">
-            Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
+            {% blocktrans %}
+              Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
+            {% endblocktrans %}
           </span>
           <span class="is-household-member error hide">
-            Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem.
+            {% trans "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem." %}
           </span>
           <span class="actoraddress-does-not-exist error hide">
-            Det angitte medlemmet bor ikke på samme adresse som dere.
+            {% trans "Det angitte medlemmet bor ikke på samme adresse som dere." %}
           </span>
           <span class="technical-error error hide">
-            Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+            {% trans "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
           </span>
         </div>
 
       </div>
       <p>
-        <a class="btn btn-large" href="{% url 'enrollment.views.registration' %}"><i class="icon-arrow-left"></i> Tilbake</a>
-        <button class="btn btn-danger btn-large" type="submit">Gå videre <i class="icon-arrow-right"></i></button>
+        <a class="btn btn-large" href="{% url 'enrollment.views.registration' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
+        <button class="btn btn-danger btn-large" type="submit">{% trans "Gå videre" %} <i class="icon-arrow-right"></i></button>
       </p>
     </form>
   </div>

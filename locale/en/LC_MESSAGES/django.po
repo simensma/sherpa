@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 18:03+0200\n"
+"POT-Creation-Date: 2013-10-11 14:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,7 @@ msgid "Hvis du har glemt passordet, klikk på \"Glemt passord\"-lenken under."
 msgstr "If you forgot your password, click the \"Forgot password\"-link below."
 
 #: templates/common/user/login/util/login_form.html:22
+#: templates/main/enrollment/registration.html:135
 msgid "E-post"
 msgstr "E-mail"
 
@@ -127,10 +128,12 @@ msgid "Land:"
 msgstr "Country:"
 
 #: templates/common/user/login/util/registration_form.html:21
+#: templates/main/enrollment/household.html:69
 msgid "Skandinavia"
 msgstr "Scandinavia"
 
 #: templates/common/user/login/util/registration_form.html:27
+#: templates/main/enrollment/household.html:75
 msgid "Resten av verden"
 msgstr "Rest of world"
 
@@ -139,10 +142,13 @@ msgid "Postnummer:"
 msgstr "Zipcode:"
 
 #: templates/common/user/login/util/registration_form.html:41
+#: templates/main/enrollment/household.html:91
 msgid "Laster poststed..."
 msgstr "Loading area..."
 
 #: templates/common/user/login/util/registration_form.html:47
+#: templates/main/enrollment/household.html:157
+#: templates/main/enrollment/registration.html:93
 msgid "Gå videre"
 msgstr "Continue"
 
@@ -208,6 +214,7 @@ msgid "Registrer deg"
 msgstr "Register"
 
 #: templates/common/user/login/util/registration_form.html:97
+#: templates/main/enrollment/payment.html:82
 #: templates/main/membership/memberid_sms/forgotten.html:13
 msgid "Laster, vennligst vent..."
 msgstr "Loading, please wait..."
@@ -396,6 +403,7 @@ msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
 msgstr "Illustration of the member ID's placement on the membership card"
 
 #: templates/main/connect/signon.html:129
+#: templates/main/enrollment/registration.html:174
 msgid "Lukk vindu"
 msgstr "Close window"
 
@@ -434,6 +442,734 @@ msgstr "Thursday"
 #: templates/main/connect/layouts/columbus.html:132
 msgid "Lørdag"
 msgstr "Saturday"
+
+#: templates/main/enrollment/household.html:31
+msgid "Dette postnummeret er ikke tilknyttet noen forening"
+msgstr "This zipcode doesn't belong to any of our local member organizations"
+
+#: templates/main/enrollment/household.html:32
+msgid ""
+"Vi arbeider jevnlig med å knytte alle postnumre i landet til "
+"medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått "
+"registrert ditt postnummer ennå."
+msgstr ""
+"We're working continuously to connect every zipcode to one of our "
+"organizations, however it seems we haven't registered yours yet."
+
+#: templates/main/enrollment/household.html:33
+#, python-format
+msgid ""
+"\n"
+"            Vi har logget feilen, og vil knytte postnummer <strong>"
+"%(location.zipcode)s</strong> til rett forening så snart som mulig.\n"
+"          "
+msgstr ""
+"\n"
+"We've logged the error, and we'll register the zipcode <strong>"
+"%(location.zipcode)s</strong> to the correct local organization as soon as "
+"possible."
+
+#: templates/main/enrollment/household.html:36
+msgid ""
+"I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et "
+"eldre postnummer i nærheten midlertidig."
+msgstr ""
+"Meanwhile, please contact DNTs memberservice, or use an older registered "
+"zipcode nearby temporarily."
+
+#: templates/main/enrollment/household.html:43
+msgid "Ugyldig medlemsnummer"
+msgstr "Invalid member ID"
+
+#: templates/main/enrollment/household.html:44
+msgid ""
+"Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at "
+"medlemmet bor på samme adresse som dere."
+msgstr ""
+"Please verify that you entered a valid member ID, and that the member shares "
+"your address."
+
+#: templates/main/enrollment/household.html:50
+msgid "Noen av opplysningene du oppgav er ugyldige."
+msgstr "Some of your provided data is invalid."
+
+#: templates/main/enrollment/household.html:51
+msgid "Vennligst se gjennom skjemaet, og rett alle felter som er markert røde."
+msgstr "Please review the form, and correct any fields marked red."
+
+#: templates/main/enrollment/household.html:55
+msgid ""
+"Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, "
+"klikker du bare OK for å gå videre."
+msgstr ""
+"Did you forget to fill out your address?&#10;&#10;If you don't have a street "
+"address, click OK to continue."
+
+#: templates/main/enrollment/household.html:60
+msgid ""
+"\n"
+"            Hvor bor du?\n"
+"          "
+msgid_plural ""
+"\n"
+"            Hvor bor dere?\n"
+"          "
+msgstr[0] ""
+"\n"
+"Where do you live?"
+msgstr[1] ""
+"\n"
+"Where do you live?"
+
+#: templates/main/enrollment/household.html:67
+msgid "Land"
+msgstr "Country"
+
+#: templates/main/enrollment/household.html:83
+#: templates/main/enrollment/progress.html:13
+#: templates/main/enrollment/progress.html:36
+msgid "Adresse"
+msgstr "Address"
+
+#: templates/main/enrollment/household.html:88
+msgid "Postnummer / Poststed"
+msgstr "Zipcode / Area"
+
+#: templates/main/enrollment/household.html:96
+msgid "Adresse 2"
+msgstr "Address 2"
+
+#: templates/main/enrollment/household.html:100
+msgid "Adresse 3"
+msgstr "Address 3"
+
+#: templates/main/enrollment/household.html:108
+#, python-format
+msgid ""
+"\n"
+"              Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. "
+"%(foreign_shipment_price)s\n"
+"            "
+msgstr ""
+"\n"
+"Receive the yearbook and Fjell og Vidde for a yearly fee of kr. "
+"%(foreign_shipment_price)s"
+
+#: templates/main/enrollment/household.html:117
+msgid "Husstandsmedlemskap"
+msgstr "Householdmembership"
+
+#: templates/main/enrollment/household.html:119
+msgid ""
+"\n"
+"            Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, "
+"kan du få billigere medlemskap som husstandsmedlem.\n"
+"          "
+msgid_plural ""
+"\n"
+"            Bor dere sammen med et <strong>eksisterende</strong> "
+"hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.\n"
+"          "
+msgstr[0] ""
+"\n"
+"You can get a cheaper membership price if you live with an <strong>existing</"
+"strong> main member."
+msgstr[1] ""
+"\n"
+"You can get cheaper membership prices if you live with an <strong>existing</"
+"strong> main member."
+
+#: templates/main/enrollment/household.html:126
+msgid "Oppgi medlemsnummer..."
+msgstr "Enter member ID..."
+
+#: templates/main/enrollment/household.html:127
+msgid "Søk"
+msgstr "Search"
+
+#: templates/main/enrollment/household.html:128
+msgid "Laster medlemsinfo..."
+msgstr "Loading member data..."
+
+#: templates/main/enrollment/household.html:133
+msgid "Hovedmedlem:"
+msgstr "Main member:"
+
+#: templates/main/enrollment/household.html:135
+msgid "Du må oppgi riktig postnummer før du søker."
+msgstr "You should enter your zipcode before searching."
+
+#: templates/main/enrollment/household.html:136
+msgid "Ugyldig medlemsnummer oppgitt."
+msgstr "Invalid member ID."
+
+#: templates/main/enrollment/household.html:137
+msgid "Fant ingen medlemmer med dette medlemsnummeret."
+msgstr "Couldn't find any members with this member ID."
+
+#: templates/main/enrollment/household.html:139
+msgid ""
+"\n"
+"              Det angitte medlemmet er bare <span class=\"age\"></span> år "
+"ved utgangen av året, og kan ikke være hovedmedlem.\n"
+"            "
+msgstr ""
+"\n"
+"This member is just <span class=\"age\"></span> years old by the end of this "
+"year, and cannot be a main member."
+
+#: templates/main/enrollment/household.html:144
+msgid ""
+"Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere "
+"til et hovedmedlem."
+msgstr ""
+"This member is a household member. You can only provide an existing main "
+"member."
+
+#: templates/main/enrollment/household.html:147
+msgid "Det angitte medlemmet bor ikke på samme adresse som dere."
+msgstr "This member doesn't share your address."
+
+#: templates/main/enrollment/household.html:150
+msgid ""
+"Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. "
+"Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt "
+"medlemsservice dersom feilen vedvarer."
+msgstr ""
+"We're sorry, we experienced a technical error when searching our "
+"memberregister. The error has been logged in our systems. Please try again, "
+"or contect memberservice if the error persists."
+
+#: templates/main/enrollment/household.html:156
+#: templates/main/enrollment/payment.html:75
+#: templates/main/enrollment/verification.html:219
+msgid "Tilbake"
+msgstr "Back"
+
+#: templates/main/enrollment/index.html:5
+#: templates/main/enrollment/index.html:6
+msgid "Innmelding"
+msgstr "Become member"
+
+#: templates/main/enrollment/index.html:13
+msgid "Bli medlem"
+msgstr "Become member"
+
+#: templates/main/enrollment/payment.html:22
+msgid "Ugyldig betalingsmåte"
+msgstr "Invalid payment method"
+
+#: templates/main/enrollment/payment.html:23
+msgid ""
+"Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre."
+msgstr "You need to select a payment method before continuing."
+
+#: templates/main/enrollment/payment.html:28
+msgid "Teknisk feil ved nettbetaling"
+msgstr "Technical error during online payment"
+
+#: templates/main/enrollment/payment.html:29
+msgid ""
+"Beklager, det oppstod en feil når vi forsøkte å koble til vår "
+"betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i "
+"stedet."
+msgstr ""
+"We're sorry, an error occurred when we tried connecting to our payment "
+"provider. You can try again, or choose invoice as payment method instead."
+
+#: templates/main/enrollment/payment.html:37
+#: templates/main/enrollment/payment.html:50
+msgid "Kortbetaling utilgjengelig"
+msgstr "Online payment deactivated"
+
+#: templates/main/enrollment/payment.html:38
+#: templates/main/enrollment/payment.html:51
+msgid ""
+"Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat "
+"nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i "
+"slutten av oktober."
+msgstr ""
+"We are in the process of ending our membership year and can unfortunately "
+"not receive online payments at this moment. We will process new memberships "
+"and send invoices and membership cards at the end of October."
+
+#: templates/main/enrollment/payment.html:40
+#: templates/main/enrollment/payment.html:53
+msgid ""
+"Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan "
+"rettes til medlemsservice, se kontaktboksen til høyre."
+msgstr ""
+"We apologize for any inconvenience, and thank you for your patience. Please "
+"send any questions to memberservice, see contact information to the right of "
+"this page."
+
+#: templates/main/enrollment/payment.html:44
+msgid "Må betales med VISA/MASTERCARD"
+msgstr "VISA/MASTERCARD payment is required"
+
+#: templates/main/enrollment/payment.html:45
+msgid ""
+"Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet "
+"i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og "
+"eventuelt tilby rabatt."
+msgstr ""
+"Since you are enrolling in conjunction with signing up for a tour/activity "
+"arranged by DNT, you have to complete payment online so that we can verify "
+"the payment and offer any discounts."
+
+#: templates/main/enrollment/payment.html:60
+msgid "Velg betalingsmåte:"
+msgstr "Choose payment method:"
+
+#: templates/main/enrollment/payment.html:66
+msgid "Få tilsendt faktura"
+msgstr "Receive invoice"
+
+#: templates/main/enrollment/payment.html:71
+msgid ""
+"<strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet "
+"gyldig før betalingen er registrert i vårt system."
+msgstr ""
+"<strong>Note:</strong> If you choose to pay with an invoice, your membership "
+"will not be valid until the payment is registered in our systems."
+
+#: templates/main/enrollment/payment.html:77
+msgid "Til betaling"
+msgstr "To payment"
+
+#: templates/main/enrollment/payment.html:80
+msgid "Send bestilling"
+msgstr "Complete and send order"
+
+#: templates/main/enrollment/progress.html:8
+#: templates/main/enrollment/progress.html:31
+#: templates/main/enrollment/verification.html:104
+msgid "Personopplysninger"
+msgstr "Personal data"
+
+#: templates/main/enrollment/progress.html:18
+#: templates/main/enrollment/progress.html:41
+msgid "Bekreftelse"
+msgstr "Verify"
+
+#: templates/main/enrollment/progress.html:22
+#: templates/main/enrollment/progress.html:45
+msgid "Betaling"
+msgstr "Payment"
+
+#: templates/main/enrollment/registration.html:27
+msgid "Innmelding i Den Norske Turistforening"
+msgstr "Enrolling in The Norwegian Trekking Association"
+
+#: templates/main/enrollment/registration.html:28
+msgid ""
+"Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde "
+"deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli "
+"videresendt til påmelding for turen."
+msgstr ""
+"You're becoming a member of DNT in conjunction with signing up for a tour or "
+"activity. When enrollment is completed, you'll be forwarded to signup for "
+"the activity."
+
+#: templates/main/enrollment/registration.html:44
+msgid "Vi klarte ikke å lagre opplysningene."
+msgstr "We weren't able to save the data."
+
+#: templates/main/enrollment/registration.html:45
+msgid ""
+"Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på "
+"nytt."
+msgstr ""
+"Did you fill out the form correctly? Please verify any fields marked red and "
+"try again."
+
+#: templates/main/enrollment/registration.html:51
+msgid "Beklager, men du kan ikke registrere disse medlemmene!"
+msgstr "Sorry, you can't register these members!"
+
+#: templates/main/enrollment/registration.html:53
+#, python-format
+msgid ""
+"\n"
+"                Du har registrert %(count)s medlemmer, hvorav ingen er "
+"gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks "
+"3 slike medlemmer av gangen.\n"
+"              "
+msgstr ""
+"\n"
+"You've registered %(count)s members, however none of these are old enough to "
+"be main member. Due to technical limitations, only 3 of these can register "
+"at a time."
+
+#: templates/main/enrollment/registration.html:57
+msgid ""
+"Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik "
+"begrensning."
+msgstr ""
+"We really do apologize for the inconvenience, and we're working to avoid "
+"this arbitrary and unnecessary limitation."
+
+#: templates/main/enrollment/registration.html:61
+msgid "Kontaktinformasjon mangler."
+msgstr "Contact information is missing."
+
+#: templates/main/enrollment/registration.html:62
+msgid ""
+"Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon "
+"og e-post)."
+msgstr ""
+"At least one member of your household should have valid contact information "
+"(both phone and e-mail)."
+
+#: templates/main/enrollment/registration.html:69
+msgid "Du har registrert:"
+msgstr "You've registered:"
+
+#: templates/main/enrollment/registration.html:78
+msgid "(Anonym)"
+msgstr "(Anonymous)"
+
+#: templates/main/enrollment/registration.html:89
+msgid "Vi"
+msgstr "We"
+
+#: templates/main/enrollment/registration.html:89
+msgid "Jeg"
+msgstr "I"
+
+#: templates/main/enrollment/registration.html:89
+msgid "har lest og godtar"
+msgstr "have read and accepted"
+
+#: templates/main/enrollment/registration.html:89
+msgid "betingelsene"
+msgstr "the terms and conditions"
+
+#: templates/main/enrollment/registration.html:92
+msgid "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene."
+msgstr ""
+"You cannot proceed unless you've read and accepted our terms and conditions."
+
+#: templates/main/enrollment/registration.html:97
+msgid "Meld inn flere i familien/husstanden:"
+msgstr "Register more members of the family/household"
+
+#: templates/main/enrollment/registration.html:98
+msgid "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse."
+msgstr ""
+"You can only register multiple members if you all share the same address."
+
+#: templates/main/enrollment/registration.html:108
+msgid "Fullt navn"
+msgstr "Full name"
+
+#: templates/main/enrollment/registration.html:112
+msgid "Fødselsdato (dd.mm.åååå)"
+msgstr "Birth date (dd.mm.yyyy)"
+
+#: templates/main/enrollment/registration.html:121
+msgid "Kjønn"
+msgstr "Gender"
+
+#: templates/main/enrollment/registration.html:123
+#: templates/main/enrollment/verification.html:132
+msgid "Kvinne"
+msgstr "Female"
+
+#: templates/main/enrollment/registration.html:126
+#: templates/main/enrollment/verification.html:130
+msgid "Mann"
+msgstr "Male"
+
+#: templates/main/enrollment/registration.html:131
+msgid "Mobiltelefon"
+msgstr "Cell phone"
+
+#: templates/main/enrollment/registration.html:138
+msgid "Lagre endringer"
+msgstr "Save changes"
+
+#: templates/main/enrollment/registration.html:138
+msgid "Legg til medlem"
+msgstr "Add this member"
+
+#: templates/main/enrollment/registration.html:151
+msgid "Betingelser for medlemskap i Den Norske Turistforening"
+msgstr ""
+"Terms and conditions for membership in the Norwegian Trekking Association"
+
+#: templates/main/enrollment/registration.html:156
+#, python-format
+msgid ""
+"\n"
+"          Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret "
+"og gjelder fra 1. januar til 31. desember. Etter 1. %(month)s kan man kjøpe "
+"medlemskap for påfølgende år.\n"
+"        "
+msgstr ""
+"\n"
+"Membership in the Norwegian Trekking Association (DNT) follows the calendar "
+"year and is valid from January 1st to December 31st. After the 1st of "
+"%(month)s, one can buy membership for the following year."
+
+#: templates/main/enrollment/registration.html:160
+msgid "Medlemskapet er personlig."
+msgstr "The membership is personal."
+
+#: templates/main/enrollment/registration.html:161
+msgid "Det er ingen angrerett på betalt medlemskap."
+msgstr "There is no right to cancel a paid membership."
+
+#: templates/main/enrollment/registration.html:162
+#, python-format
+msgid ""
+"Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%%) gis rett "
+"til honnørmedlemskap."
+msgstr ""
+"The membership categories are determined by age; however disabled (at least "
+"50%%) have the right to a senior membership."
+
+#: templates/main/enrollment/registration.html:163
+msgid ""
+"Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig "
+"med stempel eller oblat fra bank/post."
+msgstr ""
+"The membership is not valid until paid in full and the membership card is "
+"only valid with an approved stamp or sticker from bank/postage."
+
+#: templates/main/enrollment/registration.html:164
+msgid ""
+"DNT forplikter seg til ikke å videreformidle personlige opplysninger til "
+"andre enn våre egne medlemsforeninger, samt enkelte samarbeidspartnere i "
+"forbindelse med tilbud på utvalgte medlemsfordeler. Det er mulig å reservere "
+"seg mot dette på Min side."
+msgstr ""
+"DNT will only disclose personal details to its local member organizations, "
+"and certain affiliate third parties in order to offer membership benefits. "
+"One can opt out of this on the user page."
+
+#: templates/main/enrollment/registration.html:168
+msgid "Sist endret: 9. november 2012."
+msgstr "Last change: 9th of November 2012."
+
+#: templates/main/enrollment/registration.html:169
+msgid "Med forbehold om endringer i løpet av medlemsåret."
+msgstr ""
+"These terms and conditions are subject to change during the membership year."
+
+#: templates/main/enrollment/verification.html:53
+msgid "Ugyldig hovedmedlem"
+msgstr "Invalid main member"
+
+#: templates/main/enrollment/verification.html:54
+msgid ""
+"En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller "
+"skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv "
+"igjen, eller kontakt medlemsservice dersom feilen vedvarer."
+msgstr ""
+"We're sorry, we experienced a technical error which enabled you to choose a "
+"child or school-member as main member. This is not allowed. Please try "
+"again, or contact memberservice if the error persists."
+
+#: templates/main/enrollment/verification.html:59
+msgid "Mangler hovedmedlem"
+msgstr "No main member"
+
+#: templates/main/enrollment/verification.html:60
+msgid ""
+"En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er "
+"hovedmedlem, selv om du har registrert medlemmer som er eldre enn "
+"ungdomsmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst "
+"prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer."
+msgstr ""
+"A technical error occured, which enabled you to proceed without choosing a "
+"main member even though you've registered members able to be main member. In "
+"such a case, you do need to choose a main member. Please try again, or "
+"contact memberservice if the error persists."
+
+#: templates/main/enrollment/verification.html:65
+msgid "Ikke-eksisterende hovedmedlem"
+msgstr "Non-existing main member"
+
+#: templates/main/enrollment/verification.html:66
+msgid ""
+"En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være "
+"hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom "
+"feilen vedvarer."
+msgstr ""
+"We're sorry, we experienced a technical error which enabled you to proceed "
+"without choosing the main member. Please try again, or contact memberservice "
+"if the error persists."
+
+#: templates/main/enrollment/verification.html:74
+msgid "Årbok og Fjell og Vidde må bestilles separat"
+msgstr "The yearbook and Fjell og Vidde must be ordered separately"
+
+#: templates/main/enrollment/verification.html:75
+#, python-format
+msgid ""
+"\n"
+"              Dere har angitt at dere ønsker å motta årbok og Fjell og "
+"Vidde. Siden hovedmedlemmet (%(existing_name)s) allerede er medlem, kan ikke "
+"disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å "
+"bestille disse.\n"
+"            "
+msgstr ""
+"\n"
+"You have indicated that you wish to receive the yearbook and Fjell og Vidde. "
+"Since your main member (%(existing_name)s) already is a member, you can't "
+"order that in this form. Please contact memberservice to order the yearbook "
+"and Fjell og Vidde."
+
+#: templates/main/enrollment/verification.html:83
+msgid "Rabattmulighet!"
+msgstr "Discount offer!"
+
+#: templates/main/enrollment/verification.html:84
+msgid ""
+"\n"
+"            Siden <span class=\"name\"></span> er <span class=\"type\"></"
+"span>, har vi anbefalt å sette ham/henne som hovedmedlem i husstanden, da "
+"det vil være billigst. Du kan endre dette hvis du ønsker.\n"
+"          "
+msgstr ""
+"\n"
+"Since <span class=\"name\"></span> is <span class=\"type\"></span>, we've "
+"recommended to choose him/her as main member in your household, as that will "
+"be the cheapest offer. You can change this if you so wish."
+
+#: templates/main/enrollment/verification.html:95
+msgid "Registrerte opplysninger"
+msgstr "Registered details"
+
+#: templates/main/enrollment/verification.html:101
+#: templates/main/enrollment/verification.html:113
+msgid "Hovedmedlem"
+msgstr "Main member"
+
+#: templates/main/enrollment/verification.html:101
+#, python-format
+msgid ""
+"Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som "
+"husstandsmedlemmet knyttes opp til, og må være over %(age_youth)s år."
+msgstr ""
+"You can choose your main member. The main member is the one who the "
+"household member will be assigned to, and must be older than %(age_youth)s "
+"years."
+
+#: templates/main/enrollment/verification.html:101
+msgid "Hoved-<br>medlem"
+msgstr "Main<br>member"
+
+#: templates/main/enrollment/verification.html:105
+msgid "Medlemstype"
+msgstr "Membership type"
+
+#: templates/main/enrollment/verification.html:106
+msgid "Priser kan variere"
+msgstr "Prices may vary"
+
+#: templates/main/enrollment/verification.html:106
+msgid ""
+"Dette er prisene i din medlemsforening. Prisene kan variere mellom "
+"foreningene."
+msgstr ""
+"These are the prices for your local membership organization. The prices may "
+"vary between local organizations."
+
+#: templates/main/enrollment/verification.html:106
+msgid "Pris"
+msgstr "Price"
+
+#: templates/main/enrollment/verification.html:159
+msgid "Deres adresse:"
+msgstr "Your address:"
+
+#: templates/main/enrollment/verification.html:179
+#, python-format
+msgid ""
+"\n"
+"                    Depositum én DNT-nøkkel\n"
+"                  "
+msgid_plural ""
+"\n"
+"                    Depositum %(keycount)s DNT-nøkler\n"
+"                  "
+msgstr[0] ""
+"\n"
+"Deposit for one DNT Cabin key"
+msgstr[1] ""
+"\n"
+"Deposit for %(keycount)s DNT Cabin keys"
+
+#: templates/main/enrollment/verification.html:193
+msgid "Årbok og Fjell og Vidde"
+msgstr "Yearbook and Fjell og Vidde"
+
+#: templates/main/enrollment/verification.html:200
+msgid "Totalt"
+msgstr "Total"
+
+#: templates/main/enrollment/verification.html:209
+#, python-format
+msgid ""
+"\n"
+"            Du blir medlem i DNT og %(association)s.\n"
+"          "
+msgid_plural ""
+"\n"
+"            Dere blir medlemmer i DNT og %(association)s.\n"
+"          "
+msgstr[0] ""
+"\n"
+"You will become member in DNT and %(association)s."
+msgstr[1] ""
+"\n"
+"You will become members in DNT and %(association)s."
+
+#: templates/main/enrollment/verification.html:215
+msgid "Medlemskapet gjelder for"
+msgstr "The membership is valid for"
+
+#: templates/main/enrollment/verification.html:215
+msgid "samt ut"
+msgstr "and"
+
+#: templates/main/enrollment/verification.html:220
+msgid "Bekreft"
+msgstr "Confirm"
+
+#: templates/main/membership/infobox.html:4
+msgid "Spørsmål?"
+msgstr "Questions?"
+
+#: templates/main/membership/infobox.html:6
+msgid "Kontakt medlemsservice:"
+msgstr "Contact memberservice:"
+
+#: templates/main/membership/infobox.html:7
+msgid "Tlf: 40001870"
+msgstr "Phone: 40001870"
+
+#: templates/main/membership/infobox.html:9
+msgid "Åpent alle hverdager:"
+msgstr "Open all weekdays:"
+
+#: templates/main/membership/infobox.html:10
+msgid "kl. 09.00 - 16.00"
+msgstr "09.00 - 16.00"
+
+#: templates/main/membership/infobox.html:11
+msgid "Tirsdager kl. 10.00 - 16.00"
+msgstr "Tuesdays 10.00 - 16.00"
+
+#: templates/main/membership/infobox.html:12
+msgid "Eller"
+msgstr "Or"
+
+#: templates/main/membership/infobox.html:12
+msgid "gå til medlemsservice"
+msgstr "go to memberservice"
 
 #: templates/main/membership/memberid_sms/forgotten.html:8
 msgid "Få medlemsnummeret tilsendt gratis på SMS."
