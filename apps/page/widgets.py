@@ -171,7 +171,13 @@ def get_static_promo_context(path):
             'id': 'host',
             'name': 'Høst',
             'start_date': date(year=2013, month=9, day=16),
-            'end_date': date(year=2013, month=9, day=16),
+            'end_date': date(year=2013, month=10, day=10),
+        },
+        {
+            'id': 'fotokonkurranse',
+            'name': 'Fotokonkurranse',
+            'start_date': date(year=2013, month=10, day=11),
+            'end_date': date(year=2013, month=10, day=11),
         }
     ]
 

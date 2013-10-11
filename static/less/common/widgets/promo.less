@@ -544,6 +544,60 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-fotokonkurranse {
+    background-image: url('/static/img/widgets/promo/fotokonkurranse_host.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      a.giant-anchor {
+        display: block;
+        height: 480px;
+        color: white !important;
+      }
+
+      h1 {
+        position: absolute;
+        top: 16px;
+        left: 380px;
+        font-size: 36px;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 130px;
+        left: 690px;
+        font-size: 32px;
+        font-weight: bold;
+      }
+
+      p.bottom {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        margin-bottom: 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      @media(max-width: 767px) {
+        h1, p.lede, p.bottom {
+          position: static;
+        }
+
+        a.giant-anchor {
+          height: auto;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {
