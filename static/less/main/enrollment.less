@@ -149,14 +149,6 @@ div.notice-alert {
   margin-bottom: 20px;
 }
 
-p.receipt-success {
-  color: green;
-}
-
-p.receipt-error {
-  color: red;
-}
-
 /* Verification */
 
 form#verification th div.popover {
@@ -189,13 +181,23 @@ div.payment-error {
 
 /* Result */
 
-p.sms {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+div.enrollment-result.enrollment-success-card {
+  table td.sum {
+    font-weight: bold;
+  }
 
-table td.sum {
-  font-weight: bold;
+  div.sms {
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    p.success {
+      color: green;
+    }
+
+    p.error {
+      color: red;
+    }
+  }
 }
 
 /* Gift */

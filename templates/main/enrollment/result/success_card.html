@@ -61,16 +61,34 @@
 
       {% if location.country == 'NO' %}
         {% for user in users %}
-          {% if user.phone != '' and not user.sms_sent %}
-            <p class="sms">
+          {% if user.phone != '' and user.sms_sent %}
+            <div class="sms">
               <a href="javascript:undefined" class="phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
                 Send gratis kvittering på SMS til {{ user.phone }}
               </a>
-              <span class="sending hide">
-                <img class="hide ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+
+              <p class="sending hide">
                 Sender SMS, vennligst vent...
-              </span>
-            </p>
+                <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              </p>
+
+              {% with memberservicebackup='Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS.' %}
+                <p class="success hide">
+                  Kvittering har blitt sendt på SMS til {{ user.phone }}.
+                </p>
+                <p class="tehcnical-error error hide">
+                  En teknisk feil har oppstått ved utsendelse av SMS.
+                  {{ memberservicebackup }}
+                </p>
+                <p class="already-sent error hide">
+                  SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil.
+                </p>
+                <p class="connection-error service-fail error hide">
+                  En teknisk feil har oppstått ved kontakt med vår SMS-leverandør.
+                  {{ memberservicebackup }}
+                </p>
+              {% endwith %}
+            </div>
           {% endif %}
         {% endfor %}
       {% endif %}
