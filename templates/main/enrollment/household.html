@@ -47,7 +47,7 @@
       </div>
     {% endif %}
 
-    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}">
+    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}" data-confirm-no-address="Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre.">
       {% csrf_token %}
 
       <div class="form-border">
@@ -77,7 +77,7 @@
             <label> Postnummer / Poststed <span class="asterisk red">*</span></label>
             <input type="text" class="input-small" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
             <input type="text" class="input-medium" name="area" value="{{ location.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader" alt="Laster poststed..." title="Laster poststed...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader hide" alt="Laster poststed..." title="Laster poststed...">
           </div>
         </div>
         <div class="world">
@@ -106,12 +106,29 @@
         </p>
         <p>
           <input type="text" name="existing" value="{{ existing }}" placeholder="Oppgi medlemsnummer...">
-          <button class="btn search"><i class="icon-search"></i> Søk</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
+          <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> Søk</a>
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader hide" alt="Laster medlemsinfo..." title="Laster medlemsinfo...">
         </p>
 
-        <div class="existing-result">
-          <p><span class="description">Hovedmedlem: </span><span class="result"></span></p>
+        <div class="existing-result hide">
+          <span class="success hide">
+            Hovedmedlem: <span class="result"></span>
+          </span>
+          <span class="bad-zipcode error hide">Du må oppgi riktig postnummer før du søker.</span>
+          <span class="invalid-id error hide">Ugyldig medlemsnummer oppgitt.</span>
+          <span class="actor-does-not-exist error hide">Fant ingen medlemmer med dette medlemsnummeret.</span>
+          <span class="too-young error hide">
+            Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
+          </span>
+          <span class="is-household-member error hide">
+            Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem.
+          </span>
+          <span class="actoraddress-does-not-exist error hide">
+            Det angitte medlemmet bor ikke på samme adresse som dere.
+          </span>
+          <span class="technical-error error hide">
+            Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
+          </span>
         </div>
 
       </div>

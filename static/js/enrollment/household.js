@@ -3,7 +3,6 @@ $(document).ready(function() {
     var form = $("form#household");
     var existing_result = form.find("div.existing-result");
 
-    form.find("img.ajaxloader").hide();
     form.find("select[name='country']").chosen();
 
     // Zipcode-validations
@@ -78,13 +77,13 @@ $(document).ready(function() {
     form.submit(function(e) {
         if($(this).find("input[name='address1']").val() === '' &&
            form.find("select[name='country'] option:selected").val() == 'NO' &&
-           !confirm("Har du glemt å fylle ut gateadressen?\n\nHvis du ikke har gateadresse, klikker du bare OK for å gå videre.")) {
+           !confirm($(this).attr("data-confirm-no-address"))) {
                 e.preventDefault();
         }
     });
 
     /* Existing */
-    form.find("button.search").click(function(e) {
+    form.find("a.search-existing").click(function(e) {
         e.preventDefault();
         existing_result.show();
         var button = $(this);
@@ -95,53 +94,41 @@ $(document).ready(function() {
             zipcode: form.find("input[name='zipcode']").val(),
             country: form.find("select[name='country'] option:selected").val()
         };
-        existing_result.find("span.result").hide();
-        existing_result.find("span.result").removeClass('success error');
+        existing_result.find("span.hide").hide();
         $.ajaxQueue({
             url: form.attr('data-existing-url'),
             data: { data: JSON.stringify(data) }
         }).done(function(result) {
             result = JSON.parse(result);
             if(result.error == 'bad_zipcode') {
-                existing_result.find("span.result").text("Du må oppgi riktig postnummer før du søker.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                existing_result.find("span.bad-zipcode").show();
             } else if(result.error == 'invalid_id') {
-                existing_result.find("span.result").text("Ugyldig medlemsnummer oppgitt.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                existing_result.find("span.invalid-id").show();
             } else if(result.error == 'actor.does_not_exist') {
-                existing_result.find("span.result").text("Fant ingen medlemmer med dette medlemsnummeret.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                existing_result.find("span.actor-does-not-exist").show();
             } else if(result.error == 'actor.too_young') {
-                existing_result.find("span.result").text("Det angitte medlemmet er bare " + result.age + " år ved utgangen av året, og kan ikke være hovedmedlem.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                var too_young = existing_result.find("span.too-young");
+                too_young.show();
+                too_young.find("span.age").text(result.age);
             } else if(result.error == 'actor.is_household_member') {
-                existing_result.find("span.result").text("Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                existing_result.find("span.is-household-member").show();
             } else if(result.error == 'actoraddress.does_not_exist') {
-                existing_result.find("span.result").text("Det angitte medlemmet bor ikke på samme adresse som dere.");
-                existing_result.find("span.description").hide();
-                existing_result.find("span.result").addClass('error');
+                existing_result.find("span.actoraddress-does-not-exist").show();
             } else if(result.name !== '') {
-                existing_result.find("span.result").text(result.name + ', ' + result.address);
-                existing_result.find("span.description").show();
-                existing_result.find("span.result").addClass('success');
+                var success = existing_result.find("span.success");
+                success.show();
+                success.find("span.result").text(result.name + ', ' + result.address);
             }
         }).fail(function(result) {
-            // Todo
+            existing_result.find("span.technical-error").show();
         }).always(function() {
             button.prop('disabled', false);
             form.find("img.existing.ajaxloader").hide();
-            existing_result.find("span.result").show();
         });
     });
 
     if(Turistforeningen.existing) {
-        form.find("button.search").click();
+        form.find("a.search-existing").click();
     } else {
         existing_result.hide();
     }

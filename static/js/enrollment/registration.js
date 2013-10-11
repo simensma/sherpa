@@ -69,7 +69,7 @@ $(document).ready(function() {
         // Check that conditions checkbox is checked
         if(!registration.find("input.conditions").prop('checked')) {
             e.preventDefault();
-            alert("Du kan ikke gå videre med mindre du har lest og godtatt betingelsene.");
+            alert($(this).attr("data-conditions-message"));
             return;
         }
         if($(this).hasClass('post') || form.find("input[name='name']").val().length > 0) {

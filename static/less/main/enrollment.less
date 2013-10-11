@@ -29,33 +29,27 @@ div.modal.conditions li, div.modal.conditions p {
   font-size: 14px !important;
 }
 
-form#household select {
-  height: 34px;
-  width: 300px;
+form#household {
+  select {
+    height: 34px;
+    width: 300px;
+
+    option[disabled] {
+      background-color: rgb(215, 215, 215);
+    }
+  }
 }
 
-form#household select option[disabled] {
-  background-color: rgb(215, 215, 215);
-}
-
-form#household button.search {
-  margin-bottom: 10px;
-}
-
-div.existing-result p {
-  font-size: 120%;
-}
-
-div.existing-result p span.result {
+div.existing-result {
   font-weight: bold;
-}
 
-div.existing-result p span.result.success {
-  color: rgb(60, 180, 60);
-}
+  span.success span.result {
+    color: rgb(60, 180, 60);
+  }
 
-div.existing-result p span.result.error {
-  color: rgb(180, 60, 60);
+  span.error {
+    color: rgb(180, 60, 60);
+  }
 }
 
 form#registration input[type='text'], form#household input[type='text'], form#household select {
