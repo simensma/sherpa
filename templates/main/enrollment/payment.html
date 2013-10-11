@@ -6,82 +6,85 @@
 
 {% block enrollment %}
 
-<div class="row">
-  <div class="span8">
+<div class="enrollment-payment-method">
+  <div class="row">
+    <div class="span8">
 
-    {% include 'main/enrollment/progress.html' with step=4 %}
+      {% include 'main/enrollment/progress.html' with step=4 %}
 
-    {% for message in messages %}
-      {% if message.message == 'invalid_payment_method' %}
+      {% for message in messages %}
+        {% if message.message == 'invalid_payment_method' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
+            Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+          </div>
+        {% elif message.message == 'nets_register_connection_error' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>Teknisk feil ved nettbetaling</strong><br>
+            Beklager, det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i stedet.
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if not card_available and not card_required %}
         <div class="alert alert-error">
           <a class="close">x</a>
-          <strong><i class="icon-warning-sign"></i> Ugyldig betalingsmåte</strong><br>
-          Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre.
+          <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
+          Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ new_membership_year|date:"F" }}.<br><br>
+
+          Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
         </div>
-      {% elif message.message == 'nets_register_connection_error' %}
+      {% elif card_available and card_required %}
+        <div class="alert alert-error">
+          <strong><i class="icon-info-sign"></i> Må betales med VISA/MASTERCARD</strong><br>
+          Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og eventuelt tilby rabatt.
+        </div>
+      {% elif not card_available and card_required %}
         <div class="alert alert-error">
           <a class="close">x</a>
-          <strong>Teknisk feil ved nettbetaling</strong><br>
-          Beklager, det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i stedet.
+          <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
+          Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ new_membership_year|date:"F" }}.<br><br>
+
+          Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
         </div>
       {% endif %}
-    {% endfor %}
 
-    {% if not card_available and not card_required %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
-        Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ new_membership_year|date:"F" }}.<br><br>
+      <form method="post" action="{% url 'enrollment.views.payment' %}" class="payment">
+        {% csrf_token %}
+        <input type="hidden" name="main-member" value="">
+        <h2>Velg betalingsmåte:</h2>
+        <div class="control-group">
+          <label class="radio">
+            <input type="radio" name="payment_method" value="card" {% if card_available %}checked{% else %}disabled{% endif %}> VISA / MASTERCARD
+          </label>
+          <label class="radio">
+            <input type="radio" name="payment_method" value="invoice"{% if card_required %} disabled{% elif not card_required and not card_available %} checked{% endif %}> Få tilsendt faktura
+          </label>
+        </div>
 
-        Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
-      </div>
-    {% elif card_available and card_required %}
-      <div class="alert alert-error">
-        <strong><i class="icon-info-sign"></i> Må betales med VISA/MASTERCARD</strong><br>
-        Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og eventuelt tilby rabatt.
-      </div>
-    {% elif not card_available and card_required %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong><i class="icon-info-sign"></i> Kortbetaling utilgjengelig</strong><br>
-        Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ new_membership_year|date:"F" }}.<br><br>
+        <div class="alert alert-info invoice-info hide">
+          <strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet gyldig før betalingen er registrert i vårt system.
+        </div>
 
-        Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
-      </div>
-    {% endif %}
+        <p>
+          <a class="btn btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> Tilbake</a>
+          <button type="submit" class="btn btn-danger btn-large payment card{% if not card_available %} hide{% endif %}">
+            Til betaling <i class="icon-arrow-right"></i>
+          </button>
+          <button type="submit" class="btn btn-danger btn-large payment invoice{% if card_available %} hide{% endif %}">
+            Send bestilling <i class="icon-ok"></i>
+          </button>
+          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        </p>
+      </form>
 
-    <form id="payment" action="{% url 'enrollment.views.payment' %}" method="post">
-      {% csrf_token %}
-      <input type="hidden" name="main-member" value="">
-      <h2> Velg betalingsmåte:</h2>
-      <div class="control-group">
-        <label class="radio">
-          <input type="radio" name="payment_method" value="card" {% if card_available %}checked{% else %}disabled{% endif %}> VISA / MASTERCARD
-        </label>
-        <label class="radio">
-          <input type="radio" name="payment_method" value="invoice"{% if card_required %} disabled{% elif not card_required and not card_available %} checked{% endif %}> Få tilsendt faktura
-        </label>
-      </div>
+    </div>
 
-      <div class="alert alert-info invoice-info hide">
-        <strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet gyldig før betalingen er registrert i vårt system.
-      </div>
-
-      <p>
-        <a class="btn btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> Tilbake</a>
-        {% if card_available %}
-          <button type="submit" class="btn btn-danger btn-large payment">Til betaling <i class="icon-arrow-right"></i></button>
-        {% else %}
-          <button type="submit" class="btn btn-danger btn-large payment">Send bestilling <i class="icon-ok"></i></button>
-        {% endif %}
-        <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-      </p>
-    </form>
-
-  </div>
-
-  <div class="span4">
-    {% include 'main/membership/infobox.html' %}
+    <div class="span4">
+      {% include 'main/membership/infobox.html' %}
+    </div>
   </div>
 </div>
 
