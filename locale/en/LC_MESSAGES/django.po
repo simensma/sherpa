@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 16:35+0200\n"
+"POT-Creation-Date: 2013-10-14 17:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -432,14 +432,19 @@ msgid ""
 "Siden du melder deg inn i forbindelse med en tur/aktivitet arrangert i regi "
 "av DNT, kan du ikke velge å betale med faktura &mdash; da kan vi ikke gi deg "
 "en eventuell rabatt, siden vi ikke får bekreftet innbetalingen."
-msgstr "Since you are enrolling in conjunction with signing up for a tour or activity arranged by DNT, invoice payment is not possible as we need to verify the payment in order to offer any discounts."
+msgstr ""
+"Since you are enrolling in conjunction with signing up for a tour or "
+"activity arranged by DNT, invoice payment is not possible as we need to "
+"verify the payment in order to offer any discounts."
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:28
 msgid ""
 "Dette betyr at du ikke kan melde deg inn for øyeblikket. Vi beklager på det "
 "sterkeste ulempene dette medfører. Om du har noen spørsmål, kan disse rettes "
 "til"
-msgstr "This means that enrollment is not possible right now. We sincerely apologize for this inconvenience. If you have any questions, please contact"
+msgstr ""
+"This means that enrollment is not possible right now. We sincerely apologize "
+"for this inconvenience. If you have any questions, please contact"
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:32
 msgid "Gå tilbake til forrige side"
@@ -694,6 +699,8 @@ msgstr "Back"
 
 #: templates/main/enrollment/index.html:5
 #: templates/main/enrollment/index.html:6
+#: templates/main/enrollment/unavailable.html:5
+#: templates/main/enrollment/unavailable.html:6
 msgid "Innmelding"
 msgstr "Become member"
 
@@ -999,6 +1006,33 @@ msgstr "Last change: 9th of November 2012."
 msgid "Med forbehold om endringer i løpet av medlemsåret."
 msgstr ""
 "These terms and conditions are subject to change during the membership year."
+
+#: templates/main/enrollment/unavailable.html:11
+msgid "Innmelding utilgjengelig"
+msgstr "Enrollment unavailable"
+
+#: templates/main/enrollment/unavailable.html:17
+#, python-format
+msgid ""
+"Online innmeldingsskjema er dessverre utilgjengelig %(period)s på grunn av "
+"midlertidig vedlikehold."
+msgstr ""
+"Online enrollment is unfortunately not available due to temporary "
+"maintenance, for the following duration (in Norwegian): \"%(period)s\"."
+
+#: templates/main/enrollment/unavailable.html:20
+msgid ""
+"Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av "
+"midlertidig vedlikehold."
+msgstr ""
+"Online enrollment is unfortunately not available due to temporary "
+"maintenance."
+
+#: templates/main/enrollment/unavailable.html:25
+msgid ""
+"For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 "
+"eller e-post"
+msgstr "To enroll, please contact memberservice on tlf. 4000 1870 or e-mail"
 
 #: templates/main/enrollment/verification.html:53
 msgid "Ugyldig hovedmedlem"
