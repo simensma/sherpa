@@ -58,9 +58,9 @@
 
       <p>
         {% if users|length == 1 %}
-          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ users.0.email }}</strong>.
+          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ users.0.email }}</strong>.
         {% else %}
-          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
+          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
           {% for email in emails %}
             <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
           {% endfor %}
@@ -69,7 +69,7 @@
 
       {% if location.country == 'NO' %}
         {% for user in users %}
-          {% if user.phone != '' and user.sms_sent %}
+          {% if user.phone != '' and not user.sms_sent %}
             <div class="sms">
               <a href="javascript:undefined" class="phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
                 {% trans "Send gratis kvittering på SMS til" %} {{ user.phone }}
@@ -83,7 +83,7 @@
               <p class="success hide">
                 {% trans "Kvittering har blitt sendt på SMS til" %} {{ user.phone }}.
               </p>
-              <p class="tehcnical-error error hide">
+              <p class="technical-error error hide">
                 {% trans "En teknisk feil har oppstått ved utsendelse av SMS." %}
                 {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
               </p>
