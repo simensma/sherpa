@@ -125,6 +125,7 @@ def registration(request, user):
 
     today = date.today()
     new_membership_year = current_membership_year_start()
+    end_of_year = date(year=today.year, month=12, day=31)
 
     context = {
         'users': request.session['enrollment']['users'],
@@ -132,6 +133,7 @@ def registration(request, user):
         'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
         'today': today,
+        'end_of_year': end_of_year,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/registration.html', context)

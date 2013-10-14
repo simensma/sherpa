@@ -15,6 +15,19 @@
 
 {% block enrollment %}
 
+{# Hardcode for 2013 - however, we'll likely want this message to reoccur at the appropriate time next year #}
+{% if today.year == 2013 and today < new_membership_year %}
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-error">
+        <strong>Vi nærmer oss slutten for salg av medlemskap for {{ today.year }}!</strong><br>
+        Trenger du medlemskapet akkurat nå, kan du betale med kort. Vær oppmerksom på at medlemskapet følger kalenderåret og utgår {{ end_of_year|date:"j. F Y" }}.<br>
+        Vil du bli medlem for {{ today.year|add:"1" }}, ber du om å få tilsendt faktura. Vi sender deg innbetalingsgiroen i begynnelsen av november. Dette inkluderer medlemskap for resten av {{ today.year }}.
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 <div class="row">
   <div class="span8">
 
