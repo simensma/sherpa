@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-11 14:33+0200\n"
+"POT-Creation-Date: 2013-10-14 11:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgid "Hvis du har glemt passordet, klikk på \"Glemt passord\"-lenken under."
 msgstr "If you forgot your password, click the \"Forgot password\"-link below."
 
 #: templates/common/user/login/util/login_form.html:22
-#: templates/main/enrollment/registration.html:135
+#: templates/main/enrollment/registration.html:148
 msgid "E-post"
 msgstr "E-mail"
 
@@ -148,7 +148,7 @@ msgstr "Loading area..."
 
 #: templates/common/user/login/util/registration_form.html:47
 #: templates/main/enrollment/household.html:157
-#: templates/main/enrollment/registration.html:93
+#: templates/main/enrollment/registration.html:106
 msgid "Gå videre"
 msgstr "Continue"
 
@@ -403,7 +403,7 @@ msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
 msgstr "Illustration of the member ID's placement on the membership card"
 
 #: templates/main/connect/signon.html:129
-#: templates/main/enrollment/registration.html:174
+#: templates/main/enrollment/registration.html:187
 msgid "Lukk vindu"
 msgstr "Close window"
 
@@ -771,11 +771,11 @@ msgstr ""
 "activity. When enrollment is completed, you'll be forwarded to signup for "
 "the activity."
 
-#: templates/main/enrollment/registration.html:44
+#: templates/main/enrollment/registration.html:57
 msgid "Vi klarte ikke å lagre opplysningene."
 msgstr "We weren't able to save the data."
 
-#: templates/main/enrollment/registration.html:45
+#: templates/main/enrollment/registration.html:58
 msgid ""
 "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på "
 "nytt."
@@ -783,11 +783,11 @@ msgstr ""
 "Did you fill out the form correctly? Please verify any fields marked red and "
 "try again."
 
-#: templates/main/enrollment/registration.html:51
+#: templates/main/enrollment/registration.html:64
 msgid "Beklager, men du kan ikke registrere disse medlemmene!"
 msgstr "Sorry, you can't register these members!"
 
-#: templates/main/enrollment/registration.html:53
+#: templates/main/enrollment/registration.html:66
 #, python-format
 msgid ""
 "\n"
@@ -801,7 +801,7 @@ msgstr ""
 "be main member. Due to technical limitations, only 3 of these can register "
 "at a time."
 
-#: templates/main/enrollment/registration.html:57
+#: templates/main/enrollment/registration.html:70
 msgid ""
 "Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik "
 "begrensning."
@@ -809,11 +809,11 @@ msgstr ""
 "We really do apologize for the inconvenience, and we're working to avoid "
 "this arbitrary and unnecessary limitation."
 
-#: templates/main/enrollment/registration.html:61
+#: templates/main/enrollment/registration.html:74
 msgid "Kontaktinformasjon mangler."
 msgstr "Contact information is missing."
 
-#: templates/main/enrollment/registration.html:62
+#: templates/main/enrollment/registration.html:75
 msgid ""
 "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon "
 "og e-post)."
@@ -821,84 +821,84 @@ msgstr ""
 "At least one member of your household should have valid contact information "
 "(both phone and e-mail)."
 
-#: templates/main/enrollment/registration.html:69
+#: templates/main/enrollment/registration.html:82
 msgid "Du har registrert:"
 msgstr "You've registered:"
 
-#: templates/main/enrollment/registration.html:78
+#: templates/main/enrollment/registration.html:91
 msgid "(Anonym)"
 msgstr "(Anonymous)"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:102
 msgid "Vi"
 msgstr "We"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:102
 msgid "Jeg"
 msgstr "I"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:102
 msgid "har lest og godtar"
 msgstr "have read and accepted"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:102
 msgid "betingelsene"
 msgstr "the terms and conditions"
 
-#: templates/main/enrollment/registration.html:92
+#: templates/main/enrollment/registration.html:105
 msgid "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene."
 msgstr ""
 "You cannot proceed unless you've read and accepted our terms and conditions."
 
-#: templates/main/enrollment/registration.html:97
+#: templates/main/enrollment/registration.html:110
 msgid "Meld inn flere i familien/husstanden:"
 msgstr "Register more members of the family/household"
 
-#: templates/main/enrollment/registration.html:98
+#: templates/main/enrollment/registration.html:111
 msgid "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse."
 msgstr ""
 "You can only register multiple members if you all share the same address."
 
-#: templates/main/enrollment/registration.html:108
+#: templates/main/enrollment/registration.html:121
 msgid "Fullt navn"
 msgstr "Full name"
 
-#: templates/main/enrollment/registration.html:112
+#: templates/main/enrollment/registration.html:125
 msgid "Fødselsdato (dd.mm.åååå)"
 msgstr "Birth date (dd.mm.yyyy)"
 
-#: templates/main/enrollment/registration.html:121
+#: templates/main/enrollment/registration.html:134
 msgid "Kjønn"
 msgstr "Gender"
 
-#: templates/main/enrollment/registration.html:123
+#: templates/main/enrollment/registration.html:136
 #: templates/main/enrollment/verification.html:132
 msgid "Kvinne"
 msgstr "Female"
 
-#: templates/main/enrollment/registration.html:126
+#: templates/main/enrollment/registration.html:139
 #: templates/main/enrollment/verification.html:130
 msgid "Mann"
 msgstr "Male"
 
-#: templates/main/enrollment/registration.html:131
+#: templates/main/enrollment/registration.html:144
 msgid "Mobiltelefon"
 msgstr "Cell phone"
 
-#: templates/main/enrollment/registration.html:138
+#: templates/main/enrollment/registration.html:151
 msgid "Lagre endringer"
 msgstr "Save changes"
 
-#: templates/main/enrollment/registration.html:138
+#: templates/main/enrollment/registration.html:151
 msgid "Legg til medlem"
 msgstr "Add this member"
 
-#: templates/main/enrollment/registration.html:151
+#: templates/main/enrollment/registration.html:164
 msgid "Betingelser for medlemskap i Den Norske Turistforening"
 msgstr ""
 "Terms and conditions for membership in the Norwegian Trekking Association"
 
-#: templates/main/enrollment/registration.html:156
+#: templates/main/enrollment/registration.html:169
 #, python-format
 msgid ""
 "\n"
@@ -912,15 +912,15 @@ msgstr ""
 "year and is valid from January 1st to December 31st. After the 1st of "
 "%(month)s, one can buy membership for the following year."
 
-#: templates/main/enrollment/registration.html:160
+#: templates/main/enrollment/registration.html:173
 msgid "Medlemskapet er personlig."
 msgstr "The membership is personal."
 
-#: templates/main/enrollment/registration.html:161
+#: templates/main/enrollment/registration.html:174
 msgid "Det er ingen angrerett på betalt medlemskap."
 msgstr "There is no right to cancel a paid membership."
 
-#: templates/main/enrollment/registration.html:162
+#: templates/main/enrollment/registration.html:175
 #, python-format
 msgid ""
 "Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%%) gis rett "
@@ -929,7 +929,7 @@ msgstr ""
 "The membership categories are determined by age; however disabled (at least "
 "50%%) have the right to a senior membership."
 
-#: templates/main/enrollment/registration.html:163
+#: templates/main/enrollment/registration.html:176
 msgid ""
 "Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig "
 "med stempel eller oblat fra bank/post."
@@ -937,7 +937,7 @@ msgstr ""
 "The membership is not valid until paid in full and the membership card is "
 "only valid with an approved stamp or sticker from bank/postage."
 
-#: templates/main/enrollment/registration.html:164
+#: templates/main/enrollment/registration.html:177
 msgid ""
 "DNT forplikter seg til ikke å videreformidle personlige opplysninger til "
 "andre enn våre egne medlemsforeninger, samt enkelte samarbeidspartnere i "
@@ -948,11 +948,11 @@ msgstr ""
 "and certain affiliate third parties in order to offer membership benefits. "
 "One can opt out of this on the user page."
 
-#: templates/main/enrollment/registration.html:168
+#: templates/main/enrollment/registration.html:181
 msgid "Sist endret: 9. november 2012."
 msgstr "Last change: 9th of November 2012."
 
-#: templates/main/enrollment/registration.html:169
+#: templates/main/enrollment/registration.html:182
 msgid "Med forbehold om endringer i løpet av medlemsåret."
 msgstr ""
 "These terms and conditions are subject to change during the membership year."
