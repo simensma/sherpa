@@ -5,7 +5,6 @@ from django.conf import settings
 
 import simples3
 
-from page.models import *
 from core.util import use_image_thumb
 
 class Image(models.Model):
@@ -23,24 +22,6 @@ class Image(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
-
-class ImageRecovery(models.Model):
-    key = models.CharField(max_length=8)
-    extension = models.CharField(max_length=4)
-    hash = models.CharField(max_length=40)
-    description = models.TextField()
-    album = models.ForeignKey('admin.Album', null=True)
-    photographer = models.CharField(max_length=200)
-    credits = models.CharField(max_length=200)
-    licence = models.CharField(max_length=200)
-    exif = models.TextField()
-    uploaded = models.DateTimeField(auto_now_add=True)
-    width = models.IntegerField()
-    height = models.IntegerField()
-    tags = models.ManyToManyField('core.Tag', related_name='+')
-
-    def site_usage(self):
-        return Content.objects.filter(type='image', content__icontains='%s.%s' % (self.key, self.extension), column__row__version__variant__page__isnull=False)
 
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
