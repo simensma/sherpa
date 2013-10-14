@@ -144,7 +144,7 @@ def attempt_registration(request):
         log_user_in(request, user)
 
         try:
-            t = loader.get_template('common/user/login/registered_email.html')
+            t = loader.get_template('common/user/login/registered_email.txt')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
         except SMTPException:
@@ -193,7 +193,7 @@ def attempt_registration_nonmember(request):
     log_user_in(request, user)
 
     try:
-        t = loader.get_template('common/user/login/registered_nonmember_email.html')
+        t = loader.get_template('common/user/login/registered_nonmember_email.txt')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
     except SMTPException:
