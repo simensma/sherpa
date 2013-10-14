@@ -126,6 +126,7 @@ def registration(request, user):
     today = date.today()
     new_membership_year = current_membership_year_start()
     end_of_year = date(year=today.year, month=12, day=31)
+    display_membership_year_warning = today >= new_membership_year - timedelta(days=14) and today < new_membership_year
 
     context = {
         'users': request.session['enrollment']['users'],
@@ -134,6 +135,7 @@ def registration(request, user):
         'conditions': request.session['enrollment'].get('conditions', ''),
         'today': today,
         'end_of_year': end_of_year,
+        'display_membership_year_warning': display_membership_year_warning,
         'new_membership_year': new_membership_year
     }
     return render(request, 'main/enrollment/registration.html', context)

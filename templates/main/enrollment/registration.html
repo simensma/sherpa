@@ -16,7 +16,7 @@
 {% block enrollment %}
 
 {# Hardcode for 2013 - however, we'll likely want this message to reoccur at the appropriate time next year #}
-{% if today.year == 2013 and today < new_membership_year %}
+{% if display_membership_year_warning %}
   <div class="row">
     <div class="span12">
       <div class="alert alert-error">
