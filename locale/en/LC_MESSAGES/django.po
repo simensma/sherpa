@@ -205,6 +205,7 @@ msgid "Passordene er ikke like, har du skrevet feil?"
 msgstr "The passwords aren't equal, did you misspell it?"
 
 #: templates/common/user/login/util/registration_form.html:88
+#: templates/common/user/login/util/registration_form_nonmember.html:58
 msgid "Gjenta passord:"
 msgstr "Repeat password:"
 
