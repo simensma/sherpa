@@ -1,0 +1,30 @@
+{% extends "main/connect/layouts/columbus.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Logg inn" %}{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">{% trans "Logg inn" %}</a></em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/connect/signon.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span12">
+
+    <h1>Midlertidig vedlikehold</h1>
+
+    <p class="lede">
+      Tjenesten er dessverre utilgjengelig {{ focus_downtime.period_message }} på grunn av midlertidig vedlikehold.
+    </p>
+
+    <p>
+      Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør deg inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. Innen da kan vi dessverre ikke annet enn å sende deg <a href="{% url 'connect.views.signon_cancel' %}">tilbake dit du kom fra</a>.
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

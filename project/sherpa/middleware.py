@@ -131,6 +131,9 @@ class FocusDowntime():
                 ('/innmelding', 'main/enrollment/unavailable.html'),
                 ('/minside', 'common/user/unavailable.html'),
                 ('/fjelltreffen', 'main/fjelltreffen/unavailable.html'),
+                ('/connect/signon/login', 'main/connect/signon_unavailable.html'),
+                ('/connect/signon/velg-bruker', 'main/connect/signon_unavailable.html'),
+                ('/connect/signon/registrer', 'main/connect/signon_unavailable.html'),
             ]
             for path, template in focus_required_paths:
                 if request.path.startswith(path):
