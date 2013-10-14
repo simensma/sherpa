@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 17:09+0200\n"
+"POT-Creation-Date: 2013-10-14 17:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1289,3 +1289,41 @@ msgid ""
 msgstr ""
 "You've sent too many SMS requests in a short time! Please wait a while "
 "before you try again."
+
+#: templates/main/membership/memberid_sms/message.txt:1
+msgid "Medlemsnummer for:"
+msgstr "Member ID for:"
+
+#: templates/main/membership/memberid_sms/message.txt:3
+#: templates/main/membership/memberid_sms/message.txt:5
+msgid "årskontingent"
+msgstr "membership"
+
+#: templates/main/membership/memberid_sms/message.txt:3
+#: templates/main/membership/memberid_sms/message.txt:5
+msgid "betalt for"
+msgstr "paid for"
+
+#: templates/main/membership/memberid_sms/message.txt:3
+#: templates/main/membership/memberid_sms/message.txt:5
+msgid "IKKE betalt for"
+msgstr "NOT paid for"
+
+#: templates/main/membership/memberid_sms/message.txt:7
+msgid "Denne SMSen er gyldig som kvittering på betalt årskontingent."
+msgstr "This SMS is a valid receipt for confirmed paid annual membership."
+
+#: templates/main/membership/memberid_sms/message.txt:7
+msgid "Kontakt oss for å fornye medlemskapet."
+msgstr "Contact us to renew your membership."
+
+#: templates/main/membership/memberid_sms/message.txt:9
+msgid ""
+"Mvh\n"
+"DNT Medlemsservice\n"
+"Tlf: 40001870\n"
+"E-post: medlem@turistforeningen.no"
+msgstr "Best regards\n"
+"DNT Memberservice\n"
+"Tlf: 40001870\n"
+"E-mail: medlem@turistforeningen.no"
