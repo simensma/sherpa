@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 17:13+0200\n"
+"POT-Creation-Date: 2013-10-14 17:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -708,6 +708,89 @@ msgstr "Become member"
 msgid "Bli medlem"
 msgstr "Become member"
 
+#: templates/main/enrollment/payment-process-error.html:18
+#: templates/main/enrollment/payment.html:28
+msgid "Teknisk feil ved nettbetaling"
+msgstr "Technical error during online payment"
+
+#: templates/main/enrollment/payment-process-error.html:19
+msgid ""
+"Det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør for "
+"å bekrefte at betalingen har gått gjennom."
+msgstr ""
+"We're sorry, an error occurred when we tried connecting to our payment "
+"provider to verify the payment."
+
+#: templates/main/enrollment/payment-process-error.html:21
+msgid "Viktig:"
+msgstr "Important:"
+
+#: templates/main/enrollment/payment-process-error.html:21
+msgid ""
+"Vi har <em>ikke</em> registrert at betalingen din har gått gjennom, selv om "
+"den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir "
+"ikke medlemskapet ditt registrert som betalt i vårt system."
+msgstr "We have <em>not</em> confirmed that the payment was successful, even though it might be! If you leave this page without confirming the payment, your membership will not be marked as paid in our systems."
+
+#: templates/main/enrollment/payment-process-error.html:25
+msgid "Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!"
+msgstr "Retry confirming the payment by pressing F5 or this button!"
+
+#: templates/main/enrollment/payment-process-error.html:30
+msgid "Hva gjør jeg hvis feilen ikke går bort?"
+msgstr "What do I do if this error doesn't disappear?"
+
+#: templates/main/enrollment/payment-process-error.html:35
+msgid ""
+"Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen "
+"minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med "
+"medlemsservice - se boksen til høyre."
+msgstr "You should try pressing the above button at least 3-4 times, preferably a few minutes apart. If that does not help, you'll need to contact memberservice - see the box to the right."
+
+#: templates/main/enrollment/payment-process-error.html:37
+msgid ""
+"Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi "
+"har logget detaljene rundt feilen i våre systemer og kan spore opp "
+"betalingen manuelt."
+msgstr "Please provide your name and tell us what happened, and we'll straighten things out. We've logged the details for this error in our systems, and we'll be able to trace and confirm the payment manually."
+
+#: templates/main/enrollment/payment-process-error.html:42
+msgid "Mer informasjon om hva som har skjedd"
+msgstr "More information about why you're seeing this message"
+
+#: templates/main/enrollment/payment-process-error.html:47
+msgid ""
+"Når du har gjennomført din betaling i nettbanken, må vi kontakte vår "
+"betalingsleverandør for å bekrefte at betalingen var vellykket. Når vi "
+"forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt "
+"system, i løsningen til vår betalingsleverandør, eller i eventuelle "
+"tredjepartssystemer."
+msgstr "When you've processed the online payment on your banks web pages, we need to contact our payment provider to confirm that the payment was successful. When we tried to do that, we experienced a connection error. It could be a problem with our systems, with our payment provider systems, or a number of third party systems in between."
+
+#: templates/main/enrollment/payment-process-error.html:49
+msgid ""
+"Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, "
+"men går bort av seg selv etter kort tid."
+msgstr "This is usually an error that may suddenly occur without any clear reason, and resolves itself after a short while."
+
+#: templates/main/enrollment/payment-process-error.html:52
+msgid "Vi beklager virkelig dette, og ulempene det medfører!"
+msgstr "We really do apologize this inconvenience!"
+
+#: templates/main/enrollment/payment-terminal.html:6
+msgid "Medlemskap i Den Norske Turistforening"
+msgstr ""
+"Membership in the Norwegian Trekking Association"
+
+#: templates/main/enrollment/payment-terminal.html:7
+msgid "Gjelder for:"
+msgstr "Valid for:"
+
+#: templates/main/enrollment/payment-terminal.html:7
+#: templates/main/enrollment/verification.html:215
+msgid "samt ut"
+msgstr "and"
+
 #: templates/main/enrollment/payment.html:22
 msgid "Ugyldig betalingsmåte"
 msgstr "Invalid payment method"
@@ -716,10 +799,6 @@ msgstr "Invalid payment method"
 msgid ""
 "Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre."
 msgstr "You need to select a payment method before continuing."
-
-#: templates/main/enrollment/payment.html:28
-msgid "Teknisk feil ved nettbetaling"
-msgstr "Technical error during online payment"
 
 #: templates/main/enrollment/payment.html:29
 msgid ""
@@ -1208,10 +1287,6 @@ msgstr[1] ""
 msgid "Medlemskapet gjelder for"
 msgstr "The membership is valid for"
 
-#: templates/main/enrollment/verification.html:215
-msgid "samt ut"
-msgstr "and"
-
 #: templates/main/enrollment/verification.html:220
 msgid "Bekreft"
 msgstr "Confirm"
@@ -1323,7 +1398,8 @@ msgid ""
 "DNT Medlemsservice\n"
 "Tlf: 40001870\n"
 "E-post: medlem@turistforeningen.no"
-msgstr "Best regards\n"
+msgstr ""
+"Best regards\n"
 "DNT Memberservice\n"
 "Tlf: 40001870\n"
 "E-mail: medlem@turistforeningen.no"

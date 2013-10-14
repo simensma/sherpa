@@ -1,5 +1,7 @@
 {% extends 'main/enrollment/index.html' %}
 
+{% load i18n %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/payment_error.js"></script>
 {% endblock %}
@@ -13,41 +15,41 @@
 
     <div class="payment-error">
       <div class="alert alert-error">
-        <strong>Teknisk feil ved nettbetaling</strong><br>
-          Det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør for å bekrefte at betalingen har gått gjennom.<br><br>
+        <strong>{% trans "Teknisk feil ved nettbetaling" %}</strong><br>
+          {% trans "Det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør for å bekrefte at betalingen har gått gjennom." %}<br><br>
 
-        <strong>Viktig:</strong> Vi har <em>ikke</em> registrert at betalingen din har gått gjennom, selv om den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir ikke medlemskapet ditt registrert som betalt i vårt system.
+        <strong>{% trans "Viktig:" %}</strong> {% blocktrans %}Vi har <em>ikke</em> registrert at betalingen din har gått gjennom, selv om den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir ikke medlemskapet ditt registrert som betalt i vårt system.{% endblocktrans %}
       </div>
 
       <p>
-        <a href="javascript:undefined" class="btn btn-large refresh">Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!</a>
+        <a href="javascript:undefined" class="btn btn-large refresh">{% trans "Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!" %}</a>
       </p>
 
       <p class="help-action what-to-do">
         <a href="javascript:undefined">
-          <i class="icon-question-sign"></i> Hva gjør jeg hvis feilen ikke går bort?
+          <i class="icon-question-sign"></i> {% trans "Hva gjør jeg hvis feilen ikke går bort?" %}
         </a>
       </p>
 
       <div class="alert alert-info what-to-do hide">
-        Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med medlemsservice - se boksen til høyre.<br><br>
+        {% trans "Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med medlemsservice - se boksen til høyre." %}<br><br>
 
-        Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi har logget detaljene rundt feilen i våre systemer og kan spore opp betalingen manuelt.
+        {% trans "Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi har logget detaljene rundt feilen i våre systemer og kan spore opp betalingen manuelt." %}
       </div>
 
       <p class="help-action more-information">
         <a href="javascript:undefined">
-          <i class="icon-info-sign"></i> Mer informasjon om hva som har skjedd
+          <i class="icon-info-sign"></i> {% trans "Mer informasjon om hva som har skjedd" %}
         </a>
       </p>
 
       <div class="alert alert-info more-information hide">
-        Når du har gjennomført din betaling i nettbanken, må vi kontakte vår betalingsleverandør for å bekrefte at betalingen var vellykket. Når vi forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt system, i løsningen til vår betalingsleverandør, eller i eventuelle tredjepartssystemer.<br><br>
+        {% trans "Når du har gjennomført din betaling i nettbanken, må vi kontakte vår betalingsleverandør for å bekrefte at betalingen var vellykket. Når vi forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt system, i løsningen til vår betalingsleverandør, eller i eventuelle tredjepartssystemer." %}<br><br>
 
-        Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, men går bort av seg selv etter kort tid.
+        {% trans "Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, men går bort av seg selv etter kort tid." %}
       </div>
 
-      <p class="sorry">Vi beklager virkelig dette, og ulempene det medfører!</p>
+      <p class="sorry">{% trans "Vi beklager virkelig dette, og ulempene det medfører!" %}</p>
 
     </div>
   </div>
