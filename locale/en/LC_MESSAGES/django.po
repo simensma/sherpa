@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 11:10+0200\n"
+"POT-Creation-Date: 2013-10-14 11:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -684,14 +684,15 @@ msgstr "Online payment deactivated"
 
 #: templates/main/enrollment/payment.html:38
 #: templates/main/enrollment/payment.html:51
+#, python-format
 msgid ""
 "Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat "
 "nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i "
-"slutten av oktober."
+"slutten av %(month)s."
 msgstr ""
 "We are in the process of ending our membership year and can unfortunately "
 "not receive online payments at this moment. We will process new memberships "
-"and send invoices and membership cards at the end of October."
+"and send invoices and membership cards at the end of %(month)s."
 
 #: templates/main/enrollment/payment.html:40
 #: templates/main/enrollment/payment.html:53
