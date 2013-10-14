@@ -141,10 +141,25 @@ def memberid_sms(request):
     if len(actors) == 0:
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
+    elif len(actors) == 1:
+        actor = actors[0]
     elif len(actors) > 1:
-        # TODO: More than one hits, ignore for now - what should we do here?
-        pass
-    user = User.get_or_create_inactive(memberid=actors[0].memberid)
+        # Usually, this will be because children have the same number as their parents.
+        # Check if any of these are related, and in that case, use the parent.
+        actor = None
+        for actor_to_check in actors:
+            if actor_to_check.get_parent_memberid() is not None:
+                parent = Actor.objects.get(memberid=actor_to_check.get_parent_memberid())
+                if parent in actors:
+                    # Ah, this parent is in the result set - probably the one we want, use it
+                    actor = parent
+                    break
+        if actor is None:
+            # Multiple hits, and they are not related. What do? Pick a random hit for now.
+            actor = actors[0]
+    else:
+        raise Exception("A negative number of actors resulted from raw query. This is very strange, please investigate immediately.")
+    user = User.get_or_create_inactive(memberid=actor.memberid)
     sms_request.memberid = user.memberid
     sms_request.save()
     return send_sms_receipt(request, user)
