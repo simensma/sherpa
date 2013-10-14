@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 17:58+0200\n"
+"POT-Creation-Date: 2013-10-14 19:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,6 +153,9 @@ msgstr "Loading area..."
 #: templates/common/user/login/util/registration_form.html:47
 #: templates/main/enrollment/household.html:157
 #: templates/main/enrollment/registration.html:106
+#: templates/main/enrollment/result/success_card.html:119
+#: templates/main/enrollment/result/success_card.html:135
+#: templates/main/enrollment/result/success_card.html:137
 msgid "Gå videre"
 msgstr "Continue"
 
@@ -730,7 +733,10 @@ msgid ""
 "Vi har <em>ikke</em> registrert at betalingen din har gått gjennom, selv om "
 "den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir "
 "ikke medlemskapet ditt registrert som betalt i vårt system."
-msgstr "We have <em>not</em> confirmed that the payment was successful, even though it might be! If you leave this page without confirming the payment, your membership will not be marked as paid in our systems."
+msgstr ""
+"We have <em>not</em> confirmed that the payment was successful, even though "
+"it might be! If you leave this page without confirming the payment, your "
+"membership will not be marked as paid in our systems."
 
 #: templates/main/enrollment/payment-process-error.html:25
 msgid "Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!"
@@ -745,14 +751,20 @@ msgid ""
 "Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen "
 "minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med "
 "medlemsservice - se boksen til høyre."
-msgstr "You should try pressing the above button at least 3-4 times, preferably a few minutes apart. If that does not help, you'll need to contact memberservice - see the box to the right."
+msgstr ""
+"You should try pressing the above button at least 3-4 times, preferably a "
+"few minutes apart. If that does not help, you'll need to contact "
+"memberservice - see the box to the right."
 
 #: templates/main/enrollment/payment-process-error.html:37
 msgid ""
 "Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi "
 "har logget detaljene rundt feilen i våre systemer og kan spore opp "
 "betalingen manuelt."
-msgstr "Please provide your name and tell us what happened, and we'll straighten things out. We've logged the details for this error in our systems, and we'll be able to trace and confirm the payment manually."
+msgstr ""
+"Please provide your name and tell us what happened, and we'll straighten "
+"things out. We've logged the details for this error in our systems, and "
+"we'll be able to trace and confirm the payment manually."
 
 #: templates/main/enrollment/payment-process-error.html:42
 msgid "Mer informasjon om hva som har skjedd"
@@ -765,13 +777,20 @@ msgid ""
 "forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt "
 "system, i løsningen til vår betalingsleverandør, eller i eventuelle "
 "tredjepartssystemer."
-msgstr "When you've processed the online payment on your banks web pages, we need to contact our payment provider to confirm that the payment was successful. When we tried to do that, we experienced a connection error. It could be a problem with our systems, with our payment provider systems, or a number of third party systems in between."
+msgstr ""
+"When you've processed the online payment on your banks web pages, we need to "
+"contact our payment provider to confirm that the payment was successful. "
+"When we tried to do that, we experienced a connection error. It could be a "
+"problem with our systems, with our payment provider systems, or a number of "
+"third party systems in between."
 
 #: templates/main/enrollment/payment-process-error.html:49
 msgid ""
 "Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, "
 "men går bort av seg selv etter kort tid."
-msgstr "This is usually an error that may suddenly occur without any clear reason, and resolves itself after a short while."
+msgstr ""
+"This is usually an error that may suddenly occur without any clear reason, "
+"and resolves itself after a short while."
 
 #: templates/main/enrollment/payment-process-error.html:52
 msgid "Vi beklager virkelig dette, og ulempene det medfører!"
@@ -779,8 +798,7 @@ msgstr "We really do apologize this inconvenience!"
 
 #: templates/main/enrollment/payment-terminal.html:6
 msgid "Medlemskap i Den Norske Turistforening"
-msgstr ""
-"Membership in the Norwegian Trekking Association"
+msgstr "Membership in the Norwegian Trekking Association"
 
 #: templates/main/enrollment/payment-terminal.html:7
 msgid "Gjelder for:"
@@ -1218,6 +1236,7 @@ msgid "Hoved-<br>medlem"
 msgstr "Main<br>member"
 
 #: templates/main/enrollment/verification.html:105
+#: templates/main/enrollment/result/success_card.html:39
 msgid "Medlemstype"
 msgstr "Membership type"
 
@@ -1234,6 +1253,7 @@ msgstr ""
 "vary between local organizations."
 
 #: templates/main/enrollment/verification.html:106
+#: templates/main/enrollment/result/success_card.html:40
 msgid "Pris"
 msgstr "Price"
 
@@ -1290,6 +1310,313 @@ msgstr "The membership is valid for"
 #: templates/main/enrollment/verification.html:220
 msgid "Bekreft"
 msgstr "Confirm"
+
+#: templates/main/enrollment/result/cancel.html:13
+msgid "Betalingen ble avbrutt"
+msgstr "Payment canceled"
+
+#: templates/main/enrollment/result/cancel.html:17
+msgid ""
+"Medlemskapet blir ikke registrert før betalingen er gjennomført og godkjent "
+"i vår betalingsløsning."
+msgstr ""
+"The membership will not be registered unless payment is processed and "
+"confirmed by our payment provided."
+
+#: templates/main/enrollment/result/cancel.html:21
+#: templates/main/enrollment/result/fail.html:25
+msgid "Gå tilbake"
+msgstr "Go back"
+
+#: templates/main/enrollment/result/cancel.html:21
+msgid "for å starte betaling på nytt"
+msgstr "to reinitiate online payment"
+
+#: templates/main/enrollment/result/fail.html:13
+msgid "Beklager, betaling feilet"
+msgstr "We're sorry, payment was unsuccessful"
+
+#: templates/main/enrollment/result/fail.html:17
+msgid ""
+"Betalingen ble ikke godkjent i vår betalingsløsning. Dette kan skyldes "
+"problemer hos din bank eller at det ikke er dekning på konto."
+msgstr ""
+"The payment was not verified by our payment provider. This could occur due "
+"to problems in your bank, or insufficient funds."
+
+#: templates/main/enrollment/result/fail.html:21
+msgid "Medlemskapet blir ikke registrert før betalingen er godkjent."
+msgstr ""
+"The membership will not be registered until the payment is processed and "
+"confirmed by our payment provider."
+
+#: templates/main/enrollment/result/fail.html:25
+msgid "for å forsøke på nytt eller ta kontakt med banken din"
+msgstr "to retry, or contact your bank"
+
+#: templates/main/enrollment/result/success_card.html:15
+#: templates/main/enrollment/result/success_invoice.html:11
+#, python-format
+msgid ""
+"\n"
+"          Velkommen som medlem, %(name)s!\n"
+"        "
+msgid_plural ""
+"\n"
+"          Velkommen som medlemmer!\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/main/enrollment/result/success_card.html:28
+#, python-format
+msgid ""
+"\n"
+"          Du er nå medlem i DNT og <a href=\"%(url)s\">%(association)s</a>.\n"
+"        "
+msgid_plural ""
+"\n"
+"          Dere er nå medlemmer i DNT og <a href=\"%(url)s\">%(association)s</"
+"a>.\n"
+"        "
+msgstr[0] ""
+"\n"
+"You are now a member of DNT and <a href=\"%(url)s\">%(association)s</a>."
+msgstr[1] ""
+"\n"
+"You are now members of DNT and <a href=\"%(url)s\">%(association)s</a>."
+
+#: templates/main/enrollment/result/success_card.html:37
+msgid "Navn"
+msgstr "Name"
+
+#: templates/main/enrollment/result/success_card.html:38
+msgid "Medlemsnummer"
+msgstr "Member ID"
+
+#: templates/main/enrollment/result/success_card.html:52
+msgid "Totalt:"
+msgstr "Total:"
+
+#: templates/main/enrollment/result/success_card.html:61
+msgid ""
+"Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du "
+"skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
+msgstr ""
+"Your membership card will ship shortly. Meanwhile, you may print this page "
+"and use it as a membership certificate valid until"
+
+#: templates/main/enrollment/result/success_card.html:61
+#: templates/main/enrollment/result/success_card.html:63
+msgid "eller få tilsendt gratis kvittering på SMS"
+msgstr "or receive a free SMS receipt"
+
+#: templates/main/enrollment/result/success_card.html:61
+msgid "Kvittering er også sendt på e-post til"
+msgstr "A receipt has also been sent by e-mail to"
+
+#: templates/main/enrollment/result/success_card.html:63
+msgid ""
+"Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan "
+"dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
+msgstr ""
+"Your membership cards will ship shortly. Meanwhile, you may print this page "
+"and use it as a membership certificate valid until"
+
+#: templates/main/enrollment/result/success_card.html:63
+msgid "Kvittering er også sendt på e-post til følgende adresser:"
+msgstr "A receipt has also been sent by e-mail to the following adresses:"
+
+#: templates/main/enrollment/result/success_card.html:75
+msgid "Send gratis kvittering på SMS til"
+msgstr "Send free SMS receipt to"
+
+#: templates/main/enrollment/result/success_card.html:79
+msgid "Sender SMS, vennligst vent..."
+msgstr "Sending SMS, please wait..."
+
+#: templates/main/enrollment/result/success_card.html:84
+msgid "Kvittering har blitt sendt på SMS til"
+msgstr "Receipt has been sent by SMS to"
+
+#: templates/main/enrollment/result/success_card.html:87
+msgid "En teknisk feil har oppstått ved utsendelse av SMS."
+msgstr "A technical error has occred during SMS sending."
+
+#: templates/main/enrollment/result/success_card.html:88
+#: templates/main/enrollment/result/success_card.html:95
+msgid ""
+"Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker "
+"å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å "
+"få tilsendt kvittering på SMS."
+msgstr ""
+"If you plan to use our services in the near future, and cannot wait for the "
+"membership card to arrive, please contact memberservice to receive a receipt "
+"by SMS."
+
+#: templates/main/enrollment/result/success_card.html:91
+msgid ""
+"SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med "
+"medlemsservice dersom du mener dette er feil."
+msgstr ""
+"SMS receipt has already been sent to this phone number. Please contact "
+"memberservice if you think this is an error."
+
+#: templates/main/enrollment/result/success_card.html:94
+msgid "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør."
+msgstr ""
+"A technical error has occured during communication with our SMS provider."
+
+#: templates/main/enrollment/result/success_card.html:106
+msgid "Fortsett til påmeldig for tur/aktivitet"
+msgstr "Continue to signup for tour/activity"
+
+#: templates/main/enrollment/result/success_card.html:109
+msgid ""
+"\n"
+"            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du "
+"bare registrere en bruker på Min side.\n"
+"          "
+msgid_plural ""
+"\n"
+"            Dere er nå innmeldt, og du kan fortsette til påmeldingen, først "
+"må du bare registrere en bruker på Min side. Velg hvilken bruker du vil "
+"registrere:\n"
+"          "
+msgstr[0] ""
+"\n"
+"You are now enrolled! You can continue to signup, first you'll just need to "
+"register a user."
+msgstr[1] ""
+"\n"
+"You are now enrolled! You can continue to signup, first you'll just need to "
+"register a user."
+
+#: templates/main/enrollment/result/success_card.html:150
+#: templates/main/enrollment/result/success_invoice.html:52
+msgid "Registrer deg på Min side"
+msgstr "Register on the user page"
+
+#: templates/main/enrollment/result/success_card.html:153
+#, python-format
+msgctxt "Don't translate URL params (registreringsnokkel and #registrering)"
+msgid ""
+"\n"
+"                Registrer deg på <a href=\"%(login_url)s?registreringsnokkel="
+"%(key)s#registrering\">Min side</a> og få tilgang til våre "
+"medlemstjenester.\n"
+"              "
+msgstr ""
+"\n"
+"Register on <a href=\"%(login_url)s?registreringsnokkel=%(key)s#registrering"
+"\">the user page</a> and get access to our online membership services."
+
+#: templates/main/enrollment/result/success_card.html:159
+#: templates/main/enrollment/result/success_invoice.html:61
+msgid "Planlegg turen på UT.no"
+msgstr "Plan your trip on UT.no"
+
+#: templates/main/enrollment/result/success_card.html:161
+msgid ""
+"\n"
+"              På <a href=\"http://ut.no/\">UT.no</a> finner du hytter og "
+"turer over hele landet.\n"
+"            "
+msgstr ""
+"\n"
+"On <a href=\"http://ut.no/\">UT.no</a> you'll find cabins and trails for "
+"entire Norway."
+
+#: templates/main/enrollment/result/success_card.html:167
+#: templates/main/enrollment/result/success_invoice.html:69
+msgid "Hva skjer der du bor"
+msgstr "What's happening in your area"
+
+#: templates/main/enrollment/result/success_card.html:169
+#, python-format
+msgid ""
+"\n"
+"                <a href=\"%(url)s\">%(association)s</a> arrangerer "
+"fellesturer og aktiviteter hele året.\n"
+"              "
+msgstr ""
+"\n"
+"<a href=\"%(url)s\">%(association)s</a> arranges guided tours and activities "
+"all year."
+
+#: templates/main/enrollment/result/success_invoice.html:24
+#, python-format
+msgid ""
+"\n"
+"          Du blir medlem i DNT og <a href=\"%(url)s\">%(association)s</a>.\n"
+"        "
+msgid_plural ""
+"\n"
+"          Dere blir medlemmer i DNT og <a href=\"%(url)s\">%(association)s</"
+"a>.\n"
+"        "
+msgstr[0] ""
+"\n"
+"You will become member in DNT and <a href=\"%(url)s\">%(association)s</a>."
+msgstr[1] ""
+"\n"
+"You will become members in DNT and <a href=\"%(url)s\">%(association)s</a>."
+
+#: templates/main/enrollment/result/success_invoice.html:37
+#, python-format
+msgid ""
+"\n"
+"            Kvittering på denne registreringen er sendt på e-post til "
+"<strong>%(email)s</strong>.\n"
+"          "
+msgstr ""
+"\n"
+"A receipt for this registration has been sent by e-mail to <strong>"
+"%(email)s</strong>."
+
+#: templates/main/enrollment/result/success_invoice.html:41
+msgid ""
+"Kvittering på denne registreringen er sendt på e-post til følgende adresser:"
+msgstr ""
+"A receipt for this registration has also been sent by e-mail to the "
+"following adresses:"
+
+#: templates/main/enrollment/result/success_invoice.html:55
+#, python-format
+msgctxt "Don't translate URL params (registreringsnokkel and #registrering)"
+msgid ""
+"\n"
+"              Registrer deg på <a href=\"%(login_url)s?registreringsnokkel="
+"%(key)s#registrering\">Min side</a> og få tilgang til våre "
+"medlemstjenester.\n"
+"            "
+msgstr ""
+"\n"
+"Register on <a href=\"%(login_url)s?registreringsnokkel=%(key)s#registrering"
+"\">the user page</a> and get access to our online membership services."
+
+#: templates/main/enrollment/result/success_invoice.html:63
+msgid ""
+"\n"
+"            På <a href=\"http://ut.no/\">UT.no</a> finner du hytter og turer "
+"over hele landet.\n"
+"          "
+msgstr ""
+"\n"
+"On <a href=\"http://ut.no/\">UT.no</a> you'll find cabins and trails for "
+"entire Norway."
+
+#: templates/main/enrollment/result/success_invoice.html:71
+#, python-format
+msgid ""
+"\n"
+"              <a href=\"%(url)s\">%(association)s</a> arrangerer fellesturer "
+"og aktiviteter hele året.\n"
+"            "
+msgstr ""
+"\n"
+"<a href=\"%(url)s\">%(association)s</a> arranges guided tours and activities "
+"all year."
 
 #: templates/main/membership/infobox.html:4
 msgid "Spørsmål?"
