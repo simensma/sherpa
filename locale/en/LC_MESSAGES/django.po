@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 19:00+0200\n"
+"POT-Creation-Date: 2013-10-14 19:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -806,6 +806,7 @@ msgstr "Valid for:"
 
 #: templates/main/enrollment/payment-terminal.html:7
 #: templates/main/enrollment/verification.html:215
+#: templates/main/enrollment/result/sms.txt:3
 msgid "samt ut"
 msgstr "and"
 
@@ -1353,6 +1354,36 @@ msgstr ""
 #: templates/main/enrollment/result/fail.html:25
 msgid "for å forsøke på nytt eller ta kontakt med banken din"
 msgstr "to retry, or contact your bank"
+
+#: templates/main/enrollment/result/sms.txt:1
+msgid "Velkommen som medlem!"
+msgstr "Welcome as a member!"
+
+#: templates/main/enrollment/result/sms.txt:3
+msgid "Medlemskontingent"
+msgstr "Membership"
+
+#: templates/main/enrollment/result/sms.txt:3
+msgid "er betalt for"
+msgstr "is paid for"
+
+#: templates/main/enrollment/result/sms.txt:4
+msgid "medlemsnr."
+msgstr "member ID"
+
+#: templates/main/enrollment/result/sms.txt:6
+msgid "Denne SMS gjelder som bevis."
+msgstr "This SMS is a valid receipt."
+
+#: templates/main/enrollment/result/sms.txt:8
+msgid ""
+"Mvh\n"
+"DNT Medlemsservice\n"
+"Tlf: 40001870"
+msgstr ""
+"Best regards,\n"
+"DNT Memberservice\n"
+"Tlf: 40001870"
 
 #: templates/main/enrollment/result/success_card.html:15
 #: templates/main/enrollment/result/success_invoice.html:11
