@@ -681,7 +681,7 @@ msgstr ""
 #: templates/main/enrollment/payment.html:37
 #: templates/main/enrollment/payment.html:50
 msgid "Kortbetaling utilgjengelig"
-msgstr "Online payment deactivated"
+msgstr "Online payment is currently unavailable"
 
 #: templates/main/enrollment/payment.html:38
 #: templates/main/enrollment/payment.html:51
