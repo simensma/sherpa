@@ -15,6 +15,7 @@ import sys
 from core.models import Site
 from association.models import Association
 from focus.models import Actor, Enrollment
+from enrollment.util import current_template_layout
 
 logger = logging.getLogger('sherpa')
 
@@ -111,10 +112,18 @@ class CheckSherpaPermissions(object):
 class DeactivatedEnrollment():
     def process_request(self, request):
         from enrollment.models import State
+        state = State.objects.all()[0]
+
         # The enrollment slug is duplicated and hardcoded here :(
         # However, it's not really likely to change often since it's an important URL.
-        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
-            return render(request, 'main/enrollment/unavailable.html')
+        if request.path.startswith('/innmelding') and not state.active:
+            context = current_template_layout(request)
+            return render(request, 'main/enrollment/unavailable.html', context)
+
+        # Another issue: If passing through DNT Connect, and card payment is deactivated,
+        # there is no means for payment available. Inform them immediately
+        if request.path.startswith('/innmelding') and 'dntconnect' in request.session and not state.card:
+            return render(request, 'main/connect/signon_enrollment_card_deactivated.html')
 
 class FocusDowntime():
     def process_request(self, request):
@@ -137,7 +146,11 @@ class FocusDowntime():
             ]
             for path, template in focus_required_paths:
                 if request.path.startswith(path):
-                    return render(request, template)
+                    # Extra context update for enrollment URLs
+                    context = {}
+                    if request.path.startswith('/innmelding'):
+                        context.update(current_template_layout(request))
+                    return render(request, template, context)
 
 class ActorDoesNotExist():
     def process_request(self, request):
