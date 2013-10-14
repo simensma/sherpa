@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 11:24+0200\n"
+"POT-Creation-Date: 2013-10-14 13:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,8 +372,8 @@ msgid "Jeg er allerede medlem i DNT"
 msgstr "I'm already a member of DNT"
 
 #: templates/main/connect/signon.html:82
-msgid "Jeg vil melde meg inn i DNT"
-msgstr "I want to become a DNT member"
+msgid "Jeg vil melde meg inn i DNT først"
+msgstr "I want to become a DNT member first"
 
 #: templates/main/connect/signon.html:83
 msgid "(må betales på nett)"
