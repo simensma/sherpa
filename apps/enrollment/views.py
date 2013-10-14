@@ -878,10 +878,10 @@ def sms(request):
 def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
     if len(users) == 1:
         subject = EMAIL_SUBJECT_SINGLE
-        template = 'email-%s-single.html' % payment_method
+        template = '%s-single.html' % payment_method
     else:
         subject = EMAIL_SUBJECT_MULTIPLE
-        template = 'email-%s-multiple.html' % payment_method
+        template = '%s-multiple.html' % payment_method
     # proof_validity_end is not needed for the 'card' payment_method, but ignore that
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     for user in users:
@@ -897,7 +897,7 @@ def prepare_and_send_email(request, users, association, location, payment_method
                 'proof_validity_end': proof_validity_end,
                 'price_sum': price_sum
             })
-            message = render_to_string('main/enrollment/result/%s' % template, context)
+            message = render_to_string('main/enrollment/result/emails/%s' % template, context)
             send_mail(subject, message, EMAIL_FROM, [user['email']])
         except SMTPException:
             # Silently log and ignore this error. The user will have to do without email receipt.
