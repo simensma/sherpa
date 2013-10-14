@@ -14,8 +14,8 @@
   {% if prefilled_user %}
     <script>
       window.Turistforeningen.prefilled_user = {
-        memberid: {{ prefilled_user.memberid }},
-        zipcode: {{ prefilled_user.get_address.zipcode.zipcode }}
+        memberid: "{{ prefilled_user.memberid|escapejs }}",
+        zipcode: "{{ prefilled_user.get_address.zipcode.zipcode|escapejs }}"
       };
     </script>
   {% endif %}
