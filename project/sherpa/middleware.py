@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
+from django.utils import translation
 
 from datetime import datetime
 import re
@@ -27,6 +28,18 @@ if not model_cache.loaded:
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class DefaultLanguage():
+    def process_request(self, request):
+        # DNT Connect supports language selection now, so do nothing if dnt connect is in session.
+        # Note that it's *possible* someone initiated DNT connect without fulfilling it, which would
+        # let them view other pages with mixed translation results.
+        if 'dntconnect' in request.session:
+            return
+
+        # Force norwegian for all requests.
+        if request.LANGUAGE_CODE != settings.LANGUAGE_CODE:
+            translation.activate(settings.LANGUAGE_CODE)
 
 class Sites():
     def process_request(self, request):
