@@ -3,7 +3,9 @@
 {% block header %}<a href="{% url 'admin.users.views.index' %}">Brukere</a>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/users/show/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/users/show/permissions.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/users/show/change_memberid.js"></script>
 {% endblock %}
 
 {% block body %}
