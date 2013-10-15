@@ -1,5 +1,6 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -9,7 +10,7 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.core.cache import cache
 
-from datetime import datetime, date
+from datetime import datetime
 import json
 
 from association.models import Association
@@ -27,29 +28,7 @@ def index(request):
 
 def edit_inactive(request, memberid):
     user = create_inactive_user(memberid)
-    return redirect('admin.turledere.views.edit', user.id)
-
-def edit(request, user):
-    user = User.get_users().get(id=user)
-
-    today = date.today()
-    # We can't just add 365*5 timedelta days because that doesn't account for leap years,
-    # this does.
-    try:
-        five_years_from_now = date(year=(today.year + 5), month=today.month, day=today.day)
-    except ValueError:
-        # This will only occur when today is February 29th during a leap year (right?)
-        five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
-
-    context = {
-        'turleder': user,
-        'turleder_roles': Turleder.TURLEDER_CHOICES,
-        'all_associations': Association.sort(Association.objects.all()),
-        'today': today,
-        'five_years_from_now': five_years_from_now,
-    }
-
-    return render(request, 'common/admin/turledere/edit.html', context)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_turleder_certificate(request, user):
     user = User.get_users().get(id=user)
@@ -74,7 +53,7 @@ def edit_turleder_certificate(request, user):
     turleder.save()
 
     messages.info(request, "success")
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_kursleder_certificate(request, user):
     if not request.user.can_modify_kursleder_status():
@@ -92,7 +71,7 @@ def edit_kursleder_certificate(request, user):
     kursleder.save()
 
     messages.info(request, "success")
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_instruktor_roles(request, user):
     user = User.get_users().get(id=user)
@@ -104,7 +83,7 @@ def edit_instruktor_roles(request, user):
             instruktor.save()
 
     messages.info(request, "success")
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_active_associations(request, user):
     user = User.get_users().get(id=user)
@@ -117,13 +96,13 @@ def edit_active_associations(request, user):
             user.turleder_active_associations.add(Association.objects.get(id=association_id))
 
     messages.info(request, "success")
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def remove_turleder(request, turleder):
     turleder = Turleder.objects.get(id=turleder)
     user = turleder.user
     turleder.delete()
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def remove_kursleder(request, kursleder):
     if not request.user.can_modify_kursleder_status():
@@ -132,7 +111,7 @@ def remove_kursleder(request, kursleder):
     kursleder = Kursleder.objects.get(id=kursleder)
     user = kursleder.user
     kursleder.delete()
-    return redirect('admin.turledere.views.edit', user.id)
+    return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def turleder_search(request):
     turledere = User.get_users().filter(turledere__isnull=False)

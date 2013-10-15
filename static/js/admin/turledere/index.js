@@ -5,6 +5,7 @@ $(document).ready(function() {
     var filters_button = filters.find("button.search");
     var table = register.find("table.turledere");
 
+    var toggle_create = register.find("a.toggle-create");
     var turleder_search_input = filters.find("input[name='turleder']");
     var turleder_search_button = filters.find("button.turleder-search");
     var turleder_association_active = filters.find("select[name='association_active']");
@@ -13,6 +14,20 @@ $(document).ready(function() {
     var turleder_include_all_roles_label = filters.find("label.include-all-certificates");
     var turleder_include_all_roles = filters.find("input[name='include_all_certificates']");
     var turleder_association_approved = filters.find("select[name='association_approved']");
+
+
+    register.find("div.tab-pane").each(function() {
+        var id = $(this).attr('id');
+        $.fn.Hashtag('bind', id, {
+            'match': function() {
+                register.find("ul.nav a[href='#" + id + "']").tab('show');
+            }
+        });
+    });
+
+    toggle_create.click(function() {
+        register.find("ul.nav a[href='#create']").tab('show');
+    });
 
     turleder_association_approved.chosen({
         'allow_single_deselect': true

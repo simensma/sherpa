@@ -2,7 +2,7 @@
 
 {% for user in users %}
   <tr class="result">
-    <td><a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }}</a></td>
+    <td><a href="{% url 'admin.users.views.show' user.id %}#turledersertifikat">{{ user.get_full_name }}</a></td>
     <td>{{ user.memberid }}</td>
     <td>
       {% for turleder in user.turledere.all|sort_by_turleder_role %}
@@ -45,7 +45,7 @@
 
 {% for user in local_users %}
   <tr class="result">
-    <td><a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }}</a></td>
+    <td><a href="{% url 'admin.users.views.show' user.id %}#turledersertifikat">{{ user.get_full_name }}</a></td>
     <td><em>Ikke medlem i DNT</em></td>
     <td>
       {% for role in user.get_active_instruktor_roles %}

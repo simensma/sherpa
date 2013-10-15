@@ -1,0 +1,41 @@
+{# The including class needs to check user.can_modify_user_memberid #}
+
+<div class="change-memberid">
+  <a href="javascript:undefined" class="change-memberid">Jeg vet hva jeg driver med. Endre brukerens medlemsnummer</a>
+
+  <form action="{% url 'admin.users.views.change_memberid' %}" method="post" class="form-default form-border form-horizontal hide">
+    {% csrf_token %}
+    <input type="hidden" name="old-user" value="{{ other_user.id }}">
+
+    <p class="info">
+      Her kan du endre medlemsnummeret for Min side-brukeren. Dette endrer <strong>ikke</strong> noe i medlemsregisteret (Focus).
+    </p>
+
+    <p class="info">
+      <em>Ikke bruk denne funksjonen med mindre du er 100% sikker på hva du gjør.</em>
+    </p>
+
+    <p>
+      <input type="text" class="input-large" name="new-memberid" placeholder="Nytt medlemsnummer...">
+    </p>
+
+    <div class="step1">
+      <p class="check">
+        <button class="btn check" data-check-url="{% url 'admin.users.views.check_memberid' %}" data-user-id="{{ other_user.id }}"><i class="icon-search"></i> Sjekk...</button>
+      </p>
+
+      <div class="loading hide">
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader" alt="Laster..." title="Laster...">
+        Sjekker medlemsnummeret...
+      </div>
+
+      <div class="alert alert-error hide">
+        Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
+      </div>
+    </div>
+
+    <div class="step2">
+    </div>
+  </form>
+
+</div>

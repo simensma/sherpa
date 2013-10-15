@@ -1,0 +1,247 @@
+{% load friendlyrole %}
+
+<h3>Tilganger</h3>
+
+{% if other_user.perms.sherpa_admin %}
+  <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
+{% elif other_user.perms.sherpa %}
+
+  {% if other_user.all_associations|length == 0 %}
+    <div class="alert alert-error">
+      <strong>{{ other_user.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
+      Gi ham/henne tilgang til minst én forening, ellers gir det ikke mening at han/henne har tilgang til Sherpa.
+    </div>
+  {% else %}
+
+    <table class="table user-permissions">
+      {% if other_user.all_associations_sorted.central|length > 0 %}
+        <tr>
+          <td colspan="2" class="group">Sentralt</td>
+        </tr>
+        {% for association in other_user.all_associations_sorted.central %}
+          <tr>
+            <td>{{ association.name }}</td>
+            <td>
+              {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+              {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+              {{ association.role|friendlyrole }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+
+      {% if other_user.all_associations_sorted.associations|length > 0 %}
+        <tr>
+          <td colspan="2" class="group">Foreninger</td>
+        </tr>
+        {% for association in other_user.all_associations_sorted.associations %}
+          <tr>
+            <td>{{ association.name }}</td>
+            <td>
+              {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+              {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+              {{ association.role|friendlyrole }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+
+      {% if other_user.all_associations_sorted.small_associations|length > 0 %}
+        <tr>
+          <td colspan="2" class="group">Turlag</td>
+        </tr>
+        {% for association in other_user.all_associations_sorted.small_associations %}
+          <tr>
+            <td>{{ association.name }}</td>
+            <td>
+              {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+              {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+              {{ association.role|friendlyrole }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+
+      {% if other_user.all_associations_sorted.hike_groups|length > 0 %}
+        <tr>
+          <td colspan="2" class="group">Turgrupper</td>
+        </tr>
+        {% for association in other_user.all_associations_sorted.hike_groups %}
+          <tr>
+            <td>{{ association.name }}</td>
+            <td>
+              {% if association.role == 'user' %}<i class="icon-user"></i>{% endif %}
+              {% if association.role == 'admin' %}<i class="icon-star"></i>{% endif %}
+              {{ association.role|friendlyrole }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </table>
+  {% endif %}
+
+{% else %}
+  <p>{{ other_user.get_full_name }} har ikke tilgang til Sherpa.</p>
+{% endif %}
+
+{% if user == other_user %}                   {# Don't let a user modify his/her own permissions #}
+{% elif other_user.perms.sherpa_admin %} {# Permissions for sherpa admins aren't modifiable #}
+{% elif not other_user.perms.sherpa %}
+
+  {# Hasn't got Sherpa access at all #}
+  <p><button class="btn btn-danger make-sherpa-user">Gi tilgang til Sherpa</button></p>
+  <div class="alert alert-error hide make-sherpa-user">
+    <p>
+      <strong>Gjør {{ other_user.get_full_name }} til Sherpa-bruker?</strong> Husk:<br>
+    </p>
+    <ol>
+      <li>Du må gi brukeren tilgang til minst én forening etterpå, ellers gir det ikke mening at han/henne er Sherpa-bruker.</li>
+      <li>Turledere trenger ikke nødvendigvis tilgang til Sherpa. Hvis du setter en bruker som turleder på en aktivitet, får han/henne tilgang fra Min side.</li>
+    </ol>
+    <p><a href="{% url 'admin.users.views.give_sherpa_access' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-bruker</a></p>
+    <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+  </div>
+
+{% else %}
+
+  {# Normal sherpa-user #}
+  <h3>Endre tilganger</h3>
+
+  {% if user.perms.sherpa_admin %}
+    <p class="admin-buttons">
+      <button class="btn btn-danger make-sherpa-admin"><i class="icon-exclamation-sign"></i> Gjør til Sherpa-admin</button>
+      <button class="btn btn-danger revoke-sherpa-access"><i class="icon-remove"></i> Ta bort Sherpa-tilgang</button>
+    </p>
+    <div class="alert alert-error hide make-sherpa-admin">
+      <p>
+        <strong>Gjør brukeren til Sherpa-administrator?</strong><br>
+        Sherpa-administratorer har tilgang til absolutt alt, og kan gjøre andre brukere til Sherpa-administratorer.
+      </p>
+      <p><a href="{% url 'admin.users.views.make_sherpa_admin' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, gjør {{ other_user.get_full_name }} til Sherpa-administrator</a></p>
+      <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+    </div>
+    <div class="alert alert-error hide revoke-sherpa-access">
+      <p>
+        <strong>Ta bort Sherpa-tilgang!?</strong><br>
+        {{ other_user.get_full_name }} vil ikke ikke lengre ha noen form for tilgang til Sherpa, uavhengig av hvilke foreninger de er brukere/administratorer i.
+      </p>
+      <p><a href="{% url 'admin.users.views.revoke_sherpa_access' other_user.id %}" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort Sherpa-tilgang fullstendig</a></p>
+      <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+    </div>
+
+  {% endif %}
+
+  <div class="association-permission">
+    <select name="association-permission" data-placeholder="Gi tilgang til en forening...">
+      <option value=""></option>
+      {% if assignable_associations.central|length > 0 %}
+        <optgroup label="Sentralt/nasjonalt">
+          {% for association in assignable_associations.central %}
+            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if assignable_associations.associations|length > 0 %}
+        <optgroup label="Medlemsforeninger">
+          {% for association in assignable_associations.associations %}
+            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if assignable_associations.small_associations|length > 0 %}
+        <optgroup label="Lokale turlag">
+          {% for association in assignable_associations.small_associations %}
+            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% if assignable_associations.hike_groups|length > 0 %}
+        <optgroup label="Turgrupper">
+          {% for association in assignable_associations.hike_groups %}
+            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+    </select>
+  </div>
+
+  <div class="association-role hide row-fluid">
+    <div class="span6 user">
+      <p class="button"><button class="btn btn-large user"><i class="icon-user"></i> Vanlig bruker</button></p>
+      <p class="permission-description">
+        Vanlige brukere kan gjøre endringer på sin egen forening.
+      </p>
+    </div>
+
+    <div class="span6 admin">
+      <p class="button"><button class="btn btn-large admin"><i class="icon-star"></i> Administrator</button></p>
+      <p class="permission-description">
+        Administratorer kan i tillegg gjøre endringer på foreninger/turlag som er underlagt sin forening, og opprette nye turlag/foreninger.
+      </p>
+    </div>
+  </div>
+
+  <div class="alert alert-error verify-association-permission hide">
+    <form action="{% url 'admin.users.views.add_association_permission' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="user" value="{{ other_user.id }}">
+      <input type="hidden" name="association" value="">
+      <input type="hidden" name="role" value="">
+      <p>
+        <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
+      </p>
+      <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, gi tilgang</button></p>
+      <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+    </form>
+  </div>
+
+  {% if revokable_associations.central|length > 0 or revokable_associations.associations|length > 0 or revokable_associations.small_associations|length > 0 or revokable_associations.hike_groups|length > 0 %}
+    <div class="association-permission-revoke">
+      <select name="association-permission-revoke" data-placeholder="Ta bort tilgangen til en forening...">
+        <option value=""></option>
+        {% if revokable_associations.central|length > 0 %}
+          <optgroup label="Sentralt/nasjonalt">
+            {% for association in revokable_associations.central %}
+              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if revokable_associations.associations|length > 0 %}
+          <optgroup label="Medlemsforeninger">
+            {% for association in revokable_associations.associations %}
+              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if revokable_associations.small_associations|length > 0 %}
+          <optgroup label="Lokale turlag">
+            {% for association in revokable_associations.small_associations %}
+              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+        {% if revokable_associations.hike_groups|length > 0 %}
+          <optgroup label="Turgrupper">
+            {% for association in revokable_associations.hike_groups %}
+              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      </select>
+
+      <div class="association-permission-revoke-verify hide alert alert-error">
+        <form action="{% url 'admin.users.views.revoke_association_permission' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="user" value="{{ other_user.id }}">
+          <input type="hidden" name="association" value="">
+          <p>
+            <strong>Ta bort {{ other_user.get_full_name }}s tilgang til <span class="association"></span>?</strong>
+          </p>
+          <p><button type="submit" class="btn btn-success"><i class="icon-ok"></i> Ja, ta bort tilgangen</button></p>
+          <p><a href="javascript:undefined" class="btn cancel"><i class="icon-remove"></i> Nei, avbryt</a></p>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+{% endif %}

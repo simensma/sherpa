@@ -11,7 +11,7 @@
   <tr class="result">
     <td>
       <p>
-        <a href="{% url 'admin.turledere.views.edit' user.id %}">{{ user.get_full_name }} ({{ user.memberid }})</a>
+        <a href="{% url 'admin.users.views.show' user.id %}#turledersertifikat">{{ user.get_full_name }} ({{ user.memberid }})</a>
       </p>
       {% if turleder.kursleder %}
         <div class="row-fluid">

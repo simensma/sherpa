@@ -28,6 +28,10 @@
       <div class="tab-content tab-content-visible">
         <div class="tab-pane active" id="search">
 
+          <p class="intro-text">
+            Søk etter godkjente DNT-ambassadører og -turledere som er utdannet gjennom DNTs turlederutdanning. Du kan endre status og hvilken forening turlederen er aktiv i. Du kan <a href="javascript:undefined" class="toggle-create">legge inn nye turledere her</a>.
+          </p>
+
           <div class="form-border form-default form-horizontal search-area">
             {% csrf_token %}
 
@@ -137,9 +141,12 @@
         <div class="tab-pane" id="create">
 
           <div class="member-search">
-            <p>
-              Turledere må være medlem i DNT, men du kan også søke etter instruktører som ikke nødvendigvis er medlemmer.<br>
-              Da må de ha registrert seg her først: <a href="{% url 'user.login.views.register_nonmember' %}">http://{{ site.domain }}{% url 'user.login.views.register_nonmember' %}</a>
+            <p class="intro-text">
+              Du kan kun registrere DNT-ambassadører eller -turledere som er utdannet gjennom DNTs turlederutdanning. Etter fullført og bestått kurs gis det godkjenning med en varighet på 5 år om gangen for sommer- og vinterturledere. Ambassadørkurset og grunnleggende turlederkurs gir en permanent godkjenning.
+            </p>
+
+            <p class="intro-text">
+              Turledere som skal registreres må være medlem i DNT, men du kan også legge inn instruktører som ikke nødvendigvis er medlemmer. Disse må i så fall først registrere seg her: <a href="{% url 'user.login.views.register_nonmember' %}">http://{{ site.domain }}{% url 'user.login.views.register_nonmember' %}</a> før du kan søke dem opp nedenfor.
             </p>
 
             <p>
