@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 19:22+0200\n"
+"POT-Creation-Date: 2013-10-15 16:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,6 +460,34 @@ msgstr "or"
 #: templates/main/connect/signon_enrollment_card_deactivated.html:32
 msgid "avbryt påmelding til tur"
 msgstr "cancel signup for tour"
+
+#: templates/main/connect/signon_unavailable.html:17
+msgid "Midlertidig vedlikehold"
+msgstr "Temporary maintenance"
+
+#: templates/main/connect/signon_unavailable.html:20
+#, python-format
+msgid ""
+"Tjenesten er dessverre utilgjengelig %(period)s på grunn av midlertidig "
+"vedlikehold."
+msgstr ""
+"This service is unfortunately not available due to temporary maintenance, "
+"for the following duration (in Norwegian): \"%(period)s\"."
+
+#: templates/main/connect/signon_unavailable.html:25
+#, python-format
+msgid ""
+"\n"
+"        Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør "
+"deg inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. "
+"Innen da kan vi dessverre ikke annet enn å sende deg <a href="
+"\"%(previous_url)s\">tilbake dit du kom fra</a>.\n"
+"      "
+msgstr ""
+"\n"
+"We sincerely apologize for this inconvenience. Please be patient, and come "
+"back when the maintenance period is over. Meanwhile, we'll have to send you "
+"<a href=\"%(previous_url)s\">back where you came from</a>."
 
 #: templates/main/connect/layouts/columbus.html:51
 msgid "Avbryt og gå tilbake"
