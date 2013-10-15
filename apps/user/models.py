@@ -122,16 +122,8 @@ class User(AbstractBaseUser):
 
         parent = cache.get('user.%s.parent' % self.memberid)
         if parent is None:
-            try:
-                parent = User.get_users().get(memberid=parent_memberid)
-            except User.DoesNotExist:
-                parent = User(
-                    identifier=parent_memberid,
-                    memberid=parent_memberid,
-                    is_inactive=True
-                )
-                parent.save()
-                cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            parent = User.get_or_create_inactive(memberid=parent_memberid)
+            cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return parent
 
     def get_children(self):
