@@ -9,19 +9,36 @@
 {% block body %}
 
 <div class="row">
-  <div class="span6">
+  <div class="span12">
 
-    {% include 'common/admin/users/show/personal_details.html' %}
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#personopplysninger" data-toggle="tab">Personopplysninger</a></li>
+      <li><a href="#tilganger" data-toggle="tab">Tilganger</a></li>
+      <li><a href="#turleder" data-toggle="tab">Turledersertifikat</a></li>
+      {% if other_user.is_member and user.can_modify_user_memberid %}
+        <li><a href="#endremedlemsnummer" data-toggle="tab">Endre medlemsnummer</a></li>
+      {% endif %}
+    </ul>
 
-    {% include 'common/admin/users/show/change_memberid.html' %}
+    <div class="tab-content tab-content-visible">
+      <div class="tab-pane active" id="personopplysninger">
+        {% include 'common/admin/users/show/personal_details.html' %}
+      </div>
 
-  </div>
+      <div class="tab-pane" id="tilganger">
+        {% include 'common/admin/users/show/permissions.html' %}
+      </div>
 
-  <div class="span6">
+      <div class="tab-pane" id="turleder">
+        {% include 'common/admin/users/show/turledersertifikat.html' %}
+      </div>
 
-    {% include 'common/admin/users/show/permissions.html' %}
-
-    {% include 'common/admin/users/show/turledersertifikat.html' %}
+      {% if other_user.is_member and user.can_modify_user_memberid %}
+        <div class="tab-pane" id="endremedlemsnummer">
+          {% include 'common/admin/users/show/change_memberid.html' %}
+        </div>
+      {% endif %}
+    </div>
 
   </div>
 </div>
