@@ -35,7 +35,7 @@ class User(AbstractBaseUser):
     # Some users haven't registered but we still have some data relating to them
     # from various sources. They'll be created as inactive users, and registration
     # will if possible use the inactive user and retain the related data.
-    is_active = models.BooleanField(default=True)
+    is_inactive = models.BooleanField(default=False)
 
     # Actors can be deleted from Focus for various reasons. Whenever discovered,
     # we'll set this to True to mark them as expired.
@@ -128,7 +128,7 @@ class User(AbstractBaseUser):
                 parent = User(
                     identifier=parent_memberid,
                     memberid=parent_memberid,
-                    is_active=False
+                    is_inactive=True
                 )
                 parent.save()
                 cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
@@ -598,7 +598,7 @@ class User(AbstractBaseUser):
     @staticmethod
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
-        return User.get_users().filter(permissions=permission, is_active=True)
+        return User.get_users().filter(permissions=permission, is_inactive=False)
 
     @staticmethod
     def get_or_create_inactive(memberid):
@@ -632,7 +632,7 @@ class User(AbstractBaseUser):
 
             return existing_user
         except User.DoesNotExist:
-            user = User(identifier=memberid, memberid=memberid, is_active=False)
+            user = User(identifier=memberid, memberid=memberid, is_inactive=True)
             user.set_unusable_password()
             user.save()
             return user
@@ -643,7 +643,7 @@ class User(AbstractBaseUser):
         user = User(
             identifier='%s' % memberid,
             memberid=memberid,
-            is_active=False,
+            is_inactive=True,
             is_pending=True
         )
         user.set_unusable_password()

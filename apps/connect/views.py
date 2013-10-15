@@ -100,7 +100,7 @@ def signon_choose_authenticated_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:
         raise PermissionDenied
 
-    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_inactive=False)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name())
     }
@@ -120,7 +120,7 @@ def signon_login_chosen_user(request):
         return redirect('connect.views.signon_login')
 
     # All is swell, log the user in
-    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_inactive=False)
     user = authenticate(user=user)
     log_user_in(request, user)
     add_signon_session_value(request, 'logget_inn')

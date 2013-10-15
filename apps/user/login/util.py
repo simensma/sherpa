@@ -39,7 +39,7 @@ def attempt_login(request):
         old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
         if old_member is not None:
             # Actually, it is! Let's try to import them.
-            if User.get_users().filter(memberid=old_member.memberid, is_active=True).exists():
+            if User.get_users().filter(memberid=old_member.memberid, is_inactive=False).exists():
                 return matches, 'old_memberid_but_memberid_exists'
 
             # Check if a pending user exists. This shouldn't ever happen (a pending user is recently
@@ -58,8 +58,8 @@ def attempt_login(request):
             # Create the new user
             try:
                 # Check if the user's already created as inactive
-                user = User.get_users().get(memberid=old_member.memberid, is_active=False)
-                user.is_active = True
+                user = User.get_users().get(memberid=old_member.memberid, is_inactive=True)
+                user.is_inactive = False
                 user.set_password(request.POST['password'])
                 user.save()
             except User.DoesNotExist:
@@ -117,7 +117,7 @@ def attempt_registration(request):
                 raise ObjectDoesNotExist
 
         # Check that the user doesn't already have an account
-        if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
+        if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_inactive=False).exists():
             return None, 'user_exists'
 
         # Check that the memberid isn't expired.
@@ -130,8 +130,8 @@ def attempt_registration(request):
 
         try:
             # Check if the user's already created as inactive
-            user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
-            user.is_active = True
+            user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_inactive=True)
+            user.is_inactive = False
             user.set_password(request.POST['password'])
             user.save()
         except User.DoesNotExist:

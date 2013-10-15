@@ -80,7 +80,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_inactive=False)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -101,7 +101,7 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_inactive=False)
     user = authenticate(user=user)
     log_user_in(request, user)
     del request.session['authenticated_users']
@@ -175,7 +175,7 @@ def verify_memberid(request):
                 raise ObjectDoesNotExist
 
         try:
-            user = User.objects.get(memberid=request.POST['memberid'], is_active=True)
+            user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
             user_exists = True
             user_is_expired = user.is_expired
         except User.DoesNotExist:
@@ -203,13 +203,13 @@ def send_restore_password_email(request):
         try:
             # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
             # but *before* we've checked if they should still be pending.
-            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_active=True))
+            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_inactive=False))
         except User.DoesNotExist:
             focus_unregistered_matches = True
 
     for e in get_enrollment_email_matches(request.POST['email']):
         try:
-            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_active=True))
+            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_inactive=False))
         except User.DoesNotExist:
             pass
 
@@ -217,7 +217,7 @@ def send_restore_password_email(request):
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
     # Include expired users when excluding sherpa2 matches - if their current user object is expired,
     # it's irrelevant whether or not the old user account matches
-    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_active=True).exists()]
+    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_inactive=False).exists()]
 
     if len(local_matches) == 0 and len(sherpa2_matches) == 0:
         # No email-address matches.
@@ -279,7 +279,7 @@ def send_restore_password_email(request):
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_active=True)
+    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_inactive=False)
     if len(users) == 0:
         context = {
             'no_such_key': True,

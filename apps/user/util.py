@@ -45,7 +45,7 @@ def authenticate_users(email, password):
     actor_candidates = Actor.objects.filter(email=email)
     for a in actor_candidates:
         try:
-            u = User.get_users().get(memberid=a.memberid, is_active=True)
+            u = User.get_users().get(memberid=a.memberid, is_inactive=False)
             if u.check_password(password):
                 matches.append(u)
         except User.DoesNotExist:
@@ -54,7 +54,7 @@ def authenticate_users(email, password):
     # Add matching members with pending User
     for e in get_enrollment_email_matches(email):
         try:
-            u = User.get_users(include_pending=True).get(memberid=e.memberid, is_active=True)
+            u = User.get_users(include_pending=True).get(memberid=e.memberid, is_inactive=False)
             if u.check_password(password):
                 matches.append(u)
         except User.DoesNotExist:
