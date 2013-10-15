@@ -11,7 +11,6 @@ from association.models import Association
 from user.models import User, Permission, AssociationRole, Turleder
 from focus.models import Actor, Enrollment
 from core.util import current_membership_year_start
-from user.util import create_inactive_user
 
 from datetime import date
 import json
@@ -108,7 +107,7 @@ def search(request):
     return HttpResponse(render_to_string('common/admin/users/user_results.html', context))
 
 def create_inactive(request, memberid):
-    user = create_inactive_user(memberid)
+    user = User.create_inactive_user(memberid)
     return redirect('admin.users.views.show', user.id)
 
 def check_memberid(request):
