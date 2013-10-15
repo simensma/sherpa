@@ -76,7 +76,10 @@ div.turlederregister {
 
 div.turlederregister-edit {
   select[name='active_associations'] {
-    width: 100%;
+    // Well, this will be ugly in everything other than desktops, but width for chosen
+    // behaves weirdly in tabs, probably because it's hidden and the parent height isn't
+    // calculated when it needs to be, or something like that. Fix if possible.
+    width: 940px;
   }
 
   div.edit-area {
@@ -115,5 +118,9 @@ div.turlederregister-edit {
         width: 300px;
       }
     }
+  }
+
+  p.to-turlederregister {
+    text-align: center;
   }
 }

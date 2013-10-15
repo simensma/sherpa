@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
 from association.models import Association
-from user.models import User, Permission, AssociationRole
+from user.models import User, Permission, AssociationRole, Turleder
 from focus.models import Actor, Enrollment
 from core.util import current_membership_year_start
 from user.util import create_inactive_user
@@ -41,12 +41,23 @@ def show(request, other_user):
 
     today = date.today()
 
+    # We can't just add 365*5 timedelta days because that doesn't account for leap years,
+    # this does.
+    try:
+        five_years_from_now = date(year=(today.year + 5), month=today.month, day=today.day)
+    except ValueError:
+        # This will only occur when today is February 29th during a leap year (right?)
+        five_years_from_now = date(year=(today.year + 5), month=today.month, day=(today.day-1))
+
     context = {
         'other_user': other_user,
         'revokable_associations': Association.sort(revokable_associations),
         'assignable_associations': Association.sort(assignable_associations),
-        'year': today.year,
-        'next_year': today >= current_membership_year_start()
+        'all_associations': Association.sort(Association.objects.all()),
+        'turleder_roles': Turleder.TURLEDER_CHOICES,
+        'today': today,
+        'next_year': today >= current_membership_year_start(),
+        'five_years_from_now': five_years_from_now,
     }
     return render(request, 'common/admin/users/show/index.html', context)
 

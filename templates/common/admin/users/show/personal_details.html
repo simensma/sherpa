@@ -192,16 +192,16 @@
           {% if other_user.has_paid %}
             Betalt for
             {% if next_year %}
-              {{ year|add:"1" }}
+              {{ today.year|add:"1" }}
             {% else %}
-              {{ year }}
+              {{ today.year }}
             {% endif %}
           {% else %}
             Ikke betalt for
             {% if next_year %}
-              {{ year|add:"1" }}
+              {{ today.year|add:"1" }}
             {% else %}
-              {{ year }}
+              {{ today.year }}
             {% endif %}
           {% endif %}
         </td>
