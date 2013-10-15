@@ -48,7 +48,7 @@ def show(request, other_user):
         'year': today.year,
         'next_year': today >= current_membership_year_start()
     }
-    return render(request, 'common/admin/users/show.html', context)
+    return render(request, 'common/admin/users/show/index.html', context)
 
 def search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:

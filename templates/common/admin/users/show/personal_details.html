@@ -1,0 +1,364 @@
+{% if other_user.is_member and other_user.should_be_expired %}
+
+  <h3>Personopplysninger</h3>
+
+  <p>
+    Denne brukeren har medlemsnummer <strong>{{ other_user.memberid }}</strong>, men medlemsnummeret finnes ikke i medlemsregisteret lengre, så vi har ingen personopplysninger.
+  </p>
+
+  <p>
+    Brukeren er merket som <em>utgått</em> og kan ikke logge på Min side. Dersom brukeren har fått nytt medlemsnummer kan du endre det under.
+  </p>
+
+{% elif other_user.is_pending %}
+
+  <h3>Personopplysninger</h3>
+  <table class="table">
+    <tr>
+      <th>Navn</th>
+      <td>{{ other_user.get_full_name }}</td>
+    </tr>
+    <tr>
+      <th>E-post</th>
+      <td>
+        {% if other_user.get_email %}
+          <a href="mailto:{{ other_user.get_email }}">{{ other_user.get_email }}</a>
+        {% else %}
+          <em>Ikke oppgitt</em>
+        {% endif %}
+      </td>
+    </tr>
+    {% if other_user.perms.sherpa and other_user.sherpa_email != '' %}
+      <tr>
+        <th>E-post i Sherpa</th>
+        <td>{{ other_user.sherpa_email }}</td>
+      </tr>
+    {% endif %}
+
+    <tr>
+      <th>Telefon</th>
+      <td>{{ other_user.get_phone_home }}</td>
+    </tr>
+    <tr>
+      <th>Mobiltelefon</th>
+      <td>{{ other_user.get_phone_mobile }}</td>
+    </tr>
+    <tr>
+      <th>Født</th>
+      <td>{{ other_user.get_birth_date|date:"j. F Y" }}</td>
+    </tr>
+
+    <tr>
+      <th>Adresse</th>
+      <td>
+        {{ other_user.get_address.format_with_newlines|linebreaksbr }}
+      </td>
+    </tr>
+
+    <tr>
+      <th>Min side-bruker</th>
+      <td>
+        {% if other_user.is_active %}
+          Ja
+        {% else %}
+          Nei
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <h3>Medlemsinformasjon</h3>
+  <table class="table">
+    <tr>
+      <th>Status</th>
+      <td>
+        <em>Nylig innmeldt; venter på godkjenning av medlemsservice</em>
+      </td>
+    </tr>
+    <tr>
+      <th>Betalingsmåte</th>
+      <td>
+        {% if other_user.get_payment_method_text == 'card' %}
+          {% if other_user.has_paid %}
+            Bekreftet betalt over nett
+          {% else %}
+            Forsøkt betalt over nett, <strong>ikke bekreftet</strong>.
+          {% endif %}
+        {% else %}
+          Faktura
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Medlemsnummer</th>
+      <td>{{ other_user.memberid }}</td>
+    </tr>
+    <tr>
+      <th>Innmelding registrert</th>
+      <td>{{ other_user.get_enrollment_registration_date|date:"H:i, j. F Y" }}</td>
+    </tr>
+    <tr>
+      <th>Bussbillett fra NOR-WAY</th>
+      <td>
+        {% if other_user.norway_bus_ticket %}
+          <strong>Bestilt:</strong> {{ other_user.norway_bus_ticket.date_placed|date:"j. F Y" }}<br>
+          <strong>Reisedato:</strong>
+          {% if not other_user.norway_bus_ticket.is_imported %}
+            {{ other_user.norway_bus_ticket.date_trip|date:"j. F Y" }}
+          {% else %}
+            {{ other_user.norway_bus_ticket.date_trip_text }}
+          {% endif %}
+          <br>
+          <strong>Strekning:</strong> {{ other_user.norway_bus_ticket.distance }}
+        {% else %}
+          Ikke bestilt; kan ikke bestille før innmeldingen blir godkjent av medlemsservice.
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+{% else %}
+
+  <h3>Personopplysninger</h3>
+  <table class="table">
+    <tr>
+      <th>Navn</th>
+      <td>{{ other_user.get_full_name }}</td>
+    </tr>
+    <tr>
+      <th>E-post</th>
+      <td>
+        {% if other_user.get_email %}
+          <a href="mailto:{{ other_user.get_email }}">{{ other_user.get_email }}</a>
+        {% else %}
+          <em>Ikke oppgitt</em>
+        {% endif %}
+      </td>
+    </tr>
+    {% if other_user.perms.sherpa and other_user.sherpa_email != '' %}
+      <tr>
+        <th>E-post i Sherpa</th>
+        <td>{{ other_user.sherpa_email }}</td>
+      </tr>
+    {% endif %}
+
+    {% if other_user.is_member %}
+      <tr>
+        <th>Telefon</th>
+        <td>{{ other_user.get_phone_home }}</td>
+      </tr>
+      <tr>
+        <th>Mobiltelefon</th>
+        <td>{{ other_user.get_phone_mobile }}</td>
+      </tr>
+      <tr>
+        <th>Født</th>
+        <td>{{ other_user.get_birth_date|date:"j. F Y" }}</td>
+      </tr>
+
+      <tr>
+        <th>Adresse</th>
+        <td>
+          {{ other_user.get_address.format_with_newlines|linebreaksbr }}
+        </td>
+      </tr>
+    {% endif %}
+
+    <tr>
+      <th>Min side-bruker</th>
+      <td>
+        {% if other_user.is_active %}
+          Ja
+        {% else %}
+          Nei
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <h3>Medlemsinformasjon</h3>
+  <table class="table">
+    {% if not other_user.is_member %}
+      <tr>
+        <th>Status</th>
+        <td>
+          <em>Ikke registrert medlemskap</em>
+        </td>
+      </tr>
+    {% else %}
+      <tr>
+        <th>Status</th>
+        <td>
+          {% if other_user.has_paid %}
+            Betalt for
+            {% if next_year %}
+              {{ year|add:"1" }}
+            {% else %}
+              {{ year }}
+            {% endif %}
+          {% else %}
+            Ikke betalt for
+            {% if next_year %}
+              {{ year|add:"1" }}
+            {% else %}
+              {{ year }}
+            {% endif %}
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Medlemsnummer</th>
+        <td>{{ other_user.memberid }}</td>
+      </tr>
+      <tr>
+        <th>Medlemsforening</th>
+        <td>
+          {% if other_user.main_association.site %}<a href="http://{{ other_user.main_association.site.domain }}/">{% endif %}
+            {{ other_user.main_association.name }}
+          {% if other_user.main_association.site %}</a>{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Medlemstype</th>
+        <td>{{ other_user.membership_type.name }}</td>
+      </tr>
+      <tr>
+        <th>Innmeldt</th>
+        <td>{{ other_user.get_membership_start_date|date:"j. F Y" }}</td>
+      </tr>
+      {% if other_user.get_parent %}
+        <tr>
+          <th>Hovedmedlem</th>
+          <td>{{ other_user.get_parent.get_full_name }} ({{ other_user.get_parent.memberid }})</td>
+        </tr>
+      {% endif %}
+      {% if other_user.get_children|length > 0 %}
+        <tr>
+          <th>Husstandsmedlemmer</th>
+          <td>
+            {% for child in other_user.get_children %}
+              {{ child.get_full_name }} ({{ child.memberid }}){% if not forloop.last %}<br>{% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+      <tr>
+        <th>Betalingsavtale</th>
+        <td>
+          {% if other_user.get_invoice_type_text == 'avtalegiro' %}
+            AvtaleGiro
+          {% elif other_user.get_invoice_type_text == 'efaktura' %}
+            E-faktura
+          {% else %}
+            Ingen
+          {% endif %}
+        </td>
+      </tr>
+      {% if other_user.is_eligible_for_publications %}
+        <tr>
+          <th>Fjell og Vidde</th>
+          <td>
+            {% if other_user.get_address.country.code != 'NO' %}
+
+              {% if other_user.has_foreign_fjellogvidde_service %}
+                Ja
+              {% else %}
+                Nei
+              {% endif %}
+
+            {% elif other_user.is_household_member %}
+
+              {% if other_user.get_parent.get_reserved_against_fjellogvidde %}
+                Nei (husstanden)
+              {% else %}
+                Ja (husstanden)
+              {% endif %}
+
+            {% else %}
+
+              {% if other_user.get_reserved_against_fjellogvidde %}
+                Nei
+              {% else %}
+                Ja
+              {% endif %}
+
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Årboken</th>
+          <td>
+            {% if other_user.get_address.country.code != 'NO' %}
+
+              {% if other_user.has_foreign_yearbook_service %}
+                Ja
+              {% else %}
+                Nei
+              {% endif %}
+
+            {% elif other_user.is_household_member %}
+
+              {% if other_user.get_parent.get_reserved_against_fjellogvidde %}
+                Nei (husstanden)
+              {% else %}
+                Ja (husstanden)
+              {% endif %}
+
+            {% else %}
+
+              {% if other_user.get_reserved_against_yearbook %}
+                Nei
+              {% else %}
+                Ja
+              {% endif %}
+
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+      <tr>
+        <th>E-post fra DNT</th>
+        <td>
+          {% if other_user.receive_email %}
+            Ja
+          {% else %}
+            Nei
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Medlemsfordeler fra partnere</th>
+        <td>
+          {% if other_user.reserved_against_partneroffers %}
+            Nei
+          {% else %}
+            Ja
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Bussbillett fra NOR-WAY</th>
+        <td>
+          {% if other_user.norway_bus_ticket %}
+            <strong>Bestilt:</strong> {{ other_user.norway_bus_ticket.date_placed|date:"j. F Y" }}<br>
+            <strong>Reisedato:</strong>
+            {% if not other_user.norway_bus_ticket.is_imported %}
+              {{ other_user.norway_bus_ticket.date_trip|date:"j. F Y" }}
+            {% else %}
+              {{ other_user.norway_bus_ticket.date_trip_text }}
+            {% endif %}
+            <br>
+            <strong>Strekning:</strong> {{ other_user.norway_bus_ticket.distance }}
+          {% elif other_user.norway_bus_tickets_offer_has_expired %}
+            Ikke bestilt; tilbudet er utgått
+          {% elif not other_user.has_paid %}
+            Ikke bestilt; kan ikke bestille uten betalt medlemskap
+          {% else %}
+            Ikke bestilt; kan bestille i år
+          {% endif %}
+        </td>
+      </tr>
+    {% endif %}
+  </table>
+
+{% endif %}

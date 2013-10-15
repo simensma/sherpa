@@ -1,0 +1,29 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Brukere &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.users.views.index' %}">Brukere</a>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/user_management.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="span6">
+
+    {% include 'common/admin/users/show/personal_details.html' %}
+
+    {% include 'common/admin/users/show/change_memberid.html' %}
+
+  </div>
+
+  <div class="span6">
+
+    {% include 'common/admin/users/show/permissions.html' %}
+
+    {% include 'common/admin/users/show/turledersertifikat.html' %}
+
+  </div>
+</div>
+
+{% endblock %}

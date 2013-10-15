@@ -1,0 +1,16 @@
+{% load sort_by_turleder_role %}
+
+<h3>Turledersertifikat</h3>
+
+<p>
+  {% for turleder in other_user.turledere.all|sort_by_turleder_role %}
+    {{ turleder.get_role }}{% if not forloop.last %}, {% else %} - <a href="{% url 'admin.turledere.views.edit' other_user.id %}">vis detaljer/endre</a>{% endif %}
+  {% empty %}
+    Ingen turledersertifikat.
+    {% if not other_user.is_pending %}
+      <a href="{% url 'admin.turledere.views.edit' other_user.id %}">Registrer som turleder</a>
+    {% else %}
+      <em>Kan ikke registreres som turleder før innmeldingen blir godkjent av medlemsservice (vanligvis 1-2 virkedager).</em>
+    {% endif %}
+  {% endfor %}
+</p>
