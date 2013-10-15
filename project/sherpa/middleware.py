@@ -139,7 +139,11 @@ class DeactivatedEnrollment():
             return render(request, 'main/connect/signon_enrollment_card_deactivated.html')
 
 class FocusDowntime():
-    def process_request(self, request):
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        """
+        Use process_view instead of process_request here because some rendered pages need the csrf token,
+        which is generated on process_view by the csrf middleware.
+        """
         now = datetime.now()
         focus_is_down = False
         for downtime in settings.FOCUS_DOWNTIME_PERIODS:
