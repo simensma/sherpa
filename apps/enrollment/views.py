@@ -878,6 +878,9 @@ def prepare_and_send_email(request, users, association, location, payment_method
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     for user in users:
         try:
+            if user['email'] == '':
+                continue
+
             context = Context({
                 'user': user,
                 'users': users,
