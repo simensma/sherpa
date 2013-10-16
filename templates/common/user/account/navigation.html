@@ -22,7 +22,7 @@
     {% if user.is_member and user.show_norway_bus_tickets_menu_item %}
       <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url 'user.views.norway_bus_tickets' %}">Bestill bussbillett</a></li>
     {% endif %}
-    <li><a href="{% url 'enrollment.views_gift.index' %}">Bestill gavemedlemskap</a></li>
+    <li><a href="{% url 'enrollment.gift.views.index' %}">Bestill gavemedlemskap</a></li>
     {% if user.fjelltreffen_annonser.count == 0 %}
       <li><a href="{% url 'fjelltreffen.views.mine' %}">Fjelltreffen</a></li>
     {% endif %}
