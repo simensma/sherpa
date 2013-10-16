@@ -193,6 +193,9 @@ def verify_memberid(request):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
+    if not 'email' in request.POST:
+        raise PermissionDenied
+
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
 
