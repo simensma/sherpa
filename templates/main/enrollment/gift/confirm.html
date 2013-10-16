@@ -8,6 +8,17 @@
   <div class="span12">
     <h1>Gi bort gavemedlemskap</h1>
     {% include 'main/enrollment/gift/progress.html' with step=3 %}
+
+    {% for message in messages %}
+      {% if message.message == 'email_memberservice_fail' %}
+        <div class="alert alert-error">
+          <strong>Feil ved sending av e-post</strong><br>
+          Vi beklager, det oppstod en teknisk feil når vi forsøkte å sende bestillingen. Vi har logget feilen, og vi vil undersøke hva som har skjedd så snart som mulig.<br>
+          Gavemedlemskapbestillingen har <strong>ikke</strong> blitt sendt.<br>
+          Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis feilen ikke går bort.
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 </div>
 

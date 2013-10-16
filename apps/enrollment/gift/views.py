@@ -2,10 +2,16 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
+from django.contrib import messages
 
+from smtplib import SMTPException
 import json
+import logging
+import sys
 
 from enrollment.models import Giver, Receiver, membership_types
+
+logger = logging.getLogger('sherpa')
 
 EMAIL_FROM_MEMBERSERVICE = "Den Norske Turistforening <no-reply@turistforeningen.no>" # The "from"-address in the email going to our memberservice
 EMAIL_FROM_GIVER = "Den Norske Turistforening <medlem@turistforeningen.no>" # The "from"-address in the email going to the giver making the order
@@ -123,14 +129,32 @@ def send(request):
     })
     memberservice_message = t1.render(c)
     giver_message = t2.render(c)
-    send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
+
+    try:
+        send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
+    except SMTPException:
+        logger.warning(u"Klarte ikke å sende gavemedlemskap-epost til medlemsservice",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'email_memberservice_fail')
+        return redirect('enrollment.gift.views.confirm')
+
     if request.session['gift_membership']['giver'].email != '':
-        send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+        try:
+            send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+        except SMTPException:
+            logger.warning(u"Klarte ikke å sende gavemedlemskapskvittering på e-post",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            messages.error(request, 'email_receipt_fail')
     request.session['gift_membership']['order_sent'] = True
     request.session.modified = True
     return redirect('enrollment.gift.views.receipt')
 
 def receipt(request):
+    messages.error(request, 'email_receipt_fail')
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
     if not 'giver' in request.session['gift_membership']:
