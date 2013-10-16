@@ -53,7 +53,8 @@
             if(!req && input === '') { return true; }
             var email_format = input.match(/^\s*[^\s\,\<\>]+@[^\s,\<\>]+\.[^\s,\<\>]+\s*$/) !== null;
             var no_dotdot = !input.contains("..");
-            return (email_format && no_dotdot);
+            var no_double_at = input.indexOf("@") == input.lastIndexOf("@");
+            return (email_format && no_dotdot && no_double_at);
         },
         'memberid': function(input, req, opts) {
             if(!req && input === '') { return true; }
