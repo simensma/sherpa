@@ -95,14 +95,22 @@ class User(AbstractBaseUser):
         """
         Return this users' Actor (cached), or an ActorProxy if this is a pending user
         """
-        if self.is_pending:
-            return ActorProxy(self.memberid)
-        else:
-            actor = cache.get('actor.%s' % self.memberid)
-            if actor is None:
-                actor = Actor.objects.get(memberid=self.memberid)
-                cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
-            return actor
+        try:
+            if self.is_pending:
+                return ActorProxy(self.memberid)
+            else:
+                actor = cache.get('actor.%s' % self.memberid)
+                if actor is None:
+                    actor = Actor.objects.get(memberid=self.memberid)
+                    cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+                return actor
+        except (Enrollment.DoesNotExist, Actor.DoesNotExist) as e:
+            # Seems this user is expired. Since this could be called from anywhere, we can't give a
+            # proper error message, we'll just have to re-raise the exception. But we can at least
+            # set is_expired to True, so it hopefully doesn't happen again with this user.
+            self.is_expired = True
+            self.save()
+            raise e
 
     def get_parent(self):
         if not self.is_pending and not self.is_household_member():
