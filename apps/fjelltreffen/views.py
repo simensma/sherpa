@@ -44,7 +44,7 @@ def index(request):
     return render(request, 'main/fjelltreffen/index.html', context)
 
 def load(request):
-    if not request.is_ajax() or request.method != 'POST':
+    if not request.is_ajax() or request.method != 'POST' or not 'filter' in request.POST:
         raise PermissionDenied
 
     filter = json.loads(request.POST['filter'])
