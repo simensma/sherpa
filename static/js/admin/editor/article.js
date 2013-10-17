@@ -10,7 +10,6 @@ $(document).ready(function() {
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
-        language: 'nb',
         forceParse: false
     });
 

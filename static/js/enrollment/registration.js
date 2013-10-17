@@ -14,7 +14,6 @@ $(document).ready(function() {
         startView: 'decade',
         weekStart: 1,
         autoclose: true,
-        language: 'nb',
         forceParse: false
     }).on('hide', validateDatepicker);
 
