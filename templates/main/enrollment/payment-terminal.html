@@ -1,6 +1,8 @@
 {# The contents here will be sent to and shown in the Nets payment terminal. #}
 
+{% load i18n %}
+
 <p>
-  Medlemskap i Den Norske Turistforening<br>
-  Gjelder for: <span style="font-weight: bold;">{% if next_year %}{{ year|add:1 }}, samt ut {% endif %}{{ year }}</span>
+  {% trans "Medlemskap i Den Norske Turistforening" %}<br>
+  {% trans "Gjelder for:" %} <span style="font-weight: bold;">{% if next_year %}{{ year|add:1 }}, {% trans "samt ut" %} {% endif %}{{ year }}</span>
 </p>

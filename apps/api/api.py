@@ -5,11 +5,13 @@ import json
 from user.models import User
 from focus.models import Actor
 from exceptions import BadRequest
-from util import get_member_data
+from util import get_member_data, require_focus
 import error_codes
 
 def members(request, version, format):
     if request.method == 'GET':
+        require_focus()
+
         try:
             if 'sherpa_id' in request.GET and 'medlemsnummer' in request.GET:
                 user = User.get_users().get(id=request.GET['sherpa_id'], memberid=request.GET['medlemsnummer'])

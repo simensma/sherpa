@@ -1,5 +1,7 @@
 {% extends 'main/enrollment/index.html' %}
 
+{% load i18n %}
+
 {% block enrollment %}
 
 <div class="row">
@@ -8,19 +10,19 @@
     {% include 'main/enrollment/progress.html' with step=4 %}
 
     <h2>
-      <img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_196_circle_exclamation_mark.png" alt="!"> Beklager, betaling feilet
+      <img src="{{ STATIC_URL }}img/icons/glyph/original/glyphicons_196_circle_exclamation_mark.png" alt="!"> {% trans "Beklager, betaling feilet" %}
     </h2>
 
     <p>
-     Betalingen ble ikke godkjent i vår betalingsløsning. Dette kan skyldes problemer hos din bank eller at det ikke er dekning på konto.
+     {% trans "Betalingen ble ikke godkjent i vår betalingsløsning. Dette kan skyldes problemer hos din bank eller at det ikke er dekning på konto." %}
     </p>
 
     <p>
-      <strong>Medlemskapet blir ikke registrert før betalingen er godkjent.</strong>
+      <strong>{% trans "Medlemskapet blir ikke registrert før betalingen er godkjent." %}</strong>
     </p>
 
     <p>
-      <a href="{% url 'enrollment.views.verification' %}">Gå tilbake</a> for å forsøke på nytt eller ta kontakt med banken din.
+      <a href="{% url 'enrollment.views.verification' %}">{% trans "Gå tilbake" %}</a> {% trans "for å forsøke på nytt eller ta kontakt med banken din" %}.
     </p>
   </div>
 

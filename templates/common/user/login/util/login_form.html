@@ -1,0 +1,65 @@
+{% load i18n %}
+
+{% for message in messages %}
+  {% if message.message == 'invalid_credentials' %}
+    <div class="alert alert-error">
+      <strong>{% trans "Feil e-postadresse eller passord" %}</strong><br>
+      {% trans "Har du ikke Min side-konto?" %} <a href="javascript:undefined" class="toggle-registration-tab">{% trans "Opprett din bruker her!" %}</a>
+    </div>
+  {% elif message.message == 'old_memberid_but_memberid_exists' %}
+    <div class="alert alert-error">
+      <strong>{% trans "Feil e-postadresse eller passord" %}</strong><br>
+      {% trans "Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din nye e-postadresse." %}<br>
+      {% blocktrans %}Hvis du har glemt passordet, klikk på "Glemt passord"-lenken under.{% endblocktrans %}
+    </div>
+  {% endif %}
+{% endfor %}
+
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+  {% csrf_token %}
+
+  <div class="control-group email">
+    <label class="control-label" for="login_email">{% trans "E-post" %}:</label>
+    <div class="controls">
+      <input type="text" name="email" id="login_email" value="{{ email }}" class="input-xlarge">
+    </div>
+  </div>
+
+  <div class="control-group password">
+    <label class="control-label" for="login_password">{% trans "Passord:" %}</label>
+    <div class="controls">
+      <input type="password" name="password" id="login_password" class="input-large">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> {% trans "Logg inn" %}</button>
+    </div>
+  </div>
+</form>
+
+<div class="control-group">
+  <div class="controls">
+    <p><a href="javascript:undefined" class="forgot">{% trans "Jeg har glemt passordet mitt!" %}</a></p>
+    <div class="forgot-password hide" data-email-url="{% url 'user.login.views.send_restore_password_email' %}">
+      <p><input type="text" class="input-xlarge" name="email" placeholder="{% trans "Fyll ut din e-post adresse..." %}"></p>
+      <p class="actions">
+        <button class="btn restore-password">{% trans "Gjenopprett passord" %}</button>
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="{% trans "Sender e-post, vennligst vent..." %}">
+      </p>
+      <div class="alert alert-success success hide">
+        {% trans "En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet." %}
+      </div>
+      <div class="alert alert-error unknown invalid hide">
+        {% trans "Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig." %}
+      </div>
+      <div class="alert alert-info unregistered hide">
+        {% trans "Du har ikke opprettet brukerkonto ennå. Du kan" %} <a href="javascript:undefined" class="toggle-registration-tab">{% trans "opprette din bruker her" %}</a> &mdash; {% trans "det er kjapt, enkelt og gratis!" %}
+      </div>
+      <div class="alert alert-error error hide">
+        {% trans "Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -230,7 +230,7 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if User.get_users().filter(memberid=request.POST['memberid'], is_active=True).exists():
+            if User.get_users().filter(memberid=request.POST['memberid'], is_inactive=False).exists():
                 messages.error(request, 'user_exists')
                 return redirect('user.views.register_membership')
 
@@ -246,7 +246,7 @@ def register_membership(request):
 
             try:
                 # If this memberid is already an imported inactive member, merge them
-                other_user = User.get_users().get(memberid=request.POST['memberid'], is_active=False)
+                other_user = User.get_users().get(memberid=request.POST['memberid'], is_inactive=True)
                 user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
                 # It could be a pending user. If inactive, that's fine. If active, they already

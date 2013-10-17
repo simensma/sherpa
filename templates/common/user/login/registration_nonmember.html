@@ -11,103 +11,33 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/registration_nonmember.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/registration_nonmember.js"></script>
 {% endblock %}
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h2>Registrering uten medlemskap</h2>
+<div class="registration-form-nonmember-wrapper">
+  <div class="row">
+    <div class="span12">
+      <h2>Registrering uten medlemskap</h2>
 
-    <div class="alert alert-info">
-      Du er i ferd med å registrere deg som bruker uten medlemskap på DNTs nettsted. Da går du glipp av innhold og tjenester som kun er tilgjengelige for DNTs medlemmer.
+      <div class="alert alert-info">
+        Du er i ferd med å registrere deg som bruker uten medlemskap på DNTs nettsted. Da går du glipp av innhold og tjenester som kun er tilgjengelige for DNTs medlemmer.
 
-      <ul>
-        <li><a href="{% url 'user.login.views.login' %}#registrering">Registrer MED medlemskap</a></li>
-        <li><a href="{% url 'membership.views.benefits' %}">Bli medlem</a></li>
-        <li><a href="javascript:undefined" class="confirm">Fortsett</a></li>
-      </ul>
-    </div>
-
-    <form action="{% url 'user.login.views.register_nonmember' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration hide form-default form-border form-horizontal">
-      {% csrf_token %}
-
-      <div class="row-fluid">
-        <div class="span7">
-
-          <div class="form-elements">
-
-            <div class="control-group name">
-              <label class="control-label" for="name">Fullt navn:</label>
-              <div class="controls">
-                <input type="text" class="input-xlarge" name="name" id="name" value="{{ user_data.name }}">
-              </div>
-            </div>
-            <div class="control-group email">
-              <label class="control-label" for="email">E-postadresse:</label>
-              <div class="controls">
-                <input type="text" class="input-xlarge" name="email" id="email" value="{{ user_data.email }}">
-              </div>
-            </div>
-            <div class="control-group password">
-              <label class="control-label" for="password">Passord:</label>
-              <div class="controls">
-                <input type="password" class="input-xlarge" name="password" id="password">
-              </div>
-            </div>
-            <div class="control-group password-repeat">
-              <label class="control-label" for="password-repeat">Gjenta passord:</label>
-              <div class="controls">
-                <input type="password" class="input-xlarge" name="password-repeat" id="password-repeat">
-              </div>
-            </div>
-
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="span5">
-
-          <p class="form-hints">
-            Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn.
-          </p>
-
-          <div class="alert alert-error password-hint short hide">Passordet er for kort, det må være minst {{ user_password_length }} tegn.</div>
-          <div class="alert alert-error password-hint unequal hide">Passordene er ikke like, har du skrevet feil?</div>
-
-          {% for message in messages %}
-            {% if message.message == 'invalid_name' %}
-              <div class="alert alert-error">
-                <strong>Du har ikke oppgitt fullt navn!</strong><br>
-                Vennligst oppgi navnet ditt, både fornavn og etternavn.
-              </div>
-            {% elif message.message == 'invalid_email' %}
-              <div class="alert alert-error">
-                <strong>E-postadressen din er ikke gyldig!</strong><br>
-                Vennligst oppgi en gyldig e-postadresse.
-              </div>
-            {% elif message.message == 'email_exists' %}
-              <div class="alert alert-error">
-                <strong>E-postadressen din er allerede i bruk!</strong><br>
-                Hvis du allerede har en bruker, men har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a>.
-              </div>
-            {% elif message.message == 'too_short_password' %}
-              <div class="alert alert-error">
-                <strong>For kort passord</strong><br>
-                Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
-              </div>
-            {% endif %}
-          {% endfor %}
-
-        </div>
+        <ul>
+          <li><a href="{% url 'user.login.views.login' %}#registrering">Registrer MED medlemskap</a></li>
+          <li><a href="{% url 'membership.views.benefits' %}">Bli medlem</a></li>
+          <li><a href="javascript:undefined" class="confirm">Fortsett</a></li>
+        </ul>
       </div>
 
-    </form>
+      <div class="form-wrapper form-border hide">
+
+        {% url 'user.login.views.register_nonmember' as action %}
+        {% include 'common/user/login/util/registration_form_nonmember.html' %}
+
+      </div>
+    </div>
   </div>
 </div>
 

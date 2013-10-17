@@ -46,3 +46,10 @@ def focus_downtime(request):
                 }
             }
     return {'focus_downtime': {'is_currently_down': False}}
+
+def dntconnect(request):
+    if 'dntconnect' in request.session:
+        # Note that this sends the shared_secret to all templates, maybe that isn't such a good idea
+        return {'dntconnect': request.session['dntconnect']}
+    else:
+        return {}

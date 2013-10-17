@@ -1,0 +1,148 @@
+{% load advertisement %}
+{% load debug %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
+  <title>{% block title %}DNT Connect{% endblock %} &mdash; Turistforeningen</title>
+  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+
+  {% include 'global_layout/css.html' %}
+  {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+
+<div class="container">
+
+{# We'll use some hacks to make this design look like the original, since we're not modifying the css for this template. If this becomes too ugly, just remove everything and redesign based on the original. #}
+
+<header>
+  <div class="row" style="height: 70px">
+    <div class="span12">
+      <div class="association-logo left">
+        <a href="">
+          DNT Oslo og Omegn
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12 mobile-control">
+      <p class="display-menu">
+        <a href="javascript:undefined">
+          Meny <b class="caret"></b>
+        </a>
+      </p>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12 menu-container">
+      <nav id="menus">
+        <ul>
+          <li>
+            <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">{% trans "Avbryt og gå tilbake" %}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="border"></div>
+
+  <div class="row">
+    <div class="span10 breadcrumb-container">
+      <div class="menu-breadcrumb">
+        {{ dntconnect.client.friendly_name }}
+          {% if page_hierarchy %}
+            {% for page in page_hierarchy %}
+              /
+              {% if forloop.last %}<em>{% endif %}
+                <a href="/{{ page.url }}/">{{ page.title }}</a>
+              {% if forloop.last %}</em>{% endif %}
+            {% endfor %}
+          {% else %}
+            {# Fall back to the static title #}
+            / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
+          {% endif %}
+      </div>
+    </div>
+
+    <div class="span2 language-container">
+      <ul class="language-bar nav nav-pills">
+        <li class="dropdown" id="menu1">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            Language
+            <b class="caret"></b>
+          </a>
+
+          <form method="post" action="{% url 'set_language' %}" class="set-language hide">
+            {% csrf_token %}
+            <input type="hidden" name="language">
+          </form>
+
+          <ul class="dropdown-menu">
+            <li><a href="javascript:undefined" class="noexternal language" data-language-code="nb">Norsk bokmål</a></li>
+            <li><a href="javascript:undefined" class="noexternal language" data-language-code="en">English</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+{% block body %}{% endblock %}
+
+</div>
+
+<footer class="main">
+  <div class="container">
+    <div class="row services">
+      <div class="span4">
+        <h2>DNT Oslo og Omegn</h2>
+        <ul>
+          <li>Postboks 7 Sentrum</li>
+          <li>0101 Oslo</li>
+          <li>&nbsp;</li>
+          <li><a href="mailto:turinfo@dntoslo.no" class="noexternal">turinfo@dntoslo.no</a></li>
+          <li><a href="http://www.dntoslo.no" class="noexternal">http://www.dntoslo.no</a></li>
+        </ul>
+      </div>
+      <div class="span4">
+        <h2>{% trans "Åpningstider tlf." %}</h2>
+        <ul>
+          <li>{% trans "Man-fre." %}: kl. 08:30-16:00</li>
+          <li>{% trans "Sentralbord" %}: 22 82 28 00</li>
+          <li>{% trans "Turinfo" %}: 22 82 28 22</li>
+          <li>{% trans "E-post:" %} <a href="mailto:turinfo@dntoslo.no">turinfo@dntoslo.no</a></li>
+        </ul>
+      </div>
+      <div class="span4">
+        <h2>{% trans "Åpningstider turinfo" %}</h2>
+        <ul>
+          <li>{% trans "Mandag-fredag" %}: 10-17</li>
+          <li>{% trans "Torsdag" %}: 10-18</li>
+          <li>{% trans "Lørdag" %}: 10-15</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{# "Global" csrf_token for AJAX-requests #}
+{% csrf_token %}
+
+{% block js_globals %}{% endblock %}
+{% include 'global_layout/scripts.html' %}
+{% block extra_js %}{% endblock %}
+<script src="{{ STATIC_URL }}js/connect/language.js"></script>
+
+</body>
+</html>

@@ -1,27 +1,132 @@
-{% extends site.template.name|add:"/layout.html" %}
-{% block title %}Logg på{% endblock %}
+{% extends "main/connect/layouts/columbus.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Logg inn" %}{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">{% trans "Logg inn" %}</a></em>{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {
+      user_password_length: {{ user_password_length }}
+    };
+  </script>
+  {% if prefilled_user %}
+    <script>
+      window.Turistforeningen.prefilled_user = {
+        memberid: "{{ prefilled_user.memberid|escapejs }}",
+        zipcode: "{{ prefilled_user.get_address.zipcode.zipcode|escapejs }}"
+      };
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/connect/signon.js"></script>
+  <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/toggle-loginpage-tabs.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/login.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/registration.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/registration_nonmember.js"></script>
+{% endblock %}
 
 {% block body %}
 
-<div class="connect-signon">
+<div class="loginpage-wrapper">
+
   <div class="row">
     <div class="span12">
-      <h1>Logg på</h1>
-      <div class="alert alert-info">
-        {{ client_name }} ber deg om å bekrefte ditt DNT-medlemskap.
-      </div>
+      <h2>{% trans "Logg inn" %}</h2>
+    </div>
+  </div>
 
-      <ul>
-        <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}">logg på med din Min side-bruker</a></li>
-        <li><a href="{% url 'user.login.views.login' %}?next={% url 'connect.views.signon_login' %}#registrering">registrer deg på Min side</a></li>
-        <li><a href="{% url 'enrollment.views.index' %}">meld deg inn i DNT</a> (krever betaling over nett)</li>
-        <li><a href="{% url 'user.login.views.register_nonmember' %}?next={% url 'connect.views.signon_login' %}">registrer deg uten medlemskap</a></li>
+  <div class="row">
+    <div class="span7">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#login" data-toggle="tab">{% trans "Logg inn" %}</a></li>
+        <li><a href="#registration" data-toggle="tab">{% trans "Opprett ny bruker" %}</a></li>
       </ul>
 
-      <p>
-        Funksjonalitet TBD.
-      </p>
+      <div class="tab-content tab-content-visible">
+        <div class="login-form-wrapper form-border tab-pane active" id="login">
+
+          {% url 'connect.views.signon_login' as action %}
+          {% include 'common/user/login/util/login_form.html' %}
+
+        </div>
+        <div class="dntconnect-signon-registration form-border tab-pane" id="registration">
+
+          <div class="registration-form-wrapper hide">
+
+            {% url 'connect.views.signon_register' as action %}
+            {% include 'common/user/login/util/registration_form.html' %}
+
+          </div>
+
+          <div class="registration-form-nonmember-wrapper hide">
+
+            {% url 'connect.views.signon_register_nonmember' as action %}
+            {% include 'common/user/login/util/registration_form_nonmember.html' %}
+
+          </div>
+
+          <div class="choose-creation">
+
+            <hr class="hide">
+
+            <ul>
+              <li>
+                <a href="javascript:undefined" class="member">{% trans "Jeg er allerede medlem i DNT" %}</a>
+              </li>
+              <li>
+                <a href="{% url 'enrollment.views.index' %}" class="enroll">{% trans "Jeg vil melde meg inn i DNT først" %}</a>
+                {% trans "(må betales på nett)" %}
+              </li>
+              <li>
+                <a href="javascript:undefined" class="nonmember">{% trans "Jeg er ikke klar for å bli medlem ennå" %}</a>
+              </li>
+            </ul>
+
+          </div>
+
+        </div>
+      </div>
+
     </div>
+
+    <div class="span5">
+      <div class="usersite-benefits">
+
+        <p>
+          <strong>{% trans "Lurer du på noe?" %}</strong>
+        </p>
+
+        <p>
+          {% trans "Ved behov for teknisk støtte, ring:" %}<br>
+          22 82 28 00
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal memberid-hint-modal hide">
+  <div class="modal-body">
+    {# We're not using modal-header for the close button because it's too tall when empty.  #}
+    <p>
+      &nbsp;
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    </p>
+    {% include 'main/membership/memberid_sms/forgotten.html' %}
+    <p>
+      {% trans "Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:" %}
+    </p>
+    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="{% trans "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet" %}">
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
   </div>
 </div>
 

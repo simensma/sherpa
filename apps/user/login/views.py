@@ -11,23 +11,19 @@ from django.utils import crypto
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 
 from datetime import datetime, timedelta
-from smtplib import SMTPException
 import json
 import logging
 import sys
 import hashlib
 
 from user.models import User
-from user.util import memberid_lookups_exceeded, authenticate_sherpa2_user, authenticate_users
+from user.util import memberid_lookups_exceeded
+from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from focus.models import Actor, Enrollment
 from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
-from sherpa25.models import Member, import_fjelltreffen_annonser
-from connect.util import add_signon_session_value
-
-EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
-EMAIL_REGISTERED_NONMEMBER_SUBJECT = EMAIL_REGISTERED_SUBJECT
+from sherpa25.models import Member
 
 logger = logging.getLogger('sherpa')
 
@@ -49,7 +45,7 @@ def login(request):
         if 'registreringsnokkel' in request.GET:
             try:
                 user = User.get_users(include_pending=True).get(pending_registration_key=request.GET['registreringsnokkel'])
-                context['user_to_register'] = user
+                context['prefilled_user'] = user
             except User.DoesNotExist:
                 pass
 
@@ -57,14 +53,9 @@ def login(request):
         return render(request, 'common/user/login/login.html', context)
 
     elif request.method == 'POST':
-        matches = authenticate_users(request.POST['email'], request.POST['password'])
+        matches, message = attempt_login(request)
 
         if len(matches) == 1:
-            # Exactly one match, cool, just authenticate the user
-            user = authenticate(user=matches[0])
-            log_user_in(request, user)
-            if 'dntconnect' in request.session:
-                add_signon_session_value(request, 'logget_inn')
             return redirect(request.GET.get('next', reverse('user.views.home')))
 
         elif len(matches) > 1:
@@ -76,65 +67,12 @@ def login(request):
             else:
                 return redirect('user.login.views.choose_authenticated_user')
 
-        elif len(matches) == 0:
-            # Incorrect credentials. Check if this is a user from the old userpage system
-            old_member = authenticate_sherpa2_user(request.POST['email'], request.POST['password'])
-            if old_member is not None:
-                # Actually, it is! Let's try to import them.
-                if User.get_users().filter(memberid=old_member.memberid, is_active=True).exists():
-                    messages.error(request, 'old_memberid_but_memberid_exists')
-                    context['email'] = request.POST['email']
-                    return render(request, 'common/user/login/login.html', context)
+        else:
+            messages.error(request, message)
+            context['next'] = request.GET.get('next')
+            context['email'] = request.POST['email']
+            return render(request, 'common/user/login/login.html', context)
 
-                # Check if a pending user exists. This shouldn't ever happen (a pending user is recently
-                # enrolled, and an existing user will have been member for a long time).
-                if User.objects.filter(memberid=old_member.memberid, is_pending=True).exists():
-                    # Give the same error ("user exists, you need to use your new password")
-                    messages.error(request, 'old_memberid_but_memberid_exists')
-                    context['email'] = request.POST['email']
-                    return render(request, 'common/user/login/login.html', context)
-
-                # Verify that they exist in the membersystem (this turned out to be an incorrect assumption)
-                if not Actor.objects.filter(memberid=old_member.memberid).exists():
-                    # We're not quite sure why this can happen, so we'll just give them the invalid
-                    # credentials message - but this might be confusing for those who were able to log
-                    # in previously.
-                    messages.error(request, 'invalid_credentials')
-                    context['next'] = request.GET.get('next')
-                    context['email'] = request.POST['email']
-                    return render(request, 'common/user/login/login.html', context)
-
-                # Create the new user
-                try:
-                    # Check if the user's already created as inactive
-                    user = User.get_users().get(memberid=old_member.memberid, is_active=False)
-                    user.is_active = True
-                    user.set_password(request.POST['password'])
-                    user.save()
-                except User.DoesNotExist:
-                    # New user
-                    user = User(identifier=old_member.memberid, memberid=old_member.memberid)
-                    user.set_password(request.POST['password'])
-                    user.save()
-
-                # Update the email on this actor, in case it were to differ from the sherpa2 email
-                user.update_personal_data({'email': request.POST['email']})
-
-                # Import any fjelltreffen-annonser from the old system
-                import_fjelltreffen_annonser(user)
-
-                authenticate(user=user)
-                log_user_in(request, user)
-                if 'dntconnect' in request.session:
-                    add_signon_session_value(request, 'logget_inn')
-                return redirect(request.GET.get('next', reverse('user.views.home')))
-
-            else:
-                # No luck, just provide the error message
-                messages.error(request, 'invalid_credentials')
-                context['next'] = request.GET.get('next')
-                context['email'] = request.POST['email']
-                return render(request, 'common/user/login/login.html', context)
     else:
         return redirect('user.login.views.login')
 
@@ -142,7 +80,7 @@ def choose_authenticated_user(request):
     if not 'authenticated_users' in request.session:
         return redirect('user.login.views.login')
 
-    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_active=True)
+    users = User.get_users(include_pending=True).filter(id__in=request.session['authenticated_users'], is_inactive=False)
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name()),
         'next': request.GET.get('next')
@@ -163,11 +101,9 @@ def login_chosen_user(request):
         return redirect('user.login.views.login')
 
     # All is swell, log the user in
-    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_active=True)
+    user = User.get_users(include_pending=True).get(id=request.POST['user'], is_inactive=False)
     user = authenticate(user=user)
     log_user_in(request, user)
-    if 'dntconnect' in request.session:
-        add_signon_session_value(request, 'logget_inn')
     del request.session['authenticated_users']
     return redirect(request.GET.get('next', reverse('user.views.home')))
 
@@ -176,91 +112,15 @@ def logout(request):
     return redirect('page.views.page')
 
 def register(request):
-    if request.method == 'POST':
-        try:
-            # Check that the password is long enough
-            if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-                messages.error(request, 'too_short_password')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the email address is valid
-            if not validator.email(request.POST['email']):
-                messages.error(request, 'invalid_email')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the memberid is correct (and retrieve the Actor-entry)
-            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-                messages.error(request, 'memberid_lookups_exceeded')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-            if not FocusCountry.objects.filter(code=request.POST['country']).exists():
-                raise PermissionDenied
-            actor = Actor.objects.filter(
-                memberid=request.POST['memberid'],
-                address__country_code=request.POST['country'])
-            if request.POST['country'] == 'NO':
-                actor = actor.filter(address__zipcode=request.POST['zipcode'])
-            if actor.exists():
-                actor = actor.get()
-            else:
-                # No matching actors, check for pending users
-                enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
-                if request.POST['country'] == 'NO':
-                    enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
-                if enrollment.exists():
-                    actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
-                else:
-                    # Give up
-                    raise ObjectDoesNotExist
-
-            # Check that the user doesn't already have an account
-            if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_active=True).exists():
-                messages.error(request, 'user_exists')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            # Check that the memberid isn't expired.
-            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
-            # but we'll check for it anyway.
-            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
-                messages.error(request, 'expired_user_exists')
-                return redirect("%s#registrering" % reverse('user.login.views.login'))
-
-            actor.set_email(request.POST['email'].strip())
-
-            try:
-                # Check if the user's already created as inactive
-                user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_active=False)
-                user.is_active = True
-                user.set_password(request.POST['password'])
-                user.save()
-            except User.DoesNotExist:
-                # New user
-                user = User(identifier=actor.memberid, memberid=actor.memberid)
-                user.set_password(request.POST['password'])
-                user.save()
-
-            authenticate(user=user)
-            log_user_in(request, user)
-            if 'dntconnect' in request.session:
-                if 'innmelding.aktivitet' in request.session:
-                    add_signon_session_value(request, 'innmeldt')
-                else:
-                    add_signon_session_value(request, 'registrert')
-            t = loader.get_template('common/user/login/registered_email.html')
-            c = RequestContext(request)
-            send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-            return redirect(request.GET.get('next', reverse('user.views.home')))
-        except (ObjectDoesNotExist, ValueError):
-            messages.error(request, 'invalid_memberid')
-            return redirect("%s#registrering" % reverse('user.login.views.login'))
-        except SMTPException:
-            # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
-            logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
-                exc_info=sys.exc_info(),
-                extra={'request': request}
-            )
-            return redirect('user.views.home')
-    else:
+    if request.method != 'POST':
         return redirect('user.login.views.login')
+    else:
+        user, message = attempt_registration(request)
+        if user is None:
+            messages.error(request, message)
+            return redirect("%s#registrering" % reverse('user.login.views.login'))
+        else:
+            return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def register_nonmember(request):
     if request.method == 'GET':
@@ -276,47 +136,19 @@ def register_nonmember(request):
         }
         return render(request, 'common/user/login/registration_nonmember.html', context)
     elif request.method == 'POST':
-        errors = False
+        user, error_messages = attempt_registration_nonmember(request)
 
-        # Check that name is provided
-        if not validator.name(request.POST['name']):
-            messages.error(request, 'invalid_name')
-            errors = True
+        if user is None:
+            for message in error_messages:
+                messages.error(request, message)
 
-        # Check that the email address is valid
-        if not validator.email(request.POST['email']):
-            messages.error(request, 'invalid_email')
-            errors = True
-
-        # Check that the email address isn't in use
-        if User.objects.filter(identifier=request.POST['email']).exists():
-            messages.error(request, 'email_exists')
-            errors = True
-
-        # Check that the password is long enough
-        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            messages.error(request, 'too_short_password')
-            errors = True
-
-        if errors:
             request.session['user.registration_nonmember_attempt'] = {
                 'name': request.POST['name'],
                 'email': request.POST['email']
             }
             return redirect('user.login.views.register_nonmember')
-
-        user = User(identifier=request.POST['email'], email=request.POST['email'])
-        user.first_name, user.last_name = request.POST['name'].rsplit(' ', 1)
-        user.set_password(request.POST['password'])
-        user.save()
-        authenticate(user=user)
-        log_user_in(request, user)
-        if 'dntconnect' in request.session:
-            add_signon_session_value(request, 'registrert')
-        t = loader.get_template('common/user/login/registered_nonmember_email.html')
-        c = RequestContext(request)
-        send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-        return redirect(request.GET.get('next', reverse('user.views.home')))
+        else:
+            return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def verify_memberid(request):
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
@@ -343,7 +175,7 @@ def verify_memberid(request):
                 raise ObjectDoesNotExist
 
         try:
-            user = User.objects.get(memberid=request.POST['memberid'], is_active=True)
+            user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
             user_exists = True
             user_is_expired = user.is_expired
         except User.DoesNotExist:
@@ -361,6 +193,9 @@ def verify_memberid(request):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
+    if not 'email' in request.POST:
+        raise PermissionDenied
+
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
 
@@ -371,13 +206,13 @@ def send_restore_password_email(request):
         try:
             # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
             # but *before* we've checked if they should still be pending.
-            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_active=True))
+            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_inactive=False))
         except User.DoesNotExist:
             focus_unregistered_matches = True
 
     for e in get_enrollment_email_matches(request.POST['email']):
         try:
-            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_active=True))
+            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_inactive=False))
         except User.DoesNotExist:
             pass
 
@@ -385,7 +220,7 @@ def send_restore_password_email(request):
     all_sherpa2_matches = Member.objects.filter(email=request.POST['email'])
     # Include expired users when excluding sherpa2 matches - if their current user object is expired,
     # it's irrelevant whether or not the old user account matches
-    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_active=True).exists()]
+    sherpa2_matches = [m for m in all_sherpa2_matches if not User.objects.filter(memberid=m.memberid, is_inactive=False).exists()]
 
     if len(local_matches) == 0 and len(sherpa2_matches) == 0:
         # No email-address matches.
@@ -447,7 +282,7 @@ def send_restore_password_email(request):
     return HttpResponse(json.dumps({'status': 'success'}))
 
 def restore_password(request, key):
-    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_active=True)
+    users = User.get_users(include_pending=True).filter(password_restore_key=key, is_inactive=False)
     if len(users) == 0:
         context = {
             'no_such_key': True,

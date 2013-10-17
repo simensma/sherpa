@@ -1,8 +1,8 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'enrollment.gift.views.index' %}">Gavemedlemskap</a></em>{% endblock %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/enrollment/gift-entry.js"></script>
+  <script src="{{ STATIC_URL }}js/enrollment/gift/entry.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -20,7 +20,7 @@
       Tom for gaveidéer? Et medlemskap i DNT varer lenge og kan brukes så mye man vil. I tillegg til flotte naturopplevelser gir medlemskapet rabatt på overnatting på DNTs hytter, mulighet for å være med på turer, kurs og andre aktiviteter, samt en rekke andre fordeler. Velg mellom:
     </p>
 
-    <form class="gift-entry" method="post" action="{% url 'enrollment.views_gift.form' %}">
+    <form class="gift-entry" method="post" action="{% url 'enrollment.gift.views.form' %}">
       {% csrf_token %}
       <input type="hidden" name="type" value="">
       <div class="row-fluid">

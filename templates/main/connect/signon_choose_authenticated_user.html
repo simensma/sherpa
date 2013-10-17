@@ -1,0 +1,14 @@
+{% extends "main/connect/layouts/columbus.html" %}
+{% block title %}Logg inn{% endblock %}
+{% block breadcrumb %}<a href="{% url 'connect.views.signon_login' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/user/util/choose-authenticated-user.js"></script>
+{% endblock %}
+
+{% block body %}
+
+{% url 'connect.views.signon_login_chosen_user' as action %}
+{% include 'common/user/login/util/choose_authenticated_user.html' %}
+
+{% endblock %}

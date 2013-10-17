@@ -18,8 +18,8 @@ class Command(BaseCommand):
         # and all non-expired pending users as pending (regardless of active/inactive).
 
         users = User.objects.all()
-        active_users = users.filter(is_active=True, is_expired=False, is_pending=False)
-        inactive_users = users.filter(is_active=False, is_expired=False, is_pending=False)
+        active_users = users.filter(is_inactive=False, is_expired=False, is_pending=False)
+        inactive_users = users.filter(is_inactive=True, is_expired=False, is_pending=False)
         pending_users = users.filter(is_expired=False, is_pending=True)
         expired_users = users.filter(is_expired=True)
         normal_users = active_users.exclude(permissions=Permission.objects.get(name='sherpa'))

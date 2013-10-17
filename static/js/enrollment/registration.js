@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-    var form = $("form#registration");
+    var registration = $("div.enrollment-registration");
+    var form = registration.find("form#registration");
 
     // startDate is based on the earliest possible mssql smalldatetime value
     var now = new Date();
@@ -13,7 +14,6 @@ $(document).ready(function() {
         startView: 'decade',
         weekStart: 1,
         autoclose: true,
-        language: 'nb',
         forceParse: false
     }).on('hide', validateDatepicker);
 
@@ -64,22 +64,17 @@ $(document).ready(function() {
         }
     }
 
-    $("a.step2").click(function(e) {
+    registration.find("a.step2").click(function(e) {
         // Check that conditions checkbox is checked
-        if(!$("input.conditions").prop('checked')) {
+        if(!registration.find("input.conditions").prop('checked')) {
             e.preventDefault();
-            alert("Du kan ikke gå videre med mindre du har lest og godtatt betingelsene.");
+            alert($(this).attr("data-conditions-message"));
             return;
         }
         if($(this).hasClass('post') || form.find("input[name='name']").val().length > 0) {
             e.preventDefault();
             form.prepend('<input type="hidden" name="forward" value="1">').submit();
         }
-    });
-
-    /* Close conditions-dialog */
-    $("div.dialog.conditions a.close-dialog").click(function() {
-        $("div.dialog.conditions").dialog('close');
     });
 
     form.submit(function() {

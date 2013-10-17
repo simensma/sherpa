@@ -1,5 +1,7 @@
 {% extends 'main/enrollment/index.html' %}
 
+{% load i18n %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/result.js"></script>
 {% endblock %}
@@ -9,7 +11,13 @@
 <div class="enrollment-result enrollment-success-card">
   <div class="row">
     <div class="span12">
-      <h2>Velkommen som medlem{% if users|length == 1 %}, {{ users.0.name }}{% else %}mer{% endif %}!</h2>
+      <h2>
+        {% blocktrans with name=users.0.name count users=users|length %}
+          Velkommen som medlem, {{ name }}!
+        {% plural %}
+          Velkommen som medlemmer!
+        {% endblocktrans %}
+      </h2>
     </div>
   </div>
 
@@ -17,19 +25,19 @@
     <div id="result" class="span8">
 
       <p>
-        {% if users|length == 1 %}
-          Du er nå medlem i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
-        {% else %}
-          Dere er nå medlemmer i DNT og <a href="{{ association.url }}">{{ association.name }}</a>.
-        {% endif %}
+        {% blocktrans with association=association.name url=association.url count users=users|length %}
+          Du er nå medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+        {% plural %}
+          Dere er nå medlemmer i DNT og <a href="{{ url }}">{{ association }}</a>.
+        {% endblocktrans %}
       </p>
 
       <table class="table">
         <tr>
-          <th>Navn</th>
-          <th>Medlemsnummer</th>
-          <th>Medlemstype</th>
-          <th>Pris</th>
+          <th>{% trans "Navn" %}</th>
+          <th>{% trans "Medlemsnummer" %}</th>
+          <th>{% trans "Medlemstype" %}</th>
+          <th>{% trans "Pris" %}</th>
         </tr>
       {% for user in users %}
         <tr>
@@ -41,7 +49,7 @@
       {% endfor %}
       {% if users|length > 1 %}
         <tr>
-          <td class="sum">Totalt:</td>
+          <td class="sum">{% trans "Totalt:" %}</td>
           <td colspan="2"></td>
           <td class="sum">{{ price_sum }},-</td>
         </tr>
@@ -50,9 +58,9 @@
 
       <p>
         {% if users|length == 1 %}
-          Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}. Kvittering er også sendt på e-post til <strong>{{ users.0.email }}</strong>.
+          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ users.0.email }}</strong>.
         {% else %}
-          Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til {{ proof_validity_end|date:"l j. F" }}{% if users.location.country == 'NO' %}, eller få tilsendt gratis kvittering på SMS{% endif %}. Kvittering er også sendt på e-post til følgende adresser:
+          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
           {% for email in emails %}
             <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
           {% endfor %}
@@ -62,9 +70,31 @@
       {% if location.country == 'NO' %}
         {% for user in users %}
           {% if user.phone != '' and not user.sms_sent %}
-            <p class="sms"><button class="btn btn-danger phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
-              Send gratis kvittering på SMS til {{ user.phone }}
-            </button></p>
+            <div class="sms">
+              <a href="javascript:undefined" class="phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
+                {% trans "Send gratis kvittering på SMS til" %} {{ user.phone }}
+              </a>
+
+              <p class="sending hide">
+                {% trans "Sender SMS, vennligst vent..." %}
+                <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              </p>
+
+              <p class="success hide">
+                {% trans "Kvittering har blitt sendt på SMS til" %} {{ user.phone }}.
+              </p>
+              <p class="technical-error error hide">
+                {% trans "En teknisk feil har oppstått ved utsendelse av SMS." %}
+                {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
+              </p>
+              <p class="already-sent error hide">
+                {% trans "SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil." %}
+              </p>
+              <p class="connection-error service-fail error hide">
+                {% trans "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør." %}
+                {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
+              </p>
+            </div>
           {% endif %}
         {% endfor %}
       {% endif %}
@@ -73,27 +103,20 @@
 
         <hr>
 
-        <h3>Fortsett til påmeldig til (TODO: turnavn)</h3>
+        <h3>{% trans "Fortsett til påmeldig for tur/aktivitet" %}</h3>
+
+        <p>
+          {% blocktrans count users=users|length %}
+            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side.
+          {% plural %}
+            Dere er nå innmeldt, og du kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
+          {% endblocktrans %}
+        </p>
 
         {% if users|length == 1 %}
 
           <p>
-            Du er nå innmeldt, og kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side.
-
-          </p>
-
-        {% else %}
-
-          <p>
-            Dere er nå innmeldt, og du kan fortsette til påmeldingen til (TODO: turnavn), først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
-          </p>
-
-        {% endif %}
-
-        {% if users|length == 1 %}
-
-          <p>
-            <a class="btn btn-danger" href="{% url 'user.login.views.login' %}?next={{ innmelding_aktivitet.redirect_url }}&registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
           </p>
 
         {% else %}
@@ -109,9 +132,9 @@
             </p>
 
             <p>
-              <a class="btn btn-danger user" href="" disabled>Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+              <a class="btn btn-danger user" href="" disabled>{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
               {% for user in users %}
-                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'user.login.views.login' %}?next={{ innmelding_aktivitet.redirect_url }}&registreringsnokkel={{ user.pending_registration_key }}#registrering">Gå videre til registrering <i class="icon-white icon-share-alt"></i></a>
+                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
               {% endfor %}
             </p>
 
@@ -124,21 +147,28 @@
         <div class="next-step">
 
           {% if users|length == 1 %}
-            <h3>Registrer deg på Min side</h3>
+            <h3>{% trans "Registrer deg på Min side" %}</h3>
             <p>
-              Registrer deg på <a href="{% url 'user.login.views.login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
+              {% url 'user.login.views.login' as login_url %}
+              {% blocktrans with key=users.0.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
+                Registrer deg på <a href="{{ login_url }}?registreringsnokkel={{ key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
+              {% endblocktrans %}
             </p>
           {% endif %}
 
-          <h3>Planlegg turen på UT.no</h3>
+          <h3>{% trans "Planlegg turen på UT.no" %}</h3>
           <p>
-            På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+            {% blocktrans %}
+              På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+            {% endblocktrans %}
           </p>
 
           {% if location.country == 'NO' %}
-            <h3>Hva skjer der du bor</h3>
+            <h3>{% trans "Hva skjer der du bor" %}</h3>
             <p>
-              <a href="{{ association.url }}">{{ association.name }}</a> arrangerer fellesturer og aktiviteter hele året.
+              {% blocktrans with url=association.url association=association.name %}
+                <a href="{{ url }}">{{ association }}</a> arrangerer fellesturer og aktiviteter hele året.
+              {% endblocktrans %}
             </p>
           {% endif %}
 

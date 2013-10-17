@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb %}<a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.views_gift.form' %}">Skjema</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'enrollment.gift.views.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.gift.views.form' %}">Skjema</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/enrollment/gift.js"></script>
+  <script src="{{ STATIC_URL }}js/enrollment/gift/form.js"></script>
   {% if messages %}
     <script>
       window.trigger_form_validations = true;
@@ -53,7 +53,7 @@
   </div>
 </div>
 
-<form id="gift" method="post" action="{% url 'enrollment.views_gift.validate' %}">
+<form id="gift" method="post" action="{% url 'enrollment.gift.views.validate' %}">
   {% csrf_token %}
   <input type="hidden" name="receivers" value="">
   <div class="row">

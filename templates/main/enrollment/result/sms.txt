@@ -1,10 +1,10 @@
-Velkommen som medlem!
+{% load i18n %}{% trans "Velkommen som medlem!" %}
 
-Medlemskontingent {% if next_year %}{{ year|add:1 }}, samt ut {% endif %}{{ year }} er betalt for:
-{% for user in users %}{{ user.name }}, medlemsnr. {{ user.id }}
+{% trans "Medlemskontingent" %} {% if next_year %}{{ year|add:1 }}, {% trans "samt ut" %} {% endif %}{{ year }} {% trans "er betalt for" %}:
+{% for user in users %}{{ user.name }}, {% trans "medlemsnr." %} {{ user.id }}
 {% endfor %}
-Denne SMS gjelder som bevis.
+{% trans "Denne SMS gjelder som bevis." %}
 
-Mvh
+{% blocktrans %}Mvh
 DNT Medlemsservice
-Tlf: 40001870
+Tlf: 40001870{% endblocktrans %}

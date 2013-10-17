@@ -35,7 +35,7 @@ class User(AbstractBaseUser):
     # Some users haven't registered but we still have some data relating to them
     # from various sources. They'll be created as inactive users, and registration
     # will if possible use the inactive user and retain the related data.
-    is_active = models.BooleanField(default=True)
+    is_inactive = models.BooleanField(default=False)
 
     # Actors can be deleted from Focus for various reasons. Whenever discovered,
     # we'll set this to True to mark them as expired.
@@ -122,16 +122,8 @@ class User(AbstractBaseUser):
 
         parent = cache.get('user.%s.parent' % self.memberid)
         if parent is None:
-            try:
-                parent = User.get_users().get(memberid=parent_memberid)
-            except User.DoesNotExist:
-                parent = User(
-                    identifier=parent_memberid,
-                    memberid=parent_memberid,
-                    is_active=False
-                )
-                parent.save()
-                cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            parent = User.get_or_create_inactive(memberid=parent_memberid)
+            cache.set('user.%s.parent' % self.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return parent
 
     def get_children(self):
@@ -598,15 +590,44 @@ class User(AbstractBaseUser):
     @staticmethod
     def sherpa_users():
         permission = Permission.objects.get(name='sherpa')
-        return User.get_users().filter(permissions=permission, is_active=True)
+        return User.get_users().filter(permissions=permission, is_inactive=False)
 
     @staticmethod
     def get_or_create_inactive(memberid):
         try:
             return User.get_users().get(memberid=memberid)
         except User.DoesNotExist:
-            from user.util import create_inactive_user
-            return create_inactive_user(memberid)
+            return User.create_inactive_user(memberid)
+
+    @staticmethod
+    def create_inactive_user(memberid):
+        Actor.objects.get(memberid=memberid) # Verify that the Actor exists
+        try:
+            # Check if the user already exists first.
+            existing_user = User.objects.get(memberid=memberid)
+
+            # Note that we don't check if this user is inactive or not.
+            # If they are, maybe someone double-clicked some link or something.
+            # It doesn't matter, let this user pass as the created one.
+
+            if existing_user.is_pending:
+                # Well, we saw that they're not pending anymore since we checked the
+                # actor, so fix that and let them pass.
+                existing_user.is_pending = False
+                existing_user.save()
+
+            if existing_user.is_expired:
+                # Oh, what happened here? Well, they're not expired anymore since we
+                # the actor exists, so fix that and let them pass.
+                existing_user.is_expired = False
+                existing_user.save()
+
+            return existing_user
+        except User.DoesNotExist:
+            user = User(identifier=memberid, memberid=memberid, is_inactive=True)
+            user.set_unusable_password()
+            user.save()
+            return user
 
     @staticmethod
     def create_pending(memberid):
@@ -614,7 +635,7 @@ class User(AbstractBaseUser):
         user = User(
             identifier='%s' % memberid,
             memberid=memberid,
-            is_active=False,
+            is_inactive=True,
             is_pending=True
         )
         user.set_unusable_password()

@@ -51,7 +51,10 @@
         },
         'email': function(input, req, opts) {
             if(!req && input === '') { return true; }
-            return input.match(/^\s*[^\s\,\<\>]+@[^\s,\<\>]+\.[^\s,\<\>]+\s*$/) !== null;
+            var email_format = input.match(/^\s*[^\s\,\<\>]+@[^\s,\<\>]+\.[^\s,\<\>]+\s*$/) !== null;
+            var no_dotdot = !input.contains("..");
+            var no_double_at = input.indexOf("@") == input.lastIndexOf("@");
+            return (email_format && no_dotdot && no_double_at);
         },
         'memberid': function(input, req, opts) {
             if(!req && input === '') { return true; }

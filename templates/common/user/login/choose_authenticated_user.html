@@ -3,57 +3,12 @@
 {% block breadcrumb %}<a href="{% url 'user.login.views.login' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/choose-authenticated-user.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/choose-authenticated-user.js"></script>
 {% endblock %}
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <div class="choose-authenticated-user">
-      <h2>Velg bruker</h2>
-
-      <div class="form-border">
-
-        <p>
-          Du har flere brukere med <strong>samme</strong> e-postadresse og passord. Vennligst velg hvilken du vil logge på med:
-        </p>
-
-        <form action="{% url 'user.login.views.login_chosen_user' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal choose">
-          {% csrf_token %}
-          <input type="hidden" name="user" value="">
-
-          <table class="table">
-            <tr>
-              <th>Navn</th>
-              <th>Medlemstype</th>
-              <th>Medlemsnummer</th>
-            </tr>
-            {% for user in users %}
-              <tr>
-                <td>
-                  <a href="javascript:undefined" class="user-name" data-user-id="{{ user.id }}">{{ user.get_full_name }}</a>
-                </td>
-                <td>
-                  {% if not user.is_pending %}
-                    {{ user.membership_type.name|default:"<em>Ikke medlem</em>" }}
-                  {% else %}
-                    <em>Venter godkjennelse av medlemsservice</em>
-                  {% endif %}
-                </td>
-                <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
-              </tr>
-            {% endfor %}
-          </table>
-        </form>
-
-        <div class="alert alert-info">
-          Merk: Vi anbefaler at du setter en unik e-postadresse og et unikt passord på hver bruker.
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
+{% url 'user.login.views.login_chosen_user' as action %}
+{% include 'common/user/login/util/choose_authenticated_user.html' %}
 
 {% endblock %}

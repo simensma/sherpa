@@ -8,11 +8,11 @@
       user_password_length: {{ user_password_length }}
     };
   </script>
-  {% if user_to_register %}
+  {% if prefilled_user %}
   <script>
-    window.Turistforeningen.preregistered_user = {
-      memberid: {{ user_to_register.memberid }},
-      zipcode: {{ user_to_register.get_address.zipcode.zipcode }}
+    window.Turistforeningen.prefilled_user = {
+      memberid: "{{ prefilled_user.memberid|escapejs }}",
+      zipcode: "{{ prefilled_user.get_address.zipcode.zipcode|escapejs }}"
     };
   </script>
   {% endif %}
@@ -20,9 +20,9 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/membership/memberid_sms.js"></script>
-  <script src="{{ STATIC_URL }}js/user/toggle-loginpage-tabs.js"></script>
-  <script src="{{ STATIC_URL }}js/user/login.js"></script>
-  <script src="{{ STATIC_URL }}js/user/registration.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/toggle-loginpage-tabs.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/login.js"></script>
+  <script src="{{ STATIC_URL }}js/user/util/registration.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -65,228 +65,14 @@
       <div class="tab-content tab-content-visible">
         <div class="login-form-wrapper form-border tab-pane active" id="login">
 
-          {% for message in messages %}
-            {% if message.message == 'invalid_credentials' %}
-              <div class="alert alert-error">
-                <strong>Feil e-postadresse eller passord</strong><br>
-                Har du ikke Min side-konto? <a href="javascript:undefined" class="toggle-registration-tab">Opprett din bruker her!</a>
-              </div>
-            {% elif message.message == 'old_memberid_but_memberid_exists' %}
-              <div class="alert alert-error">
-                <strong>Feil e-postadresse eller passord</strong><br>
-                Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din nye e-postadresse.<br>
-                Hvis du har glemt passordet, klikk på "Glemt passord"-lenken under.
-              </div>
-            {% endif %}
-          {% endfor %}
-
-          <form action="{% url 'user.login.views.login' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
-            {% csrf_token %}
-
-            <div class="control-group email">
-              <label class="control-label" for="login_email">E-post:</label>
-              <div class="controls">
-                <input type="text" name="email" id="login_email" value="{{ email }}" class="input-xlarge">
-              </div>
-            </div>
-
-            <div class="control-group password">
-              <label class="control-label" for="login_password">Passord:</label>
-              <div class="controls">
-                <input type="password" name="password" id="login_password" class="input-large">
-              </div>
-            </div>
-
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> Logg inn</button>
-              </div>
-            </div>
-          </form>
-
-          <div class="control-group">
-            <div class="controls">
-              <p><a href="javascript:undefined" class="forgot">Jeg har glemt passordet mitt!</a></p>
-              <div class="forgot-password hide" data-email-url="{% url 'user.login.views.send_restore_password_email' %}">
-                <p><input type="text" class="input-xlarge" name="email" placeholder="Fyll ut din e-post adresse..."></p>
-                <p class="actions">
-                  <button class="btn restore-password">Gjenopprett passord</button>
-                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="hide ajaxloader" alt="Sender e-post, vennligst vent...">
-                </p>
-                <div class="alert alert-success success hide">
-                  En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet.
-                </div>
-                <div class="alert alert-error unknown invalid hide">
-                  Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig.
-                </div>
-                <div class="alert alert-info unregistered hide">
-                  Du har ikke opprettet brukerkonto ennå. Du kan <a href="javascript:undefined" class="toggle-registration-tab">opprette din bruker her</a> &mdash; det er kjapt, enkelt og gratis!
-                </div>
-                <div class="alert alert-error error hide">
-                  Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer.
-                </div>
-              </div>
-            </div>
-          </div>
+          {% url 'user.login.views.login' as action %}
+          {% include 'common/user/login/util/login_form.html' %}
 
         </div>
         <div class="registration-form-wrapper form-border tab-pane" id="registration">
 
-          <form action="{% url 'user.login.views.register' %}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
-            {% csrf_token %}
-
-            <div class="step1">
-              <div class="control-group memberid">
-                <label class="control-label" for="registration_memberid">Medlemsnummer:</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" name="memberid" id="registration_memberid">
-                  <div class="hints">
-                    <a href="javascript:undefined" class="trigger-memberid-hint">Glemt medlemsnummeret?</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="control-group country">
-                <label class="control-label" for="registration_country">Land:</label>
-                <div class="controls">
-                  <select name="country" id="registration_country">
-                    <optgroup id="scandinavia" label="Scandinavia">
-                      <option value="{{ countries.norway.code }}" selected>{{ countries.norway.name }}</option>
-                      {% for c in countries.scandinavia %}
-                        <option value="{{ c.code }}">{{ c.name }}</option>
-                      {% endfor %}
-                    </optgroup>
-                    <optgroup id="world" label="Rest of world">
-                      {% for c in countries.other %}
-                        <option value="{{ c.code }}">{{ c.name }}</option>
-                      {% endfor %}
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-
-              <div class="control-group zipcode">
-                <label class="control-label" for="registration_zipcode">Postnummer:</label>
-                <div class="controls">
-                  <input type="text" class="input-small" name="zipcode" id="registration_zipcode" maxlength="4">
-                  <input type="text" class="input-medium" name="area" disabled>
-                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <div class="controls">
-                  <button type="submit" class="btn btn-danger">Gå videre <i class="icon-arrow-right icon-white"></i></button>
-                  <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
-                </div>
-              </div>
-            </div>
-
-            <div class="step2 hide">
-              <div class="control-group">
-                <p>Velkommen, <span class="name"></span>! Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert.</p>
-              </div>
-
-              <div class="control-group email">
-                <label class="control-label" for="registration_email">E-post:</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" name="email" id="registration_email">
-                  <div class="hints email-found hide">
-                    Er din e-postadresse <a class="email" href=""></a>? Hvis ikke kan du endre den i feltet over.
-                  </div>
-                  <div class="hints email-not-found hide">
-                    Her må du oppgi e-postadressen din.
-                  </div>
-                </div>
-              </div>
-
-              <div class="control-group password">
-                <label class="control-label" for="registration_password">Passord:</label>
-                <div class="controls">
-                  <input type="password" class="input-xlarge" name="password" id="registration_password">
-                  <div class="hints">
-                    Her må du velge et passord på minst {{ user_password_length }} tegn.
-                  </div>
-                  <div class="hints error validator short hide">
-                    Passordet er for kort, det må være minst {{ user_password_length }} tegn.
-                  </div>
-                  <div class="hints error validator unequal hide">
-                    Passordene er ikke like, har du skrevet feil?
-                  </div>
-                </div>
-              </div>
-
-              <div class="control-group password-repeat">
-                <label class="control-label" for="registration_password-repeat">Gjenta passord:</label>
-                <div class="controls">
-                  <input type="password" class="input-xlarge" name="password-repeat" id="registration_password-repeat">
-                </div>
-              </div>
-
-              <div class="control-group">
-                <div class="controls">
-                  <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-                  <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-                </div>
-              </div>
-            </div>
-
-          </form>
-
-          <div class="hide alert alert-error user-exists">
-            <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-            <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
-          </div>
-
-          <div class="hide alert alert-error user-is-expired">
-            <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
-            Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
-          </div>
-
-          <div class="hide alert alert-error no-memberid-match">
-            <strong>Ukjent bruker</strong><br>
-            Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
-          </div>
-
-          <div class="hide alert alert-error memberid-lookups-exceeded">
-            <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
-          </div>
-
-          {% for message in messages %}
-            {% if message.message == 'invalid_memberid' %}
-              {# This is *kind of* duplicated below, but not really since this is after a submit, but the message below is only shown with AJAX. #}
-              <div class="alert alert-error">
-                <strong>Ukjent bruker</strong><br>
-                Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
-              </div>
-            {% elif message.message == 'memberid_lookups_exceeded' %}
-              <div class="alert alert-error">
-                <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-                Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
-              </div>
-            {% elif message.message == 'too_short_password' %}
-              <div class="alert alert-error">
-                <strong>For kort passord</strong><br>
-                Du må ha minst {{ user_password_length }} tegn i passordet ditt. Vennligst velg et lengre passord.
-              </div>
-            {% elif message.message == 'user_exists' %}
-              <div class="alert alert-error">
-                <strong>Hmmm... det ser ut som om du allerede har en bruker!</strong><br>
-                <a href="javascript:undefined" class="toggle-login-tab">Logg inn her</a>. Hvis du har glemt passordet kan du gjenopprette det der.
-              </div>
-            {% elif message.message == 'expired_user_exists' %}
-              <div class="alert alert-error">
-                <strong>Du har allerede en bruker, men den er markert som inaktiv!</strong><br>
-                Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
-              </div>
-            {% elif message.message == 'invalid_email' %}
-              <div class="alert alert-error">
-                <strong>E-postadressen din er ikke gyldig!</strong><br>
-                Vennligst oppgi en gyldig e-postadresse.
-              </div>
-            {% endif %}
-          {% endfor %}
+          {% url 'user.login.views.register' as action %}
+          {% include 'common/user/login/util/registration_form.html' %}
 
         </div>
       </div>

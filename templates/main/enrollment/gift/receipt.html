@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 {% block title %}Gavemedlemskap{% endblock %}
-{% block breadcrumb %}<a href="{% url 'enrollment.views_gift.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.views_gift.receipt' %}">Kvittering</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'enrollment.gift.views.index' %}">Gavemedlemskap</a> / <em><a href="{% url 'enrollment.gift.views.receipt' %}">Kvittering</a></em>{% endblock %}
 
 {% block body %}
 
@@ -20,6 +20,15 @@
         Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="{% url 'membership.views.index' %}">Se gjeldende kontingentsatser</a>.
       </p>
     {% endif %}
+
+    {% for message in messages %}
+      {% if message.message == 'email_receipt_fail' %}
+        <p>
+          <strong>Vi fikk ikke sendt deg kvittering på e-post,</strong> grunnet en teknisk feil. Merk at bestillingen <strong>har</strong> blitt sendt uten problemer. Du bør derfor vurdere å printe ut denne siden om du ønsker å ta vare på kvitteringen.
+        </p>
+      {% endif %}
+    {% endfor %}
+
   </div>
 </div>
 
@@ -56,7 +65,7 @@
       </table>
     </div>
     <p>
-      <a class="btn btn-large" href="{% url 'enrollment.views_gift.clear' %}">Opprett ny bestilling</a>
+      <a class="btn btn-large" href="{% url 'enrollment.gift.views.clear' %}">Opprett ny bestilling</a>
     </p>
   </div>
 

@@ -16,7 +16,6 @@ import json
 from association.models import Association
 from user.models import User, Turleder, Kursleder, Instruktor
 from focus.models import Actor
-from user.util import create_inactive_user
 
 def index(request):
     context = {
@@ -27,7 +26,7 @@ def index(request):
     return render(request, 'common/admin/turledere/index.html', context)
 
 def edit_inactive(request, memberid):
-    user = create_inactive_user(memberid)
+    user = User.create_inactive_user(memberid)
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_turleder_certificate(request, user):

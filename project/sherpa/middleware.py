@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
+from django.utils import translation
 
 from datetime import datetime
 import re
@@ -15,6 +16,7 @@ import sys
 from core.models import Site
 from association.models import Association
 from focus.models import Actor, Enrollment
+from enrollment.util import current_template_layout
 
 logger = logging.getLogger('sherpa')
 
@@ -26,6 +28,18 @@ if not model_cache.loaded:
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class DefaultLanguage():
+    def process_request(self, request):
+        # DNT Connect supports language selection now, so do nothing if dnt connect is in session.
+        # Note that it's *possible* someone initiated DNT connect without fulfilling it, which would
+        # let them view other pages with mixed translation results.
+        if 'dntconnect' in request.session:
+            return
+
+        # Force norwegian for all requests.
+        if request.LANGUAGE_CODE != settings.LANGUAGE_CODE:
+            translation.activate(settings.LANGUAGE_CODE)
 
 class Sites():
     def process_request(self, request):
@@ -111,13 +125,25 @@ class CheckSherpaPermissions(object):
 class DeactivatedEnrollment():
     def process_request(self, request):
         from enrollment.models import State
+        state = State.objects.all()[0]
+
         # The enrollment slug is duplicated and hardcoded here :(
         # However, it's not really likely to change often since it's an important URL.
-        if request.path.startswith('/innmelding') and not State.objects.all()[0].active:
-            return render(request, 'main/enrollment/unavailable.html')
+        if request.path.startswith('/innmelding') and not state.active:
+            context = current_template_layout(request)
+            return render(request, 'main/enrollment/unavailable.html', context)
+
+        # Another issue: If passing through DNT Connect, and card payment is deactivated,
+        # there is no means for payment available. Inform them immediately
+        if request.path.startswith('/innmelding') and 'dntconnect' in request.session and not state.card:
+            return render(request, 'main/connect/signon_enrollment_card_deactivated.html')
 
 class FocusDowntime():
-    def process_request(self, request):
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        """
+        Use process_view instead of process_request here because some rendered pages need the csrf token,
+        which is generated on process_view by the csrf middleware.
+        """
         now = datetime.now()
         focus_is_down = False
         for downtime in settings.FOCUS_DOWNTIME_PERIODS:
@@ -131,10 +157,17 @@ class FocusDowntime():
                 ('/innmelding', 'main/enrollment/unavailable.html'),
                 ('/minside', 'common/user/unavailable.html'),
                 ('/fjelltreffen', 'main/fjelltreffen/unavailable.html'),
+                ('/connect/signon/login', 'main/connect/signon_unavailable.html'),
+                ('/connect/signon/velg-bruker', 'main/connect/signon_unavailable.html'),
+                ('/connect/signon/registrer', 'main/connect/signon_unavailable.html'),
             ]
             for path, template in focus_required_paths:
                 if request.path.startswith(path):
-                    return render(request, template)
+                    # Extra context update for enrollment URLs
+                    context = {}
+                    if request.path.startswith('/innmelding'):
+                        context.update(current_template_layout(request))
+                    return render(request, template, context)
 
 class ActorDoesNotExist():
     def process_request(self, request):

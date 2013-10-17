@@ -1,23 +1,28 @@
-{% extends 'main/layout.html' %}
-{% block title %}Innmelding{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'enrollment.views.index' %}">Innmelding</a></em>{% endblock %}
+{% extends current_layout %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Innmelding" %}{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'enrollment.views.index' %}">{% trans "Innmelding" %}</a></em>{% endblock %}
 {% block body %}
 
 <div class="row">
   <div class="span12">
-    <h1>Innmelding utilgjengelig</h1>
+    <h1>{% trans "Innmelding utilgjengelig" %}</h1>
 
     {# This template can be rendered both by a deactivated enrollment, and by Focus being down. Render the status message slightly differently #}
     <p>
       {% if focus_downtime.is_currently_down %}
-        <strong>Online innmeldingsskjema er dessverre utilgjengelig {{ focus_downtime.period_message }} på grunn av midlertidig vedlikehold.</strong>
+        <strong>
+          {% blocktrans with period=focus_downtime.period_message %}Online innmeldingsskjema er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
+        </strong>
       {% else %}
-        <strong>Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold.</strong>
+        <strong>{% trans "Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold." %}</strong>
       {% endif %}
     </p>
 
     <p>
-      For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+      {% trans "For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post" %} <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
     </p>
   </div>
 </div>

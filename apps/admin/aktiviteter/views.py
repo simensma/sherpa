@@ -13,7 +13,6 @@ from core.models import Tag
 from user.models import User
 from focus.models import Actor
 from association.models import Association
-from user.util import create_inactive_user
 
 from datetime import datetime, timedelta
 import json
@@ -184,7 +183,7 @@ def turleder_assign(request):
         user = User.get_users().get(id=request.POST['user'])
     elif 'actor' in request.POST:
         # Create the requested user as inactive
-        user = create_inactive_user(request.POST['actor'])
+        user = User.create_inactive_user(request.POST['actor'])
     else:
         raise Exception("Expected either 'user' or 'actor' in POST request")
 

@@ -1,19 +1,23 @@
 $(document).ready(function() {
 
-    var form = $("form#payment");
-    var payment_button = form.find("button.payment");
+    var payment = $("div.enrollment-payment-method");
+    var form = payment.find("form.payment");
+    var payment_button_card = form.find("button.payment.card");
+    var payment_button_invoice = form.find("button.payment.invoice");
     var invoice_info = form.find("div.invoice-info");
     var ajaxloader = form.find("img.ajaxloader");
 
     form.find("input[name='payment_method'][value='card']").change(function() {
         if($(this).is(":checked")) {
-            payment_button.html('Til betaling <i class="icon-arrow-right"></i>');
+            payment_button_card.show();
+            payment_button_invoice.hide();
             invoice_info.hide();
         }
     });
     form.find("input[name='payment_method'][value='invoice']").change(function() {
         if($(this).is(":checked")) {
-            payment_button.html('Send bestilling <i class="icon-ok"></i>');
+            payment_button_card.hide();
+            payment_button_invoice.show();
             invoice_info.show();
         }
     });

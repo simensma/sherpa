@@ -1,12 +1,12 @@
-Medlemsnummer for:
+{% load i18n %}{% trans "Medlemsnummer for:" %}
 
-{{ mob_user.get_full_name }}: {{ mob_user.memberid }}, årskontingent {% if mob_user.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{{ mob_user.get_full_name }}: {{ mob_user.memberid }}, {% trans "årskontingent" %} {% if mob_user.has_paid %}{% trans "betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}{% trans "IKKE betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
 
-{% for child in mob_user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, årskontingent {% if child.has_paid %}betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}IKKE betalt for {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{% for child in mob_user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, {% trans "årskontingent" %} {% if child.has_paid %}{% trans "betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}{% trans "IKKE betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
 
-{% endfor %}{% if all_paid %}Denne SMSen er gyldig som kvittering på betalt årskontingent.{% else %}Kontakt oss for å fornye medlemskapet.{% endif %}
+{% endfor %}{% if all_paid %}{% trans "Denne SMSen er gyldig som kvittering på betalt årskontingent." %}{% else %}{% trans "Kontakt oss for å fornye medlemskapet." %}{% endif %}
 
-Mvh
+{% blocktrans %}Mvh
 DNT Medlemsservice
 Tlf: 40001870
-E-post: medlem@turistforeningen.no
+E-post: medlem@turistforeningen.no{% endblocktrans %}

@@ -12,6 +12,7 @@ form#registration .control-group:not(.error,.warning) label, form#household .con
 form#registration label.gender {
   width: 60px;
   float: left;
+  margin-right: 10px;
   margin-bottom: 15px;
 }
 
@@ -29,33 +30,27 @@ div.modal.conditions li, div.modal.conditions p {
   font-size: 14px !important;
 }
 
-form#household select {
-  height: 34px;
-  width: 300px;
+form#household {
+  select {
+    height: 34px;
+    width: 300px;
+
+    option[disabled] {
+      background-color: rgb(215, 215, 215);
+    }
+  }
 }
 
-form#household select option[disabled] {
-  background-color: rgb(215, 215, 215);
-}
-
-form#household button.search {
-  margin-bottom: 10px;
-}
-
-div.existing-result p {
-  font-size: 120%;
-}
-
-div.existing-result p span.result {
+div.existing-result {
   font-weight: bold;
-}
 
-div.existing-result p span.result.success {
-  color: rgb(60, 180, 60);
-}
+  span.success span.result {
+    color: rgb(60, 180, 60);
+  }
 
-div.existing-result p span.result.error {
-  color: rgb(180, 60, 60);
+  span.error {
+    color: rgb(180, 60, 60);
+  }
 }
 
 form#registration input[type='text'], form#household input[type='text'], form#household select {
@@ -155,14 +150,6 @@ div.notice-alert {
   margin-bottom: 20px;
 }
 
-p.receipt-success {
-  color: green;
-}
-
-p.receipt-error {
-  color: red;
-}
-
 /* Verification */
 
 form#verification th div.popover {
@@ -176,7 +163,7 @@ p.association-info {
 
 /* Payment */
 
-form#payment, form#payment label {
+form.payment, form.payment label {
   font-family: "DTL Nobel" !important;
 }
 
@@ -195,13 +182,23 @@ div.payment-error {
 
 /* Result */
 
-p.sms {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+div.enrollment-result.enrollment-success-card {
+  table td.sum {
+    font-weight: bold;
+  }
 
-table td.sum {
-  font-weight: bold;
+  div.sms {
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    p.success {
+      color: green;
+    }
+
+    p.error {
+      color: red;
+    }
+  }
 }
 
 /* Gift */

@@ -1,43 +1,40 @@
 $(document).ready(function() {
 
     var result = $("div.enrollment-result");
-    var button = result.find("button.phone-receipt");
+    var sms = result.find("div.sms");
     var choose_user = result.find("div.choose-user");
 
-    button.click(function() {
-        $(this).prop('disabled', true);
-        $(this).text("Sender, vennligst vent...");
-        var button = $(this);
-        var index = $(this).attr('data-index');
-        var number = $(this).attr('data-number');
-        var memberserviceBackup = 'Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS.';
-        $.ajaxQueue({
-            url: button.attr('data-sms-url'),
-            data: { index: index }
-        }).done(function(result) {
-            result = JSON.parse(result);
-            if(result.error == 'none') {
-                button.after('<p class="receipt-success">Kvittering har blitt sendt på SMS til ' + number + '.</p>');
-                button.remove();
-            } else if(result.error == 'foreign_number') {
-                button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
-                button.remove();
-            } else if(result.error == 'enrollment_uncompleted') {
-                button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
-                button.remove();
-            } else if(result.error == 'already_sent') {
-                button.after('<p class="receipt-error">SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil.</p>');
-                button.remove();
-            } else if(result.error == 'connection_error') {
-                button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. ' + memberserviceBackup + '</p>');
-                button.remove();
-            } else if(result.error == 'service_fail') {
-                button.after('<p class="receipt-error">En teknisk feil har oppstått ved kontakt med vår SMS-leverandør. ' + memberserviceBackup + '</p>');
-                button.remove();
-            }
-        }).fail(function(result) {
-            button.after('<p class="receipt-error">En teknisk feil har oppstått ved utsendelse av SMS. ' + memberserviceBackup + '</p>');
-            button.remove();
+    sms.each(function() {
+        var sms_anchor = $(this).find("a.phone-receipt");
+        var sending = $(this).find("p.sending");
+        sms_anchor.click(function() {
+            sms_anchor.hide();
+            sending.show();
+            var index = $(this).attr('data-index');
+            var number = $(this).attr('data-number');
+            $.ajaxQueue({
+                url: sms_anchor.attr('data-sms-url'),
+                data: { index: index }
+            }).done(function(result) {
+                result = JSON.parse(result);
+                if(result.error == 'none') {
+                    sms.find("p.success").show();
+                } else if(result.error == 'foreign_number') {
+                    sms.find("p.technical-error").show();
+                } else if(result.error == 'enrollment_uncompleted') {
+                    sms.find("p.technical-error").show();
+                } else if(result.error == 'already_sent') {
+                    sms.find("p.already-sent").show();
+                } else if(result.error == 'connection_error') {
+                    sms.find("p.connection-error").show();
+                } else if(result.error == 'service_fail') {
+                    sms.find("p.service-fail").show();
+                }
+            }).fail(function(result) {
+                sms.find("p.technical-error").show();
+            }).always(function(result) {
+                sending.hide();
+            });
         });
     });
 

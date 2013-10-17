@@ -1,0 +1,36 @@
+{# Scripts - Raven comes first, then the rest #}
+{% if not debug %}
+  <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
+  <script src="{{ STATIC_URL }}js/raven.js"></script>
+  {% if user.is_authenticated %}
+    <script>
+      Raven.setUser({
+          id: {{ user.id }}
+      });
+    </script>
+  {% endif %}
+{% endif %}
+<!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
+<script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
+<script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+<script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
+<script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
+<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
+<script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
+<!--[if lte IE 9]><script src="{{ STATIC_URL }}js/ie/placeholder.js"></script><![endif]-->
+<!--[if lt IE 9]><script src="{{ STATIC_URL }}js/ie/trim.js"></script><![endif]-->
+<!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
+<script src="{{ STATIC_URL }}js/ie/contains.js"></script>
+<script src="{{ STATIC_URL }}js/main.js"></script>
+<script src="{{ STATIC_URL }}js/common.js"></script>
+<script src="{{ STATIC_URL }}js/widgets.js"></script>
+<script src="{{ STATIC_URL }}js/ga.js"></script>
+<script src="{{ STATIC_URL }}js/validator.js"></script>
+<script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
+
+<script>
+  $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
+</script>

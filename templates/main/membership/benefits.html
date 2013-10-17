@@ -350,7 +350,7 @@
     <div class="span4 membership">
       {% if enrollment_active and not focus_downtime.is_currently_down %}
         <a href="{% url 'enrollment.views.index' %}" class="btn btn-danger enrollment">Bli medlem!</a><br>
-        <a href="{% url 'enrollment.views_gift.index' %}">Gi bort medlemskap!</a>
+        <a href="{% url 'enrollment.gift.views.index' %}">Gi bort medlemskap!</a>
       {% endif %}
     </div>
   </div>

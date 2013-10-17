@@ -2,10 +2,16 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
+from django.contrib import messages
 
+from smtplib import SMTPException
 import json
+import logging
+import sys
 
 from enrollment.models import Giver, Receiver, membership_types
+
+logger = logging.getLogger('sherpa')
 
 EMAIL_FROM_MEMBERSERVICE = "Den Norske Turistforening <no-reply@turistforeningen.no>" # The "from"-address in the email going to our memberservice
 EMAIL_FROM_GIVER = "Den Norske Turistforening <medlem@turistforeningen.no>" # The "from"-address in the email going to the giver making the order
@@ -15,14 +21,14 @@ EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
 def index(request):
     if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
-        return redirect('enrollment.views_gift.receipt')
+        return redirect('enrollment.gift.views.receipt')
     return render(request, 'main/enrollment/gift/index.html')
 
 def form(request):
     if not 'gift_membership' in request.session:
         request.session['gift_membership'] = {}
     if 'order_sent' in request.session['gift_membership']:
-        return redirect('enrollment.views_gift.receipt')
+        return redirect('enrollment.gift.views.receipt')
 
     if 'giver' in request.session['gift_membership']:
         request.session['gift_membership']['giver'].validate(request, add_messages=True)
@@ -53,11 +59,11 @@ def form(request):
 
 def validate(request):
     if not 'gift_membership' in request.session:
-        return redirect('enrollment.views_gift.index')
+        return redirect('enrollment.gift.views.index')
     if 'order_sent' in request.session['gift_membership']:
-        return redirect('enrollment.views_gift.receipt')
+        return redirect('enrollment.gift.views.receipt')
     if request.method == 'GET':
-        return redirect('enrollment.views_gift.form')
+        return redirect('enrollment.gift.views.form')
 
     giver = Giver(
         request.POST['giver_name'],
@@ -89,21 +95,21 @@ def validate(request):
     for receiver in receivers:
         form_valid = form_valid and receiver.validate()
     if not form_valid:
-        return redirect('enrollment.views_gift.form')
+        return redirect('enrollment.gift.views.form')
 
-    return redirect('enrollment.views_gift.confirm')
+    return redirect('enrollment.gift.views.confirm')
 
 def confirm(request):
     if not 'gift_membership' in request.session:
-        return redirect('enrollment.views_gift.index')
+        return redirect('enrollment.gift.views.index')
     if 'order_sent' in request.session['gift_membership']:
-        return redirect('enrollment.views_gift.receipt')
+        return redirect('enrollment.gift.views.receipt')
 
     form_valid = request.session['gift_membership']['giver'].validate()
     for receiver in request.session['gift_membership']['receivers']:
         form_valid = form_valid and receiver.validate()
     if not form_valid:
-        return redirect('enrollment.views_gift.form')
+        return redirect('enrollment.gift.views.form')
 
     context = {
         'giver': request.session['gift_membership']['giver'],
@@ -113,7 +119,7 @@ def confirm(request):
 
 def send(request):
     if not 'gift_membership' in request.session:
-        return redirect('enrollment.views_gift.index')
+        return redirect('enrollment.gift.views.index')
     t1 = loader.get_template('main/enrollment/gift/email-memberservice.html')
     t2 = loader.get_template('main/enrollment/gift/email-giver.html')
     # Note that this context is used for both email templates
@@ -123,18 +129,36 @@ def send(request):
     })
     memberservice_message = t1.render(c)
     giver_message = t2.render(c)
-    send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
+
+    try:
+        send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
+    except SMTPException:
+        logger.warning(u"Klarte ikke å sende gavemedlemskap-epost til medlemsservice",
+            exc_info=sys.exc_info(),
+            extra={'request': request}
+        )
+        messages.error(request, 'email_memberservice_fail')
+        return redirect('enrollment.gift.views.confirm')
+
     if request.session['gift_membership']['giver'].email != '':
-        send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+        try:
+            send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+        except SMTPException:
+            logger.warning(u"Klarte ikke å sende gavemedlemskapskvittering på e-post",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            messages.error(request, 'email_receipt_fail')
     request.session['gift_membership']['order_sent'] = True
     request.session.modified = True
-    return redirect('enrollment.views_gift.receipt')
+    return redirect('enrollment.gift.views.receipt')
 
 def receipt(request):
+    messages.error(request, 'email_receipt_fail')
     if not 'gift_membership' in request.session:
-        return redirect('enrollment.views_gift.index')
+        return redirect('enrollment.gift.views.index')
     if not 'giver' in request.session['gift_membership']:
-        return redirect('enrollment.views_gift.form')
+        return redirect('enrollment.gift.views.form')
     context = {
         'giver': request.session['gift_membership']['giver'],
         'receivers': request.session['gift_membership']['receivers'],
@@ -144,4 +168,4 @@ def receipt(request):
 
 def clear(request):
     del request.session['gift_membership']
-    return redirect('enrollment.views_gift.index')
+    return redirect('enrollment.gift.views.index')

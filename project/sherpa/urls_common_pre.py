@@ -15,4 +15,6 @@ urlpatterns = patterns('',
 
     # For django-simple-captcha
     url(r'^captcha/', include('captcha.urls')),
+
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 )

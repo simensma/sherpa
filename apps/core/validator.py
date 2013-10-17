@@ -25,7 +25,10 @@ def email(email, req=True):
     if not req and email == '':
         return True
     # Email matches anything@anything.anything, without whitespace
-    return len(re.findall('^[^\s\,\<\>]+@[^\s\,\<\>]+\.[^\s\,\<\>]+$', email)) > 0
+    email_format = len(re.findall('^[^\s\,\<\>]+@[^\s\,\<\>]+\.[^\s\,\<\>]+$', email)) > 0
+    no_dotdot = '..' not in email
+    no_double_at = email.find('@') == email.rfind('@')
+    return email_format and no_dotdot and no_double_at
 
 def memberid(memberid, req=True):
     if not req and memberid == '':

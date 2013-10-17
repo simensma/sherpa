@@ -2,6 +2,7 @@
 
 from django.conf import settings
 
+from datetime import datetime
 import base64
 
 from exceptions import BadRequest
@@ -127,3 +128,13 @@ def invalid_version_response(version):
         code=error_codes.INVALID_REPRESENTATION,
         http_code=400
     ).response()
+
+def require_focus():
+    now = datetime.now()
+    for downtime in settings.FOCUS_DOWNTIME_PERIODS:
+        if now >= downtime['from'] and now < downtime['to']:
+            raise BadRequest(
+                "Our member system is required by this API call, however it is currently down for maintenance for the following duration (in norwegian): %s" % downtime['period_message'],
+                code=error_codes.FOCUS_IS_DOWN,
+                http_code=500
+            )

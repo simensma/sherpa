@@ -58,10 +58,10 @@
     <tr>
       <th>Min side-bruker</th>
       <td>
-        {% if other_user.is_active %}
-          Ja
-        {% else %}
+        {% if other_user.is_inactive %}
           Nei
+        {% else %}
+          Ja
         {% endif %}
       </td>
     </tr>
@@ -167,10 +167,10 @@
     <tr>
       <th>Min side-bruker</th>
       <td>
-        {% if other_user.is_active %}
-          Ja
-        {% else %}
+        {% if other_user.is_inactive %}
           Nei
+        {% else %}
+          Ja
         {% endif %}
       </td>
     </tr>
