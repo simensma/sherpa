@@ -182,7 +182,8 @@ def signon_complete(request):
     client = request.session['dntconnect']['client']
     response_data = {
         'er_autentisert': request.user.is_authenticated(),
-        'signon': request.session['dntconnect'].get('signon', u'ukjent')
+        'signon': request.session['dntconnect'].get('signon', u'ukjent'),
+        'språkkode': request.LANGUAGE_CODE
     }
     if request.user.is_authenticated():
         response_data.update(get_member_data(request.user))
