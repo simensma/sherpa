@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-15 16:06+0200\n"
+"POT-Creation-Date: 2013-10-22 15:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -736,8 +736,8 @@ msgid "Innmelding"
 msgstr "Become member"
 
 #: templates/main/enrollment/index.html:13
-msgid "Bli medlem"
-msgstr "Become member"
+msgid "Bli medlem for"
+msgstr "Become member for"
 
 #: templates/main/enrollment/payment-process-error.html:18
 #: templates/main/enrollment/payment.html:28
