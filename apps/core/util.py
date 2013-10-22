@@ -44,6 +44,10 @@ class NoRoleRelationException(Exception):
     """Raised when the Association does not have a related role"""
 
 def current_membership_year_start():
+    """
+    Returns the date object for the current membership year start.
+    Usually some date near October/November.
+    """
     today = date.today()
     for year in settings.MEMBERSHIP_YEAR_START:
         if year.year == today.year:
@@ -53,6 +57,10 @@ def current_membership_year_start():
     return date(year=today.year, month=month, day=1)
 
 def previous_membership_year_start():
+    """
+    Returns the date object for the previous' membership year start, for those
+    rare cases where that's interesting.
+    """
     today = date.today()
     for year in settings.MEMBERSHIP_YEAR_START:
         if year.year == today.year - 1:
