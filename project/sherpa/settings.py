@@ -94,8 +94,8 @@ FOCUS_DOWNTIME_PERIODS = [
     },
     {
         'from': datetime(year=2013, month=10, day=22, hour=17),
-        'to': datetime(year=2013, month=10, day=22, hour=23),
-        'period_message': 'tirsdag 22. oktober fra kl. 17 og ut kvelden'
+        'to': datetime(year=2013, month=10, day=22, hour=18),
+        'period_message': 'tirsdag 22. oktober fra kl. 17:00 til kl. 18:00'
     },
 ]
 
