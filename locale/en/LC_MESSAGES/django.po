@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-23 13:45+0200\n"
+"POT-Creation-Date: 2013-10-23 14:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgid "Registrer deg"
 msgstr "Register"
 
 #: templates/common/user/login/util/registration_form.html:97
-#: templates/main/enrollment/payment.html:66
+#: templates/main/enrollment/payment.html:76
 #: templates/main/membership/memberid_sms/forgotten.html:13
 msgid "Laster, vennligst vent..."
 msgstr "Loading, please wait..."
@@ -417,6 +417,7 @@ msgid "Lukk vindu"
 msgstr "Close window"
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:17
+#: templates/main/enrollment/payment.html:36
 msgid "Kortbetaling utilgjengelig"
 msgstr "Online payment is currently unavailable"
 
@@ -721,7 +722,7 @@ msgstr ""
 "or contect memberservice if the error persists."
 
 #: templates/main/enrollment/household.html:156
-#: templates/main/enrollment/payment.html:59
+#: templates/main/enrollment/payment.html:69
 #: templates/main/enrollment/verification.html:220
 msgid "Tilbake"
 msgstr "Back"
@@ -873,11 +874,21 @@ msgstr ""
 "We're sorry, an error occurred when we tried connecting to our payment "
 "provider. You can try again, or choose invoice as payment method instead."
 
-#: templates/main/enrollment/payment.html:36
+#: templates/main/enrollment/payment.html:37
+msgid ""
+"\n"
+"            Beklager, kortbetaling er midlertidig utilgjengelig. Vennligst "
+"vent og prøv igjen litt senere, eller velg å få tilsendt faktura.<br><br>\n"
+"            Vi beklager dette og takker for din tålmodighet. Eventuelle "
+"spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.\n"
+"          "
+msgstr "We're sorry, online payment is temporarily unavailable. Please try again later, or choose to receive an invoice.<br><br>We sincerely apologize for this inconvenience. If you have any questions, please contact membership service - see contact information in the box on the right."
+
+#: templates/main/enrollment/payment.html:46
 msgid "Må betales med VISA/MASTERCARD"
 msgstr "VISA/MASTERCARD payment is required"
 
-#: templates/main/enrollment/payment.html:37
+#: templates/main/enrollment/payment.html:47
 msgid ""
 "Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet "
 "i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og "
@@ -887,15 +898,15 @@ msgstr ""
 "arranged by DNT, you have to complete payment online so that we can verify "
 "the payment and offer any discounts."
 
-#: templates/main/enrollment/payment.html:44
+#: templates/main/enrollment/payment.html:54
 msgid "Velg betalingsmåte:"
 msgstr "Choose payment method:"
 
-#: templates/main/enrollment/payment.html:50
+#: templates/main/enrollment/payment.html:60
 msgid "Få tilsendt faktura"
 msgstr "Receive invoice"
 
-#: templates/main/enrollment/payment.html:55
+#: templates/main/enrollment/payment.html:65
 msgid ""
 "<strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet "
 "gyldig før betalingen er registrert i vårt system."
@@ -903,11 +914,11 @@ msgstr ""
 "<strong>Note:</strong> If you choose to pay with an invoice, your membership "
 "will not be valid until the payment is registered in our systems."
 
-#: templates/main/enrollment/payment.html:61
+#: templates/main/enrollment/payment.html:71
 msgid "Til betaling"
 msgstr "To payment"
 
-#: templates/main/enrollment/payment.html:64
+#: templates/main/enrollment/payment.html:74
 msgid "Send bestilling"
 msgstr "Complete and send order"
 
