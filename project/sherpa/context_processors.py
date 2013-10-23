@@ -2,8 +2,9 @@ from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
+from core.util import membership_year_start as membership_year_start_date_set
 
-from datetime import datetime
+from datetime import datetime, date
 import re
 
 def menus(request):
@@ -53,3 +54,14 @@ def dntconnect(request):
         return {'dntconnect': request.session['dntconnect']}
     else:
         return {}
+
+def membership_year_start(request):
+    today = date.today()
+    date_set = {}
+    for key, value in membership_year_start_date_set().items():
+        date_set[key] = {
+            'date': value,
+            'has_passed': today >= value,
+            'applicable_year': value.year + 1 if today >= value else today.year
+        }
+    return {'membership_year_start': date_set}

@@ -10,7 +10,6 @@ from django.core.exceptions import PermissionDenied
 from association.models import Association
 from user.models import User, Permission, AssociationRole, Turleder
 from focus.models import Actor, Enrollment
-from core.util import current_membership_year_start
 
 from datetime import date
 import json
@@ -55,7 +54,6 @@ def show(request, other_user):
         'all_associations': Association.sort(Association.objects.all()),
         'turleder_roles': Turleder.TURLEDER_CHOICES,
         'today': today,
-        'next_year': today >= current_membership_year_start(),
         'five_years_from_now': five_years_from_now,
     }
     return render(request, 'common/admin/users/show/index.html', context)

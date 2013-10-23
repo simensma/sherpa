@@ -321,8 +321,9 @@ class User(AbstractBaseUser):
 
     def norway_bus_tickets_offer_has_expired(self):
         # Import here to avoid circular import
-        from core.util import previous_membership_year_start
-        return self.get_membership_start_date() < previous_membership_year_start()
+        from core.util import membership_year_start
+        last_year = date.today().year - 1
+        return self.get_membership_start_date() < membership_year_start(year=last_year)['public_date']
 
     def show_norway_bus_tickets_menu_item(self):
         """

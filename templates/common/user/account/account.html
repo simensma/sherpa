@@ -111,19 +111,9 @@
             <th>Status</th>
             <td>
               {% if user.has_paid %}
-                Betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
+                Betalt for {{ membership_year_start.public_date.applicable_year }}
               {% else %}
-                Ikke betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
+                Ikke betalt for {{ membership_year_start.public_date.applicable_year }}
               {% endif %}
             </td>
           </tr>

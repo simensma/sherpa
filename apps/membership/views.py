@@ -11,13 +11,11 @@ from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
-from core.util import current_membership_year_start
 from enrollment.models import State
 from membership.models import SMSServiceRequest
 from user.models import User
 from membership.util import send_sms_receipt, memberid_sms_count
 
-from datetime import date
 import json
 import logging
 import sys
@@ -45,15 +43,10 @@ def benefits(request, association_id):
         price = Price.objects.get(association_id=association_focus_id)
         cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     context = {
         'association': association,
         'price': price,
-        'today': today,
         'enrollment_active': State.objects.all()[0].active,
-        'new_membership_year': new_membership_year
     }
     return render(request, 'main/membership/benefits.html', context)
 

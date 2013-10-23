@@ -1,6 +1,7 @@
 {% extends 'main/enrollment/index.html' %}
 
 {% load i18n %}
+{% load samtut %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/enrollment/verification.js"></script>
@@ -212,7 +213,7 @@
             Dere blir medlemmer i DNT og {{ association }}.
           {% endblocktrans %}
 
-          {% trans "Medlemskapet gjelder for" %} <strong>{% if today >= new_membership_year %}{{ today.year|add:1 }}, {% trans "samt ut" %} {% endif %}{{ today.year }}</strong>.
+          {% trans "Medlemskapet gjelder for" %} <strong>{{ membership_year_start.initiation_date|samtut }}</strong>.
         </p>
 
         <p>

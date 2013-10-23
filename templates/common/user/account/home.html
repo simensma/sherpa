@@ -46,21 +46,11 @@
           </tr>
           <tr>
             <th>Ditt medlemskap:</th>
-            <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
+            <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {{ membership_year_start.public_date.applicable_year }} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
               {% if user.has_paid %}
-                Betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
+                Betalt for {{ membership_year_start.public_date.applicable_year }}
               {% else %}
-                Ikke betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
+                Ikke betalt for {{ membership_year_start.public_date.applicable_year }}
                 <i class="info-hover"></i>
               {% endif %}
             </td>

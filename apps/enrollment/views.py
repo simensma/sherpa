@@ -4,14 +4,13 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
-from django.template import Context
+from django.template import Context, RequestContext
 from django.template.loader import render_to_string
 from django.core.cache import cache
 from django.db import transaction, connections
 from django.contrib import messages
 
 from core import validator
-from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
@@ -20,7 +19,7 @@ from enrollment.models import State
 from enrollment.util import current_template_layout
 from user.models import User
 
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 import requests
 import re
 import json
@@ -124,20 +123,11 @@ def registration(request, user):
     if not errors and 'forward' in request.POST:
         return redirect("enrollment.views.household")
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-    end_of_year = date(year=today.year, month=12, day=31)
-    display_membership_year_warning = today >= new_membership_year - timedelta(days=14) and today < new_membership_year
-
     context = {
         'users': request.session['enrollment']['users'],
         'person': user,
         'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'today': today,
-        'end_of_year': end_of_year,
-        'display_membership_year_warning': display_membership_year_warning,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)
@@ -223,9 +213,6 @@ def household(request):
             main = True
             break
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     updateIndices(request.session)
     context = {
         'users': request.session['enrollment']['users'],
@@ -237,8 +224,6 @@ def household(request):
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'errors': errors,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/household.html', context)
@@ -355,9 +340,6 @@ def verification(request):
         cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     keycount = 0
     youth_or_older_count = 0
     main = None
@@ -399,8 +381,6 @@ def verification(request):
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/verification.html', context)
@@ -422,14 +402,9 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     context = {
         'card_available': State.objects.all()[0].card,
         'card_required': 'innmelding.aktivitet' in request.session,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/payment.html', context)
@@ -570,10 +545,6 @@ def payment(request):
         return redirect('enrollment.views.process_invoice')
 
     # Paying with card, move on.
-    today = date.today()
-    year = today.year
-    next_year = today >= current_membership_year_start()
-
     # Infer order details based on (poor) conventions.
     if main is not None:
         order_number = 'I_%s' % main['id']
@@ -596,7 +567,7 @@ def payment(request):
             first_name, last_name = request.session['enrollment']['users'][0]['name'].rsplit(' ', 1)
             email = request.session['enrollment']['users'][0]['email']
 
-    context = Context({'year': year, 'next_year': next_year})
+    context = RequestContext(request)
     desc = render_to_string('main/enrollment/payment-terminal.html', context)
 
     # Send the transaction registration to Nets
@@ -795,9 +766,6 @@ def result(request):
     # Collect emails to a separate list for easier template formatting
     emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {
@@ -808,8 +776,6 @@ def result(request):
         'emails': emails,
         'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
-        'today': today,
-        'new_membership_year': new_membership_year,
         'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
     context.update(current_template_layout(request))
@@ -842,12 +808,7 @@ def sms(request):
     number = request.session['enrollment']['users'][index]['phone']
 
     # Render the SMS template
-    today = date.today()
-    year = today.year
-    next_year = today >= current_membership_year_start()
-    context = Context({
-        'year': year,
-        'next_year': next_year,
+    context = RequestContext(request, {
         'users': request.session['enrollment']['users']
     })
     sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
