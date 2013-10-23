@@ -186,7 +186,7 @@ def household(request):
             else:
                 try:
                     focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
-                    association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
+                    Association.objects.get(focus_id=focus_zipcode.main_association_id) # Verify that the Association exists
                     return redirect('enrollment.views.verification')
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
