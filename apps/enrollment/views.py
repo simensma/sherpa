@@ -9,6 +9,7 @@ from django.core.cache import cache
 from django.contrib import messages
 
 from core.models import Zipcode, FocusCountry
+from core.util import membership_year_start
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
 from focus.util import get_membership_type_by_codename
@@ -17,7 +18,7 @@ from enrollment.util import current_template_layout, prepare_and_send_email, upd
 from enrollment.validation import validate, validate_user, validate_location
 from user.models import User
 
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 import requests
 import re
 import json
@@ -80,6 +81,11 @@ def registration(request, user):
         except ValueError:
             new_user['dob'] = None
             new_user['age'] = None
+
+        # After membership year start, the enrollment is really for the next year,
+        # hence they'll be one year older than they are this year.
+        if date.today() >= membership_year_start()['actual_date']:
+            new_user['age'] += 1
 
         if not validate_user(request.POST):
             errors = True
