@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-24 10:46+0200\n"
+"POT-Creation-Date: 2013-10-24 15:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr "Password:"
 
 #: templates/common/user/login/util/login_form.html:37
 #: templates/main/connect/signon.html:5 templates/main/connect/signon.html:6
-#: templates/main/connect/signon.html:39 templates/main/connect/signon.html:46
+#: templates/main/connect/signon.html:46
 #: templates/main/connect/signon_enrollment_card_deactivated.html:5
 #: templates/main/connect/signon_enrollment_card_deactivated.html:6
 #: templates/main/connect/signon_unavailable.html:5
@@ -371,6 +371,10 @@ msgstr "Full name:"
 msgid "E-postadresse:"
 msgstr "E-mail address:"
 
+#: templates/main/connect/signon.html:39
+msgid "Logg inn på Min side"
+msgstr "Log on to the user page"
+
 #: templates/main/connect/signon.html:47
 msgid "Opprett ny bruker"
 msgstr "Create user"
@@ -391,15 +395,19 @@ msgstr "(must be paid online)"
 msgid "Jeg er ikke klar for å bli medlem ennå"
 msgstr "I'm not ready to become a member yet"
 
-#: templates/main/connect/signon.html:101
+#: templates/main/connect/signon.html:102
 msgid "Lurer du på noe?"
 msgstr "Questions?"
 
-#: templates/main/connect/signon.html:105
+#: templates/main/connect/signon.html:106
+msgid "For å gå videre med bestillingen må du logge deg på Min side."
+msgstr "To proceed with your booking, you'll have to log on to the user page."
+
+#: templates/main/connect/signon.html:110
 msgid "Ved behov for teknisk støtte, ring:"
 msgstr "If you require technical support, please call:"
 
-#: templates/main/connect/signon.html:124
+#: templates/main/connect/signon.html:129
 msgid ""
 "Du finner også nummeret på giroen fra forrige årskontingent, og på "
 "medlemskortet ditt som vist med rød ring på bildet:"
@@ -407,11 +415,11 @@ msgstr ""
 "You'll also find your ID on your previous invoice, and on your membership "
 "card as shown with a red circle on the following photo:"
 
-#: templates/main/connect/signon.html:126
+#: templates/main/connect/signon.html:131
 msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
 msgstr "Illustration of the member ID's placement on the membership card"
 
-#: templates/main/connect/signon.html:129
+#: templates/main/connect/signon.html:134
 #: templates/main/enrollment/registration.html:174
 msgid "Lukk vindu"
 msgstr "Close window"
@@ -882,7 +890,8 @@ msgid ""
 "            Vi beklager dette og takker for din tålmodighet. Eventuelle "
 "spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.\n"
 "          "
-msgstr "\n"
+msgstr ""
+"\n"
 "We're sorry, online payment is temporarily unavailable. Please try again "
 "later, or choose to receive an invoice.<br>We sincerely apologize for this "
 "inconvenience and thank you for your patience. Please direct any questions "
