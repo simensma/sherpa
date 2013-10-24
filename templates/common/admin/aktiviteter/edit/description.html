@@ -13,203 +13,207 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<div class="admin-aktivitet-edit">
 
-    <h2>Rediger aktivitet</h2>
+  <div class="row">
+    <div class="span12">
 
-    {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
+      <h2>Rediger aktivitet</h2>
 
-    {# TODO: Client-side validations #}
-    <form action="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
-      {% csrf_token %}
-      <input type="hidden" name="images" value="">
+      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
 
-      <div class="control-group title">
-        <label class="control-label" for="title">Tittel:</label>
-        <div class="controls">
-          <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
-        </div>
-      </div>
+      {# TODO: Client-side validations #}
+      <form action="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
+        {% csrf_token %}
+        <input type="hidden" name="images" value="">
 
-      <div class="control-group description">
-        <label class="control-label" for="description">Beskrivelse:</label>
-        <div class="controls">
-          <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
-        </div>
-      </div>
-
-      <div class="control-group difficulty">
-        <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
-        <div class="controls">
-          <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-            <option value=""></option>
-            {% for difficulty in difficulties %}
-              <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="control-group audiences">
-        <label class="control-label" for="audiences">Målgruppe:</label>
-        <div class="controls">
-          <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
-            <option value=""></option>
-            {% for audience in audiences %}
-              <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="control-group subcategories">
-        <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
-        <div class="controls">
-          <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
-            <option value=""></option>
-            {% for category in aktivitet.get_missing_subcategories %}
-              <option value="{{ category }}">{{ category }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="control-group tags">
-        <label class="control-label" for="tags">Opprett egne kategorier her:</label>
-        <div class="controls">
-          <input type="hidden" name="tags" value="">
-          <p><input type="text" class="input-large" name="tag" id="tags"></p>
-          <div class="tag-box" data-predefined-tags="{{ aktivitet.category_tags.all|taglist }}"></div>
-        </div>
-      </div>
-      <div style="clear: both;"></div>
-
-      <div class="control-group association">
-        <label class="control-label" for="association">Arrangør:</label>
-        <div class="controls">
-          <select name="association" id="association" class="chosen" data-placeholder="Velg arrangør...">
-            <option value=""></option>
-            {% if user.children_associations_sorted.central|length > 0 %}
-              <optgroup label="Sentralt/nasjonalt">
-                {% for association in user.children_associations_sorted.central %}
-                  <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if user.children_associations_sorted.associations|length > 0 %}
-              <optgroup label="Medlemsforeninger">
-                {% for association in user.children_associations_sorted.associations %}
-                  <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if user.children_associations_sorted.small_associations|length > 0 %}
-              <optgroup label="Lokale turlag">
-                {% for association in user.children_associations_sorted.small_associations %}
-                  <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if user.children_associations_sorted.hike_groups|length > 0 %}
-              <optgroup label="Turgrupper">
-                {% for association in user.children_associations_sorted.hike_groups %}
-                  <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-          </select>
-        </div>
-      </div>
-
-      <div class="control-group co_association">
-        <label class="control-label" for="co_association">Medarrangør:</label>
-        <div class="controls">
-          <select name="co_association" id="co_association" class="chosen" data-placeholder="Ingen medarrangør">
-            <option value=""></option>
-            {% if all_associations.central|length > 0 %}
-              <optgroup label="Sentralt/nasjonalt">
-                {% for association in all_associations.central %}
-                  <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if all_associations.associations|length > 0 %}
-              <optgroup label="Medlemsforeninger">
-                {% for association in all_associations.associations %}
-                  <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if all_associations.small_associations|length > 0 %}
-              <optgroup label="Lokale turlag">
-                {% for association in all_associations.small_associations %}
-                  <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-            {% if all_associations.hike_groups|length > 0 %}
-              <optgroup label="Turgrupper">
-                {% for association in all_associations.hike_groups %}
-                  <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-          </select>
-        </div>
-      </div>
-
-      <div class="control-group images">
-        <label class="control-label">Bilder:</label>
-        <div class="controls">
-          {% include 'common/admin/images/util/image-carousel-picker.html' %}
-        </div>
-      </div>
-
-      <div class="control-group hide_aktivitet">
-        <label class="control-label">Tilgjengelighet:</label>
-        <div class="controls">
-          <input type="hidden" name="hidden">
-          <div class="btn-group" data-toggle="buttons-radio">
-            <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
-            <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
+        <div class="control-group title">
+          <label class="control-label" for="title">Tittel:</label>
+          <div class="controls">
+            <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
           </div>
-          <div class="hints">
-            {% if aktivitet.dates.count == 0 %}
-              En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
-            {% else %}
-              En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
-              {% for aktivitet_date in aktivitet.get_dates_ordered %}
-                <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">http://{{ site.domain }}{% url 'aktiviteter.views.show' aktivitet_date.id %}</a>
-                {% if not forloop.last %}<br>{% endif %}
+        </div>
+
+        <div class="control-group description">
+          <label class="control-label" for="description">Beskrivelse:</label>
+          <div class="controls">
+            <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+          </div>
+        </div>
+
+        <div class="control-group difficulty">
+          <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
+          <div class="controls">
+            <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+              <option value=""></option>
+              {% for difficulty in difficulties %}
+                <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
               {% endfor %}
-            {% endif %}
+            </select>
           </div>
         </div>
-      </div>
 
-      <div class="control-group pub_date">
-        <label class="control-label" for="pub_date">Publiseres:</label>
-        <div class="controls">
-          <div class="input-append date">
-            <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
-            <span class="add-on"><i class="icon-th"></i></span>
-          </div>
-          <div class="hints">
-            En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
+        <div class="control-group audiences">
+          <label class="control-label" for="audiences">Målgruppe:</label>
+          <div class="controls">
+            <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
+              <option value=""></option>
+              {% for audience in audiences %}
+                <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
+              {% endfor %}
+            </select>
           </div>
         </div>
-      </div>
 
-      <div class="control-group submit">
-        <div class="controls">
-          <button type="submit" class="btn btn-success btn-large"><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
+        <div class="control-group subcategories">
+          <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+          <div class="controls">
+            <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
+              <option value=""></option>
+              {% for category in aktivitet.get_missing_subcategories %}
+                <option value="{{ category }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
-      </div>
 
-    </form>
+        <div class="control-group tags">
+          <label class="control-label" for="tags">Opprett egne kategorier her:</label>
+          <div class="controls">
+            <input type="hidden" name="tags" value="">
+            <p><input type="text" class="input-large" name="tag" id="tags"></p>
+            <div class="tag-box" data-predefined-tags="{{ aktivitet.category_tags.all|taglist }}"></div>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
 
+        <div class="control-group association">
+          <label class="control-label" for="association">Arrangør:</label>
+          <div class="controls">
+            <select name="association" id="association" class="chosen" data-placeholder="Velg arrangør...">
+              <option value=""></option>
+              {% if user.children_associations_sorted.central|length > 0 %}
+                <optgroup label="Sentralt/nasjonalt">
+                  {% for association in user.children_associations_sorted.central %}
+                    <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if user.children_associations_sorted.associations|length > 0 %}
+                <optgroup label="Medlemsforeninger">
+                  {% for association in user.children_associations_sorted.associations %}
+                    <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if user.children_associations_sorted.small_associations|length > 0 %}
+                <optgroup label="Lokale turlag">
+                  {% for association in user.children_associations_sorted.small_associations %}
+                    <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if user.children_associations_sorted.hike_groups|length > 0 %}
+                <optgroup label="Turgrupper">
+                  {% for association in user.children_associations_sorted.hike_groups %}
+                    <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            </select>
+          </div>
+        </div>
+
+        <div class="control-group co_association">
+          <label class="control-label" for="co_association">Medarrangør:</label>
+          <div class="controls">
+            <select name="co_association" id="co_association" class="chosen" data-placeholder="Ingen medarrangør">
+              <option value=""></option>
+              {% if all_associations.central|length > 0 %}
+                <optgroup label="Sentralt/nasjonalt">
+                  {% for association in all_associations.central %}
+                    <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if all_associations.associations|length > 0 %}
+                <optgroup label="Medlemsforeninger">
+                  {% for association in all_associations.associations %}
+                    <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if all_associations.small_associations|length > 0 %}
+                <optgroup label="Lokale turlag">
+                  {% for association in all_associations.small_associations %}
+                    <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+              {% if all_associations.hike_groups|length > 0 %}
+                <optgroup label="Turgrupper">
+                  {% for association in all_associations.hike_groups %}
+                    <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            </select>
+          </div>
+        </div>
+
+        <div class="control-group images">
+          <label class="control-label">Bilder:</label>
+          <div class="controls">
+            {% include 'common/admin/images/util/image-carousel-picker.html' %}
+          </div>
+        </div>
+
+        <div class="control-group hide_aktivitet">
+          <label class="control-label">Tilgjengelighet:</label>
+          <div class="controls">
+            <input type="hidden" name="hidden">
+            <div class="btn-group" data-toggle="buttons-radio">
+              <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
+              <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
+            </div>
+            <div class="hints">
+              {% if aktivitet.dates.count == 0 %}
+                En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst hvis adressen besøkes direkte.
+              {% else %}
+                En privat aktivitet kommer ikke frem i <a href="{% url 'aktiviteter.views.index' %}">søket</a>, men kan sees av hvem som helst på følgende adresse{% if aktivitet.dates.all|length > 1 %}r{% endif %}:<br>
+                {% for aktivitet_date in aktivitet.get_dates_ordered %}
+                  <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">http://{{ site.domain }}{% url 'aktiviteter.views.show' aktivitet_date.id %}</a>
+                  {% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group pub_date">
+          <label class="control-label" for="pub_date">Publiseres:</label>
+          <div class="controls">
+            <div class="input-append date">
+              <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+            <div class="hints">
+              En upublisert aktivitet vises ikke på nettsidene (selv om den er privat).
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group submit">
+          <div class="controls">
+            <button type="submit" class="btn btn-success btn-large"><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
   </div>
+
 </div>
 
 {% include 'common/admin/images/util/image-archive-picker.html' %}
