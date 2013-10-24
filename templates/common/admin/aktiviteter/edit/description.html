@@ -31,69 +31,9 @@
 
           <div class="control-group">
             <div class="controls">
-              <h2>Beskrivelse</h2>
+              <h2>Arrangørforening</h2>
             </div>
           </div>
-
-          <div class="control-group title">
-            <label class="control-label" for="title">Tittel:</label>
-            <div class="controls">
-              <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
-            </div>
-          </div>
-
-          <div class="control-group description">
-            <label class="control-label" for="description">Beskrivelse:</label>
-            <div class="controls">
-              <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
-            </div>
-          </div>
-
-          <div class="control-group difficulty">
-            <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
-            <div class="controls">
-              <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-                <option value=""></option>
-                {% for difficulty in difficulties %}
-                  <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group audiences">
-            <label class="control-label" for="audiences">Målgruppe:</label>
-            <div class="controls">
-              <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
-                <option value=""></option>
-                {% for audience in audiences %}
-                  <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group subcategories">
-            <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
-            <div class="controls">
-              <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
-                <option value=""></option>
-                {% for category in aktivitet.get_missing_subcategories %}
-                  <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="control-group tags">
-            <label class="control-label" for="tags">Opprett egne kategorier her:</label>
-            <div class="controls">
-              <input type="hidden" name="tags" value="">
-              <p><input type="text" class="input-large" name="tag" id="tags"></p>
-              <div class="tag-box" data-predefined-tags="{{ aktivitet.category_tags.all|taglist }}"></div>
-            </div>
-          </div>
-          <div style="clear: both;"></div>
 
           <div class="control-group association">
             <label class="control-label" for="association">Arrangør:</label>
@@ -168,6 +108,76 @@
               </select>
             </div>
           </div>
+
+        </div>
+
+        <div class="section">
+
+          <div class="control-group">
+            <div class="controls">
+              <h2>Beskrivelse og informasjon</h2>
+            </div>
+          </div>
+
+          <div class="control-group title">
+            <label class="control-label" for="title">Tittel:</label>
+            <div class="controls">
+              <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
+            </div>
+          </div>
+
+          <div class="control-group description">
+            <label class="control-label" for="description">Beskrivelse:</label>
+            <div class="controls">
+              <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+            </div>
+          </div>
+
+          <div class="control-group difficulty">
+            <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
+            <div class="controls">
+              <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+                <option value=""></option>
+                {% for difficulty in difficulties %}
+                  <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group audiences">
+            <label class="control-label" for="audiences">Målgruppe:</label>
+            <div class="controls">
+              <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
+                <option value=""></option>
+                {% for audience in audiences %}
+                  <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group subcategories">
+            <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+            <div class="controls">
+              <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
+                <option value=""></option>
+                {% for category in aktivitet.get_missing_subcategories %}
+                  <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group tags">
+            <label class="control-label" for="tags">Opprett egne kategorier her:</label>
+            <div class="controls">
+              <input type="hidden" name="tags" value="">
+              <p><input type="text" class="input-large" name="tag" id="tags"></p>
+              <div class="tag-box" data-predefined-tags="{{ aktivitet.category_tags.all|taglist }}"></div>
+            </div>
+          </div>
+          <div style="clear: both;"></div>
 
           <div class="control-group images">
             <label class="control-label">Bilder:</label>
