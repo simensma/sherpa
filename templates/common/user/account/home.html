@@ -8,6 +8,7 @@
 
 {% load rowiterator %}
 {% load advertisement %}
+{% load payment_status %}
 
 {% block body %}
 
@@ -47,10 +48,8 @@
           <tr>
             <th>Ditt medlemskap:</th>
             <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {{ membership_year_start.public_date.applicable_year }} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
-              {% if user.has_paid %}
-                Betalt for {{ membership_year_start.public_date.applicable_year }}
-              {% else %}
-                Ikke betalt for {{ membership_year_start.public_date.applicable_year }}
+              {{ user|payment_status }}
+              {% if not user.has_paid %}
                 <i class="info-hover"></i>
               {% endif %}
             </td>

@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
-from datetime import datetime
+from datetime import datetime, date
 import logging
 
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, PAYMENT_METHOD_CODES
@@ -252,15 +252,60 @@ class Actor(models.Model):
         return self.parent != 0 and self.parent != self.memberid
 
     def has_paid(self):
-        has_paid = cache.get('actor.has_paid.%s' % self.memberid)
+        """
+        Checks if the membership is *currently* paid.
+        """
+        from core.util import membership_year_start
+        if date.today() >= membership_year_start()['actual_date']:
+            return self.has_paid_this_year() or self.has_paid_next_year()
+        else:
+            return self.has_paid_this_year()
+
+    def has_paid_this_year(self):
+        """
+        Checks if the membership is paid for the current year. This is how we find out that
+        a membership is valid after årskravet/before new years for the remainder of the year.
+        """
+        from core.util import membership_year_start
+        if date.today() >= membership_year_start()['actual_date']:
+            return self.has_paid_this_year_after_arskrav()
+        else:
+            return self.balance_is_paid()
+
+    def has_paid_next_year(self):
+        """
+        Checks if this member has paid for the next membership year. Can only be called after
+        årskravet. A False result doesn't mean they're not a valid member right now.
+        """
+        from core.util import membership_year_start
+        if not date.today() >= membership_year_start()['actual_date']:
+            raise Exception("Doesn't make sense to call this method before årskravet")
+        return self.balance_is_paid()
+
+    def balance_is_paid(self):
+        """
+        Checks if the balance view says that the membership is paid. Means different things
+        before and after årskravet, you usually want to check has_paid_{this,next}_year instead.
+        """
+        has_paid = cache.get('actor.balance.%s' % self.memberid)
         if has_paid is None:
             try:
                 has_paid = self.balance.is_paid()
             except BalanceHistory.DoesNotExist:
                 # Not-existing balance for this year means that they haven't paid
                 has_paid = False
-            cache.set('actor.has_paid.%s' % self.memberid, has_paid, settings.FOCUS_MEMBER_CACHE_PERIOD)
+            cache.set('actor.balance.%s' % self.memberid, has_paid, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return has_paid
+
+    def has_paid_this_year_after_arskrav(self):
+        """
+        In the period after årskravet but before year's end, members who have paid for the current
+        year (but not the next) should apparently have no end_date (and those who haven't, do).
+        """
+        from core.util import membership_year_start
+        if not date.today() >= membership_year_start()['actual_date']:
+            raise Exception("Doesn't make sense to call this method before årskravet")
+        return self.end_date is None
 
     # The members that can recieve publications to their household (but don't necessarliy have the actual
     # service themselves - e.g. household members are eligible but their main member has the service)
@@ -413,11 +458,11 @@ def delete_actor_cache(sender, **kwargs):
     cache.delete('actor.%s' % kwargs['instance'].memberid)
     cache.delete('actor.services.%s' % kwargs['instance'].memberid)
     cache.delete('actor.children.%s' % kwargs['instance'].memberid)
-    cache.delete('actor.has_paid.%s' % kwargs['instance'].memberid)
+    cache.delete('actor.balance.%s' % kwargs['instance'].memberid)
     for child in kwargs['instance'].get_children():
         cache.delete('actor.%s' % child.memberid)
         cache.delete('actor.services.%s' % child.memberid)
-        cache.delete('actor.has_paid.%s' % child.memberid)
+        cache.delete('actor.balance.%s' % child.memberid)
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')
@@ -532,31 +577,29 @@ class Price(models.Model):
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
 
-# This is a view which uses 2-3 other views/tables to collect some sort of balance.
-# Instead of wasting time studying its logic, we'll just use this view to get the
-# data we need, even though it performs relatively slow.
 class BalanceHistory(models.Model):
+    """
+    This is a view which uses 2-3 other views/tables to collect some sort of balance.
+    Instead of wasting time studying its logic, we'll just use this view to get the
+    data we need, even though it performs relatively slow.
+    """
+
     id = models.OneToOneField(Actor, related_name='balance', primary_key=True, db_column=u'ActSeqNo')
     memberid = models.IntegerField(db_column=u'ActActNo')
     current_year = models.FloatField(db_column=u'ThisYear') # Dammit, this returns float, smells like trouble
     # Note - this view also has a 'LastYear' column. That field retrieves info from the table
-    # "Cust_Turist_Balance_Hist", but upon further inspection, that table has no entry for member with memberid
-    # above 3000000 - which is from ca 2006. This probably means that it is not in use anymore, so we'll ignore it.
-    # It was used in the old user page - after October, when "årskrav" is processed, a members payment status
-    # Would be if _either_ the current_year or last_year balance was <= 0.
+    # "Cust_Turist_Balance_Hist", but upon further inspection, that table has no entry for member with
+    # memberid above 3000000 - which is from ca 2006. This probably means that it is not in use anymore,
+    # so we'll ignore it. It was used in the old user page - after årskravet is processed, a members
+    # payment status would be if _either_ the current_year or last_year balance was <= 0.
 
     def is_paid(self):
-        # This will be incorrect in the period between "årskrav" processing and year end,
-        # but only for those who haven't paid for the *next* year.
-        # The user might have paid for the current year, and the membership is valid for the
-        # remainder of the year, but Focus treats this 'current year'-field as the next year.
-        # So it will be correct for those who have paid for next year.
-        # Note that since Focus treats it this way, so do we in our code, based on the current
-        # date compared to the current month in settings.MEMBERSHIP_YEAR_START.
-        # This means that we DON'T KNOW what the membership status for the current year is
-        # after the "årskrav" month, and can't inform about it, e.g. on the account page.
-        # This should be fixed. If it is, refactor all usages of this method and rephrase
-        # the info presented to the user.
+        """
+        Note that after in the period after the årskrav has been processed but before the actual year
+        has ended, this will be checking if they have paid for the *NEXT* year. It does NOT account
+        for existing members who paid for the current year, but not the next - however they should still
+        have access to member services - that'll have to be checked by the caller as well.
+        """
         return self.current_year <= 0
 
     class Meta:
