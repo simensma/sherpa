@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-23 14:15+0200\n"
+"POT-Creation-Date: 2013-10-24 10:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -878,11 +878,15 @@ msgstr ""
 msgid ""
 "\n"
 "            Beklager, kortbetaling er midlertidig utilgjengelig. Vennligst "
-"vent og prøv igjen litt senere, eller velg å få tilsendt faktura.<br><br>\n"
+"vent og prøv igjen litt senere, eller velg å få tilsendt faktura.<br>\n"
 "            Vi beklager dette og takker for din tålmodighet. Eventuelle "
 "spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.\n"
 "          "
-msgstr "We're sorry, online payment is temporarily unavailable. Please try again later, or choose to receive an invoice.<br><br>We sincerely apologize for this inconvenience. If you have any questions, please contact membership service - see contact information in the box on the right."
+msgstr "\n"
+"We're sorry, online payment is temporarily unavailable. Please try again "
+"later, or choose to receive an invoice.<br>We sincerely apologize for this "
+"inconvenience and thank you for your patience. Please direct any questions "
+"to our membership service - see contact information in the box on the right."
 
 #: templates/main/enrollment/payment.html:46
 msgid "Må betales med VISA/MASTERCARD"
@@ -1765,16 +1769,6 @@ msgstr "Member ID for:"
 #: templates/main/membership/memberid_sms/message.txt:5
 msgid "årskontingent"
 msgstr "membership"
-
-#: templates/main/membership/memberid_sms/message.txt:3
-#: templates/main/membership/memberid_sms/message.txt:5
-msgid "betalt for"
-msgstr "paid for"
-
-#: templates/main/membership/memberid_sms/message.txt:3
-#: templates/main/membership/memberid_sms/message.txt:5
-msgid "IKKE betalt for"
-msgstr "NOT paid for"
 
 #: templates/main/membership/memberid_sms/message.txt:7
 msgid "Denne SMSen er gyldig som kvittering på betalt årskontingent."
