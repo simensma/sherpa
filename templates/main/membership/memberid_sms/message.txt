@@ -1,8 +1,8 @@
-{% load i18n %}{% trans "Medlemsnummer for:" %}
+{% load i18n %}{% load payment_status %}{% trans "Medlemsnummer for:" %}
 
-{{ mob_user.get_full_name }}: {{ mob_user.memberid }}, {% trans "årskontingent" %} {% if mob_user.has_paid %}{% trans "betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}{% trans "IKKE betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{{ mob_user.get_full_name }}: {{ mob_user.memberid }}, {% trans "årskontingent" %} {{ mob_user|payment_status:"betalt,IKKE betalt" }}
 
-{% for child in mob_user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, {% trans "årskontingent" %} {% if child.has_paid %}{% trans "betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% else %}{% trans "IKKE betalt for" %} {% if next_year %}{{ year|add:"1" }}{% else %}{{ year }}{% endif %}{% endif %}
+{% for child in mob_user.get_children %}{{ child.get_full_name }}: {{ child.memberid }}, {% trans "årskontingent" %} {{ child|payment_status:"betalt,IKKE betalt" }}
 
 {% endfor %}{% if all_paid %}{% trans "Denne SMSen er gyldig som kvittering på betalt årskontingent." %}{% else %}{% trans "Kontakt oss for å fornye medlemskapet." %}{% endif %}
 

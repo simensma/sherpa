@@ -31,19 +31,6 @@
     </div>
   {% endif %}
 
-  {# Hardcode for 2013 - however, we'll likely want this message to reoccur at the appropriate time next year #}
-  {% if display_membership_year_warning %}
-    <div class="row">
-      <div class="span12">
-        <div class="alert alert-error">
-          <strong>Vi nærmer oss slutten for salg av medlemskap for {{ today.year }}!</strong><br>
-          Trenger du medlemskapet akkurat nå, kan du betale med kort. Vær oppmerksom på at medlemskapet følger kalenderåret og utgår {{ end_of_year|date:"j. F Y" }}.<br>
-          Vil du bli medlem for {{ today.year|add:"1" }}, ber du om å få tilsendt faktura. Vi sender deg innbetalingsgiroen i begynnelsen av november. Dette inkluderer medlemskap for resten av {{ today.year }}.
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
   <div class="row">
     <div class="span8">
 
@@ -166,7 +153,7 @@
     <div class="modal-body">
     <ul>
       <li>
-        {% blocktrans with month=new_membership_year|date:"F" %}
+        {% blocktrans with month=membership_year_start.public_date.date|date:"F" %}
           Medlemskap i Den Norske Turistforening (DNT) følger kalenderåret og gjelder fra 1. januar til 31. desember. Etter 1. {{ month }} kan man kjøpe medlemskap for påfølgende år.
         {% endblocktrans %}
       </li>

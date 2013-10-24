@@ -19,7 +19,6 @@ import hashlib
 
 from user.models import User, NorwayBusTicket
 from core import validator
-from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
@@ -40,20 +39,12 @@ def home(request):
     if request.user.is_pending and request.user.verify_still_pending():
         return render(request, 'common/user/account/home_pending.html')
     else:
-        today = date.today()
-        context = {
-            'year': today.year,
-            'next_year': today >= current_membership_year_start(),
-        }
-        return render(request, 'common/user/account/home.html', context)
+        return render(request, 'common/user/account/home.html')
 
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def account(request):
-    today = date.today()
     context = {
-        'year': today.year,
-        'next_year': today >= current_membership_year_start(),
         'association_count': Association.objects.filter(type='forening').count()
     }
     return render(request, 'common/user/account/account.html', context)

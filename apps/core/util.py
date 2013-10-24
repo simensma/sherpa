@@ -43,22 +43,21 @@ def association_user_role(association, user):
 class NoRoleRelationException(Exception):
     """Raised when the Association does not have a related role"""
 
-def current_membership_year_start():
-    today = date.today()
-    for year in settings.MEMBERSHIP_YEAR_START:
-        if year.year == today.year:
-            return year
-    # The current year isn't specified - create a new date with the month of the latest specified year
-    month = max(settings.MEMBERSHIP_YEAR_START).month
-    return date(year=today.year, month=month, day=1)
+def membership_year_start(year=date.today().year):
+    """
+    Returns the date set for the membership year start, see settings.MEMBERSHIP_YEAR_START.
+    """
+    for dates in settings.MEMBERSHIP_YEAR_START:
+        if dates['public_date'].year == year:
+            return dates
 
-def previous_membership_year_start():
-    today = date.today()
-    for year in settings.MEMBERSHIP_YEAR_START:
-        if year.year == today.year - 1:
-            return year
-    # The exact year isn't defined - find the newest one before last year
-    candidates = [y for y in settings.MEMBERSHIP_YEAR_START if y.year < today.year - 1]
-    # Note that we'll intentionally let max() raise ValueError if candidates is empty
-    month = max(candidates).month
-    return date(year=(today.year - 1), month=month, day=1)
+    # At this point, there's no entry for the current year. Use the dates from the latest defined year.
+    candidates = [d for d in settings.MEMBERSHIP_YEAR_START if d['public_date'].year <= year]
+    dates = max(candidates, key=lambda d: d['public_date'])
+
+    # Return a fake date set based on the values we got
+    return {
+        'initiation_date': date(year=year, month=dates['initiation_date'].month, day=dates['initiation_date'].day),
+        'actual_date': date(year=year, month=dates['actual_date'].month, day=dates['actual_date'].day),
+        'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
+    }

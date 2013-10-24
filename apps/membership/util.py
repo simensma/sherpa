@@ -5,9 +5,6 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from django.conf import settings
 
-from core.util import current_membership_year_start
-
-from datetime import datetime, date
 from urllib import quote_plus
 import requests
 import re
@@ -34,8 +31,6 @@ def send_sms_receipt(request, user):
     try:
         context = RequestContext(request, {
             'mob_user': user,
-            'year': datetime.now().year,
-            'next_year': date.today() >= current_membership_year_start(),
             'all_paid': all(u.has_paid() for u in [user] + list(user.get_children()))
         })
         sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')

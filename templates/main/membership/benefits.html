@@ -11,12 +11,7 @@
 <div class="membership-benefits">
 
   <h1>
-    Bli medlem
-    {% if today >= new_membership_year %}
-      {{ today|date:"Y"|add:1 }}
-    {% else %}
-      {{ today|date:"Y" }}
-    {% endif %}
+    Bli medlem for {{ membership_year_start.initiation_date.applicable_year }}
   </h1>
 
   {% if not enrollment_active %}
@@ -274,14 +269,8 @@
   <div class="row">
     <div class="span8">
       <h2>
-        Priser
-        {# Note: This won't be applicable unless the prices are actually updated in Focus. #}
-        {# So in practice, this probably *should* stay static and be manually updated. Sigh. #}
-        {% if today >= new_membership_year %}
-          {{ today|date:"Y"|add:1 }}
-        {% else %}
-          {{ today|date:"Y" }}
-        {% endif %}
+        {# Note that this in practice will show the old prices after årskrav-initiation although memberships are valid for the next year. The prices should be updated at the actual årskrav-date, and the cache probably needs to be cleared. #}
+        Priser {{ membership_year_start.actual_date.applicable_year }}
       </h2>
       <table class="table prices">
         <tr>
@@ -338,10 +327,11 @@
           {% else %}
             <li>Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.</li>
           {% endif %}
-          {% if today >= new_membership_year %}
-            <li>Fra 1. {{ new_membership_year|date:"F" }} {{ today|date:"Y" }} gjelder medlemskapet resten av dette året, samt hele {{ today|date:"Y"|add:1 }}.</li>
+
+          {% if membership_year_start.public_date.has_passed %}
+            <li>Fra {{ membership_year_start.public_date.date|date:"j. F Y" }} gjelder medlemskapet resten av dette året, samt hele {{ membership_year_start.public_date.date|date:"Y"|add:"1" }}.</li>
           {% else %}
-            <li>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember {{ today|date:"Y" }}.</li>
+            <li>Medlemskapet følger kalenderåret, og gjelder fra 1. januar til 31. desember {{ membership_year_start.public_date.date|date:"Y" }}.</li>
           {% endif %}
         </ul>
       </div>

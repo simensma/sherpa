@@ -2,22 +2,20 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.core.mail import send_mail
 from django.conf import settings
-from django.template import Context
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.cache import cache
-from django.db import transaction, connections
 from django.contrib import messages
 
-from core import validator
-from core.util import current_membership_year_start
 from core.models import Zipcode, FocusCountry
+from core.util import membership_year_start
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
-from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
+from focus.util import get_membership_type_by_codename
 from enrollment.models import State
-from enrollment.util import current_template_layout
+from enrollment.util import current_template_layout, prepare_and_send_email, updateIndices, price_of, type_of, polite_title, add_focus_user, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
+from enrollment.validation import validate, validate_user, validate_location
 from user.models import User
 
 from datetime import datetime, date, timedelta
@@ -28,29 +26,8 @@ import logging
 import sys
 from lxml import etree
 from urllib import quote_plus
-from smtplib import SMTPException
 
 logger = logging.getLogger('sherpa')
-
-# Number of days the temporary membership proof is valid
-TEMPORARY_PROOF_VALIDITY = 14
-
-KEY_PRICE = 100
-FOREIGN_SHIPMENT_PRICE = 100
-
-# GET parameters used for error handling (still a few remaining)
-invalid_location = 'ugyldig-adresse'
-invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
-
-EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
-EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
-EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
-
-# Hardcoded ages
-AGE_SENIOR = 67
-AGE_MAIN = 27
-AGE_YOUTH = 19
-AGE_SCHOOL = 13
 
 # Registration states: 'registration' -> 'payment' -> 'complete'
 # These are used in most views to know where the user came from and where
@@ -105,6 +82,11 @@ def registration(request, user):
             new_user['dob'] = None
             new_user['age'] = None
 
+        # After membership year start, the enrollment is really for the next year,
+        # hence they'll be one year older than they are this year.
+        if date.today() >= membership_year_start()['actual_date']:
+            new_user['age'] += 1
+
         if not validate_user(request.POST):
             errors = True
             if 'user' in request.POST:
@@ -124,20 +106,11 @@ def registration(request, user):
     if not errors and 'forward' in request.POST:
         return redirect("enrollment.views.household")
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-    end_of_year = date(year=today.year, month=12, day=31)
-    display_membership_year_warning = today >= new_membership_year - timedelta(days=14) and today < new_membership_year
-
     context = {
         'users': request.session['enrollment']['users'],
         'person': user,
         'errors': errors,
         'conditions': request.session['enrollment'].get('conditions', ''),
-        'today': today,
-        'end_of_year': end_of_year,
-        'display_membership_year_warning': display_membership_year_warning,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)
@@ -196,7 +169,7 @@ def household(request):
             else:
                 try:
                     focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
-                    association = Association.objects.get(focus_id=focus_zipcode.main_association_id)
+                    Association.objects.get(focus_id=focus_zipcode.main_association_id) # Verify that the Association exists
                     return redirect('enrollment.views.verification')
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
@@ -223,9 +196,6 @@ def household(request):
             main = True
             break
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     updateIndices(request.session)
     context = {
         'users': request.session['enrollment']['users'],
@@ -237,8 +207,6 @@ def household(request):
         'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'errors': errors,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/household.html', context)
@@ -355,9 +323,6 @@ def verification(request):
         cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
     request.session['enrollment']['price'] = price
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     keycount = 0
     youth_or_older_count = 0
     main = None
@@ -399,8 +364,6 @@ def verification(request):
         'yearbook': request.session['enrollment']['yearbook'],
         'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/verification.html', context)
@@ -422,14 +385,9 @@ def payment_method(request):
 
     request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     context = {
         'card_available': State.objects.all()[0].card,
         'card_required': 'innmelding.aktivitet' in request.session,
-        'today': today,
-        'new_membership_year': new_membership_year
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/payment.html', context)
@@ -570,10 +528,6 @@ def payment(request):
         return redirect('enrollment.views.process_invoice')
 
     # Paying with card, move on.
-    today = date.today()
-    year = today.year
-    next_year = today >= current_membership_year_start()
-
     # Infer order details based on (poor) conventions.
     if main is not None:
         order_number = 'I_%s' % main['id']
@@ -596,7 +550,7 @@ def payment(request):
             first_name, last_name = request.session['enrollment']['users'][0]['name'].rsplit(' ', 1)
             email = request.session['enrollment']['users'][0]['email']
 
-    context = Context({'year': year, 'next_year': next_year})
+    context = RequestContext(request)
     desc = render_to_string('main/enrollment/payment-terminal.html', context)
 
     # Send the transaction registration to Nets
@@ -795,9 +749,6 @@ def result(request):
     # Collect emails to a separate list for easier template formatting
     emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
 
-    today = date.today()
-    new_membership_year = current_membership_year_start()
-
     skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {
@@ -808,8 +759,6 @@ def result(request):
         'emails': emails,
         'location': request.session['enrollment']['location'],
         'price_sum': request.session['enrollment']['price_sum'],
-        'today': today,
-        'new_membership_year': new_membership_year,
         'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
     context.update(current_template_layout(request))
@@ -842,12 +791,7 @@ def sms(request):
     number = request.session['enrollment']['users'][index]['phone']
 
     # Render the SMS template
-    today = date.today()
-    year = today.year
-    next_year = today >= current_membership_year_start()
-    context = Context({
-        'year': year,
-        'next_year': next_year,
+    context = RequestContext(request, {
         'users': request.session['enrollment']['users']
     })
     sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
@@ -874,294 +818,3 @@ def sms(request):
             extra={'request': request}
         )
         return HttpResponse(json.dumps({'error': 'connection_error'}))
-
-def prepare_and_send_email(request, users, association, location, payment_method, price_sum):
-    if len(users) == 1:
-        subject = EMAIL_SUBJECT_SINGLE
-        template = '%s-single' % payment_method
-    else:
-        subject = EMAIL_SUBJECT_MULTIPLE
-        template = '%s-multiple' % payment_method
-    # proof_validity_end is not needed for the 'card' payment_method, but ignore that
-    proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
-    for user in users:
-        try:
-            if user['email'] == '':
-                continue
-
-            context = Context({
-                'user': user,
-                'users': users,
-                'association': association,
-                'location': location,
-                'proof_validity_end': proof_validity_end,
-                'price_sum': price_sum
-            })
-            message = render_to_string('main/enrollment/result/emails/%s.txt' % template, context)
-            send_mail(subject, message, EMAIL_FROM, [user['email']])
-        except SMTPException:
-            # Silently log and ignore this error. The user will have to do without email receipt.
-            logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
-                exc_info=sys.exc_info(),
-                extra={'request': request}
-            )
-
-def updateIndices(session):
-    i = 0
-    for user in session['enrollment']['users']:
-        user['index'] = i
-        i += 1
-
-def validate(request, require_location, require_existing):
-    if not 'enrollment' in request.session:
-        return redirect("enrollment.views.registration")
-    if len(request.session['enrollment']['users']) == 0:
-        return redirect("enrollment.views.registration")
-    if not validate_youth_count(request.session['enrollment']['users']):
-        messages.error(request, 'too_many_underage')
-        return redirect("enrollment.views.registration")
-    if not validate_user_contact(request.session['enrollment']['users']):
-        messages.error(request, 'contact_missing')
-        return redirect("enrollment.views.registration")
-    if require_location:
-        if not 'location' in request.session['enrollment'] or not validate_location(request.session['enrollment']['location']):
-            return redirect("%s?%s" % (reverse("enrollment.views.household"), invalid_location))
-    if require_existing:
-        if request.session['enrollment']['existing'] != '' and not validate_existing(request.session['enrollment']['existing'], request.session['enrollment']['location']['zipcode'], request.session['enrollment']['location']['country']):
-            return redirect("%s?%s" % (reverse("enrollment.views.household"), invalid_existing))
-
-def validate_user(user):
-    # Name or address is empty
-    if not validator.name(user['name']):
-        return False
-
-    # Gender is not set
-    if user.get('gender', '') != 'm' and user.get('gender', '') != 'f':
-        return False
-
-    # Check phone number only if supplied
-    if not validator.phone(user['phone'], req=False):
-        return False
-
-    # Email is non-empty (empty is allowed) and doesn't match an email
-    if not validator.email(user['email'], req=False):
-        return False
-
-    # Date of birth is not valid format (%d.%m.%Y)
-    # Will be unicode when posted, but datetime when saved
-    if isinstance(user['dob'], unicode):
-        try:
-            datetime.strptime(user['dob'], "%d.%m.%Y")
-        except ValueError:
-            return False
-    elif not isinstance(user['dob'], datetime):
-        return False
-
-    # Birthyear is below 1900 (MSSQLs datetime datatype will barf)
-    # Same as above, will be unicode when posted, but datetime when saved
-    if isinstance(user['dob'], unicode):
-        date_to_test = datetime.strptime(user['dob'], "%d.%m.%Y")
-    else:
-        date_to_test = user['dob']
-    if date_to_test.year < 1900:
-        return False
-
-    # All tests passed!
-    return True
-
-def validate_location(location):
-    # Country does not exist
-    if not FocusCountry.objects.filter(code=location['country']).exists():
-        return False
-
-    # No address provided for other countries than Norway
-    # (Some Norwegians actually don't have a street address)
-    if location['country'] != 'NO':
-        if location['address1'].strip() == '':
-            return False
-
-    # Require zipcode for all scandinavian countries
-    if location['country'] == 'NO' or location['country'] == 'SE' or location['country'] == 'DK':
-        if location['zipcode'].strip() == '':
-            return False
-
-    if location['country'] == 'SE' or location['country'] == 'DK':
-        # No area provided
-        if location['area'].strip() == '':
-            return False
-
-    if location['country'] == 'NO':
-        # Zipcode does not exist
-        if not Zipcode.objects.filter(zipcode=location['zipcode']).exists():
-            return False
-
-    # All tests passed!
-    return True
-
-# Check that at least one member has valid phone and email
-def validate_user_contact(users):
-    for user in users:
-        if validator.phone(user['phone']) and validator.email(user['email']):
-            return True
-    return False
-
-def validate_existing(id, zipcode, country):
-    try:
-        actor = Actor.objects.get(memberid=id)
-    except (Actor.DoesNotExist, ValueError):
-        return False
-
-    if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
-        return False
-
-    if actor.is_household_member():
-        return False
-
-    if actor.get_clean_address().country.code != country:
-        return False
-
-    if country == 'NO' and actor.get_clean_address().zipcode.zipcode != zipcode:
-        return False
-
-    return True
-
-def validate_youth_count(users):
-    # Based on order number length, which is 32.
-    # MemberID is 7 chars, order number format is I[_<memberid>]+ so 4 users = 33 chars.
-    if len(users) <= 3:
-        return True
-    at_least_one_main_member = False
-    for user in users:
-        if user['age'] >= AGE_YOUTH:
-            at_least_one_main_member = True
-            break
-    return at_least_one_main_member
-
-def price_of(age, household, price):
-    if household:
-        return min(price_of_age(age, price), price.household)
-    else:
-        return price_of_age(age, price)
-
-def price_of_age(age, price):
-    if age >= AGE_SENIOR:    return price.senior
-    elif age >= AGE_MAIN:    return price.main
-    elif age >= AGE_YOUTH:   return price.youth
-    elif age >= AGE_SCHOOL:  return price.school
-    else:                    return price.child
-
-def type_of(age, household):
-    if household and age >= AGE_YOUTH:
-        return get_membership_type_by_codename('household')['name']
-    elif age >= AGE_SENIOR:
-        return get_membership_type_by_codename('senior')['name']
-    elif age >= AGE_MAIN:
-        return get_membership_type_by_codename('main')['name']
-    elif age >= AGE_YOUTH:
-        return get_membership_type_by_codename('youth')['name']
-    elif age >= AGE_SCHOOL:
-        return get_membership_type_by_codename('school')['name']
-    else:
-        return get_membership_type_by_codename('child')['name']
-
-def polite_title(str):
-    # If the string is all lowercase or uppercase, apply titling for it
-    # Else, assume that the specified case is intentional
-    if str.islower() or str.isupper():
-        return str.title()
-    else:
-        return str
-
-def add_focus_user(name, dob, age, gender, location, phone, email, can_have_yearbook, wants_yearbook, linked_to, payment_method, price):
-    first_name, last_name = name.rsplit(' ', 1)
-    gender = 'M' if gender == 'm' else 'K'
-    language = 'nb_no'
-    type = focus_type_of(age, linked_to is not None)
-    payment_method = PAYMENT_METHOD_CODES[payment_method]
-    price = price_of(age, linked_to is not None, price)
-    linked_to = '' if linked_to is None else str(linked_to)
-    if location['country'] == 'NO':
-        # Override yearbook value for norwegians based on age and household status
-        yearbook = focus_receive_yearbook(age, linked_to)
-    else:
-        # Foreigners need to pay shipment price for the yearbook, so if they match the
-        # criteria to receive it, let them choose whether or not to get it
-        yearbook = can_have_yearbook and wants_yearbook
-        if yearbook:
-            price += FOREIGN_SHIPMENT_PRICE
-    if yearbook:
-        yearbook_type = 152
-    else:
-        yearbook_type = ''
-
-    adr1 = location['address1']
-    if location['country'] == 'NO':
-        adr2 = ''
-        adr3 = ''
-        zipcode = location['zipcode']
-        area = location['area']
-    elif location['country'] == 'DK' or location['country'] == 'SE':
-        adr2 = ''
-        adr3 = "%s-%s %s" % (location['country'], location['zipcode'], location['area'])
-        zipcode = '0000'
-        area = ''
-    else:
-        adr2 = location['address2']
-        adr3 = location['address3']
-        zipcode = '0000'
-        area = ''
-
-    # Fetch and increment memberid with stored procedure
-    with transaction.commit_manually():
-        cursor = connections['focus'].cursor()
-        cursor.execute("exec sp_custTurist_updateMemberId")
-        memberid = cursor.fetchone()[0]
-        connections['focus'].commit_unless_managed()
-
-    user = Enrollment(
-        memberid=memberid,
-        last_name=last_name,
-        first_name=first_name,
-        birth_date=dob,
-        gender=gender,
-        linked_to=linked_to,
-        adr1=adr1,
-        adr2=adr2,
-        adr3=adr3,
-        country_code=location['country'],
-        phone_home='',
-        email=email,
-        receive_yearbook=yearbook,
-        type=type,
-        yearbook=yearbook_type,
-        payment_method=payment_method,
-        phone_mobile=phone,
-        zipcode=zipcode,
-        area=area,
-        language=language,
-        totalprice=price
-    )
-    user.save()
-    return memberid
-
-def focus_type_of(age, household):
-    if household and age >= AGE_YOUTH:
-        return get_membership_type_by_codename('household')['code']
-    elif age >= AGE_SENIOR:
-        return get_membership_type_by_codename('senior')['code']
-    elif age >= AGE_MAIN:
-        return get_membership_type_by_codename('main')['code']
-    elif age >= AGE_YOUTH:
-        return get_membership_type_by_codename('youth')['code']
-    elif age >= AGE_SCHOOL:
-        return get_membership_type_by_codename('school')['code']
-    else:
-        return get_membership_type_by_codename('child')['code']
-
-def focus_receive_yearbook(age, linked_to):
-    if linked_to != '':
-        return False
-    elif age >= AGE_YOUTH:
-        return True
-    else:
-        return False

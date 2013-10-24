@@ -57,13 +57,33 @@ ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
 
 # Define when årskravet is performed each year.
-# We may need to know when the previous years årskrav started regardless of what
-# it is this month, so keep a history.
+# We may need to know when the *previous* years årskrav started, so keep a history.
+#
+# initiation_date: When årskravet is started, usually the same time as when card payment
+#   is deactivated. From this date, only invoices are accepted and they will be enrolled
+#   for the *next* year.
+#
+# actual_date: The actual date årskravet is performed. Can be a few days earlier than the
+#   public date, we need to know this because this is the day the prices are updated
+#   IMPORTANT: This should be set to the day *FOLLOWING* the day årskravet is performed,
+#   since checks will change the UI on the *specified* date.
+#
+# public_date: The publicly displayed date - members are informed that after this date,
+#   enrollments are valid for the next year as well. Usually the first of some month.
+#
+# A new entry needs to be created each year, but if forgotten/delayed, an entry will be
+# faked with the dates of the previous year. See core.util.membership_year_start
 MEMBERSHIP_YEAR_START = [
-    date(year=2012, month=10, day=1),
-    date(year=2013, month=11, day=1)
-    # Note that if the current year is missing, we'll assume the current year's start
-    # date is the same as the latest existing year. See core.util.current_membership_year_start
+    {
+        'initiation_date': date(year=2012, month=9, day=30),
+        'actual_date': date(year=2012, month=10, day=1),
+        'public_date': date(year=2012, month=10, day=1),
+    },
+    {
+        'initiation_date': date(year=2013, month=10, day=20),
+        'actual_date': date(year=2013, month=10, day=25), # Note that this is one day *after*
+        'public_date': date(year=2013, month=11, day=1),
+    },
 ]
 
 # Pixel sizes for thumbnail images generated from uploaded images.
@@ -159,6 +179,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.admin_active_association",
     "sherpa.context_processors.focus_downtime",
     "sherpa.context_processors.dntconnect",
+    "sherpa.context_processors.membership_year_start",
 )
 
 MIDDLEWARE_CLASSES = (

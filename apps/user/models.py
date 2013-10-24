@@ -242,6 +242,32 @@ class User(AbstractBaseUser):
     def has_paid(self):
         return self.get_actor().has_paid()
 
+    def get_payment_years(self):
+        from core.util import membership_year_start
+        start_date = membership_year_start()['actual_date']
+        today = date.today()
+        years = {
+            'current': today.year,
+            'next': today.year + 1
+        }
+        if today >= start_date:
+            if self.get_actor().has_paid_next_year():
+                years['code'] = 'both'
+                return years
+            elif self.get_actor().has_paid_this_year():
+                years['code'] = 'current_not_next'
+                return years
+            else:
+                years['code'] = 'neither_years'
+                return years
+        else:
+            if self.get_actor().has_paid_this_year():
+                years['code'] = 'current'
+                return years
+            else:
+                years['code'] = 'not_this_year'
+                return years
+
     def is_eligible_for_publications(self):
         return self.get_actor().is_eligible_for_publications()
 
@@ -321,8 +347,9 @@ class User(AbstractBaseUser):
 
     def norway_bus_tickets_offer_has_expired(self):
         # Import here to avoid circular import
-        from core.util import previous_membership_year_start
-        return self.get_membership_start_date() < previous_membership_year_start()
+        from core.util import membership_year_start
+        last_year = date.today().year - 1
+        return self.get_membership_start_date() < membership_year_start(year=last_year)['public_date']
 
     def show_norway_bus_tickets_menu_item(self):
         """

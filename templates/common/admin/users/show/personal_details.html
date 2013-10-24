@@ -1,3 +1,5 @@
+{% load payment_status %}
+
 {% if other_user.is_member and other_user.should_be_expired %}
 
   <h3>Personopplysninger</h3>
@@ -189,21 +191,7 @@
       <tr>
         <th>Status</th>
         <td>
-          {% if other_user.has_paid %}
-            Betalt for
-            {% if next_year %}
-              {{ today.year|add:"1" }}
-            {% else %}
-              {{ today.year }}
-            {% endif %}
-          {% else %}
-            Ikke betalt for
-            {% if next_year %}
-              {{ today.year|add:"1" }}
-            {% else %}
-              {{ today.year }}
-            {% endif %}
-          {% endif %}
+          {{ other_user|payment_status }}
         </td>
       </tr>
       <tr>

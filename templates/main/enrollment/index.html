@@ -10,13 +10,21 @@
 <div class="row">
   <div class="span12">
     <h1>
-      {% trans "Bli medlem" %}
-      {% if today >= new_membership_year %}
-        {{ today|date:"Y"|add:1 }}
-      {% else %}
-        {{ today|date:"Y" }}
-      {% endif %}
+      {% trans "Bli medlem for" %} {{ membership_year_start.initiation_date.applicable_year }}
     </h1>
+
+    {% if membership_year_start.initiation_date.has_passed and not membership_year_start.actual_date.has_passed %}
+      <div class="row">
+        <div class="span12">
+          <div class="alert alert-error">
+            {% blocktrans with date=membership_year_start.public_date.date|date:"j. F" month=membership_year_start.public_date.date|date:"F" year=membership_year_start.public_date.date|date:"Y" %}
+              Vi forbereder nytt medlemsår og kan dessverre ikke motta kortbetaling akkurat nå. Kortbetaling vil igjen være tilgjengelig fra {{ date }}. Bestiller du faktura i dag, blir denne behandlet og sendt medio {{ month }}. Medlemskap for resten av {{ year }} får du med på kjøpet. Merk at oppgitte priser gjelder for {{ year }}.<br><br>
+              Dersom det haster, kan du kjøpe medlemskap hos din lokale medlemsforening. Vi beklager eventuelle ulemper og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen under.
+            {% endblocktrans %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endif %}

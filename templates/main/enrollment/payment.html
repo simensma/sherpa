@@ -31,26 +31,20 @@
         {% endif %}
       {% endfor %}
 
-      {% if not card_available and not card_required %}
+      {% if not card_available and not membership_year_start.initiation_date.has_passed %}
         <div class="alert alert-error">
-          <a class="close">x</a>
           <strong><i class="icon-info-sign"></i> {% trans "Kortbetaling utilgjengelig" %}</strong><br>
-          {% blocktrans with month=new_membership_year|date:"F" %}Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ month }}.{% endblocktrans %}<br><br>
-
-          {% trans "Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre." %}
+          {% blocktrans %}
+            Beklager, kortbetaling er midlertidig utilgjengelig. Vennligst vent og prøv igjen litt senere, eller velg å få tilsendt faktura.<br>
+            Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre.
+          {% endblocktrans %}
         </div>
-      {% elif card_available and card_required %}
+      {% endif %}
+
+      {% if card_available and card_required %}
         <div class="alert alert-error">
           <strong><i class="icon-info-sign"></i> {% trans "Må betales med VISA/MASTERCARD" %}</strong><br>
           {% trans "Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og eventuelt tilby rabatt." %}
-        </div>
-      {% elif not card_available and card_required %}
-        <div class="alert alert-error">
-          <a class="close">x</a>
-          <strong><i class="icon-info-sign"></i> {% trans "Kortbetaling utilgjengelig" %}</strong><br>
-          {% blocktrans with month=new_membership_year|date:"F" %}Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå. Vi behandler nye medlemskap og sender ut faktura med medlemskort i slutten av {{ month }}.{% endblocktrans %}<br><br>
-
-          {% trans "Vi beklager dette og takker for din tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se kontaktboksen til høyre." %}
         </div>
       {% endif %}
 

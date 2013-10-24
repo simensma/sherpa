@@ -9,6 +9,7 @@
 {% load has_membership_type %}
 {% load advertisement %}
 {% load sort_by_turleder_role %}
+{% load payment_status %}
 
 {% block body %}
 
@@ -110,21 +111,7 @@
           <tr>
             <th>Status</th>
             <td>
-              {% if user.has_paid %}
-                Betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
-              {% else %}
-                Ikke betalt for
-                {% if next_year %}
-                  {{ year|add:"1" }}
-                {% else %}
-                  {{ year }}
-                {% endif %}
-              {% endif %}
+              {{ user|payment_status }}
             </td>
           </tr>
           <tr>
