@@ -1,3 +1,8 @@
+.subcategory-button() {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 div.admin-aktivitet-edit {
   div.section {
     border-bottom: 1px solid rgb(200, 200, 200);
@@ -5,6 +10,17 @@ div.admin-aktivitet-edit {
 
     h2 {
       margin-top: 30px;
+    }
+
+    div.control-group.subcategories {
+      button.subcategory {
+        .subcategory-button;
+      }
+
+      div.custom {
+        margin-top: 20px;
+        font-family: "DTL Nobel" !important;
+      }
     }
   }
 
@@ -33,9 +49,8 @@ div.aktivitet-listing {
       div.subcategories {
         margin-bottom: 20px;
 
-        button {
-          margin-top: 5px;
-          margin-bottom: 5px;
+        button.subcategory {
+          .subcategory-button;
         }
       }
     }

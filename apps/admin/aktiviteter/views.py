@@ -83,7 +83,7 @@ def edit_description(request, aktivitet):
         aktivitet.save()
 
         aktivitet.category_tags.clear()
-        for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
+        for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
 

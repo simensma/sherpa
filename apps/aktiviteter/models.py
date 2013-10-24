@@ -57,11 +57,14 @@ class Aktivitet(models.Model):
         return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
     def get_subcategories(self):
+        return [t.name for t in self.category_tags.all()]
+
+    def get_all_subcategories(self):
         return self.SUBCATEGORIES[self.category]
 
     def get_missing_subcategories(self):
         existing_subcategories = [s.name for s in self.category_tags.all()]
-        return [s for s in self.get_subcategories() if s not in existing_subcategories]
+        return [s for s in self.get_all_subcategories() if s not in existing_subcategories]
 
     def get_images_ordered(self):
         return self.images.order_by('order')

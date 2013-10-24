@@ -158,26 +158,30 @@
           </div>
 
           <div class="control-group subcategories">
-            <label class="control-label" for="subcategories">Kategorier for <strong>{{ aktivitet.get_category }}</strong>:</label>
+            <label class="control-label" for="subcategories">Kategorier:</label>
             <div class="controls">
-              <select name="subcategories" id="subcategories" class="chosen" data-placeholder="Legg til en kategori...">
-                <option value=""></option>
-                {% for category in aktivitet.get_missing_subcategories %}
-                  <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
 
-          <div class="control-group tags">
-            <label class="control-label" for="tags">Opprett egne kategorier her:</label>
-            <div class="controls">
-              <input type="hidden" name="tags" value="">
-              <p><input type="text" class="input-large" name="tag" id="tags"></p>
-              <div class="tag-box" data-predefined-tags="{{ aktivitet.category_tags.all|taglist }}"></div>
+              <div class="square-well">
+                <div class="buttons">
+                  {% for category in aktivitet.get_subcategories %}
+                    <button class="btn subcategory btn-danger">{{ category }}</button>
+                  {% endfor %}
+
+                  {% for category in aktivitet.get_missing_subcategories %}
+                    <button class="btn subcategory">{{ category }}</button>
+                  {% endfor %}
+                </div>
+
+                <div class="custom">
+                  <button class="btn subcategory btn-danger fake hide"></button>
+                  Eller legg inn egne kategorier:
+                  <input type="text" class="input-large" name="custom-category">
+                </div>
+
+                <input type="hidden" name="subcategories">
+              </div>
             </div>
           </div>
-          <div style="clear: both;"></div>
 
           <div class="control-group images">
             <label class="control-label">Bilder:</label>
