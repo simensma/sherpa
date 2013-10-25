@@ -28,6 +28,19 @@ div.admin-aktivitet-edit {
     border-bottom: none !important;
   }
 
+  /* Specific sections */
+
+  div.section.position {
+    div.leaflet-map {
+      height: 600px;
+    }
+
+    div.control-as-text p.intro {
+      font-family: "DTL Nobel" !important;
+      font-weight: normal;
+    }
+  }
+
   div.control-group.submit {
     // Since there's currently no footer, let the user "scroll past" the button.
     // Should probably be removed when we get some sort of footer for the Sherpa UI.
@@ -54,12 +67,6 @@ div.aktivitet-listing {
         }
       }
     }
-  }
-}
-
-div.edit-aktivitet-position {
-  div.leaflet-map {
-    height: 600px;
   }
 }
 

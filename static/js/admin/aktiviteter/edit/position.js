@@ -1,9 +1,10 @@
 $(document).ready(function() {
 
-    var wrapper = $("div.edit-aktivitet-position");
-    var map_element = wrapper.find("div.leaflet-map");
-    var popup_content = wrapper.find("div.popup-content").html();
-    var form = wrapper.find("form.save-position");
+    var editor = $("div.admin-aktivitet-edit");
+    var form = editor.find("form.edit-aktivitet");
+    var position_section = editor.find("div.section.position");
+    var map_element = position_section.find("div.leaflet-map");
+    var popup_content = position_section.find("div.popup-content").html();
 
     var map = L.map('map').setView([65, 12], 5);
     L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
@@ -44,14 +45,11 @@ $(document).ready(function() {
         placement: 'right'
     });
 
-    form.submit(function(e) {
-        if(marker === undefined) {
-            alert("Du må velge en posisjon å lagre først. Klikk på ikonet oppe i venstre hjørne av kartet, og klikk der turen starter.");
-            e.preventDefault();
-            return $(this);
+    form.submit(function() {
+        if(marker !== undefined) {
+            form.find("input[name='position_lat']").val(marker.getLatLng().lat);
+            form.find("input[name='position_lng']").val(marker.getLatLng().lng);
         }
-        form.find("input[name='lat']").val(marker.getLatLng().lat);
-        form.find("input[name='lng']").val(marker.getLatLng().lng);
     });
 
 });

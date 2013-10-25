@@ -80,6 +80,9 @@ def edit_description(request, aktivitet):
         aktivitet.association = association
         aktivitet.co_association = co_association
 
+        if request.POST['position_lat'] != '' and request.POST['position_lng'] != '':
+            aktivitet.start_point = Point(float(request.POST['position_lat']), float(request.POST['position_lng']))
+
         aktivitet.save()
 
         aktivitet.category_tags.clear()
@@ -99,19 +102,6 @@ def edit_description(request, aktivitet):
             image.save()
 
         return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
-
-def edit_position(request, aktivitet):
-    aktivitet = Aktivitet.objects.get(id=aktivitet)
-
-    if request.method == 'GET':
-        context = {
-            'aktivitet': aktivitet
-        }
-        return render(request, 'common/admin/aktiviteter/edit/position.html', context)
-    elif request.method == 'POST':
-        aktivitet.start_point = Point(float(request.POST['lat']), float(request.POST['lng']))
-        aktivitet.save()
-        return redirect('admin.aktiviteter.views.edit_position', aktivitet.id)
 
 def edit_simple_signup(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
