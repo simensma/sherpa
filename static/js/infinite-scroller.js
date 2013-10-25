@@ -64,14 +64,7 @@
         }
 
         if(triggerType === 'scroll') {
-            // The enable function could be called before or after window load, so make sure the scroll
-            // event isn't added before it's loaded (for element height calculations)
-            if(windowLoaded) {
-                addScrollEvent();
-            } else {
-                $(window).load(addScrollEvent);
-            }
-            function addScrollEvent() {
+            var addScrollEvent = function() {
                 $(window).on('scroll.infinite-scroller', function() {
                     var scrollLimit = trigger.offset().top + trigger.height();
                     if(!loading && !complete && $(window).scrollTop() + $(window).height() > scrollLimit) {
@@ -79,6 +72,14 @@
                         load();
                     }
                 });
+            };
+
+            // The enable function could be called before or after window load, so make sure the scroll
+            // event isn't added before it's loaded (for element height calculations)
+            if(windowLoaded) {
+                addScrollEvent();
+            } else {
+                $(window).load(addScrollEvent);
             }
         } else if(triggerType === 'button') {
             trigger.on('click.infinite-scroller', load);
