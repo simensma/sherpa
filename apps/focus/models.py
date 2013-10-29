@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import datetime, date
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODE, PAYMENT_METHOD_CODES
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES
 
 logger = logging.getLogger('sherpa')
 
@@ -422,7 +422,7 @@ class Actor(models.Model):
         if self.get_clean_address().country.code == 'NO':
             raise Exception("It doesn't make sense to check for foreign postage on domestic members.")
         try:
-            return self.get_services().get(code=FOREIGN_POSTAGE_SERVICE_CODE).stop_date is None
+            return self.get_services().get(code__in=FOREIGN_POSTAGE_SERVICE_CODES).stop_date is None
         except ActorService.DoesNotExist:
             return False
 

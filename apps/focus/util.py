@@ -3,7 +3,7 @@
 # A few defined service codes, consult Focus for more
 FJELLOGVIDDE_SERVICE_CODE = 151
 YEARBOOK_SERVICE_CODES = [152, 153, 154]
-FOREIGN_POSTAGE_SERVICE_CODE = 155
+FOREIGN_POSTAGE_SERVICE_CODES = [155, 156, 157]
 
 # Actor endcodes (reasons for terminating membership).
 # These aren't really properly documented yet, to resolve codes/reasons consult Focus.
