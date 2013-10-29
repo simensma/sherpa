@@ -9,7 +9,7 @@ import json
 import logging
 import sys
 
-from enrollment.models import Giver, Receiver, membership_types
+from enrollment.gift.models import Giver, Receiver, membership_types, membership_price_by_code
 
 logger = logging.getLogger('sherpa')
 
@@ -22,7 +22,8 @@ EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 def index(request):
     if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
-    return render(request, 'main/enrollment/gift/index.html')
+    context = {'prices': membership_price_by_code}
+    return render(request, 'main/enrollment/gift/index.html', context)
 
 def form(request):
     if not 'gift_membership' in request.session:

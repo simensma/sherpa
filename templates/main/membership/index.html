@@ -82,9 +82,9 @@
         <strong>Du kan velge mellom:</strong>
         <ul>
           <li>Vanlig medlemskap (<a href="{% url 'membership.views.benefits' %}">Se gjeldende kontingentsatser</a>).</li>
-          <li>Dåpsgave (Medlemskap i Barnas Turlag fra 0-12 år). Pris: 1000,-</li>
-          <li>Jubileum (Hovedmedlemskap i 10 år). Pris: 5700,-</li>
-          <li>Livsvarig medlemskap (Hovedmedlemskap x 25). Pris: 14250,-</li>
+          <li>Dåpsgave (Medlemskap i Barnas Turlag fra 0-12 år). Pris: {{ gift_membership_prices.baptism }},-</li>
+          <li>Jubileum (Hovedmedlemskap i 10 år). Pris: {{ gift_membership_prices.jubilee }},-</li>
+          <li>Livsvarig medlemskap (Hovedmedlemskap x 25). Pris: {{ gift_membership_prices.life }},-</li>
         </ul>
         <a href="{% url 'enrollment.gift.views.index' %}">Bestill gavemedlemskap</a>
       </p>

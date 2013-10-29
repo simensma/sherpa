@@ -12,6 +12,7 @@ from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT
 from core.models import Zipcode
 from enrollment.models import State
+from enrollment.gift.models import membership_price_by_code
 from membership.models import SMSServiceRequest
 from user.models import User
 from membership.util import send_sms_receipt, memberid_sms_count
@@ -24,7 +25,8 @@ import re
 logger = logging.getLogger('sherpa')
 
 def index(request):
-    return render(request, 'main/membership/index.html')
+    context = {'gift_membership_prices': membership_price_by_code}
+    return render(request, 'main/membership/index.html', context)
 
 def benefits(request, association_id):
     if association_id is None:
