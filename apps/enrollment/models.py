@@ -4,7 +4,6 @@ from django.contrib import messages
 
 from datetime import datetime
 
-from page.models import Variant
 from core.models import Zipcode
 
 from core import validator
