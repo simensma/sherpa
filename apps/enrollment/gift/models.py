@@ -10,8 +10,8 @@ from core import validator
 membership_types = [
   {'code': 'normal', 'name': 'Vanlig medlemskap', 'price': None},
   {'code': 'baptism', 'name': 'Dåpsgave', 'price': 1000},
-  {'code': 'jubilee', 'name': 'Jubileum', 'price': 5700},
-  {'code': 'life', 'name': 'Livsvarig medlemskap', 'price': 14250},
+  {'code': 'jubilee', 'name': 'Jubileum', 'price': 5900},
+  {'code': 'life', 'name': 'Livsvarig medlemskap', 'price': 14750},
 ]
 
 membership_price_by_code = {type['code']: type['price'] for type in membership_types}
