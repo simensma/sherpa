@@ -9,7 +9,7 @@ import json
 import logging
 import sys
 
-from enrollment.models import Giver, Receiver, membership_types
+from enrollment.gift.models import Giver, Receiver, membership_types
 
 logger = logging.getLogger('sherpa')
 
