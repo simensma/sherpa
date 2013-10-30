@@ -1,5 +1,5 @@
 # encoding: utf-8
-from django.db import models
+from django.contrib.gis.db import models
 from django.core.cache import cache
 
 from datetime import datetime, date, timedelta
@@ -123,7 +123,7 @@ class Cabin(models.Model):
     content_fre = models.TextField(db_column=u'ca_content_fre', blank=True)
     booking_url = models.TextField(db_column=u'ca_booking_url', blank=True)
     url_ut = models.TextField(db_column=u'ca_url_ut', blank=True)
-    the_geom = models.TextField(blank=True) # This field type is a guess.
+    the_geom = models.GeometryField(blank=True)
 
     class Meta:
         db_table = u'cabin2'
