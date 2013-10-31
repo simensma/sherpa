@@ -78,14 +78,14 @@ def registration(request, user):
         try:
             new_user['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
             new_user['age'] = datetime.now().year - new_user['dob'].year
+
+            # After membership year start, the enrollment is really for the next year,
+            # hence they'll be one year older than they are this year.
+            if date.today() >= membership_year_start()['actual_date']:
+                new_user['age'] += 1
         except ValueError:
             new_user['dob'] = None
             new_user['age'] = None
-
-        # After membership year start, the enrollment is really for the next year,
-        # hence they'll be one year older than they are this year.
-        if date.today() >= membership_year_start()['actual_date']:
-            new_user['age'] += 1
 
         if not validate_user(request.POST):
             errors = True
