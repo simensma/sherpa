@@ -237,13 +237,17 @@
                 </p>
 
                 <p class="intro">
+                  <a href="javascript:undefined" class="show-map">Klikk her for å vise kartet</a>
+                </p>
+
+                <p class="intro show-on-map hide">
                   Bruk knappen til venstre på kartet for å plassere pinnen.
                 </p>
               </div>
             </div>
           </div>
 
-          <div id="map" class="leaflet-map"></div>
+          <div id="map" class="leaflet-map hide"></div>
           <div class="popup-content hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
