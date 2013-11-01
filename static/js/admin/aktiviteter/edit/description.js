@@ -125,4 +125,76 @@ $(document).ready(function() {
         subcategory_input.val(JSON.stringify(tags));
     });
 
+    // Dates
+    var dates = form.find("div.section.dates");
+    var dates_input = dates.find("input[name='dates']");
+    var dates_to_delete_input = dates.find("input[name='dates_to_delete']");
+    var existing_dates = dates.find("div.date-root:not(.hide)");
+    var add_date_button = dates.find("button.add-date");
+
+    var date_views = [];
+    var date_enrollment_counter = 0;
+    var date_ids_to_delete = [];
+
+    existing_dates.each(function() {
+        date_views.push(new AktiviteterDatesView({
+            root: $(this)
+        }));
+    });
+
+    add_date_button.click(function() {
+        var hidden_root = dates.find("div.date-root.hide");
+        var new_root = hidden_root.clone();
+        // Cloning with events doesn't work for popover, so reactivate any popovers.
+        new_root.find("*[data-popover]").popover({
+            container: 'body'
+        });
+
+        // The enrollment radio buttons need unique names, so generate names with a counter.
+        new_root.find("input[name='enrollment']").attr('name', 'enrollment-' + date_enrollment_counter++);
+
+        new_root.removeClass('hide');
+        new_root.hide(); // Hide it even though we don't want the 'hide' class on it.
+        date_views.push(new AktiviteterDatesView({
+            root: new_root
+        }));
+        new_root.insertBefore(hidden_root);
+        new_root.slideDown();
+    });
+
+    $(document).on('click', dates.selector + ' a.delete-date', function() {
+        // Ugh, remove the array element manually
+        var root = $(this).parents("div.date-root");
+        var new_date_views = [];
+        for(var i=0; i<date_views.length; i++) {
+            if(date_views[i].root[0] !== root[0]) {
+                new_date_views.push(date_views[i]);
+            }
+        }
+        date_views = new_date_views;
+        var id = root.attr('data-date-id');
+        if(id !== '') {
+            date_ids_to_delete.push(id);
+        }
+        root.slideUp(function() {
+            root.remove();
+        });
+    });
+
+    // If there are no existing dates, simulate an "add date" button click, since they'll always
+    // want to add a date in this case.
+    if(existing_dates.length === 0) {
+        add_date_button.click();
+    }
+
+    // Collect all dates on submit
+    form.submit(function(e) {
+        var date_objects = [];
+        for(var i=0; i<date_views.length; i++) {
+            date_objects.push(date_views[i].collectData());
+        }
+        dates_input.val(JSON.stringify(date_objects));
+        dates_to_delete_input.val(JSON.stringify(date_ids_to_delete));
+    });
+
 });

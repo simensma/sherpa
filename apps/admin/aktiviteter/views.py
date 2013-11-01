@@ -13,7 +13,7 @@ from user.models import User
 from focus.models import Actor
 from association.models import Association
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 
 def index(request):
@@ -56,7 +56,8 @@ def edit_description(request, aktivitet):
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
-            'all_associations': Association.sort(Association.objects.all())
+            'all_associations': Association.sort(Association.objects.all()),
+            'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
         }
         return render(request, 'common/admin/aktiviteter/edit/description.html', context)
     elif request.method == 'POST':
@@ -101,22 +102,74 @@ def edit_description(request, aktivitet):
             )
             image.save()
 
+        #
+        # Dates
+        #
+
+        dates = json.loads(request.POST['dates'])
+
+        # Remove the date objects that were explicitly deleted (checks and verifications are
+        # done client-side). Verify that those that would be implicitly deleted (by not being
+        # POSTed for editing) match those explicitly POSTed.
+        posted_ids = [int(d['id']) for d in dates if d['id'] != '']
+        implicit_to_delete = set([date.id for date in aktivitet.dates.all() if date.id not in posted_ids])
+        explicit_to_delete = set([int(d) for d in json.loads(request.POST['dates_to_delete'])])
+
+        if implicit_to_delete != explicit_to_delete:
+            # Better to raise an exception and not delete anything. The user will be confused and
+            # lose edits, but we'll get a report and hopefully be able to fix this, if it ever happens.
+            raise Exception("The explicit and implicit dates to delete did not match.")
+
+        AktivitetDate.objects.filter(id__in=explicit_to_delete).delete()
+
+        for date_post in dates:
+            if date_post['id'] != '':
+                aktivitet_date = AktivitetDate.objects.get(id=date_post['id'])
+            else:
+                aktivitet_date = AktivitetDate(aktivitet=aktivitet)
+
+            aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
+            aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
+            if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
+                aktivitet_date.signup_enabled = True
+                aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
+                aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
+                aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
+            elif date_post['signup_type'] == 'none':
+                aktivitet_date.signup_enabled = False
+            else:
+                raise Exception("Unrecognized POST value for signup_type field")
+
+            aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
+            aktivitet_date.save()
+
+            # Turledere
+            aktivitet_date.turledere.clear()
+            for user_id in date_post['turledere']['users']:
+                aktivitet_date.turledere.add(User.objects.get(id=user_id))
+            for actor_id in date_post['turledere']['actors']:
+                actor = Actor.objects.get(id=actor_id)
+                aktivitet_date.turledere.add(User.get_or_create_inactive(actor.memberid))
+
         return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
 
-def edit_dates(request, aktivitet):
-    aktivitet = Aktivitet.objects.get(id=aktivitet)
-    context = {
-        'aktivitet': aktivitet
+def edit_description_date_preview(request):
+    # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that
+    # we can render the dates_view template like it normally is.
+    fake_date_representation = json.loads(request.POST['date'])
+    fake_date_representation['start_date'] = datetime.strptime(fake_date_representation['start_date'], "%d.%m.%Y")
+    fake_date_representation['end_date'] = datetime.strptime(fake_date_representation['end_date'], "%d.%m.%Y")
+    fake_date_representation['signup_enabled'] = fake_date_representation['signup_type'] == 'minside' or fake_date_representation['signup_type'] == 'simple'
+    fake_date_representation['signup_simple_allowed'] = fake_date_representation['signup_type'] == 'simple'
+    fake_date_representation['turledere'] = {
+        'all': fake_date_representation['turledere']['users'] + fake_date_representation['turledere']['actors']
     }
-    return render(request, 'common/admin/aktiviteter/edit/dates.html', context)
-
-def edit_turledere(request, aktivitet):
-    aktivitet = Aktivitet.objects.get(id=aktivitet)
-    context = {
-        'aktivitet': aktivitet,
-        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
-    }
-    return render(request, 'common/admin/aktiviteter/edit/turledere.html', context)
+    context = RequestContext(request, {
+        'date': fake_date_representation
+    })
+    return HttpResponse(json.dumps({
+        'html': render_to_string('common/admin/aktiviteter/edit/dates_view.html', context),
+    }))
 
 def edit_participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
@@ -127,8 +180,6 @@ def edit_participants(request, aktivitet):
 
 def turleder_search(request):
     MAX_HITS = 100
-
-    aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
 
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
@@ -153,70 +204,9 @@ def turleder_search(request):
     users = list(local_users) + list(members)
 
     context = RequestContext(request, {
-        'aktivitet': aktivitet,
         'users': users[:MAX_HITS],
         'actors_without_user': actors_without_user[:MAX_HITS]})
     return HttpResponse(json.dumps({
         'results': render_to_string('common/admin/aktiviteter/edit/turleder_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors_without_user) > MAX_HITS
     }))
-
-def turleder_assign(request):
-    if 'user' in request.POST:
-        user = User.get_users().get(id=request.POST['user'])
-    elif 'actor' in request.POST:
-        # Create the requested user as inactive
-        user = User.create_inactive_user(request.POST['actor'])
-    else:
-        raise Exception("Expected either 'user' or 'actor' in POST request")
-
-    for date in request.POST.getlist('aktivitet_dates'):
-        date = AktivitetDate.objects.get(id=date)
-        date.turledere.add(user)
-    return redirect('admin.aktiviteter.views.edit_turledere', request.POST['aktivitet'])
-
-def turleder_remove(request):
-    user = User.get_users().get(id=request.POST['user'])
-    aktivitet_date = AktivitetDate.objects.get(id=request.POST['aktivitet_date'])
-    aktivitet_date.turledere.remove(user)
-    return redirect('admin.aktiviteter.views.edit_turledere', aktivitet_date.aktivitet.id)
-
-def new_aktivitet_date(request):
-    aktivitet = Aktivitet.objects.get(id=request.POST['aktivitet'])
-    aktivitet_date = create_aktivitet_date(aktivitet)
-    context = RequestContext(request, {'date': aktivitet_date})
-    date_form = render_to_string('common/admin/aktiviteter/edit/dates_form.html', context)
-    return HttpResponse(json.dumps(date_form))
-
-def edit_aktivitet_date(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.objects.get(id=aktivitet_date)
-    aktivitet_date.start_date = datetime.strptime("%s %s" % (request.POST['start_date'], request.POST['start_time']), "%d.%m.%Y %H:%M")
-    aktivitet_date.end_date = datetime.strptime("%s %s" % (request.POST['end_date'], request.POST['end_time']), "%d.%m.%Y %H:%M")
-    aktivitet_date.signup_enabled = json.loads(request.POST['signup_enabled'])
-    if aktivitet_date.signup_enabled:
-        aktivitet_date.signup_start = datetime.strptime(request.POST['signup_start'], "%d.%m.%Y").date()
-        aktivitet_date.signup_deadline = datetime.strptime(request.POST['signup_deadline'], "%d.%m.%Y").date()
-        aktivitet_date.signup_cancel_deadline = datetime.strptime(request.POST['signup_cancel_deadline'], "%d.%m.%Y").date()
-    aktivitet_date.save()
-    context = RequestContext(request, {'date': aktivitet_date})
-    date_form = render_to_string('common/admin/aktiviteter/edit/dates_form.html', context)
-    return HttpResponse(json.dumps(date_form))
-
-def delete_aktivitet_date(request, aktivitet_date):
-    AktivitetDate.objects.get(id=aktivitet_date).delete()
-    return HttpResponse()
-
-def create_aktivitet_date(aktivitet):
-    now = datetime.now()
-    six_days_from_now = now + timedelta(days=6)
-    seven_days_from_now = now + timedelta(days=7)
-
-    aktivitet_date = AktivitetDate(
-        aktivitet=aktivitet,
-        start_date=now,
-        end_date=seven_days_from_now,
-        signup_start=now.date(),
-        signup_deadline=six_days_from_now.date(),
-        signup_cancel_deadline=six_days_from_now.date())
-    aktivitet_date.save()
-    return aktivitet_date

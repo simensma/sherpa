@@ -1,132 +1,187 @@
-$(document).ready(function() {
+var AktiviteterDatesView = function(opts) {
+    var that = this;
 
-    var editor = $("div.edit-aktivitet-dates");
+    this.root = opts.root;
 
-    function enableDatepicker(elements) {
-        elements.datepicker({
-            format: 'dd.mm.yyyy',
-            weekStart: 1,
-            autoclose: true,
-            forceParse: false
-        });
-    }
+    this.view_root = this.root.find("div.date-view");
+    this.edit_root = this.root.find("div.date-edit");
+    this.view_date_display = this.view_root.find("div.date-display");
+    this.view_ajaxloader = this.view_root.find("img.ajaxloader");
+    this.view_fail = this.view_root.find("div.fail");
 
-    // Long selectors make you feel alive
-    enableDatepicker(editor.find("div.control-group.start_date div.date,div.control-group.end_date div.date,div.control-group.signup_start div.date,div.control-group.signup_deadline div.date,div.control-group.signup_cancel_deadline div.date,div.control-group.pub_date div.date"));
+    var action_view = this.edit_root.find("a.view-date");
+    var action_edit = this.view_root.find("a.edit-date");
+    this.enrollment_inputs = this.edit_root.find("input[name^='enrollment']");
+    var enrollment_group = this.edit_root.find("div.enrollment-group");
 
-    // Hide signup-options (for each date) if signup is disabled
-    $(document).on('click', editor.selector + ' div.control-group.signup_enabled button', function() {
-        var signup_enabled = $(this).parents("div.controls").find("input[name='signup_enabled']");
-        var signup_details = $(this).parents("div.control-group").siblings("div.signup-details");
-        if($(this).is(".enable")) {
-            signup_details.slideDown();
-            signup_enabled.find("input[name='signup_enabled']").val(JSON.stringify(true));
-        } else if($(this).is(".disable")) {
-            signup_details.slideUp();
-            signup_enabled.find("input[name='signup_enabled']").val(JSON.stringify(false));
+    action_view.click(function() {
+        that.view();
+    });
+
+    action_edit.click(function() {
+        that.edit();
+    });
+
+    // All dateinputs
+
+    this.edit_root.find("div.input-append.date input").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        forceParse: false
+    });
+
+    // Hide/show signup options
+
+    this.enrollment_inputs.change(function() {
+        var val = that.enrollment_inputs.filter(":checked").val();
+
+        if(val === 'minside') {
+            enrollment_group.slideDown();
+        } else if(val === 'simple') {
+            enrollment_group.slideDown();
+        } else if(val === 'none') {
+            enrollment_group.slideUp();
         }
     });
 
-    // Enable date-editing
-    $(document).on('click', editor.selector + ' div.aktivitet-date div.summary a.edit-date', function() {
-        var summary = $(this).parents("div.summary");
-        summary.hide();
-        summary.siblings("div.editing").attr("data-active", "").slideDown();
+    // Turledere
+
+    var turleder_list = this.edit_root.find("ul.turleder-list");
+    var turleder_search = this.edit_root.find("div.turleder-search");
+    var turleder_table = turleder_search.find("table.search-results");
+    var turleder_input = turleder_search.find("input[name='turleder-search']");
+    var turleder_button = turleder_search.find("button.turleder-search");
+
+    var turleder_loader = turleder_table.find("tr.loader");
+    var turleder_no_hits = turleder_table.find("tr.no-hits");
+    var turleder_short_query = turleder_table.find("tr.short_query");
+    var turleder_error = turleder_table.find("tr.technical-error");
+    var turleder_max_hits_exceeded = turleder_table.find("tr.max-hits-exceeded");
+    var turleder_result_mirror = turleder_no_hits.find("span.result-mirror");
+
+    turleder_input.keyup(function(e) {
+        if(e.which == 13) { // Enter
+            turleder_button.click();
+        }
     });
 
-    // Delete a date
-    $(document).on('click', editor.selector + ' div.aktivitet-date div.summary a.delete-date', function() {
-        // TODO: If the dates have participants, give a warning that the participants
-        // should be notified about the date change
-        if(!confirm("Er du helt sikker på at du vil slette disse datoene?")) {
-            return $(this);
+    turleder_button.click(function() {
+        turleder_input.prop('disabled', true);
+        turleder_button.prop('disabled', true);
+        turleder_table.slideDown();
+        turleder_loader.show();
+        turleder_no_hits.hide();
+        turleder_short_query.hide();
+        turleder_error.hide();
+        turleder_max_hits_exceeded.hide();
+        turleder_table.find("tr.result").remove();
+
+        var query = turleder_input.val();
+        if(query.length < Turistforeningen.admin_user_search_char_length) {
+            turleder_input.prop('disabled', false);
+            turleder_button.prop('disabled', false);
+            turleder_short_query.show();
+            turleder_loader.hide();
+            return;
         }
-        var url = $(this).attr('data-url');
-        var date_wrapper = $(this).parents("div.aktivitet-date");
-        var management_rows = $(this).parents("table").find("tr.management");
-        var ajaxloader_row = $(this).parents("table").find("tr.ajaxloader");
-        management_rows.hide();
-        ajaxloader_row.show();
+
         $.ajaxQueue({
-            url: url
-        }).done(function() {
-            date_wrapper.slideUp({
-                complete: function() {
-                    $(this).remove();
+            url: turleder_table.attr('data-search-url'),
+            data: { q: query }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            turleder_table.find("tr.result").remove();
+            if(result.results.trim() === '') {
+                turleder_result_mirror.text(query);
+                turleder_no_hits.show();
+            } else {
+                turleder_table.append(result.results);
+                if(result.max_hits_exceeded) {
+                    max_hits_exceeded.show();
                 }
-            });
-        }).fail(function() {
-            alert("Beklager - det oppstod en feil når vi prøvde å slette disse datoene!\n\n" +
-                "Har du sjekket at du ikke har mistet tilgang til internett?\n\n" +
-                "Du kan prøve igjen så mange ganger du vil. Feilen har blitt logget i våre systemer, og hvis vi ser at det er en feil i Sherpa så skal vi rette den så snart som mulig.");
-            management_rows.show();
-            ajaxloader_row.hide();
-        });
-    });
-
-    // Add new date
-    editor.find("a.add-aktivitet-date").click(function() {
-        var url = $(this).attr('data-url');
-        var aktivitet_id = editor.attr('data-aktivitet-id');
-        var anchor = $(this);
-        var ajaxloader = $(this).siblings("img.ajaxloader");
-        anchor.hide();
-        ajaxloader.show();
-        $.ajaxQueue({
-            url: url,
-            data: { aktivitet: aktivitet_id }
-        }).done(function(result) {
-            result = $(JSON.parse(result));
-            result.addClass('hide');
-            editor.find("div.date-list").append(result);
-            enableDatepicker(result.find("div.input-append.date"));
-            result.find("div.summary").hide();
-            result.find("div.editing").attr('data-active', '').show();
-            result.slideDown();
-        }).fail(function() {
-            alert("Beklager - det oppstod en feil når vi prøvde å opprette en ny dato for denne turen!\n\n" +
-                "Har du sjekket at du ikke har mistet tilgang til internett?\n\n" +
-                "Du kan prøve igjen så mange ganger du vil. Feilen har blitt logget i våre systemer, og hvis vi ser at det er en feil i Sherpa så skal vi rette den så snart som mulig.");
-        }).always(function() {
-            anchor.show();
-            ajaxloader.hide();
-        });
-    });
-
-    // On date save
-    $(document).on('click', editor.selector + ' div.aktivitet-date div.editing button.save-date', function() {
-        var editing = $(this).parents("div.editing");
-        var signup_enabled = editing.find("div.control-group.signup_enabled button.active").is(".enable");
-        var button = $(this);
-        var ajaxloader = $(this).siblings("img.ajaxloader");
-        button.hide();
-        ajaxloader.show();
-        $.ajaxQueue({
-            url: editing.attr('data-url'),
-            data: {
-                start_date: editing.find("input[name='start_date']").val(),
-                start_time: editing.find("input[name='start_time']").val(),
-                end_date: editing.find("input[name='end_date']").val(),
-                end_time: editing.find("input[name='end_time']").val(),
-                signup_enabled: JSON.stringify(signup_enabled),
-                signup_start: editing.find("input[name='signup_start']").val(),
-                signup_deadline: editing.find("input[name='signup_deadline']").val(),
-                signup_cancel_deadline: editing.find("input[name='signup_cancel_deadline']").val()
+                turleder_table.find("tr.result a.assign-turleder").click(function() {
+                    turleder_table.hide();
+                    var new_element = turleder_list.find("li.hide").clone();
+                    new_element.removeClass('hide');
+                    var content = $(this).attr('data-name') + ' (' + $(this).attr('data-memberid') + ')';
+                    new_element.find("span.content").text(content);
+                    new_element.attr('data-id', $(this).attr('data-id'));
+                    new_element.attr('data-type', $(this).attr('data-type'));
+                    new_element.appendTo(turleder_list);
+                });
             }
-        }).done(function(result) {
-            result = $(JSON.parse(result));
-            result.addClass('hide');
-            editing.parents("div.aktivitet-date").replaceWith(result);
-            enableDatepicker(result.find("div.input-append.date"));
-            result.slideDown();
-        }).fail(function() {
-            alert("Beklager - det oppstod en feil når vi prøvde å lagre datoene!\n\n" +
-                "Har du sjekket at du ikke har mistet tilgang til internett?\n\n" +
-                "Du kan prøve å lagre igjen så mange ganger du vil, men husk at hvis du lukker siden så mister du endringene dine!\n\n" +
-                "Feilen har blitt logget i våre systemer, og hvis vi ser at det er en feil i Sherpa så skal vi rette den så snart som mulig.");
-            button.show();
-            ajaxloader.hide();
+        }).fail(function(result) {
+            turleder_table.find("tr.result").remove();
+            turleder_error.show();
+        }).always(function(result) {
+            turleder_loader.hide();
+            turleder_input.prop('disabled', false);
+            turleder_button.prop('disabled', false);
         });
     });
 
-});
+    $(document).on('click', turleder_list.selector + ' a.remove-turleder', function() {
+        $(this).parents("li").remove();
+    });
+
+};
+
+AktiviteterDatesView.prototype.view = function() {
+    var that = this;
+    var date_object = this.collectData();
+    this.view_date_display.empty();
+    this.view_ajaxloader.show();
+    this.view_fail.hide();
+
+    $.ajaxQueue({
+        url: that.view_date_display.attr('data-date-preview-url'),
+        data: { date: JSON.stringify(date_object) }
+    }).done(function(result) {
+        result = JSON.parse(result);
+        var html = $($.parseHTML(result.html));
+        that.view_date_display.append(html);
+        // the root object should be a.edit-date - if that changes, this won't work
+        html.click(function() {
+            that.edit();
+        });
+    }).fail(function(result) {
+        that.view_fail.show();
+    }).always(function(result) {
+        that.view_ajaxloader.hide();
+    });
+
+    var view_root = this.view_root;
+    this.edit_root.slideUp('slow', function() {
+        view_root.slideDown('fast');
+    });
+};
+
+AktiviteterDatesView.prototype.edit = function() {
+    var edit_root = this.edit_root;
+    this.view_root.slideUp('fast', function() {
+        edit_root.slideDown('slow');
+    });
+};
+
+AktiviteterDatesView.prototype.collectData = function() {
+    var turledere = {
+        users: [],
+        actors: []
+    };
+    this.root.find("ul.turleder-list li:not(.hide)").each(function() {
+        turledere[$(this).attr('data-type') + 's'].push($(this).attr('data-id'));
+    });
+    return {
+        id: this.root.attr('data-date-id'),
+        start_date: this.root.find("input[name='start_date']").val(),
+        start_time: this.root.find("input[name='start_time']").val(),
+        end_date: this.root.find("input[name='end_date']").val(),
+        end_time: this.root.find("input[name='end_time']").val(),
+        signup_type: this.root.find("input[name^='enrollment']:checked").val(),
+        signup_start: this.root.find("input[name='signup_start']").val(),
+        signup_deadline: this.root.find("input[name='signup_deadline']").val(),
+        signup_cancel_deadline: this.root.find("input[name='signup_cancel_deadline']").val(),
+        turledere: turledere
+    };
+};

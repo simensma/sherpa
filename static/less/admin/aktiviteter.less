@@ -41,6 +41,61 @@ div.admin-aktivitet-edit {
     }
   }
 
+  div.section.dates {
+    div.date-root {
+
+      div.date-edit {
+
+        background-color: rgb(245, 245, 245);
+        padding-top: 30px;
+        padding-bottom: 30px;
+        margin-bottom: 30px;
+
+        ul.turleder-list {
+          list-style-type: none;
+          margin-left: 0;
+        }
+
+        div.turleder-search {
+          table.search-results {
+            margin-top: 15px;
+
+            th, td, td label {
+              font-family: "DTL Nobel" !important;
+              vertical-align: middle;
+            }
+
+            td {
+              label {
+                margin-top: 5px;
+                margin-bottom: 5px;
+              }
+
+              form {
+                margin-bottom: 0;
+              }
+            }
+
+            tr.loader, tr.short_query {
+              td {
+                text-align: center;
+              }
+            }
+
+            tr.max-hits-exceeded {
+              td {
+                text-align: center;
+                font-size: 18px;
+                padding-top: 20px;
+                padding-bottom: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   div.control-group.submit {
     // Since there's currently no footer, let the user "scroll past" the button.
     // Should probably be removed when we get some sort of footer for the Sherpa UI.
@@ -64,100 +119,6 @@ div.aktivitet-listing {
 
         button.subcategory {
           .subcategory-button;
-        }
-      }
-    }
-  }
-}
-
-div.edit-aktivitet-dates {
-  a.add-aktivitet-date {
-    font-weight: normal;
-  }
-
-  div.aktivitet-date {
-    div.summary {
-      font-family: "DTL Nobel" !important;
-      margin-bottom: 20px;
-
-      table {
-        th,td {
-          padding: 0 2px;
-        }
-
-        th {
-          font-weight: normal;
-          text-align: right;
-        }
-
-        td.date {
-          font-weight: bold;
-        }
-      }
-    }
-
-    div.editing {
-      border-top: 1px solid rgb(216, 216, 216);
-      border-bottom: 1px solid rgb(216, 216, 216);
-      margin-bottom: 20px;
-      padding: 15px 0 0 0;
-    }
-  }
-}
-
-div.edit-aktivitet-turledere {
-
-  div.turleder-management {
-    margin-top: 40px;
-
-    table.turledere {
-      width: 100%;
-      margin-bottom: 30px;
-
-      th, td {
-        font-family: "DTL Nobel" !important;
-      }
-
-      td {
-        form {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    div.turleder-search {
-      table.search-results {
-        margin-top: 15px;
-
-        th, td, td label {
-          font-family: "DTL Nobel" !important;
-          vertical-align: middle;
-        }
-
-        td {
-          label {
-            margin-top: 5px;
-            margin-bottom: 5px;
-          }
-
-          form {
-            margin-bottom: 0;
-          }
-        }
-
-        tr.loader, tr.short_query {
-          td {
-            text-align: center;
-          }
-        }
-
-        tr.max-hits-exceeded {
-          td {
-            text-align: center;
-            font-size: 18px;
-            padding-top: 20px;
-            padding-bottom: 20px;
-          }
         }
       }
     }

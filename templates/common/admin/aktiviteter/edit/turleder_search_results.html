@@ -3,19 +3,7 @@
     <td>{{ user.get_full_name }}</td>
     <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
-      <button class="btn btn-danger assign-turleder">Gi turlederstatus</button>
-      <form action="{% url 'admin.aktiviteter.views.turleder_assign' %}" method="post" class="hide">
-        {% csrf_token %}
-        <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
-        <input type="hidden" name="user" value="{{ user.id }}">
-        <strong>Velg datoer:</strong>
-        {% for aktivitet_date in aktivitet.get_dates_ordered %}
-          <label class="radio">
-            <input type="checkbox" name="aktivitet_dates" value="{{ aktivitet_date.id }}"> {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
-          </label>
-        {% endfor %}
-        <button type="submit" class="btn btn-danger">Gi turlederen tilgang til disse datoene</button>
-      </form>
+      <a href="javascript:undefined" class="assign-turleder" data-name="{{ user.get_full_name }}" data-id="{{ user.id }}" data-type="user" data-memberid="{{ user.memberid|default:"ikke medlem" }}">Gi turlederstatus</a>
     </td>
   </tr>
 {% endfor %}
@@ -25,19 +13,7 @@
     <td>{{ actor.get_full_name }}</td>
     <td>{{ actor.memberid }}</td>
     <td>
-      <button class="btn btn-danger assign-turleder">Gi turlederstatus</button>
-      <form action="{% url 'admin.aktiviteter.views.turleder_assign' %}" method="post" class="hide">
-        {% csrf_token %}
-        <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
-        <input type="hidden" name="actor" value="{{ actor.memberid }}">
-        <strong>Velg datoer:</strong>
-        {% for aktivitet_date in aktivitet.get_dates_ordered %}
-          <label class="radio">
-            <input type="checkbox" name="aktivitet_dates" value="{{ aktivitet_date.id }}"> {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
-          </label>
-        {% endfor %}
-        <button type="submit" class="btn btn-danger">Gi turlederen tilgang til disse datoene</button>
-      </form>
+      <a href="javascript:undefined" class="assign-turleder" data-name="{{ actor.get_full_name }}" data-id="{{ actor.id }}" data-type="actor" data-memberid="{{ actor.memberid }}">Gi turlederstatus</a>
     </td>
   </tr>
 {% endfor %}

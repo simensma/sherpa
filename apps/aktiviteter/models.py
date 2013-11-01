@@ -152,15 +152,12 @@ class AktivitetDate(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
+    signup_simple_allowed = models.BooleanField()
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
-    allow_simple_signup = models.BooleanField()
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
-
-    def get_signup_enabled_json(self):
-        return json.dumps(self.signup_enabled)
 
     def accepts_signups(self):
         today = date.today()

@@ -1,6 +1,4 @@
 <ul class="nav nav-tabs">
   <li{% if active == 'description' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}">Beskrivelse og informasjon</a></li>
-  <li{% if active == 'dates' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_dates' aktivitet.id %}">Datoer og påmelding</a></li>
-  <li{% if active == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_turledere' aktivitet.id %}">Turledere</a></li>
   <li{% if active == 'participants' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.edit_participants' aktivitet.id %}">Påmeldte</a></li>
 </ul>

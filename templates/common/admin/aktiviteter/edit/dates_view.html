@@ -1,0 +1,11 @@
+{# The root object should be a.edit, if changed, change datescontroller.js accordingly #}
+<a href="javascript:undefined" class="edit-date">
+  Fra <span class="from">{{ date.start_date|date:"j. F" }}</span> til <span class="to">{{ date.end_date|date:"j. F Y" }}</span>,
+
+  {{ date.turledere.all|length }} turledere,
+
+  <span class="signup minside{% if not date.signup_enabled or date.signup_simple_allowed %} hide{% endif %}">påmelding via Min side.</span>
+  <span class="signup simple{% if not date.signup_enabled or not date.signup_simple_allowed %} hide{% endif %}">påmelding med navn og epost/telefon.</span>
+  <span class="signup none{% if date.signup_enabled %} hide{% endif %}">ingen påmelding.</span>
+  <i class="icon-chevron-down"></i>
+</a>

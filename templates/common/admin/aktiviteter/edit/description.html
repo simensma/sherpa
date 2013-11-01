@@ -20,19 +20,20 @@
   <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
   <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
 
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/dates.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
 {% endblock %}
 
 {% block js_globals %}
   <script>
+    window.Turistforeningen = {
+      admin_user_search_char_length: {{ admin_user_search_char_length }}
+    };
+
     {% if aktivitet.start_point %}
-      window.Turistforeningen = {
-        start_point_lat: JSON.parse({{ aktivitet.get_start_point_lat_json }}),
-        start_point_lng: JSON.parse({{ aktivitet.get_start_point_lng_json }})
-      };
-    {% else %}
-      window.Turistforeningen = {};
+      window.Turistforeningen.start_point_lat = JSON.parse({{ aktivitet.get_start_point_lat_json }});
+      window.Turistforeningen.start_point_lng = JSON.parse({{ aktivitet.get_start_point_lng_json }});
     {% endif %}
     </script>
 {% endblock %}
@@ -246,6 +247,33 @@
           <div class="popup-content hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+          </div>
+
+        </div>
+
+        <div class="section dates">
+
+          <div class="control-group">
+            <div class="controls">
+              <h2>Turdatoer og påmelding</h2>
+            </div>
+          </div>
+
+          <input type="hidden" name="dates" value="">
+          <input type="hidden" name="dates_to_delete" value="">
+
+          {% for date in aktivitet.get_dates_ordered %}
+            {% include 'common/admin/aktiviteter/edit/dates.html' %}
+          {% endfor %}
+
+          {% include 'common/admin/aktiviteter/edit/dates.html' %}
+
+          <div class="control-group">
+            <div class="controls">
+              <div class="control-as-text">
+                <button class="btn add-date">Legg til enda en turdato</button>
+              </div>
+            </div>
           </div>
 
         </div>
