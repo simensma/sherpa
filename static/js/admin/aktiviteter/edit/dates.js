@@ -1,12 +1,6 @@
 $(document).ready(function() {
 
     var editor = $("div.edit-aktivitet-dates");
-    var simple_signup_form = editor.find("form.simple-signup");
-    var simple_signup_allow = simple_signup_form.find("button.allow-simple-signup");
-    var simple_signup_deny = simple_signup_form.find("button.deny-simple-signup");
-    var simple_signup_saved = simple_signup_form.find("span.saved");
-    var simple_signup_error = simple_signup_form.find("span.error");
-    var simple_signup_ajaxloader = simple_signup_form.find("img.ajaxloader");
 
     function enableDatepicker(elements) {
         elements.datepicker({
@@ -14,48 +8,6 @@ $(document).ready(function() {
             weekStart: 1,
             autoclose: true,
             forceParse: false
-        });
-    }
-
-    simple_signup_form.submit(function(e) {
-        e.preventDefault();
-    });
-
-    simple_signup_allow.click(function() {
-        editSimpleSignup(true, simple_signup_allow.hasClass('active'));
-    });
-
-    simple_signup_deny.click(function() {
-        editSimpleSignup(false, simple_signup_allow.hasClass('active'));
-    });
-
-    function editSimpleSignup(allow, allow_original) {
-        simple_signup_allow.prop('disabled', true);
-        simple_signup_deny.prop('disabled', true);
-        simple_signup_ajaxloader.show();
-        simple_signup_saved.hide();
-        simple_signup_error.hide();
-
-        $.ajaxQueue({
-            url: simple_signup_form.attr('action'),
-            data: { allow_simple_signup: JSON.stringify(allow) }
-        }).done(function() {
-            simple_signup_saved.show();
-        }).fail(function() {
-            simple_signup_error.show();
-            // Reset buttons
-            if(allow_original) {
-                simple_signup_allow.addClass('active');
-                simple_signup_deny.removeClass('active');
-            } else {
-                simple_signup_allow.removeClass('active');
-                simple_signup_deny.addClass('active');
-            }
-        }).always(function() {
-            simple_signup_ajaxloader.show();
-            simple_signup_allow.prop('disabled', false);
-            simple_signup_deny.prop('disabled', false);
-            simple_signup_ajaxloader.hide();
         });
     }
 

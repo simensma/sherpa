@@ -56,7 +56,7 @@ def signup_not_logged_on(request, aktivitet_date):
 
 def signup_simple(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
-    if not aktivitet_date.accepts_signups() or not aktivitet_date.aktivitet.allow_simple_signup:
+    if not aktivitet_date.accepts_signups() or not aktivitet_date.allow_simple_signup:
         raise PermissionDenied
 
     errors = False

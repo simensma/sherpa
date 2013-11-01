@@ -35,7 +35,6 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
-    allow_simple_signup = models.BooleanField()
     hidden = models.BooleanField(default=False)
 
     def get_dates_ordered(self):
@@ -156,6 +155,7 @@ class AktivitetDate(models.Model):
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
+    allow_simple_signup = models.BooleanField()
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
 

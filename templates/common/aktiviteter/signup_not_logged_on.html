@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        {% if aktivitet_date.aktivitet.allow_simple_signup %}
+        {% if aktivitet_date.allow_simple_signup %}
           {% for message in messages %}
             {% if message.message == 'simple_signup_phone_or_email_required' %}
               <div class="alert alert-error">
