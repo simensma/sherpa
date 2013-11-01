@@ -46,9 +46,9 @@ def new(request):
     for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
         obj, created = Tag.objects.get_or_create(name=tag)
         aktivitet.category_tags.add(obj)
-    return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
+    return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
-def edit_description(request, aktivitet):
+def edit(request, aktivitet):
     if request.method == 'GET':
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         context = {
@@ -59,7 +59,7 @@ def edit_description(request, aktivitet):
             'all_associations': Association.sort(Association.objects.all()),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
         }
-        return render(request, 'common/admin/aktiviteter/edit/description.html', context)
+        return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':
         # TODO: Server-side validations
         aktivitet = Aktivitet.objects.get(id=aktivitet)
@@ -151,9 +151,9 @@ def edit_description(request, aktivitet):
                 actor = Actor.objects.get(id=actor_id)
                 aktivitet_date.turledere.add(User.get_or_create_inactive(actor.memberid))
 
-        return redirect('admin.aktiviteter.views.edit_description', aktivitet.id)
+        return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
-def edit_description_date_preview(request):
+def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that
     # we can render the dates_view template like it normally is.
     fake_date_representation = json.loads(request.POST['date'])
@@ -171,7 +171,7 @@ def edit_description_date_preview(request):
         'html': render_to_string('common/admin/aktiviteter/edit/dates_view.html', context),
     }))
 
-def edit_participants(request, aktivitet):
+def participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
         'aktivitet': aktivitet

@@ -21,7 +21,7 @@
   <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
 
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/dates.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/description.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/edit.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
 {% endblock %}
 
@@ -45,12 +45,9 @@
   <div class="row">
     <div class="span12">
 
-      <h2>Rediger aktivitet</h2>
+      {# TODO: Client-side validations, check participants when editing dates, etc #}
 
-      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='description' %}
-
-      {# TODO: Client-side validations #}
-      <form action="{% url 'admin.aktiviteter.views.edit_description' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
+      <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
         {% csrf_token %}
         <input type="hidden" name="images" value="">
         <input type="hidden" name="position_lat">
