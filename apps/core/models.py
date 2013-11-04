@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
@@ -23,6 +23,10 @@ class ZipcodeState(models.Model):
 class County(models.Model):
     code = models.CharField(max_length=2) # Corresponds to ISO 3166-2:NO (https://no.wikipedia.org/wiki/ISO_3166-2:NO)
     name = models.CharField(max_length=100)
+    area = models.FloatField(null=True)
+    perimeter = models.FloatField(null=True)
+    geom = models.MultiPolygonField(null=True)
+    objects = models.GeoManager()
 
     @staticmethod
     def typical_objects():
