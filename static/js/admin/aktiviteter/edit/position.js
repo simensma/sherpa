@@ -8,6 +8,9 @@ $(document).ready(function() {
     var show_on_map = position_section.find("p.intro.show-on-map");
     var show_map = position_section.find("p.intro a.show-map");
 
+    var county_select = position_section.find("select[name='county']");
+    var county_ajaxloader = position_section.find("div.control-group.county img.ajaxloader");
+
     var marker;
 
     var initiate_map = function() {
@@ -43,6 +46,8 @@ $(document).ready(function() {
                 marker = e.marker;
             }
             marker.openPopup();
+
+            county_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
         });
 
         map_element.find("a.leaflet-control-draw-marker").tooltip({
@@ -63,5 +68,30 @@ $(document).ready(function() {
             form.find("input[name='position_lng']").val(marker.getLatLng().lng);
         }
     });
+
+    function county_lookup(lat, lng) {
+        county_ajaxloader.show();
+        $.ajaxQueue({
+            url: position_section.attr('data-county-lookup-url'),
+            data: {
+                lat: JSON.stringify(lat),
+                lng: JSON.stringify(lng)
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.length === 0) {
+                // TODO
+                return;
+            } else if(result.length > 1) {
+                // TODO
+            }
+            county_select.find("option[value='" + result[0] + "']").prop('selected', true);
+            county_select.trigger("liszt:updated"); // Update chosen
+        }).fail(function() {
+            // TODO
+        }).always(function() {
+            county_ajaxloader.hide();
+        });
+    }
 
 });

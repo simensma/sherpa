@@ -234,7 +234,7 @@
 
         </div>
 
-        <div class="section position">
+        <div class="section position" data-county-lookup-url="{% url 'core.views.county_lookup' %}">
 
           <div class="control-group">
             <div class="controls">
@@ -265,6 +265,37 @@
           <div class="popup-content hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+          </div>
+
+          <div class="control-group county">
+            <label class="control-label">Fylke:</label>
+            <div class="controls">
+              <select name="county" data-chosen data-placeholder="Velg fylke...">
+                <option value=""></option>
+                {% for county in counties %}
+                  <option value="{{ county.id }}">{{ county.name }}</option>
+                {% endfor %}
+              </select>
+              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Kommune:</label>
+            <div class="controls">
+              <select name="city" data-chosen data-placeholder="Velg kommune...">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Område:</label>
+            <div class="controls">
+              <select name="area" data-chosen data-placeholder="Velg område...">
+                <option value=""></option>
+              </select>
+            </div>
           </div>
 
           <div class="control-group">
