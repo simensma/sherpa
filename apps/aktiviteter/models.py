@@ -11,6 +11,8 @@ class Aktivitet(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_point = models.PointField(null=True)
+    getting_there = models.TextField()
+    meeting_place = models.TextField()
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),

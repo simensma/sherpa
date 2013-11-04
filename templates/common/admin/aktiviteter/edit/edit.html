@@ -234,6 +234,7 @@
           </div>
 
           <div class="control-group">
+            <label class="control-label">Posisjon:</label>
             <div class="controls">
               <div class="control-as-text">
                 <p class="intro">
@@ -255,6 +256,20 @@
           <div class="popup-content hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Adkomst:</label>
+            <div class="controls">
+              <textarea rows="4" cols="80" name="getting_there" id="getting_there" class="input-xxlarge">{{ aktivitet.getting_there }}</textarea>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Oppmøte:</label>
+            <div class="controls">
+              <textarea rows="4" cols="80" name="meeting_place" id="meeting_place" class="input-xxlarge">{{ aktivitet.meeting_place }}</textarea>
+            </div>
           </div>
 
         </div>

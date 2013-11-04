@@ -70,6 +70,8 @@ def edit(request, aktivitet):
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
+        aktivitet.getting_there = request.POST['getting_there']
+        aktivitet.meeting_place = request.POST['meeting_place']
 
         association = Association.objects.get(id=request.POST['association'])
         if not association in request.user.children_associations():
