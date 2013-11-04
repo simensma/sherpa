@@ -188,6 +188,44 @@
     </div>
 
     <div class="control-group">
+      <label class="control-label">Kontaktinformasjon:</label>
+      <div class="controls">
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="arrangør"{% if not date or date.contact_type == 'arrangør' %} checked{% endif %}> Arrangørforeningens opplysninger
+        </label>
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turlederens opplysninger
+        </label>
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
+        </label>
+      </div>
+    </div>
+
+    <div class="contact-custom{% if date.contact_type != 'custom' %} hide{% endif %}">
+      <div class="control-group">
+        <label class="control-label">Navn:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="contact_custom_name" value="{{ date.contact_custom_name }}">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Telefon:</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="contact_custom_phone" value="{{ date.contact_custom_phone }}">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">E-postadresse:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="contact_custom_email" value="{{ date.contact_custom_email }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
       <div class="controls">
         <div class="control-as-text">
           <a href="javascript:undefined" class="view-date"><i class="icon-chevron-up"></i> Skjul og lagre denne turdatoen</a>

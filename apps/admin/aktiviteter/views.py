@@ -144,6 +144,10 @@ def edit(request, aktivitet):
 
             aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
             aktivitet_date.meeting_place = date_post['meeting_place']
+            aktivitet_date.contact_type = date_post['contact_type']
+            aktivitet_date.contact_custom_name = date_post['contact_custom_name']
+            aktivitet_date.contact_custom_phone = date_post['contact_custom_phone']
+            aktivitet_date.contact_custom_email = date_post['contact_custom_email']
             aktivitet_date.save()
 
             # Turledere

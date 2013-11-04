@@ -133,7 +133,7 @@ $(document).ready(function() {
     var add_date_button = dates.find("button.add-date");
 
     var date_views = [];
-    var date_enrollment_counter = 0;
+    var date_radio_counter = 0;
     var date_ids_to_delete = [];
 
     existing_dates.each(function() {
@@ -150,8 +150,10 @@ $(document).ready(function() {
             container: 'body'
         });
 
-        // The enrollment radio buttons need unique names, so generate names with a counter.
-        new_root.find("input[name='enrollment']").attr('name', 'enrollment-' + date_enrollment_counter++);
+        // All radio button groups need unique names, so generate names with a counter.
+        new_root.find("input[name='enrollment']").attr('name', 'enrollment-' + date_radio_counter);
+        new_root.find("input[name='contact_type']").attr('name', 'contact_type-' + date_radio_counter);
+        date_radio_counter += 1;
 
         new_root.removeClass('hide');
         new_root.hide(); // Hide it even though we don't want the 'hide' class on it.

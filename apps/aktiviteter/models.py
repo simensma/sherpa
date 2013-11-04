@@ -161,6 +161,14 @@ class AktivitetDate(models.Model):
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()
+    CONTACT_TYPE_CHOICES = (
+        (u'arrangør', 'Arrangørforening'),
+        (u'turleder', 'Turleder'),
+        (u'custom', 'Skriv inn'),)
+    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
+    contact_custom_name = models.CharField(max_length=255)
+    contact_custom_phone = models.CharField(max_length=255)
+    contact_custom_email = models.CharField(max_length=255)
 
     def accepts_signups(self):
         today = date.today()

@@ -13,6 +13,8 @@ var AktiviteterDatesView = function(opts) {
     var action_edit = this.view_root.find("a.edit-date");
     this.enrollment_inputs = this.edit_root.find("input[name^='enrollment']");
     var enrollment_group = this.edit_root.find("div.enrollment-group");
+    this.contact_inputs = this.edit_root.find("input[name^='contact']");
+    var contact_custom = this.edit_root.find("div.contact-custom");
 
     action_view.click(function() {
         that.view();
@@ -42,6 +44,20 @@ var AktiviteterDatesView = function(opts) {
             enrollment_group.slideDown();
         } else if(val === 'none') {
             enrollment_group.slideUp();
+        }
+    });
+
+    // Hide/show custom contact information
+
+    this.contact_inputs.change(function() {
+        var val = that.contact_inputs.filter(":checked").val();
+
+        if(val === 'arrangør') {
+            contact_custom.slideUp();
+        } else if(val === 'turleder') {
+            contact_custom.slideUp();
+        } else if(val === 'custom') {
+            contact_custom.slideDown();
         }
     });
 
@@ -183,6 +199,10 @@ AktiviteterDatesView.prototype.collectData = function() {
         signup_deadline: this.root.find("input[name='signup_deadline']").val(),
         signup_cancel_deadline: this.root.find("input[name='signup_cancel_deadline']").val(),
         turledere: turledere,
-        meeting_place: this.root.find("textarea[name='meeting_place']").val()
+        meeting_place: this.root.find("textarea[name='meeting_place']").val(),
+        contact_type: this.root.find("input[name^='contact_type']:checked").val(),
+        contact_custom_name: this.root.find("input[name='contact_custom_name']").val(),
+        contact_custom_phone: this.root.find("input[name='contact_custom_phone']").val(),
+        contact_custom_email: this.root.find("input[name='contact_custom_email']").val()
     };
 };
