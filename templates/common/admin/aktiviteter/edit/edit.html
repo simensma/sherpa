@@ -219,7 +219,16 @@
           <div class="control-group images">
             <label class="control-label">Bilder:</label>
             <div class="controls">
-              {% include 'common/admin/images/util/image-carousel-picker.html' with preload=aktivitet.get_images_json %}
+
+              <div class="control-as-text images-initiate{% if aktivitet.images.count > 0 %} hide{% endif %}">
+                Du bør legge til noen fine bilder, slik at turen blir attraktiv og fristende å se på.<br>
+                <a href="javascript:undefined" class="add-images">Klikk her for å legge til bilder</a>
+              </div>
+
+              <div class="images{% if aktivitet.images.count == 0 %} hide{% endif %}">
+                {% include 'common/admin/images/util/image-carousel-picker.html' with preload=aktivitet.get_images_json %}
+              </div>
+
             </div>
           </div>
 

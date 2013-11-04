@@ -8,7 +8,16 @@ $(document).ready(function() {
     var subcategory_input = subcategories.find("input[name='subcategories']");
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
-    var images = form.find("input[name='images']");
+    var images_input = form.find("input[name='images']");
+
+    var images = form.find("div.control-group.images");
+    var images_initiate = images.find("div.images-initiate");
+    var images_container = images.find("div.images");
+
+    images_initiate.find("a").click(function() {
+        images_initiate.hide();
+        images_container.slideDown();
+    });
 
     association_select.chosen();
     co_association_select.chosen({
@@ -115,7 +124,7 @@ $(document).ready(function() {
     form.submit(function() {
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        images.val(JSON.stringify(ImageCarouselPicker.getImages()));
+        images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
 
         // Collect subcategory tags
         var tags = [];
