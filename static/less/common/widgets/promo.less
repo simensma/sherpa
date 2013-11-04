@@ -628,13 +628,13 @@ div.widget.promo {
   }
 
   div.cover.fjellsport {
-    background-image: url('/static/img/widgets/promo/fjellsport_campfjellsport.jpg');
+    background-image: url('/static/img/widgets/promo/fjellsport_skredkurs.jpg');
 
     div.content {
-      @width: 720px;
-      @padding-right: 40px;
+      @width: 500px;
+      @padding-right: 30px;
       padding-left: 940px - @width - @padding-right;
-      padding-top: 220px;
+      padding-top: 30px;
       padding-right: @padding-right;
       width: @width;
 
@@ -643,10 +643,27 @@ div.widget.promo {
 
       h1 {
         margin-bottom: 20px;
+        font-size: 50px;
+        color: white;
       }
 
       p {
         margin-bottom: 25px;
+        color: rgb(43, 62, 145);
+      }
+
+      p.double-button-hack {
+        margin-top: 160px;
+      }
+
+      @media(max-width: 767px) {
+        p {
+          color: white;
+        }
+
+        p.double-button-hack {
+          margin-top: 20px;
+        }
       }
     }
   }
