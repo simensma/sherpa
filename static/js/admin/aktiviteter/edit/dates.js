@@ -182,6 +182,7 @@ AktiviteterDatesView.prototype.collectData = function() {
         signup_start: this.root.find("input[name='signup_start']").val(),
         signup_deadline: this.root.find("input[name='signup_deadline']").val(),
         signup_cancel_deadline: this.root.find("input[name='signup_cancel_deadline']").val(),
-        turledere: turledere
+        turledere: turledere,
+        meeting_place: this.root.find("textarea[name='meeting_place']").val()
     };
 };

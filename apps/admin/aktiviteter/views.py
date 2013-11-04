@@ -71,7 +71,6 @@ def edit(request, aktivitet):
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.getting_there = request.POST['getting_there']
-        aktivitet.meeting_place = request.POST['meeting_place']
 
         association = Association.objects.get(id=request.POST['association'])
         if not association in request.user.children_associations():
@@ -144,6 +143,7 @@ def edit(request, aktivitet):
                 raise Exception("Unrecognized POST value for signup_type field")
 
             aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
+            aktivitet_date.meeting_place = date_post['meeting_place']
             aktivitet_date.save()
 
             # Turledere

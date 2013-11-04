@@ -12,7 +12,6 @@ class Aktivitet(models.Model):
     description = models.TextField()
     start_point = models.PointField(null=True)
     getting_there = models.TextField()
-    meeting_place = models.TextField()
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),
@@ -161,6 +160,7 @@ class AktivitetDate(models.Model):
     signup_cancel_deadline = models.DateField()
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
+    meeting_place = models.TextField()
 
     def accepts_signups(self):
         today = date.today()
