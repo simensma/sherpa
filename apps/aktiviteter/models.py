@@ -7,6 +7,7 @@ import json
 class Aktivitet(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
     co_association = models.ForeignKey('association.Association', null=True, related_name='+')
+    code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_point = models.PointField(null=True)

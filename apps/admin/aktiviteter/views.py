@@ -63,6 +63,7 @@ def edit(request, aktivitet):
     elif request.method == 'POST':
         # TODO: Server-side validations
         aktivitet = Aktivitet.objects.get(id=aktivitet)
+        aktivitet.code = request.POST['code']
         aktivitet.title = request.POST['title']
         aktivitet.description = request.POST['description']
         aktivitet.difficulty = request.POST['difficulty']
