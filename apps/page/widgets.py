@@ -177,7 +177,13 @@ def get_static_promo_context(path):
             'id': 'fotokonkurranse',
             'name': 'Fotokonkurranse',
             'start_date': date(year=2013, month=10, day=11),
-            'end_date': date(year=2013, month=10, day=11),
+            'end_date': date(year=2013, month=11, day=6),
+        },
+        {
+            'id': 'gjensidige',
+            'name': 'Medlemsfordeler',
+            'start_date': date(year=2013, month=11, day=7),
+            'end_date': date(year=2013, month=11, day=7),
         }
     ]
 

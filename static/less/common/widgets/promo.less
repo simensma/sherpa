@@ -598,6 +598,84 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-gjensidige {
+    background-image: url('/static/img/widgets/promo/gjensidigerabatt.jpg');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      a.giant-anchor {
+        display: block;
+        width: 940px;
+        height: 480px;
+
+        div.box {
+          position: absolute;
+          top: 100px;
+          left: 550px;
+          padding: 20px 10px;
+
+          background-color: rgb(210, 24, 24);
+
+          width: 370px;
+
+          color: white !important;
+
+          p.lede {
+            font-size: 32px;
+            font-weight: bold;
+          }
+
+          div.cta {
+            background: url('/static/img/widgets/promo/gjensidigerabatt_highlight.png') bottom center no-repeat;
+            height: 36px;
+
+            p.cta {
+              font-size: 20px;
+              font-weight: bold;
+              margin-bottom: 15px;
+            }
+          }
+        }
+      }
+
+      @media(max-width: 767px) {
+        a.giant-anchor {
+          width: auto;
+          height: auto;
+          text-decoration: none;
+
+          div.box {
+            position: static;
+            padding: 0;
+            width: auto;
+            color: white !important;
+            background: none;
+
+            p.lede {
+              font-size: 24px !important;
+            }
+
+            div.cta {
+              background: none;
+              height: auto;
+
+              p.cta {
+                font-size: 18px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {
