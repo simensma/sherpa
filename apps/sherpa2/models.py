@@ -247,7 +247,8 @@ class Location(models.Model):
     parent = models.TextField(db_column='lo_parent')
     yr_url = models.TextField(db_column='lo_yr_url')
     meta = models.IntegerField(db_column='lo_meta', null=True)
-    the_geom = models.TextField(blank=True) # This field type is a guess.
+    geom = models.MultiPolygonField(db_column='the_geom', null=True)
+    objects = models.GeoManager()
 
     class Meta:
         db_table = u'location2'
