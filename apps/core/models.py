@@ -35,6 +35,18 @@ class County(models.Model):
         """
         return County.objects.exclude(code__in=['22', '23'])
 
+class Municipality(models.Model):
+    code = models.CharField(max_length=4) # Kommunenummer
+    name = models.CharField(max_length=255)
+    area = models.FloatField(null=True)
+    perimeter = models.FloatField(null=True)
+    geom = models.MultiPolygonField()
+    # update_date is imported from a field called 'oppdatdato'. Specified for 56 out of 435 municipalities.
+    # Not exactly sure what it is, but seems to be related to when the municipality was latest merged with
+    # another municipality or changed somehow.
+    update_date = models.DateTimeField(null=True)
+    objects = models.GeoManager()
+
 # The country codes from Focus were extracted and duplicated here.
 class FocusCountry(models.Model):
     code = models.CharField(max_length=2)
