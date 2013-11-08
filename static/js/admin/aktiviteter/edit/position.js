@@ -10,6 +10,8 @@ $(document).ready(function() {
 
     var county_select = position_section.find("select[name='county']");
     var county_ajaxloader = position_section.find("div.control-group.county img.ajaxloader");
+    var municipality_select = position_section.find("select[name='municipality']");
+    var municipality_ajaxloader = position_section.find("div.control-group.municipality img.ajaxloader");
 
     var marker;
 
@@ -48,6 +50,7 @@ $(document).ready(function() {
             marker.openPopup();
 
             county_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
+            municipality_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
         });
 
         map_element.find("a.leaflet-control-draw-marker").tooltip({
@@ -91,6 +94,31 @@ $(document).ready(function() {
             // TODO
         }).always(function() {
             county_ajaxloader.hide();
+        });
+    }
+
+    function municipality_lookup(lat, lng) {
+        municipality_ajaxloader.show();
+        $.ajaxQueue({
+            url: position_section.attr('data-municipality-lookup-url'),
+            data: {
+                lat: JSON.stringify(lat),
+                lng: JSON.stringify(lng)
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.length === 0) {
+                // TODO
+                return;
+            } else if(result.length > 1) {
+                // TODO
+            }
+            municipality_select.find("option[value='" + result[0] + "']").prop('selected', true);
+            municipality_select.trigger("liszt:updated"); // Update chosen
+        }).fail(function() {
+            // TODO
+        }).always(function() {
+            municipality_ajaxloader.hide();
         });
     }
 
