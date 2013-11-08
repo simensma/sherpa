@@ -30,7 +30,9 @@ class County(models.Model):
 
     @staticmethod
     def typical_objects():
-        # Returns the most typical County objects (excludes 'Jan Mayen' and 'Kontinentalsokkelen')
+        """
+        Returns the most typical County objects (excludes 'Jan Mayen' and 'Kontinentalsokkelen')
+        """
         return County.objects.exclude(code__in=['22', '23'])
 
 # The country codes from Focus were extracted and duplicated here.
