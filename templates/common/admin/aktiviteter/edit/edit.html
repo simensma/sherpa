@@ -234,7 +234,7 @@
 
         </div>
 
-        <div class="section position" data-county-lookup-url="{% url 'core.views.county_lookup' %}" data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}">
+        <div class="section position" data-county-lookup-url="{% url 'core.views.county_lookup' %}" data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}" data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
 
           <div class="control-group">
             <div class="controls">
@@ -293,12 +293,16 @@
             </div>
           </div>
 
-          <div class="control-group">
+          <div class="control-group location">
             <label class="control-label">Område:</label>
             <div class="controls">
-              <select name="area" data-chosen data-placeholder="Velg område...">
+              <select name="location" data-chosen data-placeholder="Velg område...">
                 <option value=""></option>
+                {% for location in locations %}
+                  <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
               </select>
+              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
             </div>
           </div>
 

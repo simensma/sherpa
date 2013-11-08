@@ -9,6 +9,7 @@ from django.contrib.gis.geos import Point
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag, County, Municipality
+from sherpa2.models import Location
 from user.models import User
 from focus.models import Actor
 from association.models import Association
@@ -59,7 +60,8 @@ def edit(request, aktivitet):
             'all_associations': Association.sort(Association.objects.all()),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
-            'municipalities': Municipality.objects.order_by('name')
+            'municipalities': Municipality.objects.order_by('name'),
+            'locations': Location.objects.order_by('name')
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':

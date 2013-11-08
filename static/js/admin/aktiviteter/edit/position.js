@@ -12,6 +12,8 @@ $(document).ready(function() {
     var county_ajaxloader = position_section.find("div.control-group.county img.ajaxloader");
     var municipality_select = position_section.find("select[name='municipality']");
     var municipality_ajaxloader = position_section.find("div.control-group.municipality img.ajaxloader");
+    var location_select = position_section.find("select[name='location']");
+    var location_ajaxloader = position_section.find("div.control-group.location img.ajaxloader");
 
     var marker;
 
@@ -51,6 +53,7 @@ $(document).ready(function() {
 
             county_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
             municipality_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
+            location_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
         });
 
         map_element.find("a.leaflet-control-draw-marker").tooltip({
@@ -119,6 +122,31 @@ $(document).ready(function() {
             // TODO
         }).always(function() {
             municipality_ajaxloader.hide();
+        });
+    }
+
+    function location_lookup(lat, lng) {
+        location_ajaxloader.show();
+        $.ajaxQueue({
+            url: position_section.attr('data-location-lookup-url'),
+            data: {
+                lat: JSON.stringify(lat),
+                lng: JSON.stringify(lng)
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            if(result.length === 0) {
+                // TODO
+                return;
+            } else if(result.length > 1) {
+                // TODO
+            }
+            location_select.find("option[value='" + result[0] + "']").prop('selected', true);
+            location_select.trigger("liszt:updated"); // Update chosen
+        }).fail(function() {
+            // TODO
+        }).always(function() {
+            location_ajaxloader.hide();
         });
     }
 
