@@ -267,10 +267,10 @@
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
           </div>
 
-          <div class="control-group county">
+          <div class="control-group counties">
             <label class="control-label">Fylke:</label>
             <div class="controls">
-              <select name="county" data-chosen data-placeholder="Velg fylke...">
+              <select multiple name="counties" data-chosen data-placeholder="Velg fylke...">
                 <option value=""></option>
                 {% for county in counties %}
                   <option value="{{ county.id }}">{{ county.name }}</option>
@@ -280,10 +280,10 @@
             </div>
           </div>
 
-          <div class="control-group municipality">
+          <div class="control-group municipalities">
             <label class="control-label">Kommune:</label>
             <div class="controls">
-              <select name="municipality" data-chosen data-placeholder="Velg kommune...">
+              <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
                 <option value=""></option>
                 {% for municipality in municipalities %}
                   <option value="{{ municipality.id }}">{{ municipality.name }}</option>
@@ -293,10 +293,10 @@
             </div>
           </div>
 
-          <div class="control-group location">
+          <div class="control-group locations">
             <label class="control-label">Område:</label>
             <div class="controls">
-              <select name="location" data-chosen data-placeholder="Velg område...">
+              <select multiple name="locations" data-chosen data-placeholder="Velg område...">
                 <option value=""></option>
                 {% for location in locations %}
                   <option value="{{ location.id }}">{{ location.name }}</option>

@@ -8,12 +8,12 @@ $(document).ready(function() {
     var show_on_map = position_section.find("p.intro.show-on-map");
     var show_map = position_section.find("p.intro a.show-map");
 
-    var county_select = position_section.find("select[name='county']");
-    var county_ajaxloader = position_section.find("div.control-group.county img.ajaxloader");
-    var municipality_select = position_section.find("select[name='municipality']");
-    var municipality_ajaxloader = position_section.find("div.control-group.municipality img.ajaxloader");
-    var location_select = position_section.find("select[name='location']");
-    var location_ajaxloader = position_section.find("div.control-group.location img.ajaxloader");
+    var counties_select = position_section.find("select[name='counties']");
+    var counties_ajaxloader = position_section.find("div.control-group.counties img.ajaxloader");
+    var municipalities_select = position_section.find("select[name='municipalities']");
+    var municipalities_ajaxloader = position_section.find("div.control-group.municipalities img.ajaxloader");
+    var locations_select = position_section.find("select[name='locations']");
+    var locations_ajaxloader = position_section.find("div.control-group.locations img.ajaxloader");
 
     var marker;
 
@@ -76,7 +76,7 @@ $(document).ready(function() {
     });
 
     function county_lookup(lat, lng) {
-        county_ajaxloader.show();
+        counties_ajaxloader.show();
         $.ajaxQueue({
             url: position_section.attr('data-county-lookup-url'),
             data: {
@@ -85,23 +85,20 @@ $(document).ready(function() {
             }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length === 0) {
-                // TODO
-                return;
-            } else if(result.length > 1) {
-                // TODO
+            counties_select.find("option:selected").prop('selected', false);
+            for(var i=0; i<result.length; i++) {
+                counties_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            county_select.find("option[value='" + result[0] + "']").prop('selected', true);
-            county_select.trigger("liszt:updated"); // Update chosen
+            counties_select.trigger("liszt:updated"); // Update chosen
         }).fail(function() {
             // TODO
         }).always(function() {
-            county_ajaxloader.hide();
+            counties_ajaxloader.hide();
         });
     }
 
     function municipality_lookup(lat, lng) {
-        municipality_ajaxloader.show();
+        municipalities_ajaxloader.show();
         $.ajaxQueue({
             url: position_section.attr('data-municipality-lookup-url'),
             data: {
@@ -110,23 +107,20 @@ $(document).ready(function() {
             }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length === 0) {
-                // TODO
-                return;
-            } else if(result.length > 1) {
-                // TODO
+            municipalities_select.find("option:selected").prop('selected', false);
+            for(var i=0; i<result.length; i++) {
+                municipalities_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            municipality_select.find("option[value='" + result[0] + "']").prop('selected', true);
-            municipality_select.trigger("liszt:updated"); // Update chosen
+            municipalities_select.trigger("liszt:updated"); // Update chosen
         }).fail(function() {
             // TODO
         }).always(function() {
-            municipality_ajaxloader.hide();
+            municipalities_ajaxloader.hide();
         });
     }
 
     function location_lookup(lat, lng) {
-        location_ajaxloader.show();
+        locations_ajaxloader.show();
         $.ajaxQueue({
             url: position_section.attr('data-location-lookup-url'),
             data: {
@@ -135,18 +129,15 @@ $(document).ready(function() {
             }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.length === 0) {
-                // TODO
-                return;
-            } else if(result.length > 1) {
-                // TODO
+            locations_select.find("option:selected").prop('selected', false);
+            for(var i=0; i<result.length; i++) {
+                locations_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            location_select.find("option[value='" + result[0] + "']").prop('selected', true);
-            location_select.trigger("liszt:updated"); // Update chosen
+            locations_select.trigger("liszt:updated"); // Update chosen
         }).fail(function() {
             // TODO
         }).always(function() {
-            location_ajaxloader.hide();
+            locations_ajaxloader.hide();
         });
     }
 
