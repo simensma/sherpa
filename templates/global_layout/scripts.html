@@ -27,10 +27,58 @@
 <script src="{{ STATIC_URL }}js/main.js"></script>
 <script src="{{ STATIC_URL }}js/common.js"></script>
 <script src="{{ STATIC_URL }}js/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/ga.js"></script>
 <script src="{{ STATIC_URL }}js/validator.js"></script>
 <script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
 
 <script>
   $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
 </script>
+
+<!-- Google Analytics -->
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-266436-2']);
+  {% if donottrack %}
+    // Du har aktivert Do Not Track, og i henhold anonymiserer vi din IP-adresse for vår besøksstatistikk.
+    _gaq.push(['_gat._anonymizeIp']);
+  {% endif %}
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+{% if not donottrack %}
+  <!--
+    Følgende Adform-script vil registrere ditt besøk på våre nettsider, og dele denne informasjonen med våre samarbeidspartnere.
+    Slik kan disse gi deg mer tilpasset informasjon og for eksempel tilby deg medlemsfordeler. For mer informasjon, se vår personvernerklæring (finn lenke i footer).
+    Om du ikke ønsker dette, kan du aktivere Do Not Track i din nettleser. Se http://donottrack.us/ for mer informasjon.
+  -->
+  <script type="text/javascript">
+    var _adftrack = {
+        pm: 40194,
+        pagename: encodeURIComponent('Turistforeningen|Turistforeningen'),
+        divider: encodeURIComponent('|')
+    };
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://track.adform.net/serving/scripts/trackpoint/async/';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    })();
+  </script>
+  <noscript>
+    <p style="margin: 0; padding: 0; border: 0;">
+      <img src="https://track.adform.net/Serving/TrackPoint/?pm=40194&amp;ADFPageName=Turistforeningen|Turistforeningen&amp;ADFdivider=|" width="1" height="1" alt="">
+    </p>
+  </noscript>
+{% else %}
+  <!-- Takk for at du bruker Do Not Track! Adforms trackingscript er nå ekskludert fra ditt besøk på Den Norske Turistforeningens sider. -->
+{% endif %}

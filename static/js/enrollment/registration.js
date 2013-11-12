@@ -77,15 +77,6 @@ $(document).ready(function() {
         }
     });
 
-    form.submit(function() {
-        // The adform guys advised us to defer this call even though it probably shouldn't be
-        setTimeout(function() {
-            if(typeof adf !== 'undefined') {
-                adf.track(133425,2765715,{});
-            }
-        }, 0);
-    });
-
     if(window.trigger_form_validations) {
         Validator.trigger();
         validateDatepicker();
