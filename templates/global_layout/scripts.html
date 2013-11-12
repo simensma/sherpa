@@ -27,10 +27,24 @@
 <script src="{{ STATIC_URL }}js/main.js"></script>
 <script src="{{ STATIC_URL }}js/common.js"></script>
 <script src="{{ STATIC_URL }}js/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/ga.js"></script>
 <script src="{{ STATIC_URL }}js/validator.js"></script>
 <script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
 
 <script>
   $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
+</script>
+
+<!-- Google Analytics -->
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-266436-2']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
 </script>
