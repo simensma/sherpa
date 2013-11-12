@@ -25,12 +25,6 @@ $(document).ready(function() {
     form.submit(function() {
         payment_button.prop('disabled', true);
         ajaxloader.show();
-        // The adform guys advised us to defer this call even though it probably shouldn't be
-        setTimeout(function() {
-            if(typeof adf !== 'undefined') {
-                adf.track(133425,2765716,{});
-            }
-        }, 0);
     });
 
 });
