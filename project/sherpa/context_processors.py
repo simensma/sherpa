@@ -65,3 +65,6 @@ def membership_year_start(request):
             'applicable_year': value.year + 1 if today >= value else today.year
         }
     return {'membership_year_start': date_set}
+
+def do_not_track(request):
+    return {'donottrack': 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1'}
