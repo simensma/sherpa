@@ -63,82 +63,35 @@ var AktiviteterDatesView = function(opts) {
 
     // Turledere
 
-    var turleder_list = this.edit_root.find("ul.turleder-list");
-    var turleder_search = this.edit_root.find("div.turleder-search");
-    var turleder_table = turleder_search.find("table.search-results");
-    var turleder_input = turleder_search.find("input[name='turleder-search']");
-    var turleder_button = turleder_search.find("button.turleder-search");
+    var turledere_add = this.edit_root.find("a.add-turledere");
+    this.turleder_table = this.edit_root.find("table.turledere");
 
-    var turleder_loader = turleder_table.find("tr.loader");
-    var turleder_no_hits = turleder_table.find("tr.no-hits");
-    var turleder_short_query = turleder_table.find("tr.short_query");
-    var turleder_error = turleder_table.find("tr.technical-error");
-    var turleder_max_hits_exceeded = turleder_table.find("tr.max-hits-exceeded");
-    var turleder_result_mirror = turleder_no_hits.find("span.result-mirror");
-
-    turleder_input.keyup(function(e) {
-        if(e.which == 13) { // Enter
-            turleder_button.click();
-        }
-    });
-
-    turleder_button.click(function() {
-        turleder_input.prop('disabled', true);
-        turleder_button.prop('disabled', true);
-        turleder_table.slideDown();
-        turleder_loader.show();
-        turleder_no_hits.hide();
-        turleder_short_query.hide();
-        turleder_error.hide();
-        turleder_max_hits_exceeded.hide();
-        turleder_table.find("tr.result").remove();
-
-        var query = turleder_input.val();
-        if(query.length < Turistforeningen.admin_user_search_char_length) {
-            turleder_input.prop('disabled', false);
-            turleder_button.prop('disabled', false);
-            turleder_short_query.show();
-            turleder_loader.hide();
-            return;
-        }
-
-        $.ajaxQueue({
-            url: turleder_table.attr('data-search-url'),
-            data: { q: query }
-        }).done(function(result) {
-            result = JSON.parse(result);
-            turleder_table.find("tr.result").remove();
-            if(result.results.trim() === '') {
-                turleder_result_mirror.text(query);
-                turleder_no_hits.show();
-            } else {
-                turleder_table.append(result.results);
-                if(result.max_hits_exceeded) {
-                    max_hits_exceeded.show();
+    turledere_add.click(function() {
+        AdminAktivitetTurlederSearch.enable({
+            callback: function(opts) {
+                if(that.turleder_table.find("tr.display-result[data-id='" + opts.result_row.attr('data-id') + "']").length > 0) {
+                    alert("Personen du valgte er allerede registrert som turleder på denne turen.");
+                    return;
                 }
-                turleder_table.find("tr.result a.assign-turleder").click(function() {
-                    turleder_table.hide();
-                    var new_element = turleder_list.find("li.hide").clone();
-                    new_element.removeClass('hide');
-                    var content = $(this).attr('data-name') + ' (' + $(this).attr('data-memberid') + ')';
-                    new_element.find("span.content").text(content);
-                    new_element.attr('data-id', $(this).attr('data-id'));
-                    new_element.attr('data-type', $(this).attr('data-type'));
-                    new_element.appendTo(turleder_list);
-                });
+                that.turleder_table.append(opts.result_row);
             }
-        }).fail(function(result) {
-            turleder_table.find("tr.result").remove();
-            turleder_error.show();
-        }).always(function(result) {
-            turleder_loader.hide();
-            turleder_input.prop('disabled', false);
-            turleder_button.prop('disabled', false);
         });
     });
 
-    $(document).on('click', turleder_list.selector + ' a.remove-turleder', function() {
-        $(this).parents("li").remove();
+    $(document).on('click', this.turleder_table.selector + ' a.remove-turleder', function() {
+        $(this).parents("tr.display-result").remove();
+    });
+
+    $(document).on('click', this.turleder_table.selector + ' a.more', function() {
+        $(this).hide();
+        $(this).siblings("a.less").show();
+        $(this).siblings("div.more").slideDown();
+    });
+
+    $(document).on('click', this.turleder_table.selector + ' a.less', function() {
+        $(this).hide();
+        $(this).siblings("a.more").show();
+        $(this).siblings("div.more").slideUp();
     });
 
 };
@@ -181,12 +134,9 @@ AktiviteterDatesView.prototype.edit = function() {
 };
 
 AktiviteterDatesView.prototype.collectData = function() {
-    var turledere = {
-        users: [],
-        actors: []
-    };
-    this.root.find("ul.turleder-list li:not(.hide)").each(function() {
-        turledere[$(this).attr('data-type') + 's'].push($(this).attr('data-id'));
+    var turledere = [];
+    this.turleder_table.find("tr.display-result").each(function() {
+        turledere.push($(this).attr('data-id'));
     });
     return {
         id: this.root.attr('data-date-id'),

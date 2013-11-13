@@ -58,47 +58,13 @@ div.admin-aktivitet-edit {
         padding-bottom: 30px;
         margin-bottom: 30px;
 
-        ul.turleder-list {
-          list-style-type: none;
-          margin-left: 0;
-        }
-
-        div.turleder-search {
-          table.search-results {
-            margin-top: 15px;
-
-            th, td, td label {
-              font-family: "DTL Nobel" !important;
-              vertical-align: middle;
-            }
-
-            td {
-              label {
-                margin-top: 5px;
-                margin-bottom: 5px;
-              }
-
-              form {
-                margin-bottom: 0;
-              }
-            }
-
-            tr.loader, tr.short_query {
-              td {
-                text-align: center;
-              }
-            }
-
-            tr.max-hits-exceeded {
-              td {
-                text-align: center;
-                font-size: 18px;
-                padding-top: 20px;
-                padding-bottom: 20px;
-              }
-            }
+        table.turledere {
+          th, td, td label {
+            font-family: "DTL Nobel" !important;
+            vertical-align: middle;
           }
         }
+
       }
     }
   }
@@ -109,6 +75,26 @@ div.admin-aktivitet-edit {
     margin-bottom: 120px;
   }
 }
+
+// Since the modal is moved to the body element on instantiation, it needs its own top-level selector
+div.modal.admin-aktiviteter-turleder-search {
+
+  table.search-results {
+    margin-top: 15px;
+
+    th, td {
+      font-family: "DTL Nobel" !important;
+      vertical-align: middle;
+    }
+
+    tr.intro, tr.loader, tr.short_query, tr.max-hits-exceeded {
+      td {
+        text-align: center;
+      }
+    }
+  }
+}
+
 
 div.aktivitet-listing {
   div.new-categories {

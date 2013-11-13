@@ -1,19 +1,43 @@
 {% for user in users %}
   <tr class="result">
-    <td>{{ user.get_full_name }}</td>
-    <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
-      <a href="javascript:undefined" class="assign-turleder" data-name="{{ user.get_full_name }}" data-id="{{ user.id }}" data-type="user" data-memberid="{{ user.memberid|default:"ikke medlem" }}">Gi turlederstatus</a>
+      {{ user.get_full_name }}<br>
+      {{ user.get_email|default:"<em>Ingen e-postadresse</em>" }}
     </td>
-  </tr>
-{% endfor %}
+    <td>
+      {% if user.is_member %}
+        {{ user.get_birth_date|date:"d.m.y" }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.main_association.name }}<br>
+        Medlemsnr: {{ user.memberid }}
+      {% else %}
+        <em>Ikke medlem</em>
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_address.format_with_newlines|linebreaksbr }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_phone_home }}
 
-{% for actor in actors_without_user %}
-  <tr class="result">
-    <td>{{ actor.get_full_name }}</td>
-    <td>{{ actor.memberid }}</td>
+        {% if user.get_phone_home and user.get_phone_mobile %}
+          <br>
+        {% endif %}
+
+        {{ user.get_phone_mobile }}
+      {% endif %}
+    </td>
     <td>
-      <a href="javascript:undefined" class="assign-turleder" data-name="{{ actor.get_full_name }}" data-id="{{ actor.id }}" data-type="actor" data-memberid="{{ actor.memberid }}">Gi turlederstatus</a>
+      <a href="javascript:undefined" class="btn btn-danger assign-turleder" data-name="{{ user.get_full_name }}" data-id="{{ user.id }}" data-type="user" data-memberid="{{ user.memberid|default:"ikke medlem" }}">Velg</a>
     </td>
   </tr>
+
+  {% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True %}
+
 {% endfor %}

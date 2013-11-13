@@ -159,12 +159,7 @@ def edit(request, aktivitet):
             aktivitet_date.save()
 
             # Turledere
-            aktivitet_date.turledere.clear()
-            for user_id in date_post['turledere']['users']:
-                aktivitet_date.turledere.add(User.objects.get(id=user_id))
-            for actor_id in date_post['turledere']['actors']:
-                actor = Actor.objects.get(id=actor_id)
-                aktivitet_date.turledere.add(User.get_or_create_inactive(actor.memberid))
+            aktivitet_date.turledere = date_post['turledere']
 
         return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
@@ -177,7 +172,7 @@ def edit_date_preview(request):
     fake_date_representation['signup_enabled'] = fake_date_representation['signup_type'] == 'minside' or fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['signup_simple_allowed'] = fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['turledere'] = {
-        'all': fake_date_representation['turledere']['users'] + fake_date_representation['turledere']['actors']
+        'all': fake_date_representation['turledere']
     }
     context = RequestContext(request, {
         'date': fake_date_representation
@@ -199,13 +194,13 @@ def turleder_search(request):
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
-    local_users = User.get_users().filter(memberid__isnull=True)
+    local_nonmember_users = User.get_users().filter(memberid__isnull=True)
     for word in request.POST['q'].split():
-        local_users = local_users.filter(
+        local_nonmember_users = local_nonmember_users.filter(
             Q(first_name__icontains=word) |
             Q(last_name__icontains=word)
         )
-    local_users = local_users.order_by('first_name')
+    local_nonmember_users = local_nonmember_users.order_by('first_name')
 
     actors = Actor.objects.all()
     for word in request.POST['q'].split():
@@ -216,15 +211,16 @@ def turleder_search(request):
         )
     actors = actors.order_by('first_name')
 
-    users = User.get_users().filter(memberid__in=[a.memberid for a in actors])
-    memberids = [u.memberid for u in users]
-    actors_without_user = [a for a in actors if a.memberid not in memberids]
-    users = sorted(list(local_users) + list(users), key=lambda u: u.get_full_name())
+    # Get (or create) the user objects for the first MAX_HITS actor-hits
+    users = [User.get_or_create_inactive(a.memberid) for a in actors[:MAX_HITS]]
+
+    # Merge with non-members
+    users = sorted(list(users) + list(local_nonmember_users), key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
-        'users': users[:MAX_HITS],
-        'actors_without_user': actors_without_user[:MAX_HITS]})
+        'users': users[:MAX_HITS]
+    })
     return HttpResponse(json.dumps({
         'results': render_to_string('common/admin/aktiviteter/edit/turleder_search_results.html', context),
-        'max_hits_exceeded': len(users) > MAX_HITS or len(actors_without_user) > MAX_HITS
+        'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
