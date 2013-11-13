@@ -203,7 +203,8 @@ def turleder_search(request):
     for word in request.POST['q'].split():
         local_users = local_users.filter(
             Q(first_name__icontains=word) |
-            Q(last_name__icontains=word))
+            Q(last_name__icontains=word)
+        )
     local_users = local_users.order_by('first_name')
 
     actors = Actor.objects.all()
@@ -211,12 +212,14 @@ def turleder_search(request):
         actors = actors.filter(
             Q(first_name__icontains=word) |
             Q(last_name__icontains=word) |
-            Q(memberid__icontains=word))
+            Q(memberid__icontains=word)
+        )
     actors = actors.order_by('first_name')
 
-    members = User.get_users().filter(memberid__in=[a.memberid for a in actors])
-    actors_without_user = [a for a in actors if a.memberid not in list(members.values_list('memberid', flat=True))]
-    users = list(local_users) + list(members)
+    users = User.get_users().filter(memberid__in=[a.memberid for a in actors])
+    memberids = [u.memberid for u in users]
+    actors_without_user = [a for a in actors if a.memberid not in memberids]
+    users = sorted(list(local_users) + list(users), key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
         'users': users[:MAX_HITS],
