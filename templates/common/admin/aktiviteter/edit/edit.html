@@ -3,6 +3,7 @@
 {% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
 
 {% load taglist %}
+{% load aktivitet_has_location %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
@@ -299,7 +300,7 @@
               <select multiple name="locations" data-chosen data-placeholder="Velg område...">
                 <option value=""></option>
                 {% for location in locations %}
-                  <option value="{{ location.id }}"{% if location in aktivitet.get_locations %} selected{% endif %}>{{ location.name }}</option>
+                  <option value="{{ location.id }}"{% if aktivitet|aktivitet_has_location:location %} selected{% endif %}>{{ location.name }}</option>
                 {% endfor %}
               </select>
               <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">

@@ -51,7 +51,7 @@ def new(request):
 
 def edit(request, aktivitet):
     if request.method == 'GET':
-        aktivitet = Aktivitet.objects.get(id=aktivitet)
+        aktivitet = Aktivitet.objects.prefetch_related('municipalities', 'counties').get(id=aktivitet)
         context = {
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
