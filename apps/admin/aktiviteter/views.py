@@ -75,6 +75,7 @@ def edit(request, aktivitet):
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.getting_there = request.POST['getting_there']
+        aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 
         association = Association.objects.get(id=request.POST['association'])
         if not association in request.user.children_associations():
@@ -91,6 +92,9 @@ def edit(request, aktivitet):
             aktivitet.start_point = Point(float(request.POST['position_lat']), float(request.POST['position_lng']))
 
         aktivitet.save()
+
+        aktivitet.counties = request.POST.getlist('counties')
+        aktivitet.municipalities = request.POST.getlist('municipalities')
 
         aktivitet.category_tags.clear()
         for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:

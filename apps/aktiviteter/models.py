@@ -4,6 +4,8 @@ from django.contrib.gis.db import models
 from datetime import date
 import json
 
+from sherpa2.models import Location
+
 class Aktivitet(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
     co_association = models.ForeignKey('association.Association', null=True, related_name='+')
@@ -11,6 +13,10 @@ class Aktivitet(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_point = models.PointField(null=True)
+    counties = models.ManyToManyField('core.County', related_name='aktiviteter')
+    municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
+    # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
+    locations = models.CharField(max_length=4091)
     getting_there = models.TextField()
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
@@ -50,6 +56,9 @@ class Aktivitet(models.Model):
 
     def get_start_point_lng_json(self):
         return json.dumps(self.start_point.get_coords()[1])
+
+    def get_locations(self):
+        return Location.objects.filter(id__in=json.loads(self.locations))
 
     def get_audiences(self):
         return json.loads(self.audiences)
