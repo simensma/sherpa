@@ -5,23 +5,22 @@ var AktiviteterDatesView = function(opts) {
 
     this.view_root = this.root.find("div.date-view");
     this.edit_root = this.root.find("div.date-edit");
-    this.view_date_display = this.view_root.find("div.date-display");
     this.view_ajaxloader = this.view_root.find("img.ajaxloader");
-    this.view_fail = this.view_root.find("div.fail");
+    this.view_date_display = this.view_root.find("div.date-display");
+    this.view_fail = this.view_root.find("div.date-display-fail");
 
-    var action_view = this.edit_root.find("a.view-date");
-    var action_edit = this.view_root.find("a.edit-date");
+    var trigger_edit = this.view_root.find("a.trigger-date-editor");
     this.enrollment_inputs = this.edit_root.find("input[name^='enrollment']");
     var enrollment_group = this.edit_root.find("div.enrollment-group");
     this.contact_inputs = this.edit_root.find("input[name^='contact']");
     var contact_custom = this.edit_root.find("div.contact-custom");
 
-    action_view.click(function() {
-        that.view();
-    });
-
-    action_edit.click(function() {
-        that.edit();
+    trigger_edit.click(function() {
+        if(that.edit_root.is(":hidden")) {
+            that.edit();
+        } else {
+            that.view();
+        }
     });
 
     // All dateinputs
@@ -110,27 +109,17 @@ AktiviteterDatesView.prototype.view = function() {
         result = JSON.parse(result);
         var html = $($.parseHTML(result.html));
         that.view_date_display.append(html);
-        // the root object should be a.edit-date - if that changes, this won't work
-        html.click(function() {
-            that.edit();
-        });
     }).fail(function(result) {
         that.view_fail.show();
     }).always(function(result) {
         that.view_ajaxloader.hide();
     });
 
-    var view_root = this.view_root;
-    this.edit_root.slideUp('slow', function() {
-        view_root.slideDown('fast');
-    });
+    this.edit_root.slideUp('slow');
 };
 
 AktiviteterDatesView.prototype.edit = function() {
-    var edit_root = this.edit_root;
-    this.view_root.slideUp('fast', function() {
-        edit_root.slideDown('slow');
-    });
+    this.edit_root.slideDown('slow');
 };
 
 AktiviteterDatesView.prototype.collectData = function() {

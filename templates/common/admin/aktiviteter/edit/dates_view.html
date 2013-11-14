@@ -1,11 +1,10 @@
-{# The root object should be a.edit, if changed, change dates.js accordingly #}
-<a href="javascript:undefined" class="edit-date">
-  Fra <span class="from">{{ date.start_date|date:"j. F" }}</span> til <span class="to">{{ date.end_date|date:"j. F Y" }}</span>,
+<i class="icon-chevron-down"></i>
 
-  {{ date.turledere.all|length }} turledere,
+{% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
+  {# Same month, shorten the string by displaying the month only once #}
+  {{ date.start_date|date:"j." }}
+{% else %}
+  {{ date.start_date|date:"j. F" }}
+{% endif %}
 
-  <span class="signup minside{% if not date.signup_enabled or date.signup_simple_allowed %} hide{% endif %}">påmelding via Min side.</span>
-  <span class="signup simple{% if not date.signup_enabled or not date.signup_simple_allowed %} hide{% endif %}">påmelding med navn og epost/telefon.</span>
-  <span class="signup none{% if date.signup_enabled %} hide{% endif %}">ingen påmelding.</span>
-  <i class="icon-chevron-down"></i>
-</a>
+til {{ date.end_date|date:"j. F Y" }}

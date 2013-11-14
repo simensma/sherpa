@@ -174,6 +174,10 @@ $(document).ready(function() {
     });
 
     $(document).on('click', dates.selector + ' a.delete-date', function() {
+        if(!confirm($(this).attr('data-confirm'))) {
+            return $(this);
+        }
+
         // Ugh, remove the array element manually
         var root = $(this).parents("div.date-root");
         var new_date_views = [];

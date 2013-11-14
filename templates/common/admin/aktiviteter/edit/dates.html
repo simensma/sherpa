@@ -1,38 +1,39 @@
 <div class="date-root{% if not date %} hide{% endif %}" data-date-id="{{ date.id }}">
 
-  <div class="date-view{% if not date %} hide{% endif %}">
+  <div class="date-view">
 
-    <div class="control-group">
-      <label class="control-label">Turdato:</label>
-      <div class="controls">
-        <div class="control-as-text">
+    <div class="row-fluid">
+      <div class="span10">
+
+        <a href="javascript:undefined" class="trigger-date-editor">
+          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
           <div class="date-display" data-date-preview-url="{% url 'admin.aktiviteter.views.edit_date_preview' %}">
             {% include 'common/admin/aktiviteter/edit/dates_view.html' %}
           </div>
 
-          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-          <div class="fail hide">
-            <a href="javascript:undefined" class="edit-date">
-              Beklager, det oppstod en feil når vi prøvde å tolke datoene du valgte. <i class="icon-chevron-down"></i>
-            </a>
+          <div class="date-display-fail hide">
+            <i class="icon-chevron-down"></i>
+            Beklager, det oppstod en feil når vi prøvde å tolke datoene du valgte.
           </div>
+        </a>
 
+      </div>
+      <div class="span2">
+
+        <div class="delete">
+
+          <a href="javascript:undefined" class="btn btn-danger delete-date" data-confirm="Vil du virkelig slette denne turdatoen, med medhørende påmeldinger, turledere, etc.?">
+            Slett
+          </a>
         </div>
+
       </div>
     </div>
 
   </div>
 
   <div class="date-edit{% if date %} hide{% endif %}">
-
-    <div class="control-group">
-      <div class="controls">
-        <div class="control-as-text">
-          <a href="javascript:undefined" class="delete-date"><i class="icon-remove"></i> Slett denne turdatoen</a>
-        </div>
-      </div>
-    </div>
 
     <div class="control-group">
       <label class="control-label">Turen starter:</label>
@@ -180,13 +181,10 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <div class="controls">
-        <div class="control-as-text">
-          <a href="javascript:undefined" class="view-date"><i class="icon-chevron-up"></i> Skjul og lagre denne turdatoen</a>
-        </div>
-      </div>
-    </div>
+  </div>
 
+  <!-- A little bit ugly, but it works. (Because we don't want margins below the view div) -->
+  <div class="date-spacer">
+    &nbsp;
   </div>
 </div>
