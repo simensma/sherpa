@@ -1,4 +1,4 @@
-<div class="date-root{% if not date %} hide{% endif %}" data-date-id="{{ date.id }}">
+<div class="date-root{% if not date %} hide{% endif %}" data-date-id="{{ date.id }}" data-delete-preview-url="{% url 'admin.aktiviteter.views.delete_date_preview' %}">
 
   <div class="date-view">
 
@@ -23,7 +23,7 @@
 
         <div class="delete">
 
-          <a href="javascript:undefined" class="btn btn-danger delete-date" data-confirm="Vil du virkelig slette denne turdatoen, med medhørende påmeldinger, turledere, etc.?">
+          <a href="javascript:undefined" class="btn btn-danger delete-date">
             Slett
           </a>
         </div>

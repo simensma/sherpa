@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-    var form = $("form.edit-aktivitet");
+    var editor = $("div.admin-aktivitet-edit");
+    var form = editor.find("form.edit-aktivitet");
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
     var subcategories = form.find("div.control-group.subcategories");
     var subcategory_buttons = subcategories.find("div.buttons");
@@ -140,6 +141,13 @@ $(document).ready(function() {
     var dates_to_delete_input = dates.find("input[name='dates_to_delete']");
     var existing_dates = dates.find("div.date-root:not(.hide)");
     var add_date_button = dates.find("button.add-date");
+    var delete_date_modal = editor.find("div.modal.delete-date");
+    var delete_date_loading = delete_date_modal.find("div.loading");
+    var delete_date_preview = delete_date_modal.find("div.date-preview");
+    var delete_date_fail = delete_date_modal.find("div.fail");
+    var delete_date_choose = delete_date_modal.find("div.choose");
+    var delete_date_confirm = delete_date_choose.find("button.confirm");
+    var delete_date_cancel = delete_date_choose.find("button.cancel");
 
     var date_views = [];
     var date_radio_counter = 0;
@@ -174,12 +182,36 @@ $(document).ready(function() {
     });
 
     $(document).on('click', dates.selector + ' a.delete-date', function() {
+        delete_date_loading.show();
+        delete_date_choose.hide();
+        delete_date_preview.empty();
+        delete_date_fail.hide();
+        delete_date_modal.modal();
+        var date = $(this).parents("div.date-root");
+        delete_date_modal.data('date-root', date);
+        $.ajaxQueue({
+            url: date.attr('data-delete-preview-url'),
+            data: { date: date.attr('data-date-id') }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            delete_date_preview.append(result.html);
+            delete_date_choose.show();
+        }).fail(function() {
+            delete_date_fail.show();
+        }).always(function() {
+            delete_date_loading.hide();
+        });
+    });
+
+    delete_date_confirm.click(function() {
         if(!confirm($(this).attr('data-confirm'))) {
             return $(this);
         }
 
+        delete_date_modal.modal('hide');
+
         // Ugh, remove the array element manually
-        var root = $(this).parents("div.date-root");
+        var root = delete_date_modal.data('date-root');
         var new_date_views = [];
         for(var i=0; i<date_views.length; i++) {
             if(date_views[i].root[0] !== root[0]) {
@@ -194,6 +226,10 @@ $(document).ready(function() {
         root.slideUp(function() {
             root.remove();
         });
+    });
+
+    delete_date_cancel.click(function() {
+        delete_date_modal.modal('hide');
     });
 
     // If there are no existing dates, simulate an "add date" button click, since they'll always

@@ -471,6 +471,34 @@
     </div>
   </div>
 
+  <div class="modal container hide delete-date admin-aktiviteter-delete-date">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Bekreft sletting av turdato</h3>
+    </div>
+    <div class="modal-body">
+
+      <div class="loading">
+        Laster, vennligst vent...<br>
+        <img class="ajaxloader" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+      </div>
+
+      <div class="date-preview">
+      </div>
+
+      <div class="fail hide alert alert-error">
+        Beklager, det oppstod en teknisk feil.<br>
+        Vi skulle hente litt informasjon om turdatoen for at du skal kunne slette den, men noe galt skjedde underveis. Prøv å lukke dette vinduet (krysset oppe til høyre) og klikk på Slett-knappen igjen. Feilen har blitt logget automatisk og vi vil se på den så snart som mulig.
+      </div>
+
+      <div class="choose hide">
+        <button class="btn btn-large btn-success cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe.</button>
+        <button class="btn btn-large btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="icon-white icon-warning-sign"></i> Ja, slett turdatoen og påmeldtlistene.</button>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 {% include 'common/admin/images/util/image-archive-picker.html' %}

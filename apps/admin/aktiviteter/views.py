@@ -181,6 +181,19 @@ def edit_date_preview(request):
         'html': render_to_string('common/admin/aktiviteter/edit/dates_view.html', context),
     }))
 
+def delete_date_preview(request):
+    try:
+        aktivitet_date = AktivitetDate.objects.get(id=request.POST['date'])
+    except (AktivitetDate.DoesNotExist, ValueError):
+        aktivitet_date = None
+
+    context = RequestContext(request, {
+        'date': aktivitet_date
+    })
+    return HttpResponse(json.dumps({
+        'html': render_to_string('common/admin/aktiviteter/edit/dates_delete.html', context),
+    }))
+
 def participants(request, aktivitet):
     aktivitet = Aktivitet.objects.get(id=aktivitet)
     context = {
