@@ -1,11 +1,9 @@
 <tr class="display-result{% if hide %} hide{% endif %}" data-id="{{ user.id }}">
   <td>
-    {{ user.get_full_name }}<br>
-    <a href="javascript:undefined" class="more"><i class="icon-chevron-down"></i> Mer informasjon</a>
-    <a href="javascript:undefined" class="less hide"><i class="icon-chevron-up"></i> Mindre informasjon</a>
-
+    <div class="name">
+      {{ user.get_full_name }}
+    </div>
     <div class="more hide">
-      <br>
       {% if user.is_member %}
         <strong>Født:</strong> {{ user.get_birth_date|date:"d.m.y" }}<br>
         <strong>Medlemsforening:</strong> {{ user.main_association.name }}<br>
@@ -13,9 +11,11 @@
         <strong>Adresse:</strong><br>
         {{ user.get_address.format_with_newlines|linebreaksbr }}
       {% else %}
-        <em>Ikke medlem i DNT - derfor har vi ikke flere opplysninger.</em><br>
+        <em>Ikke medlem i DNT - derfor har vi ikke flere opplysninger.</em>
       {% endif %}
     </div>
+    <a href="javascript:undefined" class="more"><i class="icon-chevron-down"></i> Mer informasjon</a>
+    <a href="javascript:undefined" class="less hide"><i class="icon-chevron-up"></i> Mindre informasjon</a>
 
   </td>
   <td>
