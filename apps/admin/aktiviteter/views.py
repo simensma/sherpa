@@ -186,7 +186,7 @@ def participants(request, aktivitet):
     context = {
         'aktivitet': aktivitet
     }
-    return render(request, 'common/admin/aktiviteter/edit/participants.html', context)
+    return render(request, 'common/admin/aktiviteter/participants.html', context)
 
 def turleder_search(request):
     MAX_HITS = 100
