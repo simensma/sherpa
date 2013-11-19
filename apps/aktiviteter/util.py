@@ -1,4 +1,4 @@
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 
 import json
 
@@ -42,5 +42,8 @@ def filter_aktivitet_dates(filter):
     elif page == 'max':
         page = paginator.num_pages
 
-    aktivitet_dates = paginator.page(page)
+    try:
+        aktivitet_dates = paginator.page(page)
+    except EmptyPage:
+        aktivitet_dates = paginator.page(1)
     return aktivitet_dates
