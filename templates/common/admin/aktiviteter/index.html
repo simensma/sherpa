@@ -187,6 +187,11 @@
                 <a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
                 —
                 <a href="{% url 'admin.aktiviteter.views.participants' aktivitet.id %}">Se påmeldte</a>
+                {% for aktivitet_date in aktivitet.get_dates_ordered %}
+                  <br>
+                  Direkte lenke: <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">http://{{ site.domain }}{% url 'aktiviteter.views.show' aktivitet_date.id %}</a>
+                  {% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
               </td>
             </tr>
           {% endfor %}
