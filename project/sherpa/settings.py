@@ -122,6 +122,11 @@ FOCUS_DOWNTIME_PERIODS = [
         'to': datetime(year=2013, month=10, day=25, hour=4),
         'period_message': 'natt til fredag 25. oktober, til ca. kl. 04:00'
     },
+    {
+        'from': datetime(year=2013, month=11, day=26, hour=17),
+        'to': datetime(year=2013, month=11, day=26, hour=23),
+        'period_message': 'tirsdag 26. november fra kl. 17:00 og ut kvelden'
+    },
 ]
 
 DEFAULT_FROM_EMAIL = 'Den Norske Turistforening <no-reply@turistforeningen.no>'
