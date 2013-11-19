@@ -55,7 +55,7 @@
 
             <div class="section">
               <h3>Hvor vil du gå?</h3>
-              <select name="" data-chosen data-placeholder="Velg turområder..." multiple>
+              <select name="location" data-chosen data-placeholder="Velg turområder..." multiple>
                 <option value=""></option>
                 {% for location in locations %}
                   <option value="{{ location.id }}">{{ location.name }}</option>

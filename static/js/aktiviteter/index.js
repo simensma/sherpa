@@ -39,12 +39,28 @@ $(document).ready(function() {
         }
     });
 
+    button_selections.find("button").click(function() {
+        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+    });
+
+    filters.find("select[name='location']").change(function() {
+        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+    });
+
+    filters.find("input[name='travel_date']").change(function() {
+        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+    });
+
     $(document).on('click', results_content.selector + ' div.pagination li:not(.disabled):not(.active) a.page', function() {
+        refreshContent($(this).attr('data-page'));
+    });
+
+    function refreshContent(page) {
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find("div.loading").show();
         results_fail.hide();
         var filter = collectFilter();
-        filter.page = $(this).attr('data-page');
+        filter.page = page;
         $.ajaxQueue({
             url: results.attr('data-filter-url'),
             data: { filter: JSON.stringify(filter) }
@@ -56,7 +72,7 @@ $(document).ready(function() {
             results_content.empty();
             results_fail.show();
         });
-    });
+    }
 
     function collectFilter() {
         var categories = [];

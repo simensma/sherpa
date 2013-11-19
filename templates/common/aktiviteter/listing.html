@@ -21,7 +21,7 @@
     Viser {{ aktivitet_dates.object_list|length }} av totalt {{ aktivitet_dates.paginator.count }} aktiviteter.
   </p>
 
-  <div class="pagination pagination-large">
+  <div class="pagination pagination-large" data-current-page="{{ aktivitet_dates.number }}">
     <ul>
       <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
         <a href="javascript:undefined" class="page" data-page="min">«</a>
