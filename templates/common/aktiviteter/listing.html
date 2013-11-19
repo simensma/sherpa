@@ -16,12 +16,20 @@
   {% endfor %}
 </table>
 
-{% if filter_end_reached %}
-  <div class="alert alert-error">
-    <strong>Dette var alle aktivitetene som matchet søket ditt.</strong>
-  </div>
-{% else %}
+<div class="listing-footer">
   <p>
-    Viser {{ hits_per_page }} av {{ total_hits }} treff.
+    Viser {{ aktivitet_dates.object_list|length }} av totalt {{ aktivitet_dates.paginator.count }} aktiviteter.
   </p>
-{% endif %}
+
+  <div class="pagination pagination-large">
+    <ul>
+      <li><a href="#" class="disabled">«</a></li>
+      {% for number in aktivitet_dates.paginator.page_range %}
+        <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
+          <a href="javascript:undefined">{{ number }}</a>
+        </li>
+      {% endfor %}
+      <li><a href="#">»</a></li>
+    </ul>
+  </div>
+</div>
