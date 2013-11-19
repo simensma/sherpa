@@ -21,7 +21,7 @@
     Viser {{ aktivitet_dates.object_list|length }} av totalt {{ aktivitet_dates.paginator.count }} aktiviteter.
   </p>
 
-  <div class="pagination pagination-large" data-current-page="{{ aktivitet_dates.number }}">
+  <div class="pagination pagination-large">
     <ul>
       <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
         <a href="javascript:undefined" class="page" data-page="min">«</a>
@@ -37,10 +37,5 @@
         <a href="javascript:undefined" class="page" data-page="max">»</a>
       </li>
     </ul>
-
-    <div class="loading hide">
-      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-      Laster, vennligst vent...
-    </div>
   </div>
 </div>

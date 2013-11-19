@@ -95,8 +95,13 @@
 
       <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
 
-        <div class="content">
+        <div class="content" data-current-page="{{ aktivitet_dates.number }}">
           {% include 'common/aktiviteter/listing.html' %}
+        </div>
+
+        <div class="loading hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+          Laster, vennligst vent...
         </div>
 
         <div class="fail hide alert alert-error">

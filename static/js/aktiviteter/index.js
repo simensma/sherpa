@@ -5,6 +5,7 @@ $(document).ready(function() {
     var popups = listing.find("div.popups");
     var results = listing.find("div.results");
     var results_content = results.find("div.content");
+    var results_loading = results.find("div.loading");
     var results_fail = results.find("div.fail");
 
     var now = new Date();
@@ -40,15 +41,15 @@ $(document).ready(function() {
     });
 
     button_selections.find("button").click(function() {
-        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     filters.find("select[name='location']").change(function() {
-        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     filters.find("input[name='travel_date']").change(function() {
-        refreshContent(results_content.find("div.pagination").attr('data-current-page'));
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     $(document).on('click', results_content.selector + ' div.pagination li:not(.disabled):not(.active) a.page', function() {
@@ -57,7 +58,7 @@ $(document).ready(function() {
 
     function refreshContent(page) {
         results_content.find("div.pagination li").addClass('disabled');
-        results_content.find("div.loading").show();
+        results_loading.show();
         results_fail.hide();
         var filter = collectFilter();
         filter.page = page;
@@ -65,12 +66,15 @@ $(document).ready(function() {
             url: results.attr('data-filter-url'),
             data: { filter: JSON.stringify(filter) }
         }).done(function(result) {
-            results_content.empty();
             result = JSON.parse(result);
+            results_content.attr('data-current-page', result.page);
+            results_content.empty();
             results_content.append(result.html);
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
+        }).always(function(result) {
+            results_loading.hide();
         });
     }
 

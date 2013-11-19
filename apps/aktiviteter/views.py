@@ -44,6 +44,7 @@ def filter(request):
     })
     return HttpResponse(json.dumps({
         'html': render_to_string('common/aktiviteter/listing.html', context),
+        'page': aktivitet_dates.number
     }))
 
 def show(request, aktivitet_date):
