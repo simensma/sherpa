@@ -79,8 +79,18 @@ $(document).ready(function() {
         button_selections.filter(".categories").find("button.category.selected").each(function() {
             categories.push($(this).attr('data-category'));
         });
+        var audiences = [];
+        button_selections.filter(".audiences").find("button.audience.selected").each(function() {
+            audiences.push($(this).attr('data-audience'));
+        });
+        var difficulties = [];
+        button_selections.filter(".difficulties").find("button.difficulty.selected").each(function() {
+            difficulties.push($(this).attr('data-difficulty'));
+        });
         return {
-            categories: categories
+            categories: categories,
+            audiences: audiences,
+            difficulties: difficulties
         };
     }
 });
