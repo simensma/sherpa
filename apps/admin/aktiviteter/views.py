@@ -41,7 +41,9 @@ def new(request):
     aktivitet = Aktivitet(
         association=request.session['active_association'],
         pub_date=datetime.now(),
-        category=request.POST['category']
+        category=request.POST['category'],
+        audiences=json.dumps([]),
+        locations=json.dumps([]),
     )
     aktivitet.save()
     for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
