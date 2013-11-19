@@ -150,7 +150,7 @@
           <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="arrangør"{% if not date or date.contact_type == 'arrangør' %} checked{% endif %}> Arrangørforeningens opplysninger
         </label>
         <label class="radio">
-          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turlederens opplysninger
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turledernes opplysninger
         </label>
         <label class="radio">
           <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
