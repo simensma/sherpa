@@ -23,13 +23,24 @@
 
   <div class="pagination pagination-large">
     <ul>
-      <li><a href="#" class="disabled">«</a></li>
+      <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="min">«</a>
+      </li>
+
       {% for number in aktivitet_dates.paginator.page_range %}
         <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
-          <a href="javascript:undefined">{{ number }}</a>
+          <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
         </li>
       {% endfor %}
-      <li><a href="#">»</a></li>
+
+      <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="max">»</a>
+      </li>
     </ul>
+
+    <div class="loading hide">
+      <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      Laster, vennligst vent...
+    </div>
   </div>
 </div>

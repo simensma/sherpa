@@ -93,7 +93,18 @@
 
       </div>
 
-      {% include 'common/aktiviteter/listing.html' %}
+      <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
+
+        <div class="content">
+          {% include 'common/aktiviteter/listing.html' %}
+        </div>
+
+        <div class="fail hide alert alert-error">
+          <strong>Beklager, det oppstod en teknisk feil!</strong><br>
+          Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
+        </div>
+
+      </div>
 
       <div id="map" class="leaflet-map"></div>
       <div class="popups hide">

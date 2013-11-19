@@ -1,3 +1,6 @@
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
@@ -12,7 +15,7 @@ from core import validator
 
 def index(request):
     aktivitet_dates = filter_aktivitet_dates({
-        'index': 1
+        'page': 1
     })
     aktivitet_positions = Aktivitet.get_published().filter(start_point__isnull=False)
     aktivitet_positions_json = json.dumps([{
@@ -30,6 +33,20 @@ def index(request):
         'locations': Location.objects.order_by('name'),
     }
     return render(request, 'common/aktiviteter/index.html', context)
+
+def filter(request):
+    if not request.is_ajax() or not request.method == 'POST':
+        return redirect('aktiviteter.views.index')
+
+    aktivitet_dates = filter_aktivitet_dates({
+        'page': request.POST['page']
+    })
+    context = RequestContext(request, {
+        'aktivitet_dates': aktivitet_dates
+    })
+    return HttpResponse(json.dumps({
+        'html': render_to_string('common/aktiviteter/listing.html', context),
+    }))
 
 def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)

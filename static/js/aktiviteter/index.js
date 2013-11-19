@@ -3,6 +3,9 @@ $(document).ready(function() {
     var filters = listing.find("div.search-filters");
     var button_selections = filters.find("div.button-selections");
     var popups = listing.find("div.popups");
+    var results = listing.find("div.results");
+    var results_content = results.find("div.content");
+    var results_fail = results.find("div.fail");
 
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -34,5 +37,23 @@ $(document).ready(function() {
         } else {
             $(this).removeClass('btn-danger');
         }
+    });
+
+    $(document).on('click', results_content.selector + ' div.pagination li:not(.disabled):not(.active) a.page', function() {
+        var page = $(this).attr('data-page');
+        results_content.find("div.pagination li").addClass('disabled');
+        results_content.find("div.loading").show();
+        results_fail.hide();
+        $.ajaxQueue({
+            url: results.attr('data-filter-url'),
+            data: { page: page }
+        }).done(function(result) {
+            results_content.empty();
+            result = JSON.parse(result);
+            results_content.append(result.html);
+        }).fail(function(result) {
+            results_content.empty();
+            results_fail.show();
+        });
     });
 });

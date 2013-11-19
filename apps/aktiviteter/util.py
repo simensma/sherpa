@@ -12,5 +12,13 @@ def filter_aktivitet_dates(filter):
     )
 
     paginator = Paginator(hits, HITS_PER_PAGE)
-    aktivitet_dates = paginator.page(filter['index'])
+
+    # Parse "special" values
+    page = filter['page']
+    if page == 'min':
+        page = 1
+    elif page == 'max':
+        page = paginator.num_pages
+
+    aktivitet_dates = paginator.page(page)
     return aktivitet_dates
