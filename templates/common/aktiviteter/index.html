@@ -39,66 +39,54 @@
         DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
       </p>
 
-      <div class="slider search-filter-slider">
-        <div class="slider-content search-filters hide">
-          <table class="table filters">
-            <tr>
-              <th>Hva slags tur?</th>
-              <td>
-                <select name="" class="chosen" data-placeholder="Velg turtype...">
-                  <option value=""></option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>Er turen for deg?</th>
-              <td>
-                <select name="" class="chosen" data-placeholder="Velg målgruppe...">
-                  <option value=""></option>
-                </select>
-                <br>
-                <select name="" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-                  <option value=""></option>
-                  {% for difficulty in difficulties %}
-                    <option value="{{ difficulty.0 }}">{{ difficulty.1 }}</option>
-                  {% endfor %}
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>Hvor vil du gå?</th>
-              <td>
-                <select name="" class="chosen" data-placeholder="Velg turområde...">
-                  <option value=""></option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>Når vil du tidligst dra?</th>
-              <td>
-                <input type="radio"> Når som helst<br>
-                <input type="radio"> Velg: <input type="text" class="input-small">
-              </td>
-            </tr>
-            <tr>
-              <th>Når vil du senest tilbake?</th>
-              <td>
-                <input type="radio"> Når som helst<br>
-                <input type="radio"> Velg: <input type="text" class="input-small">
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <a class="slider-bar" href="javascript:undefined">
-          <span class="text">Finn en tur som passer for deg</span>
-          <span class="text hide">Skjul søket</span>
-
-          <div class="button-border-wrapper">
-            <div class="button shower"></div>
-            <div class="button hider hide"></div>
-          </div>
-        </a>
+      <div class="search-filters">
+        <table class="table filters">
+          <tr>
+            <th>Hva slags tur?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg turtype...">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Er turen for deg?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg målgruppe...">
+                <option value=""></option>
+              </select>
+              <br>
+              <select name="" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
+                <option value=""></option>
+                {% for difficulty in difficulties %}
+                  <option value="{{ difficulty.0 }}">{{ difficulty.1 }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Hvor vil du gå?</th>
+            <td>
+              <select name="" class="chosen" data-placeholder="Velg turområde...">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Når vil du tidligst dra?</th>
+            <td>
+              <input type="radio"> Når som helst<br>
+              <input type="radio"> Velg: <input type="text" class="input-small">
+            </td>
+          </tr>
+          <tr>
+            <th>Når vil du senest tilbake?</th>
+            <td>
+              <input type="radio"> Når som helst<br>
+              <input type="radio"> Velg: <input type="text" class="input-small">
+            </td>
+          </tr>
+        </table>
       </div>
 
       <table class="table table-striped aktiviteter">
