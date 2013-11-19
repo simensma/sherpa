@@ -1,0 +1,17 @@
+<table class="table table-striped aktiviteter">
+  {% for date in aktivitet_dates %}
+    <tr>
+      <td>
+        <h2>
+          <a href="{% url 'aktiviteter.views.show' date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
+        </h2>
+        <p class="date">
+          {{ date.start_date|date:"j. F Y" }}
+        </p>
+        <p>
+          {{ date.aktivitet.description|truncatewords:"65" }}
+        </p>
+      </td>
+    </tr>
+  {% endfor %}
+</table>

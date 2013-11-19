@@ -7,14 +7,11 @@ import json
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Location
 from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant
+from aktiviteter.util import filter_aktivitet_dates
 from core import validator
 
 def index(request):
-    aktivitet_dates = AktivitetDate.get_published().exclude(
-        aktivitet__hidden=True
-    ).order_by(
-        '-start_date'
-    )
+    aktivitet_dates = filter_aktivitet_dates(None)
     aktivitet_positions = Aktivitet.get_published().filter(start_point__isnull=False)
     aktivitet_positions_json = json.dumps([{
         'id': a.id,
