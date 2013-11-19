@@ -5,6 +5,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^sherpa/', include('admin.urls', app_name='admin')),
+    url(r'^sherpa2/', include('sherpa2.urls')),
     url(r'^minside/', include('user.urls')),
     url(ur'^søk/', 'page.views.search'),
     url(r'^annonse/(?P<ad>\d+)/$', 'page.views.ad'),

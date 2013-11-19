@@ -1,59 +1,190 @@
-{% extends 'common/admin/layout.html' %}
-{% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
+<div class="date-root{% if not date %} hide{% endif %}" data-date-id="{{ date.id }}" data-delete-preview-url="{% url 'admin.aktiviteter.views.delete_date_preview' %}">
 
-{% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/dates.js"></script>
-{% endblock %}
+  <div class="date-view">
 
-{% block body %}
+    <div class="row-fluid">
+      <div class="span10">
 
-<div class="row">
-  <div class="span12">
-    <div class="edit-aktivitet-dates" data-aktivitet-id="{{ aktivitet.id }}">
+        <a href="javascript:undefined" class="trigger-date-editor">
+          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
-      <h2>Rediger aktivitet</h2>
+          <div class="date-display" data-date-preview-url="{% url 'admin.aktiviteter.views.edit_date_preview' %}">
+            {% include 'common/admin/aktiviteter/edit/dates_view.html' %}
+          </div>
 
-      {% include 'common/admin/aktiviteter/edit/navigation.html' with active='dates' %}
+          <div class="date-display-fail hide">
+            <i class="icon-chevron-down"></i>
+            Beklager, det oppstod en feil når vi prøvde å tolke datoene du valgte.
+          </div>
+        </a>
 
-      {# This form will never be submitted, but we're using the form element because of the styles #}
-      <form action="{% url 'admin.aktiviteter.views.edit_simple_signup' aktivitet.id %}" method="post" class="simple-signup form-default form-horizontal">
-        {% csrf_token %}
-        <div class="control-group">
-          <label class="control-label">Enkel påmelding:</label>
-          <div class="controls">
-            <div class="btn-group" data-toggle="buttons-radio">
-              <button class="btn allow-simple-signup{% if aktivitet.allow_simple_signup %} active{% endif %}">Tillat enkel påmelding</button>
-              <button class="btn deny-simple-signup{% if not aktivitet.allow_simple_signup %} active{% endif %}">Krev Min side-bruker</button>
-            </div>
-            <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-            <span class="saved hide">Lagret.</span>
-            <span class="error hide">Kunne ikke lagre! Vennligst prøv igjen.</span>
-            <div class="hints">
-              Enkel påmelding lar brukere melde seg på med <strong>kun navn og e-post eller telefonnummer</strong>. Fordelen er at påmeldingen er enklere, ulempen er at de ikke får se sin aktivitetshistorikk på Min side.<br>
-              Husk at selv om du krever en Min side-bruker betyr ikke det at du krever medlemskap i DNT.
-            </div>
+      </div>
+      <div class="span2">
+
+        <div class="delete">
+
+          <a href="javascript:undefined" class="btn btn-danger delete-date">
+            Slett
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="date-edit{% if date %} hide{% endif %}">
+
+    <div class="control-group">
+      <label class="control-label">Turen starter:</label>
+      <div class="controls">
+        <div class="input-append date">
+          <input type="text" class="input-medium" name="start_date" value="{{ date.start_date|date:"d.m.Y" }}">
+          <span class="add-on"><i class="icon-th"></i></span>
+        </div>
+        <input type="text" class="input-small" name="start_time" value="{{ date.start_date|date:"H:i" }}">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Turen slutter:</label>
+      <div class="controls">
+        <div class="input-append date">
+          <input type="text" class="input-medium" name="end_date" value="{{ date.end_date|date:"d.m.Y" }}">
+          <span class="add-on"><i class="icon-th"></i></span>
+        </div>
+        <input type="text" class="input-small" name="end_time" value="{{ date.end_date|date:"H:i" }}">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Påmelding:</label>
+      <div class="controls">
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Min side-bruker" data-content="Denne påmeldingstypen krever at brukeren logger seg på Min side. Dette krever ikke nødvendigvis medlemskap i DNT, men man må enten registrere seg, eller logge på.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}> Med Min side-bruker
+        </label>
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Enkel påmelding" data-content="I tillegg til vanlig påmelding med Min side-bruker, får man også muligheten til å bare skrive inn et navn, samt telefonnummer <strong>eller</strong> e-postadresse. Dette er for de som ikke ønsker å ta seg bryet med å registrere seg, men husk at disse ikke får turhistorikken registrert på Min side.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}> Oppgi navn og e-post eller telefonnummer
+        </label>
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Hvis det ikke er behov for påmelding online, kan du velge denne. Da kan du eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det er behov for det.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}> Ingen påmelding
+        </label>
+      </div>
+    </div>
+
+    <div class="enrollment-group{% if not date %} hide{% endif %}">
+
+      <div class="control-group">
+        <label class="control-label">Påmeldingsstart:</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="signup_start" value="{{ date.signup_start|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
           </div>
         </div>
-      </form>
-
-      {# TODO: Client-side validations #}
-
-      <div class="date-list">
-        {% for date in aktivitet.get_dates_ordered %}
-          {% include 'common/admin/aktiviteter/edit/dates_form.html' %}
-        {% endfor %}
       </div>
 
-      <p>
-        <a class="add-aktivitet-date" href="javascript:undefined" data-url="{% url 'admin.aktiviteter.views.new_aktivitet_date' %}">
-          Legg til flere datoer
-        </a>
-        <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Lagrer, vennligst vent...">
-      </p>
+      <div class="control-group">
+        <label class="control-label">Påmeldingsfrist:</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="signup_deadline" value="{{ date.signup_deadline|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
+          <div class="hints">
+            Hvis du ikke legger inn noen påmeldingsfrist, blir den samme dag som turen starter.
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Avmeldingsfrist:</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="signup_cancel_deadline" value="{{ date.signup_cancel_deadline|date:"d.m.Y" }}">
+            <span class="add-on"><i class="icon-th"></i></span>
+          </div>
+          <div class="hints">
+            Hvis du ikke legger inn noen avmeldingsfrist, blir den samme dag som turen starter.
+          </div>
+        </div>
+      </div>
 
     </div>
+
+    <div class="control-group">
+      <label class="control-label">Turledere:</label>
+      <div class="controls">
+
+        <table class="table turledere">
+          <tr>
+            <th>Navn</th>
+            <th>Kontaktinfo</th>
+            <th>Fjern</th>
+          </tr>
+
+          {% for user in date.get_turledere_ordered %}
+            {% include 'common/admin/aktiviteter/edit/turleder_display.html' %}
+          {% endfor %}
+
+        </table>
+
+        <div class="control-as-text">
+          <a href="javascript:undefined" class="add-turledere"><i class="icon-user"></i> Legg til flere turledere</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Oppmøte:</label>
+      <div class="controls">
+        <textarea rows="4" cols="80" name="meeting_place" class="input-xxlarge">{{ date.meeting_place }}</textarea>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Kontaktinformasjon:</label>
+      <div class="controls">
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="arrangør"{% if not date or date.contact_type == 'arrangør' %} checked{% endif %}> Arrangørforeningens opplysninger
+        </label>
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turledernes opplysninger
+        </label>
+        <label class="radio">
+          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
+        </label>
+      </div>
+    </div>
+
+    <div class="contact-custom{% if date.contact_type != 'custom' %} hide{% endif %}">
+      <div class="control-group">
+        <label class="control-label">Navn:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="contact_custom_name" value="{{ date.contact_custom_name }}">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Telefon:</label>
+        <div class="controls">
+          <input type="text" class="input-medium" name="contact_custom_phone" value="{{ date.contact_custom_phone }}">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">E-postadresse:</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="contact_custom_email" value="{{ date.contact_custom_email }}">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- A little bit ugly, but it works. (Because we don't want margins below the view div) -->
+  <div class="date-spacer">
+    &nbsp;
   </div>
 </div>
-
-{% endblock %}

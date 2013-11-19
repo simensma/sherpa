@@ -7,12 +7,10 @@
 <div class="row">
   <div class="span12">
 
-    <h2>Rediger aktivitet</h2>
-
-    {% include 'common/admin/aktiviteter/edit/navigation.html' with active='participants' %}
+    <h2>Påmeldte</h2>
 
     {% for aktivitet_date in aktivitet.get_dates_ordered %}
-      {% include 'common/admin/aktiviteter/edit/participants_common_content.html' %}
+      {% include 'common/admin/aktiviteter/participants_common_content.html' %}
     {% empty %}
       <p>Aktiviteten har ingen turdatoer.</p>
     {% endfor %}

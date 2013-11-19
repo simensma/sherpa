@@ -1,43 +1,49 @@
 {% for user in users %}
   <tr class="result">
-    <td>{{ user.get_full_name }}</td>
-    <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
     <td>
-      <button class="btn btn-danger assign-turleder">Gi turlederstatus</button>
-      <form action="{% url 'admin.aktiviteter.views.turleder_assign' %}" method="post" class="hide">
-        {% csrf_token %}
-        <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
-        <input type="hidden" name="user" value="{{ user.id }}">
-        <strong>Velg datoer:</strong>
-        {% for aktivitet_date in aktivitet.get_dates_ordered %}
-          <label class="radio">
-            <input type="checkbox" name="aktivitet_dates" value="{{ aktivitet_date.id }}"> {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
-          </label>
-        {% endfor %}
-        <button type="submit" class="btn btn-danger">Gi turlederen tilgang til disse datoene</button>
-      </form>
+      {{ user.get_full_name }}
     </td>
-  </tr>
-{% endfor %}
+    <td>
+      {% if user.is_member %}
+        {{ user.get_birth_date|date:"d.m.y" }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.main_association.name }}<br>
+        Medlemsnr: {{ user.memberid }}
+      {% else %}
+        <em>Ikke medlem</em>
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_address.format_with_newlines|linebreaksbr }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {% if user.get_phone_home %}
+          {{ user.get_phone_home }}<br>
+        {% endif %}
+        {% if user.get_phone_mobile %}
+          {{ user.get_phone_mobile }}<br>
+        {% endif %}
+        {% if user.get_email %}
+          {{ user.get_email }}
+        {% endif %}
 
-{% for actor in actors_without_user %}
-  <tr class="result">
-    <td>{{ actor.get_full_name }}</td>
-    <td>{{ actor.memberid }}</td>
+        {% if not user.get_phone_home and not user.get_phone_mobile and not user.get_email %}
+          <em>Mangler kontaktopplysninger</em><br>
+          Han/hun må selv legge dette inn på Min side.
+        {% endif %}
+      {% endif %}
+    </td>
     <td>
-      <button class="btn btn-danger assign-turleder">Gi turlederstatus</button>
-      <form action="{% url 'admin.aktiviteter.views.turleder_assign' %}" method="post" class="hide">
-        {% csrf_token %}
-        <input type="hidden" name="aktivitet" value="{{ aktivitet.id }}">
-        <input type="hidden" name="actor" value="{{ actor.memberid }}">
-        <strong>Velg datoer:</strong>
-        {% for aktivitet_date in aktivitet.get_dates_ordered %}
-          <label class="radio">
-            <input type="checkbox" name="aktivitet_dates" value="{{ aktivitet_date.id }}"> {{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}
-          </label>
-        {% endfor %}
-        <button type="submit" class="btn btn-danger">Gi turlederen tilgang til disse datoene</button>
-      </form>
+      <a href="javascript:undefined" class="btn btn-danger assign-turleder" data-name="{{ user.get_full_name }}" data-id="{{ user.id }}" data-type="user" data-memberid="{{ user.memberid|default:"ikke medlem" }}">Velg</a>
     </td>
   </tr>
+
+  {% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True %}
+
 {% endfor %}

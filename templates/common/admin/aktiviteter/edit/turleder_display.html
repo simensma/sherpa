@@ -1,0 +1,31 @@
+<tr class="display-result{% if hide %} hide{% endif %}" data-id="{{ user.id }}">
+  <td>
+    <div class="name">
+      {{ user.get_full_name }}
+    </div>
+    <div class="more hide">
+      {% if user.is_member %}
+        <strong>Født:</strong> {{ user.get_birth_date|date:"d.m.y" }}<br>
+        <strong>Medlemsforening:</strong> {{ user.main_association.name }}<br>
+        <strong>Medlemsnr:</strong> {{ user.memberid }}<br>
+        <strong>Adresse:</strong><br>
+        {{ user.get_address.format_with_newlines|linebreaksbr }}
+      {% else %}
+        <em>Ikke medlem i DNT - derfor har vi ikke flere opplysninger.</em>
+      {% endif %}
+    </div>
+    <a href="javascript:undefined" class="more"><i class="icon-chevron-down"></i> Mer informasjon</a>
+    <a href="javascript:undefined" class="less hide"><i class="icon-chevron-up"></i> Mindre informasjon</a>
+
+  </td>
+  <td>
+    {% if user.is_member %}
+      {{ user.get_phone_home|default:"<em>Hustelefon ikke oppgitt</em>" }}<br>
+      {{ user.get_phone_mobile|default:"<em>Mobiltelefon ikke oppgitt</em>" }}<br>
+    {% endif %}
+    {{ user.get_email|default:"<em>E-postadresse ikke oppgitt</em>" }}
+  </td>
+  <td>
+    <a href="javascript:undefined" class="btn btn-danger remove-turleder"><i class="icon-white icon-warning-sign"></i> Fjern</a>
+  </td>
+</tr>

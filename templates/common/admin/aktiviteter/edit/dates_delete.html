@@ -1,0 +1,46 @@
+{% if not date %}
+
+  <p>Er du helt sikker på at du vil slette denne turdatoen?</p>
+
+{% else %}
+
+  <p>
+    Er du sikker på at du vil slette turdatoen fra
+
+    <strong>
+      {% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
+        {# Same month, shorten the string by displaying the month only once #}
+        {{ date.start_date|date:"j." }}
+      {% else %}
+        {{ date.start_date|date:"j. F" }}
+      {% endif %}
+    </strong>
+
+    til <strong>{{ date.end_date|date:"j. F Y" }}</strong>
+
+    for <strong>{{ date.aktivitet.title }}</strong>?
+  </p>
+
+  <p>
+    {% if date.turledere.count > 0 %}
+      Turen har {{ date.turledere.count }} turledere registrert, som vil miste tilgangen til detaljer om denne turdatoen på Min side.
+    {% else %}
+      Turen har ingen turledere.
+    {% endif %}
+  </p>
+
+  {% if date.participants.count == 0 and date.simple_participants.count == 0 %}
+    <p>
+      Turen har ingen påmeldte deltakere.
+    </p>
+  {% else %}
+    <div class="alert alert-error">
+      <strong>
+        {{ date.participants.count|add:date.simple_participants.count }} deltakere har meldt seg på turen på denne datoen.
+      </strong>
+      <br>
+      Disse må selvsagt få beskjed om at turavgangen er kansellert. <em>Dersom du sletter turavgangen, vil påmeldtlisten slettes</em>, og du mister all informasjon om hvem som var påmeldt. Om du trenger å vite hvem som var påmeldt, må du vente med å slette turdatoen. Sett heller publiseringsdatoen til en dato i fremtiden, slik at turen skjules. Alternativt kan du selv notere deltakernes kontaktopplysninger før du sletter turdatoen.
+    </div>
+  {% endif %}
+
+{% endif %}

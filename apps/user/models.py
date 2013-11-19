@@ -95,6 +95,9 @@ class User(AbstractBaseUser):
         """
         Return this users' Actor (cached), or an ActorProxy if this is a pending user
         """
+        if not self.is_member():
+            raise Exception("You cannot call get_actor() on a non-member, check your code logic")
+
         try:
             if self.is_pending:
                 return ActorProxy(self.memberid)

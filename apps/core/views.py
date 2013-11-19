@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.shortcuts import render
 
-from core.models import Tag, Zipcode
+from core.models import Tag, Zipcode, County, Municipality
 
 import json
 
@@ -21,3 +21,11 @@ def filter_tags(request):
 
 def attribution(request):
     return render(request, 'main/attribution.html')
+
+def county_lookup(request):
+    point_wkt = 'POINT(%s %s)' % (json.loads(request.POST['lng']), json.loads(request.POST['lat']))
+    return HttpResponse(json.dumps([c.id for c in County.objects.filter(geom__contains=point_wkt)]))
+
+def municipality_lookup(request):
+    point_wkt = 'POINT(%s %s)' % (json.loads(request.POST['lng']), json.loads(request.POST['lat']))
+    return HttpResponse(json.dumps([m.id for m in Municipality.objects.filter(geom__contains=point_wkt)]))

@@ -4,12 +4,20 @@ from django.contrib.gis.db import models
 from datetime import date
 import json
 
+from sherpa2.models import Location
+
 class Aktivitet(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
     co_association = models.ForeignKey('association.Association', null=True, related_name='+')
+    code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_point = models.PointField(null=True)
+    counties = models.ManyToManyField('core.County', related_name='aktiviteter')
+    municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
+    # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
+    locations = models.CharField(max_length=4091)
+    getting_there = models.TextField()
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),
@@ -35,7 +43,6 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
-    allow_simple_signup = models.BooleanField()
     hidden = models.BooleanField(default=False)
 
     def get_dates_ordered(self):
@@ -50,6 +57,9 @@ class Aktivitet(models.Model):
     def get_start_point_lng_json(self):
         return json.dumps(self.start_point.get_coords()[1])
 
+    def get_locations(self):
+        return Location.objects.filter(id__in=json.loads(self.locations))
+
     def get_audiences(self):
         return json.loads(self.audiences)
 
@@ -57,11 +67,14 @@ class Aktivitet(models.Model):
         return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
     def get_subcategories(self):
+        return [t.name for t in self.category_tags.all()]
+
+    def get_all_subcategories(self):
         return self.SUBCATEGORIES[self.category]
 
     def get_missing_subcategories(self):
         existing_subcategories = [s.name for s in self.category_tags.all()]
-        return [s for s in self.get_subcategories() if s not in existing_subcategories]
+        return [s for s in self.get_all_subcategories() if s not in existing_subcategories]
 
     def get_images_ordered(self):
         return self.images.order_by('order')
@@ -150,14 +163,21 @@ class AktivitetDate(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
+    signup_simple_allowed = models.BooleanField()
     signup_start = models.DateField()
     signup_deadline = models.DateField()
     signup_cancel_deadline = models.DateField()
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
-
-    def get_signup_enabled_json(self):
-        return json.dumps(self.signup_enabled)
+    meeting_place = models.TextField()
+    CONTACT_TYPE_CHOICES = (
+        (u'arrangør', 'Arrangørforening'),
+        (u'turleder', 'Turleder'),
+        (u'custom', 'Skriv inn'),)
+    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
+    contact_custom_name = models.CharField(max_length=255)
+    contact_custom_phone = models.CharField(max_length=255)
+    contact_custom_email = models.CharField(max_length=255)
 
     def accepts_signups(self):
         today = date.today()

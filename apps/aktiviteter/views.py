@@ -1,3 +1,6 @@
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
@@ -5,15 +8,15 @@ from django.contrib import messages
 import json
 
 from sherpa.decorators import user_requires_login
+from sherpa2.models import Location
 from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant
+from aktiviteter.util import filter_aktivitet_dates
 from core import validator
 
 def index(request):
-    aktivitet_dates = AktivitetDate.get_published().exclude(
-        aktivitet__hidden=True
-    ).order_by(
-        '-start_date'
-    )
+    aktivitet_dates = filter_aktivitet_dates({
+        'page': 1
+    })
     aktivitet_positions = Aktivitet.get_published().filter(start_point__isnull=False)
     aktivitet_positions_json = json.dumps([{
         'id': a.id,
@@ -24,9 +27,25 @@ def index(request):
         'aktivitet_dates': aktivitet_dates,
         'aktivitet_positions': aktivitet_positions,
         'aktivitet_positions_json': aktivitet_positions_json,
-        'difficulties': Aktivitet.DIFFICULTY_CHOICES
+        'difficulties': Aktivitet.DIFFICULTY_CHOICES,
+        'categories': Aktivitet.CATEGORY_CHOICES,
+        'audiences': Aktivitet.AUDIENCE_CHOICES,
+        'locations': Location.objects.order_by('name'),
     }
     return render(request, 'common/aktiviteter/index.html', context)
+
+def filter(request):
+    if not request.is_ajax() or not request.method == 'POST':
+        return redirect('aktiviteter.views.index')
+
+    aktivitet_dates = filter_aktivitet_dates(json.loads(request.POST['filter']))
+    context = RequestContext(request, {
+        'aktivitet_dates': aktivitet_dates
+    })
+    return HttpResponse(json.dumps({
+        'html': render_to_string('common/aktiviteter/listing.html', context),
+        'page': aktivitet_dates.number
+    }))
 
 def show(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
@@ -56,7 +75,7 @@ def signup_not_logged_on(request, aktivitet_date):
 
 def signup_simple(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
-    if not aktivitet_date.accepts_signups() or not aktivitet_date.aktivitet.allow_simple_signup:
+    if not aktivitet_date.accepts_signups() or not aktivitet_date.signup_simple_allowed:
         raise PermissionDenied
 
     errors = False

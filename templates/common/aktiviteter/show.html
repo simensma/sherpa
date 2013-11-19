@@ -99,6 +99,10 @@
 
       <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
 
+      <h3>Kontaktinformasjon:</h3>
+
+      {% include 'common/aktiviteter/contact_information.html' %}
+
       {% if aktivitet_date.aktivitet.images.count > 0 %}
         <div class="images">
           <h2>Bilder</h2>

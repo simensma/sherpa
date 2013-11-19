@@ -2,7 +2,7 @@ from django.db import models
 
 from core.models import County
 from fjelltreffen.models import Annonse
-from sherpa2.models import SHERPA2_COUNTIES_SET2 as SHERPA2_COUNTIES
+from sherpa2.util import SHERPA2_COUNTIES_SET2 as SHERPA2_COUNTIES
 
 #this table links other tabels
 class Link(models.Model):

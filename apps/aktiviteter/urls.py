@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('aktiviteter.views',
     url(r'^$', 'index'),
+    url(r'^filtrer/$', 'filter'),
     url(r'^vis/(?P<aktivitet_date>\d+)/$', 'show'),
     url(r'^pamelding/(?P<aktivitet_date>\d+)/$', 'signup'),
     url(r'^pamelding/ikke-innlogget/(?P<aktivitet_date>\d+)/$', 'signup_not_logged_on'),

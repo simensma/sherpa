@@ -1,0 +1,38 @@
+{# This is a small template which simply renders the contact information for an AktivitetDate #}
+
+{% if aktivitet_date.contact_type == 'arrangør' %}
+
+  {% with association=aktivitet_date.aktivitet.association %}
+    {{ association.name }}<br>
+    Tlf. {{ association.phone }}<br>
+    E-post: <a href="mailto:{{ association.email }}">{{ association.email }}</a>
+  {% endwith %}
+
+{% elif aktivitet_date.contact_type == 'turleder' %}
+
+  {% for turleder in aktivitet_date.get_turledere_ordered %}
+    {{ turleder.get_full_name }}
+
+    {% if turleder.get_phone_mobile %}
+      <br>
+      Tlf. {{ turleder.get_phone_mobile }}
+    {% endif %}
+
+    {% if turleder.get_email %}
+      <br>
+      E-post: <a href="mailto:{{ turleder.get_email }}">{{ turleder.get_email }}</a>
+    {% endif %}
+
+    {% if not forloop.last %}
+      <br><br>
+    {% endif %}
+
+  {% endfor %}
+
+{% elif aktivitet_date.contact_type == 'custom' %}
+
+  {{ aktivitet_date.contact_custom_name }}<br>
+  Tlf. {{ aktivitet_date.contact_custom_phone }}<br>
+  E-post: <a href="mailto:{{ aktivitet_date.contact_custom_email }}">{{ aktivitet_date.contact_custom_email }}</a>
+
+{% endif %}
