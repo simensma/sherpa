@@ -5,13 +5,16 @@ HITS_PER_PAGE = 20
 
 def filter_aktivitet_dates(filter):
 
-    hits = AktivitetDate.get_published().exclude(
-        aktivitet__hidden=True
-    ).order_by(
+    dates = AktivitetDate.get_published().exclude(aktivitet__hidden=True)
+
+    if 'categories' in filter and len(filter['categories']) > 0:
+        dates = dates.filter(aktivitet__category__in=filter['categories'])
+
+    dates = dates.order_by(
         '-start_date'
     )
 
-    paginator = Paginator(hits, HITS_PER_PAGE)
+    paginator = Paginator(dates, HITS_PER_PAGE)
 
     # Parse "special" values
     page = filter['page']

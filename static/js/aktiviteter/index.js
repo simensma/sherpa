@@ -40,13 +40,14 @@ $(document).ready(function() {
     });
 
     $(document).on('click', results_content.selector + ' div.pagination li:not(.disabled):not(.active) a.page', function() {
-        var page = $(this).attr('data-page');
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find("div.loading").show();
         results_fail.hide();
+        var filter = collectFilter();
+        filter.page = $(this).attr('data-page');
         $.ajaxQueue({
             url: results.attr('data-filter-url'),
-            data: { page: page }
+            data: { filter: JSON.stringify(filter) }
         }).done(function(result) {
             results_content.empty();
             result = JSON.parse(result);
@@ -56,4 +57,14 @@ $(document).ready(function() {
             results_fail.show();
         });
     });
+
+    function collectFilter() {
+        var categories = [];
+        button_selections.filter(".categories").find("button.category.selected").each(function() {
+            categories.push($(this).attr('data-category'));
+        });
+        return {
+            categories: categories
+        };
+    }
 });

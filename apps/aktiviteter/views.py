@@ -38,9 +38,7 @@ def filter(request):
     if not request.is_ajax() or not request.method == 'POST':
         return redirect('aktiviteter.views.index')
 
-    aktivitet_dates = filter_aktivitet_dates({
-        'page': request.POST['page']
-    })
+    aktivitet_dates = filter_aktivitet_dates(json.loads(request.POST['filter']))
     context = RequestContext(request, {
         'aktivitet_dates': aktivitet_dates
     })
