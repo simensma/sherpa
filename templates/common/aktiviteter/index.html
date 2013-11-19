@@ -40,53 +40,57 @@
       </p>
 
       <div class="search-filters">
-        <table class="table filters">
-          <tr>
-            <th>Hva slags tur?</th>
-            <td>
-              <select name="" class="chosen" data-placeholder="Velg turtype...">
+
+        <div class="row-fluid">
+          <div class="span6">
+
+            <div class="section">
+              <h3>Hva slags tur?</h3>
+              <div class="button-selections categories">
+                {% for category in categories %}
+                  <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="section">
+              <h3>Hvor vil du gå?</h3>
+              <select name="" data-chosen data-placeholder="Velg turområder..." multiple>
                 <option value=""></option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th>Er turen for deg?</th>
-            <td>
-              <select name="" class="chosen" data-placeholder="Velg målgruppe...">
-                <option value=""></option>
-              </select>
-              <br>
-              <select name="" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-                <option value=""></option>
-                {% for difficulty in difficulties %}
-                  <option value="{{ difficulty.0 }}">{{ difficulty.1 }}</option>
+                {% for location in locations %}
+                  <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
               </select>
-            </td>
-          </tr>
-          <tr>
-            <th>Hvor vil du gå?</th>
-            <td>
-              <select name="" class="chosen" data-placeholder="Velg turområde...">
-                <option value=""></option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th>Når vil du tidligst dra?</th>
-            <td>
-              <input type="radio"> Når som helst<br>
-              <input type="radio"> Velg: <input type="text" class="input-small">
-            </td>
-          </tr>
-          <tr>
-            <th>Når vil du senest tilbake?</th>
-            <td>
-              <input type="radio"> Når som helst<br>
-              <input type="radio"> Velg: <input type="text" class="input-small">
-            </td>
-          </tr>
-        </table>
+            </div>
+
+            <div class="section">
+              <h3>Når vil du dra?</h3>
+              <div class="input-append date">
+                <input type="text" name="travel_date" class="input-medium date" placeholder="Fra og med...">
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+            </div>
+
+          </div>
+          <div class="span6">
+
+            <h3>Er turen for deg?</h3>
+
+            <div class="button-selections audiences">
+              {% for audience in audiences %}
+                <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+              {% endfor %}
+            </div>
+
+            <br>
+            <div class="button-selections difficulties">
+              {% for difficulty in difficulties %}
+                <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <table class="table table-striped aktiviteter">

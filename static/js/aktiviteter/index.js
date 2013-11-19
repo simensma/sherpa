@@ -1,10 +1,17 @@
 $(document).ready(function() {
     var listing = $("div.aktivitet-listing");
     var filters = listing.find("div.search-filters");
+    var button_selections = filters.find("div.button-selections");
     var popups = listing.find("div.popups");
 
-    filters.find("select").chosen({
-        'allow_single_deselect': true
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    filters.find("div.input-append.date").datepicker({
+        format: 'dd.mm.yyyy',
+        weekStart: 1,
+        autoclose: true,
+        startDate: today,
+        forceParse: false
     });
 
     var map = L.map('map').setView([65, 12], 5);
@@ -19,4 +26,13 @@ $(document).ready(function() {
             'title': popup_content.find("h3").text()
         }).bindPopup(popup_content.html()).addTo(map);
     }
+
+    button_selections.find("button").click(function() {
+        $(this).toggleClass('selected');
+        if($(this).is('.selected')) {
+            $(this).addClass('btn-danger');
+        } else {
+            $(this).removeClass('btn-danger');
+        }
+    });
 });

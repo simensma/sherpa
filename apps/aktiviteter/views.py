@@ -5,6 +5,7 @@ from django.contrib import messages
 import json
 
 from sherpa.decorators import user_requires_login
+from sherpa2.models import Location
 from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant
 from core import validator
 
@@ -24,7 +25,10 @@ def index(request):
         'aktivitet_dates': aktivitet_dates,
         'aktivitet_positions': aktivitet_positions,
         'aktivitet_positions_json': aktivitet_positions_json,
-        'difficulties': Aktivitet.DIFFICULTY_CHOICES
+        'difficulties': Aktivitet.DIFFICULTY_CHOICES,
+        'categories': Aktivitet.CATEGORY_CHOICES,
+        'audiences': Aktivitet.AUDIENCE_CHOICES,
+        'locations': Location.objects.order_by('name'),
     }
     return render(request, 'common/aktiviteter/index.html', context)
 
