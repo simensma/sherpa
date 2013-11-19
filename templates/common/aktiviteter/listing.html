@@ -15,3 +15,13 @@
     </tr>
   {% endfor %}
 </table>
+
+{% if filter_end_reached %}
+  <div class="alert alert-error">
+    <strong>Dette var alle aktivitetene som matchet søket ditt.</strong>
+  </div>
+{% else %}
+  <p>
+    Viser {{ hits_per_page }} av {{ total_hits }} treff.
+  </p>
+{% endif %}
