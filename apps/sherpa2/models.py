@@ -5,6 +5,10 @@ from django.core.cache import cache
 from datetime import datetime, date, timedelta
 import json
 
+# Sometimes we'll need to reference associations directly by ID. We'll store the IDs we know and need here.
+dnt_oslo_id = 2
+dnt_ung_oslo_id = 152
+
 class Association(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)

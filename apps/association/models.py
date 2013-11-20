@@ -1,6 +1,10 @@
 # encoding: utf-8
 from django.db import models
 
+# Sometimes we'll need to reference associations directly by ID. We'll store the IDs we know and need here.
+dnt_oslo_id = 2
+dnt_ung_oslo_id = 152
+
 class Association(models.Model):
     TYPES = [
         (u'sentral', u'Sentral/nasjonal'), # Sentral/nasjonal side - DNT Sentralt, DNT Ung, DNT Fjellsport

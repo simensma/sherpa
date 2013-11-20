@@ -6,8 +6,8 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from association.models import Association
-from sherpa2.models import Association as Sherpa2Association
+from association.models import Association, dnt_oslo_id, dnt_ung_oslo_id
+from sherpa2.models import Association as Sherpa2Association, dnt_oslo_id as dnt_oslo_id_sherpa2, dnt_ung_oslo_id as dnt_ung_oslo_id_sherpa2
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -315,10 +315,18 @@ class User(AbstractBaseUser):
         actor.save()
 
     def main_association(self):
-        association = cache.get('user.association.%s' % self.get_actor().main_association_id)
+        association = cache.get('user.%s.association' % self.identifier)
         if association is None:
             association = Association.objects.get(focus_id=self.get_actor().main_association_id)
-            cache.set('user.association.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+
+            # Well, here's an interesting special case. We want youth members of DNT Oslo og Omegn
+            # to actually be a member of DNT ung Oslo og Omegn, but our member system can't handle that,
+            # so we'll have to check for that and change it here. Note that this applies only to Oslo
+            # and no other member associations.
+            if association.id == dnt_oslo_id and self.membership_type()['codename'] == 'youth':
+                association = Association.objects.get(id=dnt_ung_oslo_id)
+
+            cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24 * 7)
         return association
 
     def main_association_old(self):
@@ -327,10 +335,15 @@ class User(AbstractBaseUser):
         For now it's mostly used to get the site url because most of the new objects
         don't have an assigned site.
         """
-        association = cache.get('user.association_sherpa2.%s' % self.get_actor().main_association_id)
+        association = cache.get('user.%s.association_sherpa2' % self.identifier)
         if association is None:
             association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
-            cache.set('user.association_sherpa2.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+
+            # Special case, just like in main_association()
+            if association.id == dnt_oslo_id_sherpa2 and self.membership_type()['codename'] == 'youth':
+                association = Sherpa2Association.objects.get(id=dnt_ung_oslo_id_sherpa2)
+
+            cache.set('user.%s.association_sherpa2' % self.identifier, association, 60 * 60 * 24 * 7)
         return association
 
     def is_eligible_for_norway_bus_tickets(self):
