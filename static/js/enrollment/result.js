@@ -10,11 +10,11 @@ $(document).ready(function() {
         sms_anchor.click(function() {
             sms_anchor.hide();
             sending.show();
-            var index = $(this).attr('data-index');
+            var user = $(this).attr('data-user');
             var number = $(this).attr('data-number');
             $.ajaxQueue({
                 url: sms_anchor.attr('data-sms-url'),
-                data: { index: index }
+                data: { user: user }
             }).done(function(result) {
                 result = JSON.parse(result);
                 if(result.error == 'none') {

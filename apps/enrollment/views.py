@@ -7,19 +7,19 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.cache import cache
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 from core.models import Zipcode, FocusCountry
-from core.util import membership_year_start
 from sherpa2.models import Association
-from focus.models import FocusZipcode, Enrollment, Actor, ActorAddress, Price
+from focus.models import FocusZipcode, Enrollment as FocusEnrollment, Actor, ActorAddress
 from focus.util import get_membership_type_by_codename
-from enrollment.models import State
-from enrollment.util import current_template_layout, prepare_and_send_email, updateIndices, price_of, type_of, polite_title, add_focus_user, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
-from enrollment.validation import validate, validate_user, validate_location
+from enrollment.models import State, User as EnrollmentUser, Transaction
+from enrollment.util import current_template_layout, get_or_create_enrollment, prepare_and_send_email, polite_title, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
+from enrollment.validation import validate, validate_location
 from user.models import User
 from association.models import dnt_oslo_id
 
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 import requests
 import re
 import json
@@ -38,138 +38,125 @@ def index(request):
     return redirect("enrollment.views.registration")
 
 def registration(request, user):
-    request.session.modified = True
-    if 'enrollment' in request.session:
-        if request.session['enrollment']['state'] == 'payment':
-            # Payment has been initiated but the user goes back to the registration page - why?
-            # Maybe it failed, and they want to retry registration?
-            # Reset the state and let them reinitiate payment when they're ready.
-            request.session['enrollment']['state'] = 'registration'
-        elif request.session['enrollment']['state'] == 'complete':
-            # A previous registration has been completed, but a new one has been initiated.
-            # Remove the old one and start over.
-            del request.session['enrollment']
+    enrollment = get_or_create_enrollment(request)
 
-    # Check if this is a first-time registration (or start-over if the previous one was deleted)
-    if not 'enrollment' in request.session:
-        request.session['enrollment'] = {'users': [], 'state': 'registration'}
-    elif not 'state' in request.session['enrollment']:
-        # Temporary if-branch:
-        # Since the 'state' key was recently added to the session dict,
-        # add it for old users who revisit this page.
-        request.session['enrollment']['state'] = 'registration'
+    if enrollment.state == 'payment':
+        # Payment has been initiated but the user goes back to the registration page - why?
+        # Maybe it failed, and they want to retry registration?
+        # Reset the state and let them reinitiate payment when they're ready.
+        enrollment.state = 'registration'
+        enrollment.save()
+    elif enrollment.state == 'complete':
+        # A previous registration has been completed, but a new one has been initiated.
+        # Remove the old one and start over.
+        del request.session['enrollment']
+        enrollment = get_or_create_enrollment(request)
 
+    # User set via URL means a GET request to view some user
     if user is not None:
         try:
-            user = request.session['enrollment']['users'][int(user)]
-        except IndexError:
+            user = enrollment.users.all().get(id=user)
+        except EnrollmentUser.DoesNotExist:
             return redirect('enrollment.views.registration')
 
     errors = False
     if request.method == 'POST':
-        new_user = {}
-        # Titleize and strip whitespace before/after dash
-        new_user['name'] = re.sub('\s*-\s*', '-', polite_title(request.POST['name'].strip()))
-        new_user['phone'] = request.POST['phone'].strip()
-        new_user['email'] = request.POST['email'].lower().strip()
-        new_user['gender'] = request.POST.get('gender', '')
-        if request.POST.get('key') == 'on':
-            new_user['key'] = True
+
+        # This is a POST, if editing an existing user it will be set via the form
+        if 'user' in request.POST:
+            user = enrollment.users.all().get(id=request.POST['user'])
+        else:
+            user = EnrollmentUser(enrollment=enrollment)
 
         try:
-            new_user['dob'] = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
-            new_user['age'] = datetime.now().year - new_user['dob'].year
-
-            # After membership year start, the enrollment is really for the next year,
-            # hence they'll be one year older than they are this year.
-            if date.today() >= membership_year_start()['actual_date']:
-                new_user['age'] += 1
+            dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
         except ValueError:
-            new_user['dob'] = None
-            new_user['age'] = None
+            dob = None
 
-        if not validate_user(request.POST):
-            errors = True
-            if 'user' in request.POST:
-                index = int(request.POST['user'])
-                user = new_user
-                user['index'] = index
-            else:
-                user = new_user
+        # Titleize and strip whitespace before/after dash
+        user.name = re.sub('\s*-\s*', '-', polite_title(request.POST['name'].strip()))
+        user.phone = request.POST['phone'].strip()
+        user.email = request.POST['email'].lower().strip()
+        user.gender = request.POST.get('gender', '')
+        user.key = request.POST.get('key') == 'on'
+        user.dob = dob
+        user.save()
+
+        if user.is_valid():
+            enrollment.users.add(user)
+            # The user was saved successfully, so clear the form for the next user
+            user = None
         else:
-            if 'user' in request.POST:
-                request.session['enrollment']['users'][int(request.POST['user'])] = new_user
-            else:
-                request.session['enrollment']['users'].append(new_user)
-
-    updateIndices(request.session)
+            errors = True
 
     if not errors and 'forward' in request.POST:
         return redirect("enrollment.views.household")
 
     context = {
-        'users': request.session['enrollment']['users'],
-        'person': user,
+        'enrollment': enrollment,
+        'current_user': user,
         'errors': errors,
-        'conditions': request.session['enrollment'].get('conditions', ''),
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)
 
 def remove(request, user):
-    request.session.modified = True
-    if not 'enrollment' in request.session:
-        return redirect("enrollment.views.registration")
+    enrollment = get_or_create_enrollment(request)
 
-    # If the index is too high, ignore it and redirect the user back.
-    # This should only happen if the user messes with back/forwards buttons in their browser,
-    # and they'll at LEAST notice it the member list and price sum in the verification view.
-    if len(request.session['enrollment']['users']) >= int(user) + 1:
-        del request.session['enrollment']['users'][int(user)]
-        if len(request.session['enrollment']['users']) == 0:
-            del request.session['enrollment']
+    try:
+        enrollment.users.get(id=user).delete()
+    except EnrollmentUser.DoesNotExist:
+        # Ignore it and redirect the user back. Maybe they tried to URL-hack or something.
+        pass
+
     return redirect("enrollment.views.registration")
 
 def household(request):
-    request.session.modified = True
-    val = validate(request, require_location=False, require_existing=False)
-    if val is not None:
-        return val
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'payment':
+    # Since conditions is checked client-side, they must've accepted them if they reach this point.
+    enrollment.accepts_conditions = True
+    enrollment.save()
+
+    validation = validate(enrollment, require_location=False, require_existing=False)
+    if not validation['valid']:
+        if 'message' in validation:
+            messages.error(request, validation['message'])
+        return redirect(validation['redirect'])
+
+    if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['enrollment']['state'] = 'registration'
-    elif request.session['enrollment']['state'] == 'complete':
+        enrollment.state = 'registration'
+        enrollment.save()
+    elif enrollment.state == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return redirect("enrollment.views.registration")
 
-    request.session['enrollment']['conditions'] = True
     errors = invalid_location in request.GET
     if request.method == 'POST':
-        location = {}
-        location['country'] = request.POST['country']
-        location['address1'] = polite_title(request.POST['address1'])
-        location['address2'] = polite_title(request.POST['address2'])
-        location['address3'] = polite_title(request.POST['address3'])
-        location['zipcode'] = request.POST['zipcode']
-        location['area'] = request.POST.get('area', '')
-        request.session['enrollment']['location'] = location
-        request.session['enrollment']['yearbook'] = location['country'] != 'NO' and 'yearbook' in request.POST
-        request.session['enrollment']['attempted_yearbook'] = False
-        if request.session['enrollment']['yearbook'] and request.POST['existing'] != '':
-            request.session['enrollment']['yearbook'] = False
-            request.session['enrollment']['attempted_yearbook'] = True
-        if 'existing' in request.POST:
-            request.session['enrollment']['existing'] = request.POST['existing']
+        enrollment.country = request.POST['country']
+        enrollment.address1 = polite_title(request.POST['address1'])
+        enrollment.address2 = polite_title(request.POST['address2'])
+        enrollment.address3 = polite_title(request.POST['address3'])
+        enrollment.zipcode = request.POST['zipcode']
+        enrollment.area = request.POST.get('area', '')
+        enrollment.existing_memberid = request.POST['existing']
+        enrollment.wants_yearbook = enrollment.country != 'NO' and 'yearbook' in request.POST
+        enrollment.attempted_yearbook = False
+        if enrollment.wants_yearbook:
+            if enrollment.existing_memberid != '' or not enrollment.has_potential_main_member():
+                enrollment.wants_yearbook = False
+                enrollment.attempted_yearbook = True
+        enrollment.save()
 
-        if validate_location(request.session['enrollment']['location']):
-            if request.session['enrollment']['location']['country'] != 'NO':
+        if validate_location(enrollment):
+            if enrollment.country != 'NO':
                 return redirect('enrollment.views.verification')
             else:
                 try:
-                    focus_zipcode = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode'])
+                    focus_zipcode = FocusZipcode.objects.get(zipcode=enrollment.zipcode)
                     Association.objects.get(focus_id=focus_zipcode.main_association_id) # Verify that the Association exists
                     return redirect('enrollment.views.verification')
                 except FocusZipcode.DoesNotExist:
@@ -178,7 +165,7 @@ def household(request):
                         exc_info=sys.exc_info(),
                         extra={
                             'request': request,
-                            'postnummer': request.session['enrollment']['location']['zipcode']
+                            'postnummer': enrollment.zipcode
                         }
                     )
                     messages.error(request, 'focus_zipcode_missing')
@@ -191,21 +178,10 @@ def household(request):
         else:
             errors = True
 
-    main = False
-    for user in request.session['enrollment']['users']:
-        if user['age'] >= AGE_YOUTH:
-            main = True
-            break
-
-    updateIndices(request.session)
     context = {
-        'users': request.session['enrollment']['users'],
-        'location': request.session['enrollment'].get('location', ''),
-        'existing': request.session['enrollment'].get('existing', ''),
+        'enrollment': enrollment,
         'invalid_existing': invalid_existing in request.GET,
         'countries': FocusCountry.get_sorted(),
-        'main': main,
-        'yearbook': request.session['enrollment'].get('yearbook', ''),
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
         'errors': errors,
     }
@@ -249,28 +225,32 @@ def existing(request):
     }))
 
 def verification(request):
-    request.session.modified = True
-    val = validate(request, require_location=True, require_existing=True)
-    if val is not None:
-        return val
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'payment':
+    validation = validate(enrollment, require_location=True, require_existing=True)
+    if not validation['valid']:
+        if 'message' in validation:
+            messages.error(request, validation['message'])
+        return redirect(validation['redirect'])
+
+    if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['enrollment']['state'] = 'registration'
-    elif request.session['enrollment']['state'] == 'complete':
+        enrollment.state = 'registration'
+        enrollment.save()
+    elif enrollment.state == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return redirect("enrollment.views.registration")
 
     # If existing member is specified, save details and change to that address
     existing_name = ''
-    if request.session['enrollment']['existing'] != '':
-        actor = Actor.objects.get(memberid=request.session['enrollment']['existing'])
+    if enrollment.existing_memberid != '':
+        actor = Actor.objects.get(memberid=enrollment.existing_memberid)
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
-        request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
+        enrollment.country = actor.get_clean_address().country.code
         if actor.get_clean_address().country.code == 'NO':
-            request.session['enrollment']['location']['address1'] = actor.get_clean_address().field1
+            enrollment.address1 = actor.get_clean_address().field1
         elif actor.get_clean_address().country.code == 'DK' or actor.get_clean_address().country.code == 'SE':
             # Don't change the user-provided address.
             # The user might potentially provide a different address than the existing
@@ -281,29 +261,29 @@ def verification(request):
             pass
         else:
             # Uppercase the country code as Focus doesn't use consistent casing
-            request.session['enrollment']['location']['country'] = actor.get_clean_address().country.code
-            request.session['enrollment']['location']['address1'] = actor.get_clean_address().field1
-            request.session['enrollment']['location']['address2'] = actor.get_clean_address().field2
-            request.session['enrollment']['location']['address3'] = actor.get_clean_address().field3
+            enrollment.country = actor.get_clean_address().country.code
+            enrollment.address1 = actor.get_clean_address().field1
+            enrollment.address2 = actor.get_clean_address().field2
+            enrollment.address3 = actor.get_clean_address().field3
 
     # Get the area name for this zipcode
-    if request.session['enrollment']['location']['country'] == 'NO':
-        request.session['enrollment']['location']['area'] = Zipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).area
+    if enrollment.country == 'NO':
+        enrollment.area = Zipcode.objects.get(zipcode=enrollment.zipcode).area
 
     # Figure out which association this member/these members will belong to
-    if request.session['enrollment']['existing'] != '':
+    if enrollment.existing_memberid != '':
         # Use main members' association if applicable
-        focus_association_id = Actor.objects.get(memberid=request.session['enrollment']['existing']).main_association_id
+        focus_association_id = Actor.objects.get(memberid=enrollment.existing_memberid).main_association_id
         association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
             cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
-        if request.session['enrollment']['location']['country'] == 'NO':
-            focus_association_id = cache.get('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'])
+        if enrollment.country == 'NO':
+            focus_association_id = cache.get('focus.zipcode_association.%s' % enrollment.zipcode)
             if focus_association_id is None:
-                focus_association_id = FocusZipcode.objects.get(zipcode=request.session['enrollment']['location']['zipcode']).main_association_id
-                cache.set('focus.zipcode_association.%s' % request.session['enrollment']['location']['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
+                focus_association_id = FocusZipcode.objects.get(zipcode=enrollment.zipcode).main_association_id
+                cache.set('focus.zipcode_association.%s' % enrollment.zipcode, focus_association_id, 60 * 60 * 24 * 7)
             association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
             if association is None:
                 association = Association.objects.get(focus_id=focus_association_id)
@@ -314,41 +294,29 @@ def verification(request):
             if association is None:
                 association = Association.objects.get(id=dnt_oslo_id)
                 cache.set('association_sherpa2.%s' % dnt_oslo_id, association, 60 * 60 * 24)
-    request.session['enrollment']['association'] = association
-
-    # Get the prices for that association
-    price = cache.get('association.price.%s' % request.session['enrollment']['association'].focus_id)
-    if price is None:
-        price = Price.objects.get(association_id=request.session['enrollment']['association'].focus_id)
-        cache.set('association.price.%s' % request.session['enrollment']['association'].focus_id, price, 60 * 60 * 24 * 7)
-    request.session['enrollment']['price'] = price
+    enrollment.association = association.id
+    enrollment.save()
 
     keycount = 0
     youth_or_older_count = 0
     main = None
-    for user in request.session['enrollment']['users']:
-        if main is None or (user['age'] < main['age'] and user['age'] >= AGE_YOUTH):
+    for user in enrollment.users.all():
+        if main is None or (user.get_age() < main.get_age() and user.get_age() >= AGE_YOUTH):
             # The cheapest option will be to set the youngest member, 19 or older, as main member
             main = user
-        if user['age'] >= AGE_YOUTH:
+        if user.get_age() >= AGE_YOUTH:
             youth_or_older_count += 1
-        if 'key' in user:
+        if user.key:
             keycount += 1
     keyprice = keycount * KEY_PRICE
     multiple_main = youth_or_older_count > 1
-    updateIndices(request.session)
     context = {
-        'users': request.session['enrollment']['users'],
-        'country': FocusCountry.objects.get(code=request.session['enrollment']['location']['country']),
-        'location': request.session['enrollment']['location'],
-        'association': request.session['enrollment']['association'],
-        'existing': request.session['enrollment']['existing'],
+        'enrollment': enrollment,
         'existing_name': existing_name,
         'keycount': keycount,
         'keyprice': keyprice,
         'multiple_main': multiple_main,
         'main': main,
-        'price': request.session['enrollment']['price'],
         'age_senior': AGE_SENIOR,
         'age_main': AGE_MAIN,
         'age_youth': AGE_YOUTH,
@@ -361,29 +329,59 @@ def verification(request):
             'child': get_membership_type_by_codename('child')['name'],
             'household': get_membership_type_by_codename('household')['name'],
         },
-        'yearbook': request.session['enrollment']['yearbook'],
-        'attempted_yearbook': request.session['enrollment']['attempted_yearbook'],
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/verification.html', context)
 
 def payment_method(request):
-    request.session.modified = True
-    val = validate(request, require_location=True, require_existing=True)
-    if val is not None:
-        return val
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'payment':
+    validation = validate(enrollment, require_location=True, require_existing=True)
+    if not validation['valid']:
+        if 'message' in validation:
+            messages.error(request, validation['message'])
+        return redirect(validation['redirect'])
+
+    if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
         # Reset the state and let them reinitiate payment when they're ready.
-        request.session['enrollment']['state'] = 'registration'
-    elif request.session['enrollment']['state'] == 'complete':
+        enrollment.state = 'registration'
+        enrollment.save()
+    elif enrollment.state == 'complete':
         # A previous registration has been completed, so why would the user come directly here?
         # Just redirect them back to registration which will restart a new registration.
         return redirect("enrollment.views.registration")
 
-    request.session['enrollment']['main_member'] = request.POST.get('main-member', '')
+    enrollment.users.all().update(chosen_main_member=False)
+    if 'main-member' in request.POST and request.POST['main-member'] != '':
+        user = enrollment.users.get(id=request.POST['main-member'])
+
+        if not user.can_be_main_member():
+            messages.error(request, 'invalid_main_member')
+            return redirect('enrollment.views.verification')
+
+        user.chosen_main_member = True
+        user.save()
+    else:
+        # No choice made, in this situation, there should be an existing member specified,
+        # only one available main member, or none at all.
+        if enrollment.existing_memberid == '':
+            main_members = [user for user in enrollment.users.all() if user.can_be_main_member()]
+            if len(main_members) == 1:
+                main_members[0].chosen_main_member = True
+                main_members[0].save()
+            elif len(main_members) > 1:
+                logger.warning(u"More than one available main members and no choice made. Fix the UI",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'main_members': main_members,
+                        'enrollment': enrollment,
+                    }
+                )
+                messages.error(request, 'no_main_member')
+                return redirect('enrollment.views.verification')
 
     context = {
         'card_available': State.objects.all()[0].card,
@@ -393,10 +391,13 @@ def payment_method(request):
     return render(request, 'main/enrollment/payment.html', context)
 
 def payment(request):
-    request.session.modified = True
-    val = validate(request, require_location=True, require_existing=True)
-    if val is not None:
-        return val
+    enrollment = get_or_create_enrollment(request)
+
+    validation = validate(enrollment, require_location=True, require_existing=True)
+    if not validation['valid']:
+        if 'message' in validation:
+            messages.error(request, validation['message'])
+        return redirect(validation['redirect'])
 
     # If for some reason the user managed to POST 'card' as payment_method
     if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
@@ -406,152 +407,50 @@ def payment(request):
     if 'innmelding.aktivitet' in request.session and request.POST.get('payment_method', '') != 'card':
         return redirect('enrollment.views.payment_method')
 
-    if request.session['enrollment']['state'] == 'registration':
+    if enrollment.state == 'registration':
         # All right, enter payment state
-        request.session['enrollment']['state'] = 'payment'
-    elif request.session['enrollment']['state'] == 'payment':
+        enrollment.state = 'payment'
+        enrollment.save()
+    elif enrollment.state == 'payment':
         # Already in payment state, redirect them forwards to processing
-        if request.session['enrollment']['payment_method'] == 'invoice':
+        if enrollment.payment_method == 'invoice':
             return redirect('enrollment.views.process_invoice')
-        elif request.session['enrollment']['payment_method'] == 'card':
-            # Let's check for a transaction id first
-            if 'transaction_id' in request.session['enrollment']:
+        elif enrollment.payment_method == 'card':
+            # Let's check for an existing transaction first
+            if enrollment.get_active_transaction() is not None:
                 # Yeah, it's there. Skip payment and redirect forwards to processing
                 return redirect("%s?merchantId=%s&transactionId=%s" % (
-                    settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
+                    settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, enrollment.get_active_transaction().transaction_id
                 ))
             else:
-                # No transaction id - maybe a problem occured during payment.
+                # No active transactions - maybe a problem occured during payment.
                 # Assume payment failed and just redo it - if something failed, we'll know
                 # through logs and hopefully discover any double-payments
                 pass
-    elif request.session['enrollment']['state'] == 'complete':
+    elif enrollment.state == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
     if request.POST.get('payment_method', '') != 'card' and request.POST.get('payment_method', '') != 'invoice':
         messages.error(request, 'invalid_payment_method')
         return redirect('enrollment.views.payment_method')
-    request.session['enrollment']['payment_method'] = request.POST['payment_method']
+    enrollment.payment_method = request.POST['payment_method']
+    enrollment.save()
 
-    # Figure out who's a household-member, who's not, and who's the main member
-    main = None
-    linked_to = None
-    if request.session['enrollment']['existing'] != '':
-        # If a pre-existing main member is specified, everyone is household
-        for user in request.session['enrollment']['users']:
-            user['household'] = True
-            user['yearbook'] = False
-        linked_to = request.session['enrollment']['existing']
-    elif request.session['enrollment']['main_member'] != '':
-        # If the user specified someone, everyone except that member is household
-        for user in request.session['enrollment']['users']:
-            if user['index'] == int(request.session['enrollment']['main_member']):
-                # Ensure that the user didn't circumvent the javascript limitations for selecting main member
-                if user['age'] < AGE_YOUTH:
-                    messages.error(request, 'invalid_main_member')
-                    return redirect('enrollment.views.verification')
-                user['household'] = False
-                user['yearbook'] = True
-                main = user
-            else:
-                user['household'] = True
-                user['yearbook'] = False
-        if main is None:
-            # The specified main-member index doesn't exist
-            messages.error(request, 'nonexistent_main_member')
-            return redirect('enrollment.views.verification')
-    else:
-        # In this case, one or more members below youth age are registered,
-        # so no main/household status applies.
-        for user in request.session['enrollment']['users']:
-            user['household'] = False
-            user['yearbook'] = False
-            # Verify that all members are below youth age
-            if user['age'] >= AGE_YOUTH:
-                messages.error(request, 'no_main_member')
-                return redirect('enrollment.views.verification')
-
-    # Ok. We need the memberID of the main user, so add that user and generate its ID
-    if main is not None:
-        # Note, main will always be None when an existing main member is specified
-        main['id'] = add_focus_user(
-            main['name'],
-            main['dob'],
-            main['age'],
-            main['gender'],
-            request.session['enrollment']['location'],
-            main['phone'],
-            main['email'],
-            main['yearbook'],
-            request.session['enrollment']['yearbook'],
-            None,
-            request.session['enrollment']['payment_method'],
-            request.session['enrollment']['price']
-        )
-        linked_to = main['id']
-
-    # Right, let's add the rest of them
-    for user in request.session['enrollment']['users']:
-        if user == main:
-            continue
-        user['id'] = add_focus_user(
-            user['name'],
-            user['dob'],
-            user['age'],
-            user['gender'],
-            request.session['enrollment']['location'],
-            user['phone'],
-            user['email'],
-            user['yearbook'],
-            request.session['enrollment']['yearbook'],
-            linked_to,
-            request.session['enrollment']['payment_method'],
-            request.session['enrollment']['price']
-        )
-
-    # Calculate the prices and membership type
-    request.session['enrollment']['price_sum'] = 0
-    for user in request.session['enrollment']['users']:
-        user['price'] = price_of(user['age'], user['household'], request.session['enrollment']['price'])
-        user['type'] = type_of(user['age'], user['household'])
-        request.session['enrollment']['price_sum'] += user['price']
-        if 'key' in user:
-            request.session['enrollment']['price_sum'] += KEY_PRICE
-
-    # Pay for yearbook if foreign
-    if request.session['enrollment']['yearbook']:
-        request.session['enrollment']['price_sum'] += FOREIGN_SHIPMENT_PRICE
+    # Ok, we're good to go. Save all users to Focus
+    enrollment.save_users_to_focus()
 
     # If we're paying by invoice, skip ahead to invoice processing
-    if request.session['enrollment']['payment_method'] == 'invoice':
+    if enrollment.payment_method == 'invoice':
         return redirect('enrollment.views.process_invoice')
 
     # Paying with card, move on.
-    # Infer order details based on (poor) conventions.
-    if main is not None:
-        order_number = 'I_%s' % main['id']
-        first_name, last_name = main['name'].rsplit(' ', 1)
-        email = main['email']
-    else:
-        found = False
-        for user in request.session['enrollment']['users']:
-            if user['age'] >= AGE_YOUTH:
-                order_number = 'I_%s' % user['id']
-                first_name, last_name = user['name'].rsplit(' ', 1)
-                email = user['email']
-                found = True
-                break
-        if not found:
-            order_number = 'I'
-            for user in request.session['enrollment']['users']:
-                order_number += '_%s' % user['id']
-            # Just use the name of the first user.
-            first_name, last_name = request.session['enrollment']['users'][0]['name'].rsplit(' ', 1)
-            email = request.session['enrollment']['users'][0]['email']
+    order_number = Transaction.generate_order_number()
+    main_or_random_member = enrollment.get_main_or_random_member()
+    first_name, last_name = main_or_random_member.name.rsplit(' ', 1)
 
     context = RequestContext(request)
-    desc = render_to_string('main/enrollment/payment-terminal.html', context)
+    description = render_to_string('main/enrollment/payment-terminal.html', context)
 
     # Send the transaction registration to Nets
     try:
@@ -561,10 +460,10 @@ def payment(request):
             'orderNumber': order_number,
             'customerFirstName': first_name,
             'customerLastName': last_name,
-            'customerEmail': email,
+            'customerEmail': main_or_random_member.email,
             'currencyCode': 'NOK',
-            'amount': request.session['enrollment']['price_sum'] * 100,
-            'orderDescription': desc,
+            'amount': enrollment.get_total_price() * 100,
+            'orderDescription': description,
             'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
         })
     except requests.ConnectionError as e:
@@ -579,56 +478,58 @@ def payment(request):
     # Consider handling errors here (unexpected XML response or connection error)
     # We recieved a random "Unable to create setup string" message once, ignoring it for now
     response = r.text.encode('utf-8')
-    request.session['enrollment']['transaction_id'] = etree.fromstring(response).find("TransactionId").text
+    transaction = Transaction(
+        enrollment=enrollment,
+        transaction_id=etree.fromstring(response).find("TransactionId").text,
+        order_number=order_number,
+        state='register'
+    )
+    transaction.save()
 
     return redirect("%s?merchantId=%s&transactionId=%s" % (
-        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
+        settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, transaction.transaction_id
     ))
 
 def process_invoice(request):
-    request.session.modified = True
     if not 'enrollment' in request.session:
         return redirect('enrollment.views.registration')
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'registration':
+    if enrollment.state == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         return redirect('enrollment.views.payment_method')
-    elif request.session['enrollment']['state'] == 'payment':
+    elif enrollment.state == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
-        request.session['enrollment']['state'] = 'complete'
-    elif request.session['enrollment']['state'] == 'complete':
+        enrollment.state = 'complete'
+        enrollment.save()
+    elif enrollment.state == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
-    for user in request.session['enrollment']['users']:
-        pending_user = User.create_pending(user['id'])
-        user['pending_registration_key'] = pending_user.pending_registration_key
+    for user in enrollment.users.all():
+        user.pending_user = User.create_pending(user.memberid)
+        user.save()
 
-    prepare_and_send_email(
-        request,
-        request.session['enrollment']['users'],
-        request.session['enrollment']['association'],
-        request.session['enrollment']['location'],
-        'invoice',
-        request.session['enrollment']['price_sum'])
-
-    request.session['enrollment']['result'] = 'success_invoice'
+    prepare_and_send_email(request, enrollment)
+    enrollment.result = 'success_invoice'
+    enrollment.save()
     return redirect('enrollment.views.result')
 
 def process_card(request):
-    request.session.modified = True
     if not 'enrollment' in request.session:
         return redirect('enrollment.views.registration')
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'registration':
+    if enrollment.state == 'registration':
         # Whoops, how did we get here without going through payment first? Redirect back.
         # Note, *this* makes it impossible to use a previously verified transaction id
         # on a *second* registration by skipping the payment view and going straight to this check.
         return redirect('enrollment.views.payment_method')
-    elif request.session['enrollment']['state'] == 'payment':
+    elif enrollment.state == 'payment':
         # Cool, this is where we want to be. Update the state to 'complete'
-        request.session['enrollment']['state'] = 'complete'
-    elif request.session['enrollment']['state'] == 'complete':
+        enrollment.state = 'complete'
+        enrollment.save()
+    elif enrollment.state == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
@@ -638,7 +539,7 @@ def process_card(request):
                 'merchantId': settings.NETS_MERCHANT_ID,
                 'token': settings.NETS_TOKEN,
                 'operation': 'SALE',
-                'transactionId': request.session['enrollment']['transaction_id']
+                'transactionId': enrollment.get_active_transaction().transaction_id
             })
             response = r.text.encode('utf-8')
 
@@ -655,10 +556,12 @@ def process_card(request):
                     extra={
                         'request': request,
                         'nets_response': response,
-                        'transaction_id': request.session['enrollment']['transaction_id']
+                        'enrollment': enrollment,
+                        'transaction_id': enrollment.get_active_transaction().transaction_id
                     }
                 )
-                request.session['enrollment']['state'] = 'payment'
+                enrollment.state = 'payment'
+                enrollment.save()
                 context = current_template_layout(request)
                 return render(request, 'main/enrollment/payment-process-error.html', context)
             elif response_code.text == '99' and response_text is not None and response_text.text == 'Transaction already processed':
@@ -668,7 +571,7 @@ def process_card(request):
                 r = requests.get(settings.NETS_QUERY_URL, params={
                     'merchantId': settings.NETS_MERCHANT_ID,
                     'token': settings.NETS_TOKEN,
-                    'transactionId': request.session['enrollment']['transaction_id']
+                    'transactionId': enrollment.get_active_transaction().transaction_id
                 })
                 response = r.text.encode('utf-8')
                 dom = etree.fromstring(response)
@@ -676,21 +579,22 @@ def process_card(request):
                 captured_amount = int(dom.find(".//Summary/AmountCaptured").text)
                 credited_amount = int(dom.find(".//Summary/AmountCredited").text)
 
-                if order_amount == (captured_amount - credited_amount) == request.session['enrollment']['price_sum'] * 100:
+                if order_amount == (captured_amount - credited_amount) == enrollment.get_total_price() * 100:
                     payment_verified = True
 
                 logger.warning(u"Transaction already processed - sjekker Query istedet",
                     exc_info=sys.exc_info(),
                     extra={
                         'request': request,
+                        'enrollment': enrollment,
                         'nets_sale_response': sale_response,
                         'nets_query_response': response,
-                        'transaction_id': request.session['enrollment']['transaction_id'],
+                        'transaction_id': enrollment.get_active_transaction().transaction_id,
                         'payment_verified': payment_verified,
                         'order_amount': order_amount,
                         'captured_amount': captured_amount,
                         'credited_amount': credited_amount,
-                        'price_sum_100': request.session['enrollment']['price_sum'] * 100
+                        'total_price_100': enrollment.get_total_price() * 100
                     }
                 )
 
@@ -698,75 +602,89 @@ def process_card(request):
                 payment_verified = True
 
             if payment_verified:
+                # Mark the transaction as successful
+                transaction = enrollment.get_active_transaction()
+                transaction.state = 'success'
+                transaction.save()
+
                 # Register the payment in focus
-                for user in request.session['enrollment']['users']:
-                    focus_user = Enrollment.objects.get(memberid=user['id'])
+                for user in enrollment.users.all():
+                    focus_user = FocusEnrollment.objects.get(memberid=user.memberid)
                     focus_user.paid = True
                     focus_user.save()
-                    pending_user = User.create_pending(user['id'])
-                    user['pending_registration_key'] = pending_user.pending_registration_key
-                prepare_and_send_email(
-                    request,
-                    request.session['enrollment']['users'],
-                    request.session['enrollment']['association'],
-                    request.session['enrollment']['location'],
-                    'card',
-                    request.session['enrollment']['price_sum'])
-                request.session['enrollment']['result'] = 'success_card'
+                    user.pending_user = User.create_pending(user.memberid)
+                    user.save()
+                prepare_and_send_email(request, enrollment)
+                enrollment.result = 'success_card'
+                enrollment.save()
             else:
-                request.session['enrollment']['result'] = 'fail'
+                transaction = enrollment.get_active_transaction()
+                transaction.state = 'fail'
+                transaction.save()
+
+                enrollment.result = 'fail'
+                enrollment.state = 'registration'
+                enrollment.save()
         except requests.ConnectionError as e:
             logger.error(u"(Håndtert, men bør sjekkes) %s" % e.message,
                 exc_info=sys.exc_info(),
                 extra={'request': request}
             )
-            request.session['enrollment']['state'] = 'payment'
+            enrollment.state = 'payment'
+            enrollment.save()
             context = current_template_layout(request)
             return render(request, 'main/enrollment/payment-process-error.html', context)
 
     else:
-        request.session['enrollment']['state'] = 'registration'
-        request.session['enrollment']['result'] = 'cancel'
+        transaction = enrollment.get_active_transaction()
+        transaction.state = 'cancel'
+        transaction.save()
+
+        enrollment.state = 'registration'
+        enrollment.result = 'cancel'
+        enrollment.save()
     return redirect('enrollment.views.result')
 
 def result(request):
-    request.session.modified = True
     if not 'enrollment' in request.session:
         return redirect('enrollment.views.registration')
+    enrollment = get_or_create_enrollment(request)
 
-    if request.session['enrollment']['state'] == 'registration' and request.session['enrollment'].get('result') != 'cancel':
+    if enrollment.state == 'registration' and enrollment.result not in ['cancel', 'fail']:
         # Whoops, how did we get here without going through payment first? Redirect back.
         return redirect('enrollment.views.payment_method')
-    elif request.session['enrollment']['state'] == 'payment':
+    elif enrollment.state == 'payment':
         # Not done with payments, why is the user here? Redirect back to payment processing
-        if request.session['enrollment']['payment_method'] == 'invoice':
+        if enrollment.payment_method == 'invoice':
             return redirect('enrollment.views.process_invoice')
-        elif request.session['enrollment']['payment_method'] == 'card':
+        elif enrollment.payment_method == 'card':
             return redirect("%s?merchantId=%s&transactionId=%s" % (
-                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, request.session['enrollment']['transaction_id']
+                settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, enrollment.get_active_transaction().transaction_id
             ))
 
     # Collect emails to a separate list for easier template formatting
-    emails = [user['email'] for user in request.session['enrollment']['users'] if user['email'] != '']
+    emails = [user.email for user in enrollment.users.all() if user.email != '']
 
-    skip_header = request.session['enrollment']['result'] == 'success_invoice' or request.session['enrollment']['result'] == 'success_card'
+    skip_header = enrollment.result == 'success_invoice' or enrollment.result == 'success_card'
     proof_validity_end = datetime.now() + timedelta(days=TEMPORARY_PROOF_VALIDITY)
     context = {
-        'users': request.session['enrollment']['users'],
+        'enrollment': enrollment,
         'skip_header': skip_header,
-        'association': request.session['enrollment']['association'],
         'proof_validity_end': proof_validity_end,
         'emails': emails,
-        'location': request.session['enrollment']['location'],
-        'price_sum': request.session['enrollment']['price_sum'],
         'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/result/%s.html' % request.session['enrollment']['result'], context)
+    return render(request, 'main/enrollment/result/%s.html' % enrollment.result, context)
 
 def sms(request):
     if not request.is_ajax():
         return redirect('enrollment.views.result')
+
+    if not 'enrollment' in request.session:
+        raise PermissionDenied
+
+    enrollment = get_or_create_enrollment(request)
 
     if request.method == 'GET':
         # This shouldn't happen, but already did happen twice (according to error logs).
@@ -777,44 +695,49 @@ def sms(request):
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
-        index = int(request.GET['index'])
+        user = int(request.GET['user'])
     else:
-        index = int(request.POST['index'])
+        user = int(request.POST['user'])
+
+    user = enrollment.users.get(id=user)
 
     # Verify that this is a valid SMS request
-    if request.session['enrollment']['state'] != 'complete':
+    if enrollment.state != 'complete':
         return HttpResponse(json.dumps({'error': 'enrollment_uncompleted'}))
-    if request.session['enrollment']['location']['country'] != 'NO':
+    if enrollment.country != 'NO':
         return HttpResponse(json.dumps({'error': 'foreign_number'}))
-    if 'sms_sent' in request.session['enrollment']['users'][index]:
+    if user.sms_sent:
         return HttpResponse(json.dumps({'error': 'already_sent'}))
-    number = request.session['enrollment']['users'][index]['phone']
 
     # Render the SMS template
     context = RequestContext(request, {
-        'users': request.session['enrollment']['users']
+        'users': enrollment.get_users_by_name()
     })
     sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
 
     # Send the message
     try:
-        r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
+        r = requests.get(settings.SMS_URL % (quote_plus(user.phone), quote_plus(sms_message)))
         if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: Ukjent status",
                 exc_info=sys.exc_info(),
                 extra={
                     'request': request,
+                    'enrollment': enrollment,
                     'response_text': r.text,
                     'sms_request_object': r
                 }
             )
             return HttpResponse(json.dumps({'error': 'service_fail'}))
-        request.session['enrollment']['users'][index]['sms_sent'] = True
-        request.session.modified = True
+        user.sms_sent = True
+        user.save()
         return HttpResponse(json.dumps({'error': 'none'}))
     except requests.ConnectionError:
         logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: requests.ConnectionError",
             exc_info=sys.exc_info(),
-            extra={'request': request}
+            extra={
+                'request': request,
+                'enrollment': enrollment,
+            }
         )
         return HttpResponse(json.dumps({'error': 'connection_error'}))

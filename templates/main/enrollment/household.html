@@ -9,7 +9,7 @@
 {% block js_globals %}
   <script>
     window.Turistforeningen = {
-      existing: {% if existing %}true{% else %}false{% endif %}
+      existing: {% if enrollment.existing_memberid %}true{% else %}false{% endif %}
     };
     {% if errors %}
       Turistforeningen.trigger_form_validations = true;
@@ -31,7 +31,7 @@
           <a class="close">x</a><strong>{% trans "Dette postnummeret er ikke tilknyttet noen forening" %}</strong><br>
           {% trans "Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå." %}<br>
           {% blocktrans %}
-            Vi har logget feilen, og vil knytte postnummer <strong>{{ location.zipcode }}</strong> til rett forening så snart som mulig.
+            Vi har logget feilen, og vil knytte postnummer <strong>{{ enrollment.zipcode }}</strong> til rett forening så snart som mulig.
           {% endblocktrans %}<br>
           {% trans "I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig." %}
         </div>
@@ -57,7 +57,7 @@
 
       <div class="form-border">
         <h2 style="margin-bottom: 15px;">
-          {% blocktrans count users=users|length %}
+          {% blocktrans count users=enrollment.users.count %}
             Hvor bor du?
           {% plural %}
             Hvor bor dere?
@@ -67,63 +67,63 @@
           <label>{% trans "Land" %} <span class="asterisk red">*</span></label>
           <select name="country">
             <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
-              <option value="{{ countries.norway.code }}"{% if location.country == countries.norway.code or not location %} selected{% endif %}>{{ countries.norway.name }}</option>
+              <option value="{{ countries.norway.code }}"{% if enrollment.country == countries.norway.code or not enrollment.country %} selected{% endif %}>{{ countries.norway.name }}</option>
               {% for c in countries.scandinavia %}
-                <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+                <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
               {% endfor %}
             </optgroup>
             <optgroup id="world" label="{% trans "Resten av verden" %}">
             {% for c in countries.other %}
-              <option value="{{ c.code }}"{% if location.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+              <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
             {% endfor %}
             </optgroup>
           </select>
         </div>
         <div class="control-group address1">
           <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="address1" value="{{ location.address1 }}">
+          <input type="text" class="input-large" name="address1" value="{{ enrollment.address1 }}">
         </div>
         <div class="scandinavia">
           <div class="control-group zipcode">
             <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
-            <input type="text" class="input-small" name="zipcode" value="{{ location.zipcode }}" maxlength="10">
-            <input type="text" class="input-medium" name="area" value="{{ location.area }}" disabled>
+            <input type="text" class="input-small" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
+            <input type="text" class="input-medium" name="area" value="{{ enrollment.area }}" disabled>
             <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
           </div>
         </div>
         <div class="world">
           <div class="control-group address2">
             <label>{% trans "Adresse 2" %}</label>
-            <input type="text" class="input-large" name="address2" value="{{ location.address2 }}">
+            <input type="text" class="input-large" name="address2" value="{{ enrollment.address2 }}">
           </div>
           <div class="control-group address3">
             <label>{% trans "Adresse 3" %}</label>
-            <input type="text" class="input-large" name="address3" value="{{ location.address3 }}">
+            <input type="text" class="input-large" name="address3" value="{{ enrollment.address3 }}">
           </div>
         </div>
-        {% if main %}
-        <div class="control-group yearbook">
-          <label class="checkbox">
-            <input type="checkbox" name="yearbook"{% if yearbook %} checked{% endif %}>
-            {% blocktrans %}
-              Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
-            {% endblocktrans %}
-          </label>
-        </div>
+        {% if enrollment.has_potential_main_member %}
+          <div class="control-group yearbook">
+            <label class="checkbox">
+              <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
+              {% blocktrans %}
+                Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+              {% endblocktrans %}
+            </label>
+          </div>
         {% endif %}
       </div>
 
       <div class="well">
         <h2>{% trans "Husstandsmedlemskap" %}</h2>
         <p>
-          {% blocktrans count users=users|length %}
+          {% blocktrans count users=enrollment.users.count %}
             Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, kan du få billigere medlemskap som husstandsmedlem.
           {% plural %}
             Bor dere sammen med et <strong>eksisterende</strong> hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.
           {% endblocktrans %}
         </p>
         <p>
-          <input type="text" name="existing" value="{{ existing }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
+          <input type="text" name="existing" value="{{ enrollment.existing_memberid }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
           <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
           <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
         </p>

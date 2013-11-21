@@ -69,8 +69,8 @@ $(document).ready(function() {
 
     form.find("a.verify").click(function() {
         var main = price_table.find("tr.main");
-        if(main.attr('data-index') !== undefined) {
-            form.find("input[name='main-member']").val(main.attr('data-index'));
+        if(main.attr('data-id') !== undefined) {
+            form.find("input[name='main-member']").val(main.attr('data-id'));
         }
         form.submit();
     });
@@ -86,7 +86,7 @@ $(document).ready(function() {
     function orderListByAge() {
         var rows = [];
         var main = price_table.find("tr.main");
-        var jrows = price_table.find("tr[data-index]");
+        var jrows = price_table.find("tr[data-id]");
         main.detach();
         jrows.each(function() {
             rows.push($(this));
@@ -108,7 +108,7 @@ $(document).ready(function() {
         price_table.find("span.yearbook-price").each(function() {
             totalPrice += Number($(this).text());
         });
-        price_table.find("tr[data-index]").each(function() {
+        price_table.find("tr[data-id]").each(function() {
             var age = $(this).attr('data-age');
             var price = priceOf(age);
             var type = typeOf(age);
