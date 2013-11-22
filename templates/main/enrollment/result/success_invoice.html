@@ -21,11 +21,21 @@
     <div id="result" class="span8">
 
       <p>
-        {% blocktrans with association=enrollment.get_association.name url=enrollment.get_association.url count users=enrollment.users.count %}
+        {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url count users=enrollment.users.count %}
           Du blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% plural %}
           Dere blir medlemmer i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% endblocktrans %}
+        <br>
+
+        {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+          {% blocktrans with association=enrollment.get_actual_association_if_any.name url=enrollment.get_actual_association_if_any.url %}
+            Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+          {% endblocktrans %}
+          <br>
+
+        {% endif %}
       </p>
 
       <p>
@@ -68,7 +78,7 @@
         {% if enrollment.country == 'NO' %}
           <h3>{% trans "Hva skjer der du bor" %}</h3>
           <p>
-            {% blocktrans with url=enrollment.get_association.url association=enrollment.get_association.name %}
+            {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url %}
               <a href="{{ url }}">{{ association }}</a> arrangerer fellesturer og aktiviteter hele året.
             {% endblocktrans %}
           </p>

@@ -4,7 +4,8 @@ from django.core.cache import cache
 
 from core import validator
 from core.models import FocusCountry
-from sherpa2.models import Association
+from sherpa2.models import Association, dnt_oslo_id, dnt_ung_oslo_id
+
 from focus.models import Price, Enrollment as FocusEnrollment
 
 from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
@@ -79,11 +80,49 @@ class Enrollment(models.Model):
         return FocusCountry.objects.get(code=self.country)
 
     def get_association(self):
+        """
+        Get the association defined in Focus for this zipcode. This *should* be the actual
+        Association, but other rules may dictate that it isn't, see the below methods.
+        """
         association = cache.get('association_sherpa2.%s' % self.association)
         if association is None:
             association = Association.objects.get(id=self.association)
             cache.set('association_sherpa2.%s' % self.association, association, 60 * 60 * 24 * 7)
         return association
+
+    def is_applicable_for_dnt_ung_oslo(self):
+        """
+        Youth members of DNT Oslo og Omegn should be displayed as members of DNT ung Oslo. See
+        user.models.User.main_association() for more information of why we have to create that
+        logic here. Use this method to find out how applicable this is for these users
+        (applicable for none of them, some, or all).
+        """
+        if self.get_association().id != dnt_oslo_id:
+            # Not DNT Oslo og Omegn, applicable for none
+            return 'none'
+        else:
+            if all([u.applicable_for_dnt_ung_oslo() for u in self.users.all()]):
+                return 'all'
+            elif any([u.applicable_for_dnt_ung_oslo() for u in self.users.all()]):
+                return 'some'
+            else:
+                return 'none'
+
+    def get_actual_association_if_any(self):
+        return self.get_actual_association(any)
+
+    def get_actual_association_if_all(self):
+        return self.get_actual_association(all)
+
+    def get_actual_association(self, desired_count):
+        if self.get_association().id == dnt_oslo_id and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
+            association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id)
+            if association is None:
+                association = Association.objects.get(id=dnt_ung_oslo_id)
+                cache.set('association_sherpa2.%s' % dnt_ung_oslo_id, association, 60 * 60 * 24 * 7)
+            return association
+        else:
+            return self.get_association()
 
     def get_prices(self):
         price = cache.get('association.price.%s' % self.get_association().focus_id)
@@ -185,6 +224,22 @@ class User(models.Model):
 
         # All tests passed!
         return True
+
+    def get_actual_association(self):
+        """
+        Return the applicable association for this user. Which means the default association in most
+        cases, but DNT ung Oslo if the default is DNT Oslo og Omegn and this is a youth member.
+        """
+        association = self.enrollment.get_association()
+        if association.id == dnt_oslo_id and self.applicable_for_dnt_ung_oslo():
+            association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id)
+            if association is None:
+                association = Association.objects.get(id=dnt_ung_oslo_id)
+                cache.set('association_sherpa2.%s' % dnt_ung_oslo_id, association, 60 * 60 * 24 * 7)
+        return association
+
+    def applicable_for_dnt_ung_oslo(self):
+        return self.get_age() < AGE_MAIN and self.get_age() >= AGE_YOUTH
 
     def membership_type(self):
         if self.is_household_member() and self.get_age() >= AGE_YOUTH:

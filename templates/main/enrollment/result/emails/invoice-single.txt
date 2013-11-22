@@ -1,6 +1,6 @@
 Hei {{ user.name }}!
 
-Velkommen som medlem i DNT og {{ enrollment.get_association.name }}.
+Velkommen som medlem i DNT og {{ user.get_actual_association.name }}.
 
 Du vil i løpet av kort tid motta medlemskort og faktura på kr. {{ enrollment.get_total_price }}
 i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
@@ -22,8 +22,8 @@ Planlegg turen på UT.no:
 På http://ut.no/ finner du hytter og turer over hele landet.
 
 {% if enrollment.country == 'NO' %}Bli med på tur:
-{{ enrollment.get_association.name }} arrangerer en rekke fellesturer og aktiviteter
-hele året. Sjekk tilbudet på {{ enrollment.get_association.url }}
+{{ user.get_actual_association.name }} arrangerer en rekke fellesturer og aktiviteter
+hele året. Sjekk tilbudet på {{ user.get_actual_association.url }}
 
 {% endif %}God tur!
 
