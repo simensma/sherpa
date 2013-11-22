@@ -56,6 +56,20 @@ def get_or_create_enrollment(request):
     if not 'enrollment' in request.session:
         enrollment = create_enrollment(request)
     else:
+        # Temporary check for the old session structure, shouldn't be needed longer than
+        # the session expiry date (2 weeks from this commit) I think?
+        if type(request.session['enrollment']) == dict:
+            # Note that we could send the user a message here, but don't bother. We'll deploy this
+            # when very few are online, and there will be many more false positives than true positives,
+            # so we prefer not to confuse those and rather confuse the true positives just a little bit
+            # (they'll just have to fill the form out an extra time).
+            del request.session['enrollment']
+            enrollment = create_enrollment(request)
+            logger.warning(u"Bruker med gammel enrollment-struktur må starte innmelding på nytt",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+
         try:
             enrollment = Enrollment.objects.get(id=request.session['enrollment'])
         except Enrollment.DoesNotExist:
