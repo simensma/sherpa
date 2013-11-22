@@ -30,8 +30,8 @@
         <div class="alert alert-error">
           <a class="close">x</a><strong>{% trans "Dette postnummeret er ikke tilknyttet noen forening" %}</strong><br>
           {% trans "Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå." %}<br>
-          {% blocktrans %}
-            Vi har logget feilen, og vil knytte postnummer <strong>{{ enrollment.zipcode }}</strong> til rett forening så snart som mulig.
+          {% blocktrans with zipcode=enrollment.zipcode %}
+            Vi har logget feilen, og vil knytte postnummer <strong>{{ zipcode }}</strong> til rett forening så snart som mulig.
           {% endblocktrans %}<br>
           {% trans "I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig." %}
         </div>
