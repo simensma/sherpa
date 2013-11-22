@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 
+from datetime import date
 import simples3
 
 from core.util import use_image_thumb
@@ -66,7 +67,7 @@ class Publication(models.Model):
         return self.releases.all().order_by('-pub_date')
 
     def released_releases_ordered(self):
-        return [r for r in self.releases_ordered() if r.is_released()]
+        return [r for r in self.releases.filter(pub_date__lte=date.today()).order_by('-pub_date') if r.is_available()]
 
     def get_latest_release(self):
         try:
@@ -113,7 +114,7 @@ class Release(models.Model):
         else:
             return ''
 
-    def is_released(self):
+    def is_available(self):
         return self.pdf_hash != '' or self.online_view != ''
 
 # Upon image delete, delete the corresponding object from S3

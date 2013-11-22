@@ -30,7 +30,7 @@
       {% endif %}
     </p>
 
-    {% if publication.releases_ordered|length == 0 %}
+    {% if publication.released_releases_ordered.count == 0 %}
       <p>
         Vi har dessverre ikke fått publisert noen utgivelser av {{ publication.title }} her på nettsidene ennå. Vær vennlig og kom tilbake senere, så skal vi se om vi kan få lagt ut noe etter hvert!
       </p>
@@ -45,11 +45,11 @@
           <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
             <div class="release">
               <h3 class="title">
-                {% if release.is_released %}
+                {% if release.is_available %}
                   <a href="{{ release.get_default_release }}" class="noexternal"{% if release.get_default_release_type == 'pdf' %} title="Last ned PDF"{% else %} title="Les online"{% endif %}>
                 {% endif %}
                   {{ release.title }}
-                {% if release.is_released %}
+                {% if release.is_available %}
                   </a>
                 {% endif %}
               </h3>
