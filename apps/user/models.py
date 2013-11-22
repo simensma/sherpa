@@ -326,22 +326,33 @@ class User(AbstractBaseUser):
             if association.id == dnt_oslo_id and self.membership_type()['codename'] == 'youth':
                 association = Association.objects.get(id=dnt_ung_oslo_id)
 
-            cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24 * 7)
+            cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24)
         return association
 
     def main_association_old(self):
         """
         This sad method returns the association object from the old sherpa2 model.
         For now it's mostly used to get the site url because most of the new objects
-        don't have an assigned site.
+        don't have an assigned site. Cache heavily since this hits the old DB.
         """
+
+        # Users' association cache
         association = cache.get('user.%s.association_sherpa2' % self.identifier)
         if association is None:
-            association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
+
+            # The actual association cache
+            association = cache.get('association_sherpa2.focus.%s' % self.get_actor().main_association_id)
+            if association is None:
+                association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
+                cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
 
             # Special case, just like in main_association()
             if association.id == dnt_oslo_id_sherpa2 and self.membership_type()['codename'] == 'youth':
-                association = Sherpa2Association.objects.get(id=dnt_ung_oslo_id_sherpa2)
+                # Get the DNT ung Oslo association, use the association cache
+                association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id_sherpa2)
+                if association is None:
+                    association = Sherpa2Association.objects.get(id=dnt_ung_oslo_id_sherpa2)
+                    cache.set('association_sherpa2.%s' % dnt_ung_oslo_id_sherpa2, association, 60 * 60 * 24 * 7)
 
             cache.set('user.%s.association_sherpa2' % self.identifier, association, 60 * 60 * 24 * 7)
         return association

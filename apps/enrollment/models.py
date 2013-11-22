@@ -82,7 +82,7 @@ class Enrollment(models.Model):
         association = cache.get('association_sherpa2.%s' % self.association)
         if association is None:
             association = Association.objects.get(id=self.association)
-            cache.set('association_sherpa2.%s' % self.association, association, 60 * 60 * 24)
+            cache.set('association_sherpa2.%s' % self.association, association, 60 * 60 * 24 * 7)
         return association
 
     def get_prices(self):

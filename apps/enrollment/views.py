@@ -274,26 +274,26 @@ def verification(request):
     if enrollment.existing_memberid != '':
         # Use main members' association if applicable
         focus_association_id = Actor.objects.get(memberid=enrollment.existing_memberid).main_association_id
-        association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
+        association = cache.get('association_sherpa2.focus.%s' % focus_association_id)
         if association is None:
             association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
     else:
         if enrollment.country == 'NO':
             focus_association_id = cache.get('focus.zipcode_association.%s' % enrollment.zipcode)
             if focus_association_id is None:
                 focus_association_id = FocusZipcode.objects.get(zipcode=enrollment.zipcode).main_association_id
                 cache.set('focus.zipcode_association.%s' % enrollment.zipcode, focus_association_id, 60 * 60 * 24 * 7)
-            association = cache.get('focus.association_sherpa2.%s' % focus_association_id)
+            association = cache.get('association_sherpa2.focus.%s' % focus_association_id)
             if association is None:
                 association = Association.objects.get(focus_id=focus_association_id)
-                cache.set('focus.association_sherpa2.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+                cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
             association = cache.get('association_sherpa2.%s' % dnt_oslo_id)
             if association is None:
                 association = Association.objects.get(id=dnt_oslo_id)
-                cache.set('association_sherpa2.%s' % dnt_oslo_id, association, 60 * 60 * 24)
+                cache.set('association_sherpa2.%s' % dnt_oslo_id, association, 60 * 60 * 24 * 7)
     enrollment.association = association.id
     enrollment.save()
 
