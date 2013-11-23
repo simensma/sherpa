@@ -344,7 +344,7 @@ class User(AbstractBaseUser):
             association = cache.get('association_sherpa2.focus.%s' % self.get_actor().main_association_id)
             if association is None:
                 association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
-                cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+                cache.set('association_sherpa2.focus.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
 
             # Special case, just like in main_association()
             if association.id == dnt_oslo_id_sherpa2 and self.membership_type()['codename'] == 'youth':
