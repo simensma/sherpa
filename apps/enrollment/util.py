@@ -63,12 +63,15 @@ def get_or_create_enrollment(request):
             # when very few are online, and there will be many more false positives than true positives,
             # so we prefer not to confuse those and rather confuse the true positives just a little bit
             # (they'll just have to fill the form out an extra time).
-            del request.session['enrollment']
-            enrollment = create_enrollment(request)
             logger.warning(u"Bruker med gammel enrollment-struktur må starte innmelding på nytt",
                 exc_info=sys.exc_info(),
-                extra={'request': request}
+                extra={
+                    'request': request,
+                    'old_enrollment': request.session['enrollment'],
+                }
             )
+            del request.session['enrollment']
+            enrollment = create_enrollment(request)
 
         try:
             enrollment = Enrollment.objects.get(id=request.session['enrollment'])
