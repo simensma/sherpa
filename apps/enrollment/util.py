@@ -64,7 +64,6 @@ def get_or_create_enrollment(request):
             # so we prefer not to confuse those and rather confuse the true positives just a little bit
             # (they'll just have to fill the form out an extra time).
             logger.warning(u"Bruker med gammel enrollment-struktur må starte innmelding på nytt",
-                exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'old_enrollment': request.session['enrollment'],
