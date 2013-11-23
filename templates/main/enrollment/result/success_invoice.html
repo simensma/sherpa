@@ -8,7 +8,7 @@
   <div class="row">
     <div class="span12">
       <h2>
-        {% blocktrans with name=users.0.name count users=users|length %}
+        {% blocktrans with name=enrollment.users.all.0.name count users=enrollment.users.count %}
           Velkommen som medlem, {{ name }}!
         {% plural %}
           Velkommen som medlemmer!
@@ -21,20 +21,30 @@
     <div id="result" class="span8">
 
       <p>
-        {% blocktrans with association=association.name url=association.url count users=users|length %}
+        {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url count users=enrollment.users.count %}
           Du blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% plural %}
           Dere blir medlemmer i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% endblocktrans %}
+        <br>
+
+        {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+          {% blocktrans with association=enrollment.get_actual_association_if_any.name url=enrollment.get_actual_association_if_any.url %}
+            Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+          {% endblocktrans %}
+          <br>
+
+        {% endif %}
       </p>
 
       <p>
-        {% if users|length == 1 %}Du{% else %}Dere{% endif %} vil i løpet av kort tid motta medlemskort og faktura på kr. {{ price_sum }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
+        {% if enrollment.users.count == 1 %}Du{% else %}Dere{% endif %} vil i løpet av kort tid motta medlemskort og faktura på kr. {{ enrollment.get_total_price }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
       </p>
 
       <p>
-        {% if users|length == 1 %}
-          {% blocktrans with email=users.0.email %}
+        {% if enrollment.users.count == 1 %}
+          {% blocktrans with email=enrollment.users.all.0.email %}
             Kvittering på denne registreringen er sendt på e-post til <strong>{{ email }}</strong>.
           {% endblocktrans %}
         {% else %}
@@ -48,11 +58,11 @@
       {# "Where to go next" - hide if enrolling for an aktivitet #}
       <div class="next-step">
 
-        {% if users|length == 1 %}
+        {% if enrollment.users.count == 1 %}
           <h3>{% trans "Registrer deg på Min side" %}</h3>
           <p>
             {% url 'user.login.views.login' as login_url %}
-            {% blocktrans with key=users.0.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
+            {% blocktrans with key=enrollment.users.all.0.pending_user.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
               Registrer deg på <a href="{{ login_url }}?registreringsnokkel={{ key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
             {% endblocktrans %}
           </p>
@@ -65,10 +75,10 @@
           {% endblocktrans %}
         </p>
 
-        {% if location.country == 'NO' %}
+        {% if enrollment.country == 'NO' %}
           <h3>{% trans "Hva skjer der du bor" %}</h3>
           <p>
-            {% blocktrans with url=association.url association=association.name %}
+            {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url %}
               <a href="{{ url }}">{{ association }}</a> arrangerer fellesturer og aktiviteter hele året.
             {% endblocktrans %}
           </p>

@@ -1,8 +1,8 @@
 Hei {{ user.name }}!
 
-Velkommen som medlem i DNT og {{ association.name }}.
+Velkommen som medlem i DNT og {{ user.get_actual_association.name }}.
 
-Du vil i løpet av kort tid motta medlemskort og faktura på kr. {{ price_sum }}
+Du vil i løpet av kort tid motta medlemskort og faktura på kr. {{ enrollment.get_total_price }}
 i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
 
 Mer informasjon om medlemskapet og medlemsfordelene dine finner du på:
@@ -16,14 +16,14 @@ Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få
 tilgang til Fjelltreffen. Merk at din innmelding må være behandlet i vårt
 medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres
 påfølgende virkedag. Registrer deg her:
-https://www.turistforeningen.no/minside/logg-inn/?registreringsnokkel={{ user.pending_registration_key }}#registrering
+https://www.turistforeningen.no/minside/logg-inn/?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering
 
 Planlegg turen på UT.no:
 På http://ut.no/ finner du hytter og turer over hele landet.
 
-{% if location.country == 'NO' %}Bli med på tur:
-{{ association.name }} arrangerer en rekke fellesturer og aktiviteter
-hele året. Sjekk tilbudet på {{ association.url }}
+{% if enrollment.country == 'NO' %}Bli med på tur:
+{{ user.get_actual_association.name }} arrangerer en rekke fellesturer og aktiviteter
+hele året. Sjekk tilbudet på {{ user.get_actual_association.url }}
 
 {% endif %}God tur!
 

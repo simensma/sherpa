@@ -67,10 +67,10 @@
         <p>
           <a class="btn btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
           <button type="submit" class="btn btn-danger btn-large payment card{% if not card_available %} hide{% endif %}">
-            {% trans "Til betaling" %} <i class="icon-arrow-right"></i>
+            {% trans "Til betaling" %} <i class="icon-arrow-right icon-white"></i>
           </button>
           <button type="submit" class="btn btn-danger btn-large payment invoice{% if card_available %} hide{% endif %}">
-            {% trans "Send bestilling" %} <i class="icon-ok"></i>
+            {% trans "Send bestilling" %} <i class="icon-ok icon-white"></i>
           </button>
           <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
         </p>

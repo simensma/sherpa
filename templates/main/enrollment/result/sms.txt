@@ -1,7 +1,7 @@
 {% load i18n %}{% load samtut %}{% trans "Velkommen som medlem!" %}
 
 {% trans "Medlemskontingent" %} {{ membership_year_start.actual_date|samtut }} {% trans "er betalt for" %}:
-{% for user in users %}{{ user.name }}, {% trans "medlemsnr." %} {{ user.id }}
+{% for user in users %}{{ user.name }}, {% trans "medlemsnr." %} {{ user.memberid }}
 {% endfor %}
 {% trans "Denne SMS gjelder som bevis." %}
 

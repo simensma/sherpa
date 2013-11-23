@@ -12,12 +12,12 @@
     window.Turistforeningen = {
       price_key: {{ keyprice }},
       price_shipment_yearbook: {{ foreign_shipment_price }},
-      price_main: {{ price.main }},
-      price_household: {{ price.household }},
-      price_senior: {{ price.senior }},
-      price_youth: {{ price.youth }},
-      price_school: {{ price.school }},
-      price_child: {{ price.child }},
+      price_main: {{ enrollment.get_prices.main }},
+      price_household: {{ enrollment.get_prices.household }},
+      price_senior: {{ enrollment.get_prices.senior }},
+      price_youth: {{ enrollment.get_prices.youth }},
+      price_school: {{ enrollment.get_prices.school }},
+      price_child: {{ enrollment.get_prices.child }},
 
       age_senior: {{ age_senior }},
       age_main: {{ age_main }},
@@ -60,16 +60,10 @@
               <strong><i class="icon-warning-sign"></i> {% trans "Mangler hovedmedlem" %}</strong><br>
               {% trans "En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn ungdomsmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
             </div>
-          {% elif message.message == 'nonexistent_main_member' %}
-            <div class="alert alert-error">
-              <a class="close">x</a>
-              <strong><i class="icon-warning-sign"></i> {% trans "Ikke-eksisterende hovedmedlem" %}</strong><br>
-              {% trans "En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
-            </div>
           {% endif %}
         {% endfor %}
 
-        {% if attempted_yearbook %}
+        {% if enrollment.attempted_yearbook %}
           <div class="alert alert-warning">
             <a class="close">x</a>
             <strong><i class="icon-info-sign"></i> {% trans "Årbok og Fjell og Vidde må bestilles separat" %}</strong><br>
@@ -97,7 +91,7 @@
           <table class="table prices">
             <thead>
               <tr>
-                {% if multiple_main and not existing %}
+                {% if multiple_main and not enrollment.existing_memberid %}
                   <th>
                     <div data-popover data-trigger="hover" data-title="{% trans "Hovedmedlem" %}" data-content="{% blocktrans %}Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som husstandsmedlemmet knyttes opp til, og må være over {{ age_youth }} år.{% endblocktrans %}">{% trans "Hoved-<br>medlem" %}</div>
                   </th>
@@ -108,21 +102,21 @@
               </tr>
             </thead>
             <tbody>
-              {% if existing %}
+              {% if enrollment.existing_memberid %}
               <tr class="main">
                 <td>{{ existing_name }}</td>
                 <td>{% trans "Hovedmedlem" %}</td>
                 <td>-</td>
               </tr>
               {% endif %}
-              {% for user in users %}
-                <tr data-index="{{ user.index }}" data-name="{{ user.name }}" data-age="{{ user.age }}">
-                  {% if multiple_main and not existing and user.age >= age_youth %}
+              {% for user in enrollment.get_users_by_name %}
+                <tr data-id="{{ user.id }}" data-name="{{ user.name }}" data-age="{{ user.get_age }}">
+                  {% if multiple_main and not enrollment.existing_memberid and user.get_age >= age_youth %}
                     <td class="choose-main">
-                      <input type="radio" name="main" value="{{ user.index }}">
+                      <input type="radio" name="main" value="{{ user.id }}">
                     </td>
                   {% endif %}
-                  {% if multiple_main and not existing and user.age < age_youth %}
+                  {% if multiple_main and not enrollment.existing_memberid and user.get_age < age_youth %}
                     <td></td>
                   {% endif %}
                   <td>
@@ -133,16 +127,16 @@
                       {% trans "Kvinne" %}
                     {% endif %}<br>
                     {{ user.dob|date:"j. F Y" }}<br>
-                    {% if users|length == 1 and not existing %}
-                      {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
-                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                        {{ location.zipcode }} {{ location.area }}<br>
+                    {% if enrollment.users.count == 1 and not enrollment.existing_memberid %}
+                      {% if enrollment.get_country.code == 'NO' or enrollment.get_country.code == 'DK' or enrollment.get_country.code == 'SE' %}
+                        {% if enrollment.address1 %}{{ enrollment.address1 }}<br>{% endif %}
+                        {{ enrollment.zipcode }} {{ enrollment.area }}<br>
                       {% else %}
-                        {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                        {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
-                        {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
+                        {% if enrollment.address1 %}{{ enrollment.address1 }}<br>{% endif %}
+                        {% if enrollment.address2 %}{{ enrollment.address2 }}<br>{% endif %}
+                        {% if enrollment.address3 %}{{ enrollment.address3 }}<br>{% endif %}
                       {% endif %}
-                      {% if country.code != 'NO' %}{{ country.name }}<br>{% endif %}
+                      {% if enrollment.get_country.code != 'NO' %}{{ enrollment.get_country.name }}<br>{% endif %}
                     {% endif %}
                     {% if user.phone %}{{ user.phone }}<br>{% endif %}
                     {% if user.email %}{{ user.email }}{% endif %}
@@ -151,29 +145,29 @@
                   <td><span class="price"></span>,-</td>
                 </tr>
               {% endfor %}
-              {% if users|length > 1 or existing %}
+              {% if enrollment.users.count > 1 or enrollment.existing_memberid %}
               <tr>
-                {% if multiple_main and not existing %}
+                {% if multiple_main and not enrollment.existing_memberid %}
                   <td></td>
                 {% endif %}
                 <td>
                   <strong>{% trans "Deres adresse:" %}</strong><br>
-                    {% if country.code == 'NO' or country.code == 'DK' or country.code == 'SE' %}
-                      {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                      {{ location.zipcode }} {{ location.area }}<br>
+                    {% if enrollment.get_country.code == 'NO' or enrollment.get_country.code == 'DK' or enrollment.get_country.code == 'SE' %}
+                      {% if enrollment.address1 %}{{ enrollment.address1 }}<br>{% endif %}
+                      {{ enrollment.zipcode }} {{ enrollment.area }}<br>
                     {% else %}
-                      {% if location.address1 %}{{ location.address1 }}<br>{% endif %}
-                      {% if location.address2 %}{{ location.address2 }}<br>{% endif %}
-                      {% if location.address3 %}{{ location.address3 }}<br>{% endif %}
+                      {% if enrollment.address1 %}{{ enrollment.address1 }}<br>{% endif %}
+                      {% if enrollment.address2 %}{{ enrollment.address2 }}<br>{% endif %}
+                      {% if enrollment.address3 %}{{ enrollment.address3 }}<br>{% endif %}
                     {% endif %}
-                    {% if country.code != 'NO' %}{{ country.name }}{% endif %}
+                    {% if enrollment.get_country.code != 'NO' %}{{ enrollment.get_country.name }}{% endif %}
                 </td>
                 <td colspan="2"></td>
               </tr>
               {% endif %}
               {% if keycount > 0 %}
               <tr>
-                {% if multiple_main and not existing %}
+                {% if multiple_main and not enrollment.existing_memberid %}
                   <td></td>
                 {% endif %}
                 <td colspan="2">
@@ -186,9 +180,9 @@
                 <td><span class="keyprice">{{ keyprice }}</span>,-</td>
               </tr>
               {% endif %}
-              {% if yearbook %}
+              {% if enrollment.wants_yearbook %}
                 <tr>
-                  {% if multiple_main and not existing %}
+                  {% if multiple_main and not enrollment.existing_memberid %}
                     <td></td>
                   {% endif %}
                   <td colspan="2">{% trans "Årbok og Fjell og Vidde" %}</td>
@@ -198,7 +192,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <th colspan="{% if multiple_main and not existing %}3{% else %}2{% endif %}">{% trans "Totalt" %}</th>
+                <th colspan="{% if multiple_main and not enrollment.existing_memberid %}3{% else %}2{% endif %}">{% trans "Totalt" %}</th>
                 <th><span class="totalprice"></span>,-</th>
               </tr>
             </tfoot>
@@ -207,18 +201,28 @@
         </div>
 
         <p class="association-info">
-          {% blocktrans with association=association.name count users=users|length %}
+          {% blocktrans with association=enrollment.get_actual_association_if_all.name count users=enrollment.users.count %}
             Du blir medlem i DNT og {{ association }}.
           {% plural %}
             Dere blir medlemmer i DNT og {{ association }}.
           {% endblocktrans %}
+          <br>
+
+          {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+            {% blocktrans with association=enrollment.get_actual_association_if_any.name %}
+              Ungdomsmedlemmer blir medlem i DNT og {{ association }}.
+            {% endblocktrans %}
+            <br>
+
+          {% endif %}
 
           {% trans "Medlemskapet gjelder for" %} <strong>{{ membership_year_start.initiation_date|samtut }}</strong>.
         </p>
 
         <p>
           <a class="btn btn-large" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
-          <a href="javascript:undefined" class="btn btn-danger btn-large verify">{% trans "Bekreft" %} <i class="icon-arrow-right"></i></a>
+          <a href="javascript:undefined" class="btn btn-danger btn-large verify">{% trans "Bekreft" %} <i class="icon-arrow-right icon-white"></i></a>
         </p>
 
       </form>

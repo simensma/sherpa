@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-24 15:34+0200\n"
+"POT-Creation-Date: 2013-11-22 11:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgid "Hvis du har glemt passordet, klikk på \"Glemt passord\"-lenken under."
 msgstr "If you forgot your password, click the \"Forgot password\"-link below."
 
 #: templates/common/user/login/util/login_form.html:22
-#: templates/main/enrollment/registration.html:135
+#: templates/main/enrollment/registration.html:134
 msgid "E-post"
 msgstr "E-mail"
 
@@ -152,10 +152,10 @@ msgstr "Loading area..."
 
 #: templates/common/user/login/util/registration_form.html:47
 #: templates/main/enrollment/household.html:157
-#: templates/main/enrollment/registration.html:93
-#: templates/main/enrollment/result/success_card.html:119
-#: templates/main/enrollment/result/success_card.html:135
-#: templates/main/enrollment/result/success_card.html:137
+#: templates/main/enrollment/registration.html:92
+#: templates/main/enrollment/result/success_card.html:129
+#: templates/main/enrollment/result/success_card.html:145
+#: templates/main/enrollment/result/success_card.html:147
 msgid "Gå videre"
 msgstr "Continue"
 
@@ -222,7 +222,7 @@ msgid "Registrer deg"
 msgstr "Register"
 
 #: templates/common/user/login/util/registration_form.html:97
-#: templates/main/enrollment/payment.html:76
+#: templates/main/enrollment/payment.html:75
 #: templates/main/membership/memberid_sms/forgotten.html:13
 msgid "Laster, vennligst vent..."
 msgstr "Loading, please wait..."
@@ -420,12 +420,12 @@ msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
 msgstr "Illustration of the member ID's placement on the membership card"
 
 #: templates/main/connect/signon.html:134
-#: templates/main/enrollment/registration.html:174
+#: templates/main/enrollment/registration.html:173
 msgid "Lukk vindu"
 msgstr "Close window"
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:17
-#: templates/main/enrollment/payment.html:36
+#: templates/main/enrollment/payment.html:35
 msgid "Kortbetaling utilgjengelig"
 msgstr "Online payment is currently unavailable"
 
@@ -550,12 +550,12 @@ msgstr ""
 msgid ""
 "\n"
 "            Vi har logget feilen, og vil knytte postnummer <strong>"
-"%(location.zipcode)s</strong> til rett forening så snart som mulig.\n"
+"%(zipcode)s</strong> til rett forening så snart som mulig.\n"
 "          "
 msgstr ""
 "\n"
 "We've logged the error, and we'll register the zipcode <strong>"
-"%(location.zipcode)s</strong> to the correct local organization as soon as "
+"%(zipcode)s</strong> to the correct local organization as soon as "
 "possible."
 
 #: templates/main/enrollment/household.html:36
@@ -636,9 +636,9 @@ msgstr "Address 3"
 #, python-format
 msgid ""
 "\n"
-"              Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. "
+"                Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. "
 "%(foreign_shipment_price)s\n"
-"            "
+"              "
 msgstr ""
 "\n"
 "Receive the yearbook and Fjell og Vidde for a yearly fee of kr. "
@@ -730,8 +730,8 @@ msgstr ""
 "or contect memberservice if the error persists."
 
 #: templates/main/enrollment/household.html:156
-#: templates/main/enrollment/payment.html:69
-#: templates/main/enrollment/verification.html:220
+#: templates/main/enrollment/payment.html:68
+#: templates/main/enrollment/verification.html:224
 msgid "Tilbake"
 msgstr "Back"
 
@@ -772,7 +772,7 @@ msgstr ""
 "contact information below."
 
 #: templates/main/enrollment/payment-process-error.html:18
-#: templates/main/enrollment/payment.html:28
+#: templates/main/enrollment/payment.html:27
 msgid "Teknisk feil ved nettbetaling"
 msgstr "Technical error during online payment"
 
@@ -864,16 +864,16 @@ msgstr "Membership in the Norwegian Trekking Association"
 msgid "Gjelder for:"
 msgstr "Valid for:"
 
-#: templates/main/enrollment/payment.html:22
+#: templates/main/enrollment/payment.html:21
 msgid "Ugyldig betalingsmåte"
 msgstr "Invalid payment method"
 
-#: templates/main/enrollment/payment.html:23
+#: templates/main/enrollment/payment.html:22
 msgid ""
 "Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre."
 msgstr "You need to select a payment method before continuing."
 
-#: templates/main/enrollment/payment.html:29
+#: templates/main/enrollment/payment.html:28
 msgid ""
 "Beklager, det oppstod en feil når vi forsøkte å koble til vår "
 "betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i "
@@ -882,7 +882,7 @@ msgstr ""
 "We're sorry, an error occurred when we tried connecting to our payment "
 "provider. You can try again, or choose invoice as payment method instead."
 
-#: templates/main/enrollment/payment.html:37
+#: templates/main/enrollment/payment.html:36
 msgid ""
 "\n"
 "            Beklager, kortbetaling er midlertidig utilgjengelig. Vennligst "
@@ -897,11 +897,11 @@ msgstr ""
 "inconvenience and thank you for your patience. Please direct any questions "
 "to our membership service - see contact information in the box on the right."
 
-#: templates/main/enrollment/payment.html:46
+#: templates/main/enrollment/payment.html:45
 msgid "Må betales med VISA/MASTERCARD"
 msgstr "VISA/MASTERCARD payment is required"
 
-#: templates/main/enrollment/payment.html:47
+#: templates/main/enrollment/payment.html:46
 msgid ""
 "Siden innmeldingen er i forbindelse med at du skal melde deg på en aktivitet "
 "i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og "
@@ -911,15 +911,15 @@ msgstr ""
 "arranged by DNT, you have to complete payment online so that we can verify "
 "the payment and offer any discounts."
 
-#: templates/main/enrollment/payment.html:54
+#: templates/main/enrollment/payment.html:53
 msgid "Velg betalingsmåte:"
 msgstr "Choose payment method:"
 
-#: templates/main/enrollment/payment.html:60
+#: templates/main/enrollment/payment.html:59
 msgid "Få tilsendt faktura"
 msgstr "Receive invoice"
 
-#: templates/main/enrollment/payment.html:65
+#: templates/main/enrollment/payment.html:64
 msgid ""
 "<strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet "
 "gyldig før betalingen er registrert i vårt system."
@@ -927,17 +927,17 @@ msgstr ""
 "<strong>Note:</strong> If you choose to pay with an invoice, your membership "
 "will not be valid until the payment is registered in our systems."
 
-#: templates/main/enrollment/payment.html:71
+#: templates/main/enrollment/payment.html:70
 msgid "Til betaling"
 msgstr "To payment"
 
-#: templates/main/enrollment/payment.html:74
+#: templates/main/enrollment/payment.html:73
 msgid "Send bestilling"
 msgstr "Complete and send order"
 
 #: templates/main/enrollment/progress.html:8
 #: templates/main/enrollment/progress.html:31
-#: templates/main/enrollment/verification.html:105
+#: templates/main/enrollment/verification.html:99
 msgid "Personopplysninger"
 msgstr "Personal data"
 
@@ -951,11 +951,11 @@ msgstr "Verify"
 msgid "Betaling"
 msgstr "Payment"
 
-#: templates/main/enrollment/registration.html:27
+#: templates/main/enrollment/registration.html:26
 msgid "Innmelding i Den Norske Turistforening"
 msgstr "Enrolling in The Norwegian Trekking Association"
 
-#: templates/main/enrollment/registration.html:28
+#: templates/main/enrollment/registration.html:27
 msgid ""
 "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde "
 "deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli "
@@ -965,11 +965,11 @@ msgstr ""
 "activity. When enrollment is completed, you'll be forwarded to signup for "
 "the activity."
 
-#: templates/main/enrollment/registration.html:44
+#: templates/main/enrollment/registration.html:43
 msgid "Vi klarte ikke å lagre opplysningene."
 msgstr "We weren't able to save the data."
 
-#: templates/main/enrollment/registration.html:45
+#: templates/main/enrollment/registration.html:44
 msgid ""
 "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på "
 "nytt."
@@ -977,11 +977,11 @@ msgstr ""
 "Did you fill out the form correctly? Please verify any fields marked red and "
 "try again."
 
-#: templates/main/enrollment/registration.html:51
+#: templates/main/enrollment/registration.html:50
 msgid "Beklager, men du kan ikke registrere disse medlemmene!"
 msgstr "Sorry, you can't register these members!"
 
-#: templates/main/enrollment/registration.html:53
+#: templates/main/enrollment/registration.html:52
 #, python-format
 msgid ""
 "\n"
@@ -995,7 +995,7 @@ msgstr ""
 "be main member. Due to technical limitations, only 3 of these can register "
 "at a time."
 
-#: templates/main/enrollment/registration.html:57
+#: templates/main/enrollment/registration.html:56
 msgid ""
 "Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik "
 "begrensning."
@@ -1003,11 +1003,11 @@ msgstr ""
 "We really do apologize for the inconvenience, and we're working to avoid "
 "this arbitrary and unnecessary limitation."
 
-#: templates/main/enrollment/registration.html:61
+#: templates/main/enrollment/registration.html:60
 msgid "Kontaktinformasjon mangler."
 msgstr "Contact information is missing."
 
-#: templates/main/enrollment/registration.html:62
+#: templates/main/enrollment/registration.html:61
 msgid ""
 "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon "
 "og e-post)."
@@ -1015,84 +1015,84 @@ msgstr ""
 "At least one member of your household should have valid contact information "
 "(both phone and e-mail)."
 
-#: templates/main/enrollment/registration.html:69
+#: templates/main/enrollment/registration.html:68
 msgid "Du har registrert:"
 msgstr "You've registered:"
 
-#: templates/main/enrollment/registration.html:78
+#: templates/main/enrollment/registration.html:77
 msgid "(Anonym)"
 msgstr "(Anonymous)"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:88
 msgid "Vi"
 msgstr "We"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:88
 msgid "Jeg"
 msgstr "I"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:88
 msgid "har lest og godtar"
 msgstr "have read and accepted"
 
-#: templates/main/enrollment/registration.html:89
+#: templates/main/enrollment/registration.html:88
 msgid "betingelsene"
 msgstr "the terms and conditions"
 
-#: templates/main/enrollment/registration.html:92
+#: templates/main/enrollment/registration.html:91
 msgid "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene."
 msgstr ""
 "You cannot proceed unless you've read and accepted our terms and conditions."
 
-#: templates/main/enrollment/registration.html:97
+#: templates/main/enrollment/registration.html:96
 msgid "Meld inn flere i familien/husstanden:"
 msgstr "Register more members of the family/household"
 
-#: templates/main/enrollment/registration.html:98
+#: templates/main/enrollment/registration.html:97
 msgid "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse."
 msgstr ""
 "You can only register multiple members if you all share the same address."
 
-#: templates/main/enrollment/registration.html:108
+#: templates/main/enrollment/registration.html:107
 msgid "Fullt navn"
 msgstr "Full name"
 
-#: templates/main/enrollment/registration.html:112
+#: templates/main/enrollment/registration.html:111
 msgid "Fødselsdato (dd.mm.åååå)"
 msgstr "Birth date (dd.mm.yyyy)"
 
-#: templates/main/enrollment/registration.html:121
+#: templates/main/enrollment/registration.html:120
 msgid "Kjønn"
 msgstr "Gender"
 
-#: templates/main/enrollment/registration.html:123
-#: templates/main/enrollment/verification.html:133
+#: templates/main/enrollment/registration.html:122
+#: templates/main/enrollment/verification.html:127
 msgid "Kvinne"
 msgstr "Female"
 
-#: templates/main/enrollment/registration.html:126
-#: templates/main/enrollment/verification.html:131
+#: templates/main/enrollment/registration.html:125
+#: templates/main/enrollment/verification.html:125
 msgid "Mann"
 msgstr "Male"
 
-#: templates/main/enrollment/registration.html:131
+#: templates/main/enrollment/registration.html:130
 msgid "Mobiltelefon"
 msgstr "Cell phone"
 
-#: templates/main/enrollment/registration.html:138
+#: templates/main/enrollment/registration.html:137
 msgid "Lagre endringer"
 msgstr "Save changes"
 
-#: templates/main/enrollment/registration.html:138
+#: templates/main/enrollment/registration.html:137
 msgid "Legg til medlem"
 msgstr "Add this member"
 
-#: templates/main/enrollment/registration.html:151
+#: templates/main/enrollment/registration.html:150
 msgid "Betingelser for medlemskap i Den Norske Turistforening"
 msgstr ""
 "Terms and conditions for membership in the Norwegian Trekking Association"
 
-#: templates/main/enrollment/registration.html:156
+#: templates/main/enrollment/registration.html:155
 #, python-format
 msgid ""
 "\n"
@@ -1107,15 +1107,15 @@ msgstr ""
 "%(month)s, any new enrollments/renewals will provide membership for the "
 "following calendar year."
 
-#: templates/main/enrollment/registration.html:160
+#: templates/main/enrollment/registration.html:159
 msgid "Medlemskapet er personlig."
 msgstr "The membership is personal."
 
-#: templates/main/enrollment/registration.html:161
+#: templates/main/enrollment/registration.html:160
 msgid "Det er ingen angrerett på betalt medlemskap."
 msgstr "There is no right to cancel a paid membership."
 
-#: templates/main/enrollment/registration.html:162
+#: templates/main/enrollment/registration.html:161
 #, python-format
 msgid ""
 "Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%%) gis rett "
@@ -1124,7 +1124,7 @@ msgstr ""
 "The membership categories are determined by age; however, disabled (at least "
 "50%%) have the right to a senior membership."
 
-#: templates/main/enrollment/registration.html:163
+#: templates/main/enrollment/registration.html:162
 msgid ""
 "Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig "
 "med stempel eller oblat fra bank/post."
@@ -1132,7 +1132,7 @@ msgstr ""
 "The membership is not valid until paid in full and the membership card is "
 "only valid with an approved stamp or sticker from bank/postage."
 
-#: templates/main/enrollment/registration.html:164
+#: templates/main/enrollment/registration.html:163
 msgid ""
 "DNT forplikter seg til ikke å videreformidle personlige opplysninger til "
 "andre enn våre egne medlemsforeninger, samt enkelte samarbeidspartnere i "
@@ -1143,11 +1143,11 @@ msgstr ""
 "and certain affiliate third parties in order to offer membership benefits. "
 "One can opt out of this by logging on to the user page after enrollment."
 
-#: templates/main/enrollment/registration.html:168
+#: templates/main/enrollment/registration.html:167
 msgid "Sist endret: 9. november 2012."
 msgstr "Last change: 9th of November 2012."
 
-#: templates/main/enrollment/registration.html:169
+#: templates/main/enrollment/registration.html:168
 msgid "Med forbehold om endringer i løpet av medlemsåret."
 msgstr ""
 "These terms and conditions are subject to change during the membership year."
@@ -1209,25 +1209,11 @@ msgstr ""
 "such a case, you do need to choose a main member. Please try again, or "
 "contact memberservice if the error persists."
 
-#: templates/main/enrollment/verification.html:66
-msgid "Ikke-eksisterende hovedmedlem"
-msgstr "Non-existing main member"
-
-#: templates/main/enrollment/verification.html:67
-msgid ""
-"En teknisk feil oppstod, som gjorde at du ikke fikk valgt hvem som skal være "
-"hovedmedlem. Vennligst prøv igjen, eller kontakt medlemsservice dersom "
-"feilen vedvarer."
-msgstr ""
-"We're sorry, we experienced a technical error which enabled you to proceed "
-"without choosing the main member. Please try again, or contact memberservice "
-"if the error persists."
-
-#: templates/main/enrollment/verification.html:75
+#: templates/main/enrollment/verification.html:69
 msgid "Årbok og Fjell og Vidde må bestilles separat"
 msgstr "The yearbook and Fjell og Vidde must be ordered separately"
 
-#: templates/main/enrollment/verification.html:76
+#: templates/main/enrollment/verification.html:70
 #, python-format
 msgid ""
 "\n"
@@ -1243,11 +1229,11 @@ msgstr ""
 "order that in this form. Please contact memberservice to order the yearbook "
 "and Fjell og Vidde."
 
-#: templates/main/enrollment/verification.html:84
+#: templates/main/enrollment/verification.html:78
 msgid "Rabattmulighet!"
 msgstr "Discount offer!"
 
-#: templates/main/enrollment/verification.html:85
+#: templates/main/enrollment/verification.html:79
 msgid ""
 "\n"
 "            Siden <span class=\"name\"></span> er <span class=\"type\"></"
@@ -1260,16 +1246,16 @@ msgstr ""
 "recommended to choose him/her as main member in your household, as that will "
 "be the cheapest offer. You can change this if you so wish."
 
-#: templates/main/enrollment/verification.html:96
+#: templates/main/enrollment/verification.html:90
 msgid "Registrerte opplysninger"
 msgstr "Registered details"
 
-#: templates/main/enrollment/verification.html:102
-#: templates/main/enrollment/verification.html:114
+#: templates/main/enrollment/verification.html:96
+#: templates/main/enrollment/verification.html:108
 msgid "Hovedmedlem"
 msgstr "Main member"
 
-#: templates/main/enrollment/verification.html:102
+#: templates/main/enrollment/verification.html:96
 #, python-format
 msgid ""
 "Du kan velge hvem som skal være hovedmedlem. Hovedmedlemmet er den som "
@@ -1279,20 +1265,20 @@ msgstr ""
 "household member will be assigned to, and must be older than %(age_youth)s "
 "years."
 
-#: templates/main/enrollment/verification.html:102
+#: templates/main/enrollment/verification.html:96
 msgid "Hoved-<br>medlem"
 msgstr "Main<br>member"
 
-#: templates/main/enrollment/verification.html:106
-#: templates/main/enrollment/result/success_card.html:39
+#: templates/main/enrollment/verification.html:100
+#: templates/main/enrollment/result/success_card.html:49
 msgid "Medlemstype"
 msgstr "Membership type"
 
-#: templates/main/enrollment/verification.html:107
+#: templates/main/enrollment/verification.html:101
 msgid "Priser kan variere"
 msgstr "Prices may vary"
 
-#: templates/main/enrollment/verification.html:107
+#: templates/main/enrollment/verification.html:101
 msgid ""
 "Dette er prisene i din medlemsforening. Prisene kan variere mellom "
 "foreningene."
@@ -1300,16 +1286,16 @@ msgstr ""
 "These are the prices for your local membership organization. The prices may "
 "vary between local organizations."
 
-#: templates/main/enrollment/verification.html:107
-#: templates/main/enrollment/result/success_card.html:40
+#: templates/main/enrollment/verification.html:101
+#: templates/main/enrollment/result/success_card.html:50
 msgid "Pris"
 msgstr "Price"
 
-#: templates/main/enrollment/verification.html:160
+#: templates/main/enrollment/verification.html:154
 msgid "Deres adresse:"
 msgstr "Your address:"
 
-#: templates/main/enrollment/verification.html:180
+#: templates/main/enrollment/verification.html:174
 #, python-format
 msgid ""
 "\n"
@@ -1326,15 +1312,15 @@ msgstr[1] ""
 "\n"
 "Deposit for %(keycount)s DNT Cabin keys"
 
-#: templates/main/enrollment/verification.html:194
+#: templates/main/enrollment/verification.html:188
 msgid "Årbok og Fjell og Vidde"
 msgstr "Yearbook and Fjell og Vidde"
 
-#: templates/main/enrollment/verification.html:201
+#: templates/main/enrollment/verification.html:195
 msgid "Totalt"
 msgstr "Total"
 
-#: templates/main/enrollment/verification.html:210
+#: templates/main/enrollment/verification.html:204
 #, python-format
 msgid ""
 "\n"
@@ -1346,16 +1332,26 @@ msgid_plural ""
 "          "
 msgstr[0] ""
 "\n"
-"You will become member in DNT and %(association)s."
+"You will be member of DNT and %(association)s."
 msgstr[1] ""
 "\n"
-"You will become members in DNT and %(association)s."
+"You will be members of DNT and %(association)s."
 
-#: templates/main/enrollment/verification.html:216
+#: templates/main/enrollment/verification.html:213
+#, python-format
+msgid ""
+"\n"
+"              Ungdomsmedlemmer blir medlem i DNT og %(association)s.\n"
+"            "
+msgstr ""
+"\n"
+"Youth members will be members of DNT and %(association)s."
+
+#: templates/main/enrollment/verification.html:220
 msgid "Medlemskapet gjelder for"
 msgstr "The membership is valid for"
 
-#: templates/main/enrollment/verification.html:221
+#: templates/main/enrollment/verification.html:225
 msgid "Bekreft"
 msgstr "Confirm"
 
@@ -1465,18 +1461,29 @@ msgstr[1] ""
 "You are now members of DNT and <a href=\"%(url)s\">%(association)s</a>."
 
 #: templates/main/enrollment/result/success_card.html:37
+#, python-format
+msgid ""
+"\n"
+"            Ungdomsmedlemmer er medlem i DNT og <a href=\"%(url)s\">"
+"%(association)s</a>.\n"
+"          "
+msgstr ""
+"\n"
+"Youth members are members of DNT and <a href=\"%(url)s\">%(association)s</a>."
+
+#: templates/main/enrollment/result/success_card.html:47
 msgid "Navn"
 msgstr "Name"
 
-#: templates/main/enrollment/result/success_card.html:38
+#: templates/main/enrollment/result/success_card.html:48
 msgid "Medlemsnummer"
 msgstr "Member ID"
 
-#: templates/main/enrollment/result/success_card.html:52
+#: templates/main/enrollment/result/success_card.html:62
 msgid "Totalt:"
 msgstr "Total:"
 
-#: templates/main/enrollment/result/success_card.html:61
+#: templates/main/enrollment/result/success_card.html:71
 msgid ""
 "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du "
 "skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
@@ -1484,16 +1491,16 @@ msgstr ""
 "Your membership card will ship shortly. Meanwhile, you may print this page "
 "and use it as a membership certificate valid until"
 
-#: templates/main/enrollment/result/success_card.html:61
-#: templates/main/enrollment/result/success_card.html:63
+#: templates/main/enrollment/result/success_card.html:71
+#: templates/main/enrollment/result/success_card.html:73
 msgid "eller få tilsendt gratis kvittering på SMS"
 msgstr "or receive a free SMS receipt"
 
-#: templates/main/enrollment/result/success_card.html:61
+#: templates/main/enrollment/result/success_card.html:71
 msgid "Kvittering er også sendt på e-post til"
 msgstr "A receipt has also been sent by e-mail to"
 
-#: templates/main/enrollment/result/success_card.html:63
+#: templates/main/enrollment/result/success_card.html:73
 msgid ""
 "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan "
 "dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
@@ -1501,28 +1508,28 @@ msgstr ""
 "Your membership cards will ship shortly. Meanwhile, you may print this page "
 "and use it as a membership certificate valid until"
 
-#: templates/main/enrollment/result/success_card.html:63
+#: templates/main/enrollment/result/success_card.html:73
 msgid "Kvittering er også sendt på e-post til følgende adresser:"
 msgstr "A receipt has also been sent by e-mail to the following adresses:"
 
-#: templates/main/enrollment/result/success_card.html:75
+#: templates/main/enrollment/result/success_card.html:85
 msgid "Send gratis kvittering på SMS til"
 msgstr "Send free SMS receipt to"
 
-#: templates/main/enrollment/result/success_card.html:79
+#: templates/main/enrollment/result/success_card.html:89
 msgid "Sender SMS, vennligst vent..."
 msgstr "Sending SMS, please wait..."
 
-#: templates/main/enrollment/result/success_card.html:84
+#: templates/main/enrollment/result/success_card.html:94
 msgid "Kvittering har blitt sendt på SMS til"
 msgstr "Receipt has been sent by SMS to"
 
-#: templates/main/enrollment/result/success_card.html:87
+#: templates/main/enrollment/result/success_card.html:97
 msgid "En teknisk feil har oppstått ved utsendelse av SMS."
 msgstr "A technical error has occred during SMS sending."
 
-#: templates/main/enrollment/result/success_card.html:88
-#: templates/main/enrollment/result/success_card.html:95
+#: templates/main/enrollment/result/success_card.html:98
+#: templates/main/enrollment/result/success_card.html:105
 msgid ""
 "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker "
 "å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å "
@@ -1532,7 +1539,7 @@ msgstr ""
 "membership card to arrive, please contact memberservice to receive a receipt "
 "by SMS."
 
-#: templates/main/enrollment/result/success_card.html:91
+#: templates/main/enrollment/result/success_card.html:101
 msgid ""
 "SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med "
 "medlemsservice dersom du mener dette er feil."
@@ -1540,16 +1547,16 @@ msgstr ""
 "SMS receipt has already been sent to this phone number. Please contact "
 "memberservice if you think this is an error."
 
-#: templates/main/enrollment/result/success_card.html:94
+#: templates/main/enrollment/result/success_card.html:104
 msgid "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør."
 msgstr ""
 "A technical error has occured during communication with our SMS provider."
 
-#: templates/main/enrollment/result/success_card.html:106
+#: templates/main/enrollment/result/success_card.html:116
 msgid "Fortsett til påmeldig for tur/aktivitet"
 msgstr "Continue to signup for tour/activity"
 
-#: templates/main/enrollment/result/success_card.html:109
+#: templates/main/enrollment/result/success_card.html:119
 msgid ""
 "\n"
 "            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du "
@@ -1570,12 +1577,12 @@ msgstr[1] ""
 "You are now enrolled! You can continue to signup, first you'll just need to "
 "register a user."
 
-#: templates/main/enrollment/result/success_card.html:150
-#: templates/main/enrollment/result/success_invoice.html:52
+#: templates/main/enrollment/result/success_card.html:160
+#: templates/main/enrollment/result/success_invoice.html:62
 msgid "Registrer deg på Min side"
 msgstr "Register on the user page"
 
-#: templates/main/enrollment/result/success_card.html:153
+#: templates/main/enrollment/result/success_card.html:163
 #, python-format
 msgctxt "Don't translate URL params (registreringsnokkel and #registrering)"
 msgid ""
@@ -1589,12 +1596,12 @@ msgstr ""
 "Register on <a href=\"%(login_url)s?registreringsnokkel=%(key)s#registrering"
 "\">the user page</a> and get access to our online membership services."
 
-#: templates/main/enrollment/result/success_card.html:159
-#: templates/main/enrollment/result/success_invoice.html:61
+#: templates/main/enrollment/result/success_card.html:169
+#: templates/main/enrollment/result/success_invoice.html:71
 msgid "Planlegg turen på UT.no"
 msgstr "Plan your trip on UT.no"
 
-#: templates/main/enrollment/result/success_card.html:161
+#: templates/main/enrollment/result/success_card.html:171
 msgid ""
 "\n"
 "              På <a href=\"http://ut.no/\">UT.no</a> finner du hytter og "
@@ -1605,12 +1612,12 @@ msgstr ""
 "On <a href=\"http://ut.no/\">UT.no</a> you'll find cabins and trails for "
 "entire Norway."
 
-#: templates/main/enrollment/result/success_card.html:167
-#: templates/main/enrollment/result/success_invoice.html:69
+#: templates/main/enrollment/result/success_card.html:177
+#: templates/main/enrollment/result/success_invoice.html:79
 msgid "Hva skjer der du bor"
 msgstr "What's happening in your area"
 
-#: templates/main/enrollment/result/success_card.html:169
+#: templates/main/enrollment/result/success_card.html:179
 #, python-format
 msgid ""
 "\n"
@@ -1640,7 +1647,18 @@ msgstr[1] ""
 "\n"
 "You will become members in DNT and <a href=\"%(url)s\">%(association)s</a>."
 
-#: templates/main/enrollment/result/success_invoice.html:37
+#: templates/main/enrollment/result/success_invoice.html:33
+#, python-format
+msgid ""
+"\n"
+"            Ungdomsmedlemmer blir medlem i DNT og <a href=\"%(url)s\">"
+"%(association)s</a>.\n"
+"          "
+msgstr ""
+"\n"
+"Youth members will be members of DNT and <a href=\"%(url)s\">%(association)s</a>."
+
+#: templates/main/enrollment/result/success_invoice.html:47
 #, python-format
 msgid ""
 "\n"
@@ -1652,14 +1670,14 @@ msgstr ""
 "A receipt for this registration has been sent by e-mail to <strong>"
 "%(email)s</strong>."
 
-#: templates/main/enrollment/result/success_invoice.html:41
+#: templates/main/enrollment/result/success_invoice.html:51
 msgid ""
 "Kvittering på denne registreringen er sendt på e-post til følgende adresser:"
 msgstr ""
 "A receipt for this registration has also been sent by e-mail to the "
 "following adresses:"
 
-#: templates/main/enrollment/result/success_invoice.html:55
+#: templates/main/enrollment/result/success_invoice.html:65
 #, python-format
 msgctxt "Don't translate URL params (registreringsnokkel and #registrering)"
 msgid ""
@@ -1673,7 +1691,7 @@ msgstr ""
 "Register on <a href=\"%(login_url)s?registreringsnokkel=%(key)s#registrering"
 "\">the user page</a> and get access to our online membership services."
 
-#: templates/main/enrollment/result/success_invoice.html:63
+#: templates/main/enrollment/result/success_invoice.html:73
 msgid ""
 "\n"
 "            På <a href=\"http://ut.no/\">UT.no</a> finner du hytter og turer "
@@ -1684,7 +1702,7 @@ msgstr ""
 "On <a href=\"http://ut.no/\">UT.no</a> you'll find cabins and trails for "
 "entire Norway."
 
-#: templates/main/enrollment/result/success_invoice.html:71
+#: templates/main/enrollment/result/success_invoice.html:81
 #, python-format
 msgid ""
 "\n"

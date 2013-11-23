@@ -12,7 +12,7 @@
   <div class="row">
     <div class="span12">
       <h2>
-        {% blocktrans with name=users.0.name count users=users|length %}
+        {% blocktrans with name=enrollment.users.all.0.name count users=enrollment.users.count %}
           Velkommen som medlem, {{ name }}!
         {% plural %}
           Velkommen som medlemmer!
@@ -25,11 +25,21 @@
     <div id="result" class="span8">
 
       <p>
-        {% blocktrans with association=association.name url=association.url count users=users|length %}
+        {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url count users=enrollment.users.count %}
           Du er nå medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% plural %}
           Dere er nå medlemmer i DNT og <a href="{{ url }}">{{ association }}</a>.
         {% endblocktrans %}
+        <br>
+
+        {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+          {% blocktrans with association=enrollment.get_actual_association_if_any.name url=enrollment.get_actual_association_if_any.url %}
+            Ungdomsmedlemmer er medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+          {% endblocktrans %}
+          <br>
+
+        {% endif %}
       </p>
 
       <table class="table">
@@ -39,39 +49,39 @@
           <th>{% trans "Medlemstype" %}</th>
           <th>{% trans "Pris" %}</th>
         </tr>
-      {% for user in users %}
+      {% for user in enrollment.get_users_by_name %}
         <tr>
           <td>{{ user.name }}</td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.type }}</td>
+          <td>{{ user.memberid }}</td>
+          <td>{{ user.membership_type }}</td>
           <td>{{ user.price }},-</td>
         </tr>
       {% endfor %}
-      {% if users|length > 1 %}
+      {% if enrollment.users.count > 1 %}
         <tr>
           <td class="sum">{% trans "Totalt:" %}</td>
           <td colspan="2"></td>
-          <td class="sum">{{ price_sum }},-</td>
+          <td class="sum">{{ enrollment.get_total_price }},-</td>
         </tr>
       {% endif %}
       </table>
 
       <p>
-        {% if users|length == 1 %}
-          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ users.0.email }}</strong>.
+        {% if enrollment.users.count == 1 %}
+          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if enrollment.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ enrollment.users.all.0.email }}</strong>.
         {% else %}
-          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if location.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
+          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if enrollment.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
           {% for email in emails %}
             <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
           {% endfor %}
         {% endif %}
       </p>
 
-      {% if location.country == 'NO' %}
-        {% for user in users %}
+      {% if enrollment.country == 'NO' %}
+        {% for user in enrollment.get_users_by_name %}
           {% if user.phone != '' and not user.sms_sent %}
             <div class="sms">
-              <a href="javascript:undefined" class="phone-receipt" data-index="{{ user.index }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
+              <a href="javascript:undefined" class="phone-receipt" data-user="{{ user.id }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
                 {% trans "Send gratis kvittering på SMS til" %} {{ user.phone }}
               </a>
 
@@ -106,17 +116,17 @@
         <h3>{% trans "Fortsett til påmeldig for tur/aktivitet" %}</h3>
 
         <p>
-          {% blocktrans count users=users|length %}
+          {% blocktrans count users=enrollment.users.count %}
             Du er nå innmeldt, og kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side.
           {% plural %}
             Dere er nå innmeldt, og du kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
           {% endblocktrans %}
         </p>
 
-        {% if users|length == 1 %}
+        {% if enrollment.users.count == 1 %}
 
           <p>
-            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ users.0.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
           </p>
 
         {% else %}
@@ -124,17 +134,17 @@
           <div class="choose-user">
 
             <p class="user-list">
-              {% for user in users %}
+              {% for user in enrollment.get_users_by_name %}
                 <label class="checkbox">
-                  <input type="radio" name="user" value="{{ user.id }}"> {{ user.name }}
+                  <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
                 </label>
               {% endfor %}
             </p>
 
             <p>
               <a class="btn btn-danger user" href="" disabled>{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
-              {% for user in users %}
-                <a class="btn btn-danger hide user" data-user-id="{{ user.id }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+              {% for user in enrollment.get_users_by_name %}
+                <a class="btn btn-danger hide user" data-user-id="{{ user.memberid }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
               {% endfor %}
             </p>
 
@@ -146,11 +156,11 @@
         {# "Where to go next" - hide if enrolling for an aktivitet #}
         <div class="next-step">
 
-          {% if users|length == 1 %}
+          {% if enrollment.users.count == 1 %}
             <h3>{% trans "Registrer deg på Min side" %}</h3>
             <p>
               {% url 'user.login.views.login' as login_url %}
-              {% blocktrans with key=users.0.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
+              {% blocktrans with key=enrollment.users.all.0.pending_user.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
                 Registrer deg på <a href="{{ login_url }}?registreringsnokkel={{ key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
               {% endblocktrans %}
             </p>
@@ -163,10 +173,10 @@
             {% endblocktrans %}
           </p>
 
-          {% if location.country == 'NO' %}
+          {% if enrollment.country == 'NO' %}
             <h3>{% trans "Hva skjer der du bor" %}</h3>
             <p>
-              {% blocktrans with url=association.url association=association.name %}
+              {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url %}
                 <a href="{{ url }}">{{ association }}</a> arrangerer fellesturer og aktiviteter hele året.
               {% endblocktrans %}
             </p>
