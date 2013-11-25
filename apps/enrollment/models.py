@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from core import validator
 from core.models import FocusCountry
-from sherpa2.models import Association, dnt_oslo_id, dnt_ung_oslo_id
+from sherpa2.models import Association, DNT_OSLO_ID, DNT_UNG_OSLO_ID
 
 from focus.models import Price, Enrollment as FocusEnrollment
 
@@ -97,7 +97,7 @@ class Enrollment(models.Model):
         logic here. Use this method to find out how applicable this is for these users
         (applicable for none of them, some, or all).
         """
-        if self.get_association().id != dnt_oslo_id:
+        if self.get_association().id != DNT_OSLO_ID:
             # Not DNT Oslo og Omegn, applicable for none
             return 'none'
         else:
@@ -115,11 +115,11 @@ class Enrollment(models.Model):
         return self.get_actual_association(all)
 
     def get_actual_association(self, desired_count):
-        if self.get_association().id == dnt_oslo_id and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
-            association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id)
+        if self.get_association().id == DNT_OSLO_ID and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
+            association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID)
             if association is None:
-                association = Association.objects.get(id=dnt_ung_oslo_id)
-                cache.set('association_sherpa2.%s' % dnt_ung_oslo_id, association, 60 * 60 * 24 * 7)
+                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
+                cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID, association, 60 * 60 * 24 * 7)
             return association
         else:
             return self.get_association()
@@ -231,11 +231,11 @@ class User(models.Model):
         cases, but DNT ung Oslo if the default is DNT Oslo og Omegn and this is a youth member.
         """
         association = self.enrollment.get_association()
-        if association.id == dnt_oslo_id and self.applicable_for_dnt_ung_oslo():
-            association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id)
+        if association.id == DNT_OSLO_ID and self.applicable_for_dnt_ung_oslo():
+            association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID)
             if association is None:
-                association = Association.objects.get(id=dnt_ung_oslo_id)
-                cache.set('association_sherpa2.%s' % dnt_ung_oslo_id, association, 60 * 60 * 24 * 7)
+                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
+                cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID, association, 60 * 60 * 24 * 7)
         return association
 
     def applicable_for_dnt_ung_oslo(self):

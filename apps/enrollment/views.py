@@ -17,7 +17,7 @@ from enrollment.models import State, User as EnrollmentUser, Transaction
 from enrollment.util import current_template_layout, get_or_create_enrollment, prepare_and_send_email, polite_title, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
 from enrollment.validation import validate, validate_location
 from user.models import User
-from association.models import dnt_oslo_id
+from association.models import DNT_OSLO_ID
 
 from datetime import datetime, timedelta
 import requests
@@ -290,10 +290,10 @@ def verification(request):
                 cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
-            association = cache.get('association_sherpa2.%s' % dnt_oslo_id)
+            association = cache.get('association_sherpa2.%s' % DNT_OSLO_ID)
             if association is None:
-                association = Association.objects.get(id=dnt_oslo_id)
-                cache.set('association_sherpa2.%s' % dnt_oslo_id, association, 60 * 60 * 24 * 7)
+                association = Association.objects.get(id=DNT_OSLO_ID)
+                cache.set('association_sherpa2.%s' % DNT_OSLO_ID, association, 60 * 60 * 24 * 7)
     enrollment.association = association.id
     enrollment.save()
 

@@ -2,8 +2,8 @@
 from django.db import models
 
 # Sometimes we'll need to reference associations directly by ID. We'll store the IDs we know and need here.
-dnt_oslo_id = 2
-dnt_ung_oslo_id = 152
+DNT_OSLO_ID = 2
+DNT_UNG_OSLO_ID = 152
 
 class Association(models.Model):
     TYPES = [

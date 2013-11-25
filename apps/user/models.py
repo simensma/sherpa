@@ -6,8 +6,8 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from association.models import Association, dnt_oslo_id, dnt_ung_oslo_id
-from sherpa2.models import Association as Sherpa2Association, dnt_oslo_id as dnt_oslo_id_sherpa2, dnt_ung_oslo_id as dnt_ung_oslo_id_sherpa2
+from association.models import Association, DNT_OSLO_ID, DNT_UNG_OSLO_ID
+from sherpa2.models import Association as Sherpa2Association, DNT_OSLO_ID as DNT_OSLO_ID_SHERPA2, DNT_UNG_OSLO_ID as DNT_UNG_OSLO_ID_SHERPA2
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -323,8 +323,8 @@ class User(AbstractBaseUser):
             # to actually be a member of DNT ung Oslo og Omegn, but our member system can't handle that,
             # so we'll have to check for that and change it here. Note that this applies only to Oslo
             # and no other member associations.
-            if association.id == dnt_oslo_id and self.membership_type()['codename'] == 'youth':
-                association = Association.objects.get(id=dnt_ung_oslo_id)
+            if association.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
 
             cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24)
         return association
@@ -347,12 +347,12 @@ class User(AbstractBaseUser):
                 cache.set('association_sherpa2.focus.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
 
             # Special case, just like in main_association()
-            if association.id == dnt_oslo_id_sherpa2 and self.membership_type()['codename'] == 'youth':
+            if association.id == DNT_OSLO_ID_SHERPA2 and self.membership_type()['codename'] == 'youth':
                 # Get the DNT ung Oslo association, use the association cache
-                association = cache.get('association_sherpa2.%s' % dnt_ung_oslo_id_sherpa2)
+                association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2)
                 if association is None:
-                    association = Sherpa2Association.objects.get(id=dnt_ung_oslo_id_sherpa2)
-                    cache.set('association_sherpa2.%s' % dnt_ung_oslo_id_sherpa2, association, 60 * 60 * 24 * 7)
+                    association = Sherpa2Association.objects.get(id=DNT_UNG_OSLO_ID_SHERPA2)
+                    cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2, association, 60 * 60 * 24 * 7)
 
             cache.set('user.%s.association_sherpa2' % self.identifier, association, 60 * 60 * 24 * 7)
         return association
