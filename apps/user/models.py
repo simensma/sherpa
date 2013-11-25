@@ -314,20 +314,29 @@ class User(AbstractBaseUser):
         actor.reserved_against_partneroffers = reserved
         actor.save()
 
-    def main_association(self):
+    def main_association(self, convert_dnt_oslo_for_youth=True):
+        """
+        We have an interesting special case where we want youth members of DNT Oslo og Omegn
+        to actually be a member of DNT ung Oslo og Omegn, but our member system can't handle that,
+        so we'll have to check for that and change it here. Note that this applies only to Oslo
+        and no other member associations. We'll do that by default and let callers override that
+        with the convert_dnt_oslo_for_youth parameter.
+        """
         association = cache.get('user.%s.association' % self.identifier)
         if association is None:
             association = Association.objects.get(focus_id=self.get_actor().main_association_id)
 
-            # Well, here's an interesting special case. We want youth members of DNT Oslo og Omegn
-            # to actually be a member of DNT ung Oslo og Omegn, but our member system can't handle that,
-            # so we'll have to check for that and change it here. Note that this applies only to Oslo
-            # and no other member associations.
-            if association.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+            if convert_dnt_oslo_for_youth and association.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
                 association = Association.objects.get(id=DNT_UNG_OSLO_ID)
 
             cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24)
         return association
+
+    def main_association_actual(self):
+        """
+        Shortcut method to main_association() with parameter for use in templates.
+        """
+        return self.main_association(convert_dnt_oslo_for_youth=False)
 
     def main_association_old(self):
         """
