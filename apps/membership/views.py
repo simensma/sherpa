@@ -9,7 +9,7 @@ from django.conf import settings
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Association
 from focus.models import FocusZipcode, Price, Actor
-from focus.util import ACTOR_ENDCODE_DUBLETT
+from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_OSLO_ID as DNT_OSLO_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from enrollment.gift.models import membership_price_by_code
@@ -31,7 +31,7 @@ def index(request):
 def benefits(request, association_id):
     if association_id is None:
         # No association-attachment provided, use default prices (DNT Oslo og Omegn).
-        association_focus_id = 10
+        association_focus_id = DNT_OSLO_ID_FOCUS
         association = None
     else:
         association = cache.get('association_sherpa2.%s' % association_id)

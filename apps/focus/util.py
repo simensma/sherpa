@@ -5,6 +5,9 @@ FJELLOGVIDDE_SERVICE_CODE = 151
 YEARBOOK_SERVICE_CODES = [152, 153, 154]
 FOREIGN_POSTAGE_SERVICE_CODES = [155, 156, 157]
 
+# Association IDs we need to know
+DNT_OSLO_ID = 10
+
 # Actor endcodes (reasons for terminating membership).
 # These aren't really properly documented yet, to resolve codes/reasons consult Focus.
 ACTOR_ENDCODE_DUBLETT = 21
