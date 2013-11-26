@@ -165,6 +165,16 @@
 
       {% endfor %}
 
+      <div class="pagination pagination-large">
+        <ul>
+          {% for number in enrollments.paginator.page_range %}
+            <li{% if number == enrollments.number %} class="active"{% endif %}>
+              <a href="{% url 'admin.enrollment.views.index' %}?page={{ number }}" class="page">{{ number }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
     </div>
   </div>
 </div>

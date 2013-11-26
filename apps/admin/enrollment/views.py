@@ -1,15 +1,23 @@
 # encoding: utf-8
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.paginator import Paginator, InvalidPage
 
 import json
 
 from enrollment.models import State, Enrollment
 
 def index(request):
+    enrollments = Enrollment.get_active().prefetch_related('users', 'transactions', 'users__pending_user')
+    paginator = Paginator(enrollments, 20)
+    try:
+        enrollments = paginator.page(request.GET.get('page', 1))
+    except InvalidPage:
+        enrollments = paginator.page(1)
+
     context = {
         # TODO: Sort sensibly
-        'enrollments': Enrollment.get_active().prefetch_related('users', 'transactions', 'users__pending_user')
+        'enrollments': enrollments
     }
     return render(request, 'common/admin/enrollment/index.html', context)
 
