@@ -41,9 +41,6 @@ class Enrollment(models.Model):
     zipcode = models.CharField(max_length=51)
     area = models.CharField(max_length=255)
 
-    # Payment information, maybe foreignkey instead
-    # transaction_id = models.CharField(max_length=255)
-
     def get_users_by_name(self):
         return self.users.order_by('name')
 
