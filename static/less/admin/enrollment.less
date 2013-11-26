@@ -1,5 +1,53 @@
 /* Changing enrollment status in admin-UI */
 
+div.enrollment-overview {
+  div.enrollment {
+    margin-bottom: 20px;
+
+    * {
+      font-family: "DTL Nobel" !important;
+    }
+
+    div.header {
+      background-color: rgb(245, 245, 245);
+      padding: 10px 20px;
+    }
+
+    div.header:hover {
+      cursor: pointer;
+      background-color: rgb(235, 235, 235);
+    }
+
+    div.header.closed {
+      i.icon-chevron-up {
+        display: none;
+      }
+
+      i.icon-chevron-down {
+        display: inline-block;
+      }
+    }
+
+    div.header.open {
+      i.icon-chevron-up {
+        display: inline-block;
+      }
+
+      i.icon-chevron-down {
+        display: none;
+      }
+    }
+
+    div.body {
+      padding: 10px 20px;
+
+      div.section {
+        margin-bottom: 30px;
+      }
+    }
+  }
+}
+
 div.change-enrollment-status {
   .status {
     font-weight: normal;

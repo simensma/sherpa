@@ -4,10 +4,13 @@ from django.http import HttpResponse
 
 import json
 
-from enrollment.models import State
+from enrollment.models import State, Enrollment
 
 def index(request):
-    context = {}
+    context = {
+        # TODO: Sort sensibly
+        'enrollments': Enrollment.get_active().prefetch_related('users', 'transactions', 'users__pending_user')
+    }
     return render(request, 'common/admin/enrollment/index.html', context)
 
 def status(request):

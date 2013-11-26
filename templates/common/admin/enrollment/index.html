@@ -1,6 +1,9 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
 {% block header %}<a href="{% url 'admin.enrollment.views.index' %}">Innmelding</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/enrollment/index.js"></script>
+{% endblock %}
 {% block body %}
 
 <div class="row">
@@ -8,6 +11,161 @@
     <p>
       <a href="{% url 'admin.enrollment.views.status' %}">Deaktiver innmeldingsskjemaet eller kortbetaling</a>
     </p>
+  </div>
+</div>
+
+<div class="enrollment-overview">
+  <div class="row">
+    <div class="span12">
+
+      {% for enrollment in enrollments %}
+
+        <div class="enrollment">
+          <div class="header closed">
+
+            <div class="row-fluid">
+              <div class="span6">
+                Status: {{ enrollment.get_state }}
+                {% if enrollment.result %}
+                  ({{ enrollment.get_result }})<br>
+                {% endif %}
+              </div>
+              <div class="span5">
+                {{ enrollment.users.count }} medlemmer<br>
+                {{ enrollment.transactions.count }} transaksjoner
+
+              </div>
+              <div class="span1">
+                <div class="pull-right">
+                  <i class="icon-chevron-down"></i>
+                  <i class="icon-chevron-up"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="body hide">
+
+            <div class="section">
+              Godtar betingelsene: {{ enrollment.accepts_conditions|yesno:"Ja,Nei" }}<br>
+
+              Eksisterende hovedmedlem: {{ enrollment.existing_memberid|default:"<em>Ingen</em>" }}<br>
+
+              Betalingsmetode:
+              {% if enrollment.payment_method == 'card' %}
+                Kortbetaling
+              {% elif enrollment.payment_method == 'invoice' %}
+                Faktura
+              {% else %}
+                <em>Ikke valgt</em>
+              {% endif %}
+              <br>
+
+              {% if enrollment.country != 'NO' %}
+                Ønsker årbok mot portotillegg: {{ enrollment.wants_yearbook|yesno:"Ja,Nei" }}
+                <br>
+              {% endif %}
+
+              Forening:
+              {% if enrollment.association %}
+                {{ enrollment.get_association.name }}
+              {% else %}
+                <em>Ikke registrert adresse</em>
+              {% endif %}
+              <br>
+
+              Adresse:
+              {{ enrollment.address1 }},
+              {% if enrollment.address2 %}
+                {{ enrollment.address2 }},
+              {% endif %}
+              {% if enrollment.address3 %}
+                {{ enrollment.address3 }},
+              {% endif %}
+              {{ enrollment.zipcode }} {{ enrollment.area|title }},
+              {{ enrollment.get_country.name }}
+              <br>
+
+              {% if enrollment.state == 'payment' or enrollment.state == 'complete' %}
+                Totalsum: kr. {{ enrollment.get_total_price }},-
+              {% endif %}
+
+            </div>
+
+            <div class="section">
+              {% if enrollment.users.count > 0 %}
+
+                <table class="table">
+                  <tr>
+                    <th>Navn</th>
+                    <th>Født</th>
+                    <th>Kontaktinfo</th>
+                    <th>Medlemsnummer</th>
+                    <th>Pris</th>
+                  </tr>
+                  {% for user in enrollment.users.all %}
+                    <tr>
+                      <td>
+                        {{ user.name }}
+                        ({% if user.gender == 'm' %}M{% else %}K{% endif %})
+                      </td>
+                      <td>{{ user.dob|date:"d.m.y" }}</td>
+                      <td>{{ user.phone|default:"(Ingen tlf.)" }} / {{ user.email|default:"(Ingen e-postadr.)" }}</td>
+                      <td>
+                        {% if user.pending_user %}
+                          <a href="{% url 'admin.users.views.show' user.pending_user.id %}">
+                        {% endif %}
+
+                        {{ user.memberid|default:"(Ikke lagret)" }}
+
+                        {% if user.pending_user %}
+                          </a>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if user.dob %}
+                          kr. {{ user.price }},-
+                        {% else %}
+                          <em>Alder ukjent</em>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </table>
+
+              {% endif %}
+            </div>
+
+            <div class="section">
+              {% if enrollment.transactions.count > 0 %}
+
+                <table class="table">
+                  <tr>
+                    <th>Status</th>
+                    <th>Startet</th>
+                    <th>TransaksjonsID</th>
+                    <th>Ordrenummer</th>
+                  </tr>
+                  {% for transaction in enrollment.transactions.all %}
+                    <tr>
+                      <td>{{ transaction.get_state }}</td>
+                      <td>{{ transaction.initiated|date:"d.m.y H:i" }}</td>
+                      <td>{{ transaction.transaction_id }}</td>
+                      <td>{{ transaction.order_number }}</td>
+                    </tr>
+                  {% endfor %}
+                </table>
+
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+
+      {% endfor %}
+
+    </div>
   </div>
 </div>
 
