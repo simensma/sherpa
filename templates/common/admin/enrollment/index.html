@@ -18,6 +18,20 @@
   <div class="row">
     <div class="span12">
 
+      <div class="search">
+        <form action="{% url 'admin.enrollment.views.index' %}" method="get">
+          {% csrf_token %}
+          <input type="text" name="search" class="input-xxlarge" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer">
+          <button class="btn search input-button-align" type="submit"><i class="icon-search"></i></button>
+        </form>
+      </div>
+
+      {% if search %}
+        <p>
+          Søker etter '{{ search }}'. <a href="{% url 'admin.enrollment.views.index' %}">Vis alle innmeldinger</a>
+        </p>
+      {% endif %}
+
       {% for enrollment in enrollments %}
 
         <div class="enrollment">
@@ -172,7 +186,7 @@
         <ul>
           {% for number in enrollments.paginator.page_range %}
             <li{% if number == enrollments.number %} class="active"{% endif %}>
-              <a href="{% url 'admin.enrollment.views.index' %}?page={{ number }}" class="page">{{ number }}</a>
+              <a href="{% url 'admin.enrollment.views.index' %}?page={{ number }}{% if search %}&amp;search={{ search }}{% endif %}" class="page">{{ number }}</a>
             </li>
           {% endfor %}
         </ul>
