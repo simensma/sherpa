@@ -27,8 +27,11 @@
               <div class="span6">
                 Status: {{ enrollment.get_state }}
                 {% if enrollment.result %}
-                  ({{ enrollment.get_result }})<br>
+                  ({{ enrollment.get_result }})
                 {% endif %}
+                <br>
+                Startet: {{ enrollment.date_initiated|date:"d.m.y H:i" }}<br>
+                Sist endret: {{ enrollment.date_modified|date:"d.m.y H:i" }}
               </div>
               <div class="span5">
                 {{ enrollment.users.count }} medlemmer<br>

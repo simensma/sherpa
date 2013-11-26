@@ -8,7 +8,7 @@ import json
 from enrollment.models import State, Enrollment
 
 def index(request):
-    enrollments = Enrollment.get_active().prefetch_related('users', 'transactions', 'users__pending_user')
+    enrollments = Enrollment.get_active().prefetch_related('users', 'transactions', 'users__pending_user').order_by('-date_modified')
     paginator = Paginator(enrollments, 20)
     try:
         enrollments = paginator.page(request.GET.get('page', 1))
@@ -16,7 +16,6 @@ def index(request):
         enrollments = paginator.page(1)
 
     context = {
-        # TODO: Sort sensibly
         'enrollments': enrollments
     }
     return render(request, 'common/admin/enrollment/index.html', context)

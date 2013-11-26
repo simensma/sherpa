@@ -52,6 +52,9 @@ class Enrollment(models.Model):
     zipcode = models.CharField(max_length=51)
     area = models.CharField(max_length=255)
 
+    date_initiated = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
     def get_state(self):
         return [c[1] for c in self.STATE_CHOICES if c[0] == self.state][0]
 
