@@ -676,6 +676,41 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-stillenatur {
+    background-image: url('/static/img/widgets/promo/opprop-promo-bilde.jpg');
+
+    div.content {
+      @width: 420px;
+      @padding-right: 40px;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 240px;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 32px;
+        text-transform: none;
+      }
+
+      p {
+        margin-bottom: 30px;
+        font-size: 18px;
+      }
+
+      @media(max-width: 767px) {
+        p.bottom {
+          margin-top: auto;
+        }
+
+        p.photo {
+          display: none;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {

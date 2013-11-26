@@ -183,7 +183,13 @@ def get_static_promo_context(path):
             'id': 'gjensidige',
             'name': 'Medlemsfordeler',
             'start_date': date(year=2013, month=11, day=7),
-            'end_date': date(year=2013, month=11, day=7),
+            'end_date': date(year=2013, month=11, day=25),
+        },
+        {
+            'id': 'stillenatur',
+            'name': '#stillenatur',
+            'start_date': date(year=2013, month=11, day=26),
+            'end_date': date(year=2013, month=11, day=26),
         }
     ]
 
