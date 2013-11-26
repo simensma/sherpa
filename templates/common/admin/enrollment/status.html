@@ -1,0 +1,49 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
+{% block header %}<a href="{% url 'admin.enrollment.views.index' %}">Innmelding</a>{% endblock %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/enrollment/status.js"></script>
+{% endblock %}
+{% block body %}
+
+<div class="change-enrollment-status" data-activate-state-url="{% url 'admin.enrollment.views.activate_state' %}" data-activate-card-url="{% url 'admin.enrollment.views.activate_card' %}">
+  <div class="row">
+    <div class="span6 cont">
+      <div class="active state{% if not state.active %} hide{% endif %}">
+        <h2 class="status active">Innmeldingsskjemaet er aktivert.</h2>
+        <button class="btn btn-large btn-danger deactivate-state">Deaktiver innmeldingsskjemaet</button>
+      </div>
+
+      <div class="inactive state{% if state.active %} hide{% endif %}">
+        <h2 class="status inactive">Innmeldingsskjemaet er deaktivert!</h2>
+        <button class="btn btn-large btn-success activate-state">Aktiver innmeldingsskjemaet</button>
+      </div>
+
+      <p class="ajaxloader state hide">
+        <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      </p>
+    </div>
+
+    <div class="span6 cont">
+      <div class="active card{% if not state.card %} hide{% endif %}">
+        <h2 class="status active">Kortbetaling er aktivert.</h2>
+        <button class="btn btn-large btn-danger deactivate-card">Deaktiver kortbetaling</button>
+      </div>
+
+      <div class="inactive card{% if state.card %} hide{% endif %}">
+        <h2 class="status inactive">Kortbetaling er deaktivert!</h2>
+        <button class="btn btn-large btn-success activate-card">Aktiver kortbetaling</button>
+      </div>
+
+      <p class="ajaxloader card hide">
+        <img src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+      </p>
+
+      <p class="notice">
+        Kortinnbetaling må kun deaktiveres i forbindelse med årskravet, og det må gis beskjed til webutviklere i DNT sentralt om hvilken dato det skal gjøres i <strong>god tid</strong> i forkant. Om ikke dette gjøres, kan medlemmene få forvirrende og motstridende beskjeder på websidene.<br>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

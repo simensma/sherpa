@@ -7,8 +7,12 @@ import json
 from enrollment.models import State
 
 def index(request):
-    context = {'state': State.objects.all()[0]}
+    context = {}
     return render(request, 'common/admin/enrollment/index.html', context)
+
+def status(request):
+    context = {'state': State.objects.all()[0]}
+    return render(request, 'common/admin/enrollment/status.html', context)
 
 def activate_state(request):
     if request.is_ajax():
