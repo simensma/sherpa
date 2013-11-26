@@ -21,12 +21,23 @@ class State(models.Model):
     card = models.BooleanField() # Accept card-payment
 
 class Enrollment(models.Model):
+    STATE_CHOICES = (
+        ('registration', 'Registrering'),
+        ('payment', 'Til betaling'),
+        ('complete', 'Fullført'),
+    )
     state = models.CharField(max_length=255)
     accepts_conditions = models.BooleanField()
     existing_memberid = models.CharField(max_length=51)
     wants_yearbook = models.BooleanField()
     attempted_yearbook = models.BooleanField()
     payment_method = models.CharField(max_length=51)
+    RESULT_CHOICES = (
+        ('success_invoice', 'Faktura bestilt'),
+        ('success_card', 'Kortbetaling godkjent'),
+        ('fail', 'Kortbetaling ikke godkjent'),
+        ('cancel', 'Kortbetaling avbrutt'),
+    )
     result = models.CharField(max_length=255)
 
     # Cross-DB relationship to sherpa2.models.Association
@@ -41,8 +52,14 @@ class Enrollment(models.Model):
     zipcode = models.CharField(max_length=51)
     area = models.CharField(max_length=255)
 
-    # Payment information, maybe foreignkey instead
-    # transaction_id = models.CharField(max_length=255)
+    date_initiated = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    def get_state(self):
+        return [c[1] for c in self.STATE_CHOICES if c[0] == self.state][0]
+
+    def get_result(self):
+        return [c[1] for c in self.RESULT_CHOICES if c[0] == self.result][0]
 
     def get_users_by_name(self):
         return self.users.order_by('name')
@@ -152,6 +169,10 @@ class Enrollment(models.Model):
         else:
             # Will return the newest active transaction if there are several, since the filter is ordered
             return active_transactions[0]
+
+    @staticmethod
+    def get_active():
+        return Enrollment.objects.filter(users__isnull=False).distinct()
 
 class User(models.Model):
     enrollment = models.ForeignKey(Enrollment, related_name='users')
@@ -369,13 +390,16 @@ class Transaction(models.Model):
     transaction_id = models.CharField(max_length=32)
     order_number = models.CharField(max_length=32)
     STATE_CHOICES = (
-        ('register', 'Registered, but unhandeled'),
-        ('cancel', 'Canceled by user'),
-        ('fail', 'Failed by bank (e.g. insufficient funds)'),
-        ('success', 'Successfully paid'),
+        ('register', 'Startet, men ikke gjennomført'),
+        ('cancel', 'Avbrutt av kunden'),
+        ('fail', 'Avslått av banken'),
+        ('success', 'Betaling godkjent'),
     )
     state = models.CharField(max_length=255, choices=STATE_CHOICES, default=STATE_CHOICES[0][0])
     initiated = models.DateTimeField(auto_now_add=True)
+
+    def get_state(self):
+        return [c[1] for c in self.STATE_CHOICES if c[0] == self.state][0]
 
     @staticmethod
     def generate_order_number():
@@ -383,3 +407,6 @@ class Transaction(models.Model):
         while Transaction.objects.filter(order_number=order_number).exists():
             order_number = random.randint(100000000, 999999999)
         return order_number
+
+    class Meta:
+        ordering = ['-initiated']
