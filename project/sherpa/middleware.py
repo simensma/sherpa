@@ -168,7 +168,11 @@ class FocusDowntime():
 
 class ActorDoesNotExist():
     def process_request(self, request):
-        if request.user.is_authenticated() and request.user.is_member():
+        # Skip this check if Focus is currently down
+        now = datetime.now()
+        focus_is_down = any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
+
+        if not focus_is_down and request.user.is_authenticated() and request.user.is_member():
             try:
                 # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
                 request.user.get_actor()
