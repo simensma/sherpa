@@ -12,6 +12,7 @@ from collections import OrderedDict
 from datetime import datetime, date
 import json
 from smtplib import SMTPException
+from ssl import SSLError
 import logging
 import sys
 import requests
@@ -400,7 +401,7 @@ def norway_bus_tickets_order(request):
             [NORWAY_EMAIL_RECIPIENT])
         messages.info(request, 'order_success')
         return redirect('user.views.norway_bus_tickets')
-    except SMTPException:
+    except (SMTPException, SSLError):
         logger.warning(u"Mail til NOR-WAY Bussekspress failet",
             exc_info=sys.exc_info(),
             extra={

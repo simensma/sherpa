@@ -6,6 +6,7 @@ from django.template import RequestContext, loader
 from django.core.mail import send_mail
 
 from smtplib import SMTPException
+from ssl import SSLError
 import logging
 import sys
 
@@ -147,7 +148,7 @@ def attempt_registration(request):
             t = loader.get_template('common/user/login/registered_email.txt')
             c = RequestContext(request)
             send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-        except SMTPException:
+        except (SMTPException, SSLError):
             # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
             logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
                 exc_info=sys.exc_info(),
@@ -196,7 +197,7 @@ def attempt_registration_nonmember(request):
         t = loader.get_template('common/user/login/registered_nonmember_email.txt')
         c = RequestContext(request)
         send_mail(EMAIL_REGISTERED_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [user.get_email()])
-    except SMTPException:
+    except (SMTPException, SSLError):
         # Silently log and ignore this error. Consider warning the user that the email wasn't sent?
         logger.warning(u"Klarte ikke å sende registreringskvitteringepost",
             exc_info=sys.exc_info(),

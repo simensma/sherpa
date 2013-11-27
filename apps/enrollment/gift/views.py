@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.contrib import messages
 
 from smtplib import SMTPException
+from ssl import SSLError
 import json
 import logging
 import sys
@@ -133,7 +134,7 @@ def send(request):
 
     try:
         send_mail(EMAIL_MEMBERSERVICE_SUBJECT, memberservice_message, EMAIL_FROM_MEMBERSERVICE, [EMAIL_MEMBERSERVICE_RECIPIENT])
-    except SMTPException:
+    except (SMTPException, SSLError):
         logger.warning(u"Klarte ikke å sende gavemedlemskap-epost til medlemsservice",
             exc_info=sys.exc_info(),
             extra={'request': request}
@@ -144,7 +145,7 @@ def send(request):
     if request.session['gift_membership']['giver'].email != '':
         try:
             send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
-        except SMTPException:
+        except (SMTPException, SSLError):
             logger.warning(u"Klarte ikke å sende gavemedlemskapskvittering på e-post",
                 exc_info=sys.exc_info(),
                 extra={'request': request}

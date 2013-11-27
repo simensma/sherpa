@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import sys
 import logging
 from smtplib import SMTPException
-
+from ssl import SSLError
 
 # Number of days the temporary membership proof is valid
 TEMPORARY_PROOF_VALIDITY = 14
@@ -99,7 +99,7 @@ def prepare_and_send_email(request, enrollment):
             })
             message = render_to_string('main/enrollment/result/emails/%s.txt' % template, context)
             send_mail(subject, message, EMAIL_FROM, [user.email])
-        except SMTPException:
+        except (SMTPException, SSLError):
             # Silently log and ignore this error. The user will have to do without email receipt.
             logger.warning(u"Klarte ikke å sende innmeldingskvitteringepost",
                 exc_info=sys.exc_info(),
