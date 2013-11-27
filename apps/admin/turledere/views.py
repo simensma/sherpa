@@ -44,14 +44,18 @@ def edit_turleder_certificate(request, user):
         )
 
     turleder.association_approved = Association.objects.get(id=request.POST['association_approved'])
-    turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
-    if turleder.role == u'ambassadør':
-        turleder.date_end = None
-    else:
-        turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+    try:
+        turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
+        if turleder.role == u'ambassadør':
+            turleder.date_end = None
+        else:
+            turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
+        messages.info(request, "success")
+    except ValueError:
+        messages.error(request, "invalid_turleder_sertifikat_date")
+
     turleder.save()
 
-    messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_kursleder_certificate(request, user):

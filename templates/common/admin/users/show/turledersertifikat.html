@@ -8,6 +8,11 @@
         <strong>Endringene har blitt lagret.</strong><br>
         <a href="{% url 'admin.turledere.views.index' %}">Gå til turlederregisteret</a>
       </div>
+    {% elif message.message == 'invalid_turleder_sertifikat_date' %}
+      <div class="alert alert-error">
+        <strong>Datoen du valgte for turledersetifikatet var ikke en gyldig dato.</strong><br>
+        Vennligst prøv igjen med rett dato.
+      </div>
     {% endif %}
   {% endfor %}
 
