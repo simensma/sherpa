@@ -64,7 +64,12 @@ def registration(request, user):
 
         # This is a POST, if editing an existing user it will be set via the form
         if 'user' in request.POST:
-            user = enrollment.users.all().get(id=request.POST['user'])
+            try:
+                user = enrollment.users.all().get(id=request.POST['user'])
+            except EnrollmentUser.DoesNotExist:
+                # They're trying to save a non-existing user - maybe they deleted it in
+                # another tab or something - just create a new one
+                user = EnrollmentUser(enrollment=enrollment)
         else:
             user = EnrollmentUser(enrollment=enrollment)
 
