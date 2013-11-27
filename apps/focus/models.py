@@ -194,10 +194,16 @@ class Actor(models.Model):
             return ''
 
     def get_first_name(self):
-        return self.first_name.strip()
+        if self.first_name is None:
+            return ''
+        else:
+            return self.first_name.strip()
 
     def get_last_name(self):
-        return self.last_name.strip()
+        if self.last_name is None:
+            return ''
+        else:
+            return self.last_name.strip()
 
     def get_full_name(self):
         return ("%s %s" % (self.get_first_name(), self.get_last_name())).strip()
