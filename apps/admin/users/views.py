@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.core.cache import cache
 from django.conf import settings
@@ -172,7 +173,7 @@ def give_sherpa_access(request, user):
 
     permission = Permission.objects.get(name='sherpa')
     User.objects.get(id=user).permissions.add(permission)
-    return redirect('admin.users.views.show', user)
+    return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user]))
 
 def revoke_sherpa_access(request, user):
     if not request.user.has_perm('sherpa'):
@@ -180,7 +181,7 @@ def revoke_sherpa_access(request, user):
 
     permission = Permission.objects.get(name='sherpa')
     User.objects.get(id=user).permissions.remove(permission)
-    return redirect('admin.users.views.show', user)
+    return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user]))
 
 def make_sherpa_admin(request, user):
     if not request.user.has_perm('sherpa_admin'):
@@ -191,7 +192,7 @@ def make_sherpa_admin(request, user):
     user.permissions.add(permission)
     cache.delete('user.%s.all_associations' % user.id)
     cache.delete('user.%s.children_associations' % user.id)
-    return redirect('admin.users.views.show', user.id)
+    return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))
 
 def add_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
@@ -221,7 +222,7 @@ def add_association_permission(request):
 
     cache.delete('user.%s.all_associations' % user.id)
     cache.delete('user.%s.children_associations' % user.id)
-    return redirect('admin.users.views.show', user.id)
+    return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))
 
 def revoke_association_permission(request):
     user = User.objects.get(id=request.POST['user'])
@@ -236,4 +237,4 @@ def revoke_association_permission(request):
     role.delete()
     cache.delete('user.%s.all_associations' % user.id)
     cache.delete('user.%s.children_associations' % user.id)
-    return redirect('admin.users.views.show', user.id)
+    return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))
