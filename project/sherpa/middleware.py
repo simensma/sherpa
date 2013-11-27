@@ -145,10 +145,7 @@ class FocusDowntime():
         which is generated on process_view by the csrf middleware.
         """
         now = datetime.now()
-        focus_is_down = False
-        for downtime in settings.FOCUS_DOWNTIME_PERIODS:
-            if now >= downtime['from'] and now < downtime['to']:
-                focus_is_down = True
+        focus_is_down = any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
 
         if focus_is_down:
             # All these paths are hardcoded! :(
