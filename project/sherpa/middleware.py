@@ -8,12 +8,12 @@ from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
 from django.utils import translation
 
-from datetime import datetime
 import re
 import logging
 import sys
 
 from core.models import Site
+from core.util import focus_is_down
 from association.models import Association
 from focus.models import Actor, Enrollment
 from enrollment.util import current_template_layout
@@ -144,10 +144,7 @@ class FocusDowntime():
         Use process_view instead of process_request here because some rendered pages need the csrf token,
         which is generated on process_view by the csrf middleware.
         """
-        now = datetime.now()
-        focus_is_down = any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
-
-        if focus_is_down:
+        if focus_is_down():
             # All these paths are hardcoded! :(
             # These are the paths that can be directly accessed and require Focus to function
             focus_required_paths = [
@@ -169,10 +166,7 @@ class FocusDowntime():
 class ActorDoesNotExist():
     def process_request(self, request):
         # Skip this check if Focus is currently down
-        now = datetime.now()
-        focus_is_down = any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
-
-        if not focus_is_down and request.user.is_authenticated() and request.user.is_member():
+        if not focus_is_down() and request.user.is_authenticated() and request.user.is_member():
             try:
                 # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
                 request.user.get_actor()

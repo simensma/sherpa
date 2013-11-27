@@ -4,7 +4,7 @@ from django.conf import settings
 
 from user.models import AssociationRole
 
-from datetime import date
+from datetime import datetime, date
 import re
 
 def use_image_thumb(url, preferred_size):
@@ -61,3 +61,10 @@ def membership_year_start(year=date.today().year):
         'actual_date': date(year=year, month=dates['actual_date'].month, day=dates['actual_date'].day),
         'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
     }
+
+def focus_is_down():
+    """
+    Return True if Focus is currently down
+    """
+    now = datetime.now()
+    return any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
