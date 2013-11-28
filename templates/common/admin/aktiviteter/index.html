@@ -162,17 +162,62 @@
 
     <div class="row">
       <div class="span12">
-        <table class="table table-striped">
+        <table class="table table-striped aktivitet-listing">
           {% for aktivitet in aktiviteter %}
             <tr>
-              <td>
-                <a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
-                —
-                <a href="{% url 'admin.aktiviteter.views.participants' aktivitet.id %}">Se påmeldte</a>
-                {% for aktivitet_date in aktivitet.get_dates_ordered %}
-                  <br>
-                  Direkte lenke: <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">http://{{ site.domain }}{% url 'aktiviteter.views.show' aktivitet_date.id %}</a>
-                  {% if not forloop.last %}<br>{% endif %}
+              <td class="aktivitet-container">
+                <h3>
+                  <a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
+                  {{ aktivitet.code }}
+                </h3>
+
+                <p>
+                  {% if aktivitet.hidden %}
+                    <span class="label label-important">Privat aktivitet</span>
+                  {% elif not aktivitet.is_published %}
+                    <span class="label label-warning">Publiseres {{ aktivitet.pub_date|date:"j. F Y" }}</span>
+                  {% else %}
+                    <span class="label label-success">Publisert {{ aktivitet.pub_date|date:"j. F Y" }}</span>
+                  {% endif %}
+                </p>
+
+
+                {% for date in aktivitet.get_dates_ordered %}
+                  <div class="row-fluid">
+                    <div class="span6">
+                      {% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
+                        {# Same month, shorten the string by displaying the month only once #}
+                        {{ date.start_date|date:"j." }}
+                      {% else %}
+                        {{ date.start_date|date:"j. F" }}
+                      {% endif %}
+
+                      til
+
+                      {{ date.end_date|date:"j. F Y" }}
+
+                      <a href="{% url 'aktiviteter.views.show' date.id %}">(direkte lenke)</a>
+
+                    </div>
+                    <div class="span6">
+                      <a href="{% url 'admin.aktiviteter.views.participants' aktivitet.id %}">{{ date.total_signup_count }} påmeldte</a>
+
+                      {% if date.accepts_signups %}
+                        <span class="label label-success">Åpen til {{ date.signup_deadline|date:"j. F Y" }}</span>
+                      {% elif date.will_accept_signups %}
+                        <span class="label label-warning">Åpner {{ date.signup_start|date:"j. F Y" }}</span>
+                      {% elif date.signup_deadline_passed %}
+                        <span class="label label-important">Frist utløpt</span>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                {% empty %}
+
+                  <p>
+                    <em>Ingen turdatoer er registrert på denne aktiviteten.</em>
+                  </p>
+
                 {% endfor %}
               </td>
             </tr>

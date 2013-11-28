@@ -29,6 +29,8 @@ def index(request):
     else:
         exclude_filter = True
 
+    aktiviteter = aktiviteter.order_by('-pub_date')
+
     context = {
         'aktiviteter': aktiviteter,
         'categories': Aktivitet.CATEGORY_CHOICES,

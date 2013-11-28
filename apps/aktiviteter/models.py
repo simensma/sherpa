@@ -93,6 +93,10 @@ class Aktivitet(models.Model):
             })
         return json.dumps(images)
 
+    def is_published(self):
+        today = date.today()
+        return self.pub_date <= today
+
     @staticmethod
     def get_published():
         today = date.today()
@@ -209,6 +213,9 @@ class AktivitetDate(models.Model):
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
+    def total_signup_count(self):
+        return self.participants.count() + self.simple_participants.count()
 
     @staticmethod
     def get_published():
