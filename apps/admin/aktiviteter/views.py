@@ -18,21 +18,22 @@ from datetime import datetime
 import json
 
 def index(request):
-    if 'forening' in request.GET:
-        association_filter = Association.objects.get(id=request.GET['forening'])
-    else:
-        association_filter = request.session['active_association']
+    aktiviteter = Aktivitet.objects.all()
 
-    aktiviteter = Aktivitet.objects.filter(
-        Q(association=association_filter) |
-        Q(co_association=association_filter)
-    )
+    if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
+        aktiviteter = aktiviteter.filter(
+            Q(association=request.session['active_association']) |
+            Q(co_association=request.session['active_association'])
+        )
+        exclude_filter = False
+    else:
+        exclude_filter = True
 
     context = {
         'aktiviteter': aktiviteter,
         'categories': Aktivitet.CATEGORY_CHOICES,
         'subcategories': Aktivitet.SUBCATEGORIES,
-        'association_filter': association_filter
+        'exclude_filter': exclude_filter,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
