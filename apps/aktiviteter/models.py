@@ -67,17 +67,48 @@ class Aktivitet(models.Model):
         return json.loads(self.audiences)
 
     def get_category(self):
-        return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
+        return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
-    def get_subcategories(self):
+    def get_main_subcategories(self):
+        return [{
+            'name': sub,
+            'category': self.category,
+            'active': sub in self.get_active_subcategories()
+        } for sub in Aktivitet.SUBCATEGORIES[self.category]]
+
+    def get_other_subcategories(self):
+        other_subcategories = []
+        for category, subcategories in Aktivitet.SUBCATEGORIES.items():
+            if category == self.category:
+                continue
+
+            for subcategory in subcategories:
+                other_subcategories.append({
+                    'name': subcategory,
+                    'category': category,
+                    'active': subcategory in self.get_active_subcategories()
+                })
+
+        all_subcategories = []
+        for subs in Aktivitet.SUBCATEGORIES.values():
+            for s in subs:
+                all_subcategories.append(s)
+
+        for subcategory in self.get_active_subcategories():
+            if subcategory not in all_subcategories:
+                other_subcategories.append({
+                    'name': subcategory,
+                    'category': 'custom',
+                    'active': True
+                })
+
+        return other_subcategories
+
+    def has_other_subcategories(self):
+        return any([s['active'] for s in self.get_other_subcategories()])
+
+    def get_active_subcategories(self):
         return [t.name for t in self.category_tags.all()]
-
-    def get_all_subcategories(self):
-        return self.SUBCATEGORIES[self.category]
-
-    def get_missing_subcategories(self):
-        existing_subcategories = [s.name for s in self.category_tags.all()]
-        return [s for s in self.get_all_subcategories() if s not in existing_subcategories]
 
     def get_images_ordered(self):
         return self.images.order_by('order')

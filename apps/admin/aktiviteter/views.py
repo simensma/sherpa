@@ -61,7 +61,8 @@ def edit(request, aktivitet):
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
             'audiences': Aktivitet.AUDIENCE_CHOICES,
-            'subcategories': json.dumps(Aktivitet.SUBCATEGORIES[aktivitet.category]),
+            'categories': Aktivitet.CATEGORY_CHOICES,
+            'subcategories': Aktivitet.SUBCATEGORIES,
             'all_associations': Association.sort(Association.objects.all()),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
@@ -77,6 +78,7 @@ def edit(request, aktivitet):
         aktivitet.description = request.POST['description']
         aktivitet.difficulty = request.POST['difficulty']
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
+        aktivitet.category = request.POST['category']
         aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.getting_there = request.POST['getting_there']

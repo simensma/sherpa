@@ -192,24 +192,65 @@
             </div>
           </div>
 
-          <div class="control-group subcategories">
-            <label class="control-label" for="subcategories">Kategorier:</label>
+          <div class="control-group category">
+            <label class="control-label" for="category">Hovedkategori:</label>
+            <div class="controls">
+              <select name="category" id="category" data-chosen data-placeholder="Velg kategori...">
+                <option value=""></option>
+                {% for category in categories %}
+                  <option value="{{ category.0 }}"{% if category.0 in aktivitet.get_category %} selected{% endif %}>{{ category.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group subcategories{% if aktivitet.category == '' %} hide{% endif %}">
             <div class="controls">
 
               <div class="square-well">
-                <div class="buttons">
-                  {% for category in aktivitet.get_subcategories %}
-                    <button class="btn subcategory btn-danger">{{ category }}</button>
-                  {% endfor %}
 
-                  {% for category in aktivitet.get_missing_subcategories %}
-                    <button class="btn subcategory">{{ category }}</button>
+                <div class="labels">
+                  <h3 class="trip{% if aktivitet.category != 'trip' %} hide{% endif %}">
+                    Hva slags tur/aktivitet er dette?
+                  </h3>
+
+                  <h3 class="course{% if aktivitet.category != 'course' %} hide{% endif %}">
+                    Hva slags kurs er dette?
+                  </h3>
+
+                  <h3 class="event{% if aktivitet.category != 'event' %} hide{% endif %}">
+                    Hva slags arrangement er dette?
+                  </h3>
+
+                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} hide{% endif %}">
+                    Hva slags dugnad er dette?
+                  </h3>
+                </div>
+
+                <div class="main-buttons">
+                  {% for sub in aktivitet.get_main_subcategories %}
+                    <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
                   {% endfor %}
+                </div>
+
+                {% if not aktivitet.has_other_subcategories %}
+                  <p class="show-other-buttons">
+                    <a href="javascript:undefined" class="show-other-buttons">Vis flere kategoriforslag...</a>
+                  </p>
+                {% endif %}
+
+                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} hide{% endif %}">
+                  <h4>Flere kategoriforslag</h4>
+                  <div class="other-buttons">
+                    {% for sub in aktivitet.get_other_subcategories %}
+                      <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
+                    {% endfor %}
+                  </div>
                 </div>
 
                 <div class="custom">
                   <button class="btn subcategory btn-danger fake hide"></button>
-                  Eller legg inn egne kategorier:
+                  <strong>Eller finn på egne kategorier:</strong>
                   <input type="text" class="input-large" name="custom-category">
                 </div>
 

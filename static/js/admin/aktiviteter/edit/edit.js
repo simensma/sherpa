@@ -3,8 +3,14 @@ $(document).ready(function() {
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
+    var category = form.find("div.control-group.category");
+    var category_select = category.find("select[name='category']");
     var subcategories = form.find("div.control-group.subcategories");
-    var subcategory_buttons = subcategories.find("div.buttons");
+    var subcategory_labels = subcategories.find("div.labels");
+    var subcategory_main_buttons = subcategories.find("div.main-buttons");
+    var subcategory_other_buttons = subcategories.find("div.other-buttons");
+    var subcategory_other_buttons_wrapper = subcategories.find("div.other-buttons-wrapper");
+    var subcategory_other_buttons_trigger = subcategories.find("a.show-other-buttons");
     var custom_subcategory = subcategories.find("input[name='custom-category']");
     var subcategory_input = subcategories.find("input[name='subcategories']");
     var association_select = form.find("select[name='association']");
@@ -37,6 +43,25 @@ $(document).ready(function() {
 
     // Subcategories
 
+    category_select.change(function() {
+        subcategory_labels.find("h3").hide();
+        subcategory_labels.find("h3." + $(this).find("option:selected").val()).show();
+
+        // Move all main buttons back
+
+        subcategory_main_buttons.find("button.subcategory").each(function() {
+            $(this).detach();
+            subcategory_other_buttons.append(' ');
+            subcategory_other_buttons.append($(this));
+        });
+
+        subcategory_other_buttons.find("button.subcategory." + $(this).find("option:selected").val()).each(function() {
+            $(this).detach();
+            subcategory_main_buttons.append(' ');
+            subcategory_main_buttons.append($(this));
+        });
+    });
+
     function toggleButtons(e) {
         // So, this is thrown when you press enter in any input element. Wtf?
         // No idea why, but pageX and pageY is zero when that happens, so avoid it.
@@ -51,7 +76,13 @@ $(document).ready(function() {
         }
     }
 
-    subcategory_buttons.find("button.subcategory").click(toggleButtons);
+    subcategory_main_buttons.find("button.subcategory").click(toggleButtons);
+    subcategory_other_buttons.find("button.subcategory").click(toggleButtons);
+
+    subcategory_other_buttons_trigger.click(function() {
+        $(this).parent().hide();
+        subcategory_other_buttons_wrapper.slideDown();
+    });
 
     // Add custom subcategories
 
@@ -95,7 +126,7 @@ $(document).ready(function() {
 
         // Check if the tag already exists
         var exists = false;
-        subcategory_buttons.find("button.subcategory").each(function() {
+        subcategory_other_buttons.find("button.subcategory").each(function() {
             if($(this).text().trim() === category) {
                 $(this).addClass("btn-danger");
                 exists = true;
@@ -110,11 +141,15 @@ $(document).ready(function() {
         var new_button = subcategories.find("button.subcategory.fake").clone();
         new_button.text(category);
         new_button.removeClass('fake');
-        subcategory_buttons.append(' ');
-        subcategory_buttons.append(new_button);
+        subcategory_other_buttons.append(' ');
+        subcategory_other_buttons.append(new_button);
         new_button.click(toggleButtons);
         new_button.show();
         custom_subcategory.val('');
+
+        // This might be hidden, instashow it in this case
+        subcategory_other_buttons_trigger.hide();
+        subcategory_other_buttons_wrapper.slideDown();
     }
 
     // Buttons without submit-type aren't supposed to submit the form
@@ -129,7 +164,10 @@ $(document).ready(function() {
 
         // Collect subcategory tags
         var tags = [];
-        subcategory_buttons.find("button.btn-danger").each(function() {
+        subcategory_main_buttons.find("button.btn-danger").each(function() {
+            tags.push($(this).text());
+        });
+        subcategory_other_buttons.find("button.btn-danger").each(function() {
             tags.push($(this).text());
         });
         subcategory_input.val(JSON.stringify(tags));
