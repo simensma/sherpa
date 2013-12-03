@@ -33,8 +33,6 @@ def index(request):
 
     context = {
         'aktiviteter': aktiviteter,
-        'categories': Aktivitet.CATEGORY_CHOICES,
-        'subcategories': Aktivitet.SUBCATEGORIES,
         'exclude_filter': exclude_filter,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
@@ -44,14 +42,11 @@ def new(request):
     aktivitet = Aktivitet(
         association=request.session['active_association'],
         pub_date=datetime.now(),
-        category=request.POST['category'],
+        category=Aktivitet.CATEGORY_CHOICES[0][0],
         audiences=json.dumps([]),
         locations=json.dumps([]),
     )
     aktivitet.save()
-    for tag in [tag.lower() for tag in json.loads(request.POST['tags'])]:
-        obj, created = Tag.objects.get_or_create(name=tag)
-        aktivitet.category_tags.add(obj)
     return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def edit(request, aktivitet):
