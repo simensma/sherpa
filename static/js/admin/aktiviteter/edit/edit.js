@@ -104,6 +104,10 @@ $(document).ready(function() {
                 tags.unshift(query);
                 process(tags);
             });
+        },
+        updater: function(item) {
+            custom_subcategory.val(item);
+            addCustomSubcategory();
         }
     });
 
@@ -112,10 +116,6 @@ $(document).ready(function() {
             addCustomSubcategory();
             e.preventDefault();
         }
-    });
-
-    custom_subcategory.focusout(function() {
-        addCustomSubcategory();
     });
 
     function addCustomSubcategory() {
