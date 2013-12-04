@@ -72,12 +72,16 @@ var AktiviteterDatesView = function(opts) {
                     alert("Personen du valgte er allerede registrert som turleder på denne turen.");
                     return;
                 }
+                that.turleder_table.show();
                 that.turleder_table.append(opts.result_row);
             }
         });
     });
 
     $(document).on('click', this.turleder_table.selector + ' a.remove-turleder', function() {
+        if(that.turleder_table.find("tr.display-result").length == 1) {
+            that.turleder_table.hide();
+        }
         $(this).parents("tr.display-result").remove();
     });
 

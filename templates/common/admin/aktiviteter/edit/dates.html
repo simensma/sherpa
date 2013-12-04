@@ -116,7 +116,7 @@
       <label class="control-label">Turledere:</label>
       <div class="controls">
 
-        <table class="table turledere">
+        <table class="table turledere{% if date.turledere.count == 0 %} hide{% endif %}">
           <tr>
             <th>Navn</th>
             <th>Kontaktinfo</th>
