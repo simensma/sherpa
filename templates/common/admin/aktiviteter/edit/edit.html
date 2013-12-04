@@ -195,12 +195,12 @@
           <div class="control-group category">
             <label class="control-label" for="category">Hovedkategori:</label>
             <div class="controls">
-              <select name="category" id="category" data-chosen data-placeholder="Velg kategori...">
-                <option value=""></option>
+              <input type="hidden" name="category" value="">
+              <div class="btn-group" data-toggle="buttons-radio" data-target="category">
                 {% for category in categories %}
-                  <option value="{{ category.0 }}"{% if category.0 in aktivitet.get_category %} selected{% endif %}>{{ category.1 }}</option>
+                  <button class="btn btn-large{% if category.0 == aktivitet.category %} active{% endif %}" data-category="{{ category.0 }}">{{ category.1 }}</button>
                 {% endfor %}
-              </select>
+              </div>
             </div>
           </div>
 

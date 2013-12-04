@@ -4,7 +4,8 @@ $(document).ready(function() {
     var form = editor.find("form.edit-aktivitet");
     var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
     var category = form.find("div.control-group.category");
-    var category_select = category.find("select[name='category']");
+    var category_input = category.find("input[name='category']");
+    var category_buttons = category.find("button[data-category]");
     var subcategories = form.find("div.control-group.subcategories");
     var subcategory_labels = subcategories.find("div.labels");
     var subcategory_main_buttons = subcategories.find("div.main-buttons");
@@ -43,9 +44,9 @@ $(document).ready(function() {
 
     // Subcategories
 
-    category_select.change(function() {
+    category_buttons.click(function() {
         subcategory_labels.find("h3").hide();
-        subcategory_labels.find("h3." + $(this).find("option:selected").val()).show();
+        subcategory_labels.find("h3." + $(this).attr('data-category')).show();
 
         // Move all main buttons back
 
@@ -55,7 +56,7 @@ $(document).ready(function() {
             subcategory_other_buttons.append($(this));
         });
 
-        subcategory_other_buttons.find("button.subcategory." + $(this).find("option:selected").val()).each(function() {
+        subcategory_other_buttons.find("button.subcategory." + $(this).attr('data-category')).each(function() {
             $(this).detach();
             subcategory_main_buttons.append(' ');
             subcategory_main_buttons.append($(this));
@@ -276,14 +277,17 @@ $(document).ready(function() {
         add_date_button.click();
     }
 
-    // Collect all dates on submit
     form.submit(function(e) {
+        // Collect all dates
         var date_objects = [];
         for(var i=0; i<date_views.length; i++) {
             date_objects.push(date_views[i].collectData());
         }
         dates_input.val(JSON.stringify(date_objects));
         dates_to_delete_input.val(JSON.stringify(date_ids_to_delete));
+
+        // Collect the active category
+        category_input.val(category_buttons.filter(".active").attr('data-category'));
     });
 
 });
