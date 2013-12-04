@@ -202,9 +202,12 @@ class AktivitetDate(models.Model):
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
-    signup_start = models.DateField()
-    signup_deadline = models.DateField()
-    signup_cancel_deadline = models.DateField()
+
+    # Signup start/deadline/cancel should only be null when signup_enabled is False
+    signup_start = models.DateField(null=True)
+    signup_deadline = models.DateField(null=True)
+    signup_cancel_deadline = models.DateField(null=True)
+
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()

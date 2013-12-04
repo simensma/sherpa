@@ -149,6 +149,9 @@ def edit(request, aktivitet):
                 aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
             elif date_post['signup_type'] == 'none':
                 aktivitet_date.signup_enabled = False
+                aktivitet_date.signup_start = None
+                aktivitet_date.signup_deadline = None
+                aktivitet_date.signup_cancel_deadline = None
             else:
                 raise Exception("Unrecognized POST value for signup_type field")
 
