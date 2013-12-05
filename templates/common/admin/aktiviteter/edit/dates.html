@@ -59,14 +59,17 @@
     <div class="control-group">
       <label class="control-label">Påmelding:</label>
       <div class="controls">
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Min side-bruker" data-content="Denne påmeldingstypen krever at brukeren logger seg på Min side. Dette krever ikke nødvendigvis medlemskap i DNT, men man må enten registrere seg, eller logge på.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}> Med Min side-bruker
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Krever Min side-bruker" data-content="En må logge på Min side for å kunne melde seg på turen.<br><br>Da får vi tilgang til all medlemsinformasjon om deltakerne, samt at de får opp turhistorikken sin på Min side.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}>
+          Vanlig påmelding
         </label>
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Enkel påmelding" data-content="I tillegg til vanlig påmelding med Min side-bruker, får man også muligheten til å bare skrive inn et navn, samt telefonnummer <strong>eller</strong> e-postadresse. Dette er for de som ikke ønsker å ta seg bryet med å registrere seg, men husk at disse ikke får turhistorikken registrert på Min side.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}> Oppgi navn og e-post eller telefonnummer
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Kun navn og kontaktinfo" data-content="En får melde seg på ved å kun oppgi navn, og telefonnummer eller e-post.<br><br>Da har vi mindre informasjon om deltakerne, men det er enklere for dem å melde seg på.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}>
+          Enkel påmelding
         </label>
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Hvis det ikke er behov for påmelding online, kan du velge denne. Da kan du eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det er behov for det.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}> Ingen påmelding
+        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Ingen påmelding er tilgjengelig på nett. Du kan eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det i det hele tatt er behov for det.">
+          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}>
+          Ingen påmelding
         </label>
       </div>
     </div>
