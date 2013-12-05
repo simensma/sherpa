@@ -1,10 +1,18 @@
 <i class="icon-chevron-down"></i>
 
-{% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
-  {# Same month, shorten the string by displaying the month only once #}
-  {{ date.start_date|date:"j." }}
-{% else %}
-  {{ date.start_date|date:"j. F" }}
-{% endif %}
+{% if not date %}
 
-til {{ date.end_date|date:"j. F Y" }}
+  Velg når aktiviteten skal arrangeres...
+
+{% else %}
+
+  {% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
+    {# Same month, shorten the string by displaying the month only once #}
+    {{ date.start_date|date:"j." }}
+  {% else %}
+    {{ date.start_date|date:"j. F" }}
+  {% endif %}
+
+  til {{ date.end_date|date:"j. F Y" }}
+
+{% endif %}
