@@ -25,7 +25,7 @@ var AktiviteterDatesView = function(opts) {
 
     // All dateinputs
 
-    this.edit_root.find("div.input-append.date input").datepicker({
+    this.edit_root.find("div.input-append.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
