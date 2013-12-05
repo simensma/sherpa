@@ -62,7 +62,8 @@ def edit(request, aktivitet):
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
-            'locations': Location.objects.order_by('name')
+            'locations': Location.objects.order_by('name'),
+            'now': datetime.now()
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':
@@ -145,8 +146,14 @@ def edit(request, aktivitet):
             if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
                 aktivitet_date.signup_enabled = True
                 aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
-                aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
-                aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
+                if date_post['signup_deadline_until_start']:
+                    aktivitet_date.signup_deadline = aktivitet_date.start_date
+                else:
+                    aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
+                if date_post['signup_cancel_deadline_until_start']:
+                    aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
+                else:
+                    aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
             elif date_post['signup_type'] == 'none':
                 aktivitet_date.signup_enabled = False
                 aktivitet_date.signup_start = None

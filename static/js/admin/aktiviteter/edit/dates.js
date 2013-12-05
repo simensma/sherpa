@@ -9,6 +9,16 @@ var AktiviteterDatesView = function(opts) {
     this.view_date_display = this.view_root.find("div.date-display");
     this.view_fail = this.view_root.find("div.date-display-fail");
 
+    this.start_date = this.root.find("input[name='start_date']");
+    this.start_time = this.root.find("input[name='start_time']");
+    this.end_date = this.root.find("input[name='end_date']");
+    this.end_time = this.root.find("input[name='end_time']");
+    this.signup_start = this.root.find("input[name='signup_start']");
+    this.signup_deadline = this.root.find("input[name='signup_deadline']");
+    this.signup_deadline_until_start = this.root.find("input[name='signup_deadline_until_start']");
+    this.signup_cancel_deadline = this.root.find("input[name='signup_cancel_deadline']");
+    this.signup_cancel_deadline_until_start = this.root.find("input[name='signup_cancel_deadline_until_start']");
+
     var trigger_edit = this.view_root.find("a.trigger-date-editor");
     this.enrollment_inputs = this.edit_root.find("input[name^='enrollment']");
     var enrollment_group = this.edit_root.find("div.enrollment-group");
@@ -43,6 +53,30 @@ var AktiviteterDatesView = function(opts) {
             enrollment_group.slideDown();
         } else if(val === 'none') {
             enrollment_group.slideUp();
+        }
+    });
+
+    // Disable signup date inputs if until-start checkbox is checked
+
+    this.signup_deadline_until_start.change(function() {
+        if($(this).is(":checked")) {
+            that.signup_deadline.prop('disabled', true);
+            that.signup_deadline.attr('data-default-date', that.signup_deadline.val());
+            that.signup_deadline.val('');
+        } else {
+            that.signup_deadline.prop('disabled', false);
+            that.signup_deadline.val(that.signup_deadline.attr('data-default-date'));
+        }
+    });
+
+    this.signup_cancel_deadline_until_start.change(function() {
+        if($(this).is(":checked")) {
+            that.signup_cancel_deadline.prop('disabled', true);
+            that.signup_cancel_deadline.attr('data-default-date', that.signup_cancel_deadline.val());
+            that.signup_cancel_deadline.val('');
+        } else {
+            that.signup_cancel_deadline.prop('disabled', false);
+            that.signup_cancel_deadline.val(that.signup_cancel_deadline.attr('data-default-date'));
         }
     });
 
@@ -133,14 +167,16 @@ AktiviteterDatesView.prototype.collectData = function() {
     });
     return {
         id: this.root.attr('data-date-id'),
-        start_date: this.root.find("input[name='start_date']").val(),
-        start_time: this.root.find("input[name='start_time']").val(),
-        end_date: this.root.find("input[name='end_date']").val(),
-        end_time: this.root.find("input[name='end_time']").val(),
+        start_date: this.start_date.val(),
+        start_time: this.start_time.val(),
+        end_date: this.end_date.val(),
+        end_time: this.end_time.val(),
         signup_type: this.root.find("input[name^='enrollment']:checked").val(),
-        signup_start: this.root.find("input[name='signup_start']").val(),
-        signup_deadline: this.root.find("input[name='signup_deadline']").val(),
-        signup_cancel_deadline: this.root.find("input[name='signup_cancel_deadline']").val(),
+        signup_start: this.signup_start.val(),
+        signup_deadline: this.signup_deadline.val(),
+        signup_deadline_until_start: this.signup_deadline_until_start.is(":checked"),
+        signup_cancel_deadline: this.signup_cancel_deadline.val(),
+        signup_cancel_deadline_until_start: this.signup_cancel_deadline_until_start.is(":checked"),
         turledere: turledere,
         meeting_place: this.root.find("textarea[name='meeting_place']").val(),
         contact_type: this.root.find("input[name^='contact_type']:checked").val(),
