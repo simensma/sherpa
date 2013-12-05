@@ -113,10 +113,12 @@ var AktiviteterDatesView = function(opts) {
     });
 
     $(document).on('click', this.turleder_table.selector + ' a.remove-turleder', function() {
-        if(that.turleder_table.find("tr.display-result").length == 1) {
-            that.turleder_table.hide();
+        var row = $(this).parents("tr.display-result");
+        var turleder_table = $(this).parents("table.turledere");
+        if(row.siblings("tr.display-result").length === 0) {
+            turleder_table.hide();
         }
-        $(this).parents("tr.display-result").remove();
+        row.remove();
     });
 
     $(document).on('click', this.turleder_table.selector + ' a.more', function() {
