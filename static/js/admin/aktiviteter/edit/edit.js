@@ -188,12 +188,11 @@ $(document).ready(function() {
     var delete_date_confirm = delete_date_choose.find("button.confirm");
     var delete_date_cancel = delete_date_choose.find("button.cancel");
 
-    var date_views = [];
     var date_radio_counter = 0;
     var date_ids_to_delete = [];
 
     existing_dates.each(function() {
-        date_views.push(new AktiviteterDatesView({
+        $(this).data('view', new AktiviteterDatesView({
             root: $(this)
         }));
     });
@@ -213,7 +212,7 @@ $(document).ready(function() {
 
         new_root.removeClass('hide');
         new_root.hide(); // Hide it even though we don't want the 'hide' class on it.
-        date_views.push(new AktiviteterDatesView({
+        new_root.data('view', new AktiviteterDatesView({
             root: new_root
         }));
         new_root.insertBefore(hidden_root);
@@ -249,15 +248,7 @@ $(document).ready(function() {
 
         delete_date_modal.modal('hide');
 
-        // Ugh, remove the array element manually
         var root = delete_date_modal.data('date-root');
-        var new_date_views = [];
-        for(var i=0; i<date_views.length; i++) {
-            if(date_views[i].root[0] !== root[0]) {
-                new_date_views.push(date_views[i]);
-            }
-        }
-        date_views = new_date_views;
         var id = root.attr('data-date-id');
         if(id !== '') {
             date_ids_to_delete.push(id);
@@ -278,11 +269,11 @@ $(document).ready(function() {
     }
 
     form.submit(function(e) {
-        // Collect all dates
+        // Collect all currently active dates
         var date_objects = [];
-        for(var i=0; i<date_views.length; i++) {
-            date_objects.push(date_views[i].collectData());
-        }
+        dates.find("div.date-root:not(.hide)").each(function() {
+            date_objects.push($(this).data('view').collectData());
+        });
         dates_input.val(JSON.stringify(date_objects));
         dates_to_delete_input.val(JSON.stringify(date_ids_to_delete));
 
