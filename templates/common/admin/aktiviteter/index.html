@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% load rowiterator %}
+{% load date_fromto %}
 
 {% block body %}
 
@@ -75,17 +76,8 @@
                 {% for date in aktivitet.get_dates_ordered %}
                   <div class="row-fluid">
                     <div class="span6">
-                      {% if date.start_date.month == date.end_date.month and date.start_date.year == date.end_date.year %}
-                        {# Same month, shorten the string by displaying the month only once #}
-                        {{ date.start_date|date:"j." }}
-                      {% else %}
-                        {{ date.start_date|date:"j. F" }}
-                      {% endif %}
 
-                      til
-
-                      {{ date.end_date|date:"j. F Y" }}
-
+                      {{ date.start_date|date_fromto:date.end_date }}
                       <a href="{% url 'aktiviteter.views.show' date.id %}">(direkte lenke)</a>
 
                     </div>
