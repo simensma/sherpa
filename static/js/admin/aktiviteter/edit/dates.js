@@ -83,6 +83,7 @@ var AktiviteterDatesView = function(opts) {
         that.signup_start.datepicker('setEndDate', start_date);
         that.signup_deadline.datepicker('setEndDate', start_date);
         that.signup_cancel_deadline.datepicker('setEndDate', start_date);
+        that.updateView();
     });
 
     this.end_date.on('changeDate', function() {
@@ -91,6 +92,7 @@ var AktiviteterDatesView = function(opts) {
             that.start_date.datepicker('setDate', end_date);
             that.start_date.datepicker('update');
         }
+        that.updateView();
     });
 
     // Disable signup date inputs if until-start checkbox is checked
@@ -174,6 +176,16 @@ var AktiviteterDatesView = function(opts) {
 
 AktiviteterDatesView.prototype.view = function() {
     var that = this;
+    this.updateView();
+    this.edit_root.slideUp('slow');
+};
+
+AktiviteterDatesView.prototype.edit = function() {
+    this.edit_root.slideDown('slow');
+};
+
+AktiviteterDatesView.prototype.updateView = function() {
+    var that = this;
     var date_object = this.collectData();
     this.view_date_display.empty();
     this.view_ajaxloader.show();
@@ -191,12 +203,6 @@ AktiviteterDatesView.prototype.view = function() {
     }).always(function(result) {
         that.view_ajaxloader.hide();
     });
-
-    this.edit_root.slideUp('slow');
-};
-
-AktiviteterDatesView.prototype.edit = function() {
-    this.edit_root.slideDown('slow');
 };
 
 AktiviteterDatesView.prototype.collectData = function() {
