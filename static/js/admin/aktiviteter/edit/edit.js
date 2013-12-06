@@ -158,6 +158,10 @@ $(document).ready(function() {
     });
 
     form.submit(function() {
+        // Disable submit buttons
+        $(this).find("button[type='submit']").prop('disabled', true);
+        $(this).find("img.ajaxloader.submit").show();
+
         var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
         images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
