@@ -67,7 +67,7 @@ $(document).ready(function() {
         var input = control_group.find("input[name='title']");
         var error = control_group.find("div.error");
 
-        TitleValidator.scrollTo = control_group.parents("div.section").offset().top;
+        TitleValidator.scrollTo = control_group.parents("div.section");
 
         TitleValidator.validate = function() {
             var valid = input.val().trim() !== '';
@@ -99,7 +99,7 @@ $(document).ready(function() {
         var input = control_group.find("textarea[name='description']");
         var error = control_group.find("div.error");
 
-        DescriptionValidator.scrollTo = control_group.parents("div.section").offset().top;
+        DescriptionValidator.scrollTo = control_group.parents("div.section");
 
         DescriptionValidator.validate = function() {
             var valid = input.val().trim() !== '';
@@ -131,7 +131,7 @@ $(document).ready(function() {
         var select = control_group.find("select[name='difficulty']");
         var error = control_group.find("div.error");
 
-        DifficultyValidator.scrollTo = control_group.offset().top;
+        DifficultyValidator.scrollTo = control_group;
 
         DifficultyValidator.validate = function() {
             var valid = select.find("option:selected").val() !== '';
@@ -162,7 +162,7 @@ $(document).ready(function() {
         var select = control_group.find("select[name='audiences']");
         var error = control_group.find("div.error");
 
-        AudienceValidator.scrollTo = control_group.offset().top;
+        AudienceValidator.scrollTo = control_group;
 
         AudienceValidator.validate = function() {
             var valid = select.find("option:selected").length !== 0;
@@ -198,7 +198,7 @@ $(document).ready(function() {
         var category_buttons = control_group.find("button[data-category]");
         var subcategory_buttons = control_group.find("button.subcategory");
 
-        CategoryValidator.scrollTo = control_group.offset().top;
+        CategoryValidator.scrollTo = control_group;
 
         CategoryValidator.validate = function() {
             var category = category_buttons.filter(".active").attr('data-category');
@@ -231,7 +231,7 @@ $(document).ready(function() {
         var error = control_group.find("div.error");
         var select = control_group.find("select[name='counties']");
 
-        CountyValidator.scrollTo = control_group.offset().top;
+        CountyValidator.scrollTo = control_group;
 
         CountyValidator.validate = function() {
             var valid = select.find("option:selected").length !== 0;
@@ -266,7 +266,7 @@ $(document).ready(function() {
         var error = control_group.find("div.error");
         var select = control_group.find("select[name='municipalities']");
 
-        MunicipalityValidator.scrollTo = control_group.offset().top;
+        MunicipalityValidator.scrollTo = control_group;
 
         MunicipalityValidator.validate = function() {
             var valid = select.find("option:selected").length !== 0;

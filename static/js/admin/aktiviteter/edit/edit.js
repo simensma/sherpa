@@ -299,7 +299,7 @@ $(document).ready(function() {
             $(this).find("img.ajaxloader.submit").hide();
             e.preventDefault();
             $('html, body').animate({
-                scrollTop: validation.scrollTo
+                scrollTop: validation.scrollTo.offset().top
             }, 300);
         }
     });
