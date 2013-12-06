@@ -187,6 +187,9 @@
             <label class="control-label" for="description">Beskrivelse:</label>
             <div class="controls">
               <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+              <div class="hints error hide">
+                Du må legge inn noen få ord om turen her.
+              </div>
             </div>
           </div>
 
@@ -199,6 +202,9 @@
                   <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
                 {% endfor %}
               </select>
+              <div class="hints error hide">
+                Du må velge vanskelighetsgraden for turen.
+              </div>
             </div>
           </div>
 
@@ -211,6 +217,9 @@
                   <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
                 {% endfor %}
               </select>
+              <div class="hints error hide">
+                Du må velge minst én målgruppe.
+              </div>
             </div>
           </div>
 
@@ -228,6 +237,10 @@
 
           <div class="control-group subcategories{% if aktivitet.category == '' %} hide{% endif %}">
             <div class="controls">
+
+              <div class="hints error hide">
+                Du må velge minst én av de foreslåtte kategoriene. Klikk på de kategoriene du vil velge.
+              </div>
 
               <div class="square-well">
 
