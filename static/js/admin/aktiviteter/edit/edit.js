@@ -271,6 +271,9 @@ $(document).ready(function() {
         hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
         images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
 
+        // Collect the active category
+        category_input.val(category_buttons.filter(".active").attr('data-category'));
+
         // Collect subcategory tags
         var tags = [];
         subcategory_main_buttons.find("button.btn-danger").each(function() {
@@ -288,9 +291,6 @@ $(document).ready(function() {
         });
         dates_input.val(JSON.stringify(date_objects));
         dates_to_delete_input.val(JSON.stringify(date_ids_to_delete));
-
-        // Collect the active category
-        category_input.val(category_buttons.filter(".active").attr('data-category'));
 
         // Validate the form
         var validation = validateForm();
