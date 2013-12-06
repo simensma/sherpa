@@ -123,20 +123,17 @@ $(document).ready(function() {
         var categories = custom_subcategory.val().trim().split(' ');
         for(var i=0; i<categories.length; i++) {
             if(categories[i] === '') {
-                return;
+                continue;
             }
 
             // Check if the tag already exists
-            var exists = false;
-            subcategory_other_buttons.find("button.subcategory").each(function() {
-                if($(this).text().trim() === categories[i]) {
-                    $(this).addClass("btn-danger");
-                    exists = true;
-                }
-            });
-            if(exists) {
+            main_existing = subcategory_main_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            other_existing = subcategory_other_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            if(main_existing.length > 0 || other_existing.length > 0) {
+                main_existing.addClass("btn-danger");
+                other_existing.addClass("btn-danger");
                 custom_subcategory.val('');
-                return;
+                continue;
             }
 
             // Create the new button
