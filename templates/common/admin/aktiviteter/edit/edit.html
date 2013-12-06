@@ -47,6 +47,15 @@
   <div class="row">
     <div class="span12">
 
+      {% for message in messages %}
+        {% if message.message == 'save_success' %}
+          <div class="alert alert-success">
+            <strong>Endringene har blitt lagret!</strong><br>
+            Se gjennom endringene dine, eller <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>.
+          </div>
+        {% endif %}
+      {% endfor %}
+
       {# TODO: Client-side validations, check participants when editing dates, etc #}
 
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">

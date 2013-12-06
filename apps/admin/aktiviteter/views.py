@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.gis.geos import Point
+from django.contrib import messages
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag, County, Municipality
@@ -173,6 +174,7 @@ def edit(request, aktivitet):
             # Turledere
             aktivitet_date.turledere = date_post['turledere']
 
+        messages.info(request, 'save_success')
         return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def edit_date_preview(request):
