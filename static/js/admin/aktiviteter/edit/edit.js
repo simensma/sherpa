@@ -280,4 +280,11 @@ $(document).ready(function() {
         category_input.val(category_buttons.filter(".active").attr('data-category'));
     });
 
+    // Save buttons are disabled by default and enabled at window load, because if someone
+    // clicks it before the window is fully loaded, inputs that are filled by js on form
+    // submit may be missed
+    $(window).load(function() {
+        form.find("button[type='submit']").prop('disabled', false);
+    });
+
 });
