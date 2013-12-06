@@ -120,37 +120,39 @@ $(document).ready(function() {
     });
 
     function addCustomSubcategory() {
-        var category = custom_subcategory.val().trim();
-        if(category === '') {
-            return;
-        }
-
-        // Check if the tag already exists
-        var exists = false;
-        subcategory_other_buttons.find("button.subcategory").each(function() {
-            if($(this).text().trim() === category) {
-                $(this).addClass("btn-danger");
-                exists = true;
+        var categories = custom_subcategory.val().trim().split(' ');
+        for(var i=0; i<categories.length; i++) {
+            if(categories[i] === '') {
+                return;
             }
-        });
-        if(exists) {
+
+            // Check if the tag already exists
+            var exists = false;
+            subcategory_other_buttons.find("button.subcategory").each(function() {
+                if($(this).text().trim() === categories[i]) {
+                    $(this).addClass("btn-danger");
+                    exists = true;
+                }
+            });
+            if(exists) {
+                custom_subcategory.val('');
+                return;
+            }
+
+            // Create the new button
+            var new_button = subcategories.find("button.subcategory.fake").clone();
+            new_button.text(categories[i]);
+            new_button.removeClass('fake');
+            subcategory_other_buttons.append(' ');
+            subcategory_other_buttons.append(new_button);
+            new_button.click(toggleButtons);
+            new_button.show();
             custom_subcategory.val('');
-            return;
+
+            // This might be hidden, instashow it in this case
+            subcategory_other_buttons_trigger.hide();
+            subcategory_other_buttons_wrapper.slideDown();
         }
-
-        // Create the new button
-        var new_button = subcategories.find("button.subcategory.fake").clone();
-        new_button.text(category);
-        new_button.removeClass('fake');
-        subcategory_other_buttons.append(' ');
-        subcategory_other_buttons.append(new_button);
-        new_button.click(toggleButtons);
-        new_button.show();
-        custom_subcategory.val('');
-
-        // This might be hidden, instashow it in this case
-        subcategory_other_buttons_trigger.hide();
-        subcategory_other_buttons_wrapper.slideDown();
     }
 
     // Buttons without submit-type aren't supposed to submit the form
