@@ -35,6 +35,16 @@ $(document).ready(function() {
                 scrollTo = scrollTo || CategoryValidator.scrollTo;
             }
 
+            if(!CountyValidator.validate()) {
+                valid = false;
+                scrollTo = scrollTo || CountyValidator.scrollTo;
+            }
+
+            if(!MunicipalityValidator.validate()) {
+                valid = false;
+                scrollTo = scrollTo || MunicipalityValidator.scrollTo;
+            }
+
             return {
                 valid: valid,
                 scrollTo: scrollTo
@@ -213,5 +223,75 @@ $(document).ready(function() {
         }
 
     }(window.CategoryValidator = window.CategoryValidator || {}, jQuery ));
+
+    // Require at least one county
+    (function(CountyValidator, $, undefined ) {
+
+        var control_group = form.find("div.control-group.counties");
+        var error = control_group.find("div.error");
+        var select = control_group.find("select[name='counties']");
+
+        CountyValidator.scrollTo = control_group.offset().top;
+
+        CountyValidator.validate = function() {
+            var valid = select.find("option:selected").length !== 0;
+            if(!valid) {
+                markError();
+            }
+            return valid;
+        };
+
+        select.change(function() {
+            if(CountyValidator.validate()) {
+                clearError();
+            }
+        });
+
+        function markError() {
+            control_group.addClass('error');
+            error.show();
+        }
+
+        function clearError() {
+            control_group.removeClass('error');
+            error.hide();
+        }
+
+    }(window.CountyValidator = window.CountyValidator || {}, jQuery ));
+
+    // Require at least one municipality
+    (function(MunicipalityValidator, $, undefined ) {
+
+        var control_group = form.find("div.control-group.municipalities");
+        var error = control_group.find("div.error");
+        var select = control_group.find("select[name='municipalities']");
+
+        MunicipalityValidator.scrollTo = control_group.offset().top;
+
+        MunicipalityValidator.validate = function() {
+            var valid = select.find("option:selected").length !== 0;
+            if(!valid) {
+                markError();
+            }
+            return valid;
+        };
+
+        select.change(function() {
+            if(MunicipalityValidator.validate()) {
+                clearError();
+            }
+        });
+
+        function markError() {
+            control_group.addClass('error');
+            error.show();
+        }
+
+        function clearError() {
+            control_group.removeClass('error');
+            error.hide();
+        }
+
+    }(window.MunicipalityValidator = window.MunicipalityValidator || {}, jQuery ));
 
 });
