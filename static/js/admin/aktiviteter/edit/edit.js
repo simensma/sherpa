@@ -291,6 +291,71 @@ $(document).ready(function() {
 
         // Collect the active category
         category_input.val(category_buttons.filter(".active").attr('data-category'));
+
+        // Validate the form
+        var validation = validateForm();
+        if(!validation.valid) {
+            $(this).find("button[type='submit']").prop('disabled', false);
+            $(this).find("img.ajaxloader.submit").hide();
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: validation.scrollTo
+            }, 300);
+        }
     });
+
+    /**
+     * So we'll try a new take on clientside validations here. Check on focusout, and also
+     * on submit, and in the latter case scroll to the first error. Define "static classes"
+     * for each element to validate.
+     */
+
+    function validateForm() {
+        var valid = true;
+        var scrollTo;
+
+        if(!TitleValidator.validate()) {
+            valid = false;
+            scrollTo = scrollTo || TitleValidator.scrollTo;
+        }
+
+        return {
+            valid: valid,
+            scrollTo: scrollTo
+        };
+    }
+
+    // Require title
+    (function(TitleValidator, $, undefined ) {
+
+        var control_group = form.find("div.control-group.title");
+        var input = control_group.find("input[name='title']");
+        var error = control_group.find("div.error");
+
+        TitleValidator.scrollTo = control_group.parents("div.section").offset().top;
+
+        TitleValidator.validate = function() {
+            var valid = input.val().trim() !== '';
+            if(!valid) {
+                markError();
+            }
+            return valid;
+        };
+
+        input.focus(clearError);
+        input.focusout(TitleValidator.validate);
+
+        function markError() {
+            control_group.addClass('error');
+            error.show();
+        }
+
+        function clearError() {
+            control_group.removeClass('error');
+            error.hide();
+        }
+
+    }(window.TitleValidator = window.TitleValidator || {}, jQuery ));
+
 
 });
