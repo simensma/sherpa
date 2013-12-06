@@ -61,7 +61,7 @@ class Aktivitet(models.Model):
         return json.dumps(self.start_point.get_coords()[1])
 
     def get_locations(self):
-        return Location.objects.filter(id__in=json.loads(self.locations))
+        return Location.get_active().filter(id__in=json.loads(self.locations))
 
     def get_audiences(self):
         return json.loads(self.audiences)

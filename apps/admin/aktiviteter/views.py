@@ -63,7 +63,7 @@ def edit(request, aktivitet):
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
-            'locations': Location.objects.order_by('name'),
+            'locations': Location.get_active().order_by('name'),
             'now': datetime.now()
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)

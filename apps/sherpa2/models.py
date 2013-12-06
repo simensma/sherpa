@@ -218,7 +218,7 @@ class Condition(models.Model):
     def get_locations(self):
         locations = cache.get('conditions.locations.%s' % self.id)
         if locations is None:
-            locations = set([Location.objects.get(code=l) for l in self.locations.split('|') if l != ''])
+            locations = set([Location.get_active().get(code=l) for l in self.locations.split('|') if l != ''])
             cache.set('conditions.locations.%s' % self.id, locations, 60 * 60 * 12)
         return locations
 
@@ -274,6 +274,10 @@ class Location(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    @staticmethod
+    def get_active():
+        return Location.objects.filter(online=1)
 
     class Meta:
         db_table = u'location2'

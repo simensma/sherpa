@@ -30,7 +30,7 @@ def index(request):
         'difficulties': Aktivitet.DIFFICULTY_CHOICES,
         'categories': Aktivitet.CATEGORY_CHOICES,
         'audiences': Aktivitet.AUDIENCE_CHOICES,
-        'locations': Location.objects.order_by('name'),
+        'locations': Location.get_active().order_by('name'),
     }
     return render(request, 'common/aktiviteter/index.html', context)
 

@@ -6,4 +6,4 @@ import json
 
 def location_lookup(request):
     point_wkt = 'POINT(%s %s)' % (json.loads(request.POST['lng']), json.loads(request.POST['lat']))
-    return HttpResponse(json.dumps([m.id for m in Location.objects.filter(geom__contains=point_wkt)]))
+    return HttpResponse(json.dumps([m.id for m in Location.get_active().filter(geom__contains=point_wkt)]))
