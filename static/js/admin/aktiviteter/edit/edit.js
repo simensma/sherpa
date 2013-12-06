@@ -157,26 +157,6 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    form.submit(function() {
-        // Disable submit buttons
-        $(this).find("button[type='submit']").prop('disabled', true);
-        $(this).find("img.ajaxloader.submit").show();
-
-        var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
-        hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
-
-        // Collect subcategory tags
-        var tags = [];
-        subcategory_main_buttons.find("button.btn-danger").each(function() {
-            tags.push($(this).text());
-        });
-        subcategory_other_buttons.find("button.btn-danger").each(function() {
-            tags.push($(this).text());
-        });
-        subcategory_input.val(JSON.stringify(tags));
-    });
-
     // Dates
     var dates = form.find("div.section.dates");
     var dates_input = dates.find("input[name='dates']");
@@ -271,7 +251,36 @@ $(document).ready(function() {
         add_date_button.click();
     }
 
+    // Save buttons are disabled by default and enabled at window load, because if someone
+    // clicks it before the window is fully loaded, inputs that are filled by js on form
+    // submit may be missed
+    $(window).load(function() {
+        form.find("button[type='submit']").prop('disabled', false);
+    });
+
+
+    /**
+     * Common submit operations
+     */
     form.submit(function(e) {
+        // Disable submit buttons
+        $(this).find("button[type='submit']").prop('disabled', true);
+        $(this).find("img.ajaxloader.submit").show();
+
+        var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
+        hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
+        images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
+
+        // Collect subcategory tags
+        var tags = [];
+        subcategory_main_buttons.find("button.btn-danger").each(function() {
+            tags.push($(this).text());
+        });
+        subcategory_other_buttons.find("button.btn-danger").each(function() {
+            tags.push($(this).text());
+        });
+        subcategory_input.val(JSON.stringify(tags));
+
         // Collect all currently active dates
         var date_objects = [];
         dates.find("div.date-root:not(.hide)").each(function() {
@@ -282,13 +291,6 @@ $(document).ready(function() {
 
         // Collect the active category
         category_input.val(category_buttons.filter(".active").attr('data-category'));
-    });
-
-    // Save buttons are disabled by default and enabled at window load, because if someone
-    // clicks it before the window is fully loaded, inputs that are filled by js on form
-    // submit may be missed
-    $(window).load(function() {
-        form.find("button[type='submit']").prop('disabled', false);
     });
 
 });
