@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import datetime, date
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES
 
 logger = logging.getLogger('sherpa')
 
@@ -249,13 +249,19 @@ class Actor(models.Model):
         return children
 
     def is_household_member(self):
-        # Note that the definition of a household member is vague; membership type codes
-        # (defined by Focus services) include "household member" but it is only used when
-        # the member is an adult - if it is a child, a "child member" service is used instead,
-        # even though they do have a parent (and hence is a household member).
-        # This method defines *having a separate parent* as being a household member and should
-        # be considered canonical.
-        return self.parent != 0 and self.parent != self.memberid
+        """
+        Note that the definition of a household member is vague; membership type codes
+        (defined by Focus services) include "household member" but it is only used when
+        the member is an adult - if it is a child, a "child member" service is used instead,
+        even though they do have a parent (and hence is a household member).
+
+        *Having a separate parent* is the canonical definition of a household member.
+        However, there are also a few cases where the membership type is used even though
+        there isn't a parent is set, so handle both cases.
+        """
+        is_household_by_parent = self.parent != 0 and self.parent != self.memberid
+        is_household_by_service = self.get_services().filter(code__in=HOUSEHOLD_MEMBER_SERVICE_CODES).exists()
+        return is_household_by_parent or is_household_by_service
 
     def has_paid(self):
         """
