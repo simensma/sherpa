@@ -14,7 +14,7 @@ from core.models import FocusCountry
 from user.models import User
 from user.util import authenticate_sherpa2_user, authenticate_users
 from focus.models import Actor, Enrollment
-from sherpa25.models import import_fjelltreffen_annonser
+from sherpa25.util import import_fjelltreffen_annonser
 from core import validator
 from user.util import memberid_lookups_exceeded
 
