@@ -434,7 +434,8 @@ class Actor(models.Model):
         if self.get_clean_address().country.code == 'NO':
             raise Exception("It doesn't make sense to check for foreign postage on domestic members.")
         try:
-            return self.get_services().get(code__in=FOREIGN_POSTAGE_SERVICE_CODES).stop_date is None
+            # Note that we're not failing if there are multiple active services even though there should only be one.
+            return self.get_services().filter(code__in=FOREIGN_POSTAGE_SERVICE_CODES, stop_date__isnull=True).exists()
         except ActorService.DoesNotExist:
             return False
 
