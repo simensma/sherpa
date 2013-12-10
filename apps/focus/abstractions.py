@@ -110,7 +110,7 @@ class ActorProxy:
         self.enrollment = enrollment
 
     def __unicode__(self):
-        return u'%s' % self.enrollment.memberid
+        return u'Enrollment: %s' % self.enrollment.memberid
 
     def get_first_name(self):
         return self.enrollment.first_name.strip()

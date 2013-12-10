@@ -39,6 +39,9 @@ class Association(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
     def get_with_children(self):
         associations = [self]
         for children in self.children.all():

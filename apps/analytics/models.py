@@ -3,8 +3,11 @@ from django.db import models
 class Search(models.Model):
     query = models.CharField(max_length=1024)
     date = models.DateTimeField(auto_now_add=True)
-
     site = models.ForeignKey('core.Site')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     @staticmethod
     def on(site):
         return Search.objects.filter(site=site)
@@ -12,8 +15,11 @@ class Search(models.Model):
 class NotFound(models.Model):
     path = models.CharField(max_length=2048)
     date = models.DateTimeField()
-
     site = models.ForeignKey('core.Site')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     @staticmethod
     def on(site):
         return NotFound.objects.filter(site=site)
@@ -21,6 +27,9 @@ class NotFound(models.Model):
 class Segment(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def match(self, request):
         if   self.name == 'opera': return self.matchOpera(request)

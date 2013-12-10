@@ -13,8 +13,11 @@ class Article(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.User', related_name='articles_modified', null=True)
     modified_date = models.DateTimeField(null=True)
-
     site = models.ForeignKey('core.Site')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     @staticmethod
     def on(site):
         return Article.objects.filter(site=site)
@@ -30,3 +33,6 @@ class OldArticle(models.Model):
     author_name = models.CharField(max_length=255)
     author_email = models.CharField(max_length=255)
     date = models.DateTimeField()
+
+    def __unicode__(self):
+        return u'%s' % self.pk

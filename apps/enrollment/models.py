@@ -20,6 +20,9 @@ class State(models.Model):
     active = models.BooleanField()
     card = models.BooleanField() # Accept card-payment
 
+    def __unicode__(self):
+        return u'%s (active: %s, card: %s)' % (self.pk, self.active, self.card)
+
 class Enrollment(models.Model):
     STATE_CHOICES = (
         ('registration', 'Registrering'),
@@ -54,6 +57,9 @@ class Enrollment(models.Model):
 
     date_initiated = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_state(self):
         return [c[1] for c in self.STATE_CHOICES if c[0] == self.state][0]
@@ -186,6 +192,9 @@ class User(models.Model):
     memberid = models.IntegerField(null=True)
     pending_user = models.ForeignKey('user.User', related_name='+', null=True)
     sms_sent = models.BooleanField()
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_age(self):
         age = date.today().year - self.dob.year
@@ -397,6 +406,9 @@ class Transaction(models.Model):
     )
     state = models.CharField(max_length=255, choices=STATE_CHOICES, default=STATE_CHOICES[0][0])
     initiated = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_state(self):
         return [c[1] for c in self.STATE_CHOICES if c[0] == self.state][0]

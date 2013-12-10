@@ -32,6 +32,9 @@ class Annonse(models.Model):
     hideage = models.BooleanField()
     is_image_old = models.BooleanField() # True for those imported from old Fjelltreffen
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     def get_image_url(self):
         if self.is_image_old:
             return "http://%s/%s" % (settings.OLD_SITE, self.image)

@@ -2,7 +2,7 @@ from django.db.models.signals import pre_delete, post_delete
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db import models
-from django.db.models import Min, Q, F
+from django.db.models import Q, F
 from django.conf import settings
 
 from datetime import date
@@ -20,8 +20,11 @@ class Menu(models.Model):
     order = models.IntegerField()
     # Used to mark the current active menu page
     active = None
-
     site = models.ForeignKey('core.Site')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     @staticmethod
     def on(site):
         return Menu.objects.filter(site=site)
@@ -42,8 +45,11 @@ class Page(models.Model):
     modified_by = models.ForeignKey('user.User', related_name='pages_modified', null=True)
     modified_date = models.DateTimeField(null=True)
     parent = models.ForeignKey('page.Page', null=True)
-
     site = models.ForeignKey('core.Site')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     @staticmethod
     def on(site):
         return Page.objects.filter(site=site)
@@ -68,6 +74,9 @@ class Variant(models.Model):
     # way to do this?
     active = None
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 @receiver(post_delete, sender=Variant, dispatch_uid="page.models")
 def delete_page_variant(sender, **kwargs):
     # Note: We don't really need to cascade priorities
@@ -86,6 +95,9 @@ class Version(models.Model):
     thumbnail = None
     hide_thumbnail = False
     children = None # Used in page listing
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def load_preview(self):
         self.title = Content.objects.get(column__row__version=self, type='title')
@@ -123,6 +135,9 @@ class Row(models.Model):
     order = models.IntegerField()
     columns = None
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 @receiver(post_delete, sender=Row, dispatch_uid="page.models")
 def delete_row(sender, **kwargs):
     Column.objects.filter(row=kwargs['instance']).delete()
@@ -133,6 +148,9 @@ class Column(models.Model):
     offset = models.IntegerField()
     order = models.IntegerField()
     contents = None
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
 @receiver(post_delete, sender=Column, dispatch_uid="page.models")
 def delete_column(sender, **kwargs):
@@ -145,6 +163,9 @@ class Content(models.Model):
     # Note: 'order' should be unique, but it's not enforced because
     # when deleting and cascading orders, two orders will temporarily clash.
     order = models.IntegerField()
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
@@ -177,6 +198,9 @@ class Ad(models.Model):
     fallback_extension = models.CharField(max_length=4, null=True)
     fallback_sha1_hash = models.CharField(max_length=40, null=True)
     fallback_content_type = models.CharField(max_length=200, null=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def url(self):
         return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
@@ -230,6 +254,9 @@ class AdPlacement(models.Model):
     end_date = models.DateField(null=True)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def is_old(self): return self.end_date < date.today()
     def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()

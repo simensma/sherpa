@@ -8,3 +8,6 @@ class SMSServiceRequest(models.Model):
     count = models.IntegerField() # The number of requests we've recorded from this user thus far
     blocked = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk

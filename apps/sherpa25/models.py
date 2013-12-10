@@ -14,6 +14,9 @@ class Link(models.Model):
     role = models.IntegerField()
     priority = models.IntegerField(null=True, blank=True)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'Link'
 
@@ -28,6 +31,9 @@ class Classified(models.Model):
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'Classified'
 
@@ -38,6 +44,9 @@ class ClassifiedImage(models.Model):
     modified = models.DateTimeField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True)
     online = models.NullBooleanField(blank=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     class Meta:
         db_table = u'ClassifiedImage'
@@ -76,6 +85,9 @@ class Member(models.Model):
     modified = models.DateTimeField(null=True)
     status = models.IntegerField(null=True)
     online = models.BooleanField()
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_full_name(self):
         return "%s %s" % (self.first_name, self.last_name)

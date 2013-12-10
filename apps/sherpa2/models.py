@@ -42,6 +42,9 @@ class Association(models.Model):
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
     map = models.TextField(db_column='gr_map', blank=True)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'groups'
 
@@ -129,6 +132,9 @@ class Cabin(models.Model):
     url_ut = models.TextField(db_column=u'ca_url_ut', blank=True)
     the_geom = models.GeometryField(blank=True)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'cabin2'
 
@@ -151,6 +157,9 @@ class Article(models.Model):
     priority = models.IntegerField(db_column='ar_priority', null=True, blank=True)
     folders = models.ManyToManyField('sherpa2.Folder', related_name='articles', through='FolderArticle')
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'article'
 
@@ -170,6 +179,9 @@ class Folder(models.Model):
     show_rel_articles = models.IntegerField(db_column='fo_show_rel_articles')
     cols = models.IntegerField(db_column='fo_cols', null=True, blank=True)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'folder'
 
@@ -177,6 +189,9 @@ class FolderArticle(models.Model):
     folder = models.ForeignKey('sherpa2.Folder', db_column='fo_id')
     article = models.ForeignKey('sherpa2.Article', db_column='ar_id')
     status = models.CharField(db_column='fa_status', max_length=20, blank=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     class Meta:
         db_table = u'folder_article'
@@ -193,6 +208,9 @@ class Condition(models.Model):
     gr_id = models.IntegerField(db_column='co_gr_id', null=True, blank=True)
     online = models.IntegerField(db_column='co_online', null=True, blank=True)
     deleted = models.IntegerField(db_column='co_deleted')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_date_observed(self):
         return datetime.strptime(self.date_observed, "%Y%m%d").date()
@@ -253,6 +271,9 @@ class Location(models.Model):
     meta = models.IntegerField(db_column='lo_meta', null=True)
     geom = models.MultiPolygonField(db_column='the_geom', null=True)
     objects = models.GeoManager()
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     class Meta:
         db_table = u'location2'

@@ -51,6 +51,9 @@ class Enrollment(models.Model):
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
 
+    def __unicode__(self):
+        return u'%s (memberid: %s)' % (self.pk, self.memberid)
+
     def has_paid(self):
         return self.payment_method == PAYMENT_METHOD_CODES['card'] and self.paid == True
 
@@ -159,7 +162,7 @@ class Actor(models.Model):
     chdt = models.DateTimeField(db_column=u'ChDt')
 
     def __unicode__(self):
-        return u'%s' % self.memberid
+        return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
     def membership_type(self):
         now = datetime.now()
@@ -504,6 +507,9 @@ class ActorService(models.Model):
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
     invdate = models.DateTimeField(null=True, db_column=u'InvDate')
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'ActService'
 
@@ -525,6 +531,9 @@ class ActorAddress(models.Model):
     crby = models.CharField(max_length=50, db_column=u'CrBy')
     crdt = models.DateTimeField(null=True, db_column=u'CrDt')
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
     class Meta:
         db_table = u'ActAd'
 
@@ -541,6 +550,9 @@ class ActorText(models.Model):
     created_date = models.DateTimeField(null=True, db_column=u'CrDt')
     changed_by = models.CharField(max_length=25, db_column=u'ChBy')
     changed_date = models.DateTimeField(null=True, db_column=u'ChDt')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     class Meta:
         db_table = u'ActText'
@@ -573,6 +585,9 @@ class FocusZipcode(models.Model):
     chby = models.CharField(max_length=25, db_column=u'ChBy')
     chdt = models.DateTimeField(null=True, db_column=u'ChDt')
 
+    def __unicode__(self):
+        return u'%s (zipcode: %s)' % (self.pk, self.zipcode)
+
     class Meta:
         db_table = u'PostalCode'
 
@@ -586,6 +601,9 @@ class Price(models.Model):
     school = models.IntegerField(null=True, db_column=u'C106')
     household = models.IntegerField(null=True, db_column=u'C107')
     unknown = models.IntegerField(null=True, db_column=u'C108')
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     class Meta:
         db_table = u'Cust_Turist_Region_PriceCode_CrossTable'
@@ -605,6 +623,9 @@ class BalanceHistory(models.Model):
     # memberid above 3000000 - which is from ca 2006. This probably means that it is not in use anymore,
     # so we'll ignore it. It was used in the old user page - after årskravet is processed, a members
     # payment status would be if _either_ the current_year or last_year balance was <= 0.
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def is_paid(self):
         """

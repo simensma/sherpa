@@ -727,6 +727,9 @@ class Permission(models.Model):
     """
     name = models.CharField(max_length=255)
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
 class AssociationRole(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Administrator'),
@@ -734,6 +737,9 @@ class AssociationRole(models.Model):
     user = models.ForeignKey('user.User')
     association = models.ForeignKey('association.Association')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     @staticmethod
     def friendly_role(role):
@@ -750,6 +756,9 @@ class NorwayBusTicket(models.Model):
     distance = models.CharField(max_length=1024)
     is_imported = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 class Turleder(models.Model):
     TURLEDER_CHOICES = (
         (u'vinter', u'Vinterturleder'),
@@ -761,6 +770,9 @@ class Turleder(models.Model):
     association_approved = models.ForeignKey('association.Association', related_name='turledere_approved')
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_role(self):
         return [c[1] for c in self.TURLEDER_CHOICES if c[0] == self.role][0]
@@ -777,6 +789,9 @@ class Kursleder(models.Model):
     user = models.OneToOneField(User, related_name='kursleder')
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def is_expired(self):
         return self.date_end <= date.today()
@@ -801,3 +816,6 @@ class Instruktor(models.Model):
 
     user = models.ForeignKey(User, related_name='instruktor')
     role = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % self.pk

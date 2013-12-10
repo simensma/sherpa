@@ -3,13 +3,22 @@ from django.contrib.gis.db import models
 class Tag(models.Model):
     name = models.CharField(max_length=200)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 class Site(models.Model):
     domain = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255)
     template = models.ForeignKey('core.SiteTemplate')
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.domain)
+
 class SiteTemplate(models.Model):
     name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
 
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
@@ -17,8 +26,14 @@ class Zipcode(models.Model):
     city_code = models.CharField(max_length=4)
     city = models.CharField(max_length=100)
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 class ZipcodeState(models.Model):
     last_update = models.DateTimeField()
+
+    def __unicode__(self):
+        return u'%s (last_update: %s)' % (self.pk, self.last_update)
 
 class County(models.Model):
     code = models.CharField(max_length=2) # Corresponds to ISO 3166-2:NO (https://no.wikipedia.org/wiki/ISO_3166-2:NO)
@@ -27,6 +42,9 @@ class County(models.Model):
     perimeter = models.FloatField(null=True)
     geom = models.MultiPolygonField(null=True)
     objects = models.GeoManager()
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
 
     @staticmethod
     def typical_objects():
@@ -47,11 +65,17 @@ class Municipality(models.Model):
     update_date = models.DateTimeField(null=True)
     objects = models.GeoManager()
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
 # The country codes from Focus were extracted and duplicated here.
 class FocusCountry(models.Model):
     code = models.CharField(max_length=2)
     name = models.CharField(max_length=255)
     scandinavian = models.BooleanField()
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
 
     @staticmethod
     def get_sorted():

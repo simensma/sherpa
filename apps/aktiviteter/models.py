@@ -45,6 +45,9 @@ class Aktivitet(models.Model):
     pub_date = models.DateField()
     hidden = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.title)
+
     def get_dates_ordered(self):
         return self.dates.all().order_by('-start_date')
 
@@ -179,6 +182,9 @@ class AktivitetDate(models.Model):
     contact_custom_phone = models.CharField(max_length=255)
     contact_custom_email = models.CharField(max_length=255)
 
+    def __unicode__(self):
+        return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
+
     def accepts_signups(self):
         today = date.today()
         return self.signup_enabled and self.signup_start <= today and self.signup_deadline >= today
@@ -216,8 +222,14 @@ class AktivitetImage(models.Model):
     photographer = models.CharField(max_length=255)
     order = models.IntegerField()
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 class SimpleParticipant(models.Model):
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)

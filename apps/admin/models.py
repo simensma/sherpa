@@ -24,6 +24,9 @@ class Image(models.Model):
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
 
+    def __unicode__(self):
+        return u'%s' % self.pk
+
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
@@ -39,7 +42,7 @@ class Album(models.Model):
     parent = models.ForeignKey('admin.Album', null=True)
 
     def __unicode__(self):
-        return self.name
+        return u'%s (%s)' % (self.pk, self.name)
 
     def children(self):
         return Album.objects.filter(parent=self)
@@ -62,6 +65,9 @@ class Publication(models.Model):
         ('all_rights_reserved', 'Alle rettigheter reservert'),
         ('cc-by-nc-nd', 'Creative Commons Navngivelse-Ikkekommersiell-IngenBearbeidelse 3.0'),)
     license = models.CharField(max_length=255, choices=LICENSE_CHOICES, default=LICENSE_CHOICES[0][0])
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.pk, self.title)
 
     def releases_ordered(self):
         return self.releases.all().order_by('-pub_date')
@@ -91,6 +97,9 @@ class Release(models.Model):
     online_view = models.CharField(max_length=2048)
     pub_date = models.DateTimeField()
     tags = models.ManyToManyField('core.Tag', related_name='releases')
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.pk, self.title)
 
     def get_cover_photo(self):
         return use_image_thumb(self.cover_photo, 500)
