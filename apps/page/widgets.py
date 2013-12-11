@@ -189,7 +189,13 @@ def get_static_promo_context(path):
             'id': 'stillenatur',
             'name': '#stillenatur',
             'start_date': date(year=2013, month=11, day=26),
-            'end_date': date(year=2013, month=11, day=26),
+            'end_date': date(year=2013, month=12, day=10),
+        },
+        {
+            'id': 'gavemedlemskap',
+            'name': 'Gavemedlemskap',
+            'start_date': date(year=2013, month=12, day=11),
+            'end_date': date(year=2013, month=12, day=11),
         }
     ]
 
@@ -206,7 +212,7 @@ def get_static_promo_context(path):
 
     context = {}
     promos = [
-        {'name': rotation['name'], 'url': '/', 'template': 'main', 'type': 'cover', 'rotation': rotation},
+        {'name': rotation['name'], 'url': '/', 'template': 'main', 'type': 'default', 'rotation': rotation},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
