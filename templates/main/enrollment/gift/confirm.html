@@ -8,6 +8,9 @@
   <div class="span12">
     <h1>Gi bort gavemedlemskap</h1>
     {% include 'main/enrollment/gift/progress.html' with step=3 %}
+    {% if display_christmas_warning %}
+      {% include 'main/enrollment/gift/christmas_warning.html' %}
+    {% endif %}
 
     {% for message in messages %}
       {% if message.message == 'email_memberservice_fail' %}

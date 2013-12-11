@@ -11,6 +11,9 @@
   <div class="span12">
     <h1>Gi bort gavemedlemskap</h1>
     {% include 'main/enrollment/gift/progress.html' with step=1 %}
+    {% if display_christmas_warning %}
+      {% include 'main/enrollment/gift/christmas_warning.html' %}
+    {% endif %}
   </div>
 </div>
 

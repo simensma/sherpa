@@ -6,6 +6,7 @@ from django.contrib import messages
 
 from smtplib import SMTPException
 from ssl import SSLError
+from datetime import date
 import json
 import logging
 import sys
@@ -20,10 +21,16 @@ EMAIL_MEMBERSERVICE_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>
 EMAIL_MEMBERSERVICE_SUBJECT = u"Bestilling av gavemedlemskap"
 EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
+# Automatically remove the christmas warning at this date. Remove all related code after that.
+CHRISTMAS_WARNING_END = date(2013, 12, 24)
+
 def index(request):
     if 'gift_membership' in request.session and 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
-    context = {'prices': membership_price_by_code}
+    context = {
+        'prices': membership_price_by_code,
+        'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
+    }
     return render(request, 'main/enrollment/gift/index.html', context)
 
 def form(request):
@@ -56,6 +63,7 @@ def form(request):
         'giver': request.session['gift_membership'].get('giver', None),
         'receivers': request.session['gift_membership'].get('receivers', []),
         'chosen_type': chosen_type,
+        'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
     return render(request, 'main/enrollment/gift/form.html', context)
 
@@ -115,7 +123,8 @@ def confirm(request):
 
     context = {
         'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers']
+        'receivers': request.session['gift_membership']['receivers'],
+        'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
     return render(request, 'main/enrollment/gift/confirm.html', context)
 
