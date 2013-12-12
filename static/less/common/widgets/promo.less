@@ -711,6 +711,34 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-gavemedlemskap {
+    background-image: url('/static/img/widgets/promo/gavemedlemskap-2013.jpg');
+
+    div.content {
+      @width: 300px;
+      @padding-right: 20px;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 300px;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      h1, p {
+        display: none;
+      }
+
+      p.double-button-hack {
+        display: block;
+      }
+
+      @media(max-width: 767px) {
+        h1, p {
+          display: block;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {

@@ -1,16 +1,12 @@
-<div class="wrapper ut">
-  <div class="right">
-    <h1 style="text-align: center; font-size: 50px; margin-top: 40px; padding-left: 20px; padding-right: 20p">Tom for gaveidéer?</h1>
+<h1>
+  1 skjorte, 3 DVDer, eller 498 hytter?
+</h1>
 
-    <p style="text-align: center; font-size: 30px; font-family: 'DTL Nobel' !important; padding-left: 50px; padding-right: 50px">
-      <strong>Et medlemskap i DNT varer lenge og kan brukes så mye man vil.</strong>
-    </p>
+<p>
+  Vi har 498 hytter stående rundt omkring i hele Norge, og du kan gi dem bort, alle sammen. For bare 590 kr får du nemlig et medlemskap i Den Norske Turistforening som gir tilgang til alle våre hytter. God jul. Og god tur.
+</p>
 
-    <p class="button" style="text-align: center;">
-      <a class="btn btn-large" href="{% url 'enrollment.gift.views.index' %}">Gi bort gavemedlemskap</a>
-    </p>
-
-  </div>
-  <img class="background-image" src="{{ STATIC_URL }}img/widgets/promo/gavemedlemskap.jpg" alt="Gavemedlemskap">
-  <div style="clear: both;"></div>
-</div>
+<p class="double-button-hack">
+  <a class="btn btn-large btn-danger full" href="{% url 'enrollment.gift.views.index' %}">Jeg vil gi bort 498 hytter!</a>
+  <a class="btn btn-large small" href="{% url 'enrollment.gift.views.index' %}">Jeg vil gi bort 498 hytter!</a>
+</p>

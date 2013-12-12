@@ -212,7 +212,7 @@ def get_static_promo_context(path):
 
     context = {}
     promos = [
-        {'name': rotation['name'], 'url': '/', 'template': 'main', 'type': 'default', 'rotation': rotation},
+        {'name': rotation['name'], 'url': '/', 'template': 'main', 'type': 'cover', 'rotation': rotation},
         {'name': 'Fellesturer', 'url': '/fellesturer/', 'template': 'fellesturer', 'type': 'default'},
         {'name': 'Hytter og ruter', 'url': '/hytter/', 'template': 'hytter', 'type': 'default'},
         {'name': 'Barn', 'url': '/barn/', 'template': 'barn', 'type': 'default'},
