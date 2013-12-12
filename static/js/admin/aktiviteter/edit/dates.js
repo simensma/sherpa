@@ -180,8 +180,16 @@ AktiviteterDatesView.prototype.view = function() {
     this.edit_root.slideUp('slow');
 };
 
-AktiviteterDatesView.prototype.edit = function() {
-    this.edit_root.slideDown('slow');
+AktiviteterDatesView.prototype.edit = function(opts) {
+    opts = $.extend({
+        instant: false
+    }, opts);
+
+    if(opts.instant) {
+        this.edit_root.show();
+    } else {
+        this.edit_root.slideDown('slow');
+    }
 };
 
 AktiviteterDatesView.prototype.updateView = function() {

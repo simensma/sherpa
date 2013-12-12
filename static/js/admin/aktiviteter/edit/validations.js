@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
+    var dates = form.find("div.section.dates");
 
     (function(AktivitetValidator, $, undefined ) {
 
@@ -43,6 +44,12 @@ $(document).ready(function() {
             if(!MunicipalityValidator.validate()) {
                 valid = false;
                 scrollTo = scrollTo || MunicipalityValidator.scrollTo;
+            }
+
+            var dt = new DatesValidator().validate();
+            if(!dt.valid) {
+                valid = false;
+                scrollTo = scrollTo || dt.scrollTo;
             }
 
             return {
@@ -293,5 +300,118 @@ $(document).ready(function() {
         }
 
     }(window.MunicipalityValidator = window.MunicipalityValidator || {}, jQuery ));
+
+    function DatesValidator() {
+
+        /**
+         * Note that a weak point here is that the focus events won't work until the first
+         * attempt to validate (it's won't be binded at runtime)
+         */
+
+        var valid = true;
+        var scrollTo;
+
+        this.validate = function() {
+            dates.find("div.date-root:not(.hide)").each(function() {
+                var view = $(this).data('view');
+
+                var checks = [
+                    new StartTimeValidator(view.root),
+                    new EndTimeValidator(view.root),
+                ];
+
+                for(var i=0; i<checks.length; i++) {
+                    var this_valid = checks[i].validate();
+
+                    valid = valid && this_valid;
+                    scrollTo = scrollTo || checks[i].scrollTo;
+
+                    if(!this_valid) {
+                        view.edit({instant: true});
+                    }
+                }
+            });
+
+            return {
+                valid: valid,
+                scrollTo: scrollTo
+            };
+        };
+
+        // Start datetime format
+        function StartTimeValidator(root) {
+
+            var control_group = root.find("div.control-group.start_date");
+            var error = control_group.find("div.error");
+            var date_control = control_group.find("div.date");
+            var date_input = control_group.find("input[name='start_date']");
+            var time_input = control_group.find("input[name='start_time']");
+            this.scrollTo = root;
+
+            this.validate = function() {
+                var date_valid = date_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+                var time_valid = time_input.val().match(/^\d\d:\d\d$/) !== null;
+                var valid = date_valid && time_valid;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            date_input.focus(clearError);
+            time_input.focus(clearError);
+            date_control.on('changeDate', this.validate);
+            time_input.focusout(this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        // End datetime format
+        function EndTimeValidator(root) {
+
+            var control_group = root.find("div.control-group.end_date");
+            var error = control_group.find("div.error");
+            var date_control = control_group.find("div.date");
+            var date_input = control_group.find("input[name='end_date']");
+            var time_input = control_group.find("input[name='end_time']");
+            this.scrollTo = root;
+
+            this.validate = function() {
+                var date_valid = date_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+                var time_valid = time_input.val().match(/^\d\d:\d\d$/) !== null;
+                var valid = date_valid && time_valid;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            date_input.focus(clearError);
+            time_input.focus(clearError);
+            date_control.on('changeDate', this.validate);
+            time_input.focusout(this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+    }
 
 });

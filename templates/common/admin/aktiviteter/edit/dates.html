@@ -42,6 +42,9 @@
           <span class="add-on"><i class="icon-th"></i></span>
         </div>
         <input type="text" class="input-small" name="start_time" value="{% firstof date.start_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
+        <div class="hints error hide">
+          Du må legge inn turens startdato på rett format: dd.mm.åååå, tt:mm (dag, måned, år, time, minutt)
+        </div>
       </div>
     </div>
 
@@ -53,6 +56,9 @@
           <span class="add-on"><i class="icon-th"></i></span>
         </div>
         <input type="text" class="input-small" name="end_time" value="{% firstof date.end_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
+        <div class="hints error hide">
+          Du må legge inn turens sluttdato på rett format: dd.mm.åååå, tt:mm (dag, måned, år, time, minutt)
+        </div>
       </div>
     </div>
 
