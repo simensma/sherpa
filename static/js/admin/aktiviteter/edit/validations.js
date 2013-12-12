@@ -318,6 +318,9 @@ $(document).ready(function() {
                 var checks = [
                     new StartTimeValidator(view.root),
                     new EndTimeValidator(view.root),
+                    new SignupStartValidator(view.root),
+                    new SignupDeadlineValidator(view.root),
+                    new SignupCancelDeadlineValidator(view.root),
                 ];
 
                 for(var i=0; i<checks.length; i++) {
@@ -400,6 +403,135 @@ $(document).ready(function() {
             time_input.focus(clearError);
             date_control.on('changeDate', this.validate);
             time_input.focusout(this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        // End datetime format
+        function SignupStartValidator(root) {
+
+            var control_group_signup = root.find("div.control-group.signup");
+            var control_group = root.find("div.control-group.signup_start");
+            var error = control_group.find("div.error");
+            var signup_start = control_group.find("div.date");
+            var signup_start_input = control_group.find("input[name='signup_start']");
+            this.scrollTo = root;
+
+            this.validate = function() {
+
+                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                    return true;
+                }
+
+                var valid = signup_start_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            signup_start_input.focus(clearError);
+            signup_start.on('show', clearError);
+            signup_start.on('changeDate', this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        // End datetime format
+        function SignupDeadlineValidator(root) {
+
+            var control_group_signup = root.find("div.control-group.signup");
+            var control_group = root.find("div.control-group.signup_deadline");
+            var error = control_group.find("div.error");
+            var signup_deadline_until_start = control_group.find("input[name='signup_deadline_until_start']");
+            var signup_deadline = control_group.find("div.date");
+            var signup_deadline_input = control_group.find("input[name='signup_deadline']");
+            this.scrollTo = root;
+
+            this.validate = function() {
+
+                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                    return true;
+                }
+
+                if(signup_deadline_until_start.is(":checked")) {
+                    return true;
+                }
+
+                var valid = signup_deadline_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            signup_deadline_until_start.change(clearError);
+            signup_deadline_input.focus(clearError);
+            signup_deadline.on('show', clearError);
+            signup_deadline.on('changeDate', this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        // End datetime format
+        function SignupCancelDeadlineValidator(root) {
+
+            var control_group_signup = root.find("div.control-group.signup");
+            var control_group = root.find("div.control-group.signup_cancel_deadline");
+            var error = control_group.find("div.error");
+            var signup_cancel_deadline_until_start = control_group.find("input[name='signup_cancel_deadline_until_start']");
+            var signup_cancel_deadline = control_group.find("div.date");
+            var signup_cancel_deadline_input = control_group.find("input[name='signup_cancel_deadline']");
+            this.scrollTo = root;
+
+            this.validate = function() {
+
+                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                    return true;
+                }
+
+                if(signup_cancel_deadline_until_start.is(":checked")) {
+                    return true;
+                }
+
+                var valid = signup_cancel_deadline_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            signup_cancel_deadline_until_start.change(clearError);
+            signup_cancel_deadline_input.focus(clearError);
+            signup_cancel_deadline.on('show', clearError);
+            signup_cancel_deadline.on('changeDate', this.validate);
 
             function markError() {
                 control_group.addClass('error');
