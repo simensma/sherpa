@@ -715,25 +715,37 @@ div.widget.promo {
     background-image: url('/static/img/widgets/promo/gavemedlemskap-2013.jpg');
 
     div.content {
-      @width: 300px;
-      @padding-right: 20px;
+      @width: 410px;
+      @padding-right: 70px;
       padding-left: 940px - @width - @padding-right;
-      padding-top: 300px;
+      padding-top: 50px;
       width: @width;
       padding-right: @padding-right;
       color: white;
+      text-align: left;
 
-      h1, p {
-        display: none;
+      h1 {
+        font-weight: normal;
+        text-transform: none;
+        max-width: 390px; // Friendly hack for suitable linebreak
+      }
+
+      p {
+        font-size: 16px;
       }
 
       p.double-button-hack {
-        display: block;
+        text-align: right;
+        margin-right: 8px;
       }
 
       @media(max-width: 767px) {
-        h1, p {
-          display: block;
+        h1 {
+          max-width: none;
+        }
+
+        p.double-button-hack {
+          text-align: center;
         }
       }
     }
