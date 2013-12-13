@@ -52,7 +52,11 @@
         {% if message.message == 'save_success' %}
           <div class="alert alert-success">
             <strong>Endringene har blitt lagret!</strong><br>
-            Se gjennom endringene dine, eller <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>.
+            {% if aktivitet.dates.count == 0 %}
+              Se gjennom endringene dine, eller <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>.
+            {% else %}
+              Se gjennom endringene dine, <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
+            {% endif %}
           </div>
         {% endif %}
       {% endfor %}
