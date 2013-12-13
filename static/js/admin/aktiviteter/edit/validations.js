@@ -13,6 +13,7 @@ $(document).ready(function() {
         new CountyValidator(),
         new MunicipalityValidator(),
         new DatesValidator(),
+        new PublicationDateValidator(),
     ];
 
     (function(AktivitetValidator, $, undefined ) {
@@ -255,6 +256,37 @@ $(document).ready(function() {
                 that.clearError();
             }
         });
+    }
+
+    function PublicationDateValidator() {
+        var that = this;
+        var control_group = form.find("div.control-group.pub_date");
+        var error = control_group.find("div.error");
+        var date = control_group.find("div.date");
+        var input = control_group.find("input[name='pub_date']");
+        this.scrollTo = control_group;
+
+        this.validate = function() {
+            var valid = input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+            if(!valid) {
+                that.markError();
+            }
+            return valid;
+        };
+
+        this.markError = function() {
+            control_group.addClass('error');
+            error.show();
+        };
+
+        this.clearError = function() {
+            control_group.removeClass('error');
+            error.hide();
+        };
+
+        date.on('show', this.clearError);
+        date.on('changeDate', this.validate);
+        input.focus(this.clearError);
     }
 
     function DatesValidator() {
