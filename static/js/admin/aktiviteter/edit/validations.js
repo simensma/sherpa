@@ -12,6 +12,7 @@ $(document).ready(function() {
         new CategoryValidator(),
         new CountyValidator(),
         new MunicipalityValidator(),
+        new DatesValidator(),
     ];
 
     (function(AktivitetValidator, $, undefined ) {
@@ -26,12 +27,6 @@ $(document).ready(function() {
                 if(!valid) {
                     scrollTo = scrollTo || validators[i].scrollTo;
                 }
-            }
-
-            var dt = new DatesValidator().validate();
-            if(!dt.valid) {
-                valid = false;
-                scrollTo = scrollTo || dt.scrollTo;
             }
 
             return {
@@ -266,17 +261,18 @@ $(document).ready(function() {
 
         /**
          * Note that a weak point here is that the focus events won't work until the first
-         * attempt to validate (it's won't be binded at runtime)
+         * attempt to validate (it won't be bound at runtime)
          */
 
-        var valid = true;
-        var scrollTo;
+        var that = this;
+        this.scrollTo = undefined;
 
         this.validate = function() {
+            var valid = true;
             dates.find("div.date-root:not(.hide)").each(function() {
                 var view = $(this).data('view');
 
-                var checks = [
+                var validators = [
                     new StartTimeValidator(view.root),
                     new EndTimeValidator(view.root),
                     new SignupStartValidator(view.root),
@@ -284,11 +280,11 @@ $(document).ready(function() {
                     new SignupCancelDeadlineValidator(view.root),
                 ];
 
-                for(var i=0; i<checks.length; i++) {
-                    var this_valid = checks[i].validate();
+                for(var i=0; i<validators.length; i++) {
+                    var this_valid = validators[i].validate();
 
                     valid = valid && this_valid;
-                    scrollTo = scrollTo || checks[i].scrollTo;
+                    that.scrollTo = that.scrollTo || validators[i].scrollTo;
 
                     if(!this_valid) {
                         view.edit({instant: true});
@@ -296,10 +292,7 @@ $(document).ready(function() {
                 }
             });
 
-            return {
-                valid: valid,
-                scrollTo: scrollTo
-            };
+            return valid;
         };
 
         // Start datetime format
