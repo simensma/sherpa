@@ -418,7 +418,10 @@ class Transaction(models.Model):
         order_number = random.randint(100000000, 999999999)
         while Transaction.objects.filter(order_number=order_number).exists():
             order_number = random.randint(100000000, 999999999)
-        return order_number
+        # The I_ convension is there for historical reasons, and memberservice is using
+        # it to filter the different payment types when validating all sums.
+        # E.g. F_ is used for foreign payments
+        return 'I_%s' % order_number
 
     class Meta:
         ordering = ['-initiated']
