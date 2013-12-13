@@ -39,7 +39,6 @@ def index(request):
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
 def new(request):
-    # TODO: Validations
     aktivitet = Aktivitet(
         association=request.session['active_association'],
         pub_date=datetime.now(),
@@ -68,7 +67,6 @@ def edit(request, aktivitet):
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':
-        # TODO: Server-side validations
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         aktivitet.code = request.POST['code']
         aktivitet.title = request.POST['title']

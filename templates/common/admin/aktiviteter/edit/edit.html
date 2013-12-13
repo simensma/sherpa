@@ -61,8 +61,6 @@
         {% endif %}
       {% endfor %}
 
-      {# TODO: Client-side validations, check participants when editing dates, etc #}
-
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
         {% csrf_token %}
         <input type="hidden" name="images" value="">
