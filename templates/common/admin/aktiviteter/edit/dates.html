@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <div class="enrollment-group{% if not date %} hide{% endif %}">
+    <div class="enrollment-group{% if not date or not date.signup_enabled %} hide{% endif %}">
 
       <div class="control-group signup_start">
         <label class="control-label">Påmelding starter:</label>
