@@ -4,46 +4,28 @@ $(document).ready(function() {
     var form = editor.find("form.edit-aktivitet");
     var dates = form.find("div.section.dates");
 
+    var validators = [
+        new TitleValidator(),
+        new DescriptionValidator(),
+        new DifficultyValidator(),
+        new AudienceValidator(),
+        new CategoryValidator(),
+        new CountyValidator(),
+        new MunicipalityValidator(),
+    ];
+
     (function(AktivitetValidator, $, undefined ) {
 
         AktivitetValidator.validate = function() {
-
             var valid = true;
             var scrollTo;
 
-            if(!TitleValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || TitleValidator.scrollTo;
-            }
-
-            if(!DescriptionValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || DescriptionValidator.scrollTo;
-            }
-
-            if(!DifficultyValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || DifficultyValidator.scrollTo;
-            }
-
-            if(!AudienceValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || AudienceValidator.scrollTo;
-            }
-
-            if(!CategoryValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || CategoryValidator.scrollTo;
-            }
-
-            if(!CountyValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || CountyValidator.scrollTo;
-            }
-
-            if(!MunicipalityValidator.validate()) {
-                valid = false;
-                scrollTo = scrollTo || MunicipalityValidator.scrollTo;
+            for(var i=0; i<validators.length; i++) {
+                var this_valid = validators[i].validate();
+                valid = valid && this_valid;
+                if(!valid) {
+                    scrollTo = scrollTo || validators[i].scrollTo;
+                }
             }
 
             var dt = new DatesValidator().validate();
@@ -56,7 +38,6 @@ $(document).ready(function() {
                 valid: valid,
                 scrollTo: scrollTo
             };
-
         };
 
     }(window.AktivitetValidator = window.AktivitetValidator || {}, jQuery ));
@@ -67,239 +48,219 @@ $(document).ready(function() {
      * for each element to validate.
      */
 
-    // Require title
-    (function(TitleValidator, $, undefined ) {
-
+    function TitleValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.title");
         var input = control_group.find("input[name='title']");
         var error = control_group.find("div.error");
+        this.scrollTo = control_group.parents("div.section");
 
-        TitleValidator.scrollTo = control_group.parents("div.section");
-
-        TitleValidator.validate = function() {
+        this.validate = function() {
             var valid = input.val().trim() !== '';
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        input.focus(clearError);
-        input.focusout(TitleValidator.validate);
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.TitleValidator = window.TitleValidator || {}, jQuery ));
+        input.focus(this.clearError);
+        input.focusout(this.validate);
+    }
 
-    // Require description
-    (function(DescriptionValidator, $, undefined ) {
-
+    function DescriptionValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.description");
         var input = control_group.find("textarea[name='description']");
         var error = control_group.find("div.error");
+        this.scrollTo = control_group.parents("div.section");
 
-        DescriptionValidator.scrollTo = control_group.parents("div.section");
-
-        DescriptionValidator.validate = function() {
+        this.validate = function() {
             var valid = input.val().trim() !== '';
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        input.focus(clearError);
-        input.focusout(DescriptionValidator.validate);
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.DescriptionValidator = window.DescriptionValidator || {}, jQuery ));
+        input.focus(this.clearError);
+        input.focusout(this.validate);
+    }
 
-    // Require difficulty
-    (function(DifficultyValidator, $, undefined ) {
-
+    function DifficultyValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.difficulty");
         var select = control_group.find("select[name='difficulty']");
         var error = control_group.find("div.error");
+        this.scrollTo = control_group;
 
-        DifficultyValidator.scrollTo = control_group;
-
-        DifficultyValidator.validate = function() {
+        this.validate = function() {
             var valid = select.find("option:selected").val() !== '';
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        select.change(clearError);
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.DifficultyValidator = window.DifficultyValidator || {}, jQuery ));
+        select.change(this.clearError);
+    }
 
-    // Require at least one audience
-    (function(AudienceValidator, $, undefined ) {
-
+    function AudienceValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.audiences");
         var select = control_group.find("select[name='audiences']");
         var error = control_group.find("div.error");
+        this.scrollTo = control_group;
 
-        AudienceValidator.scrollTo = control_group;
-
-        AudienceValidator.validate = function() {
+        this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        select.change(function() {
-            if(AudienceValidator.validate()) {
-                clearError();
-            }
-        });
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.AudienceValidator = window.AudienceValidator || {}, jQuery ));
+        select.change(function() {
+            if(that.validate()) {
+                that.clearError();
+            }
+        });
+    }
 
-    // Require at least one predefined category
-    (function(CategoryValidator, $, undefined ) {
 
+    function CategoryValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.category, div.control-group.subcategories");
         var error = control_group.find("div.error");
         var category_buttons = control_group.find("button[data-category]");
         var subcategory_buttons = control_group.find("button.subcategory");
+        this.scrollTo = control_group;
 
-        CategoryValidator.scrollTo = control_group;
-
-        CategoryValidator.validate = function() {
+        this.validate = function() {
             var category = category_buttons.filter(".active").attr('data-category');
             var valid = subcategory_buttons.is("." + category + ".btn-danger");
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        category_buttons.click(clearError);
-        subcategory_buttons.click(clearError);
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.CategoryValidator = window.CategoryValidator || {}, jQuery ));
+        category_buttons.click(this.clearError);
+        subcategory_buttons.click(this.clearError);
+    }
 
-    // Require at least one county
-    (function(CountyValidator, $, undefined ) {
-
+    function CountyValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.counties");
         var error = control_group.find("div.error");
         var select = control_group.find("select[name='counties']");
+        this.scrollTo = control_group;
 
-        CountyValidator.scrollTo = control_group;
-
-        CountyValidator.validate = function() {
+        this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        select.change(function() {
-            if(CountyValidator.validate()) {
-                clearError();
-            }
-        });
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.CountyValidator = window.CountyValidator || {}, jQuery ));
+        select.change(function() {
+            if(that.validate()) {
+                that.clearError();
+            }
+        });
+    }
 
-    // Require at least one municipality
-    (function(MunicipalityValidator, $, undefined ) {
-
+    function MunicipalityValidator() {
+        var that = this;
         var control_group = form.find("div.control-group.municipalities");
         var error = control_group.find("div.error");
         var select = control_group.find("select[name='municipalities']");
+        this.scrollTo = control_group;
 
-        MunicipalityValidator.scrollTo = control_group;
-
-        MunicipalityValidator.validate = function() {
+        this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
             if(!valid) {
-                markError();
+                that.markError();
             }
             return valid;
         };
 
-        select.change(function() {
-            if(MunicipalityValidator.validate()) {
-                clearError();
-            }
-        });
-
-        function markError() {
+        this.markError = function() {
             control_group.addClass('error');
             error.show();
-        }
+        };
 
-        function clearError() {
+        this.clearError = function() {
             control_group.removeClass('error');
             error.hide();
-        }
+        };
 
-    }(window.MunicipalityValidator = window.MunicipalityValidator || {}, jQuery ));
+        select.change(function() {
+            if(that.validate()) {
+                that.clearError();
+            }
+        });
+    }
 
     function DatesValidator() {
 
