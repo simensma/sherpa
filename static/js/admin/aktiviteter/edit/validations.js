@@ -310,6 +310,7 @@ $(document).ready(function() {
                     new SignupStartValidator(view.root),
                     new SignupDeadlineValidator(view.root),
                     new SignupCancelDeadlineValidator(view.root),
+                    new MeetingPlaceValidator(view.root),
                 ];
 
                 for(var i=0; i<validators.length; i++) {
@@ -518,6 +519,43 @@ $(document).ready(function() {
             signup_cancel_deadline_input.focus(clearError);
             signup_cancel_deadline.on('show', clearError);
             signup_cancel_deadline.on('changeDate', this.validate);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        function MeetingPlaceValidator(root) {
+
+            var control_group = root.find("div.control-group.meeting_place");
+            var input = control_group.find("textarea[name='meeting_place']");
+            var error = control_group.find("div.error");
+            this.scrollTo = root;
+
+            this.validate = function() {
+                var valid = input.val().trim() !== "";
+                if(!valid) {
+                    // Not valid, but it's not required, so ask the user if they're sure
+                    // TODO: this will ask multiple times if there are multiple dates without
+                    // this value - consider handling that
+                    if(confirm("Du har ikke beskrevet oppmøtested for en av turavgangene. Vil du virkelig fortsette uten å legge inn oppmøtested?")) {
+                        // User accepts, continue as if it's valid
+                        valid = true;
+                    }
+                }
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            input.focus(clearError);
 
             function markError() {
                 control_group.addClass('error');

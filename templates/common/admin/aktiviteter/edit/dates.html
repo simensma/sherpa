@@ -179,10 +179,13 @@
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group meeting_place">
       <label class="control-label">Oppmøte:</label>
       <div class="controls">
         <textarea rows="4" cols="80" name="meeting_place" class="input-xxlarge">{{ date.meeting_place }}</textarea>
+        <div class="hints error hide">
+          Oppmøte er ikke fylt ut for denne datoen. Du er ikke nødt til å legge inn noe her hvis du ikke mener det er nødvendig, men jo mer informasjon som finnes jo bedre er det jo.
+        </div>
       </div>
     </div>
 
