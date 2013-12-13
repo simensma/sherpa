@@ -43,6 +43,7 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
+    published = models.BooleanField(default=False)
     private = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -131,7 +132,7 @@ class Aktivitet(models.Model):
     @staticmethod
     def get_published():
         today = date.today()
-        return Aktivitet.objects.filter(pub_date__lte=today)
+        return Aktivitet.objects.filter(published=True, pub_date__lte=today)
 
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
@@ -254,7 +255,7 @@ class AktivitetDate(models.Model):
     @staticmethod
     def get_published():
         today = date.today()
-        return AktivitetDate.objects.filter(aktivitet__pub_date__lte=today)
+        return AktivitetDate.objects.filter(aktivitet__published=True, aktivitet__pub_date__lte=today)
 
 class AktivitetImage(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='images')

@@ -63,7 +63,9 @@
                 </h3>
 
                 <p>
-                  {% if aktivitet.private %}
+                  {% if not aktivitet.published %}
+                    <span class="label label-important">Ikke publisert</span>
+                  {% elif aktivitet.private %}
                     <span class="label label-important">Privat aktivitet</span>
                   {% elif not aktivitet.is_published %}
                     <span class="label label-warning">Publiseres {{ aktivitet.pub_date|date:"j. F Y" }}</span>

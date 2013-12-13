@@ -17,6 +17,8 @@ $(document).ready(function() {
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
     var images_input = form.find("input[name='images']");
+    var publish_button = form.find("input[name='publish']");
+    var publish_extras = form.find("div.publish-extras");
 
     var images = form.find("div.control-group.images");
     var images_initiate = images.find("div.images-initiate");
@@ -151,6 +153,14 @@ $(document).ready(function() {
             subcategory_other_buttons_wrapper.slideDown();
         }
     }
+
+    publish_button.change(function() {
+        if($(this).is(":checked")) {
+            publish_extras.slideDown();
+        } else {
+            publish_extras.slideUp();
+        }
+    });
 
     // Buttons without submit-type aren't supposed to submit the form
     $(document).on('click', "button:not([type='submit'])", function(e) {

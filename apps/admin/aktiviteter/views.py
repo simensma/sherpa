@@ -76,15 +76,18 @@ def edit(request, aktivitet):
         aktivitet.difficulty = request.POST['difficulty']
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.category = request.POST['category']
-        aktivitet.private = json.loads(request.POST['private'])
+        aktivitet.published = request.POST.get('publish') == 'publish'
         aktivitet.getting_there = request.POST['getting_there']
         aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 
-        try:
-            aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
-        except ValueError:
-            errors = True
-            messages.error(request, 'invalid_date_format')
+        if aktivitet.published:
+            # If published, set the extra relevant fields (otherwise ignore them)
+            aktivitet.private = json.loads(request.POST['private'])
+            try:
+                aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
+            except ValueError:
+                errors = True
+                messages.error(request, 'invalid_date_format')
 
         association = Association.objects.get(id=request.POST['association'])
         if not association in request.user.children_associations():
