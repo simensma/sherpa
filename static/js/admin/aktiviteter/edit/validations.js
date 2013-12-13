@@ -311,6 +311,7 @@ $(document).ready(function() {
                     new SignupDeadlineValidator(view.root),
                     new SignupCancelDeadlineValidator(view.root),
                     new MeetingPlaceValidator(view.root),
+                    new ContactValidator(view.root),
                 ];
 
                 for(var i=0; i<validators.length; i++) {
@@ -556,6 +557,49 @@ $(document).ready(function() {
             };
 
             input.focus(clearError);
+
+            function markError() {
+                control_group.addClass('error');
+                error.show();
+            }
+
+            function clearError() {
+                control_group.removeClass('error');
+                error.hide();
+            }
+        }
+
+        function ContactValidator(root) {
+
+            var control_group = root.find("div.control-group.contact_type");
+            var error = control_group.find("div.error");
+            var custom_group = root.find("div.contact-custom");
+            var radios = control_group.find("input[type='radio']");
+            var name_input = custom_group.find("input[name='contact_custom_name']");
+            var phone_input = custom_group.find("input[name='contact_custom_phone']");
+            var email_input = custom_group.find("input[name='contact_custom_email']");
+            this.scrollTo = control_group;
+
+            this.validate = function() {
+                if(!radios.filter(":checked").is("[value='custom']")) {
+                    return true;
+                }
+
+                var name_valid = name_input.val().trim() !== "";
+                var phone_valid = name_input.val().trim() !== "";
+                var email_valid = name_input.val().trim() !== "";
+                var valid = name_valid || phone_valid || email_valid;
+
+                if(!valid) {
+                    markError();
+                }
+                return valid;
+            };
+
+            radios.change(clearError);
+            name_input.focus(clearError);
+            phone_input.focus(clearError);
+            email_input.focus(clearError);
 
             function markError() {
                 control_group.addClass('error');

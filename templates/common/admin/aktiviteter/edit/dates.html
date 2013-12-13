@@ -189,7 +189,7 @@
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group contact_type">
       <label class="control-label">Kontaktinformasjon:</label>
       <div class="controls">
         <label class="radio">
@@ -201,6 +201,9 @@
         <label class="radio">
           <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
         </label>
+        <div class="hints error hide">
+          Du har valgt å skrive inn kontaktinformasjon selv, men du har ikke lagt noe inn. Skriv inn opplysningene, eller velg arrangør/turledere over.
+        </div>
       </div>
     </div>
 
