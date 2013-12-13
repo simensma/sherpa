@@ -459,13 +459,13 @@
           </div>
         </div>
 
-        <div class="control-group hide_aktivitet">
+        <div class="control-group private_aktivitet">
           <label class="control-label">Tilgjengelighet:</label>
           <div class="controls">
-            <input type="hidden" name="hidden">
+            <input type="hidden" name="private">
             <div class="btn-group" data-toggle="buttons-radio">
-              <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
-              <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
+              <button class="btn public{% if not aktivitet.private %} active{% endif %}">Offentlig</button>
+              <button class="btn private{% if aktivitet.private %} active{% endif %}">Privat</button>
             </div>
             <div class="hints">
               En privat aktivitet vises ikke i <a href="{% url 'aktiviteter.views.index' %}">det offentlige søket</a>, men kan likevel sees av hvem som helst hvis adressen besøkes direkte. (Du finner adressen etter at du har lagret.)

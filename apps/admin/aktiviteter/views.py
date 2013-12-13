@@ -76,7 +76,7 @@ def edit(request, aktivitet):
         aktivitet.difficulty = request.POST['difficulty']
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.category = request.POST['category']
-        aktivitet.hidden = json.loads(request.POST['hidden'])
+        aktivitet.private = json.loads(request.POST['private'])
         aktivitet.getting_there = request.POST['getting_there']
         aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 

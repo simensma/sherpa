@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
-    var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
+    var private_aktivitet = form.find("div.control-group.private_aktivitet");
     var category = form.find("div.control-group.category");
     var category_input = category.find("input[name='category']");
     var category_buttons = category.find("button[data-category]");
@@ -267,8 +267,8 @@ $(document).ready(function() {
         $(this).find("button[type='submit']").prop('disabled', true);
         $(this).find("img.ajaxloader.submit").show();
 
-        var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
-        hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
+        var priv = private_aktivitet.find("button.active").is(".private");
+        private_aktivitet.find("input[name='private']").val(JSON.stringify(priv));
         images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
 
         // Collect the active category

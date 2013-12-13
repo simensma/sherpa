@@ -43,7 +43,7 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
-    hidden = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)

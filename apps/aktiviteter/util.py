@@ -8,7 +8,7 @@ HITS_PER_PAGE = 20
 
 def filter_aktivitet_dates(filter):
 
-    dates = AktivitetDate.get_published().exclude(aktivitet__hidden=True)
+    dates = AktivitetDate.get_published().filter(aktivitet__private=False)
 
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
