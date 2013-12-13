@@ -67,6 +67,8 @@ def edit(request, aktivitet):
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':
+        errors = False
+
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         aktivitet.code = request.POST['code']
         aktivitet.title = request.POST['title']
@@ -74,10 +76,15 @@ def edit(request, aktivitet):
         aktivitet.difficulty = request.POST['difficulty']
         aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         aktivitet.category = request.POST['category']
-        aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
         aktivitet.hidden = json.loads(request.POST['hidden'])
         aktivitet.getting_there = request.POST['getting_there']
         aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
+
+        try:
+            aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
+        except ValueError:
+            errors = True
+            messages.error(request, 'invalid_date_format')
 
         association = Association.objects.get(id=request.POST['association'])
         if not association in request.user.children_associations():
@@ -140,26 +147,30 @@ def edit(request, aktivitet):
             else:
                 aktivitet_date = AktivitetDate(aktivitet=aktivitet)
 
-            aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
-            aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
-            if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
-                aktivitet_date.signup_enabled = True
-                aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
-                if date_post['signup_deadline_until_start']:
-                    aktivitet_date.signup_deadline = aktivitet_date.start_date
+            try:
+                aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
+                aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
+                if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
+                    aktivitet_date.signup_enabled = True
+                    aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
+                    if date_post['signup_deadline_until_start']:
+                        aktivitet_date.signup_deadline = aktivitet_date.start_date
+                    else:
+                        aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
+                    if date_post['signup_cancel_deadline_until_start']:
+                        aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
+                    else:
+                        aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
+                elif date_post['signup_type'] == 'none':
+                    aktivitet_date.signup_enabled = False
+                    aktivitet_date.signup_start = None
+                    aktivitet_date.signup_deadline = None
+                    aktivitet_date.signup_cancel_deadline = None
                 else:
-                    aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
-                if date_post['signup_cancel_deadline_until_start']:
-                    aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
-                else:
-                    aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
-            elif date_post['signup_type'] == 'none':
-                aktivitet_date.signup_enabled = False
-                aktivitet_date.signup_start = None
-                aktivitet_date.signup_deadline = None
-                aktivitet_date.signup_cancel_deadline = None
-            else:
-                raise Exception("Unrecognized POST value for signup_type field")
+                    raise Exception("Unrecognized POST value for signup_type field")
+            except ValueError:
+                errors = True
+                messages.error(request, 'invalid_date_format')
 
             aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
             aktivitet_date.meeting_place = date_post['meeting_place']
@@ -172,7 +183,9 @@ def edit(request, aktivitet):
             # Turledere
             aktivitet_date.turledere = date_post['turledere']
 
-        messages.info(request, 'save_success')
+        if not errors:
+            messages.info(request, 'save_success')
+
         return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def edit_date_preview(request):

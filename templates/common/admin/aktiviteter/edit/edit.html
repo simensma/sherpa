@@ -58,6 +58,11 @@
               Se gjennom endringene dine, <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
             {% endif %}
           </div>
+        {% elif message.message == 'invalid_date_format' %}
+          <div class="alert alert-error">
+            <strong>Ugyldig datoformat</strong><br>
+            Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt, påmeldingsfrister osv). Datoene må legges inn med følgende format: <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut: <strong>{{ now|date:"d.m.Y" }}</strong>
+          </div>
         {% endif %}
       {% endfor %}
 
