@@ -132,7 +132,7 @@ def invalid_version_response(version):
 def require_focus():
     if focus_is_down():
         raise BadRequest(
-            "Our member system is required by this API call, however it is currently down for maintenance for the following duration (in norwegian): %s" % downtime['period_message'],
+            "Our member system is required by this API call, however it is currently down for maintenance.",
             code=error_codes.FOCUS_IS_DOWN,
             http_code=500
         )
