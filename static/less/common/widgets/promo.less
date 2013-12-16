@@ -734,6 +734,16 @@ div.widget.promo {
         font-size: 16px;
       }
 
+      p.credits {
+        position: absolute;
+        bottom: 4px;
+        right: 6px;
+        color: black;
+        font-size: 13px;
+        font-style: italic;
+        margin-bottom: 0;
+      }
+
       p.double-button-hack {
         text-align: right;
         margin-right: 8px;
@@ -742,6 +752,10 @@ div.widget.promo {
       @media(max-width: 767px) {
         h1 {
           max-width: none;
+        }
+
+        p.credits {
+          display: none;
         }
 
         p.double-button-hack {
