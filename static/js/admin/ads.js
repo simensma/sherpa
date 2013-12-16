@@ -42,6 +42,7 @@ $(document).ready(function() {
         var form = modal_placement_time.find("form");
         form.find("input[name='id']").val($(this).attr('data-id'));
         form.find("select[name='ad'] option[value='" + $(this).attr('data-ad') + "']").prop('selected', true);
+        form.find("select[name='ad']").trigger('liszt:updated');
         form.find("input[name='start_date']").val($(this).attr('data-start-date'));
         form.find("input[name='end_date']").val($(this).attr('data-end-date'));
         // The bootstrap-datepicker 'update' method doesn't work, see:
