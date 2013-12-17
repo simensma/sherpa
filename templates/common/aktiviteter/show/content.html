@@ -102,6 +102,12 @@
         <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
       {% endif %}
 
+      {% if aktivitet_date.aktivitet.turforslag %}
+        <p>
+          <a href="{{ aktivitet_date.aktivitet.get_turforslag.ut_url }}">Se turforslag på UT.no</a>
+        </p>
+      {% endif %}
+
 
       <h3>Kontaktinformasjon:</h3>
 

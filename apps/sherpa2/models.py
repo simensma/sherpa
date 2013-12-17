@@ -344,6 +344,7 @@ class Turforslag(models.Model):
     hash = models.CharField(db_column='tp_hash', max_length=256, blank=True)
     type2 = models.CharField(db_column='tp_type2', max_length=8191, blank=True)
     difficulty = models.TextField(blank=True)
+    ut_url = models.TextField(blank=True)
 
     def get_object_id(self):
         return NtbId.objects.get(sql_id=self.id, type='T').object_id
