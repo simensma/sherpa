@@ -273,6 +273,10 @@ $(document).ready(function() {
     });
 
     preview_buttons.click(function() {
+        var confirmation = preview_buttons.filter("[data-confirm-if-published]").attr('data-confirm-if-published');
+        if(publish_button.is(":checked") && !confirm(confirmation)) {
+            return $(this);
+        }
         preview_input.val(JSON.stringify(true));
         form.submit();
     });

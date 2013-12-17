@@ -76,7 +76,7 @@
         <div class="control-group submit-header">
           <div class="controls">
             <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-            <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+            <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
             <br>
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
             <div class="hints">
