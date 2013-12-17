@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage
 
+from datetime import datetime
 import json
 
 from aktiviteter.models import AktivitetDate
@@ -15,6 +16,11 @@ def filter_aktivitet_dates(filter):
 
     if 'difficulties' in filter and len(filter['difficulties']) > 0:
         dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
+
+    try:
+        dates = dates.filter(start_date__gte=datetime.strptime(filter['travel_date'], "%d.%m.%Y"))
+    except (ValueError, KeyError):
+        pass
 
     dates = dates.order_by(
         '-start_date'
