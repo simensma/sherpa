@@ -39,6 +39,15 @@ def filter_aktivitet_dates(filter):
         for d in dates_to_remove:
             dates.remove(d)
 
+    if 'locations' in filter and len(filter['locations']) > 0:
+        filter['locations'] = [int(l) for l in filter['locations']]
+        dates_to_remove = []
+        for date in dates:
+            if not any(l in filter['locations'] for l in json.loads(date.aktivitet.locations)):
+                dates_to_remove.append(date)
+        for d in dates_to_remove:
+            dates.remove(d)
+
     paginator = Paginator(dates, HITS_PER_PAGE)
 
     # Parse "special" values

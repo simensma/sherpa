@@ -91,11 +91,16 @@ $(document).ready(function() {
         button_selections.filter(".difficulties").find("button.difficulty.selected").each(function() {
             difficulties.push($(this).attr('data-difficulty'));
         });
+        var locations = [];
+        filters.find("select[name='location'] option:selected").each(function() {
+            locations.push($(this).val());
+        });
         var travel_date = filters.find("input[name='travel_date']").val();
         return {
             categories: categories,
             audiences: audiences,
             difficulties: difficulties,
+            locations: locations,
             travel_date: travel_date,
         };
     }
