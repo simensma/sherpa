@@ -1,0 +1,145 @@
+<div class="row">
+  <div class="span12">
+
+    <div class="aktivitet">
+      <h2>{{ aktivitet_date.aktivitet.title }}</h2>
+
+      <div class="meta square-well">
+        <div class="signup">
+          {% if not aktivitet_date.signup_enabled %}
+            <div class="pull-right no-signup">
+              Det er ingen påmelding til denne turen.
+            </div>
+          {% elif user_is_participating %}
+            {# TODO Present overview and signup-cancelling options #}
+            <div class="pull-right already-participating">
+              Du har meldt deg på denne turen!
+            </div>
+          {% elif aktivitet_date.accepts_signups %}
+            <div class="pull-right accepts-signups">
+              <a href="{% url 'aktiviteter.views.signup' aktivitet_date.id %}" class="btn btn-danger">Meld deg på!</a><br>
+              <span class="deadline">
+                Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
+              </span>
+            </div>
+          {% elif aktivitet_date.will_accept_signups %}
+            <div class="pull-right signup-countdown">
+              Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }} til {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
+            </div>
+          {% elif aktivitet_date.signup_deadline_passed %}
+            <div class="pull-right signup-passed">
+              Påmeldingsfristen har passert.
+            </div>
+          {% endif %}
+        </div>
+
+        <table>
+          <tr>
+            <th>Dato:</th>
+            <td>{{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}</td>
+          </tr>
+          {% if aktivitet_date.other_dates|length > 0 %}
+          <tr>
+            <th>Alternative datoer</th>
+            <td>
+              {% if aktivitet_date.other_dates|length > 1 %}
+                <a href="javascript:undefined" class="show-alternative-dates">Vis {{ aktivitet_date.other_dates|length }} andre datoer</a>
+              {% endif %}
+              <div class="alternatives{% if aktivitet_date.other_dates|length > 1 %} hide{% endif %}">
+                {% for date in aktivitet_date.get_other_dates_ordered %}
+                  <a href="{% url 'aktiviteter.views.show' date.id %}">
+                    {{ date.start_date|date:"j. F Y" }}
+                    til
+                    {{ date.end_date|date:"j. F Y" }}
+                  </a>
+                  {% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <th>Vanskelighetsgrad:</th>
+            <td>{{ aktivitet_date.aktivitet.get_difficulty }}</td>
+          </tr>
+          {% if aktivitet_date.aktivitet.category_tags.all|length > 0 %}
+            <tr>
+              <th>Nøkkelord:</th>
+              <td>
+                {% for tag in aktivitet_date.aktivitet.category_tags.all %}
+                  {{ tag.name }}{% if not forloop.last %}, {% endif%}
+                {% endfor %}
+              </td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Påmeldte:</th>
+            <td>
+              {% if aktivitet_date.participants.all|length == 0 %}
+                Ingen
+              {% else %}
+                {{ aktivitet_date.participants.all|length }}
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
+
+      <h3>Kontaktinformasjon:</h3>
+
+      {% include 'common/aktiviteter/contact_information.html' %}
+
+      {% if aktivitet_date.aktivitet.images.count > 0 %}
+        <div class="images">
+          <h2>Bilder</h2>
+
+          {% if aktivitet_date.aktivitet.images.count == 1 %}
+            {# A single image #}
+            <div class="single-carousel-item">
+              <img src="{{ aktivitet_date.aktivitet.images.get.url }}" alt="{{ aktivitet_date.aktivitet.images.get.text }}">
+              {% if aktivitet_date.aktivitet.images.get.text or aktivitet_date.aktivitet.images.get.photographer %}
+                <div class="carousel-caption">
+                  <p>
+                    {{ aktivitet_date.aktivitet.images.get.text }}
+                    {% if aktivitet_date.aktivitet.images.get.photographer %}
+                      Foto: {{ aktivitet_date.aktivitet.images.get.photographer }}
+                    {% endif %}
+                  </p>
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            <div id="carousel" class="carousel slide" data-interval="false">
+              <ol class="carousel-indicators">
+                <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel" data-slide-to="1"></li>
+              </ol>
+              <div class="carousel-inner">
+                {% for image in aktivitet_date.aktivitet.get_images_ordered %}
+                  <div class="{% if forloop.first %}active {% endif %}item">
+                    <img src="{{ image.url }}" alt="{{ image.text }}">
+                    {% if image.text or image.photographer %}
+                      <div class="carousel-caption">
+                        <p>
+                          {{ image.text }}
+                          {% if image.photographer %}
+                            Foto: {{ image.photographer }}
+                          {% endif %}
+                        </p>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+              <a class="carousel-control left" href="#carousel" data-slide="prev">&lsaquo;</a>
+              <a class="carousel-control right" href="#carousel" data-slide="next">&rsaquo;</a>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>

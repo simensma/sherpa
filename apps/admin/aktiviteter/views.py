@@ -195,8 +195,18 @@ def edit(request, aktivitet):
             return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def preview(request, aktivitet):
-    # TODO
-    pass
+    try:
+        aktivitet = Aktivitet.objects.get(id=aktivitet)
+        aktivitet_date = aktivitet.get_dates_ordered()[0]
+    except IndexError:
+        raise Exception("TODO handle no dates")
+
+    context = {
+        'aktivitet_date': aktivitet_date,
+        'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
+    }
+    return render(request, 'common/aktiviteter/show/preview.html', context)
+
 
 def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that

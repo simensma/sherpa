@@ -53,7 +53,7 @@ def show(request, aktivitet_date):
         'aktivitet_date': aktivitet_date,
         'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
     }
-    return render(request, 'common/aktiviteter/show.html', context)
+    return render(request, 'common/aktiviteter/show/show.html', context)
 
 def signup(request, aktivitet_date):
     aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
