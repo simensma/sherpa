@@ -199,7 +199,10 @@ def preview(request, aktivitet):
         aktivitet = Aktivitet.objects.get(id=aktivitet)
         aktivitet_date = aktivitet.get_dates_ordered()[0]
     except IndexError:
-        raise Exception("TODO handle no dates")
+        context = {
+            'aktivitet': aktivitet
+        }
+        return render(request, 'common/aktiviteter/show/preview_no_dates.html', context)
 
     context = {
         'aktivitet_date': aktivitet_date,
