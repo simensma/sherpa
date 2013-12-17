@@ -23,6 +23,7 @@
 
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/turleder_search.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/dates.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/validations.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/edit.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
 {% endblock %}
@@ -47,13 +48,42 @@
   <div class="row">
     <div class="span12">
 
-      {# TODO: Client-side validations, check participants when editing dates, etc #}
+      {% for message in messages %}
+        {% if message.message == 'save_success' %}
+          <div class="alert alert-success">
+            <strong>Endringene har blitt lagret!</strong><br>
+            {% if aktivitet.dates.count == 0 %}
+              Se gjennom endringene dine, eller <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>.
+            {% else %}
+              Se gjennom endringene dine, <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
+            {% endif %}
+          </div>
+        {% elif message.message == 'invalid_date_format' %}
+          <div class="alert alert-error">
+            <strong>Ugyldig datoformat</strong><br>
+            Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt, påmeldingsfrister osv). Datoene må legges inn med følgende format: <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut: <strong>{{ now|date:"d.m.Y" }}</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
 
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
         {% csrf_token %}
         <input type="hidden" name="images" value="">
         <input type="hidden" name="position_lat">
         <input type="hidden" name="position_lng">
+        <input type="hidden" name="preview" value="false">
+
+        <div class="control-group submit-header">
+          <div class="controls">
+            <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
+            <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+            <br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <div class="hints">
+              Husk at du alltid må trykke på lagre-knappen etter at du endrer noe!
+            </div>
+          </div>
+        </div>
 
         <div class="section association">
 
@@ -158,6 +188,9 @@
             <label class="control-label" for="title">Tittel:</label>
             <div class="controls">
               <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
+              <div class="hints error hide">
+                Du må jo skrive inn en tittel!
+              </div>
             </div>
           </div>
 
@@ -165,6 +198,9 @@
             <label class="control-label" for="description">Beskrivelse:</label>
             <div class="controls">
               <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
+              <div class="hints error hide">
+                Du må legge inn noen få ord om turen her.
+              </div>
             </div>
           </div>
 
@@ -177,6 +213,9 @@
                   <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
                 {% endfor %}
               </select>
+              <div class="hints error hide">
+                Du må velge vanskelighetsgraden for turen.
+              </div>
             </div>
           </div>
 
@@ -189,27 +228,75 @@
                   <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
                 {% endfor %}
               </select>
+              <div class="hints error hide">
+                Du må velge minst én målgruppe.
+              </div>
             </div>
           </div>
 
-          <div class="control-group subcategories">
-            <label class="control-label" for="subcategories">Kategorier:</label>
+          <div class="control-group category">
+            <label class="control-label" for="category">Kategori:</label>
+            <div class="controls">
+              <input type="hidden" name="category" value="">
+              <div class="btn-group" data-toggle="buttons-radio" data-target="category">
+                {% for category in categories %}
+                  <button class="btn btn-large{% if category.0 == aktivitet.category %} active{% endif %}" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group subcategories{% if aktivitet.category == '' %} hide{% endif %}">
             <div class="controls">
 
-              <div class="square-well">
-                <div class="buttons">
-                  {% for category in aktivitet.get_subcategories %}
-                    <button class="btn subcategory btn-danger">{{ category }}</button>
-                  {% endfor %}
+              <div class="hints error hide">
+                Du må velge minst én av de foreslåtte kategoriene. Klikk på de kategoriene du vil velge.
+              </div>
 
-                  {% for category in aktivitet.get_missing_subcategories %}
-                    <button class="btn subcategory">{{ category }}</button>
+              <div class="square-well">
+
+                <div class="labels">
+                  <h3 class="trip{% if aktivitet.category != 'trip' %} hide{% endif %}">
+                    Hva slags tur/aktivitet er dette?
+                  </h3>
+
+                  <h3 class="course{% if aktivitet.category != 'course' %} hide{% endif %}">
+                    Hva slags kurs er dette?
+                  </h3>
+
+                  <h3 class="event{% if aktivitet.category != 'event' %} hide{% endif %}">
+                    Hva slags arrangement er dette?
+                  </h3>
+
+                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} hide{% endif %}">
+                    Hva slags dugnad er dette?
+                  </h3>
+                </div>
+
+                <div class="main-buttons">
+                  {% for sub in aktivitet.get_main_subcategories %}
+                    <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
                   {% endfor %}
+                </div>
+
+                {% if not aktivitet.has_other_subcategories %}
+                  <p class="show-other-buttons">
+                    <a href="javascript:undefined" class="show-other-buttons">Vis flere kategoriforslag...</a>
+                  </p>
+                {% endif %}
+
+                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} hide{% endif %}">
+                  <h4>Flere kategoriforslag</h4>
+                  <div class="other-buttons">
+                    {% for sub in aktivitet.get_other_subcategories %}
+                      <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
+                    {% endfor %}
+                  </div>
                 </div>
 
                 <div class="custom">
                   <button class="btn subcategory btn-danger fake hide"></button>
-                  Eller legg inn egne kategorier:
+                  <strong>Eller finn på egne kategorier:</strong>
                   <input type="text" class="input-large" name="custom-category">
                 </div>
 
@@ -279,6 +366,9 @@
                 {% endfor %}
               </select>
               <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error hide">
+                Du må velge hvilket fylke turen arrangeres i.
+              </div>
             </div>
           </div>
 
@@ -292,6 +382,9 @@
                 {% endfor %}
               </select>
               <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error hide">
+                Du må velge hvilken kommune turen arrangeres i.
+              </div>
             </div>
           </div>
 
@@ -312,6 +405,18 @@
             <label class="control-label">Adkomst:</label>
             <div class="controls">
               <textarea rows="4" cols="80" name="getting_there" id="getting_there" class="input-xxlarge">{{ aktivitet.getting_there }}</textarea>
+            </div>
+          </div>
+
+          <div class="control-group turforslag" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
+            <label class="control-label">Koble til turforslag:</label>
+            <div class="controls">
+              <input type="text" name="turforslag" class="input-xxlarge" placeholder="Søk etter turforslag...">
+              <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
+              <div class="result control-as-text{% if not aktivitet.turforslag %} hide{% endif %}">
+                <a href="javascript:undefined" class="remove">[x]</a>
+                <span class="name">{{ aktivitet.get_turforslag.name|safe }}</span>
+              </div>
             </div>
           </div>
 
@@ -352,37 +457,56 @@
             </div>
           </div>
 
-          <div class="control-group pub_date">
-            <label class="control-label" for="pub_date">Publiseres:</label>
+          <div class="control-group publish">
+            <label class="control-label">Publisering:</label>
             <div class="controls">
-              <div class="input-append date">
-                <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
-                <span class="add-on"><i class="icon-th"></i></span>
+              <label class="radio" for="publish">
+                <input type="checkbox" id="publish" name="publish" value="publish"{% if aktivitet.published %} checked{% endif %}>
+                Publiserer turen og gjør den tilgjengelig på nettsidene
+              </label>
+            </div>
+          </div>
+
+          <div class="publish-extras{% if not aktivitet.published %} hide{% endif %}">
+            <div class="control-group pub_date">
+              <label class="control-label" for="pub_date">Publiseringsdato:</label>
+              <div class="controls">
+                <div class="input-append date">
+                  <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+                  <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <div class="hints">
+                  Aktiviteten vises ikke på nettsidene før publiseringsdatoen.
+                </div>
+                <div class="hints error hide">
+                  Du må legge inn turens publiseringsdato på rett format: dd.mm.åååå (dag, måned, år)
+                </div>
               </div>
-              <div class="hints">
-                Aktiviteten vises ikke på nettsidene før publiseringsdatoen.
+            </div>
+
+            <div class="control-group private_aktivitet">
+              <label class="control-label">Tilgjengelighet:</label>
+              <div class="controls">
+                <input type="hidden" name="private">
+                <div class="btn-group" data-toggle="buttons-radio">
+                  <button class="btn public{% if not aktivitet.private %} active{% endif %}">Offentlig</button>
+                  <button class="btn private{% if aktivitet.private %} active{% endif %}">Privat</button>
+                </div>
+                <div class="hints">
+                  En privat aktivitet vises ikke i <a href="{% url 'aktiviteter.views.index' %}">det offentlige søket</a>, men kan likevel sees av hvem som helst hvis adressen besøkes direkte. (Du finner adressen etter at du har lagret.)
+                </div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <div class="control-group hide_aktivitet">
-          <label class="control-label">Tilgjengelighet:</label>
+        <div class="control-group submit-footer">
           <div class="controls">
-            <input type="hidden" name="hidden">
-            <div class="btn-group" data-toggle="buttons-radio">
-              <button class="btn show_aktivitet{% if not aktivitet.hidden %} active{% endif %}">Offentlig</button>
-              <button class="btn hide_aktivitet{% if aktivitet.hidden %} active{% endif %}">Privat</button>
-            </div>
-            <div class="hints">
-              En privat aktivitet vises ikke i <a href="{% url 'aktiviteter.views.index' %}">det offentlige søket</a>, men kan likevel sees av hvem som helst hvis adressen besøkes direkte. (Du finner adressen etter at du har lagret.)
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group submit">
-          <div class="controls">
-            <button type="submit" class="btn btn-success btn-large"><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
+            <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
+            <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+            <br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
           </div>
         </div>
 

@@ -2,14 +2,30 @@ $(document).ready(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
-    var hide_aktivitet = form.find("div.control-group.hide_aktivitet");
+    var private_aktivitet = form.find("div.control-group.private_aktivitet");
+    var category = form.find("div.control-group.category");
+    var category_input = category.find("input[name='category']");
+    var category_buttons = category.find("button[data-category]");
     var subcategories = form.find("div.control-group.subcategories");
-    var subcategory_buttons = subcategories.find("div.buttons");
+    var subcategory_labels = subcategories.find("div.labels");
+    var subcategory_main_buttons = subcategories.find("div.main-buttons");
+    var subcategory_other_buttons = subcategories.find("div.other-buttons");
+    var subcategory_other_buttons_wrapper = subcategories.find("div.other-buttons-wrapper");
+    var subcategory_other_buttons_trigger = subcategories.find("a.show-other-buttons");
     var custom_subcategory = subcategories.find("input[name='custom-category']");
     var subcategory_input = subcategories.find("input[name='subcategories']");
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
     var images_input = form.find("input[name='images']");
+    var turforslag = form.find("div.control-group.turforslag");
+    var turforslag_input = turforslag.find("input[name='turforslag']");
+    var turforslag_id_input = turforslag.find("input[name='turforslag_id']");
+    var turforslag_result = turforslag.find("div.result");
+    var publish_button = form.find("input[name='publish']");
+    var publish_extras = form.find("div.publish-extras");
+    var preview_buttons = form.find("div.submit-header button.preview,div.submit-footer button.preview");
+    var preview_input = form.find("input[name='preview']");
+    var submit_buttons = form.find("button[type='submit']");
 
     var images = form.find("div.control-group.images");
     var images_initiate = images.find("div.images-initiate");
@@ -37,6 +53,25 @@ $(document).ready(function() {
 
     // Subcategories
 
+    category_buttons.click(function() {
+        subcategory_labels.find("h3").hide();
+        subcategory_labels.find("h3." + $(this).attr('data-category')).show();
+
+        // Move all main buttons back
+
+        subcategory_main_buttons.find("button.subcategory").each(function() {
+            $(this).detach();
+            subcategory_other_buttons.append(' ');
+            subcategory_other_buttons.append($(this));
+        });
+
+        subcategory_other_buttons.find("button.subcategory." + $(this).attr('data-category')).each(function() {
+            $(this).detach();
+            subcategory_main_buttons.append(' ');
+            subcategory_main_buttons.append($(this));
+        });
+    });
+
     function toggleButtons(e) {
         // So, this is thrown when you press enter in any input element. Wtf?
         // No idea why, but pageX and pageY is zero when that happens, so avoid it.
@@ -51,7 +86,13 @@ $(document).ready(function() {
         }
     }
 
-    subcategory_buttons.find("button.subcategory").click(toggleButtons);
+    subcategory_main_buttons.find("button.subcategory").click(toggleButtons);
+    subcategory_other_buttons.find("button.subcategory").click(toggleButtons);
+
+    subcategory_other_buttons_trigger.click(function() {
+        $(this).parent().hide();
+        subcategory_other_buttons_wrapper.slideDown();
+    });
 
     // Add custom subcategories
 
@@ -73,6 +114,10 @@ $(document).ready(function() {
                 tags.unshift(query);
                 process(tags);
             });
+        },
+        updater: function(item) {
+            custom_subcategory.val(item);
+            addCustomSubcategory();
         }
     });
 
@@ -83,56 +128,80 @@ $(document).ready(function() {
         }
     });
 
-    custom_subcategory.focusout(function() {
-        addCustomSubcategory();
+    function addCustomSubcategory() {
+        var categories = custom_subcategory.val().trim().split(' ');
+        for(var i=0; i<categories.length; i++) {
+            if(categories[i] === '') {
+                continue;
+            }
+
+            // Check if the tag already exists
+            main_existing = subcategory_main_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            other_existing = subcategory_other_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            if(main_existing.length > 0 || other_existing.length > 0) {
+                main_existing.addClass("btn-danger");
+                other_existing.addClass("btn-danger");
+                custom_subcategory.val('');
+                continue;
+            }
+
+            // Create the new button
+            var new_button = subcategories.find("button.subcategory.fake").clone();
+            new_button.text(categories[i]);
+            new_button.removeClass('fake');
+            subcategory_other_buttons.append(' ');
+            subcategory_other_buttons.append(new_button);
+            new_button.click(toggleButtons);
+            new_button.show();
+            custom_subcategory.val('');
+
+            // This might be hidden, instashow it in this case
+            subcategory_other_buttons_trigger.hide();
+            subcategory_other_buttons_wrapper.slideDown();
+        }
+    }
+
+    var turforslag_objects;
+    turforslag_input.typeahead({
+        minLength: 5,
+        items: 12,
+        matcher: function() {
+            // Trust the serverside to filter on the query
+            return true;
+        },
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: turforslag.attr('data-turforslag-search-url'),
+                data: { query: query }
+            }).done(function(result) {
+                result = JSON.parse(result);
+                turforslag_objects = result.objects;
+                process(result.names);
+            });
+        },
+        updater: function(item) {
+            turforslag_id_input.val(turforslag_objects[item]);
+            turforslag_result.find("span.name").html(item);
+            turforslag_result.show();
+        }
     });
 
-    function addCustomSubcategory() {
-        var category = custom_subcategory.val().trim();
-        if(category === '') {
-            return;
-        }
+    turforslag_result.find("a.remove").click(function() {
+        turforslag_result.hide();
+        turforslag_id_input.val('');
+    });
 
-        // Check if the tag already exists
-        var exists = false;
-        subcategory_buttons.find("button.subcategory").each(function() {
-            if($(this).text().trim() === category) {
-                $(this).addClass("btn-danger");
-                exists = true;
-            }
-        });
-        if(exists) {
-            custom_subcategory.val('');
-            return;
+    publish_button.change(function() {
+        if($(this).is(":checked")) {
+            publish_extras.slideDown();
+        } else {
+            publish_extras.slideUp();
         }
-
-        // Create the new button
-        var new_button = subcategories.find("button.subcategory.fake").clone();
-        new_button.text(category);
-        new_button.removeClass('fake');
-        subcategory_buttons.append(' ');
-        subcategory_buttons.append(new_button);
-        new_button.click(toggleButtons);
-        new_button.show();
-        custom_subcategory.val('');
-    }
+    });
 
     // Buttons without submit-type aren't supposed to submit the form
     $(document).on('click', "button:not([type='submit'])", function(e) {
         e.preventDefault();
-    });
-
-    form.submit(function() {
-        var hidden = hide_aktivitet.find("button.active").is(".hide_aktivitet");
-        hide_aktivitet.find("input[name='hidden']").val(JSON.stringify(hidden));
-        images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
-
-        // Collect subcategory tags
-        var tags = [];
-        subcategory_buttons.find("button.btn-danger").each(function() {
-            tags.push($(this).text());
-        });
-        subcategory_input.val(JSON.stringify(tags));
     });
 
     // Dates
@@ -149,12 +218,11 @@ $(document).ready(function() {
     var delete_date_confirm = delete_date_choose.find("button.confirm");
     var delete_date_cancel = delete_date_choose.find("button.cancel");
 
-    var date_views = [];
     var date_radio_counter = 0;
     var date_ids_to_delete = [];
 
     existing_dates.each(function() {
-        date_views.push(new AktiviteterDatesView({
+        $(this).data('view', new AktiviteterDatesView({
             root: $(this)
         }));
     });
@@ -174,7 +242,7 @@ $(document).ready(function() {
 
         new_root.removeClass('hide');
         new_root.hide(); // Hide it even though we don't want the 'hide' class on it.
-        date_views.push(new AktiviteterDatesView({
+        new_root.data('view', new AktiviteterDatesView({
             root: new_root
         }));
         new_root.insertBefore(hidden_root);
@@ -210,15 +278,7 @@ $(document).ready(function() {
 
         delete_date_modal.modal('hide');
 
-        // Ugh, remove the array element manually
         var root = delete_date_modal.data('date-root');
-        var new_date_views = [];
-        for(var i=0; i<date_views.length; i++) {
-            if(date_views[i].root[0] !== root[0]) {
-                new_date_views.push(date_views[i]);
-            }
-        }
-        date_views = new_date_views;
         var id = root.attr('data-date-id');
         if(id !== '') {
             date_ids_to_delete.push(id);
@@ -238,14 +298,69 @@ $(document).ready(function() {
         add_date_button.click();
     }
 
-    // Collect all dates on submit
-    form.submit(function(e) {
-        var date_objects = [];
-        for(var i=0; i<date_views.length; i++) {
-            date_objects.push(date_views[i].collectData());
+    // Save buttons are disabled by default and enabled at window load, because if someone
+    // clicks it before the window is fully loaded, inputs that are filled by js on form
+    // submit may be missed
+    $(window).load(function() {
+        submit_buttons.prop('disabled', false);
+        preview_buttons.prop('disabled', false);
+    });
+
+    preview_buttons.click(function() {
+        var confirmation = preview_buttons.filter("[data-confirm-if-published]").attr('data-confirm-if-published');
+        if(publish_button.is(":checked") && !confirm(confirmation)) {
+            return $(this);
         }
+        preview_input.val(JSON.stringify(true));
+        form.submit();
+    });
+
+
+    /**
+     * Common submit operations
+     */
+    form.submit(function(e) {
+        // Disable submit buttons
+        submit_buttons.prop('disabled', true);
+        preview_buttons.prop('disabled', true);
+        $(this).find("img.ajaxloader.submit").show();
+
+        var priv = private_aktivitet.find("button.active").is(".private");
+        private_aktivitet.find("input[name='private']").val(JSON.stringify(priv));
+        images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
+
+        // Collect the active category
+        category_input.val(category_buttons.filter(".active").attr('data-category'));
+
+        // Collect subcategory tags
+        var tags = [];
+        subcategory_main_buttons.find("button.btn-danger").each(function() {
+            tags.push($(this).text());
+        });
+        subcategory_other_buttons.find("button.btn-danger").each(function() {
+            tags.push($(this).text());
+        });
+        subcategory_input.val(JSON.stringify(tags));
+
+        // Collect all currently active dates
+        var date_objects = [];
+        dates.find("div.date-root:not(.hide)").each(function() {
+            date_objects.push($(this).data('view').collectData());
+        });
         dates_input.val(JSON.stringify(date_objects));
         dates_to_delete_input.val(JSON.stringify(date_ids_to_delete));
+
+        // Validate the form
+        var validation = AktivitetValidator.validate();
+        if(!validation.valid) {
+            submit_buttons.prop('disabled', false);
+            preview_buttons.prop('disabled', false);
+            $(this).find("img.ajaxloader.submit").hide();
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: validation.scrollTo.offset().top
+            }, 300);
+        }
     });
 
 });

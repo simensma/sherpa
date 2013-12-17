@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 from datetime import date
 import json
 
-from sherpa2.models import Location
+from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
@@ -18,6 +18,7 @@ class Aktivitet(models.Model):
     # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
     locations = models.CharField(max_length=4091)
     getting_there = models.TextField()
+    turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),
@@ -43,7 +44,8 @@ class Aktivitet(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
-    hidden = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
@@ -61,23 +63,60 @@ class Aktivitet(models.Model):
         return json.dumps(self.start_point.get_coords()[1])
 
     def get_locations(self):
-        return Location.objects.filter(id__in=json.loads(self.locations))
+        return Location.get_active().filter(id__in=json.loads(self.locations))
 
     def get_audiences(self):
         return json.loads(self.audiences)
 
     def get_category(self):
-        return [c[1] for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
+        return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
 
-    def get_subcategories(self):
+    def get_main_subcategories(self):
+        return [{
+            'name': sub,
+            'category': self.category,
+            'active': sub in self.get_active_subcategories()
+        } for sub in Aktivitet.SUBCATEGORIES[self.category]]
+
+    def get_other_subcategories(self):
+        other_subcategories = []
+        for category, subcategories in Aktivitet.SUBCATEGORIES.items():
+            if category == self.category:
+                continue
+
+            for subcategory in subcategories:
+                other_subcategories.append({
+                    'name': subcategory,
+                    'category': category,
+                    'active': subcategory in self.get_active_subcategories()
+                })
+
+        all_subcategories = []
+        for subs in Aktivitet.SUBCATEGORIES.values():
+            for s in subs:
+                all_subcategories.append(s)
+
+        for subcategory in self.get_active_subcategories():
+            if subcategory not in all_subcategories:
+                other_subcategories.append({
+                    'name': subcategory,
+                    'category': 'custom',
+                    'active': True
+                })
+
+        return other_subcategories
+
+    def has_other_subcategories(self):
+        return any([s['active'] for s in self.get_other_subcategories()])
+
+    def get_active_subcategories(self):
         return [t.name for t in self.category_tags.all()]
 
-    def get_all_subcategories(self):
-        return self.SUBCATEGORIES[self.category]
-
-    def get_missing_subcategories(self):
-        existing_subcategories = [s.name for s in self.category_tags.all()]
-        return [s for s in self.get_all_subcategories() if s not in existing_subcategories]
+    def get_turforslag(self):
+        if self.turforslag is None:
+            return None
+        else:
+            return Turforslag.objects.get(id=self.turforslag)
 
     def get_images_ordered(self):
         return self.images.order_by('order')
@@ -93,10 +132,14 @@ class Aktivitet(models.Model):
             })
         return json.dumps(images)
 
+    def is_published(self):
+        today = date.today()
+        return self.pub_date <= today
+
     @staticmethod
     def get_published():
         today = date.today()
-        return Aktivitet.objects.filter(pub_date__lte=today)
+        return Aktivitet.objects.filter(published=True, pub_date__lte=today)
 
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
@@ -167,9 +210,12 @@ class AktivitetDate(models.Model):
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
-    signup_start = models.DateField()
-    signup_deadline = models.DateField()
-    signup_cancel_deadline = models.DateField()
+
+    # Signup start/deadline/cancel should only be null when signup_enabled is False
+    signup_start = models.DateField(null=True)
+    signup_deadline = models.DateField(null=True)
+    signup_cancel_deadline = models.DateField(null=True)
+
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()
@@ -210,10 +256,13 @@ class AktivitetDate(models.Model):
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
+    def total_signup_count(self):
+        return self.participants.count() + self.simple_participants.count()
+
     @staticmethod
     def get_published():
         today = date.today()
-        return AktivitetDate.objects.filter(aktivitet__pub_date__lte=today)
+        return AktivitetDate.objects.filter(aktivitet__published=True, aktivitet__pub_date__lte=today)
 
 class AktivitetImage(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='images')

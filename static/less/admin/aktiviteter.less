@@ -3,6 +3,26 @@
   margin-bottom: 5px;
 }
 
+div.aktivitet-listing {
+  div.new-aktivitet {
+    text-align: center;
+
+    a.btn {
+      font-size: 20px !important;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+  }
+
+ table.aktivitet-listing {
+    td.aktivitet-container {
+      padding: 20px 10px;
+    }
+  }
+}
+
 div.admin-aktivitet-edit {
   div.section {
     border-bottom: 1px solid rgb(200, 200, 200);
@@ -13,13 +33,34 @@ div.admin-aktivitet-edit {
     }
 
     div.control-group.subcategories {
-      button.subcategory {
-        .subcategory-button;
+
+      h4 {
+        margin-top: 30px;
+        margin-bottom: 0;
       }
 
-      div.custom {
-        margin-top: 20px;
+      p.show-other-buttons {
         font-family: "DTL Nobel" !important;
+        margin-top: 20px;
+      }
+
+      div.main-buttons, div.other-buttons {
+
+        button.subcategory {
+          .subcategory-button;
+        }
+      }
+
+
+      div.custom {
+        font-family: "DTL Nobel" !important;
+      }
+
+    }
+
+    div.control-group.publish {
+      label.radio {
+        padding-left: 0;
       }
     }
   }
@@ -85,6 +126,12 @@ div.admin-aktivitet-edit {
         padding-bottom: 30px;
         margin-bottom: 30px;
 
+        label.signup-deadlines-until-start {
+          .form-hints;
+          font-weight: normal;
+          padding-left: 0;
+        }
+
         table.turledere {
           th, td, td label {
             font-family: "DTL Nobel" !important;
@@ -96,7 +143,7 @@ div.admin-aktivitet-edit {
     }
   }
 
-  div.control-group.submit {
+  div.control-group.submit-footer {
     // Since there's currently no footer, let the user "scroll past" the button.
     // Should probably be removed when we get some sort of footer for the Sherpa UI.
     margin-bottom: 120px;
@@ -134,26 +181,4 @@ div.modal.admin-aktiviteter-delete-date {
     text-align: center;
   }
 
-}
-
-div.aktivitet-listing {
-  div.new-categories {
-    button.category {
-      width: 100%;
-      margin-bottom: 15px;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      font-size: 20px !important;
-    }
-
-    div.pick-subcategories {
-      div.subcategories {
-        margin-bottom: 20px;
-
-        button.subcategory {
-          .subcategory-button;
-        }
-      }
-    }
-  }
 }

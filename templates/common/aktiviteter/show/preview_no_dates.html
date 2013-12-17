@@ -1,0 +1,14 @@
+{% extends "common/aktiviteter/layout.html" %}
+{% block title %}{{ aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <em>{{ aktivitet.title }}</em>{% endblock %}
+
+{% block body %}
+
+  {{ block.super }}
+
+  <div class="alert alert-error">
+    <strong>Det finnes ingen turdatoer tilknyttet denne turen!</strong><br>
+    <a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">Gå tilbake til redigeringen</a>, og legg til en turdato for å kunne forhåndsvise turen.
+  </div>
+
+{% endblock %}

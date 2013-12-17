@@ -48,7 +48,7 @@ $(document).ready(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("input[name='travel_date']").change(function() {
+    filters.find("div.input-append.date").on('changeDate', function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
@@ -91,10 +91,17 @@ $(document).ready(function() {
         button_selections.filter(".difficulties").find("button.difficulty.selected").each(function() {
             difficulties.push($(this).attr('data-difficulty'));
         });
+        var locations = [];
+        filters.find("select[name='location'] option:selected").each(function() {
+            locations.push($(this).val());
+        });
+        var travel_date = filters.find("input[name='travel_date']").val();
         return {
             categories: categories,
             audiences: audiences,
-            difficulties: difficulties
+            difficulties: difficulties,
+            locations: locations,
+            travel_date: travel_date,
         };
     }
 });
