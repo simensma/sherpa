@@ -2,8 +2,33 @@
 {% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <em><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a></em>{% endblock %}
 
-{% block extra_js %}
-  <script src="{{ STATIC_URL }}js/aktiviteter/show.js"></script>
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.css" media="screen">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.ie.css" media="screen">
+      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.ie.css" media="screen">
+  <![endif]-->
 {% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/aktiviteter/show/show.js"></script>
+  {% if aktivitet_date.aktivitet.start_point %}
+    <script src="{{ STATIC_URL }}js/aktiviteter/show/map.js"></script>
+    <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
+  {% endif %}
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {};
+
+    {% if aktivitet_date.aktivitet.start_point %}
+      window.Turistforeningen.start_point_lat = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lat_json }});
+      window.Turistforeningen.start_point_lng = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lng_json }});
+    {% endif %}
+    </script>
+{% endblock %}
+
 
 {% block body %}{% endblock %}

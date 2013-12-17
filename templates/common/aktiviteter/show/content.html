@@ -85,7 +85,23 @@
         </table>
       </div>
 
-      <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
+      {% if aktivitet_date.aktivitet.start_point %}
+        <div class="row-fluid">
+          <div class="span7">
+            <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
+          </div>
+          <div class="span5">
+            <div id="map" class="leaflet-map"></div>
+            <div class="leaflet-popup-content hide">
+              <h3>{{ aktivitet_date.aktivitet.title }}</h3>
+              <p>{{ aktivitet_date.aktivitet.description|truncatewords:"30" }}</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
+      {% endif %}
+
 
       <h3>Kontaktinformasjon:</h3>
 
