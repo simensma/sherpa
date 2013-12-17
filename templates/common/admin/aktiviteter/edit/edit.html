@@ -71,11 +71,14 @@
         <input type="hidden" name="images" value="">
         <input type="hidden" name="position_lat">
         <input type="hidden" name="position_lng">
+        <input type="hidden" name="preview" value="false">
 
         <div class="control-group submit-header">
           <div class="controls">
             <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+            <br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
             <div class="hints">
               Husk at du alltid må trykke på lagre-knappen etter at du endrer noe!
             </div>
@@ -489,7 +492,9 @@
         <div class="control-group submit-footer">
           <div class="controls">
             <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+            <br>
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
           </div>
         </div>
 

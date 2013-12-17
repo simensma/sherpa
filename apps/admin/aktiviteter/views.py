@@ -189,7 +189,14 @@ def edit(request, aktivitet):
         if not errors:
             messages.info(request, 'save_success')
 
-        return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+        if json.loads(request.POST['preview']):
+            return redirect('admin.aktiviteter.views.preview', aktivitet.id)
+        else:
+            return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+
+def preview(request, aktivitet):
+    # TODO
+    pass
 
 def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that

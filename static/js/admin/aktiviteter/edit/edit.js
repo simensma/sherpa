@@ -19,6 +19,9 @@ $(document).ready(function() {
     var images_input = form.find("input[name='images']");
     var publish_button = form.find("input[name='publish']");
     var publish_extras = form.find("div.publish-extras");
+    var preview_buttons = form.find("div.submit-header button.preview,div.submit-footer button.preview");
+    var preview_input = form.find("input[name='preview']");
+    var submit_buttons = form.find("button[type='submit']");
 
     var images = form.find("div.control-group.images");
     var images_initiate = images.find("div.images-initiate");
@@ -265,7 +268,13 @@ $(document).ready(function() {
     // clicks it before the window is fully loaded, inputs that are filled by js on form
     // submit may be missed
     $(window).load(function() {
-        form.find("button[type='submit']").prop('disabled', false);
+        submit_buttons.prop('disabled', false);
+        preview_buttons.prop('disabled', false);
+    });
+
+    preview_buttons.click(function() {
+        preview_input.val(JSON.stringify(true));
+        form.submit();
     });
 
 
@@ -274,7 +283,8 @@ $(document).ready(function() {
      */
     form.submit(function(e) {
         // Disable submit buttons
-        $(this).find("button[type='submit']").prop('disabled', true);
+        submit_buttons.prop('disabled', true);
+        preview_buttons.prop('disabled', true);
         $(this).find("img.ajaxloader.submit").show();
 
         var priv = private_aktivitet.find("button.active").is(".private");
@@ -305,7 +315,8 @@ $(document).ready(function() {
         // Validate the form
         var validation = AktivitetValidator.validate();
         if(!validation.valid) {
-            $(this).find("button[type='submit']").prop('disabled', false);
+            submit_buttons.prop('disabled', false);
+            preview_buttons.prop('disabled', false);
             $(this).find("img.ajaxloader.submit").hide();
             e.preventDefault();
             $('html, body').animate({
