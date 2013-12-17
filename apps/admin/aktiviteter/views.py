@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -10,13 +11,14 @@ from django.contrib import messages
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag, County, Municipality
-from sherpa2.models import Location
+from sherpa2.models import Location, Turforslag
 from user.models import User
 from focus.models import Actor
 from association.models import Association
 
 from datetime import datetime
 import json
+import re
 
 def index(request):
     aktiviteter = Aktivitet.objects.all()
@@ -79,6 +81,11 @@ def edit(request, aktivitet):
         aktivitet.published = request.POST.get('publish') == 'publish'
         aktivitet.getting_there = request.POST['getting_there']
         aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
+
+        if request.POST['turforslag_id'] == '':
+            aktivitet.turforslag = None
+        else:
+            aktivitet.turforslag = request.POST['turforslag_id']
 
         if aktivitet.published:
             # If published, set the extra relevant fields (otherwise ignore them)
@@ -210,6 +217,32 @@ def preview(request, aktivitet):
     }
     return render(request, 'common/aktiviteter/show/preview.html', context)
 
+def turforslag_search(request):
+    query = request.POST['query']
+
+    # Trips are stored with HTML entities, so convert the query.
+    # No, the re.I flag doesn't work for these characters.
+    query = re.sub(u'æ', '&aelig;', query)
+    query = re.sub(u'ø', '&oslash;', query)
+    query = re.sub(u'å', '&aring;', query)
+    query = re.sub(u'Æ', '&AElig;', query)
+    query = re.sub(u'Ø', '&Oslash;', query)
+    query = re.sub(u'Å', '&Aring;', query)
+
+    if len(query) < 5:
+        raise PermissionDenied
+
+    turforslag = Turforslag.objects.all()
+    for name in query.split():
+        turforslag = turforslag.filter(name__icontains=name)
+
+    turforslag = turforslag.distinct('name').order_by('name')[:12]
+    objects = {t.name: t.id for t in turforslag}
+
+    return HttpResponse(json.dumps({
+        'names': [t.name for t in turforslag],
+        'objects': objects
+    }))
 
 def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that

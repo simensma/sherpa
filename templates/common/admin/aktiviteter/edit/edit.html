@@ -408,6 +408,18 @@
             </div>
           </div>
 
+          <div class="control-group turforslag" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
+            <label class="control-label">Koble til turforslag:</label>
+            <div class="controls">
+              <input type="text" name="turforslag" class="input-xxlarge" placeholder="Søk etter turforslag...">
+              <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
+              <div class="result control-as-text{% if not aktivitet.turforslag %} hide{% endif %}">
+                <a href="javascript:undefined" class="remove">[x]</a>
+                <span class="name">{{ aktivitet.get_turforslag.name|safe }}</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <div class="section dates">

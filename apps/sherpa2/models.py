@@ -281,3 +281,80 @@ class Location(models.Model):
 
     class Meta:
         db_table = u'location2'
+
+class Turforslag(models.Model):
+    id = models.IntegerField(db_column='tp_id', primary_key=True)
+    season = models.TextField(db_column='tp_season', blank=True)
+    owner = models.CharField(db_column='tp_owner', max_length=20, blank=True)
+    name = models.CharField(db_column='tp_name', max_length=100, blank=True)
+    ingress = models.TextField(db_column='tp_ingress', blank=True)
+    content = models.TextField(db_column='tp_content', blank=True)
+    author = models.CharField(db_column='tp_author', max_length=100, blank=True)
+    author_email = models.CharField(db_column='tp_author_email', max_length=100, blank=True)
+    location = models.CharField(db_column='tp_location', max_length=100, blank=True)
+    extras = models.CharField(db_column='tp_extras', max_length=255, blank=True)
+    status = models.CharField(db_column='tp_status', max_length=20, blank=True)
+    online = models.IntegerField(db_column='tp_online', null=True, blank=True)
+    name_nno = models.CharField(db_column='tp_name_nno', max_length=100, blank=True)
+    ingress_nno = models.TextField(db_column='tp_ingress_nno', blank=True)
+    content_nno = models.TextField(db_column='tp_content_nno', blank=True)
+    name_eng = models.CharField(db_column='tp_name_eng', max_length=100, blank=True)
+    ingress_eng = models.TextField(db_column='tp_ingress_eng', blank=True)
+    content_eng = models.TextField(db_column='tp_content_eng', blank=True)
+    name_ger = models.CharField(db_column='tp_name_ger', max_length=100, blank=True)
+    ingress_ger = models.TextField(db_column='tp_ingress_ger', blank=True)
+    content_ger = models.TextField(db_column='tp_content_ger', blank=True)
+    days = models.CharField(db_column='tp_days', max_length=8191, blank=True)
+    type = models.CharField(db_column='tp_type', max_length=8191, blank=True)
+    modified = models.DateTimeField(db_column='tp_modified', null=True, blank=True)
+    modified_by = models.IntegerField(db_column='tp_modified_by', null=True, blank=True)
+    created = models.DateTimeField(db_column='tp_created', null=True, blank=True)
+    created_by = models.IntegerField(db_column='tp_created_by', null=True, blank=True)
+    terrain = models.TextField(db_column='tp_terrain', blank=True)
+    difficulty = models.TextField(db_column='tp_difficulty', blank=True)
+    suits = models.TextField(db_column='tp_suits', blank=True)
+    album = models.TextField(db_column='tp_album', blank=True)
+    content2 = models.TextField(db_column='tp_content2', blank=True)
+    content2_eng = models.TextField(db_column='tp_content2_eng', blank=True)
+    content2_ger = models.TextField(db_column='tp_content2_ger', blank=True)
+    content2_nno = models.TextField(db_column='tp_content2_nno', blank=True)
+    access = models.TextField(db_column='tp_access', blank=True)
+    access_eng = models.TextField(db_column='tp_access_eng', blank=True)
+    access_ger = models.TextField(db_column='tp_access_ger', blank=True)
+    access_nno = models.TextField(db_column='tp_access_nno', blank=True)
+    county = models.IntegerField(db_column='tp_county', null=True, blank=True)
+    municipality = models.IntegerField(db_column='tp_municipality', null=True, blank=True)
+    map = models.TextField(db_column='tp_map', blank=True)
+    name_fre = models.TextField(db_column='tp_name_fre', blank=True)
+    content2_fre = models.TextField(db_column='tp_content2_fre', blank=True)
+    access_fre = models.TextField(db_column='tp_access_fre', blank=True)
+    lat = models.DecimalField(null=True, max_digits=65535, decimal_places=65535, blank=True)
+    lon = models.DecimalField(null=True, max_digits=65535, decimal_places=65535, blank=True)
+    the_geom = models.GeometryField(blank=True)
+    time = models.TextField(db_column='tp_time', blank=True)
+    km = models.TextField(db_column='tp_km', blank=True)
+    season2 = models.TextField(db_column='tp_season2', blank=True)
+    geojson = models.TextField(blank=True)
+    group = models.CharField(db_column='tp_group', max_length=100, blank=True)
+    mail_sent = models.IntegerField(null=True, blank=True)
+    geojson_ok = models.IntegerField(null=True, blank=True)
+    eta_modified_by = models.TextField(db_column='tp_eta_modified_by', blank=True)
+    links = models.TextField(db_column='tp_links', blank=True)
+    auth_uri = models.CharField(max_length=256, blank=True)
+    hash = models.CharField(db_column='tp_hash', max_length=256, blank=True)
+    type2 = models.CharField(db_column='tp_type2', max_length=8191, blank=True)
+    difficulty = models.TextField(blank=True)
+
+    def get_object_id(self):
+        return NtbId.objects.get(sql_id=self.id, type='T').object_id
+
+    class Meta:
+        db_table = u'trip'
+
+class NtbId(models.Model):
+    sql_id = models.IntegerField(db_column='id')
+    object_id = models.CharField(db_column='oid', max_length=24, unique=True)
+    type = models.CharField(max_length=1)
+
+    class Meta:
+        db_table = 'ntb_id'

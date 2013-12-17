@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 from datetime import date
 import json
 
-from sherpa2.models import Location
+from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
     association = models.ForeignKey('association.Association', related_name='+')
@@ -18,6 +18,7 @@ class Aktivitet(models.Model):
     # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
     locations = models.CharField(max_length=4091)
     getting_there = models.TextField()
+    turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
     DIFFICULTY_CHOICES = (
         ('easy', 'Enkel'),
         ('medium', 'Middels'),
@@ -110,6 +111,12 @@ class Aktivitet(models.Model):
 
     def get_active_subcategories(self):
         return [t.name for t in self.category_tags.all()]
+
+    def get_turforslag(self):
+        if self.turforslag is None:
+            return None
+        else:
+            return Turforslag.objects.get(id=self.turforslag)
 
     def get_images_ordered(self):
         return self.images.order_by('order')

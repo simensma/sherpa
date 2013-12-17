@@ -17,6 +17,10 @@ $(document).ready(function() {
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
     var images_input = form.find("input[name='images']");
+    var turforslag = form.find("div.control-group.turforslag");
+    var turforslag_input = turforslag.find("input[name='turforslag']");
+    var turforslag_id_input = turforslag.find("input[name='turforslag_id']");
+    var turforslag_result = turforslag.find("div.result");
     var publish_button = form.find("input[name='publish']");
     var publish_extras = form.find("div.publish-extras");
     var preview_buttons = form.find("div.submit-header button.preview,div.submit-footer button.preview");
@@ -156,6 +160,36 @@ $(document).ready(function() {
             subcategory_other_buttons_wrapper.slideDown();
         }
     }
+
+    var turforslag_objects;
+    turforslag_input.typeahead({
+        minLength: 5,
+        items: 12,
+        matcher: function() {
+            // Trust the serverside to filter on the query
+            return true;
+        },
+        source: function(query, process) {
+            $.ajaxQueue({
+                url: turforslag.attr('data-turforslag-search-url'),
+                data: { query: query }
+            }).done(function(result) {
+                result = JSON.parse(result);
+                turforslag_objects = result.objects;
+                process(result.names);
+            });
+        },
+        updater: function(item) {
+            turforslag_id_input.val(turforslag_objects[item]);
+            turforslag_result.find("span.name").html(item);
+            turforslag_result.show();
+        }
+    });
+
+    turforslag_result.find("a.remove").click(function() {
+        turforslag_result.hide();
+        turforslag_id_input.val('');
+    });
 
     publish_button.change(function() {
         if($(this).is(":checked")) {
