@@ -48,7 +48,7 @@ $(document).ready(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("input[name='travel_date']").change(function() {
+    filters.find("div.input-append.date").on('changeDate', function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
