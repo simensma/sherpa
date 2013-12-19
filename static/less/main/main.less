@@ -229,50 +229,71 @@ footer.main {
   }
 
   div.sponsors {
-    text-align: center;
-    margin-top: 40px;
 
-    img {
-      margin-left: 5px;
-      margin-right: 5px;
+    div.logos {
+      text-align: center;
+      margin-top: 40px;
+      clear: both;
+
+      div.smallscreen-header {
+        display: none;
+
+        @media (max-width: 979px) {
+          display: block;
+          font-family: "DTL Nobel" !important;
+          font-size: 18px;
+          margin-top: 30px;
+          margin-bottom: 20px;
+          border-bottom: 2px solid rgb(195, 195, 195);
+        }
+      }
+
+      a {
+        img {
+          margin-left: 5px;
+          margin-right: 5px;
+        }
+
+        @media (max-width: 979px) {
+          display: block;
+          text-align: center;
+        }
+      }
     }
 
-    img.onecall {
-      margin-right: 20px !important;
-    }
-  }
+    div.underline {
+      @media (max-width: 979px) {
+        display: none;
+      }
 
-  div.sponsors-underline {
-    @main: 195px;
-    @tour: 353px;
-    @other: 216px;
-    margin-left: 60px;
+      div {
+        float: left;
+        font-family: "DTL Nobel" !important;
+        font-size: 14px;
+        color: rgb(145, 145, 145);
+        border-top: 2px solid rgb(195, 195, 195);
+        margin-top: 15px;
+        margin-right: 8px;
+        margin-bottom: 40px;
+        padding-top: 5px;
+      }
 
-    div {
-      float: left;
-      font-family: "DTL Nobel" !important;
-      font-size: 14px;
-      color: rgb(145, 145, 145);
-      border-top: 2px solid rgb(195, 195, 195);
-      margin-top: 15px;
-      margin-right: 8px;
-      padding-top: 5px;
+      div.main {
+        width: 196px;
+        margin-left: 372px;
+      }
+
+      div.tour {
+        width: 448px;
+        margin-left: 48px;
+      }
+
+      div.other {
+        width: 380px;
+        margin-left: 9px;
+      }
     }
 
-    div.main {
-      width: @main;
-      margin-left: 10px;
-    }
-
-    div.tour {
-      width: @tour;
-      margin-left: 17px;
-    }
-
-    div.other {
-      width: @other;
-      margin-left: 8px;
-    }
   }
 }
 
@@ -327,12 +348,6 @@ footer.local {
     div.services div.span3 {
       margin-bottom: 30px;
     }
-  }
-}
-
-@media (max-width: 979px) {
-  footer div.sponsors-underline {
-    display: none;
   }
 }
 
