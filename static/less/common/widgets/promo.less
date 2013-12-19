@@ -765,6 +765,69 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-godjul {
+    background-image: url('/static/img/widgets/promo/Julebanner2013_bilde.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      a.giant-anchor {
+        display: block;
+        height: 480px;
+        color: white !important;
+      }
+
+      h1 {
+        position: absolute;
+        top: 100px;
+        right: 0;
+        font-size: 32px;
+        width: 210px;
+        text-transform: none;
+        text-align: left;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 240px;
+        right: 0;
+        font-size: 14px;
+        font-weight: bold;
+        width: 210px;
+        text-align: left;
+      }
+
+      p.credits {
+        position: absolute;
+        bottom: 5px;
+        left: 10px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      @media(max-width: 767px) {
+        h1, p.lede {
+          position: static;
+        }
+
+        a.giant-anchor {
+          height: auto;
+        }
+
+        p.credits {
+          display: none;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {

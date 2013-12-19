@@ -195,7 +195,13 @@ def get_static_promo_context(path):
             'id': 'gavemedlemskap',
             'name': 'Gavemedlemskap',
             'start_date': date(year=2013, month=12, day=11),
-            'end_date': date(year=2013, month=12, day=11),
+            'end_date': date(year=2013, month=12, day=18),
+        },
+        {
+            'id': 'godjul',
+            'name': 'God jul',
+            'start_date': date(year=2013, month=12, day=19),
+            'end_date': date(year=2013, month=12, day=19),
         }
     ]
 
