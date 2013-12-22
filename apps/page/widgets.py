@@ -201,7 +201,13 @@ def get_static_promo_context(path):
             'id': 'godjul',
             'name': 'God jul',
             'start_date': date(year=2013, month=12, day=19),
-            'end_date': date(year=2013, month=12, day=19),
+            'end_date': date(year=2013, month=12, day=31),
+        },
+        {
+            'id': 'godtnyttar',
+            'name': 'Godt nytt turår',
+            'start_date': date(year=2014, month=1, day=1),
+            'end_date': date(year=2014, month=1, day=1),
         }
     ]
 
