@@ -43,10 +43,13 @@ def association_user_role(association, user):
 class NoRoleRelationException(Exception):
     """Raised when the Association does not have a related role"""
 
-def membership_year_start(year=date.today().year):
+def membership_year_start(year=None):
     """
     Returns the date set for the membership year start, see settings.MEMBERSHIP_YEAR_START.
     """
+    if year is None:
+        year = date.today().year
+
     for dates in settings.MEMBERSHIP_YEAR_START:
         if dates['public_date'].year == year:
             return dates
