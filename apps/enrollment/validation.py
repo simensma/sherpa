@@ -10,31 +10,31 @@ def validate(enrollment, require_location, require_existing):
     if enrollment.users.count() == 0:
         return {
             'valid': False,
-            'redirect': "enrollment.views.registration"
+            'redirect': ["enrollment.views.registration"]
         }
     if not validate_youth_count(enrollment):
         return {
             'valid': False,
             'message': 'too_many_underage',
-            'redirect': "enrollment.views.registration"
+            'redirect': ["enrollment.views.registration"]
         }
     if not any([u.is_valid(require_contact_info=True) for u in enrollment.users.all()]):
         return {
             'valid': False,
             'message': 'contact_missing',
-            'redirect': "enrollment.views.registration"
+            'redirect': ["enrollment.views.registration"]
         }
     if require_location:
         if not validate_location(enrollment):
             return {
                 'valid': False,
-                'redirect': "%s?%s" % (reverse("enrollment.views.household"), invalid_location)
+                'redirect': ["%s?%s" % (reverse("enrollment.views.household"), invalid_location)]
             }
     if require_existing:
         if enrollment.existing_memberid != '' and not validate_existing(enrollment):
             return {
                 'valid': False,
-                'redirect': "%s?%s" % (reverse("enrollment.views.household"), invalid_existing)
+                'redirect': ["%s?%s" % (reverse("enrollment.views.household"), invalid_existing)]
             }
 
     return {

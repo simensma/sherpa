@@ -127,7 +127,7 @@ def household(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -236,7 +236,7 @@ def verification(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -346,7 +346,7 @@ def payment_method(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -401,7 +401,7 @@ def payment(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     # If for some reason the user managed to POST 'card' as payment_method
     if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
