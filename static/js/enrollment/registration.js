@@ -77,7 +77,7 @@ $(document).ready(function() {
         }
     });
 
-    if(window.trigger_form_validations) {
+    if(Turistforeningen.trigger_form_validations) {
         Validator.trigger();
         validateDatepicker();
         validateGender();

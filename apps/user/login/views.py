@@ -151,6 +151,10 @@ def register_nonmember(request):
             return redirect(request.GET.get('next', reverse('user.views.home')))
 
 def verify_memberid(request):
+    if not all([q in request.POST for q in ['country', 'memberid', 'zipcode']]):
+        # Some clients seem to send empty query dicts, see e.g.:
+        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1173/
+        raise PermissionDenied
     if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
         return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
     if not FocusCountry.objects.filter(code=request.POST['country']).exists():

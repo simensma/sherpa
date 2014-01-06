@@ -92,6 +92,7 @@ def registration(request, user):
             # The user was saved successfully, so clear the form for the next user
             user = None
         else:
+            messages.error(request, 'user_invalid')
             errors = True
 
     if not errors and 'forward' in request.POST:
@@ -100,7 +101,6 @@ def registration(request, user):
     context = {
         'enrollment': enrollment,
         'current_user': user,
-        'errors': errors,
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)
@@ -127,7 +127,7 @@ def household(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -236,7 +236,7 @@ def verification(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -346,7 +346,7 @@ def payment_method(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     if enrollment.state == 'payment':
         # Payment has been initiated but the user goes back here - why?
@@ -378,7 +378,6 @@ def payment_method(request):
                 main_members[0].save()
             elif len(main_members) > 1:
                 logger.warning(u"More than one available main members and no choice made. Fix the UI",
-                    exc_info=sys.exc_info(),
                     extra={
                         'request': request,
                         'main_members': main_members,
@@ -402,7 +401,7 @@ def payment(request):
     if not validation['valid']:
         if 'message' in validation:
             messages.error(request, validation['message'])
-        return redirect(validation['redirect'])
+        return redirect(*validation['redirect'])
 
     # If for some reason the user managed to POST 'card' as payment_method
     if not State.objects.all()[0].card and request.POST.get('payment_method', '') == 'card':
