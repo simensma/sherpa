@@ -92,6 +92,7 @@ def registration(request, user):
             # The user was saved successfully, so clear the form for the next user
             user = None
         else:
+            messages.error(request, 'user_invalid')
             errors = True
 
     if not errors and 'forward' in request.POST:
@@ -100,7 +101,6 @@ def registration(request, user):
     context = {
         'enrollment': enrollment,
         'current_user': user,
-        'errors': errors,
     }
     context.update(current_template_layout(request))
     return render(request, 'main/enrollment/registration.html', context)

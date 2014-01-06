@@ -35,15 +35,6 @@
 
       {% include 'main/enrollment/progress.html' with step=1 %}
 
-      {% if errors %}
-        <script>
-          window.trigger_form_validations = true;
-        </script>
-        <div class="alert alert-error">
-          <a class="close">x</a><strong>{% trans "Vi klarte ikke å lagre opplysningene." %}</strong><br>
-          {% trans "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt." %}
-        </div>
-      {% endif %}
       {% for message in messages %}
         {% if message.message == 'too_many_underage' %}
           <div class="notice-alert">
@@ -59,6 +50,14 @@
           <div class="alert alert-error">
             <a class="close">x</a><strong><i class="icon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
             {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
+          </div>
+        {% elif message.message == 'user_invalid' %}
+          <script>
+            window.trigger_form_validations = true;
+          </script>
+          <div class="alert alert-error">
+            <a class="close">x</a><strong>{% trans "Vi klarte ikke å lagre opplysningene." %}</strong><br>
+            {% trans "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt." %}
           </div>
         {% endif %}
       {% endfor %}

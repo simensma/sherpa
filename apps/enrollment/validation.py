@@ -18,12 +18,23 @@ def validate(enrollment, require_location, require_existing):
             'message': 'too_many_underage',
             'redirect': ["enrollment.views.registration"]
         }
+    # Verify that at least one member has valid contact information
     if not any([u.is_valid(require_contact_info=True) for u in enrollment.users.all()]):
         return {
             'valid': False,
             'message': 'contact_missing',
             'redirect': ["enrollment.views.registration"]
         }
+    # Verify that all members are otherwise valid (without contact information required)
+    for u in enrollment.users.all():
+        if not u.is_valid():
+            # Redirect back to edit this first invalid user. If others are also invalid, let them
+            # figure that out on the next attempt to validate.
+            return {
+                'valid': False,
+                'message': 'user_invalid',
+                'redirect': ["enrollment.views.registration", u.id]
+            }
     if require_location:
         if not validate_location(enrollment):
             return {
