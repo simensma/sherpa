@@ -322,14 +322,14 @@ class User(AbstractBaseUser):
         and no other member associations. We'll do that by default and let callers override that
         with the convert_dnt_oslo_for_youth parameter.
         """
-        association = cache.get('user.%s.association' % self.identifier)
+        association = cache.get('user.%s.%s.association' % (self.identifier, convert_dnt_oslo_for_youth))
         if association is None:
             association = Association.objects.get(focus_id=self.get_actor().main_association_id)
 
             if convert_dnt_oslo_for_youth and association.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
                 association = Association.objects.get(id=DNT_UNG_OSLO_ID)
 
-            cache.set('user.%s.association' % self.identifier, association, 60 * 60 * 24)
+            cache.set('user.%s.%s.association' % (self.identifier, convert_dnt_oslo_for_youth), association, 60 * 60 * 24)
         return association
 
     def main_association_actual(self):
