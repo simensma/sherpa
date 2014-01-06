@@ -12,6 +12,12 @@
       phone_required: {% if enrollment.users.count == 0 %}true{% else %}false{% endif %},
       email_required: {% if enrollment.users.count == 0 %}true{% else %}false{% endif %}
     };
+    {% for message in messages %}
+      {% if message.message == 'user_invalid' %}
+        Turistforeningen.trigger_form_validations = true;
+      {% endif %}
+    {% endfor %}
+
   </script>
 {% endblock %}
 
@@ -52,9 +58,7 @@
             {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
           </div>
         {% elif message.message == 'user_invalid' %}
-          <script>
-            window.trigger_form_validations = true;
-          </script>
+          {# Note that this message also emits a value to the js_globals block #}
           <div class="alert alert-error">
             <a class="close">x</a><strong>{% trans "Vi klarte ikke å lagre opplysningene." %}</strong><br>
             {% trans "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt." %}
