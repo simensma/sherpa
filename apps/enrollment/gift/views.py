@@ -72,7 +72,7 @@ def validate(request):
         return redirect('enrollment.gift.views.index')
     if 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
-    if request.method == 'GET':
+    if request.method != 'POST' or not 'receivers' in request.POST:
         return redirect('enrollment.gift.views.form')
 
     giver = Giver(
@@ -84,16 +84,21 @@ def validate(request):
         request.POST['giver_email'])
 
     receivers = []
-    for r in json.loads(request.POST['receivers']):
-        receivers.append(Receiver(
-            r['type'],
-            r['name'],
-            r['dob'],
-            r['address'],
-            r['zipcode'],
-            r['phone'],
-            r['email']
-        ))
+    try:
+        for r in json.loads(request.POST['receivers']):
+            receivers.append(Receiver(
+                r['type'],
+                r['name'],
+                r['dob'],
+                r['address'],
+                r['zipcode'],
+                r['phone'],
+                r['email']
+            ))
+    except ValueError:
+        # Something wrong with the json-formatted POST value. Not quite sure how this can happen, see:
+        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/885/
+        return redirect('enrollment.gift.views.form')
 
     request.session['gift_membership'] = {
         'giver': giver,
@@ -112,6 +117,10 @@ def validate(request):
 def confirm(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
+    if not 'giver' in request.session['gift_membership']:
+        # Not quite sure how this can happen, see:
+        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1262/
+        return redirect('enrollment.gift.views.form')
     if 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
 
