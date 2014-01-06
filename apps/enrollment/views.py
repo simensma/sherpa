@@ -378,7 +378,6 @@ def payment_method(request):
                 main_members[0].save()
             elif len(main_members) > 1:
                 logger.warning(u"More than one available main members and no choice made. Fix the UI",
-                    exc_info=sys.exc_info(),
                     extra={
                         'request': request,
                         'main_members': main_members,
