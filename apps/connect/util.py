@@ -17,8 +17,7 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    key = client['shared_secret']
-    request_data = json.loads(decrypt(key, request.GET['data']))
+    request_data = json.loads(try_keys(client['shared_secrets'], request.GET['data'], decrypt))
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
@@ -36,10 +35,24 @@ def prepare_response(client, response_data, redirect_url):
 
     # Encrypt the complete data package
     json_string = json.dumps(response_data)
-    encrypted_data = encrypt(client['shared_secret'], json_string)
+    encrypted_data = try_keys(client['shared_secrets'], json_string, encrypt)
     url_safe = quote_plus(encrypted_data)
 
     return redirect("%s?data=%s" % (redirect_url, url_safe))
+
+def try_keys(keys, data, method):
+    """
+    Encryption and decryption is run through this method which tries all the specified keys, and if one succeeds, uses
+    that, if not, raises the exception of the last attempted key.
+    """
+    last_exception = None
+    for key in keys:
+        try:
+            return method(key, data)
+        except Exception as e:
+            last_exception = e
+    # None of the keys worked, raise the last exception
+    raise last_exception
 
 def encrypt(key, plaintext):
     padded_text = pkcs7.encode(plaintext, settings.DNT_CONNECT_BLOCK_SIZE)
