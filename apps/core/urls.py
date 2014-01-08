@@ -7,4 +7,5 @@ urlpatterns = patterns('core.views',
     url(r'^kreditering/$', 'attribution'),
     url(r'^geosok/fylker/$', 'county_lookup'),
     url(r'^geosok/kommuner/$', 'municipality_lookup'),
+    url(r'^doge/$', 'doge'),
 )

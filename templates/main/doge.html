@@ -1,0 +1,87 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Doge søker deg!{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'core.views.doge' %}">Doge søker deg!</a></em>{% endblock %}
+
+{% block body %}
+
+<div class="doge">
+  <div class="row">
+    <div class="span12">
+
+      <h1>Doge søker deg!</h1>
+
+      <p class="lede">
+        Er du en stolt og nøyaktig <strong>designer</strong>? Eller kanskje heller en pragmatisk <strong>systemadministrator</strong>? Kanskje ligger du midt på treet, som en entusiastisk og omgjengelig <strong>webutvikler</strong> som tør å røre deg både oppe og nede i stacken?
+      </p>
+
+      <p>
+        Uansett hvem av disse du er, kan det se ut som at det er <strong>deg</strong> vi savner på laget vårt!
+      </p>
+
+      <p>
+        Den Norske Turistforening søker en ny webutvikler som kan bidra til å styrke vår profil på nettet. Vi har en omfattende webstack som krever variert kompetanse, samt ambisiøse mål som krever fremtidsrettede og pragmatiske hoder.
+      </p>
+
+      <p>
+        Du vil bli en del av et uviklingsteam på 3 personer. Som følge av dette innebærer stillingen både mye ansvar, og mye frihet. Vi kan leke og eksperimentere med all slags ny teknologi, og bruker det vi kan til å fremme DNTs budskap for å få folk ut på tur.
+      </p>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span6">
+      <div class="square-well section">
+
+        <h3>Web, serverdrift, kart og rutedatabaser</h3>
+        <p>
+          Turistforeningens sentrale og medlemsforeningenes lokale nettsteder kjøres på et felles system. Dette er bygget på det Python-baserte MVC-rammeverket <strong>Django</strong> og kjøres på <strong>Amazon AWS EC2</strong>.
+        </p>
+
+        <p>
+          Vi forvalter også et enormt nettverk av ruter, løyper og turisthytter som knytter disse sammen, over hele landet. Disse forvaltes i en <strong>PostgreSQL-database</strong> med <strong>PostGIS</strong>-støtte. I applikasjonen bruker vi <strong>GeoDjango</strong> og <strong>Leaflet</strong> for å behandle kartdataene på en enkel måte i et CMS som er tilgjengelig for alle medlemsforeningene.
+        </p>
+
+      </div>
+    </div>
+    <div class="span6">
+      <div class="square-well section">
+
+        <h3>APIer og eksterne tjenester</h3>
+
+        <p>
+          <strong>Nasjonal Turbase</strong> er hele Norges nasjonale platform for å samle, forvalte, og tilgjengeliggjøre standardiserte friluftslivsdata fra alle aktører som tilrettelegger for friluftsliv. Data fra Nasjonal Turbase er fritt tilgjengelig for bruk og viderebruk av alle via åpne, maskinlesbare formater. Dataene kan brukes i andre applikasjoner og tjenester. Nasjonal Turbase kjører på <strong>dotCloud (nå docker inc.)</strong>, i form av en <strong>mongodb</strong> database og med <strong>node.js</strong> som API-motor.
+        </p>
+
+        <p>
+          <strong>DNT Connect</strong> er en tjeneste DNT tilbyr for å autentisere våre medlemmer. Samarbeidspartnere som for eksempel UT.no kan sjekke om deres besøkende er innlogget i DNTs systemer, eventuelt kreve innlogging ved behov, og få tilbake en datapakke med informasjon om medlemmet, om årskontingenten er betalt, og så videre.
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12 section">
+
+      <h3>Filosofi</h3>
+
+      <p>
+        Vi tror på <strong>åpen kildekode</strong> og er svært stolte av <a href="http://turistforeningen.github.io/">vår github-profil</a>. Vi liker å være en del av et fagmiljø som stadig er i utvikling, og ser både egenverdien i vakre og elegante IT-systemer, samt nytten i å kunne bruke disse til å fremme DNTs budskap. Som en del av vårt team vil du ikke sitte og jobbe med teknologiene som er nevnt her i 10 år fremover, men du vil være med og bestemme hvilken retning vi går i.
+      </p>
+
+      <p>
+        <strong>DNT-utviklere</strong> er heller ikke redde for å lukke IDEen, detache fra tmux/screen, skru av telefonen, og snøre sekken for å dra avgårde til fjells og koble helt av!
+      </p>
+
+      <p>
+        <a href="http://www.turistforeningen.no:8000/nyheter/159-dnt-sker-webutvikler/">Ta en titt på vår offisielle annonse, og send inn din søknad!</a>
+        <strong>Nevn gjerne hvordan du fant denne siden søknaden!</strong>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

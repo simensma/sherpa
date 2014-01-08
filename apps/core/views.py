@@ -29,3 +29,6 @@ def county_lookup(request):
 def municipality_lookup(request):
     point_wkt = 'POINT(%s %s)' % (json.loads(request.POST['lng']), json.loads(request.POST['lat']))
     return HttpResponse(json.dumps([m.id for m in Municipality.objects.filter(geom__contains=point_wkt)]))
+
+def doge(request):
+    return render(request, 'main/doge.html')
