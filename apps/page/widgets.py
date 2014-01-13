@@ -207,8 +207,14 @@ def get_static_promo_context(path):
             'id': 'godtnyttar',
             'name': 'Godt nytt turår',
             'start_date': date(year=2014, month=1, day=1),
-            'end_date': date(year=2014, month=1, day=1),
-        }
+            'end_date': date(year=2014, month=1, day=12),
+        },
+        {
+            'id': 'kom-deg-ut-feb',
+            'name': 'Kom deg ut',
+            'start_date': date(year=2014, month=1, day=13),
+            'end_date': date(year=2014, month=1, day=13),
+        },
     ]
 
     today = date.today()

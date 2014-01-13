@@ -878,6 +878,63 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-kom-deg-ut-feb {
+    background-image: url('/static/img/widgets/promo/kom-deg-ut-feb.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      a.giant-anchor {
+        display: block;
+        height: 480px;
+      }
+
+      h1 {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 40px;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 65px;
+        right: 15px;
+        font-size: 36px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      p.cta {
+        position: absolute;
+        top: 120px;
+        right: 15px;
+        font-weight: bold;
+      }
+
+      @media(max-width: 767px) {
+        h1, p.lede, p.cta {
+          position: static;
+          color: white !important;
+        }
+
+        a.giant-anchor {
+          height: auto;
+        }
+
+        a.giant-anchor:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {
