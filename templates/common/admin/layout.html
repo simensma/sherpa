@@ -52,18 +52,43 @@
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
           <li class="active"><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-          <li><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
-          <li><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
+
+          {% if active_association.site %}
+            <li><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
+            <li><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
+          {% endif %}
+
           <li><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
-          <li><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
-          <li><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
-          <li><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
-          <li><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse</a></li>
+
+          {% if active_association.site %}
+            <li><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
+            <li><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
+          {% endif %}
+
+          {# Explicitly hide images for non-central users for now #}
+          {% if active_association.id == 56 %}{# DNT Central #}
+            <li><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
+          {% endif %}
+
+          {% if active_association.site %}
+            <li><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse</a></li>
+          {% endif %}
+
           <li><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
           <li><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
-          <li><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
-          <li><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
-          <li><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
+
+          {% if active_association.site %}
+            <li><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
+          {% endif %}
+
+          {# Applies only to DNT Central #}
+          {% if active_association.id == 56 %}
+            <li><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
+          {% endif %}
+
+          {% if user.perms.sherpa_admin %}
+            <li><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
+          {% endif %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right navbar-user">
@@ -82,8 +107,13 @@
           </li>
           <li class="dropdown user-dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{% gravatar user.get_sherpa_email 19 %}">
-              {{ user.get_full_name }} <b class="caret"></b>
+              {% if not focus_downtime.is_currently_down %}
+                <img src="{% gravatar user.get_sherpa_email 19 %}">
+                {{ user.get_full_name }} <b class="caret"></b>
+              {% else %}
+                <img src="{% gravatar "" 19 %}">{# Yields an anonymous gravatar #}
+                N.N. <b class="caret"></b>
+              {% endif %}
             </a>
             <ul class="dropdown-menu">
               <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
@@ -108,119 +138,7 @@
     </nav>
 
     <div id="page-wrapper">
-
-      <div class="row">
-        <div class="col-lg-12">
-          <h1>Sherpa <small>velkommen til nye Sherpa</small></h1>
-          <ol class="breadcrumb">
-            <li class="active"><i class="fa fa-dashboard"></i> Sherpa</li>
-          </ol>
-        </div>
-      </div><!-- /.row -->
-
-      <div class="row">
-        <div class="col-lg-3">
-          <div class="dashboard-panel blue">
-            <div class="content">
-              <div class="row">
-                <div class="col-xs-6">
-                  <i class="fa fa-comments fa-inverse fa-5x"></i>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <p class="announcement-heading">456</p>
-                  <p class="announcement-text">New Mentions!</p>
-                </div>
-              </div>
-            </div>
-            <a href="#">
-              <div class="row">
-                <div class="col-xs-6">
-                  View Mentions
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="dashboard-panel green">
-            <div class="content">
-              <div class="row">
-                <div class="col-xs-6">
-                  <i class="fa fa-check fa-5x"></i>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <p class="announcement-heading">12</p>
-                  <p class="announcement-text">To-Do Items</p>
-                </div>
-              </div>
-            </div>
-            <a href="#">
-              <div class="row">
-                <div class="col-xs-6">
-                  Complete Tasks
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="dashboard-panel purple">
-            <div class="content">
-              <div class="row">
-                <div class="col-xs-6">
-                  <i class="fa fa-tasks fa-5x"></i>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <p class="announcement-heading">18</p>
-                  <p class="announcement-text">Crawl Errors</p>
-                </div>
-              </div>
-            </div>
-            <a href="#">
-              <div class="row">
-                <div class="col-xs-6">
-                  Fix Issues
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="dashboard-panel yellow">
-            <div class="content">
-              <div class="row">
-                <div class="col-xs-6">
-                  <i class="fa fa-comments fa-5x"></i>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <p class="announcement-heading">56</p>
-                  <p class="announcement-text">New Orders!</p>
-                </div>
-              </div>
-            </div>
-            <a href="#">
-              <div class="row">
-                <div class="col-xs-6">
-                  Complete Orders
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div><!-- /.row -->
-
+      {% block body %}{% endblock %}
     </div><!-- /#page-wrapper -->
 
   </div><!-- /#wrapper -->

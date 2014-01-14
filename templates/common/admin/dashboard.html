@@ -2,171 +2,137 @@
 
 {% block body %}
 
-<div class="sherpa-dashboard">
-  <div class="row">
-    <div class="span12">
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Sherpa <small><a href="{% url 'admin.views.intro' %}">velkommen til nye Sherpa</a></small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> Sherpa</li>
+    </ol>
+  </div>
+</div><!-- /.row -->
 
-      {% if focus_downtime.is_currently_down %}
-        <div class="alert alert-danger">
-          <strong>Focus er nede for midlertidig vedlikehold {{ focus_downtime.period_message }}.</strong><br>
-          Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her.<br>
-          Derfor er det <strong>stor sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa.<br>
-          Det er også derfor vi ikke kan vise navnet ditt oppe i høyre hjørne!
+{% if focus_downtime.is_currently_down %}
+  <div class="alert alert-danger">
+    <strong>Focus er nede for midlertidig vedlikehold {{ focus_downtime.period_message }}.</strong><br>
+    Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her.<br>
+    Derfor er det <strong>stor sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa.<br>
+    Det er også derfor vi ikke kan vise navnet ditt oppe i høyre hjørne!
+  </div>
+{% endif %}
+
+<div class="row">
+  <div class="col-lg-3">
+    <div class="dashboard-panel blue">
+      <div class="content">
+        <div class="row">
+          <div class="col-xs-6">
+            <i class="fa fa-comments fa-inverse fa-5x"></i>
+          </div>
+          <div class="col-xs-6 text-right">
+            <p class="announcement-heading">456</p>
+            <p class="announcement-text">New Mentions!</p>
+          </div>
         </div>
-      {% endif %}
-
-      <p class="intro">
-        Hei og <a href="{% url 'admin.views.intro' %}">velkommen til nye Sherpa</a>!
-      </p>
-
-      <nav class="dashboard">
-        <ul>
-
-          {% if active_association.site %}
-
-            <li>
-              <a href="{% url 'admin.cms.views.page.list' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/webpages.jpg">
-              </a>
-              <h2><a href="{% url 'admin.cms.views.page.list' %}">Websider</a></h2>
-              <p>
-                Endre på hovedinnholdet på websidene.
-              </p>
-              <div style="clear: both;"></div>
-            </li>
-
-            <li>
-              <a href="{% url 'admin.articles.views.list' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/articles.jpg">
-              </a>
-              <h2><a href="{% url 'admin.articles.views.list' %}">Nyheter</a></h2>
-              <p>Skriv og publiser artikler som vises under <a href="{% url 'articles.views.index' %}">/nyheter/</a></p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-
-          <li>
-            <a href="{% url 'admin.aktiviteter.views.index' %}">
-              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/activity.jpg">
-            </a>
-            <h2><a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter (prototype!)</a></h2>
-            <p>
-              <strong>Dette er en prototype som ikke er i bruk.</strong><br>
-              Aktiviteter som publiseres offentlig forvaltes ennå i <a href="http://{{ old_site }}/admin/activity.php">gamle Sherpa</a>.<br>
-            </p>
-            <div style="clear: both;"></div>
-          </li>
-
-          {% if active_association.site %}
-
-            <li>
-              <a href="{% url 'admin.publications.views.index' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/magazine.png">
-              </a>
-              <h2><a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a></h2>
-              <p>Legg ut blader, årbøker, brosjyrer eller liknende som blir tilgjengelige for medlemmer via Min side.</p>
-              <div style="clear: both;"></div>
-            </li>
-
-            <li>
-              <a href="{% url 'admin.ads.views.list' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/ads.png">
-              </a>
-              <h2><a href="{% url 'admin.ads.views.list' %}">Annonser</a></h2>
-              <p>Last opp og legg ut annonser. Hvilke sider annonsene vises på velges under "<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>".</p>
-              <div style="clear: both;"></div>
-            </li>
-
-          {% endif %}
-
-          {# Explicitly hide images for non-central users for now #}
-          {% if active_association.id == 56 %}{# DNT Central #}
-            <li>
-              <a href="{% url 'admin.images.views.index' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/imagearchive.jpg">
-              </a>
-              <h2><a href="{% url 'admin.images.views.index' %}">Bildearkiv</a></h2>
-              <p>Finn bilder eller last opp nye. Det gamle bildearkivet finner du foreløpig i <a href="https://{{ old_site }}/admin/">gamle sherpa</a>, mens vi jobber med å flytte dem hit.</p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-
-          {% if active_association.site %}
-            <li>
-              <a href="{% url 'admin.analytics.views.index' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/statistics.jpg">
-              </a>
-              <h2><a href="{% url 'admin.analytics.views.index' %}">Analyse</a></h2>
-              <p>Statistikk og analyse av bruksmønstre på siden. Foreløpig finner man kun søkestatistikk her, men vi ønsker å utvide funksjonaliteten etter hvert.</p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-
-          <li>
-            <a href="{% url 'admin.users.views.index' %}">
-              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/users.png">
-            </a>
-            <h2><a href="{% url 'admin.users.views.index' %}">Medlemsregister og brukeroversikt</a></h2>
-            <p>Søk etter og finn opplysninger om medlemmer og brukere. Her kan du for eksempel gi tilgang til Sherpa.</p>
-            <div style="clear: both;"></div>
-          </li>
-
-          <li>
-            <a href="{% url 'admin.turledere.views.index' %}">
-              <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/turledere.png">
-            </a>
-            <h2><a href="{% url 'admin.turledere.views.index' %}">Turledere og instruktører</a></h2>
-            <p>Finn turledere og instruktører, eller opprette nye sertifikater.</p>
-            <div style="clear: both;"></div>
-          </li>
-
-          {% if active_association.site %}
-            <li>
-              <a href="{% url 'admin.cache.views.index' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/cache.png">
-              </a>
-              <h2><a href="{% url 'admin.cache.views.index' %}">Caching</a></h2>
-              <p>
-                Vi benytter <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste. Her kan du slette cachede sider for å se endringer kjapt.
-              </p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-
-          {% if active_association.id == 56 %}
-            {# Applies only to DNT Central #}
-            <li>
-              <a href="{% url 'admin.enrollment.views.index' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/enrollment.jpg">
-              </a>
-              <h2><a href="{% url 'admin.enrollment.views.index' %}">Innmelding</a></h2>
-              <p>Se oversikt over innmeldinger og transaksjoner, deaktiver kortinnbetaling eller hele innmeldingsskjemaet, ved behov. Hovedsaklig for DNTs medlemsservice.</p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-
-          {% if user.perms.sherpa_admin %}
-            <li>
-              <a href="{% url 'admin.memberid_sms.views.list' %}">
-                <img class="icon" src="{{ STATIC_URL }}img/icons/sherpa-dashboard/memberid-sms.png">
-              </a>
-              <h2><a href="{% url 'admin.memberid_sms.views.list' %}">Medlemsnummer SMS-tjeneste</a></h2>
-              <p>Medlemmer kan få tilsendt sitt medlemsnummer på SMS, her logges bruk av tjenesten for overvåkning og avslørelse av eventuelt misbruk. Kun Sherpa-admins har tilgang til denne tjenesten.</p>
-              <div style="clear: both;"></div>
-            </li>
-          {% endif %}
-        </ul>
-
-        <h2>Savner du noe?</h2>
-        <p>
-          Mens vi jobber med funksjonaliteten i nye Sherpa, må du fremdeles logge på gamle Sherpa for enkelte ting, som for eksempel forvaltning av hytter og ruter, turer og aktiviteter, bildearkiv/filarkiv, føremeldinger og så videre. Medlemsforeningenes nettsteder forvaltes også i gamle Sherpa enn så lenge.
-        </p>
-        <p>
-          Logg på gamle Sherpa på denne adressen: <a href="http://www2.turistforeningen.no/admin/">http://www2.turistforeningen.no/admin/</a>
-        </p>
-      </nav>
+      </div>
+      <a href="#">
+        <div class="row">
+          <div class="col-xs-6">
+            View Mentions
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
-</div>
+  <div class="col-lg-3">
+    <div class="dashboard-panel green">
+      <div class="content">
+        <div class="row">
+          <div class="col-xs-6">
+            <i class="fa fa-check fa-5x"></i>
+          </div>
+          <div class="col-xs-6 text-right">
+            <p class="announcement-heading">12</p>
+            <p class="announcement-text">To-Do Items</p>
+          </div>
+        </div>
+      </div>
+      <a href="#">
+        <div class="row">
+          <div class="col-xs-6">
+            Complete Tasks
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-3">
+    <div class="dashboard-panel purple">
+      <div class="content">
+        <div class="row">
+          <div class="col-xs-6">
+            <i class="fa fa-tasks fa-5x"></i>
+          </div>
+          <div class="col-xs-6 text-right">
+            <p class="announcement-heading">18</p>
+            <p class="announcement-text">Crawl Errors</p>
+          </div>
+        </div>
+      </div>
+      <a href="#">
+        <div class="row">
+          <div class="col-xs-6">
+            Fix Issues
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-3">
+    <div class="dashboard-panel yellow">
+      <div class="content">
+        <div class="row">
+          <div class="col-xs-6">
+            <i class="fa fa-comments fa-5x"></i>
+          </div>
+          <div class="col-xs-6 text-right">
+            <p class="announcement-heading">56</p>
+            <p class="announcement-text">New Orders!</p>
+          </div>
+        </div>
+      </div>
+      <a href="#">
+        <div class="row">
+          <div class="col-xs-6">
+            Complete Orders
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
+    <h2>Savner du noe?</h2>
+    <p>
+      Mens vi jobber med funksjonaliteten i nye Sherpa, må du fremdeles logge på gamle Sherpa for enkelte ting, som for eksempel forvaltning av hytter og ruter, turer og aktiviteter, bildearkiv/filarkiv, føremeldinger og så videre. Medlemsforeningenes nettsteder forvaltes også i gamle Sherpa enn så lenge.
+    </p>
+    <p>
+      Logg på gamle Sherpa på denne adressen: <a href="http://www2.turistforeningen.no/admin/">http://www2.turistforeningen.no/admin/</a>
+    </p>
+  </div>
+</div><!-- /.row -->
 
 {% endblock %}
