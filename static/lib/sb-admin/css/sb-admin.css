@@ -87,6 +87,9 @@ table.tablesorter thead tr th:hover {
   color: #fff;
   font-size: 20px;
   font-weight: 100;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  min-height: 50px;
 }
 
 .navbar-header .navbar-brand:hover {
@@ -105,6 +108,23 @@ table.tablesorter thead tr th:hover {
 
   #page-wrapper {
   padding: 15px 25px;
+  }
+
+  /* Right Nav */
+
+  .navbar-nav.navbar-right .dropdown .dropdown-toggle {
+    min-height: 50px;
+  }
+
+  .navbar-nav.navbar-right .user-dropdown a.dropdown-with-gravatar {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-nav.navbar-right .user-dropdown a.dropdown-with-gravatar span {
+    display: inline-block;
+    padding-top: 12px;
+    padding-bottom: 12px;
   }
 
   /* Side Nav */
