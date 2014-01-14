@@ -16,7 +16,7 @@
 
     {% for message in messages %}
       {% if message.message == 'incorrect_file_format' %}
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <strong>Du kan kun laste opp filer i PDF-format.</strong>
         </div>
       {% endif %}
@@ -32,7 +32,7 @@
       <a href="javascript:undefined" class="delete-release">Slett utgivelsen</a>
     </p>
 
-    <div class="alert alert-error delete-release-confirm hide">
+    <div class="alert alert-danger delete-release-confirm hide">
       <p>
         <strong>Er du sikker på at du vil slette {{ release.title }}?</strong><br>
         {% if release.pdf_hash != '' %}

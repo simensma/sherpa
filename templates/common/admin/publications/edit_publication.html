@@ -54,7 +54,7 @@
 
     {% include 'common/admin/publications/edit_publication_form.html' %}
 
-    <div class="alert alert-error delete-publication-confirm hide">
+    <div class="alert alert-danger delete-publication-confirm hide">
       <p>
         <strong>Er du sikker på at du vil slette {{ publication.title }}{% if publication.releases_ordered|length > 0 %}, med sine {{ publication.releases_ordered|length }} utgivelser{% endif %}?</strong><br>
         {% if publication.releases_ordered|length > 0 %}
@@ -84,7 +84,7 @@
 
     {% for message in messages %}
       {% if message.message == 'incorrect_file_format' %}
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
           <strong>Du kan kun laste opp filer i PDF-format.</strong>
         </div>
       {% endif %}
@@ -123,7 +123,7 @@
                 {% elif release.online_view != '' %}
                   <a href="{{ release.online_view }}">Se les på nett-lenke</a>
                 {% else %}
-                  <div class="alert alert-error">
+                  <div class="alert alert-danger">
                     <strong>Utgivelsen mangler innhold!</strong><br>
                     Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til hvor den kan leses på nett.
                   </div>

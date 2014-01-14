@@ -59,7 +59,7 @@
             {% endif %}
           </div>
         {% elif message.message == 'invalid_date_format' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <strong>Ugyldig datoformat</strong><br>
             Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt, påmeldingsfrister osv). Datoene må legges inn med følgende format: <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut: <strong>{{ now|date:"d.m.Y" }}</strong>
           </div>
@@ -559,7 +559,7 @@
 
         <tr class="technical-error hide">
           <td colspan="6">
-            <div class="alert alert-error">
+            <div class="alert alert-danger">
               Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
             </div>
           </td>
@@ -568,7 +568,7 @@
         <tr class="max-hits-exceeded hide">
           <td colspan="6">
 
-            <div class="alert alert-error">
+            <div class="alert alert-danger">
               Du fikk veldig mange treff, kun et utvalg vises her.<br>
               Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
             </div>
@@ -602,7 +602,7 @@
       <div class="date-preview">
       </div>
 
-      <div class="fail hide alert alert-error">
+      <div class="fail hide alert alert-danger">
         Beklager, det oppstod en teknisk feil.<br>
         Vi skulle hente litt informasjon om turdatoen for at du skal kunne slette den, men noe galt skjedde underveis. Prøv å lukke dette vinduet (krysset oppe til høyre) og klikk på Slett-knappen igjen. Feilen har blitt logget automatisk og vi vil se på den så snart som mulig.
       </div>

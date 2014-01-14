@@ -14,12 +14,12 @@
     <div class="span12">
       {% for message in messages %}
         {% if message.message == 'invalid_date' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>Ugyldig datoformat, vennligst prøv igjen!</strong>
           </div>
         {% elif message.message == 'unparseable_script' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>Klarte ikke å hente ut nødvendig informasjon fra adform-scriptet.</strong><br>
             Kanskje har formatet endret seg, eller så tok du ikke med riktig del av scriptet?<br>
