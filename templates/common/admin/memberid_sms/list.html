@@ -55,6 +55,27 @@
         {% endfor %}
       </tbody>
     </table>
+
+    <ul class="pagination pagination-lg">
+      <li>
+        <a href="{% url 'admin.memberid_sms.views.list' %}?page=1">
+          <i class="fa fa-angle-double-left"></i>
+        </a>
+      </li>
+
+      {% for number in sms_requests.paginator.page_range %}
+        <li{% if number == sms_requests.number %} class="active"{% endif %}>
+          <a href="{% url 'admin.memberid_sms.views.list' %}?page={{ number }}">{{ number }}</a>
+        </li>
+      {% endfor %}
+
+      <li>
+        <a href="{% url 'admin.memberid_sms.views.list' %}?page={{ sms_requests.paginator.num_pages }}" class="page">
+          <i class="fa fa-angle-double-right"></i>
+        </a>
+      </li>
+    </ul>
+
   </div>
 </div>
 

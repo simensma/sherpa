@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, InvalidPage
 
 from membership.models import SMSServiceRequest
 
@@ -11,6 +12,13 @@ def list(request):
     sms_requests = sms_requests.order_by('-date')
     sms_price = 0.39
     total_cost = sms_price * total_sent
+
+    paginator = Paginator(sms_requests, 100)
+    try:
+        sms_requests = paginator.page(request.GET.get('page', 1))
+    except InvalidPage:
+        sms_requests = paginator.page(1)
+
     context = {
         'sms_requests': sms_requests,
         'sms_price': sms_price,
