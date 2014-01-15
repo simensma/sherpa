@@ -1,14 +1,22 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Velkommen til nye Sherpa!{% endblock %}
-{% block header %}<a href="{% url 'admin.views.intro' %}">Nye Sherpa</a>{% endblock %}
+
+{% block admin_menu %}{% with 'dashboard' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block body %}
 
-<div class="velkomsthilsen">
-  <div class="row">
-    <div class="span12">
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Velkommen til nye Sherpa!</h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.views.intro' %}">Velkomsthilsen</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
 
-      <h1 class="sherpa">Velkommen til nye Sherpa!</h1>
+  <div class="row">
+    <div class="col-lg-12">
 
       <h3>Hva er dette? Hvorfor har vi en ny Sherpa?</h3>
       <p>
@@ -58,6 +66,5 @@
 
     </div>
   </div>
-</div>
 
 {% endblock %}
