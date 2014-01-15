@@ -141,7 +141,7 @@
           {# Choose active association. Those users who have 1 association don't need to choose manually. #}
           {% if user.all_associations|length > 1 %}
             <li class="dropdown association-dropdown">
-              <select name="user_association" data-placeholder="Velg en forening...">
+              <select name="user_association" data-placeholder="Velg aktiv forening...">
                 <option value=""></option>
                 {% if user.all_associations_sorted.central|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
