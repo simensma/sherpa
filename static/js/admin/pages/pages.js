@@ -1,6 +1,6 @@
 /* Editing a page (not its contents) */
 
-$(document).ready(function() {
+$(function() {
 
     /* New page dialog - define slug based on title */
 
@@ -162,109 +162,4 @@ $(document).ready(function() {
         });
     }
 
-});
-
-/* Menus */
-
-$(document).ready(function() {
-
-    // Set when a modal is opened (undefined for new items, or the anchor element for editing)
-    var activeMenu;
-
-    var menus = $("nav#menus");
-    var menu_modal = $("div.modal.menu");
-    var menu_add = $("a.add-menu-element");
-
-    menu_add.click(function() {
-        activeMenu = undefined;
-        menu_modal.find("input[name='name']").val('');
-        menu_modal.find("input[name='url']").val('');
-        menu_modal.find("button.delete-menu").hide();
-        menu_modal.modal();
-    });
-
-    menus.find("a.edit").click(edit);
-
-    function edit() {
-        activeMenu = $(this);
-        menu_modal.find("input[name='name']").val($(this).text());
-        menu_modal.find("input[name='url']").val($(this).attr('data-href'));
-        menu_modal.find("button.delete-menu").show();
-        menu_modal.modal();
-    }
-
-    menus.find("ul").sortable({
-        vertical: false,
-        nested: false,
-        onDrop: function ($item, container, _super) {
-            _super($item, container);
-            var list = $(this);
-            var i = 0;
-            var items = [];
-            menus.find("a.edit").each(function() {
-                items.push({
-                    "id": $(this).attr('data-id'),
-                    "order": i
-                });
-                i++;
-            });
-            $.ajaxQueue({
-                url: menus.attr('data-reorder-url'),
-                data: { menus: JSON.stringify(items) }
-            }).fail(function(result) {
-                alert("Klarte ikke å lagre ny menyposisjon, vennligst oppdater siden (F5) og prøv igjen.");
-            });
-        }
-    });
-
-    menu_modal.find("button.save-menu").click(function() {
-        var name = menu_modal.find("input[name='name']").val();
-        var url = menu_modal.find("input[name='url']").val().trim();
-        if(!url.match(/^https?:\/\//)) {
-            url = "http://" + url;
-        }
-        var ajaxUrl;
-        if(activeMenu === undefined) {
-            ajaxUrl = 'ny/';
-        } else {
-            ajaxUrl = 'rediger/' + encodeURIComponent(activeMenu.attr('data-id')) + '/';
-        }
-        $.ajaxQueue({
-            url: '/sherpa/cms/meny/' + ajaxUrl,
-            data: {
-                name: name,
-                url: url
-            }
-        }).done(function(result) {
-            if(activeMenu === undefined) {
-                result = JSON.parse(result);
-                var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
-                item.find("a.edit").click(edit);
-                menus.find("li").last().after(item);
-            } else {
-                activeMenu.text(name);
-                activeMenu.attr('data-href', url);
-            }
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            menu_modal.modal('hide');
-        });
-    });
-
-    menu_modal.find("button.delete-menu").click(function() {
-        if(!confirm('Er du sikker på at du vil slette denne linken fra hovedmenyen?')) {
-            return;
-        }
-        $.ajaxQueue({
-            url: '/sherpa/cms/meny/slett/' + activeMenu.attr('data-id') + '/',
-            type: 'POST'
-        }).done(function(result) {
-            activeMenu.remove();
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            menu_modal.modal('hide');
-        });
-    });
 });
