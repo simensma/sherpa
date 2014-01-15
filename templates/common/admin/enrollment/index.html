@@ -1,13 +1,27 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Innmelding &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.enrollment.views.index' %}">Innmelding</a>{% endblock %}
+
+{% block title %}Innmelding — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'enrollment' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/enrollment/index.js"></script>
 {% endblock %}
+
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
+    <h1>Innmelding <small>søk i innmeldinger, transaksjoner osv.</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.enrollment.views.index' %}">Innmeldinger</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
     <p>
       <a href="{% url 'admin.enrollment.views.status' %}">Deaktiver innmeldingsskjemaet eller kortbetaling</a>
     </p>
@@ -16,13 +30,13 @@
 
 <div class="enrollment-overview">
   <div class="row">
-    <div class="span12">
+    <div class="col-lg-12">
 
       <div class="search">
         <form action="{% url 'admin.enrollment.views.index' %}" method="get">
           {% csrf_token %}
-          <input type="text" name="search" class="input-xxlarge" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer">
-          <button class="btn search input-button-align" type="submit"><i class="icon-search"></i></button>
+          <input type="text" name="search" class="form-control" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer...">
+          <button class="btn search input-button-align" type="submit"><i class="fa fa-search"></i> Søk</button>
         </form>
       </div>
 
@@ -37,8 +51,8 @@
         <div class="enrollment">
           <div class="header closed">
 
-            <div class="row-fluid">
-              <div class="span6">
+            <div class="row">
+              <div class="col-lg-6">
                 Status: {{ enrollment.get_state }}
                 {% if enrollment.result %}
                   ({{ enrollment.get_result }})
@@ -47,12 +61,12 @@
                 Startet: {{ enrollment.date_initiated|date:"d.m.y H:i" }}<br>
                 Sist endret: {{ enrollment.date_modified|date:"d.m.y H:i" }}
               </div>
-              <div class="span5">
+              <div class="col-lg-5">
                 {{ enrollment.users.count }} medlemmer<br>
                 {{ enrollment.transactions.count }} transaksjoner
 
               </div>
-              <div class="span1">
+              <div class="col-lg-1">
                 <div class="pull-right">
                   <i class="icon-chevron-down"></i>
                   <i class="icon-chevron-up"></i>
@@ -182,15 +196,13 @@
 
       {% endfor %}
 
-      <div class="pagination pagination-large">
-        <ul>
-          {% for number in enrollments.paginator.page_range %}
-            <li{% if number == enrollments.number %} class="active"{% endif %}>
-              <a href="{% url 'admin.enrollment.views.index' %}?page={{ number }}{% if search %}&amp;search={{ search }}{% endif %}" class="page">{{ number }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      <ul class="pagination pagination-lg">
+        {% for number in enrollments.paginator.page_range %}
+          <li{% if number == enrollments.number %} class="active"{% endif %}>
+            <a href="{% url 'admin.enrollment.views.index' %}?page={{ number }}{% if search %}&amp;search={{ search }}{% endif %}" class="page">{{ number }}</a>
+          </li>
+        {% endfor %}
+      </ul>
 
     </div>
   </div>
