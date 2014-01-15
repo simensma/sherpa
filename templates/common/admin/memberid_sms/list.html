@@ -1,11 +1,22 @@
 {% extends 'common/admin/layout.html' %}
+{% block title %}SMS-tjenester — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'memberid_sms' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
+    <h1>SMS-tjenester <small>overvåk medlemmenes bruk av våre SMS-tjenester</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.memberid_sms.views.list' %}">SMS-tjenester</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
 
-    <h2>Bruk av SMS-tjenesten</h2>
+<div class="row">
+  <div class="col-lg-12">
 
     <p>
       "Antall" er antall noterte requests på samme IP de siste 30 min - resettes etter de 30 minuttene.<br>
