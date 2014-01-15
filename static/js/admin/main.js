@@ -5,7 +5,7 @@ $(document).ready(function() {
         $("#add-page-dialog input[name='slug']").val(slugify($(this).val()));
     });
 
-    $("header select[name='user_association']").chosen().change(function() {
+    $("select[name='user_association']").chosen().change(function() {
         var next = encodeURIComponent(location.pathname + location.search);
         var a = $('<a class="hide" href="' + $(this).find('option:selected').attr('data-href') + '?next=' + next + '">s</a>').appendTo(document.body).get(0).click();
     });
