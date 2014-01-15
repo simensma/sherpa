@@ -1,5 +1,7 @@
 {% extends 'common/admin/layout.html' %}
 
+{% block admin_menu %}{% with 'dashboard' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block body %}
 
 <div class="row">

@@ -51,44 +51,49 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-          <li class="active"><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 
-          {% if active_association.site %}
-            <li><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
-            <li><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
-          {% endif %}
+          {% block admin_menu %}
 
-          <li><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
+            <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 
-          {% if active_association.site %}
-            <li><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
-            <li><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
-          {% endif %}
+            {% if active_association.site %}
+              <li{% if active_entry == 'cms' %} class="active"{% endif %}><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
+              <li{% if active_entry == 'articles' %} class="active"{% endif %}><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
+            {% endif %}
 
-          {# Explicitly hide images for non-central users for now #}
-          {% if active_association.id == 56 %}{# DNT Central #}
-            <li><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
-          {% endif %}
+            <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
 
-          {% if active_association.site %}
-            <li><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse</a></li>
-          {% endif %}
+            {% if active_association.site %}
+              <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
+              <li{% if active_entry == 'ads' %} class="active"{% endif %}><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
+            {% endif %}
 
-          <li><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
-          <li><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
+            {# Explicitly hide images for non-central users for now #}
+            {% if active_association.id == 56 %}{# DNT Central #}
+              <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
+            {% endif %}
 
-          {% if active_association.site %}
-            <li><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
-          {% endif %}
+            {% if active_association.site %}
+              <li{% if active_entry == 'analytics' %} class="active"{% endif %}><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse</a></li>
+            {% endif %}
 
-          {# Applies only to DNT Central #}
-          {% if active_association.id == 56 %}
-            <li><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
-          {% endif %}
+            <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
+            <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
-          {% if user.perms.sherpa_admin %}
-            <li><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
-          {% endif %}
+            {% if active_association.site %}
+              <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
+            {% endif %}
+
+            {# Applies only to DNT Central #}
+            {% if active_association.id == 56 %}
+              <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
+            {% endif %}
+
+            {% if user.perms.sherpa_admin %}
+              <li{% if active_entry == 'memberid_sms' %} class="active"{% endif %}><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
+            {% endif %}
+
+          {% endblock %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right navbar-user">
