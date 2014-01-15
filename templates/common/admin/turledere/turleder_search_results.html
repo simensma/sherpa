@@ -14,25 +14,25 @@
         <a href="{% url 'admin.users.views.show' user.id %}#turledersertifikat">{{ user.get_full_name }} ({{ user.memberid }})</a>
       </p>
       {% if turleder.kursleder %}
-        <div class="row-fluid">
-          <div class="span6 no-min-height">
+        <div class="row">
+          <div class="col-md-6 no-min-height">
             {% if turleder.kursleder.is_expired %}<s>{% endif %}
               Kursleder
             {% if turleder.kursleder.is_expired %}</s>{% endif %}
           </div>
-          <div class="span6 no-min-height{% if turleder.kursleder.is_expired %} expired{% endif %}">
+          <div class="col-md-6 no-min-height{% if turleder.kursleder.is_expired %} expired{% endif %}">
             {{ turleder.kursleder.date_start|date:"Y"|default:"?" }}-{{ turleder.kursleder.date_end|date:"Y"|default:"?" }}
           </div>
         </div>
       {% endif %}
       {% for turleder in user.turledere.all|sort_by_turleder_role %}
-        <div class="row-fluid">
-          <div class="span6 no-min-height">
+        <div class="row">
+          <div class="col-md-6 no-min-height">
             {% if turleder.is_expired %}<s>{% endif %}
               {{ turleder.get_role }}
             {% if turleder.is_expired %}</s>{% endif %}
           </div>
-          <div class="span6 no-min-height{% if turleder.is_expired %} expired{% endif %}">
+          <div class="col-md-6 no-min-height{% if turleder.is_expired %} expired{% endif %}">
             {{ turleder.date_start|date:"Y"|default:"?" }}{% if turleder.role != 'ambassadør' %}-{{ turleder.date_end|date:"Y"|default:"?" }}{% endif %}
           </div>
         </div>
