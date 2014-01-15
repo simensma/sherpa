@@ -125,11 +125,14 @@
               {% endif %}
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
-              <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">7</span></a></li>
-              <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+              {% if active_association.site %}
+                <li><a href="http://{{ active_association.site.domain }}/"><i class="fa fa-home"></i> {{ active_association.name }}</a></li>
+              {% endif %}
+              <li><a href="{% url 'user.views.home' %}"><i class="fa fa-user"></i> Min side</a></li>
+              <li><a href="{% url 'user.views.account' %}"><i class="fa fa-pencil-square-o"></i> Dine opplysninger</a></li>
+              <li><a href="{% url 'user.views.account_password' %}"><i class="fa fa-key"></i> Endre passord</a></li>
               <li class="divider"></li>
-              <li><a href="#"><i class="fa fa-power-off"></i> Log Out</a></li>
+              <li><a href="{% url 'user.login.views.logout' %}"><i class="fa fa-power-off"></i> Logg ut</a></li>
             </ul>
           </li>
           <li class="dropdown user-dropdown">
