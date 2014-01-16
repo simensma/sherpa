@@ -1,7 +1,7 @@
 {% load albumpath %}
 
 <div class="row uploader jq-hide">
-  <div class="span6">
+  <div class="col-md-6">
 
     <div class="alert alert-danger upload-failed jq-hide">
       <a class="close">x</a>
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div class="span6">
+  <div class="col-md-6">
     {% include 'common/admin/images/util/licencing.html' %}
 
     <div class="image-details jq-hide">
@@ -53,35 +53,39 @@
         <input type="hidden" name="ids">
         <input type="hidden" name="origin" value="{{ origin }}">
 
-        <label class="image-description" for="image-description">Beskrivelse:</label>
-        <textarea name="description" rows="4" id="image-description"></textarea>
-
-        <div class="control-group">
-          <label class="control-label" for="image-photographer">Fotograf:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." id="image-photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+        <div class="form-group">
+          <label class="col-sm-2 image-description" for="image-description">Beskrivelse:</label>
+          <div class="col-sm-10">
+            <textarea name="description" rows="4" id="image-description" class="form-control"></textarea>
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-credits">Kreditering:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..." id="image-credits">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-photographer">Fotograf:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." id="image-photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-licence">Bruksrett:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..." id="image-licence">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-credits">Kreditering:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="credits" placeholder="Navn på person, forening e.l..." id="image-credits">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-tags">Nøkkelord:</label>
-          <div class="controls">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-licence">Bruksrett:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="licence" placeholder="Kun ved behov..." id="image-licence">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-tags">Nøkkelord:</label>
+          <div class="col-sm-10">
             <input type="hidden" name="tags-serialized">
-            <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
+            <input type="text" class="form-control" name="tags" style="margin-bottom: 10px" id="image-tags">
             <div class="tag-box">
               {% for tag in image.tags.all %}
                 <div class="tag">
@@ -93,9 +97,9 @@
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-album">Album:</label>
-          <div class="controls">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-album">Album:</label>
+          <div class="col-sm-10">
             <input type="hidden" name="album" value="{{ current_album.id }}">
             <p class="chosen-album">
               <span class="display-name">{{ current_album.name|default:"(Legges ikke i album)" }}</span> (<a href="javascript:undefined" class="albumpicker-trigger" data-albumpicker-id="{{ current_album.id }}">endre</a>)
@@ -105,7 +109,7 @@
 
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre bildeinformasjon</button>
+            <button type="submit" class="btn btn-large btn-success"><i class="fa fa-check"></i> Lagre bildeinformasjon</button>
             <p class="waiting jq-hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
           </div>
         </div>

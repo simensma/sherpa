@@ -4,14 +4,20 @@
     <h3>Velg album...</h3>
   </div>
   <div class="modal-body">
-    <div class="row-fluid image-archive-navigation">
-      <div class="span4">
+    <div class="row ia-navigation">
+      <div class="col-md-4">
         <div class="item">
-          <input type="text" name="search" placeholder="Søk etter album...">
-          <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+          <div class="row">
+            <div class="col-sm-10">
+              <input type="text" name="search" class="form-control" placeholder="Søk etter album...">
+            </div>
+            <div class="col-sm-2">
+              <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="span4">
+      <div class="col-md-4">
         <div class="item">
           {# Todo, when associations are created #}
           <p>
@@ -19,7 +25,7 @@
           </p>
         </div>
       </div>
-      <div class="span4">
+      <div class="col-md-4">
         <div class="item current">
           <p>
             <a href="javascript:undefined" class="albums">Alle bilder</a>

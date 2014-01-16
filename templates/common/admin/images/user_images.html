@@ -1,4 +1,5 @@
 {% extends 'common/admin/images/layout.html' %}
+
 {% block js_globals %}
   <script>
     window.Turistforeningen = {
@@ -7,6 +8,7 @@
     };
   </script>
 {% endblock %}
+
 {% block extra_js %}
   {{ block.super }}
   <script src="{{ STATIC_URL }}js/admin/albumpicker.js"></script>
@@ -16,102 +18,110 @@
 
 {% block imagebody %}
 
-<div class="row imagearchive-action-buttons">
-  <div class="span3">
-    <p>
-      <button class="btn btn-large btn-success upload"{% if active_user != user %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
-        <i class="icon-picture"></i> Last opp nytt bilde
+<div class="action-buttons">
+  <div class="row">
+    <div class="col-lg-3">
+      <p>
+        <button class="btn btn-large btn-success upload"{% if active_user != user %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
+          <i class="fa fa-picture-o"></i> Last opp nytt bilde
+        </button>
+      </p>
+      <p>
+        <button class="btn btn-large btn-success add-album" disabled data-tooltip="Du kan ikke opprette album her.">
+          <i class="fa fa-folder-open"></i> Opprett nytt album
+        </button>
+      </p>
+    </div>
+    <div class="col-lg-3">
+      <button class="btn btn-large btn-warning albums details jq-hide">
+        <i class="fa fa-pencil"></i> Endre albumdetaljer
       </button>
-    </p>
-    <p>
-      <button class="btn btn-large btn-success add-album" disabled data-tooltip="Du kan ikke opprette album her.">
-        <i class="icon-folder-open"></i> Opprett nytt album
+      <button class="btn btn-large btn-warning images details jq-hide">
+        <i class="fa fa-pencil"></i> Endre bildedetaljer
       </button>
-    </p>
+      <button class="btn btn-large btn-warning dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
+        <i class="fa fa-pencil"></i> Endre detaljer
+      </button>
+    </div>
+    <div class="col-lg-3" data-album-id="{{ current_album.id }}">
+      <button class="btn btn-large btn-warning albums move jq-hide">
+        <i class="fa fa-share-square"></i> Flytt album
+      </button>
+      <button class="btn btn-large btn-warning images move jq-hide">
+        <i class="fa fa-share-square"></i> Flytt bilder
+      </button>
+      <button class="btn btn-large btn-warning both move jq-hide">
+        <i class="fa fa-share-square"></i> Flytt album/bilder
+      </button>
+      <button class="btn btn-large btn-warning dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
+        <i class="fa fa-share-square"></i> Flytt album/bilder
+      </button>
+      <form class="move-items jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
+        {% csrf_token %}
+        <input type="hidden" name="images">
+        <input type="hidden" name="albums">
+        <input type="hidden" name="destination_album">
+      </form>
+    </div>
+    <div class="col-lg-3">
+      <button class="btn btn-large btn-danger delete albums jq-hide">
+        <i class="fa fa-warning"></i> Slett album
+      </button>
+      <button class="btn btn-large btn-danger delete images jq-hide">
+        <i class="fa fa-warning"></i> Slett bilder
+      </button>
+      <button class="btn btn-large btn-danger delete both jq-hide">
+        <i class="fa fa-warning"></i> Slett album og bilder
+      </button>
+      <button class="btn btn-large btn-danger delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
+        <i class="fa fa-warning"></i> Slett bilder
+      </button>
+    </div>
   </div>
-  <div class="span3">
-    <button class="btn btn-large btn-warning albums details jq-hide">
-      <i class="icon-pencil"></i> Endre albumdetaljer
-    </button>
-    <button class="btn btn-large btn-warning images details jq-hide">
-      <i class="icon-pencil"></i> Endre bildedetaljer
-    </button>
-    <button class="btn btn-large btn-warning dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
-      <i class="icon-pencil"></i> Endre detaljer
-    </button>
-  </div>
-  <div class="span3" data-album-id="{{ current_album.id }}">
-    <button class="btn btn-large btn-warning albums move jq-hide">
-      <i class="icon-share-alt"></i> Flytt album
-    </button>
-    <button class="btn btn-large btn-warning images move jq-hide">
-      <i class="icon-share-alt"></i> Flytt bilder
-    </button>
-    <button class="btn btn-large btn-warning both move jq-hide">
-      <i class="icon-share-alt"></i> Flytt album/bilder
-    </button>
-    <button class="btn btn-large btn-warning dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
-      <i class="icon-share-alt"></i> Flytt album/bilder
-    </button>
-    <form class="move-items jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
-      {% csrf_token %}
-      <input type="hidden" name="images">
-      <input type="hidden" name="albums">
-      <input type="hidden" name="destination_album">
-    </form>
-  </div>
-  <div class="span3">
-    <button class="btn btn-large btn-danger delete albums jq-hide">
-      <i class="icon-remove"></i> Slett album
-    </button>
-    <button class="btn btn-large btn-danger delete images jq-hide">
-      <i class="icon-remove"></i> Slett bilder
-    </button>
-    <button class="btn btn-large btn-danger delete both jq-hide">
-      <i class="icon-remove"></i> Slett album og bilder
-    </button>
-    <button class="btn btn-large btn-danger delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
-      <i class="icon-remove"></i> Slett bilder
-    </button>
-  </div>
-</div>
+</div><!-- /.action-buttons -->
 
-{% if active_user != user %}
-  <h2 style="text-align: center;">{{ active_user.get_full_name }}s bilder</h2>
-{% else %}
-  {% include 'common/admin/images/uploader.html' %}
-{% endif %}
+<div class="row">
+  <div class="col-md-12">
 
-{% if not images %}
-  <div class="alert alert-info">
-    {% if active_user == user %}
-      Du
+    {% if active_user != user %}
+      <h2 style="text-align: center;">{{ active_user.get_full_name }}s bilder</h2>
     {% else %}
-      {{ active_user.get_full_name }}
+      {% include 'common/admin/images/uploader.html' %}
     {% endif %}
-    har ikke lastet opp noen bilder.
-  </div>
-{% endif %}
 
-<div id="archive-gallery">
-  <ul>
-  {% for image in images %}
-    <li class="image" data-id="{{ image.id }}">
-      <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>
-      <a class="image" href="{% url 'admin.images.views.image_details' image.id %}">
-        <img src="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="{{ image.description }}">
-      </a>
-      {{ image.width }} x {{ image.height }}<br>
-      {% if not image.photographer %}
-        Ingen fotograf oppgitt
-      {% else %}
-        Fotograf: {{ image.photographer }}
-      {% endif %}
-    </li>
-  {% endfor %}
-  </ul>
+    {% if not images %}
+      <div class="alert alert-info">
+        {% if active_user == user %}
+          Du
+        {% else %}
+          {{ active_user.get_full_name }}
+        {% endif %}
+        har ikke lastet opp noen bilder.
+      </div>
+    {% endif %}
+
+    <div class="archive-gallery">
+      <ul>
+        {% for image in images %}
+          <li class="image" data-id="{{ image.id }}">
+            <button class="btn mark"><i class="icon-tag"></i> Merk bilde</button>
+            <a class="image" href="{% url 'admin.images.views.image_details' image.id %}">
+              <img src="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="{{ image.description }}">
+            </a>
+            {{ image.width }} x {{ image.height }}<br>
+            {% if not image.photographer %}
+              Ingen fotograf oppgitt
+            {% else %}
+              Fotograf: {{ image.photographer }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div style="clear: both;"></div>
+
+  </div>
 </div>
-<div style="clear: both;"></div>
 
 {% include 'common/admin/images/modals.html' %}
 {% include 'common/admin/images/albumpicker.html' %}

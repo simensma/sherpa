@@ -14,7 +14,7 @@ $(document).ready(function() {
     var form_details = image_details.find("form.upload-image-details");
     var iframe = uploader.find("iframe");
 
-    $("div.imagearchive-action-buttons button.upload").click(function() {
+    $("div.action-buttons button.upload").click(function() {
         uploader.toggle('slow');
     });
 

@@ -1,6 +1,8 @@
 {% extends 'common/admin/layout.html' %}
+
 {% block title %}Bildearkiv — {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.images.views.index' %}">Bildearkiv</a>{% endblock %}
+
+{% block admin_menu %}{% with 'images' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="/static/js/admin/images/layout.js"></script>
@@ -8,72 +10,91 @@
 
 {% block body %}
 
-<div class="row image-archive-navigation">
-  <div class="span4">
-    <div class="item{% if current_navigation == 'personal' %} current{% endif %}">
-      <p>
-        {% if current_navigation != 'personal' %}<a href="{% url 'admin.images.views.user_images' user.id %}">{% else %}<span class="disabled-link">{% endif %}
-        Mine bilder
-        {% if current_navigation != 'personal' %}</a>{% else %}</span>{% endif %}
-      </p>
-    </div>
-  </div>
-  <div class="span4">
-    <div class="item{% if current_navigation == 'associations' %} current{% endif %}">
-      <p>
-        {% if current_navigation != 'associations' %}<a href="javascript:undefined" data-tooltip="Bilder tilknyttet foreninger er ikke klare før foreningsbasen blir importert til nye Sherpa.">{% else %}<span class="disabled-link">{% endif %}
-        {# Todo: Echo the currently active association #}
-        Foreningsbilder
-        {% if current_navigation != 'associations' %}</a>{% else %}</span>{% endif %}
-      </p>
-    </div>
-  </div>
-  <div class="span4">
-    <div class="item{% if current_navigation == 'albums' %} current{% endif %}">
-      <p>
-        {% if current_navigation != 'albums' %}<a href="{% url 'admin.images.views.list_albums' %}">{% else %}<span class="disabled-link">{% endif %}
-        Alle bilder
-        {% if current_navigation != 'albums' %}</a>{% else %}</span>{% endif %}
-      </p>
-    </div>
-  </div>
-</div>
+<div class="image-archive">
 
-<div class="row image-archive-quicksearch">
-  <div class="span4">
-    <form action="{% url 'admin.images.views.search' %}" method="get">
-      <input type="text" name="q" placeholder="Søk etter bilder..." value="{{ search_query }}">
-      <button type="submit" class="btn input-button-align"><i class="icon-search"></i></button>
-    </form>
-  </div>
-  <div class="span4">
-    <select name="association-images" data-placeholder="Andre foreningers bilder...">
-      <option></option>
-    </select>
-  </div>
-  <div class="span4">
-    <select name="user-images" data-placeholder="Andre brukeres bilder...">
-      <option></option>
-      {% for user in all_users %}
-        <option value="{{ user.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ user.get_full_name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-</div>
-
-{% if albumpath %}
   <div class="row">
-    <div class="span12">
-      <div class="albumpath">
-        <strong>Album:</strong>
-        <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
-        {% for album in albumpath %}
-          / <a href="{% url 'admin.images.views.list_albums' album.id %}">{{ album.name }}</a>
-        {% endfor %}
+    <div class="col-lg-12">
+      <h1>Bildearkiv <small>last opp bilder som kan brukes i artikler, bildegallerier m.m.</small></h1>
+      <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+        <li><a href="{% url 'admin.images.views.index' %}">Bildearkiv</a></li>
+
+        {% if albumpath %}
+          <li>
+            <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
+          </li>
+          <li>
+            {% for album in albumpath %}
+              <a href="{% url 'admin.images.views.list_albums' album.id %}">{{ album.name }}</a>
+            {% endfor %}
+          </li>
+        {% endif %}
+
+      </ol>
+    </div>
+  </div><!-- /.row -->
+
+  <div class="row ia-navigation">
+    <div class="col-md-4">
+      <div class="item{% if current_navigation == 'personal' %} current{% endif %}">
+        <p>
+          {% if current_navigation != 'personal' %}<a href="{% url 'admin.images.views.user_images' user.id %}">{% else %}<span class="disabled-link">{% endif %}
+          Mine bilder
+          {% if current_navigation != 'personal' %}</a>{% else %}</span>{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="item{% if current_navigation == 'associations' %} current{% endif %}">
+        <p>
+          {% if current_navigation != 'associations' %}<a href="javascript:undefined" data-tooltip="Bilder tilknyttet foreninger er ikke klare før foreningsbasen blir importert til nye Sherpa.">{% else %}<span class="disabled-link">{% endif %}
+          {# Todo: Echo the currently active association #}
+          Foreningsbilder
+          {% if current_navigation != 'associations' %}</a>{% else %}</span>{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="item{% if current_navigation == 'albums' %} current{% endif %}">
+        <p>
+          {% if current_navigation != 'albums' %}<a href="{% url 'admin.images.views.list_albums' %}">{% else %}<span class="disabled-link">{% endif %}
+          Alle bilder
+          {% if current_navigation != 'albums' %}</a>{% else %}</span>{% endif %}
+        </p>
       </div>
     </div>
   </div>
-{% endif %}
 
-{% block imagebody %}{% endblock %}
+  <div class="row image-archive-quicksearch">
+    <div class="col-md-4">
+      <form action="{% url 'admin.images.views.search' %}" method="get">
+        <div class="row">
+          <div class="col-md-10">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Søk etter bilder...">
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn input-button-align"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <select name="association-images" class="chosen" data-placeholder="Andre foreningers bilder...">
+        <option></option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select name="user-images" class="chosen" data-placeholder="Andre brukeres bilder...">
+        <option></option>
+        {% for user in all_users %}
+          <option value="{{ user.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ user.get_full_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  {% block imagebody %}{% endblock %}
+
+</div><!-- /.image-archive -->
+
 {% endblock %}

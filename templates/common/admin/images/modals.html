@@ -18,12 +18,13 @@
       <input type="hidden" name="albums">
       <input type="hidden" name="images">
       <input type="hidden" name="origin" value="{{ origin }}">
-      <button type="submit" class="btn btn-danger perform-delete"><i class="icon-warning-sign"></i> Ja, jeg vil virkelig slette slette dem for godt.</button>
+      <button type="submit" class="btn btn-danger perform-delete"><i class="fa fa-warning"></i> Ja, jeg vil virkelig slette dem for godt.</button>
     </form>
-    <button class="btn btn-success cancel-delete"><i class="icon-heart"></i> Nei, jeg vil ikke slette noe likevel.</button>
+    <br>
+    <button class="btn btn-success cancel-delete"><i class="fa fa-heart"></i> Nei, jeg vil ikke slette noe likevel.</button>
   </div>
   <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
 
@@ -35,7 +36,10 @@
   <div class="modal-body">
     <form action="{% if album %}{% url 'admin.images.views.add_album' album %}{% else %}{% url 'admin.images.views.add_album' %}{% endif %}" method="post">
       {% csrf_token %}
-      <p>Navn på nytt album: <input type="text" name="name"></p>
+      <div class="form-group">
+        <label>Navn på nytt album:</label>
+        <input type="text" name="name" class="form-control">
+      </div>
       <p><button class="btn" type="submit">Legg til album</button></p>
     </form>
   </div>
@@ -49,7 +53,10 @@
   <div class="modal-body">
     <form action="{% url 'admin.images.views.update_album' %}" method="post">
       {% csrf_token %}
-      <p>Nytt navn: <input type="text" name="name"></p>
+      <div class="form-group">
+        <label>Nytt navn:</label>
+        <input type="text" name="name" class="form-control">
+      </div>
       <input type="hidden" name="albums">
       <p><button class="btn" type="submit">Oppdater album</button></p>
     </form>

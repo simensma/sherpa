@@ -10,7 +10,7 @@
 {% block imagebody %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
     <h2>Du endrer nå detaljer for disse {{ images|length }} bildene:</h2>
     <p>
       {% for image in images %}
@@ -20,102 +20,106 @@
       {% endfor %}
     </p>
 
-    <h3 style="margin-top: 40px">Hvilke felter vil du endre?</h3>
   </div>
 </div>
 
-<form class="update-images form-horizontal" action="{% url 'admin.images.views.update_images' %}" method="post">
-  {% csrf_token %}
-  <input type="hidden" name="ids" value="{{ ids }}">
-  <input type="hidden" name="origin" value="{{ origin }}">
-  <input type="hidden" name="fields" value="">
 
 <div class="row">
-  <div class="span12">
-    <table class="table multiple-metadata">
-      <tr>
-        <th></th>
-        <th>Felt</th>
-        <th>Ny verdi</th>
-      </tr>
-      <tr class="description">
-        <td>
-          <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
-        </td>
-        <td class="field-name">Beskrivelse</td>
-        <td class="keep">
-          <em>Gammel verdi beholdes</em>
-        </td>
-        <td class="new jq-hide">
-          <textarea name="description" rows="3" class="input-xlarge" id="image-description"></textarea>
-        </td>
-      </tr>
-      <tr class="photographer">
-        <td>
-          <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
-        </td>
-        <td class="field-name">Fotograf</td>
-        <td class="keep">
-          <em>Gammel verdi beholdes</em>
-        </td>
-        <td class="new jq-hide">
-          <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
-        </td>
-      </tr>
-      <tr class="credits">
-        <td>
-          <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
-        </td>
-        <td class="field-name">Kreditering</td>
-        <td class="keep">
-          <em>Gammel verdi beholdes</em>
-        </td>
-        <td class="new jq-hide">
-          <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l...">
-        </td>
-      </tr>
-      <tr class="licence">
-        <td>
-          <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
-        </td>
-        <td class="field-name">Bruksrett</td>
-        <td class="keep">
-          <em>Gammel verdi beholdes</em>
-        </td>
-        <td class="new jq-hide">
-          <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov...">
-        </td>
-      </tr>
-    </table>
+  <div class="col-lg-12">
+
+    <form class="update-images" action="{% url 'admin.images.views.update_images' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="ids" value="{{ ids }}">
+      <input type="hidden" name="origin" value="{{ origin }}">
+      <input type="hidden" name="fields" value="">
+
+      <h3>Hvilke felter vil du endre?</h3>
+
+      <table class="table multiple-metadata">
+        <tr>
+          <th>Felt</th>
+          <th>Ny verdi</th>
+        </tr>
+        <tr class="description">
+          <td class="field-name">
+            <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
+            <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+            Beskrivelse
+          </td>
+          <td class="keep">
+            <em>Gammel verdi beholdes</em>
+          </td>
+          <td class="new jq-hide">
+            <textarea name="description" rows="3" class="form-control" id="image-description"></textarea>
+          </td>
+        </tr>
+        <tr class="photographer">
+          <td class="field-name">
+            <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
+            <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+            Fotograf
+          </td>
+          <td class="keep">
+            <em>Gammel verdi beholdes</em>
+          </td>
+          <td class="new jq-hide">
+            <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
+          </td>
+        </tr>
+        <tr class="credits">
+          <td class="field-name">
+            <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
+            <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+            Kreditering
+          </td>
+          <td class="keep">
+            <em>Gammel verdi beholdes</em>
+          </td>
+          <td class="new jq-hide">
+            <input type="text" class="form-control" name="credits" placeholder="Navn på person, forening e.l...">
+          </td>
+        </tr>
+        <tr class="licence">
+          <td class="field-name">
+            <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
+            <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+            Bruksrett
+          </td>
+          <td class="keep">
+            <em>Gammel verdi beholdes</em>
+          </td>
+          <td class="new jq-hide">
+            <input type="text" class="form-control" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov...">
+          </td>
+        </tr>
+      </table>
+
+      <div class="row">
+        <div class="col-md-6">
+
+          <h3>Nøkkelord:</h3>
+          <p>Du kan legge til nye nøkkelord for alle bildene her. For å <strong>ta bort</strong> nøkkelord må du redigere ett og ett bilde.</p>
+
+          <input type="hidden" name="tags-serialized">
+          <input type="text" class="form-control" name="tags" style="margin-bottom: 10px">
+          <div class="tag-box" data-predefined-tags="{{ image.tags.all|taglist }}"></div>
+          <div style="clear: both;"></div>
+
+          <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre alle endringer</button>
+        </div>
+
+        <div class="col-md-6">
+          <div class="alert alert-danger">
+            <strong>Lisensiering</strong><br>
+            Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
+          </div>
+        </div>
+      </div><!-- /.row -->
+
+    </form>
+
   </div>
-</div>
+</div><!-- /.row -->
 
-<div class="row">
-  <div class="span6">
-
-    <h3>Nøkkelord:</h3>
-    <p>Du kan legge til nye nøkkelord for alle bildene her. For å <strong>ta bort</strong> nøkkelord må du redigere ett og ett bilde.</p>
-
-    <input type="hidden" name="tags-serialized">
-    <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px">
-    <div class="tag-box" data-predefined-tags="{{ image.tags.all|taglist }}"></div>
-    <div style="clear: both;"></div>
-
-    <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre alle endringer</button>
-  </div>
-
-  <div class="span6">
-    <div class="alert alert-danger">
-      <strong>Lisensiering</strong><br>
-      Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
-    </div>
-  </div>
-</div>
-
-</form>
 
 {% endblock %}
