@@ -98,33 +98,21 @@ $(document).ready(function() {
 
     custom_subcategory.typeahead({
         minLength: 3,
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: '/tags/filter/',
-                data: { name: query }
-            }).done(function(result) {
-                query = query.toLowerCase();
-                tags = JSON.parse(result);
-                // Ensure the current value is always the topmost suggestion.
-                for(var i=0; i<tags.length; i++) {
-                    if(tags[i] == query) {
-                        tags = tags.slice(0, i).concat(tags.slice(i + 1));
-                    }
-                }
-                tags.unshift(query);
-                process(tags);
-            });
-        },
-        updater: function(item) {
-            custom_subcategory.val(item);
-            addCustomSubcategory();
+        remote: custom_subcategory.attr('data-tags-url') + '?q=%QUERY'
+    }).on('typeahead:selected', function(object, datum) {
+        custom_subcategory.val(datum.value);
+        addCustomSubcategory();
+    });
+
+    custom_subcategory.keydown(function(e) {
+        if(e.which == 13) { // Enter
+            e.preventDefault();
         }
     });
 
     custom_subcategory.keyup(function(e) {
         if(e.which == 13) { // Enter
             addCustomSubcategory();
-            e.preventDefault();
         }
     });
 
@@ -136,12 +124,16 @@ $(document).ready(function() {
             }
 
             // Check if the tag already exists
-            main_existing = subcategory_main_buttons.find("button.subcategory:contains('" + categories[i] + "')");
-            other_existing = subcategory_other_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            main_existing = subcategory_main_buttons.find("button.subcategory").filter(function() {
+                return $(this).text() === categories[i];
+            });
+            other_existing = subcategory_other_buttons.find("button.subcategory").filter(function() {
+                return $(this).text() === categories[i];
+            });
             if(main_existing.length > 0 || other_existing.length > 0) {
                 main_existing.addClass("btn-danger");
                 other_existing.addClass("btn-danger");
-                custom_subcategory.val('');
+                custom_subcategory.typeahead('setQuery', "");
                 continue;
             }
 
@@ -153,7 +145,7 @@ $(document).ready(function() {
             subcategory_other_buttons.append(new_button);
             new_button.click(toggleButtons);
             new_button.show();
-            custom_subcategory.val('');
+            custom_subcategory.typeahead('setQuery', "");
 
             // This might be hidden, instashow it in this case
             subcategory_other_buttons_trigger.hide();
@@ -161,29 +153,15 @@ $(document).ready(function() {
         }
     }
 
-    var turforslag_objects;
     turforslag_input.typeahead({
         minLength: 5,
-        items: 12,
-        matcher: function() {
-            // Trust the serverside to filter on the query
-            return true;
-        },
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: turforslag.attr('data-turforslag-search-url'),
-                data: { query: query }
-            }).done(function(result) {
-                result = JSON.parse(result);
-                turforslag_objects = result.objects;
-                process(result.names);
-            });
-        },
-        updater: function(item) {
-            turforslag_id_input.val(turforslag_objects[item]);
-            turforslag_result.find("span.name").html(item);
-            turforslag_result.show();
-        }
+        limit: 12,
+        remote: turforslag.attr('data-turforslag-search-url') + "?q=%QUERY"
+    }).on('typeahead:selected', function(object, datum) {
+        turforslag_id_input.val(datum.id);
+        turforslag_result.find("span.name").html(datum.value);
+        turforslag_result.show();
+        turforslag_input.typeahead('setQuery', "");
     });
 
     turforslag_result.find("a.remove").click(function() {

@@ -24,14 +24,7 @@
         var photographer = form.find("input[name='photographer']");
         photographer.typeahead({
             minLength: 3,
-            source: function(query, process) {
-                $.ajaxQueue({
-                    url: photographer.attr('data-source-url'),
-                    data: { name: query }
-                }).done(function(result) {
-                    process(JSON.parse(result));
-                });
-            }
+            remote: photographer.attr('data-photographers-url') + "?q=%QUERY"
         });
     });
 

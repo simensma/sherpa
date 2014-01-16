@@ -194,41 +194,17 @@
     }
 
     function enableTagPicker(ref) {
-        pickerInput[ref].change(function(e) {
-            // Sorry, this is kind of ugly. 'change' is fired by both jquery and bootstrap.
-            // To discriminate, we know that bootstraps event doesn't have the 'which' property.
-            // If you know of something better to check for here, feel free to fix this.
-            if(!e.hasOwnProperty('which')) {
-                addCurrentPickerTags(ref);
-            }
-        });
         pickerInput[ref].keyup(function(e) {
-            if(e.which == 32 || (!typeaheadIsActive(ref) && e.which == 13)) { // Space, or inactive + enter
+            if(e.which == 32 || e.which == 13) { // Space or enter
                 addCurrentPickerTags(ref);
             }
         }).focusout(function(e) {
-            if(!typeaheadIsActive(ref)) {
-                addCurrentPickerTags(ref);
-            }
+            addCurrentPickerTags(ref);
         }).typeahead({
             minLength: 3,
-            source: function(query, process) {
-                $.ajaxQueue({
-                    url: '/tags/filter/',
-                    data: { name: query }
-                }).done(function(result) {
-                    query = query.toLowerCase();
-                    tags = JSON.parse(result);
-                    // Ensure the current value is always the topmost suggestion.
-                    for(var i=0; i<tags.length; i++) {
-                        if(tags[i] == query) {
-                            tags = tags.slice(0, i).concat(tags.slice(i + 1));
-                        }
-                    }
-                    tags.unshift(query);
-                    process(tags);
-                });
-            }
+            remote: pickerInput[ref].attr('data-tags-url') + "?q=%QUERY"
+        }).on('typeahead:selected', function(object, datum) {
+            addCurrentPickerTags(ref);
         });
     }
 
@@ -241,15 +217,7 @@
         for(var i=0; i<tags.length; i++) {
             TagDisplay.addTag(tags[i], ref);
         }
-        pickerInput[ref].val("");
-    }
-
-    function typeaheadIsActive(ref) {
-        var typeahead = pickerInput[ref].siblings("ul.typeahead");
-        if(typeahead.length !== 0 && typeahead.css('display') !== 'none') {
-            return true;
-        }
-        return false;
+        pickerInput[ref].typeahead('setQuery', "");
     }
 
 }(window.TagDisplay = window.TagDisplay || {}, jQuery));

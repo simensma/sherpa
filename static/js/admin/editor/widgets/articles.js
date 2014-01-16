@@ -42,16 +42,10 @@
         widget_editor = $("div.widget-editor[data-widget='articles']");
 
         // Enable/disable
+        var url = widget_editor.find("input[name='tag-link']").attr('data-tags-url');
         widget_editor.find("input[name='tag-link']").typeahead({
             minLength: 3,
-            source: function(query, process) {
-                $.ajaxQueue({
-                    url: widget_editor.find("input[name='tag-link']").attr('data-source-url'),
-                    data: { name: query }
-                }).done(function(result) {
-                    process(JSON.parse(result));
-                });
-            }
+            remote: url + "?q=%QUERY"
         });
         widget_editor.find("input[name='set-tag-link']").change(function() {
             if($(this).is(':checked')) {
