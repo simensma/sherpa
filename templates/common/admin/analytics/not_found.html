@@ -1,62 +1,84 @@
 {% extends 'common/admin/layout.html' %}
+
 {% block title %}Analyse — {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.analytics.views.index' %}">Analyse</a>{% endblock %}
+
+{% block admin_menu %}{% with 'analytics' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/analytics.js"></script>
 {% endblock %}
+
 {% block body %}
 
-<h2>404-treff for {{ active_association.site.domain }}</h2>
-
-<p>
-  Merk: Det gjøres ikke forskjell på store/små bokstaver ved opptelling.
-</p>
-
-<p>
-  Flest treff-listen er ganske stor og caches i 24 timer.
-</p>
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Analyse og statistikk <small>se hvilke sider som ikke finnes på <a href="http://{{ active_association.site.domain }}/">{{ active_association.site.domain }}</a></small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.analytics.views.index' %}">Analyse og statistikk</a></li>
+      <li><a href="{% url 'admin.analytics.views.not_found' %}">404-treff</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
 
 <div class="row">
+  <div class="col-lg-12">
 
-  <div class="span6">
-    <table class="table">
-      <tr>
-        <th colspan="2">Flest treff</th>
-      </tr>
-      {% for request in most_requested %}
-        {% if forloop.counter < 50 %}
+    <p>
+      Dette viser hvilke sider våre besøkende har forsøkt å vise, men som gir 404-feilmelding (siden finnes ikke).
+    </p>
+
+    <p>
+      Merk: Det gjøres ikke forskjell på store/små bokstaver ved opptelling.
+    </p>
+
+    <p>
+      Flest treff-listen er ganske stor og caches i 24 timer.
+    </p>
+
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table">
           <tr>
-            <td>{{ request.count }}</td>
-            <td>{{ request.path }}</td>
+            <th colspan="2">Flest treff</th>
           </tr>
-        {% else %}
-          <tr class="jq-hide">
-            <td>{{ request.count }}</td>
-            <td>{{ request.path }}</td>
-          </tr>
-        {% endif %}
-        {% if forloop.counter == 50 %}
-          <tr class="expand">
-            <td colspan="2"><button class="btn"><i class="icon-plus"></i> Vis alle</button></td>
-          </tr>
-        {% endif %}
-      {% endfor %}
-    </table>
-  </div>
+          {% for request in most_requested %}
+            {% if forloop.counter < 50 %}
+              <tr>
+                <td>{{ request.count }}</td>
+                <td>{{ request.path }}</td>
+              </tr>
+            {% else %}
+              <tr class="jq-hide">
+                <td>{{ request.count }}</td>
+                <td>{{ request.path }}</td>
+              </tr>
+            {% endif %}
+            {% if forloop.counter == 50 %}
+              <tr class="expand">
+                <td colspan="2"><button class="btn"><i class="icon-plus"></i> Vis alle</button></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
 
-  <div class="span6">
-    <table class="table">
-      <tr>
-        <th colspan="2">Nyeste treff</th>
-      </tr>
-      {% for request in latest_requests %}
-        <tr>
-          <td>{{ request.date|date:"H:i" }}</td>
-          <td>{{ request.path }}</td>
-        </tr>
-      {% endfor %}
-    </table>
+      <div class="col-md-6">
+        <table class="table">
+          <tr>
+            <th colspan="2">Nyeste treff</th>
+          </tr>
+          {% for request in latest_requests %}
+            <tr>
+              <td>{{ request.date|date:"H:i" }}</td>
+              <td>{{ request.path }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div><!-- /.row -->
+
   </div>
-</div>
+</div><!-- /.row -->
 
 {% endblock %}
