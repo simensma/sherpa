@@ -41,52 +41,52 @@
       <tr class="description">
         <td>
           <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
         </td>
         <td class="field-name">Beskrivelse</td>
         <td class="keep">
           <em>Gammel verdi beholdes</em>
         </td>
-        <td class="new hide">
+        <td class="new jq-hide">
           <textarea name="description" rows="3" class="input-xlarge" id="image-description"></textarea>
         </td>
       </tr>
       <tr class="photographer">
         <td>
           <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
         </td>
         <td class="field-name">Fotograf</td>
         <td class="keep">
           <em>Gammel verdi beholdes</em>
         </td>
-        <td class="new hide">
+        <td class="new jq-hide">
           <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-source-url="{% url 'admin.images.views.photographer' %}">
         </td>
       </tr>
       <tr class="credits">
         <td>
           <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
         </td>
         <td class="field-name">Kreditering</td>
         <td class="keep">
           <em>Gammel verdi beholdes</em>
         </td>
-        <td class="new hide">
+        <td class="new jq-hide">
           <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l...">
         </td>
       </tr>
       <tr class="licence">
         <td>
           <button class="btn btn-success new"><i class="icon-pencil"></i> Endre</button>
-          <button class="btn btn-warning keep hide"><i class="icon-remove"></i> Behold gammel verdi</button>
+          <button class="btn btn-warning keep jq-hide"><i class="icon-remove"></i> Behold gammel verdi</button>
         </td>
         <td class="field-name">Bruksrett</td>
         <td class="keep">
           <em>Gammel verdi beholdes</em>
         </td>
-        <td class="new hide">
+        <td class="new jq-hide">
           <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov...">
         </td>
       </tr>

@@ -80,7 +80,7 @@
             {% endif %}
 
             {% if user.can_modify_kursleder_status %}
-              <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+              <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate jq-hide">
                 {% csrf_token %}
                 <input type="hidden" name="kursleder" value="{{ other_user.kursleder.id }}">
                 <input type="hidden" name="role" value="kursleder">
@@ -151,7 +151,7 @@
 
                 {% endif %}
 
-                <form action="{% url 'admin.turledere.views.edit_turleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate hide">
+                <form action="{% url 'admin.turledere.views.edit_turleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate jq-hide">
                   {% csrf_token %}
                   <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
                   <input type="hidden" name="role" value="{{ role.0 }}">

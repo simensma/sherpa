@@ -54,7 +54,7 @@
 
     {% include 'common/admin/publications/edit_publication_form.html' %}
 
-    <div class="alert alert-danger delete-publication-confirm hide">
+    <div class="alert alert-danger delete-publication-confirm jq-hide">
       <p>
         <strong>Er du sikker på at du vil slette {{ publication.title }}{% if publication.releases_ordered|length > 0 %}, med sine {{ publication.releases_ordered|length }} utgivelser{% endif %}?</strong><br>
         {% if publication.releases_ordered|length > 0 %}

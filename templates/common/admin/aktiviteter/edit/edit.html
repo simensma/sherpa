@@ -78,7 +78,7 @@
             <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
             <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
             <br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
             <div class="hints">
               Husk at du alltid må trykke på lagre-knappen etter at du endrer noe!
             </div>
@@ -188,7 +188,7 @@
             <label class="control-label" for="title">Tittel:</label>
             <div class="controls">
               <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må jo skrive inn en tittel!
               </div>
             </div>
@@ -198,7 +198,7 @@
             <label class="control-label" for="description">Beskrivelse:</label>
             <div class="controls">
               <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må legge inn noen få ord om turen her.
               </div>
             </div>
@@ -213,7 +213,7 @@
                   <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
                 {% endfor %}
               </select>
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge vanskelighetsgraden for turen.
               </div>
             </div>
@@ -228,7 +228,7 @@
                   <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
                 {% endfor %}
               </select>
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge minst én målgruppe.
               </div>
             </div>
@@ -246,29 +246,29 @@
             </div>
           </div>
 
-          <div class="control-group subcategories{% if aktivitet.category == '' %} hide{% endif %}">
+          <div class="control-group subcategories{% if aktivitet.category == '' %} jq-hide{% endif %}">
             <div class="controls">
 
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge minst én av de foreslåtte kategoriene. Klikk på de kategoriene du vil velge.
               </div>
 
               <div class="square-well">
 
                 <div class="labels">
-                  <h3 class="trip{% if aktivitet.category != 'trip' %} hide{% endif %}">
+                  <h3 class="trip{% if aktivitet.category != 'trip' %} jq-hide{% endif %}">
                     Hva slags tur/aktivitet er dette?
                   </h3>
 
-                  <h3 class="course{% if aktivitet.category != 'course' %} hide{% endif %}">
+                  <h3 class="course{% if aktivitet.category != 'course' %} jq-hide{% endif %}">
                     Hva slags kurs er dette?
                   </h3>
 
-                  <h3 class="event{% if aktivitet.category != 'event' %} hide{% endif %}">
+                  <h3 class="event{% if aktivitet.category != 'event' %} jq-hide{% endif %}">
                     Hva slags arrangement er dette?
                   </h3>
 
-                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} hide{% endif %}">
+                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} jq-hide{% endif %}">
                     Hva slags dugnad er dette?
                   </h3>
                 </div>
@@ -285,7 +285,7 @@
                   </p>
                 {% endif %}
 
-                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} hide{% endif %}">
+                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} jq-hide{% endif %}">
                   <h4>Flere kategoriforslag</h4>
                   <div class="other-buttons">
                     {% for sub in aktivitet.get_other_subcategories %}
@@ -295,7 +295,7 @@
                 </div>
 
                 <div class="custom">
-                  <button class="btn subcategory btn-danger fake hide"></button>
+                  <button class="btn subcategory btn-danger fake jq-hide"></button>
                   <strong>Eller finn på egne kategorier:</strong>
                   <input type="text" class="input-large" name="custom-category">
                 </div>
@@ -309,12 +309,12 @@
             <label class="control-label">Bilder:</label>
             <div class="controls">
 
-              <div class="control-as-text images-initiate{% if aktivitet.images.count > 0 %} hide{% endif %}">
+              <div class="control-as-text images-initiate{% if aktivitet.images.count > 0 %} jq-hide{% endif %}">
                 Du bør legge til noen fine bilder, slik at turen blir attraktiv og fristende å se på.<br>
                 <a href="javascript:undefined" class="add-images">Klikk her for å legge til bilder</a>
               </div>
 
-              <div class="images{% if aktivitet.images.count == 0 %} hide{% endif %}">
+              <div class="images{% if aktivitet.images.count == 0 %} jq-hide{% endif %}">
                 {% include 'common/admin/images/util/image-carousel-picker.html' with preload=aktivitet.get_images_json %}
               </div>
 
@@ -343,15 +343,15 @@
                   <a href="javascript:undefined" class="show-map">Klikk her for å vise kartet</a>
                 </p>
 
-                <p class="intro show-on-map hide">
+                <p class="intro show-on-map jq-hide">
                   Bruk knappen til venstre på kartet for å plassere pinnen.
                 </p>
               </div>
             </div>
           </div>
 
-          <div id="map" class="leaflet-map hide"></div>
-          <div class="popup-content hide">
+          <div id="map" class="leaflet-map jq-hide"></div>
+          <div class="popup-content jq-hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
           </div>
@@ -365,8 +365,8 @@
                   <option value="{{ county.id }}"{% if county in aktivitet.counties.all %} selected{% endif %}>{{ county.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-              <div class="hints error hide">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error jq-hide">
                 Du må velge hvilket fylke turen arrangeres i.
               </div>
             </div>
@@ -381,8 +381,8 @@
                   <option value="{{ municipality.id }}"{% if municipality in aktivitet.municipalities.all %} selected{% endif %}>{{ municipality.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-              <div class="hints error hide">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error jq-hide">
                 Du må velge hvilken kommune turen arrangeres i.
               </div>
             </div>
@@ -397,7 +397,7 @@
                   <option value="{{ location.id }}"{% if aktivitet|aktivitet_has_location:location %} selected{% endif %}>{{ location.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
             </div>
           </div>
 
@@ -413,7 +413,7 @@
             <div class="controls">
               <input type="text" name="turforslag" class="input-xxlarge" placeholder="Søk etter turforslag...">
               <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
-              <div class="result control-as-text{% if not aktivitet.turforslag %} hide{% endif %}">
+              <div class="result control-as-text{% if not aktivitet.turforslag %} jq-hide{% endif %}">
                 <a href="javascript:undefined" class="remove">[x]</a>
                 <span class="name">{{ aktivitet.get_turforslag.name|safe }}</span>
               </div>
@@ -467,7 +467,7 @@
             </div>
           </div>
 
-          <div class="publish-extras{% if not aktivitet.published %} hide{% endif %}">
+          <div class="publish-extras{% if not aktivitet.published %} jq-hide{% endif %}">
             <div class="control-group pub_date">
               <label class="control-label" for="pub_date">Publiseringsdato:</label>
               <div class="controls">
@@ -478,7 +478,7 @@
                 <div class="hints">
                   Aktiviteten vises ikke på nettsidene før publiseringsdatoen.
                 </div>
-                <div class="hints error hide">
+                <div class="hints error jq-hide">
                   Du må legge inn turens publiseringsdato på rett format: dd.mm.åååå (dag, måned, år)
                 </div>
               </div>
@@ -506,7 +506,7 @@
             <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
             <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
             <br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
           </div>
         </div>
 
@@ -515,7 +515,7 @@
     </div>
   </div>
 
-  <div class="modal container hide turleder-search admin-aktiviteter-turleder-search">
+  <div class="modal container jq-hide turleder-search admin-aktiviteter-turleder-search">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Finn turledere for denne aktiviteten</h3>
@@ -547,17 +547,17 @@
           <td colspan="6">Søk etter turledere i søkeboksen over.</td>
         </tr>
 
-        <tr class="no-hits hide">
+        <tr class="no-hits jq-hide">
           <td colspan="6">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
         </tr>
 
-        <tr class="short_query hide">
+        <tr class="short_query jq-hide">
           <td colspan="6">
             Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
           </td>
         </tr>
 
-        <tr class="technical-error hide">
+        <tr class="technical-error jq-hide">
           <td colspan="6">
             <div class="alert alert-danger">
               Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
@@ -565,7 +565,7 @@
           </td>
         </tr>
 
-        <tr class="max-hits-exceeded hide">
+        <tr class="max-hits-exceeded jq-hide">
           <td colspan="6">
 
             <div class="alert alert-danger">
@@ -575,7 +575,7 @@
           </td>
         </tr>
 
-        <tr class="loader hide">
+        <tr class="loader jq-hide">
           <td colspan="6">
             Vennligst vent mens vi søker.<br>
             Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
@@ -587,7 +587,7 @@
     </div>
   </div>
 
-  <div class="modal container hide delete-date admin-aktiviteter-delete-date">
+  <div class="modal container jq-hide delete-date admin-aktiviteter-delete-date">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Bekreft sletting av turdato</h3>
@@ -602,12 +602,12 @@
       <div class="date-preview">
       </div>
 
-      <div class="fail hide alert alert-danger">
+      <div class="fail jq-hide alert alert-danger">
         Beklager, det oppstod en teknisk feil.<br>
         Vi skulle hente litt informasjon om turdatoen for at du skal kunne slette den, men noe galt skjedde underveis. Prøv å lukke dette vinduet (krysset oppe til høyre) og klikk på Slett-knappen igjen. Feilen har blitt logget automatisk og vi vil se på den så snart som mulig.
       </div>
 
-      <div class="choose hide">
+      <div class="choose jq-hide">
         <button class="btn btn-large btn-success cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe.</button>
         <button class="btn btn-large btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="icon-white icon-warning-sign"></i> Ja, slett turdatoen og påmeldtlistene.</button>
       </div>

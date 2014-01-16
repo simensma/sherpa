@@ -78,7 +78,7 @@
                   {% endfor %}
                 </select>
 
-                <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
+                <label class="checkbox include-all-certificates jq-hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
                   <input type="checkbox" name="include_all_certificates" checked>
                   Inkluder de som har sertifikat med høyere nivå
                 </label>
@@ -128,12 +128,12 @@
               <th>Turleder</th>
               <th>Aktiv i</th>
             </tr>
-            <tr class="short-query hide">
+            <tr class="short-query jq-hide">
               <td colspan="2">
                 Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
               </td>
             </tr>
-            <tr class="technical-error hide">
+            <tr class="technical-error jq-hide">
               <td colspan="2">
                 <div class="alert alert-danger">
                   Beklager, det oppstod en teknisk feil!<br>
@@ -143,7 +143,7 @@
             </tr>
           </table>
 
-          <div class="infinite-scroll-loader hide">
+          <div class="infinite-scroll-loader jq-hide">
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
             Søker i turlederregisteret, vennligst vent...
           </div>
@@ -166,28 +166,28 @@
               <button class="btn member-search input-button-align"><i class="fa fa-search"></i></button>
             </p>
 
-            <table class="table member-search-list hide" data-search-url="{% url 'admin.turledere.views.member_search' %}">
+            <table class="table member-search-list jq-hide" data-search-url="{% url 'admin.turledere.views.member_search' %}">
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>
                 <th>Turledersertifikater/instruktørroller</th>
               </tr>
 
-              <tr class="no-hits hide">
+              <tr class="no-hits jq-hide">
                 <td colspan="4">Fant ingen medlemmer med dette navnet eller medlemsnummeret.</td>
               </tr>
 
-              <tr class="short-query hide">
+              <tr class="short-query jq-hide">
                 <td colspan="4">
                   Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
                 </td>
               </tr>
 
-              <tr class="technical-error hide">
+              <tr class="technical-error jq-hide">
                 <td colspan="4">Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.</td>
               </tr>
 
-              <tr class="loader hide">
+              <tr class="loader jq-hide">
                 <td colspan="4">
                   Vennligst vent mens vi søker.<br>
                   Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>

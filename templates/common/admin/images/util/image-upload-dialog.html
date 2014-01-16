@@ -1,30 +1,30 @@
-<div class="modal hide image-upload-dialog">
+<div class="modal jq-hide image-upload-dialog">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg et bilde å laste opp...</h3>
   </div>
 
   <div class="modal-body">
-    <div class="alert alert-info uploading hide">
+    <div class="alert alert-info uploading jq-hide">
       <a class="close">x</a>
       Vent mens bildet lastes opp...
     </div>
-    <div class="alert alert-danger upload-no-files hide">
+    <div class="alert alert-danger upload-no-files jq-hide">
       <a class="close">x</a>
       Du må velge et bilde å laste opp!
     </div>
-    <div class="alert alert-danger parse-error hide">
+    <div class="alert alert-danger parse-error jq-hide">
       <a class="close">x</a>
       Bildet du forsøkte å laste opp er ikke en gyldig bilde-fil!
     </div>
-    <div class="alert alert-danger unknown-exception hide">
+    <div class="alert alert-danger unknown-exception jq-hide">
       <a class="close">x</a>
       Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
     <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
       {% csrf_token %}
-      <input type="reset" class="hide">
+      <input type="reset" class="jq-hide">
 
       <div class="control-group">
         <label class="control-label">Finn bilde:</label>
@@ -78,7 +78,7 @@
       </div>
     </form>
 
-    <iframe name="inlineframe" class="hide"></iframe>
+    <iframe name="inlineframe" class="jq-hide"></iframe>
     {% include 'common/admin/images/util/licencing.html' %}
   </div>
 

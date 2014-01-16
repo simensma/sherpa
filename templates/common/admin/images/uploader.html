@@ -1,20 +1,20 @@
 {% load albumpath %}
 
-<div class="row uploader hide">
+<div class="row uploader jq-hide">
   <div class="span6">
 
-    <div class="alert alert-danger upload-failed hide">
+    <div class="alert alert-danger upload-failed jq-hide">
       <a class="close">x</a>
       Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!
     </div>
-    <div class="alert alert-danger upload-no-files hide">
+    <div class="alert alert-danger upload-no-files jq-hide">
       Du må jo velge noen bilder å laste opp!<a class="close">x</a>
     </div>
-    <div class="alert alert-danger upload-unknown-exception hide">
+    <div class="alert alert-danger upload-unknown-exception jq-hide">
       <a class="close">x</a>
       Beklager, det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
-    <div class="alert alert-danger upload-iframe-render-failed hide">
+    <div class="alert alert-danger upload-iframe-render-failed jq-hide">
       <a class="close">x</a>
       Beklager, det oppstod en ukjent feil! Bildene er sannsynligvis ikke blitt lastet opp. Dette kan skje når du laster opp kjempemange bilder på en gang, og serveren kommer ut av tellingen. Grunnet feilens tekniske natur er det dessverre ikke sikkert at feilen har blitt logget, så om dette skjer ofte kan det være en god idé å kontakte teknisk avdeling ved DNT sentralt og opplyse om problemet.
     </div>
@@ -25,10 +25,10 @@
       <h1 class="sherpa">Last opp nye bilder</h1>
       <input type="file" name="files" multiple><br>
       <input class="btn" type="submit" value="Last opp valgte bilder">
-      <iframe name="iframe" class="hide"></iframe>
+      <iframe name="iframe" class="jq-hide"></iframe>
     </form>
 
-    <div class="uploading hide">
+    <div class="uploading jq-hide">
       <h2>Laster opp...</h2>
       <p>
         <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster opp, vennligst vent...">
@@ -36,7 +36,7 @@
       <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem i skjemaet til høyre.</em></p>
     </div>
 
-    <div class="alert alert-info upload-complete hide">
+    <div class="alert alert-info upload-complete jq-hide">
       <a class="close">x</a>
       Bildene har blitt lastet opp! Fyll ut skjemaet til høyre, og klikk "Lagre bildeinformasjon".
     </div>
@@ -45,7 +45,7 @@
   <div class="span6">
     {% include 'common/admin/images/util/licencing.html' %}
 
-    <div class="image-details hide">
+    <div class="image-details jq-hide">
       <h2>Fyll inn bildeinformasjon</h2>
 
       <form class="upload-image-details form-horizontal" method="post" action="{% url 'admin.images.views.update_images' %}">
@@ -106,7 +106,7 @@
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre bildeinformasjon</button>
-            <p class="waiting hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
+            <p class="waiting jq-hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
           </div>
         </div>
       </form>

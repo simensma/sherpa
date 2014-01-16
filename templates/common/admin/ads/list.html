@@ -49,7 +49,7 @@
             <th>Status</th>
           </tr>
           {% for placement in time_placements %}
-            <tr class="placement {{ placement.time_state }}{% if placement.is_old %} hide{% endif %}"
+            <tr class="placement {{ placement.time_state }}{% if placement.is_old %} jq-hide{% endif %}"
               data-id="{{ placement.id }}"
               data-ad="{{ placement.ad.id }}"
               data-start-date="{{ placement.start_date|date:"d.m.Y" }}"
@@ -86,7 +86,7 @@
             <th>Status</th>
           </tr>
           {% for placement in view_placements %}
-            <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} hide{% endif %}"
+            <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} jq-hide{% endif %}"
               data-id="{{ placement.id }}"
               data-ad="{{ placement.ad.id }}"
               data-view-limit="{{ placement.view_limit }}">
@@ -298,7 +298,7 @@
   </div>
 
   {# Modals #}
-  <div class="modal hide placement time" data-width="auto">
+  <div class="modal jq-hide placement time" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsevisning</h3>
@@ -340,7 +340,7 @@
     </div>
   </div>
 
-  <div class="modal hide placement view" data-width="auto">
+  <div class="modal jq-hide placement view" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsevisning</h3>
@@ -375,7 +375,7 @@
     </div>
   </div>
 
-  <div class="modal hide ad file" data-width="auto">
+  <div class="modal jq-hide ad file" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsedetaljer</h3>
@@ -421,7 +421,7 @@
     </div>
   </div>
 
-  <div class="modal hide ad adform-script" data-width="auto">
+  <div class="modal jq-hide ad adform-script" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsedetaljer</h3>

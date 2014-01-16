@@ -76,7 +76,7 @@
       {# This URL is kind of ugly, but it's just a URLencoded JSON-list of one image id #}
       <a class="btn btn-warning" href="{% url 'admin.images.views.update_images' %}?bilder=%5B%22{{ image.id }}%22%5D&amp;origin={{ origin }}"><i class="icon-pencil"></i> Rediger bildeinformasjon</a>
     </p>
-    <form class="move-image hide" method="post" action="{% url 'admin.images.views.move_items' %}">
+    <form class="move-image jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
       {% csrf_token %}
       <input type="hidden" name="images" value="[&quot;{{ image.id }}&quot;]">
       <input type="hidden" name="albums" value="[]">

@@ -40,10 +40,10 @@
       </p>
     </div>
     <div class="span3">
-      <button class="btn btn-large btn-warning albums details hide">
+      <button class="btn btn-large btn-warning albums details jq-hide">
         <i class="icon-pencil"></i> Endre albumdetaljer
       </button>
-      <button class="btn btn-large btn-warning images details hide">
+      <button class="btn btn-large btn-warning images details jq-hide">
         <i class="icon-pencil"></i> Endre bildedetaljer
       </button>
       <button class="btn btn-large btn-warning dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
@@ -51,19 +51,19 @@
       </button>
     </div>
     <div class="span3" data-album-id="{{ current_album.id }}">
-      <button class="btn btn-large btn-warning albums move hide">
+      <button class="btn btn-large btn-warning albums move jq-hide">
         <i class="icon-share-alt"></i> Flytt album
       </button>
-      <button class="btn btn-large btn-warning images move hide">
+      <button class="btn btn-large btn-warning images move jq-hide">
         <i class="icon-share-alt"></i> Flytt bilder
       </button>
-      <button class="btn btn-large btn-warning both move hide">
+      <button class="btn btn-large btn-warning both move jq-hide">
         <i class="icon-share-alt"></i> Flytt album/bilder
       </button>
       <button class="btn btn-large btn-warning dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
         <i class="icon-share-alt"></i> Flytt album/bilder
       </button>
-      <form class="move-items hide" method="post" action="{% url 'admin.images.views.move_items' %}">
+      <form class="move-items jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
         {% csrf_token %}
         <input type="hidden" name="images">
         <input type="hidden" name="albums">
@@ -71,13 +71,13 @@
       </form>
     </div>
     <div class="span3">
-      <button class="btn btn-large btn-danger delete albums hide">
+      <button class="btn btn-large btn-danger delete albums jq-hide">
         <i class="icon-remove"></i> Slett album
       </button>
-      <button class="btn btn-large btn-danger delete images hide">
+      <button class="btn btn-large btn-danger delete images jq-hide">
         <i class="icon-remove"></i> Slett bilder
       </button>
-      <button class="btn btn-large btn-danger delete both hide">
+      <button class="btn btn-large btn-danger delete both jq-hide">
         <i class="icon-remove"></i> Slett album og bilder
       </button>
       <button class="btn btn-large btn-danger delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
