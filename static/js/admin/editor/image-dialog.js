@@ -33,7 +33,7 @@
             ImageArchivePicker.pick(inputDataFromSource);
         });
         imageDialog.find("button.upload-image").click(function() {
-            ImageUploadDialog.open(inputDataFromSource);(inputDataFromSource);
+            ImageUploadDialog.open(inputDataFromSource);
         });
 
         function inputDataFromSource(url, description, photographer) {
