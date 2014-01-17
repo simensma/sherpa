@@ -6,7 +6,7 @@ register = template.Library()
 
 @register.filter
 def date_fromto(date1, date2):
-    if date1 == date2:
+    if date1.date() == date2.date():
         # A 1-day event, we only need to show one date
         return date(date1, "j. F Y")
     else:
