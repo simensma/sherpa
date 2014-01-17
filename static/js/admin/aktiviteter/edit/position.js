@@ -9,11 +9,11 @@ $(document).ready(function() {
     var show_map = position_section.find("p.intro a.show-map");
 
     var counties_select = position_section.find("select[name='counties']");
-    var counties_ajaxloader = position_section.find("div.control-group.counties img.ajaxloader");
+    var counties_ajaxloader = position_section.find("div.form-group.counties img.ajaxloader");
     var municipalities_select = position_section.find("select[name='municipalities']");
-    var municipalities_ajaxloader = position_section.find("div.control-group.municipalities img.ajaxloader");
+    var municipalities_ajaxloader = position_section.find("div.form-group.municipalities img.ajaxloader");
     var locations_select = position_section.find("select[name='locations']");
-    var locations_ajaxloader = position_section.find("div.control-group.locations img.ajaxloader");
+    var locations_ajaxloader = position_section.find("div.form-group.locations img.ajaxloader");
 
     var marker;
 

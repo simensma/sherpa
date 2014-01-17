@@ -9,16 +9,16 @@ var AktiviteterDatesView = function(opts) {
     this.view_date_display = this.view_root.find("div.date-display");
     this.view_fail = this.view_root.find("div.date-display-fail");
 
-    this.start_date = this.root.find("div.control-group.start_date div.date");
+    this.start_date = this.root.find("div.form-group.start_date div.date");
     this.start_time = this.root.find("input[name='start_time']");
-    this.end_date = this.root.find("div.control-group.end_date div.date");
+    this.end_date = this.root.find("div.form-group.end_date div.date");
     this.end_time = this.root.find("input[name='end_time']");
-    this.signup_start = this.root.find("div.control-group.signup_start div.date");
+    this.signup_start = this.root.find("div.form-group.signup_start div.date");
     this.signup_start_input = this.signup_start.find("input");
-    this.signup_deadline = this.root.find("div.control-group.signup_deadline div.date");
+    this.signup_deadline = this.root.find("div.form-group.signup_deadline div.date");
     this.signup_deadline_input = this.signup_deadline.find("input");
     this.signup_deadline_until_start = this.root.find("input[name='signup_deadline_until_start']");
-    this.signup_cancel_deadline = this.root.find("div.control-group.signup_cancel_deadline div.date");
+    this.signup_cancel_deadline = this.root.find("div.form-group.signup_cancel_deadline div.date");
     this.signup_cancel_deadline_input = this.signup_cancel_deadline.find("input");
     this.signup_cancel_deadline_until_start = this.root.find("input[name='signup_cancel_deadline_until_start']");
 
@@ -38,7 +38,7 @@ var AktiviteterDatesView = function(opts) {
 
     // All dateinputs
 
-    this.edit_root.find("div.input-append.date").datepicker({
+    this.edit_root.find("div.input-group.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,

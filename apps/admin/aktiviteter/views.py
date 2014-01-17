@@ -89,7 +89,7 @@ def edit(request, aktivitet):
 
         if aktivitet.published:
             # If published, set the extra relevant fields (otherwise ignore them)
-            aktivitet.private = json.loads(request.POST['private'])
+            aktivitet.private = request.POST['private'] == 'private'
             try:
                 aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
             except ValueError:

@@ -2,11 +2,9 @@ $(document).ready(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
-    var private_aktivitet = form.find("div.control-group.private_aktivitet");
-    var category = form.find("div.control-group.category");
-    var category_input = category.find("input[name='category']");
-    var category_buttons = category.find("button[data-category]");
-    var subcategories = form.find("div.control-group.subcategories");
+    var category = form.find("div.form-group.category");
+    var category_inputs = category.find("input[type='radio']");
+    var subcategories = form.find("div.form-group.subcategories");
     var subcategory_labels = subcategories.find("div.labels");
     var subcategory_main_buttons = subcategories.find("div.main-buttons");
     var subcategory_other_buttons = subcategories.find("div.other-buttons");
@@ -17,7 +15,7 @@ $(document).ready(function() {
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
     var images_input = form.find("input[name='images']");
-    var turforslag = form.find("div.control-group.turforslag");
+    var turforslag = form.find("div.form-group.turforslag");
     var turforslag_input = turforslag.find("input[name='turforslag']");
     var turforslag_id_input = turforslag.find("input[name='turforslag_id']");
     var turforslag_result = turforslag.find("div.result");
@@ -27,7 +25,7 @@ $(document).ready(function() {
     var preview_input = form.find("input[name='preview']");
     var submit_buttons = form.find("button[type='submit']");
 
-    var images = form.find("div.control-group.images");
+    var images = form.find("div.form-group.images");
     var images_initiate = images.find("div.images-initiate");
     var images_container = images.find("div.images");
 
@@ -41,10 +39,10 @@ $(document).ready(function() {
         'allow_single_deselect': true
     });
 
-    form.find("div.control-group.difficulty select[name='difficulty']").chosen();
-    form.find("div.control-group.audiences select[name='audiences']").chosen();
+    form.find("div.form-group.difficulty select[name='difficulty']").chosen();
+    form.find("div.form-group.audiences select[name='audiences']").chosen();
 
-    form.find("div.control-group.pub_date div.date").datepicker({
+    form.find("div.form-group.pub_date div.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
@@ -53,9 +51,10 @@ $(document).ready(function() {
 
     // Subcategories
 
-    category_buttons.click(function() {
+    category_inputs.change(function() {
+        var new_category = category_inputs.filter(":checked").val();
         subcategory_labels.find("h3").hide();
-        subcategory_labels.find("h3." + $(this).attr('data-category')).show();
+        subcategory_labels.find("h3." + new_category).show();
 
         // Move all main buttons back
 
@@ -65,7 +64,7 @@ $(document).ready(function() {
             subcategory_other_buttons.append($(this));
         });
 
-        subcategory_other_buttons.find("button.subcategory." + $(this).attr('data-category')).each(function() {
+        subcategory_other_buttons.find("button.subcategory." + new_category).each(function() {
             $(this).detach();
             subcategory_main_buttons.append(' ');
             subcategory_main_buttons.append($(this));
@@ -186,7 +185,7 @@ $(document).ready(function() {
     var dates = form.find("div.section.dates");
     var dates_input = dates.find("input[name='dates']");
     var dates_to_delete_input = dates.find("input[name='dates_to_delete']");
-    var existing_dates = dates.find("div.date-root:not(.hide)");
+    var existing_dates = dates.find("div.date-root:not(.jq-hide)");
     var add_date_button = dates.find("button.add-date");
     var delete_date_modal = editor.find("div.modal.delete-date");
     var delete_date_loading = delete_date_modal.find("div.loading");
@@ -206,7 +205,7 @@ $(document).ready(function() {
     });
 
     add_date_button.click(function() {
-        var hidden_root = dates.find("div.date-root.hide");
+        var hidden_root = dates.find("div.date-root.jq-hide");
         var new_root = hidden_root.clone();
         // Cloning with events doesn't work for popover, so reactivate any popovers.
         new_root.find("*[data-popover]").popover({
@@ -303,12 +302,7 @@ $(document).ready(function() {
         preview_buttons.prop('disabled', true);
         $(this).find("img.ajaxloader.submit").show();
 
-        var priv = private_aktivitet.find("button.active").is(".private");
-        private_aktivitet.find("input[name='private']").val(JSON.stringify(priv));
         images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
-
-        // Collect the active category
-        category_input.val(category_buttons.filter(".active").attr('data-category'));
 
         // Collect subcategory tags
         var tags = [];
@@ -322,7 +316,7 @@ $(document).ready(function() {
 
         // Collect all currently active dates
         var date_objects = [];
-        dates.find("div.date-root:not(.hide)").each(function() {
+        dates.find("div.date-root:not(.jq-hide)").each(function() {
             date_objects.push($(this).data('view').collectData());
         });
         dates_input.val(JSON.stringify(date_objects));
