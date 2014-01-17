@@ -1,6 +1,8 @@
 {% extends 'common/admin/layout.html' %}
+
 {% block title %}Publikasjoner — {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a>{% endblock %}
+
+{% block admin_menu %}{% with 'publications' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -18,7 +20,17 @@
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
+    <h1>Publikasjoner <small>legg ut magasiner, årboken m.m. som medlemmene kan lese på Min side</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
 
     {% if publications|length > 0 %}
       <table class="table">
