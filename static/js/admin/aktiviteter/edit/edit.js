@@ -218,8 +218,8 @@ $(document).ready(function() {
         new_root.find("input[name='contact_type']").attr('name', 'contact_type-' + date_radio_counter);
         date_radio_counter += 1;
 
-        new_root.removeClass('hide');
-        new_root.hide(); // Hide it even though we don't want the 'hide' class on it.
+        new_root.removeClass('jq-hide');
+        new_root.hide(); // Hide it even though we don't want the 'jq-hide' class on it.
         new_root.data('view', new AktiviteterDatesView({
             root: new_root
         }));

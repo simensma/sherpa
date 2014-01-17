@@ -33,7 +33,7 @@ $(document).ready(function() {
                     if(i % 2 === 0) {
                         first = $('<div class="row-fluid">' + result[i] + '</div>');
                     } else {
-                        first.append(result[i]).addClass('hide');
+                        first.append(result[i]).addClass('jq-hide');
                         list.append(first);
                         first.fadeIn();
                     }
