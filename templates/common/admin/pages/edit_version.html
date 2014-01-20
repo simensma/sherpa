@@ -4,7 +4,6 @@
 {% block title %}{{ version.variant.page.title }} — {{ block.super }}{% endblock %}
 
 {% load taglist %}
-{% load advertisement %}
 
 {% block extra_js %}
   {# 3rd party libs #}
@@ -45,12 +44,6 @@
       image_search_length: {{ image_search_length }}
     };
   </script>
-{% endblock %}
-
-{% block advertisement %}
-  {% if version.ads %}
-    {% advertisement count_view=False %}
-  {% endif %}
 {% endblock %}
 
 {% block body %}
