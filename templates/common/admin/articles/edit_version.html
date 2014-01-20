@@ -118,6 +118,11 @@
           <a class="btn btn-danger delete-article" href="{% url 'admin.articles.views.confirm_delete' version.variant.article.id %}">
             <i class="icon-warning-sign"></i> Slett
           </a>
+          <br><br>
+
+          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.cms.views.page.list' %}">Lagre & Tilbake til Sherpa</button>
+          <a href="{% url 'admin.cms.views.page.list' %}" class="btn btn-default">Tilbake til Sherpa UTEN å lagre</a>
+
         </div>
 
         <div style="clear: both;"></div>
