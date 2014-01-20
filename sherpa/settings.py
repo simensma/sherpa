@@ -7,7 +7,7 @@ from datetime import datetime, date
 
 # Add apps directory to sys.path
 import sys
-sys.path.insert(1, "%s/apps" % sys.path[0][:sys.path[0].rfind('/')])
+sys.path.insert(1, "%s/apps" % sys.path[0])
 
 from sherpa.local_settings import *
 
