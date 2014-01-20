@@ -21,7 +21,10 @@ $(document).ready(function() {
     updateSaveCount();
 
     $("div.editor-header button.save").click(save);
-    $("div.editor-header button.preview").click(function() {
+    $("div.editor-header button.preview").click(saveAndGo);
+    $("div.editor-header button.save-and-quit").click(saveAndGo);
+
+    function saveAndGo() {
         var button = $(this);
         button.html('<i class="icon-search"></i> Lagrer først...');
         button.prop('disabled', true);
@@ -32,7 +35,7 @@ $(document).ready(function() {
             button.html('<i class="icon-search"></i> Forhåndsvisning');
             button.prop('disabled', false);
         });
-    });
+    }
 
     window.save = save;
     function save(done, fail) {
