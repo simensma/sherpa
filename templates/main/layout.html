@@ -171,9 +171,11 @@
 
 {% block body %}{% endblock %}
 
-{% if version.ads %}
-  {% advertisement %}
-{% endif %}
+{% block advertisement %}
+  {% if version.ads %}
+    {% advertisement %}
+  {% endif %}
+{% endblock %}
 
 </div>
 
