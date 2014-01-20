@@ -23,98 +23,52 @@
 {% endif %}
 
 <div class="row">
-  <div class="col-lg-3">
-    <div class="dashboard-panel blue">
-      <div class="content">
-        <div class="row">
-          <div class="col-xs-6">
-            <i class="fa fa-comments fa-inverse fa-5x"></i>
-          </div>
-          <div class="col-xs-6 text-right">
-            <p class="announcement-heading">456</p>
-            <p class="announcement-text">New Mentions!</p>
+
+  {% if active_association.site %}
+    <div class="col-lg-3">
+      <div class="dashboard-panel green">
+        <div class="content">
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <span class="pull-left">
+                <i class="fa fa-file fa-5x"></i>
+              </span>
+              <p class="announcement-heading">{{ dashboard_stats.pages }}</p>
+              <p class="announcement-text">publiserte websider</p>
+            </div>
           </div>
         </div>
+        <a href="{% url 'admin.cms.views.page.list' %}" class="action">
+          <div class="row">
+            <div class="col-xs-6">
+              Publisér flere sider
+            </div>
+            <div class="col-xs-6 text-right">
+              <i class="fa fa-arrow-circle-right"></i>
+            </div>
+          </div>
+        </a>
       </div>
-      <a href="#" class="action">
-        <div class="row">
-          <div class="col-xs-6">
-            View Mentions
-          </div>
-          <div class="col-xs-6 text-right">
-            <i class="fa fa-arrow-circle-right"></i>
-          </div>
-        </div>
-      </a>
     </div>
-  </div>
-  <div class="col-lg-3">
-    <div class="dashboard-panel green">
-      <div class="content">
-        <div class="row">
-          <div class="col-xs-6">
-            <i class="fa fa-check fa-5x"></i>
-          </div>
-          <div class="col-xs-6 text-right">
-            <p class="announcement-heading">12</p>
-            <p class="announcement-text">To-Do Items</p>
-          </div>
-        </div>
-      </div>
-      <a href="#" class="action">
-        <div class="row">
-          <div class="col-xs-6">
-            Complete Tasks
-          </div>
-          <div class="col-xs-6 text-right">
-            <i class="fa fa-arrow-circle-right"></i>
-          </div>
-        </div>
-      </a>
-    </div>
-  </div>
-  <div class="col-lg-3">
-    <div class="dashboard-panel purple">
-      <div class="content">
-        <div class="row">
-          <div class="col-xs-6">
-            <i class="fa fa-tasks fa-5x"></i>
-          </div>
-          <div class="col-xs-6 text-right">
-            <p class="announcement-heading">18</p>
-            <p class="announcement-text">Crawl Errors</p>
-          </div>
-        </div>
-      </div>
-      <a href="#" class="action">
-        <div class="row">
-          <div class="col-xs-6">
-            Fix Issues
-          </div>
-          <div class="col-xs-6 text-right">
-            <i class="fa fa-arrow-circle-right"></i>
-          </div>
-        </div>
-      </a>
-    </div>
-  </div>
+  {% endif %}
+
   <div class="col-lg-3">
     <div class="dashboard-panel yellow">
       <div class="content">
         <div class="row">
-          <div class="col-xs-6">
-            <i class="fa fa-comments fa-5x"></i>
-          </div>
-          <div class="col-xs-6 text-right">
-            <p class="announcement-heading">56</p>
-            <p class="announcement-text">New Orders!</p>
+          <div class="col-xs-12 text-right">
+            <span class="pull-left">
+              <i class="fa fa-globe fa-5x"></i>
+            </span>
+            <p class="announcement-heading">{{ dashboard_stats.aktiviteter }}</p>
+            <p class="announcement-text">publiserte aktiviteter</p>
           </div>
         </div>
       </div>
-      <a href="#" class="action">
+      <a href="{% url 'admin.aktiviteter.views.index' %}" class="action">
         <div class="row">
           <div class="col-xs-6">
-            Complete Orders
+            Legg ut en ny aktivitet
           </div>
           <div class="col-xs-6 text-right">
             <i class="fa fa-arrow-circle-right"></i>
@@ -123,6 +77,63 @@
       </a>
     </div>
   </div>
+
+<div class="col-lg-3">
+  <div class="dashboard-panel blue">
+    <div class="content">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span class="pull-left">
+            <i class="fa fa-user fa-inverse fa-5x"></i>
+          </span>
+          <p class="announcement-heading">
+            {{ dashboard_stats.members.total }}
+          </p>
+          <p class="announcement-text">
+            medlemmer, hvorav {{ dashboard_stats.members.local }} i {{ active_association.get_main_association.name }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <a href="{% url 'admin.users.views.index' %}" class="action">
+      <div class="row">
+        <div class="col-xs-6">
+          Søk i medlemsregisteret
+        </div>
+        <div class="col-xs-6 text-right">
+          <i class="fa fa-arrow-circle-right"></i>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="col-lg-3">
+  <div class="dashboard-panel purple">
+    <div class="content">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <span class="pull-left">
+            <i class="fa fa-users fa-5x"></i>
+          </span>
+          <p class="announcement-heading">{{ dashboard_stats.turledere }}</p>
+          <p class="announcement-text">turledere i turlederregisteret</p>
+        </div>
+      </div>
+    </div>
+    <a href="{% url 'admin.turledere.views.index' %}" class="action">
+      <div class="row">
+        <div class="col-xs-6">
+          Gå til turlederregisteret
+        </div>
+        <div class="col-xs-6 text-right">
+          <i class="fa fa-arrow-circle-right"></i>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
 </div><!-- /.row -->
 
 <div class="row">
