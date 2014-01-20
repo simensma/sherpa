@@ -1,0 +1,232 @@
+// This sheet needs a good refactoring
+
+/* Page header editing */
+
+div.editor-header {
+  background-color: rgb(240, 240, 240) !important;
+  color: rgb(65, 65, 65) !important;
+
+  h1 {
+    font-size: 160%;
+    font-weight: normal;
+  }
+
+  div.publish {
+    input[name='date'] {
+      width: 110px;
+    }
+
+    input[name='time'] {
+      width: 70px;
+    }
+  }
+}
+
+/* Article header editing */
+
+div.editor-header.article {
+  img.article-thumbnail {
+    background-color: rgb(0, 0, 0);
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  img.article-thumbnail:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: alias;
+  }
+
+  div.preview-image {
+    float: right;
+  }
+
+  div.publish, div.editor-header.article div.status {
+    margin-bottom: 10px;
+  }
+
+  select[name='authors'] {
+    width: 400px;
+  }
+}
+
+/* CMS editor */
+
+div.cms-editor {
+  article {
+    .insertable {
+      cursor: pointer;
+      font-weight: bold;
+      background-color: rgb(65, 65, 65) !important;
+      color: rgb(195, 195, 195) !important;
+    }
+
+    .insertable, .empty:not(.editable) {
+      text-align: center;
+      color: rgb(125, 125, 125);
+      font-size: 180%;
+      font-style: italic;
+      line-height: 1;
+    }
+
+    .hover-remove {
+      cursor: pointer;
+      opacity: 0.2;
+      filter: alpha(opacity=20);
+    }
+
+    div.image img {
+      display: block;
+      background-color: rgb(0, 0, 0);
+      min-width: 20px;
+      min-height: 20px;
+    }
+
+    div.image:hover, div.widget:not(.static):hover {
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+      cursor: alias;
+    }
+
+    div[data-placeholder] {
+      font-style: italic;
+    }
+
+    div[data-placeholder]:hover {
+      cursor: text;
+    }
+
+    div[contenteditable='true'].selected {
+      margin: -1px -1px 19px -1px; /* Subtract the border from the default margins 
+      border: 1px solid rgb(65, 65, 65);
+      background-color: rgb(215, 215, 215);
+    }
+
+    div[contenteditable='true']:hover:not(.selected) {
+      margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+      border: 1px solid rgb(120, 120, 120);
+      background-color: rgb(235, 235, 235);
+    }
+
+    div[contenteditable='true']:hover, div[contenteditable='true'].selected {
+      span.h1 {
+        // This quickfix avoids the bottom-margin of the content growing because the
+        // border added on hover makes the margins NOT collapse (both content and h1 has
+        // large bottom-margins).
+        // This might look weird if a h1 title is used in a content element together
+        // with normal paragraphs, but that almost never happens, besides this is JUST
+        // when hovering in the editor.
+        margin-bottom: 0;
+      }
+    }
+
+    div.html.empty, div.lede.empty {
+      margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+      border: 1px solid rgb(255, 95, 95);
+      background-color: rgb(255, 220, 220);
+    }
+
+    .moveable {
+      cursor: move;
+    }
+
+    .moveable.horizontal {
+      background: url("/static/img/arrow-left.png") left center no-repeat, url("/static/img/arrow-right.png") right center no-repeat rgb(238, 238, 238);
+    }
+
+    .moveable.vertical {
+      background: url("/static/img/arrow-up.png") center top no-repeat, url("/static/img/arrow-down.png") center bottom no-repeat rgb(238, 238, 238);
+    }
+
+    div.widget p.widget-rendring-failed {
+      color: @profile-red;
+      font-style: italic;
+      font-size: 14px;
+    }
+  }
+
+  div.insert-columns {
+    h1 {
+      font-size: 140%;
+      text-align: center;
+    }
+
+    img:hover {
+      cursor: pointer;
+      opacity: 0.4;
+      filter: alpha(opacity=40);
+    }
+  }
+
+  div.alert p.delete-content-warning {
+    font-size: 120%;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  div.cms-editor-toolbar {
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    width: 500px;
+    z-index: 1000;
+    padding: 9px;
+    border: 1px solid rgb(221, 221, 221);
+    background-color: rgb(245, 245, 245) !important;
+    border: 1px solid rgb(221, 221, 221);
+
+    a.button {
+      display: block;
+      float: left;
+      cursor: pointer;
+      width: 27px;
+      height: 27px;
+    }
+
+    a.button:hover {
+      text-decoration: none;
+    }
+
+    input[name='url'] {
+      width: 350px;
+    }
+  }
+}
+
+/* Add widget dialog */
+
+div.add-widget div.widget-thumbnail {
+  cursor: pointer;
+  float: left;
+  margin: 12px;
+  text-align: center;
+  font-size: 24px;
+
+  div.wrapper {
+    border: 1px solid rgb(200, 200, 200);
+    min-height: 200px;
+    padding: 10px;
+
+    img {
+      display: block;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+/* Change image-dialog */
+
+div.change-image {
+  h2 {
+    font-size: 20px;
+  }
+
+  div.preview-container {
+    max-width: 100%;
+
+    img {
+      border: 1px solid rgb(0, 0, 0);
+    }
+  }
+}

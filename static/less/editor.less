@@ -1,0 +1,8 @@
+// Note that this yields duplicate data, since the editor will be rendered in the main layout
+// which already includes the generic markup. However, we need the variables defined in that
+// file for editor.less. Consider extracting vars out to a separate less file
+@import "common/generic-markup.less";
+
+// Generic
+@import "admin/generic-markup.less";
+@import "admin/editor.less";
