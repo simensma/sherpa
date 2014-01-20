@@ -275,14 +275,19 @@ class AdPlacement(models.Model):
         return self.ad.render_adform_script(self)
 
     @staticmethod
-    def get_active_ad():
+    def get_active_ad(count_view=True):
         ads = AdPlacement.objects.filter(
             Q(start_date__lte=date.today(), end_date__gte=date.today(), view_limit__isnull=True) |
-            Q(views__lt=F('view_limit'), start_date__isnull=True))
+            Q(views__lt=F('view_limit'), start_date__isnull=True)
+        )
 
         if len(ads) == 0:
             return None
+
         ad = ads[random.randint(0, len(ads) - 1)]
-        ad.views += 1
-        ad.save()
+
+        if count_view:
+            ad.views += 1
+            ad.save()
+
         return ad
