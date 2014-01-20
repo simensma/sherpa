@@ -126,14 +126,53 @@
 </div><!-- /.row -->
 
 <div class="row">
-  <div class="col-lg-12">
-    <h2>Savner du noe?</h2>
-    <p>
-      Mens vi jobber med funksjonaliteten i nye Sherpa, må du fremdeles logge på gamle Sherpa for enkelte ting, som for eksempel forvaltning av hytter og ruter, turer og aktiviteter, bildearkiv/filarkiv, føremeldinger og så videre. Medlemsforeningenes nettsteder forvaltes også i gamle Sherpa enn så lenge.
-    </p>
-    <p>
-      Logg på gamle Sherpa på denne adressen: <a href="http://www2.turistforeningen.no/admin/">http://www2.turistforeningen.no/admin/</a>
-    </p>
+  <div class="col-md-6">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title">Savner du noe?</h2>
+      </div>
+
+      <div class="panel-body">
+        <p>
+          Mens vi jobber med funksjonaliteten i nye Sherpa, må du fremdeles logge på gamle Sherpa for enkelte ting, som for eksempel forvaltning av hytter og ruter, turer og aktiviteter, bildearkiv/filarkiv, føremeldinger og så videre. Medlemsforeningenes nettsteder forvaltes også i gamle Sherpa enn så lenge.
+        </p>
+        <p>
+          Logg på gamle Sherpa på denne adressen: <a href="http://www2.turistforeningen.no/admin/">http://www2.turistforeningen.no/admin/</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title">DNT beta</h2>
+      </div>
+      <div class="panel-body">
+        {% for entry in betablog %}
+          <div class="media">
+            {% if entry.image %}
+              <a class="pull-left" href="#">
+                <img class="media-object" src="{{ entry.image }}" alt="{{ entry.title }}">
+              </a>
+            {% endif %}
+            <div class="media-body">
+              <h3 class="media-heading">
+                <a href="{{ entry.link }}">{{ entry.title }}</a>
+                <small>{{ entry.pub_date|date:"d.m.Y" }}</small>
+              </h3>
+              {{ entry.content|truncatewords:50 }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="panel-footer">
+        Les mer om hva vi jobber med på <a href="http://beta.turistforeningen.no/">DNT beta</a>!
+      </div>
+    </div>
+
   </div>
 </div><!-- /.row -->
 
