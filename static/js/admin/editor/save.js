@@ -23,6 +23,11 @@ $(document).ready(function() {
     $("div.editor-header button.save").click(save);
     $("div.editor-header button.preview").click(saveAndGo);
     $("div.editor-header button.save-and-quit").click(saveAndGo);
+    $("div.editor-header a.quit").click(function(e) {
+        if(!(confirm($(this).attr('data-confirm')))) {
+            e.preventDefault();
+        }
+    });
 
     function saveAndGo() {
         var button = $(this);
