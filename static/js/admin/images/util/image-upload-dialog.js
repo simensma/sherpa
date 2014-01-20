@@ -38,7 +38,7 @@
         uploader.find("div.tag-box").empty();
 
         // Hide that which should be hidden by default
-        uploader.find("div.hide").hide();
+        uploader.find("div.jq-hide").hide();
 
         uploader.modal();
     };

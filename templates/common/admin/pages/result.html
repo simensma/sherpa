@@ -3,7 +3,7 @@
     <td data-level="{{ level }}">
       {% if version.children > 0 %}
         <a href="javascript:undefined" class="expand" data-id="{{ version.variant.page.id }}">
-          <i class="fa fa-plus" data-next-class="icon-minus"></i>
+          <i class="fa fa-plus" data-next-class="fa fa-minus"></i>
         </a>
       {% endif %}
       <a href="{% url 'admin.cms.views.page.edit_version' version.id %}">{{ version.variant.page.title }}</a>

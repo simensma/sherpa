@@ -26,53 +26,53 @@
       {% csrf_token %}
       <input type="reset" class="jq-hide">
 
-      <div class="control-group">
-        <label class="control-label">Finn bilde:</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Finn bilde:</label>
+        <div class="col-md-10">
           <input type="file" name="file">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Beskrivelse:</label>
-        <div class="controls">
-          <textarea name="description" rows="4" class="input-xlarge"></textarea>
+      <div class="form-group">
+        <label class="col-md-2 control-label">Beskrivelse:</label>
+        <div class="col-md-10">
+          <textarea name="description" rows="4" class="form-control"></textarea>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Fotograf:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Fotograf:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Kreditering:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l...">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Kreditering:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="credits" placeholder="Navn på person, forening e.l...">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Bruksrett:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov...">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Bruksrett:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="licence" placeholder="Kun ved behov...">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Nøkkelord</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="tags">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Nøkkelord</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="tags">
           <input type="hidden" name="tags-serialized">
           <div class="tag-box"></div>
           <div style="clear: both;"></div>
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
           <input class="btn btn-success" type="submit" value="Last opp">
         </div>
       </div>
@@ -83,6 +83,6 @@
   </div>
 
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>

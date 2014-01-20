@@ -122,9 +122,9 @@ $(function() {
 
     $(document).on('click', 'a.expand', function() {
         var i = $(this).children("i");
-        if(i.hasClass('icon-plus')) {
-            i.removeClass('icon-plus');
-            i.addClass('icon-minus');
+        if(i.hasClass('fa-plus')) {
+            i.removeClass('fa-plus');
+            i.addClass('fa-minus');
             var tr = $(this).parents("tr");
             var level = Number($(this).parents("td").attr('data-level')) + 1;
             var id = $(this).attr("data-id");
@@ -139,8 +139,8 @@ $(function() {
                 updateLevels();
             });
         } else {
-            i.addClass('icon-plus');
-            i.removeClass('icon-minus');
+            i.addClass('fa-plus');
+            i.removeClass('fa-minus');
             removeChildren($(this).parents('tr'));
         }
     });

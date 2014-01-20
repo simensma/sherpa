@@ -36,7 +36,7 @@
         <form action="{% url 'admin.enrollment.views.index' %}" method="get">
           {% csrf_token %}
           <input type="text" name="search" class="form-control" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer...">
-          <button class="btn search input-button-align" type="submit"><i class="fa fa-search"></i> Søk</button>
+          <button class="btn btn-default search input-button-align" type="submit"><i class="fa fa-search"></i> Søk</button>
         </form>
       </div>
 
@@ -61,16 +61,10 @@
                 Startet: {{ enrollment.date_initiated|date:"d.m.y H:i" }}<br>
                 Sist endret: {{ enrollment.date_modified|date:"d.m.y H:i" }}
               </div>
-              <div class="col-lg-5">
+              <div class="col-lg-6">
                 {{ enrollment.users.count }} medlemmer<br>
                 {{ enrollment.transactions.count }} transaksjoner
 
-              </div>
-              <div class="col-lg-1">
-                <div class="pull-right">
-                  <i class="icon-chevron-down"></i>
-                  <i class="icon-chevron-up"></i>
-                </div>
               </div>
             </div>
 

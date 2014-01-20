@@ -12,7 +12,7 @@
       <input type="checkbox" name="include_meta" id="include_meta" checked> Vis størrelse og fotograf under bildene
     </label>
 
-    <div class="alert alert-danger span4 too-few-chars jq-hide">
+    <div class="alert alert-danger col-sm-4 span4 too-few-chars jq-hide">{# Bootstrap 2 compatible #}
       <a class="close">x</a>
       <strong>For få søketegn!</strong><br>Vennligst bruk minst {{ image_search_length }} tegn når du søker, ellers får du garantert mange flere resultater enn du vil ha.
     </div>
@@ -23,7 +23,7 @@
   </div>
 
   <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
   </div>
 
 </div>

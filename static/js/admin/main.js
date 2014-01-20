@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     $("select[name='user_association']").chosen().change(function() {
         var next = encodeURIComponent(location.pathname + location.search);
-        var a = $('<a class="hide" href="' + $(this).find('option:selected').attr('data-href') + '?next=' + next + '">s</a>').appendTo(document.body).get(0).click();
+        var a = $('<a class="jq-hide" href="' + $(this).find('option:selected').attr('data-href') + '?next=' + next + '">s</a>').appendTo(document.body).get(0).click();
     });
 });
 

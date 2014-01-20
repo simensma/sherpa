@@ -86,8 +86,8 @@
 
         <div class="form-group submit-header">
           <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-success btn-large" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
-            <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
+            <button type="submit" class="btn btn-success btn-lg" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
+            <button class="btn btn-lg preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
             <br>
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
             <div class="hints">
@@ -451,7 +451,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <button class="btn add-date">Legg til enda en turdato</button>
+              <button class="btn btn-default add-date">Legg til enda en turdato</button>
             </div>
           </div>
 
@@ -517,8 +517,8 @@
 
         <div class="form-group submit-footer">
           <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-success btn-large" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
-            <button class="btn btn-large preview" disabled><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
+            <button type="submit" class="btn btn-success btn-lg" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
+            <button class="btn btn-default btn-lg preview" disabled><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
             <br>
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
           </div>
@@ -545,7 +545,7 @@
       </p>
 
       <input type="text" class="form-control" name="turleder-search" placeholder="Søk etter navn eller medlemsnummer for å finne turledere...">
-      <button class="btn turleder-search input-button-align"><i class="fa fa-search"></i></button>
+      <button class="btn btn-default turleder-search input-button-align"><i class="fa fa-search"></i></button>
 
       <table class="table search-results" data-search-url="{% url 'admin.aktiviteter.views.turleder_search' %}">
         <tr>
@@ -622,8 +622,8 @@
       </div>
 
       <div class="choose jq-hide">
-        <button class="btn btn-large btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="fa fa-warning"></i> Ja, slett turdatoen og påmeldtlistene.</button>
-        <button class="btn btn-large btn-success cancel">Nei, avbryt og ikke slett noe.</button>
+        <button class="btn btn-lg btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="fa fa-warning"></i> Ja, slett turdatoen og påmeldtlistene.</button>
+        <button class="btn btn-lg btn-success cancel">Nei, avbryt og ikke slett noe.</button>
       </div>
 
     </div>

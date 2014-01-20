@@ -10,8 +10,8 @@
 
 {% if list_status == 'root_album' %}
   <div class="albums">
-    <div class="row-fluid">
-      <div class="span4">
+    <div class="row row-fluid">{# Bootstrap 2 compatible (kind-of) #}
+      <div class="col-md-4 span4">{# Bootstrap 2 compatible #}
         {% for album in albums_divided.0 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
@@ -21,7 +21,7 @@
           <div style="clear: both;"></div>
         {% endfor %}
       </div>
-      <div class="span4">
+      <div class="col-md-4 span4">{# Bootstrap 2 compatible #}
         {% for album in albums_divided.1 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
@@ -31,7 +31,7 @@
           <div style="clear: both;"></div>
         {% endfor %}
       </div>
-      <div class="span4">
+      <div class="col-md-4 span4">{# Bootstrap 2 compatible #}
         {% for album in albums_divided.2 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
