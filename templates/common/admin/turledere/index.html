@@ -1,6 +1,8 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Turlederregister &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.turledere.views.index' %}">Turlederregister</a>{% endblock %}
+
+{% block title %}Turlederregister — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'turledere' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -16,9 +18,19 @@
 
 {% block body %}
 
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Turlederregister <small>finn turledere i din forening</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.turledere.views.index' %}">Turledere</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
 <div class="turlederregister">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
 
       <ul class="nav nav-tabs">
         <li class="active"><a href="#search" data-toggle="tab">Søk etter turledere</a></li>
@@ -35,16 +47,16 @@
           <div class="form-border form-default form-horizontal search-area">
             {% csrf_token %}
 
-            <div class="control-group">
-              <label class="control-label">Navn/medlemsnummer</label>
-              <div class="controls">
-                <input type="text" name="turleder" placeholder="Søk etter turledere (navn eller medlemsnummer)..." class="input-xxlarge">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Navn/medlemsnummer</label>
+              <div class="col-sm-10">
+                <input type="text" name="turleder" class="form-control" placeholder="Søk etter turledere (navn eller medlemsnummer)...">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Turledere som er aktive i en av</label>
-              <div class="controls">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Turledere som er aktive i en av</label>
+              <div class="col-sm-10">
                 <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
                   <option value=""></option>
                   <optgroup label="Medlemsforeninger">
@@ -56,9 +68,9 @@
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Turledere som har</label>
-              <div class="controls">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Turledere som har</label>
+              <div class="col-sm-10">
                 <select name="turleder_roles" class="chosen" data-placeholder="følgende sertifikat...">
                   <option value=""></option>
                   {% for role in turleder_roles %}
@@ -66,16 +78,16 @@
                   {% endfor %}
                 </select>
 
-                <label class="checkbox include-all-certificates hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
+                <label class="checkbox include-all-certificates jq-hide" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
                   <input type="checkbox" name="include_all_certificates" checked>
                   Inkluder de som har sertifikat med høyere nivå
                 </label>
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Instruktører som er</label>
-              <div class="controls">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Instruktører som er</label>
+              <div class="col-sm-10">
                 <select name="instruktor_roles" data-chosen data-placeholder="følgende instruktørtype(r)..." multiple>
                   <option value=""></option>
                   {% for role in instruktor_roles %}
@@ -85,9 +97,9 @@
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Ett av sertifikatene må være godkjent av</label>
-              <div class="controls">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Ett av sertifikatene må være godkjent av</label>
+              <div class="col-sm-10">
                 <select name="association_approved" class="chosen" data-placeholder="følgende forening...">
                   <option value=""></option>
                   <optgroup label="Sentralt/nasjonalt">
@@ -104,9 +116,9 @@
               </div>
             </div>
 
-            <div class="control-group">
-              <div class="controls">
-                <button class="btn search"><i class="icon-search"></i> Søk etter turledere med dette filteret...</button>
+            <div class="form-group">
+              <div class="col-sm-10">
+                <button class="btn search"><i class="fa fa-search"></i> Søk etter turledere med dette filteret...</button>
               </div>
             </div>
           </div>
@@ -116,14 +128,14 @@
               <th>Turleder</th>
               <th>Aktiv i</th>
             </tr>
-            <tr class="short-query hide">
+            <tr class="short-query jq-hide">
               <td colspan="2">
                 Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
               </td>
             </tr>
-            <tr class="technical-error hide">
+            <tr class="technical-error jq-hide">
               <td colspan="2">
-                <div class="alert alert-error">
+                <div class="alert alert-danger">
                   Beklager, det oppstod en teknisk feil!<br>
                   Feilen har blitt logget og vi vil fikse den så snart som mulig.
                 </div>
@@ -131,7 +143,7 @@
             </tr>
           </table>
 
-          <div class="infinite-scroll-loader hide">
+          <div class="infinite-scroll-loader jq-hide">
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
             Søker i turlederregisteret, vennligst vent...
           </div>
@@ -150,32 +162,32 @@
             </p>
 
             <p>
-              <input type="text" name="member-search" placeholder="Søk etter brukere (navn eller medlemsnummer)..." class="input-xxlarge">
-              <button class="btn member-search input-button-align"><i class="icon-search"></i></button>
+              <input type="text" name="member-search" placeholder="Søk etter brukere (navn eller medlemsnummer)..." class="form-control">
+              <button class="btn member-search input-button-align"><i class="fa fa-search"></i></button>
             </p>
 
-            <table class="table member-search-list hide" data-search-url="{% url 'admin.turledere.views.member_search' %}">
+            <table class="table member-search-list jq-hide" data-search-url="{% url 'admin.turledere.views.member_search' %}">
               <tr>
                 <th>Navn</th>
                 <th>Medlemsnummer</th>
                 <th>Turledersertifikater/instruktørroller</th>
               </tr>
 
-              <tr class="no-hits hide">
+              <tr class="no-hits jq-hide">
                 <td colspan="4">Fant ingen medlemmer med dette navnet eller medlemsnummeret.</td>
               </tr>
 
-              <tr class="short-query hide">
+              <tr class="short-query jq-hide">
                 <td colspan="4">
                   Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
                 </td>
               </tr>
 
-              <tr class="technical-error hide">
+              <tr class="technical-error jq-hide">
                 <td colspan="4">Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.</td>
               </tr>
 
-              <tr class="loader hide">
+              <tr class="loader jq-hide">
                 <td colspan="4">
                   Vennligst vent mens vi søker.<br>
                   Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>

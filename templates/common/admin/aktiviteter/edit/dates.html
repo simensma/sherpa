@@ -1,25 +1,25 @@
-<div class="date-root{% if not date %} hide{% endif %}" data-date-id="{{ date.id }}" data-delete-preview-url="{% url 'admin.aktiviteter.views.delete_date_preview' %}">
+<div class="date-root{% if not date %} jq-hide{% endif %}" data-date-id="{{ date.id }}" data-delete-preview-url="{% url 'admin.aktiviteter.views.delete_date_preview' %}">
 
   <div class="date-view">
 
-    <div class="row-fluid">
-      <div class="span10">
+    <div class="row">
+      <div class="col-md-10">
 
         <a href="javascript:undefined" class="trigger-date-editor">
-          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
           <div class="date-display" data-date-preview-url="{% url 'admin.aktiviteter.views.edit_date_preview' %}">
             {% include 'common/admin/aktiviteter/edit/dates_view.html' %}
           </div>
 
-          <div class="date-display-fail hide">
+          <div class="date-display-fail jq-hide">
             <i class="icon-chevron-down"></i>
             Beklager, det oppstod en feil når vi prøvde å tolke datoene du valgte.
           </div>
         </a>
 
       </div>
-      <div class="span2">
+      <div class="col-md-2">
 
         <div class="delete">
           <a href="javascript:undefined" class="btn btn-danger delete-date">
@@ -32,120 +32,130 @@
 
   </div>
 
-  <div class="date-edit{% if date %} hide{% endif %}">
+  <div class="date-edit{% if date %} jq-hide{% endif %}">
 
-    <div class="control-group start_date">
-      <label class="control-label">Turen starter:</label>
-      <div class="controls">
-        <div class="input-append date">
-          <input type="text" class="input-medium" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-          <span class="add-on"><i class="icon-th"></i></span>
+    <div class="form-group start_date">
+      <label class="col-md-2 control-label">Turen starter</label>
+      <div class="col-md-10">
+        <div class="input-group date">
+          <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
-        <input type="text" class="input-small" name="start_time" value="{% firstof date.start_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
-        <div class="hints error hide">
+        <input type="text" class="form-control" name="start_time" value="{% firstof date.start_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
+        <div class="hints error jq-hide">
           Du må legge inn turens startdato på rett format: dd.mm.åååå, tt:mm (dag, måned, år, time, minutt)
         </div>
       </div>
     </div>
 
-    <div class="control-group end_date">
-      <label class="control-label">Turen slutter:</label>
-      <div class="controls">
-        <div class="input-append date">
-          <input type="text" class="input-medium" name="end_date" value="{% firstof date.end_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-          <span class="add-on"><i class="icon-th"></i></span>
+    <div class="form-group end_date">
+      <label class="col-md-2 control-label">Turen slutter</label>
+      <div class="col-md-10">
+        <div class="input-group date">
+          <input type="text" class="form-control" name="end_date" value="{% firstof date.end_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
-        <input type="text" class="input-small" name="end_time" value="{% firstof date.end_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
-        <div class="hints error hide">
+        <input type="text" class="form-control" name="end_time" value="{% firstof date.end_date|date:"H:i" now|date:"H:i" %}" placeholder="Klokkeslett...">
+        <div class="hints error jq-hide">
           Du må legge inn turens sluttdato på rett format: dd.mm.åååå, tt:mm (dag, måned, år, time, minutt)
         </div>
       </div>
     </div>
 
-    <div class="control-group signup">
-      <label class="control-label">Påmelding:</label>
-      <div class="controls">
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Krever Min side-bruker" data-content="En må logge på Min side for å kunne melde seg på turen.<br><br>Da får vi tilgang til all medlemsinformasjon om deltakerne, samt at de får opp turhistorikken sin på Min side.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}>
-          Vanlig påmelding
-        </label>
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Kun navn og kontaktinfo" data-content="En får melde seg på ved å kun oppgi navn, og telefonnummer eller e-post.<br><br>Da har vi mindre informasjon om deltakerne, men det er enklere for dem å melde seg på.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}>
-          Enkel påmelding
-        </label>
-        <label class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Ingen påmelding er tilgjengelig på nett. Du kan eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det i det hele tatt er behov for det.">
-          <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}>
-          Ingen påmelding
-        </label>
+    <div class="form-group signup">
+      <label class="col-md-2 control-label">Påmelding</label>
+      <div class="col-md-10">
+        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Krever Min side-bruker" data-content="En må logge på Min side for å kunne melde seg på turen.<br><br>Da får vi tilgang til all medlemsinformasjon om deltakerne, samt at de får opp turhistorikken sin på Min side.">
+          <label>
+            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}>
+            Vanlig påmelding
+          </label>
+        </div>
+        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Kun navn og kontaktinfo" data-content="En får melde seg på ved å kun oppgi navn, og telefonnummer eller e-post.<br><br>Da har vi mindre informasjon om deltakerne, men det er enklere for dem å melde seg på.">
+          <label>
+            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}>
+            Enkel påmelding
+          </label>
+        </div>
+        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Ingen påmelding er tilgjengelig på nett. Du kan eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det i det hele tatt er behov for det.">
+          <label>
+            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}>
+            Ingen påmelding
+          </label>
+        </div>
       </div>
     </div>
 
-    <div class="enrollment-group{% if not date or not date.signup_enabled %} hide{% endif %}">
+    <div class="enrollment-group{% if not date or not date.signup_enabled %} jq-hide{% endif %}">
 
-      <div class="control-group signup_start">
-        <label class="control-label">Påmelding starter:</label>
-        <div class="controls">
-          <div class="input-append date">
-            <input type="text" class="input-medium" name="signup_start" value="{% firstof date.signup_start|date:"d.m.Y" now|date:"d.m.Y" %}">
-            <span class="add-on"><i class="icon-th"></i></span>
+      <div class="form-group signup_start">
+        <label class="col-md-2 control-label">Påmelding starter</label>
+        <div class="col-md-10">
+          <div class="input-group date">
+            <input type="text" class="form-control" name="signup_start" value="{% firstof date.signup_start|date:"d.m.Y" now|date:"d.m.Y" %}">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
-          <div class="hints error hide">
+          <div class="hints error jq-hide">
             Datoen er ikke på rett format: dd.mm.åååå (dag, måned, år)
           </div>
         </div>
       </div>
 
-      <div class="control-group signup_deadline">
-        <label class="control-label">Påmeldingsfrist:</label>
-        <div class="controls">
-          <div class="input-append date">
+      <div class="form-group signup_deadline">
+        <label class="col-md-2 control-label">Påmeldingsfrist</label>
+        <div class="col-md-10">
+          <div class="input-group date">
 
             {% if not date %}
               {# No date, default is disabled #}
-              <input type="text" class="input-medium" name="signup_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
+              <input type="text" class="form-control" name="signup_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
             {% elif date.signup_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %}
               {# Deadline should be the same as start date; disabled #}
-              <input type="text" class="input-medium" name="signup_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
+              <input type="text" class="form-control" name="signup_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
             {% elif date.signup_deadline|date:"d.m.Y" != date.start_date|date:"d.m.Y" %}
               {# Custom signup deadline date #}
-              <input type="text" class="input-medium" name="signup_deadline" value="{{ date.signup_deadline|date:"d.m.Y" }}">
+              <input type="text" class="form-control" name="signup_deadline" value="{{ date.signup_deadline|date:"d.m.Y" }}">
             {% endif %}
 
-            <span class="add-on"><i class="icon-th"></i></span>
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
-          <label class="radio signup-deadlines-until-start">
-            <input type="checkbox" name="signup_deadline_until_start"{% if not date or date.signup_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %} checked{% endif %}>
-            Påmelding helt frem til turen starter
-          </label>
-          <div class="hints error hide">
+          <div class="checkbox">
+            <label class="signup-deadlines-until-start">
+              <input type="checkbox" name="signup_deadline_until_start"{% if not date or date.signup_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %} checked{% endif %}>
+              Påmelding helt frem til turen starter
+            </label>
+          </div>
+          <div class="hints error jq-hide">
             Datoen er ikke på rett format: dd.mm.åååå (dag, måned, år)
           </div>
         </div>
       </div>
 
-      <div class="control-group signup_cancel_deadline">
-        <label class="control-label">Avmeldingsfrist:</label>
-        <div class="controls">
-          <div class="input-append date">
+      <div class="form-group signup_cancel_deadline">
+        <label class="col-md-2 control-label">Avmeldingsfrist</label>
+        <div class="col-md-10">
+          <div class="input-group date">
 
             {% if not date %}
               {# No date, default is disabled #}
-              <input type="text" class="input-medium" name="signup_cancel_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
+              <input type="text" class="form-control" name="signup_cancel_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
             {% elif date.signup_cancel_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %}
               {# Deadline should be the same as start date; disabled #}
-              <input type="text" class="input-medium" name="signup_cancel_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
+              <input type="text" class="form-control" name="signup_cancel_deadline" value="" data-default-date="{{ now|date:"d.m.Y" }}" disabled>
             {% elif date.signup_cancel_deadline|date:"d.m.Y" != date.start_date|date:"d.m.Y" %}
               {# Custom signup deadline date #}
-              <input type="text" class="input-medium" name="signup_cancel_deadline" value="{{ date.signup_cancel_deadline|date:"d.m.Y" }}">
+              <input type="text" class="form-control" name="signup_cancel_deadline" value="{{ date.signup_cancel_deadline|date:"d.m.Y" }}">
             {% endif %}
 
-            <span class="add-on"><i class="icon-th"></i></span>
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
-          <label class="radio signup-deadlines-until-start">
-            <input type="checkbox" name="signup_cancel_deadline_until_start"{% if not date or date.signup_cancel_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %} checked{% endif %}>
-            Avmelding helt frem til turen starter
-          </label>
-          <div class="hints error hide">
+          <div class="checkbox">
+            <label class="signup-deadlines-until-start">
+              <input type="checkbox" name="signup_cancel_deadline_until_start"{% if not date or date.signup_cancel_deadline|date:"d.m.Y" == date.start_date|date:"d.m.Y" %} checked{% endif %}>
+              Avmelding helt frem til turen starter
+            </label>
+          </div>
+          <div class="hints error jq-hide">
             Datoen er ikke på rett format: dd.mm.åååå (dag, måned, år)
           </div>
         </div>
@@ -153,11 +163,11 @@
 
     </div>
 
-    <div class="control-group">
-      <label class="control-label">Turledere:</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="col-md-2 control-label">Turledere</label>
+      <div class="col-md-10">
 
-        <table class="table turledere{% if not date or date.turledere.count == 0 %} hide{% endif %}">
+        <table class="table turledere{% if not date or date.turledere.count == 0 %} jq-hide{% endif %}">
           <tr>
             <th>Navn</th>
             <th>Kontaktinfo</th>
@@ -170,62 +180,68 @@
 
         </table>
 
-        <div class="control-as-text">
+        <p>
           <a href="javascript:undefined" class="add-turledere">
             <i class="icon-user"></i> Legg til turledere...
           </a>
-        </div>
+        </p>
 
       </div>
     </div>
 
-    <div class="control-group meeting_place">
-      <label class="control-label">Oppmøte:</label>
-      <div class="controls">
-        <textarea rows="4" cols="80" name="meeting_place" class="input-xxlarge">{{ date.meeting_place }}</textarea>
-        <div class="hints error hide">
+    <div class="form-group meeting_place">
+      <label class="col-md-2 control-label">Oppmøte</label>
+      <div class="col-md-10">
+        <textarea rows="4" cols="80" name="meeting_place" class="form-control">{{ date.meeting_place }}</textarea>
+        <div class="hints error jq-hide">
           Oppmøte er ikke fylt ut for denne datoen. Du er ikke nødt til å legge inn noe her hvis du ikke mener det er nødvendig, men jo mer informasjon som finnes jo bedre er det jo.
         </div>
       </div>
     </div>
 
-    <div class="control-group contact_type">
-      <label class="control-label">Kontaktinformasjon:</label>
-      <div class="controls">
-        <label class="radio">
-          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="arrangør"{% if not date or date.contact_type == 'arrangør' %} checked{% endif %}> Arrangørforeningens opplysninger
-        </label>
-        <label class="radio">
-          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turledernes opplysninger
-        </label>
-        <label class="radio">
-          <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
-        </label>
-        <div class="hints error hide">
+    <div class="form-group contact_type">
+      <label class="col-md-2 control-label">Kontaktinformasjon</label>
+      <div class="col-md-10">
+        <div class="radio">
+          <label>
+            <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="arrangør"{% if not date or date.contact_type == 'arrangør' %} checked{% endif %}> Arrangørforeningens opplysninger
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="turleder"{% if date.contact_type == 'turleder' %} checked{% endif %}> Turledernes opplysninger
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="contact_type{% if date %}-date-{{ date.id }}{% endif %}" value="custom"{% if date.contact_type == 'custom' %} checked{% endif %}> Skriv inn selv
+          </label>
+        </div>
+        <div class="hints error jq-hide">
           Du har valgt å skrive inn kontaktinformasjon selv, men du har ikke lagt noe inn. Skriv inn opplysningene, eller velg arrangør/turledere over.
         </div>
       </div>
     </div>
 
-    <div class="contact-custom{% if date.contact_type != 'custom' %} hide{% endif %}">
-      <div class="control-group">
-        <label class="control-label">Navn:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="contact_custom_name" value="{{ date.contact_custom_name }}">
+    <div class="contact-custom{% if date.contact_type != 'custom' %} jq-hide{% endif %}">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Navn</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="contact_custom_name" value="{{ date.contact_custom_name }}">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Telefon:</label>
-        <div class="controls">
-          <input type="text" class="input-medium" name="contact_custom_phone" value="{{ date.contact_custom_phone }}">
+      <div class="form-group">
+        <label class="col-md-2 control-label">Telefon</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="contact_custom_phone" value="{{ date.contact_custom_phone }}">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">E-postadresse:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="contact_custom_email" value="{{ date.contact_custom_email }}">
+      <div class="form-group">
+        <label class="col-md-2 control-label">E-postadresse</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="contact_custom_email" value="{{ date.contact_custom_email }}">
         </div>
       </div>
     </div>

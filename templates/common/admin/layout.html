@@ -1,141 +1,258 @@
 {% load debug %}
+{% load gravatar %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Sherpa{% endblock %} &mdash; Turistforeningen</title>
-  <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+  <title>{% block title %}Sherpa{% endblock %} — Turistforeningen</title>
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
+  {# Fonts #}
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300">
+
+  {# Bootstrap core #}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap3/css/bootstrap.min.css" media="screen">
+
+  {# Other 3rd party plugins #}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-modal/css/bootstrap-modal.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker.css" media="screen">
-  <!--[if lt IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker-ie7fix.css" media="screen"><![endif]-->
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker3.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/sb-admin/css/sb-admin.css">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome/css/font-awesome.min.css">
 
-  {# image cropping #}
+  {# Our libs #}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/imgareaselect/css/imgareaselect-default.css">
 
+  {# Our styles #}
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
   {% block extra_css %}{% endblock %}
 </head>
-<body class="container">
 
-<header class="row">
-  <div class="span2 logo">
-    <a href="{% url 'admin.views.index' %}">
-      <img src="{{ STATIC_URL }}img/dnt_logo.gif" alt="Den Norske Turistforening" title="Tilbake til Sherpa-forsiden">
-    </a>
-  </div>
-  <div class="span6">
-    <h1 class="sherpa">
-      {% block header %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endblock %}
-    </h1>
-  </div>
-  <div class="span4 right">
-    {# Skip user-data section if Focus is down because the unavailable-template extends this layout #}
-    {% if not focus_downtime.is_currently_down %}
-      <p class="userline">
-        <a href="{% url 'user.views.home' %}">{{ user.get_full_name }}</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span>
-      </p>
-    {% else %}
-      <p class="userline">
-        <a href="{% url 'user.views.home' %}">N.N.</a> <span class="logout">(<a href="{% url 'user.login.views.logout' %}">Logg ut</a>)</span><br>
-      </p>
+<body>
+
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="{% url 'admin.views.index' %}" class="navbar-brand">Sherpa</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+
+          {% block admin_menu %}
+
+            <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+
+            {% if active_association.site %}
+              <li{% if active_entry == 'cms' %} class="active"{% endif %}><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
+              <li{% if active_entry == 'articles' %} class="active"{% endif %}><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
+            {% endif %}
+
+            <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
+
+            {% if active_association.site %}
+              <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
+              <li{% if active_entry == 'ads' %} class="active"{% endif %}><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
+            {% endif %}
+
+            {# Explicitly hide images for non-central users for now #}
+            {% if active_association.id == 56 %}{# DNT Central #}
+              <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
+            {% endif %}
+
+            {% if active_association.site %}
+              <li{% if active_entry == 'analytics' %} class="active"{% endif %}><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse og statistikk</a></li>
+            {% endif %}
+
+            <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
+            <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
+
+            {% if active_association.site %}
+              <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
+            {% endif %}
+
+            {# Applies only to DNT Central #}
+            {% if active_association.id == 56 %}
+              <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
+            {% endif %}
+
+            {% if user.perms.sherpa_admin %}
+              <li{% if active_entry == 'memberid_sms' %} class="active"{% endif %}><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
+            {% endif %}
+
+          {% endblock %}
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right navbar-user">
+          <li class="dropdown alerts-dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell"></i> Beskjeder <span class="badge jq-hide">0</span> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="#">
+                  Du har ingen beskjeder! Det er ikke så rart,<br>
+                  siden det ikke finnes noe beskjedsystem i Sherpa<br>
+                  ennå. Synes du vi bør ha et? Ta kontakt og si<br>
+                  litt om hva du mener det kan brukes til!
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown user-dropdown">
+            <a href="#" class="dropdown-toggle dropdown-with-gravatar" data-toggle="dropdown">
+              {% if not focus_downtime.is_currently_down %}
+                <img src="{% gravatar user.get_sherpa_email 35 %}">
+                <span>
+                  {{ user.get_full_name }} <b class="caret"></b>
+                </span>
+              {% else %}
+                <img src="{% gravatar "" 35 %}">{# Yields an anonymous gravatar #}
+                <span>
+                  N.N. <b class="caret"></b>
+                </span>
+              {% endif %}
+            </a>
+            <ul class="dropdown-menu">
+              {% if active_association.site %}
+                <li><a href="http://{{ active_association.site.domain }}/"><i class="fa fa-home"></i> {{ active_association.name }}</a></li>
+              {% endif %}
+              <li><a href="{% url 'user.views.home' %}"><i class="fa fa-user"></i> Min side</a></li>
+              <li><a href="{% url 'user.views.account' %}"><i class="fa fa-pencil-square-o"></i> Dine opplysninger</a></li>
+              <li><a href="{% url 'user.views.account_password' %}"><i class="fa fa-key"></i> Endre passord</a></li>
+              <li class="divider"></li>
+              <li><a href="{% url 'user.login.views.logout' %}"><i class="fa fa-power-off"></i> Logg ut</a></li>
+            </ul>
+          </li>
+
+          {# Choose active association. Those users who have 1 association don't need to choose manually. #}
+          {% if user.all_associations|length > 1 %}
+            <li class="dropdown association-dropdown">
+              <select name="user_association" data-placeholder="Velg aktiv forening...">
+                <option value=""></option>
+                {% if user.all_associations_sorted.central|length > 0 %}
+                  <optgroup label="Sentralt/nasjonalt">
+                    {% for association in user.all_associations_sorted.central %}
+                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+                {% if user.all_associations_sorted.associations|length > 0 %}
+                  <optgroup label="Medlemsforeninger">
+                    {% for association in user.all_associations_sorted.associations %}
+                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+                {% if user.all_associations_sorted.small_associations|length > 0 %}
+                  <optgroup label="Lokale turlag">
+                  {% for association in user.all_associations_sorted.small_associations %}
+                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+                {% if user.all_associations_sorted.hike_groups|length > 0 %}
+                  <optgroup label="Turgrupper">
+                  {% for association in user.all_associations_sorted.hike_groups %}
+                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+              </select>
+            </li>
+          {% endif %}
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div id="page-wrapper">
+      {% block body %}{% endblock %}
+    </div><!-- /#page-wrapper -->
+
+  </div><!-- /#wrapper -->
+
+  {# "Global" csrf_token for AJAX-requests #}
+  {% csrf_token %}
+
+  {# Raven for client-side debugging - should always be first #}
+  {% if not debug %}
+    <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
+    <script src="{{ STATIC_URL }}js/raven.js"></script>
+    {% if user.is_authenticated %}
+      <script>
+        Raven.setUser({
+            id: {{ user.id }}
+        });
+      </script>
     {% endif %}
-    <select name="user_association" data-placeholder="Velg en forening...">
-      <option value=""></option>
-      {% if user.all_associations_sorted.central|length > 0 %}
-        <optgroup label="Sentralt/nasjonalt">
-          {% for association in user.all_associations_sorted.central %}
-            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
-          {% endfor %}
-        </optgroup>
-      {% endif %}
-      {% if user.all_associations_sorted.associations|length > 0 %}
-        <optgroup label="Medlemsforeninger">
-          {% for association in user.all_associations_sorted.associations %}
-            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
-          {% endfor %}
-        </optgroup>
-      {% endif %}
-      {% if user.all_associations_sorted.small_associations|length > 0 %}
-        <optgroup label="Lokale turlag">
-        {% for association in user.all_associations_sorted.small_associations %}
-            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
-          {% endfor %}
-        </optgroup>
-      {% endif %}
-      {% if user.all_associations_sorted.hike_groups|length > 0 %}
-        <optgroup label="Turgrupper">
-        {% for association in user.all_associations_sorted.hike_groups %}
-            <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
-          {% endfor %}
-        </optgroup>
-      {% endif %}
-    </select>
-  </div>
-</header>
-
-<hr>
-
-{% block body %}{% endblock %}
-<footer>
-</footer>
-
-{# "Global" csrf_token for AJAX-requests #}
-{% csrf_token %}
-
-{# Scripts - Raven comes first, then rendered globals, then the rest #}
-{% if not debug %}
-  <script src="{{ STATIC_URL }}lib/raven-js/raven.min.js"></script>
-  <script src="{{ STATIC_URL }}js/raven.js"></script>
-  {% if user.is_authenticated %}
-    <script>
-      Raven.setUser({
-          id: {{ user.id }}
-      });
-    </script>
   {% endif %}
-{% endif %}
-{% block js_globals %}{% endblock %}
-<!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
-<script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
-<script src="{{ STATIC_URL }}lib/jquery-sortable/jquery-sortable-min.js"></script>
-<script src="{{ STATIC_URL }}lib/jquery-draggable/jquery.draggable.min.js"></script>
-<script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
-<script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
-<script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
-<script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
 
-{# image cropping #}
-<script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
-<script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.min.js"></script>
-<script src="{{ STATIC_URL }}js/admin/editor/image-cropper.js"></script>
+  {# Rendered globals may be needed by other scripts #}
+  {% block js_globals %}{% endblock %}
 
-<!--[if lt IE 9]><script src="{{ STATIC_URL }}js/ie/trim.js"></script><![endif]-->
-<!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
-<script src="{{ STATIC_URL }}js/ie/contains.js"></script>
-<script src="{{ STATIC_URL }}js/admin/main.js"></script>
-<script src="{{ STATIC_URL }}js/common.js"></script>
-<script src="{{ STATIC_URL }}js/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
-<script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
-<script src="{{ STATIC_URL }}js/validator.js"></script>
+  {# Polyfill and fixups #}
+  <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
+  <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
+  <script src="{{ STATIC_URL }}js/polyfill.js"></script>
 
-<script>
-  $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
-</script>
+  {# Core libraries (jquery and bootstrap) #}
+  <script src="{{ STATIC_URL }}lib/jquery/jquery-1.10.2.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap3/js/bootstrap.min.js"></script>
 
-{% block extra_js %}{% endblock %}
+  {# 3rd party libs that depend on core #}
+  <script src="{{ STATIC_URL }}lib/jquery-sortable/jquery-sortable-min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-draggable/jquery.draggable.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery/jQuery.ajaxQueue.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jQuery.Hashtag/jQuery.Hashtag.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-modal/js/bootstrap-modal.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
+  <script>
+    $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
+  </script>
+
+  {# Other 3rd party libs #}
+  <script src="{{ STATIC_URL }}lib/typeahead/typeahead.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
+  <script>
+    window.User = {
+      email: '{{ user.get_sherpa_email }}',
+      name: '{{ user.get_full_name }}',
+      id: {{ user.id }},
+    };
+  </script>
+  <script src="{{ STATIC_URL }}js/uservoice.js"></script>
+
+  {# Our libs #}
+  <script src="{{ STATIC_URL }}js/admin/editor/image-utils.js"></script>
+  <script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.min.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/image-cropper.js"></script>
+
+  {# Our scripts #}
+  <script src="{{ STATIC_URL }}js/admin/main.js"></script>
+  <script src="{{ STATIC_URL }}js/common.js"></script>
+  <script src="{{ STATIC_URL }}js/widgets.js"></script>
+  <script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/validator.js"></script>
+
+  {% block extra_js %}{% endblock %}
+
 
 </body>
 </html>

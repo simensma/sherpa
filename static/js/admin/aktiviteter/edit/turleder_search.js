@@ -63,7 +63,7 @@
                     }
                     that.table.find("tr.result a.assign-turleder").click(function() {
                         var display_result = $(this).parents("tr.result").next().clone();
-                        display_result.removeClass('hide');
+                        display_result.removeClass('jq-hide');
                         that.callback({
                             result_row: display_result
                         });

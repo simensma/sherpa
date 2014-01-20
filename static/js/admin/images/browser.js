@@ -1,9 +1,10 @@
 $(document).ready(function() {
 
-    var actionButtons = $("div.imagearchive-action-buttons");
+    var actionButtons = $("div.action-buttons");
     var modal_album_details = $("div.modal.album-details");
     var modal_album_add = $("div.modal.album-add");
     var modal_delete = $("div.modal.delete");
+    var gallery = $("div.archive-gallery");
 
     actionButtons.find("button.albums.details").click(function() {
         modal_album_details.modal();
@@ -11,9 +12,12 @@ $(document).ready(function() {
 
     actionButtons.find("button.images.details").click(function() {
         var images = [];
-        $("#archive-gallery li.image.selected").each(function() {
+        gallery.find("li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
+        if(typeof origin === 'undefined') {
+            var origin = '';
+        }
         window.location = '/sherpa/bildearkiv/bilde/oppdater/?bilder=' + encodeURIComponent(JSON.stringify(images)) + '&origin=' + origin;
     });
 
@@ -44,15 +48,15 @@ $(document).ready(function() {
 
     modal_album_details.find("form").submit(function() {
         var albums = [];
-        $("#archive-gallery li.album.selected").each(function() {
+        gallery.find("li.album.selected").each(function() {
             albums.push($(this).attr('data-id'));
         });
         $(this).children("input[name='albums']").val(JSON.stringify(albums));
     });
 
     function toggleMultiedit() {
-        var albums = $("#archive-gallery li.album.selected").length > 0;
-        var images = $("#archive-gallery li.image.selected").length > 0;
+        var albums = gallery.find("li.album.selected").length > 0;
+        var images = gallery.find("li.image.selected").length > 0;
         actionButtons.find("button.details, button.move, button.delete").hide();
         if(albums && images) {
             actionButtons.find("button.details.dummy").show();
@@ -76,12 +80,12 @@ $(document).ready(function() {
         }
     }
 
-    $("#archive-gallery li.album button.mark").click(function() {
+    gallery.find("li.album button.mark").click(function() {
         $(this).parent("li").toggleClass('selected');
         toggleMultiedit();
     });
 
-    $("#archive-gallery li.image button.mark").click(function() {
+    gallery.find("li.image button.mark").click(function() {
         $(this).parent("li").toggleClass('selected');
         toggleMultiedit();
     });
@@ -98,10 +102,10 @@ $(document).ready(function() {
     function getSelectedItems() {
         var albums = [];
         var images = [];
-        $("#archive-gallery li.album.selected").each(function() {
+        gallery.find("li.album.selected").each(function() {
             albums.push($(this).attr('data-id'));
         });
-        $("#archive-gallery li.image.selected").each(function() {
+        gallery.find("li.image.selected").each(function() {
             images.push($(this).attr('data-id'));
         });
         return {

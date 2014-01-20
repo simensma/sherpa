@@ -1,9 +1,9 @@
-<tr class="display-result{% if hide %} hide{% endif %}" data-id="{{ user.id }}">
+<tr class="display-result{% if hide %} jq-hide{% endif %}" data-id="{{ user.id }}">
   <td>
     <div class="name">
       {{ user.get_full_name }}
     </div>
-    <div class="more hide">
+    <div class="more jq-hide">
       {% if user.is_member %}
         <strong>Født:</strong> {{ user.get_birth_date|date:"d.m.y" }}<br>
         <strong>Medlemsforening:</strong> {{ user.main_association.name }}<br>
@@ -15,7 +15,7 @@
       {% endif %}
     </div>
     <a href="javascript:undefined" class="more"><i class="icon-chevron-down"></i> Mer informasjon</a>
-    <a href="javascript:undefined" class="less hide"><i class="icon-chevron-up"></i> Mindre informasjon</a>
+    <a href="javascript:undefined" class="less jq-hide"><i class="icon-chevron-up"></i> Mindre informasjon</a>
 
   </td>
   <td>

@@ -1,14 +1,29 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Websider &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.cms.views.page.list' %}">Websider</a>{% endblock %}
+{% block title %}Websider — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'cms' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/pages.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/pages/pages.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/pages/menu.js"></script>
 {% endblock %}
+
 {% block body %}
 
-<h2 class="skinny">Hovedmeny</h2>
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
+    <h1>Websider <small>sett opp innholdet på <a href="http://{{ active_association.site.domain }}/">{{ active_association.site.domain }}</a></small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.cms.views.page.list' %}">Websider</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-md-12">
+
+    <h2>Hovedmeny <small>dra for å sortere, klikk for å endre</small></h2>
     <nav id="menus" data-reorder-url="{% url 'admin.cms.views.menu.reorder' %}">
       <ul class="sortable horizontal">
         {% for menu in menus %}
@@ -19,36 +34,36 @@
       </ul>
     </nav>
     <p>
-      <a class="add-menu-element" href="javascript:undefined">Nytt menyelement <i class="icon-plus"></i></a>
+      <a class="add-menu-element" href="javascript:undefined">Nytt menyelement</a>
     </p>
+
+
+    <h2>Websider</h2>
+    <p style="text-align: center;">
+      <a id="add-page" class="btn btn-success btn-large new-page" href="javascript:undefined">
+        Opprett ny webside
+      </a>
+    </p>
+
+    {% if not versions %}
+      <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
+    {% else %}
+      <table class="table pages">
+        <thead>
+          <tr>
+            <th>Tittel</th>
+            <th>URL til siden</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% include 'common/admin/pages/result.html' with versions=versions level=0 %}
+        </tbody>
+      </table>
+    {% endif %}
   </div>
-</div>
+</div><!-- /.row -->
 
-<h2 class="skinny">Websider</h2>
-
-<div class="row">
-  <div class="span12">
-    <p style="text-align: center;"><a id="add-page" class="btn btn-success btn-large new-page" href="javascript:undefined"><i class="icon-plus"></i> Opprett ny webside</a></p>
-  </div>
-</div>
-
-{% if not versions %}
-<div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
-{% else %}
-<table class="table pages">
-<thead>
-<tr>
-  <th>Tittel</th>
-  <th>URL til siden</th>
-</tr>
-</thead>
-<tbody>
-  {% include 'common/admin/pages/result.html' with versions=versions level=0 %}
-</tbody>
-</table>
-{% endif %}
-
-<div class="modal container hide new-page" data-check-slug-url="{% url 'admin.cms.views.page.check_slug' %}">
+<div class="modal container jq-hide new-page" data-check-slug-url="{% url 'admin.cms.views.page.check_slug' %}">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Opprett ny webside</h3>
@@ -58,71 +73,85 @@
     {% csrf_token %}
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">
-      <table class="table">
-      <tr>
-        <td class="big">Tittel:</td>
-        <td><input type="text" name="title" class="input-xlarge"></td>
-      </tr>
-      <tr>
-        <td>Permanent URL:</td>
-        <td style="min-width: 400px">
-          http://{{ active_association.site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug icon-pencil"></i><i class="save-slug icon-ok"></i>
-          <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
-          <span class="valid">
-            <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
-            Ok!
-          </span>
-          <span class="invalid">
-            <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
-            Denne URLen er allerede i bruk!
-          </span>
-        </td>
-      </tr>
-      </table>
-      <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
-      <div class="template">
-        <img src="{{ STATIC_URL }}img/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
-        <p>Tom</p>
+      <div class="form-group">
+        <label>Tittel</label>
+        <input type="text" name="title" class="form-control">
       </div>
-      <div class="template">
-        <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
-        <p>Én kolonne</p>
+      <div class="form-group">
+        <label>Permanent URL:</label>
+        http://{{ active_association.site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
+        <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
+        <span class="valid">
+          <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
+          Ok!
+        </span>
+        <span class="invalid">
+          <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
+          Denne URLen er allerede i bruk!
+        </span>
+
       </div>
-      <div class="template">
-        <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
-        <p>Sidebar (hele)</p>
-      </div>
-      <div class="template">
-        <img src="{{ STATIC_URL }}img/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
-        <p>Tre kolonner</p>
+
+      <h2>Velg en ferdigdefinert mal her:</h2>
+
+      <div class="row-fluid">
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
+          <p>Tom</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
+          <p>Én kolonne</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
+          <p>Sidebar (hele)</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
+          <p>Tre kolonner</p>
+        </div>
       </div>
     </form>
   </div>
-  <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
 
-<div class="modal hide menu" data-width="auto">
+<div class="modal menu" data-new-url="{% url 'admin.cms.views.menu.new' %}" data-edit-url="{% url 'admin.cms.views.menu.edit' %}" data-delete-url="{% url 'admin.cms.views.menu.delete' %}">
   <div class="modal-header">
+
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Lagre menylink</h3>
+    <h3>Endre meny-lenke</h3>
+
   </div>
   <div class="modal-body">
-    <table class="table">
-    <tr>
-      <td>Navn på linken:</td>
-      <td><input type="text" name="name" class="input-large"></td>
-    </tr>
-    <tr>
-      <td>Adresse:</td>
-      <td><input type="text" name="url" class="input-xxlarge"></td>
-    </tr>
-    </table>
+
+    <div class="form-group">
+      <label>Tittel</label>
+      <input type="text" name="name" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Adresse</label>
+      <input type="text" name="url" class="form-control">
+    </div>
+
+    <div class="loading jq-hide">
+      Vennligst vent...<br>
+      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader" alt="Vennligst vent...">
+    </div>
+
   </div>
   <div class="modal-footer">
-    <button class="btn btn-success save-menu"><i class="icon-ok"></i> Lagre</button>
-    <button class="btn btn-danger delete-menu"><i class="icon-warning-sign"></i> Slett linken</button>
+
+    <button class="btn btn-success save-menu">
+      Lagre
+    </button>
+    <button class="btn btn-danger delete-menu">
+      Slett lenken
+    </button>
+
   </div>
 </div>
 

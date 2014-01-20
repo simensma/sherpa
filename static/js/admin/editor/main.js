@@ -12,7 +12,7 @@ $(document).ready(function() {
     enableEditing();
     disableIframes($("article div.content.widget"));
 
-    var toolbar = $("div#toolbar");
+    var toolbar = $("div.cms-editor-toolbar");
     var toolbarContents = toolbar.find("div.toolbar-contents");
 
     // An image currently being changed (need to save this state while opening the changer dialog)

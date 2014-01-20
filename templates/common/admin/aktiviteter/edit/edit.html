@@ -1,9 +1,11 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Aktiviteter &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.aktiviteter.views.index' %}">Aktiviteter</a>{% endblock %}
 
 {% load taglist %}
 {% load aktivitet_has_location %}
+
+{% block title %}{{ aktivitet.title|default:"Ny aktivitet" }} — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'aktiviteter' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
@@ -43,23 +45,32 @@
 
 {% block body %}
 
+<div class="row">
+  <div class="col-lg-12">
+    <h1>{{ aktivitet.title|default:"Ny aktivitet" }} <small>legg inn opplysninger om denne aktiviteten</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"Ny aktivitet" }}</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
 <div class="admin-aktivitet-edit">
 
   <div class="row">
-    <div class="span12">
+    <div class="col-lg-12">
 
       {% for message in messages %}
         {% if message.message == 'save_success' %}
           <div class="alert alert-success">
             <strong>Endringene har blitt lagret!</strong><br>
-            {% if aktivitet.dates.count == 0 %}
-              Se gjennom endringene dine, eller <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>.
-            {% else %}
-              Se gjennom endringene dine, <a href="{% url 'admin.aktiviteter.views.index' %}">gå tilbake til aktivitetsoversikten</a>, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
+            {% if aktivitet.dates.count > 0 %}
+              Se gjennom endringene dine, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
             {% endif %}
           </div>
         {% elif message.message == 'invalid_date_format' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <strong>Ugyldig datoformat</strong><br>
             Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt, påmeldingsfrister osv). Datoene må legges inn med følgende format: <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut: <strong>{{ now|date:"d.m.Y" }}</strong>
           </div>
@@ -73,12 +84,12 @@
         <input type="hidden" name="position_lng">
         <input type="hidden" name="preview" value="false">
 
-        <div class="control-group submit-header">
-          <div class="controls">
-            <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-            <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+        <div class="form-group submit-header">
+          <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-success btn-large" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
+            <button class="btn btn-large preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?"><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
             <br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
             <div class="hints">
               Husk at du alltid må trykke på lagre-knappen etter at du endrer noe!
             </div>
@@ -87,15 +98,15 @@
 
         <div class="section association">
 
-          <div class="control-group">
-            <div class="controls">
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
               <h2>Arrangørforening</h2>
             </div>
           </div>
 
-          <div class="control-group association">
-            <label class="control-label" for="association">Arrangør:</label>
-            <div class="controls">
+          <div class="form-group association">
+            <label class="col-md-2 control-label" for="association">Arrangør</label>
+            <div class="col-md-10">
               <select name="association" id="association" class="chosen" data-placeholder="Velg arrangør...">
                 <option value=""></option>
                 {% if user.children_associations_sorted.central|length > 0 %}
@@ -130,9 +141,9 @@
             </div>
           </div>
 
-          <div class="control-group co_association">
-            <label class="control-label" for="co_association">Medarrangør:</label>
-            <div class="controls">
+          <div class="form-group co_association">
+            <label class="col-md-2 control-label" for="co_association">Medarrangør</label>
+            <div class="col-md-10">
               <select name="co_association" id="co_association" class="chosen" data-placeholder="Ingen medarrangør">
                 <option value=""></option>
                 {% if all_associations.central|length > 0 %}
@@ -171,104 +182,105 @@
 
         <div class="section description">
 
-          <div class="control-group">
-            <div class="controls">
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
               <h2>Beskrivelse og informasjon</h2>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group code">
-            <label class="control-label" for="code">Turkode:</label>
-            <div class="controls">
-              <input type="text" class="input-large" name="code" id="code" value="{{ aktivitet.code }}">
+          <div class="form-group code">
+            <label class="col-md-2 control-label" for="code">Turkode</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="code" id="code" value="{{ aktivitet.code }}">
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group title">
-            <label class="control-label" for="title">Tittel:</label>
-            <div class="controls">
-              <input type="text" class="input-xxlarge" name="title" id="title" value="{{ aktivitet.title }}">
-              <div class="hints error hide">
+          <div class="form-group title">
+            <label class="col-md-2 control-label" for="title">Tittel</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="title" id="title" value="{{ aktivitet.title }}">
+              <div class="hints error jq-hide">
                 Du må jo skrive inn en tittel!
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group description">
-            <label class="control-label" for="description">Beskrivelse:</label>
-            <div class="controls">
-              <textarea rows="6" cols="80" name="description" id="description" class="input-xxlarge">{{ aktivitet.description }}</textarea>
-              <div class="hints error hide">
+          <div class="form-group description">
+            <label class="col-md-2 control-label" for="description">Beskrivelse</label>
+            <div class="col-md-10">
+              <textarea rows="6" cols="80" name="description" id="description" class="form-control">{{ aktivitet.description }}</textarea>
+              <div class="hints error jq-hide">
                 Du må legge inn noen få ord om turen her.
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group difficulty">
-            <label class="control-label" for="difficulty">Vanskelighetsgrad:</label>
-            <div class="controls">
+          <div class="form-group difficulty">
+            <label class="col-md-2 control-label" for="difficulty">Vanskelighetsgrad</label>
+            <div class="col-md-10">
               <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
                 <option value=""></option>
                 {% for difficulty in difficulties %}
                   <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
                 {% endfor %}
               </select>
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge vanskelighetsgraden for turen.
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group audiences">
-            <label class="control-label" for="audiences">Målgruppe:</label>
-            <div class="controls">
+          <div class="form-group audiences">
+            <label class="col-md-2 control-label" for="audiences">Målgruppe</label>
+            <div class="col-md-10">
               <select name="audiences" id="audiences" multiple class="chosen" data-placeholder="Velg målgruppe...">
                 <option value=""></option>
                 {% for audience in audiences %}
                   <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
                 {% endfor %}
               </select>
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge minst én målgruppe.
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group category">
-            <label class="control-label" for="category">Kategori:</label>
-            <div class="controls">
-              <input type="hidden" name="category" value="">
-              <div class="btn-group" data-toggle="buttons-radio" data-target="category">
+          <div class="form-group category">
+            <label class="col-md-2 control-label">Kategori</label>
+            <div class="col-md-10">
+              <div class="btn-group" data-toggle="buttons">
                 {% for category in categories %}
-                  <button class="btn btn-large{% if category.0 == aktivitet.category %} active{% endif %}" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                  <label class="btn btn-default{% if category.0 == aktivitet.category %} active{% endif %}">
+                    <input type="radio" name="category" value="{{ category.0 }}"{% if category.0 == aktivitet.category %} checked{% endif %}> {{ category.1 }}
+                  </label>
                 {% endfor %}
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group subcategories{% if aktivitet.category == '' %} hide{% endif %}">
-            <div class="controls">
+          <div class="form-group subcategories{% if aktivitet.category == '' %} jq-hide{% endif %}">
+            <div class="col-md-offset-2 col-md-10">
 
-              <div class="hints error hide">
+              <div class="hints error jq-hide">
                 Du må velge minst én av de foreslåtte kategoriene. Klikk på de kategoriene du vil velge.
               </div>
 
               <div class="square-well">
 
                 <div class="labels">
-                  <h3 class="trip{% if aktivitet.category != 'trip' %} hide{% endif %}">
+                  <h3 class="trip{% if aktivitet.category != 'trip' %} jq-hide{% endif %}">
                     Hva slags tur/aktivitet er dette?
                   </h3>
 
-                  <h3 class="course{% if aktivitet.category != 'course' %} hide{% endif %}">
+                  <h3 class="course{% if aktivitet.category != 'course' %} jq-hide{% endif %}">
                     Hva slags kurs er dette?
                   </h3>
 
-                  <h3 class="event{% if aktivitet.category != 'event' %} hide{% endif %}">
+                  <h3 class="event{% if aktivitet.category != 'event' %} jq-hide{% endif %}">
                     Hva slags arrangement er dette?
                   </h3>
 
-                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} hide{% endif %}">
+                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} jq-hide{% endif %}">
                     Hva slags dugnad er dette?
                   </h3>
                 </div>
@@ -285,7 +297,7 @@
                   </p>
                 {% endif %}
 
-                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} hide{% endif %}">
+                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} jq-hide{% endif %}">
                   <h4>Flere kategoriforslag</h4>
                   <div class="other-buttons">
                     {% for sub in aktivitet.get_other_subcategories %}
@@ -295,137 +307,135 @@
                 </div>
 
                 <div class="custom">
-                  <button class="btn subcategory btn-danger fake hide"></button>
+                  <button class="btn subcategory btn-danger fake jq-hide"></button>
                   <strong>Eller finn på egne kategorier:</strong>
-                  <input type="text" class="input-large" name="custom-category">
+                  <input type="text" class="form-control" name="custom-category" data-tags-url="{% url 'core.views.filter_tags' %}">
                 </div>
 
                 <input type="hidden" name="subcategories">
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-          <div class="control-group images">
-            <label class="control-label">Bilder:</label>
-            <div class="controls">
+          <div class="form-group images">
+            <label class="col-md-2 control-label">Bilder</label>
+            <div class="col-md-10">
 
-              <div class="control-as-text images-initiate{% if aktivitet.images.count > 0 %} hide{% endif %}">
+              <div class="images-initiate{% if aktivitet.images.count > 0 %} jq-hide{% endif %}">
                 Du bør legge til noen fine bilder, slik at turen blir attraktiv og fristende å se på.<br>
                 <a href="javascript:undefined" class="add-images">Klikk her for å legge til bilder</a>
               </div>
 
-              <div class="images{% if aktivitet.images.count == 0 %} hide{% endif %}">
+              <div class="images{% if aktivitet.images.count == 0 %} jq-hide{% endif %}">
                 {% include 'common/admin/images/util/image-carousel-picker.html' with preload=aktivitet.get_images_json %}
               </div>
 
             </div>
-          </div>
+          </div><!-- /.form-group -->
 
-        </div>
+        </div><!-- /.section.description -->
 
         <div class="section position" data-county-lookup-url="{% url 'core.views.county_lookup' %}" data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}" data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
 
-          <div class="control-group">
-            <div class="controls">
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
               <h2>Område og posisjon</h2>
             </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label">Posisjon:</label>
-            <div class="controls">
-              <div class="control-as-text">
-                <p class="intro">
-                  Her kan du plassere punktet hvor turen <strong>starter</strong> på kartet. Dette bør du gjøre slik at turen vises på kartoversikten i aktivitetssøket.
-                </p>
+          <div class="form-group">
+            <label class="col-md-2 control-label">Posisjon</label>
+            <div class="col-md-10">
+              <p class="intro">
+                Her kan du plassere punktet hvor turen <strong>starter</strong> på kartet. Dette bør du gjøre slik at turen vises på kartoversikten i aktivitetssøket.
+              </p>
 
-                <p class="intro">
-                  <a href="javascript:undefined" class="show-map">Klikk her for å vise kartet</a>
-                </p>
+              <p class="intro">
+                <a href="javascript:undefined" class="show-map">Klikk her for å vise kartet</a>
+              </p>
 
-                <p class="intro show-on-map hide">
-                  Bruk knappen til venstre på kartet for å plassere pinnen.
-                </p>
-              </div>
+              <p class="intro show-on-map jq-hide">
+                Bruk knappen til venstre på kartet for å plassere pinnen.
+              </p>
             </div>
           </div>
 
-          <div id="map" class="leaflet-map hide"></div>
-          <div class="popup-content hide">
+          <div id="map" class="leaflet-map jq-hide"></div>
+          <div class="popup-content jq-hide">
             <h3>{{ aktivitet.title }}</h3>
             <p>{{ aktivitet.description|truncatewords:"30" }}</p>
           </div>
 
-          <div class="control-group counties">
-            <label class="control-label">Fylke:</label>
-            <div class="controls">
+          <div class="form-group counties">
+            <label class="col-md-2 control-label">Fylke</label>
+            <div class="col-md-10">
               <select multiple name="counties" data-chosen data-placeholder="Velg fylke...">
                 <option value=""></option>
                 {% for county in counties %}
                   <option value="{{ county.id }}"{% if county in aktivitet.counties.all %} selected{% endif %}>{{ county.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-              <div class="hints error hide">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error jq-hide">
                 Du må velge hvilket fylke turen arrangeres i.
               </div>
             </div>
           </div>
 
-          <div class="control-group municipalities">
-            <label class="control-label">Kommune:</label>
-            <div class="controls">
+          <div class="form-group municipalities">
+            <label class="col-md-2 control-label">Kommune</label>
+            <div class="col-md-10">
               <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
                 <option value=""></option>
                 {% for municipality in municipalities %}
                   <option value="{{ municipality.id }}"{% if municipality in aktivitet.municipalities.all %} selected{% endif %}>{{ municipality.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-              <div class="hints error hide">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <div class="hints error jq-hide">
                 Du må velge hvilken kommune turen arrangeres i.
               </div>
             </div>
           </div>
 
-          <div class="control-group locations">
-            <label class="control-label">Område:</label>
-            <div class="controls">
+          <div class="form-group locations">
+            <label class="col-md-2 control-label">Område</label>
+            <div class="col-md-10">
               <select multiple name="locations" data-chosen data-placeholder="Velg område...">
                 <option value=""></option>
                 {% for location in locations %}
                   <option value="{{ location.id }}"{% if aktivitet|aktivitet_has_location:location %} selected{% endif %}>{{ location.name }}</option>
                 {% endfor %}
               </select>
-              <img class="ajaxloader hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
             </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label">Adkomst:</label>
-            <div class="controls">
-              <textarea rows="4" cols="80" name="getting_there" id="getting_there" class="input-xxlarge">{{ aktivitet.getting_there }}</textarea>
+          <div class="form-group">
+            <label class="col-md-2 control-label">Adkomst</label>
+            <div class="col-md-10">
+              <textarea rows="4" cols="80" name="getting_there" id="getting_there" class="form-control">{{ aktivitet.getting_there }}</textarea>
             </div>
           </div>
 
-          <div class="control-group turforslag" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
-            <label class="control-label">Koble til turforslag:</label>
-            <div class="controls">
-              <input type="text" name="turforslag" class="input-xxlarge" placeholder="Søk etter turforslag...">
+          <div class="form-group turforslag" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
+            <label class="col-md-2 control-label">Koble til turforslag</label>
+            <div class="col-md-10">
+              <input type="text" name="turforslag" class="form-control" placeholder="Søk etter turforslag...">
               <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
-              <div class="result control-as-text{% if not aktivitet.turforslag %} hide{% endif %}">
+              <div class="result {% if not aktivitet.turforslag %} jq-hide{% endif %}">
                 <a href="javascript:undefined" class="remove">[x]</a>
                 <span class="name">{{ aktivitet.get_turforslag.name|safe }}</span>
               </div>
             </div>
           </div>
 
-        </div>
+        </div><!-- /.section.position -->
 
         <div class="section dates">
 
-          <div class="control-group">
-            <div class="controls">
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
               <h2>Turdatoer og påmelding</h2>
             </div>
           </div>
@@ -439,58 +449,62 @@
 
           {% include 'common/admin/aktiviteter/edit/dates.html' %}
 
-          <div class="control-group">
-            <div class="controls">
-              <div class="control-as-text">
-                <button class="btn add-date">Legg til enda en turdato</button>
-              </div>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <button class="btn add-date">Legg til enda en turdato</button>
             </div>
           </div>
 
-        </div>
+        </div><!-- /.section.dates -->
 
         <div class="section publish skip-border">
 
-          <div class="control-group">
-            <div class="controls">
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
               <h2>Publisering og synlighet</h2>
             </div>
           </div>
 
-          <div class="control-group publish">
-            <label class="control-label">Publisering:</label>
-            <div class="controls">
-              <label class="radio" for="publish">
-                <input type="checkbox" id="publish" name="publish" value="publish"{% if aktivitet.published %} checked{% endif %}>
-                Publiserer turen og gjør den tilgjengelig på nettsidene
-              </label>
+          <div class="form-group publish">
+            <label class="col-md-2 control-label">Publisering</label>
+            <div class="col-md-10">
+              <div class="checkbox">
+                <label for="publish">
+                  <input type="checkbox" id="publish" name="publish" value="publish"{% if aktivitet.published %} checked{% endif %}>
+                  Publiserer turen og gjør den tilgjengelig på nettsidene
+                </label>
+              </div>
             </div>
           </div>
 
-          <div class="publish-extras{% if not aktivitet.published %} hide{% endif %}">
-            <div class="control-group pub_date">
-              <label class="control-label" for="pub_date">Publiseringsdato:</label>
-              <div class="controls">
-                <div class="input-append date">
-                  <input type="text" class="input-medium" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
-                  <span class="add-on"><i class="icon-th"></i></span>
+          <div class="publish-extras{% if not aktivitet.published %} jq-hide{% endif %}">
+            <div class="form-group pub_date">
+              <label class="col-md-2 control-label" for="pub_date">Publiseringsdato</label>
+              <div class="col-md-10">
+                <div class="input-group date">
+                  <input type="text" class="form-control" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 <div class="hints">
                   Aktiviteten vises ikke på nettsidene før publiseringsdatoen.
                 </div>
-                <div class="hints error hide">
+                <div class="hints error jq-hide">
                   Du må legge inn turens publiseringsdato på rett format: dd.mm.åååå (dag, måned, år)
                 </div>
               </div>
             </div>
 
-            <div class="control-group private_aktivitet">
-              <label class="control-label">Tilgjengelighet:</label>
-              <div class="controls">
+            <div class="form-group private_aktivitet">
+              <label class="col-md-2 control-label">Tilgjengelighet</label>
+              <div class="col-md-10">
                 <input type="hidden" name="private">
-                <div class="btn-group" data-toggle="buttons-radio">
-                  <button class="btn public{% if not aktivitet.private %} active{% endif %}">Offentlig</button>
-                  <button class="btn private{% if aktivitet.private %} active{% endif %}">Privat</button>
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-default{% if not aktivitet.private %} active{% endif %}">
+                    <input type="radio" name="private" value="public"{% if not aktivitet.private %} checked{% endif %}> Offentlig
+                  </label>
+                  <label class="btn btn-default{% if aktivitet.private %} active{% endif %}">
+                    <input type="radio" name="private" value="private"{% if aktivitet.private %} checked{% endif %}> Privat
+                  </label>
                 </div>
                 <div class="hints">
                   En privat aktivitet vises ikke i <a href="{% url 'aktiviteter.views.index' %}">det offentlige søket</a>, men kan likevel sees av hvem som helst hvis adressen besøkes direkte. (Du finner adressen etter at du har lagret.)
@@ -499,14 +513,14 @@
             </div>
           </div>
 
-        </div>
+        </div><!-- /.section.publish -->
 
-        <div class="control-group submit-footer">
-          <div class="controls">
-            <button type="submit" class="btn btn-success btn-large" disabled><i class="icon-ok icon-white"></i> Lagre alle endringer</button>
-            <button class="btn btn-large preview" disabled><i class="icon-search"></i> Lagre og se forhåndsvisning</button>
+        <div class="form-group submit-footer">
+          <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-success btn-large" disabled><i class="fa fa-check"></i> Lagre alle endringer</button>
+            <button class="btn btn-large preview" disabled><i class="fa fa-search"></i> Lagre og se forhåndsvisning</button>
             <br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit hide" alt="Lagrer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader submit jq-hide" alt="Lagrer, vennligst vent...">
           </div>
         </div>
 
@@ -515,7 +529,7 @@
     </div>
   </div>
 
-  <div class="modal container hide turleder-search admin-aktiviteter-turleder-search">
+  <div class="modal container jq-hide turleder-search admin-aktiviteter-turleder-search">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Finn turledere for denne aktiviteten</h3>
@@ -530,8 +544,8 @@
         <strong>Hvis personen mangler kontaktopplysninger, bør du be ham/henne legge dette inn på Min side.</strong>
       </p>
 
-      <input type="text" class="input-xxlarge" name="turleder-search" placeholder="Søk etter navn eller medlemsnummer for å finne turledere...">
-      <button class="btn turleder-search input-button-align"><i class="icon-search"></i></button>
+      <input type="text" class="form-control" name="turleder-search" placeholder="Søk etter navn eller medlemsnummer for å finne turledere...">
+      <button class="btn turleder-search input-button-align"><i class="fa fa-search"></i></button>
 
       <table class="table search-results" data-search-url="{% url 'admin.aktiviteter.views.turleder_search' %}">
         <tr>
@@ -547,35 +561,35 @@
           <td colspan="6">Søk etter turledere i søkeboksen over.</td>
         </tr>
 
-        <tr class="no-hits hide">
+        <tr class="no-hits jq-hide">
           <td colspan="6">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
         </tr>
 
-        <tr class="short_query hide">
+        <tr class="short_query jq-hide">
           <td colspan="6">
             Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
           </td>
         </tr>
 
-        <tr class="technical-error hide">
+        <tr class="technical-error jq-hide">
           <td colspan="6">
-            <div class="alert alert-error">
+            <div class="alert alert-danger">
               Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
             </div>
           </td>
         </tr>
 
-        <tr class="max-hits-exceeded hide">
+        <tr class="max-hits-exceeded jq-hide">
           <td colspan="6">
 
-            <div class="alert alert-error">
+            <div class="alert alert-danger">
               Du fikk veldig mange treff, kun et utvalg vises her.<br>
               Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
             </div>
           </td>
         </tr>
 
-        <tr class="loader hide">
+        <tr class="loader jq-hide">
           <td colspan="6">
             Vennligst vent mens vi søker.<br>
             Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
@@ -587,7 +601,7 @@
     </div>
   </div>
 
-  <div class="modal container hide delete-date admin-aktiviteter-delete-date">
+  <div class="modal container jq-hide delete-date admin-aktiviteter-delete-date">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Bekreft sletting av turdato</h3>
@@ -602,14 +616,14 @@
       <div class="date-preview">
       </div>
 
-      <div class="fail hide alert alert-error">
+      <div class="fail jq-hide alert alert-danger">
         Beklager, det oppstod en teknisk feil.<br>
         Vi skulle hente litt informasjon om turdatoen for at du skal kunne slette den, men noe galt skjedde underveis. Prøv å lukke dette vinduet (krysset oppe til høyre) og klikk på Slett-knappen igjen. Feilen har blitt logget automatisk og vi vil se på den så snart som mulig.
       </div>
 
-      <div class="choose hide">
-        <button class="btn btn-large btn-success cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe.</button>
-        <button class="btn btn-large btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="icon-white icon-warning-sign"></i> Ja, slett turdatoen og påmeldtlistene.</button>
+      <div class="choose jq-hide">
+        <button class="btn btn-large btn-danger confirm" data-confirm="Siste sjanse til å angre. Er du helt sikker på at du vil slette turdatoen og påmeldtlistene?"><i class="fa fa-warning"></i> Ja, slett turdatoen og påmeldtlistene.</button>
+        <button class="btn btn-large btn-success cancel">Nei, avbryt og ikke slett noe.</button>
       </div>
 
     </div>

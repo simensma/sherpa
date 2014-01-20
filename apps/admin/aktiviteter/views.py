@@ -89,7 +89,7 @@ def edit(request, aktivitet):
 
         if aktivitet.published:
             # If published, set the extra relevant fields (otherwise ignore them)
-            aktivitet.private = json.loads(request.POST['private'])
+            aktivitet.private = request.POST['private'] == 'private'
             try:
                 aktivitet.pub_date = datetime.strptime(request.POST['pub_date'], "%d.%m.%Y").date()
             except ValueError:
@@ -218,7 +218,7 @@ def preview(request, aktivitet):
     return render(request, 'common/aktiviteter/show/preview.html', context)
 
 def turforslag_search(request):
-    query = request.POST['query']
+    query = request.GET['q'].strip()
 
     # Trips are stored with HTML entities, so convert the query.
     # No, the re.I flag doesn't work for these characters.
@@ -237,12 +237,13 @@ def turforslag_search(request):
         turforslag = turforslag.filter(name__icontains=name)
 
     turforslag = turforslag.distinct('name').order_by('name')[:12]
-    objects = {t.name: t.id for t in turforslag}
+    turforslag = [{
+        'id': t.id,
+        'value': t.name,
+        'tokens': t.name.split()
+    } for t in turforslag]
 
-    return HttpResponse(json.dumps({
-        'names': [t.name for t in turforslag],
-        'objects': objects
-    }))
+    return HttpResponse(json.dumps(turforslag))
 
 def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that

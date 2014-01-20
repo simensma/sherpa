@@ -1,11 +1,11 @@
-<div class="modal container hide change-image">
+<div class="modal container jq-hide change-image">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg et bilde å sette inn...</h3>
   </div>
   <div class="modal-body">
     <div class="image-details">
-      <div class="alert alert-error empty-src">
+      <div class="alert alert-danger empty-src">
         <a class="close">x</a>
         <strong>Sett inn hvilket bilde?</strong><br>
         Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
@@ -23,7 +23,7 @@
         </tr>
         <tr class="photographer">
           <td>Fotograf:</td>
-          <td><input type="text" class="input-xlarge" name="photographer" data-source-url="{% url 'admin.images.views.photographer' %}"></td>
+          <td><input type="text" class="input-xlarge" name="photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}"></td>
         </tr>
         <tr class="anchor">
           <td>Lenker til:</td>

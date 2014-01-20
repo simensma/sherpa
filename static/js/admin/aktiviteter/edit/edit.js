@@ -2,11 +2,9 @@ $(document).ready(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");
-    var private_aktivitet = form.find("div.control-group.private_aktivitet");
-    var category = form.find("div.control-group.category");
-    var category_input = category.find("input[name='category']");
-    var category_buttons = category.find("button[data-category]");
-    var subcategories = form.find("div.control-group.subcategories");
+    var category = form.find("div.form-group.category");
+    var category_inputs = category.find("input[type='radio']");
+    var subcategories = form.find("div.form-group.subcategories");
     var subcategory_labels = subcategories.find("div.labels");
     var subcategory_main_buttons = subcategories.find("div.main-buttons");
     var subcategory_other_buttons = subcategories.find("div.other-buttons");
@@ -17,7 +15,7 @@ $(document).ready(function() {
     var association_select = form.find("select[name='association']");
     var co_association_select = form.find("select[name='co_association']");
     var images_input = form.find("input[name='images']");
-    var turforslag = form.find("div.control-group.turforslag");
+    var turforslag = form.find("div.form-group.turforslag");
     var turforslag_input = turforslag.find("input[name='turforslag']");
     var turforslag_id_input = turforslag.find("input[name='turforslag_id']");
     var turforslag_result = turforslag.find("div.result");
@@ -27,7 +25,7 @@ $(document).ready(function() {
     var preview_input = form.find("input[name='preview']");
     var submit_buttons = form.find("button[type='submit']");
 
-    var images = form.find("div.control-group.images");
+    var images = form.find("div.form-group.images");
     var images_initiate = images.find("div.images-initiate");
     var images_container = images.find("div.images");
 
@@ -41,10 +39,10 @@ $(document).ready(function() {
         'allow_single_deselect': true
     });
 
-    form.find("div.control-group.difficulty select[name='difficulty']").chosen();
-    form.find("div.control-group.audiences select[name='audiences']").chosen();
+    form.find("div.form-group.difficulty select[name='difficulty']").chosen();
+    form.find("div.form-group.audiences select[name='audiences']").chosen();
 
-    form.find("div.control-group.pub_date div.date").datepicker({
+    form.find("div.form-group.pub_date div.date").datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
@@ -53,9 +51,10 @@ $(document).ready(function() {
 
     // Subcategories
 
-    category_buttons.click(function() {
+    category_inputs.change(function() {
+        var new_category = category_inputs.filter(":checked").val();
         subcategory_labels.find("h3").hide();
-        subcategory_labels.find("h3." + $(this).attr('data-category')).show();
+        subcategory_labels.find("h3." + new_category).show();
 
         // Move all main buttons back
 
@@ -65,7 +64,7 @@ $(document).ready(function() {
             subcategory_other_buttons.append($(this));
         });
 
-        subcategory_other_buttons.find("button.subcategory." + $(this).attr('data-category')).each(function() {
+        subcategory_other_buttons.find("button.subcategory." + new_category).each(function() {
             $(this).detach();
             subcategory_main_buttons.append(' ');
             subcategory_main_buttons.append($(this));
@@ -98,33 +97,21 @@ $(document).ready(function() {
 
     custom_subcategory.typeahead({
         minLength: 3,
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: '/tags/filter/',
-                data: { name: query }
-            }).done(function(result) {
-                query = query.toLowerCase();
-                tags = JSON.parse(result);
-                // Ensure the current value is always the topmost suggestion.
-                for(var i=0; i<tags.length; i++) {
-                    if(tags[i] == query) {
-                        tags = tags.slice(0, i).concat(tags.slice(i + 1));
-                    }
-                }
-                tags.unshift(query);
-                process(tags);
-            });
-        },
-        updater: function(item) {
-            custom_subcategory.val(item);
-            addCustomSubcategory();
+        remote: custom_subcategory.attr('data-tags-url') + '?q=%QUERY'
+    }).on('typeahead:selected', function(object, datum) {
+        custom_subcategory.val(datum.value);
+        addCustomSubcategory();
+    });
+
+    custom_subcategory.keydown(function(e) {
+        if(e.which == 13) { // Enter
+            e.preventDefault();
         }
     });
 
     custom_subcategory.keyup(function(e) {
         if(e.which == 13) { // Enter
             addCustomSubcategory();
-            e.preventDefault();
         }
     });
 
@@ -136,12 +123,16 @@ $(document).ready(function() {
             }
 
             // Check if the tag already exists
-            main_existing = subcategory_main_buttons.find("button.subcategory:contains('" + categories[i] + "')");
-            other_existing = subcategory_other_buttons.find("button.subcategory:contains('" + categories[i] + "')");
+            main_existing = subcategory_main_buttons.find("button.subcategory").filter(function() {
+                return $(this).text() === categories[i];
+            });
+            other_existing = subcategory_other_buttons.find("button.subcategory").filter(function() {
+                return $(this).text() === categories[i];
+            });
             if(main_existing.length > 0 || other_existing.length > 0) {
                 main_existing.addClass("btn-danger");
                 other_existing.addClass("btn-danger");
-                custom_subcategory.val('');
+                custom_subcategory.typeahead('setQuery', "");
                 continue;
             }
 
@@ -153,7 +144,7 @@ $(document).ready(function() {
             subcategory_other_buttons.append(new_button);
             new_button.click(toggleButtons);
             new_button.show();
-            custom_subcategory.val('');
+            custom_subcategory.typeahead('setQuery', "");
 
             // This might be hidden, instashow it in this case
             subcategory_other_buttons_trigger.hide();
@@ -161,29 +152,15 @@ $(document).ready(function() {
         }
     }
 
-    var turforslag_objects;
     turforslag_input.typeahead({
         minLength: 5,
-        items: 12,
-        matcher: function() {
-            // Trust the serverside to filter on the query
-            return true;
-        },
-        source: function(query, process) {
-            $.ajaxQueue({
-                url: turforslag.attr('data-turforslag-search-url'),
-                data: { query: query }
-            }).done(function(result) {
-                result = JSON.parse(result);
-                turforslag_objects = result.objects;
-                process(result.names);
-            });
-        },
-        updater: function(item) {
-            turforslag_id_input.val(turforslag_objects[item]);
-            turforslag_result.find("span.name").html(item);
-            turforslag_result.show();
-        }
+        limit: 12,
+        remote: turforslag.attr('data-turforslag-search-url') + "?q=%QUERY"
+    }).on('typeahead:selected', function(object, datum) {
+        turforslag_id_input.val(datum.id);
+        turforslag_result.find("span.name").html(datum.value);
+        turforslag_result.show();
+        turforslag_input.typeahead('setQuery', "");
     });
 
     turforslag_result.find("a.remove").click(function() {
@@ -208,7 +185,7 @@ $(document).ready(function() {
     var dates = form.find("div.section.dates");
     var dates_input = dates.find("input[name='dates']");
     var dates_to_delete_input = dates.find("input[name='dates_to_delete']");
-    var existing_dates = dates.find("div.date-root:not(.hide)");
+    var existing_dates = dates.find("div.date-root:not(.jq-hide)");
     var add_date_button = dates.find("button.add-date");
     var delete_date_modal = editor.find("div.modal.delete-date");
     var delete_date_loading = delete_date_modal.find("div.loading");
@@ -228,7 +205,7 @@ $(document).ready(function() {
     });
 
     add_date_button.click(function() {
-        var hidden_root = dates.find("div.date-root.hide");
+        var hidden_root = dates.find("div.date-root.jq-hide");
         var new_root = hidden_root.clone();
         // Cloning with events doesn't work for popover, so reactivate any popovers.
         new_root.find("*[data-popover]").popover({
@@ -240,8 +217,8 @@ $(document).ready(function() {
         new_root.find("input[name='contact_type']").attr('name', 'contact_type-' + date_radio_counter);
         date_radio_counter += 1;
 
-        new_root.removeClass('hide');
-        new_root.hide(); // Hide it even though we don't want the 'hide' class on it.
+        new_root.removeClass('jq-hide');
+        new_root.hide(); // Hide it even though we don't want the 'jq-hide' class on it.
         new_root.data('view', new AktiviteterDatesView({
             root: new_root
         }));
@@ -325,12 +302,7 @@ $(document).ready(function() {
         preview_buttons.prop('disabled', true);
         $(this).find("img.ajaxloader.submit").show();
 
-        var priv = private_aktivitet.find("button.active").is(".private");
-        private_aktivitet.find("input[name='private']").val(JSON.stringify(priv));
         images_input.val(JSON.stringify(ImageCarouselPicker.getImages()));
-
-        // Collect the active category
-        category_input.val(category_buttons.filter(".active").attr('data-category'));
 
         // Collect subcategory tags
         var tags = [];
@@ -344,7 +316,7 @@ $(document).ready(function() {
 
         // Collect all currently active dates
         var date_objects = [];
-        dates.find("div.date-root:not(.hide)").each(function() {
+        dates.find("div.date-root:not(.jq-hide)").each(function() {
             date_objects.push($(this).data('view').collectData());
         });
         dates_input.val(JSON.stringify(date_objects));

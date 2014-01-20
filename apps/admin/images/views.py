@@ -333,8 +333,9 @@ def search(request):
     return render(request, 'common/admin/images/search.html', context)
 
 def photographer(request):
-    images = Image.objects.filter(photographer__icontains=request.POST['name']).distinct('photographer')
-    photographers = []
-    for image in images:
-        photographers.append(image.photographer)
+    images = Image.objects.all()
+    for word in request.GET['q'].split():
+        images = images.filter(photographer__icontains=word)
+    images = images.distinct('photographer')
+    photographers = [image.photographer for image in images]
     return HttpResponse(json.dumps(photographers))

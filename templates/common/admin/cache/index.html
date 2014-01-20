@@ -1,13 +1,27 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Caching &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.cache.views.index' %}">Caching</a>{% endblock %}
+
+{% block title %}Caching — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'cache' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/cache.js"></script>
 {% endblock %}
+
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
+    <h1>Caching <small>slett mellomlagrede versjoner av nettsidene</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.cache.views.index' %}">Caching</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-md-12">
     <p>
       I Sherpa benytter vi <a href="http://en.wikipedia.org/wiki/Cache_(computing)">caching</a> for å gjøre sidene våre raskere å laste, men dette medfører at når du for eksempel lager en ny artikkel så blir den synlig på forsiden først etter en stund.
     </p>
@@ -19,9 +33,8 @@
 </div>
 
 <div class="row">
-  <div class="span12">
+  <div class="col-md-12">
 
-    <h2>Slett innhold fra cachen</h2>
     <table class="table delete-cache" data-url="{% url 'admin.cache.views.delete' %}">
       <tr>
         <th>Hovedmenyen</th>
@@ -29,7 +42,7 @@
         <td>24 timer</td>
         <td>
           <button class="btn btn-danger main-menu"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
       <tr>
@@ -38,7 +51,7 @@
         <td>10 min</td>
         <td>
           <button class="btn btn-danger frontpage"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
       <tr>
@@ -55,7 +68,7 @@
         <td>10 min</td>
         <td>
           <button class="btn btn-danger page"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
       <tr>
@@ -72,7 +85,7 @@
         <td>10 min</td>
         <td>
           <button class="btn btn-danger article"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
       <tr>
@@ -81,7 +94,7 @@
         <td>30 min</td>
         <td>
           <button class="btn btn-danger blog-widget"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
       <tr>
@@ -90,12 +103,12 @@
         <td>1 time</td>
         <td>
           <button class="btn btn-danger instagram"><i class="icon-remove"></i> Slett</button>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader hide">
+          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent..." class="loader jq-hide">
         </td>
       </tr>
     </table>
 
-    <div class="alert alert-info hide delete-success">
+    <div class="alert alert-info jq-hide delete-success">
       <a class="close">x</a>
       <strong><span class="name"></span> har blitt sletta</strong><br>
       Du kan nå besøke den aktuelle siden for å se oppdatert versjon.

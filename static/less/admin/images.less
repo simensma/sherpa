@@ -1,6 +1,4 @@
-/* Image gallery */
-
-div.image-archive-navigation {
+.ia-navigation() {
   div.item {
     text-align: center;
     border: 1px solid rgb(190, 190, 190);
@@ -11,9 +9,17 @@ div.image-archive-navigation {
       margin-bottom: 0;
     }
 
-    p a, p span.disabled-link {
+    .font() {
       font-size: 20px;
       font-weight: bold;
+    }
+
+    p a {
+      .font;
+    }
+
+    p span.disabled-link {
+      .font;
     }
   }
 
@@ -22,108 +28,88 @@ div.image-archive-navigation {
   }
 }
 
-div.image-archive-quicksearch {
-  input[name='search'] {
-    font-size: 18px !important;
+
+div.image-archive {
+
+  div.ia-navigation {
+    .ia-navigation;
   }
-}
 
-div.imagearchive-action-buttons {
-  margin-bottom: 20px;
+  div.action-buttons {
+    margin-bottom: 20px;
 
-  button {
-    text-align: center;
-    width: 100%;
-  }
-}
-
-div#archive-gallery {
-  ul li {
-    display: block;
-    width: 200px;
-    height: 224px;
-    border: 1px solid #888;
-    margin: 1%;
-    padding-bottom: 15px;
-    float: left;
-    text-align: center;
-
-    img {
-      margin-bottom: 5px;
-      max-width: 160px;
-      height: 120px;
-    }
-
-    button.mark {
-      margin-bottom: 10px;
+    button {
+      text-align: center;
       width: 100%;
     }
+  }
 
-    a.image {
-      display: block;
+  div.archive-gallery {
+    ul {
+      li {
+        display: block;
+        width: 200px;
+        height: 224px;
+        border: 1px solid #888;
+        margin: 1%;
+        padding-bottom: 15px;
+        float: left;
+        text-align: center;
+
+        img {
+          margin-bottom: 5px;
+          max-width: 160px;
+          height: 120px;
+        }
+
+        button.mark {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+
+        a.image {
+          display: block;
+        }
+      }
+
+      li.selected {
+        background-color: rgb(215, 215, 215);
+      }
     }
   }
 
-  ul li.selected {
-    background-color: rgb(215, 215, 215);
-  }
-}
 
+  div.image-details {
 
-div#image-display {
-
-  p.image-description {
-    font-family: "DTL Nobel" !important;
-    background-color: rgb(250, 250, 250);
-  }
-
-  p.edit-button {
-    text-align: center;
-  }
-
-  table.metadata {
-    float: right;
-    width: auto;
-
-    th {
-      text-align: right;
-      vertical-align: top;
+    p.image-description {
+      background-color: rgb(250, 250, 250);
     }
 
-    td {
-      text-align: left;
+    p.edit-button {
+      text-align: center;
     }
   }
-}
 
-form.image-uploader input[type='file'] {
-  width: 100%;
-}
+  form.update-images {
+    margin-top: 40px;
 
-table.multiple-metadata td.field-name {
-  font-family: "DTL Nobel" !important;
-  font-size: 20px !important;
-}
-
-form.upload-image-details {
-  p.chosen-album {
-    font-family: "DTL Nobel" !important;
-    padding-top: 5px;
-    margin-bottom: 0;
-  }
-}
-
-form.upload-image-details, form.update-image {
-  label.image-description {
-    font-family: "DTL Nobel" !important;
+    table.multiple-metadata {
+      td.field-name {
+        font-size: 18px;
+      }
+    }
   }
 
-  textarea[name='description'] {
-    width: 95% !important;
-    margin-bottom: 20px;
+  form.upload-image-details {
+    p.chosen-album {
+      padding-top: 5px;
+      margin-bottom: 0;
+    }
   }
+
 }
 
+// The modal will be displayed outside of the wrapper in the DOM
 div.album-picker {
   button.pick {
     margin-left: 10px;
@@ -136,5 +122,9 @@ div.album-picker {
       width: 25px;
       height: 25px;
     }
+  }
+
+  div.ia-navigation {
+    .ia-navigation;
   }
 }

@@ -1,17 +1,23 @@
-<div class="modal container hide album-picker" data-search-url="{% url 'admin.images.views.album_search_json' %}">
+<div class="modal container jq-hide album-picker" data-search-url="{% url 'admin.images.views.album_search_json' %}">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg album...</h3>
   </div>
   <div class="modal-body">
-    <div class="row-fluid image-archive-navigation">
-      <div class="span4">
+    <div class="row ia-navigation">
+      <div class="col-md-4">
         <div class="item">
-          <input type="text" name="search" placeholder="Søk etter album...">
-          <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+          <div class="row">
+            <div class="col-sm-10">
+              <input type="text" name="search" class="form-control" placeholder="Søk etter album...">
+            </div>
+            <div class="col-sm-2">
+              <button class="btn input-button-align search"><i class="icon-search"></i> Søk</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="span4">
+      <div class="col-md-4">
         <div class="item">
           {# Todo, when associations are created #}
           <p>
@@ -19,7 +25,7 @@
           </p>
         </div>
       </div>
-      <div class="span4">
+      <div class="col-md-4">
         <div class="item current">
           <p>
             <a href="javascript:undefined" class="albums">Alle bilder</a>
@@ -35,13 +41,13 @@
       <span class="path">
       </span>
       <button class="btn btn-success pick"><i class="icon-ok"></i> Velg dette albumet</button>
-      <button class="btn btn-danger deselect hide"><i class="icon-ban-circle"></i> Ikke legg i album</button>
+      <button class="btn btn-danger deselect jq-hide"><i class="icon-ban-circle"></i> Ikke legg i album</button>
       <button class="btn cancel"><i class="icon-remove"></i> Avbryt</button>
     </div>
 
-    <img class="ajaxloader hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+    <img class="ajaxloader jq-hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
 
-    <div class="dummy-child hide">
+    <div class="dummy-child jq-hide">
       <img src="/static/img/icons/imagearchive/folder.png" alt="Album">
       <a href="javascript:undefined" data-albumpicker-id=""></a>
     </div>

@@ -463,6 +463,11 @@ class Actor(models.Model):
         from focus.abstractions import ActorAddressClean
         return ActorAddressClean(self.address)
 
+    @staticmethod
+    def all_members():
+        # TODO: This is probably not sufficient, verify with memberservice
+        return Actor.objects.filter(type='P', balance__current_year__gte=0)
+
     class Meta:
         db_table = u'Actor'
 

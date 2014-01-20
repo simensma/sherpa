@@ -1,20 +1,20 @@
 {% load albumpath %}
 
-<div class="row uploader hide">
-  <div class="span6">
+<div class="row uploader jq-hide">
+  <div class="col-md-6">
 
-    <div class="alert alert-error upload-failed hide">
+    <div class="alert alert-danger upload-failed jq-hide">
       <a class="close">x</a>
       Et eller flere av bildene du forsøkte å laste opp er ikke en gyldig bilde-fil!
     </div>
-    <div class="alert alert-error upload-no-files hide">
+    <div class="alert alert-danger upload-no-files jq-hide">
       Du må jo velge noen bilder å laste opp!<a class="close">x</a>
     </div>
-    <div class="alert alert-error upload-unknown-exception hide">
+    <div class="alert alert-danger upload-unknown-exception jq-hide">
       <a class="close">x</a>
       Beklager, det oppstod en ukjent feil ved opplastingen! Bildene er sannsynligvis ikke blitt lastet opp. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
-    <div class="alert alert-error upload-iframe-render-failed hide">
+    <div class="alert alert-danger upload-iframe-render-failed jq-hide">
       <a class="close">x</a>
       Beklager, det oppstod en ukjent feil! Bildene er sannsynligvis ikke blitt lastet opp. Dette kan skje når du laster opp kjempemange bilder på en gang, og serveren kommer ut av tellingen. Grunnet feilens tekniske natur er det dessverre ikke sikkert at feilen har blitt logget, så om dette skjer ofte kan det være en god idé å kontakte teknisk avdeling ved DNT sentralt og opplyse om problemet.
     </div>
@@ -25,10 +25,10 @@
       <h1 class="sherpa">Last opp nye bilder</h1>
       <input type="file" name="files" multiple><br>
       <input class="btn" type="submit" value="Last opp valgte bilder">
-      <iframe name="iframe" class="hide"></iframe>
+      <iframe name="iframe" class="jq-hide"></iframe>
     </form>
 
-    <div class="uploading hide">
+    <div class="uploading jq-hide">
       <h2>Laster opp...</h2>
       <p>
         <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster opp, vennligst vent...">
@@ -36,16 +36,16 @@
       <p><em>Mens bildene lastes opp er det fint om du kan fylle inn litt informasjon om dem i skjemaet til høyre.</em></p>
     </div>
 
-    <div class="alert alert-info upload-complete hide">
+    <div class="alert alert-info upload-complete jq-hide">
       <a class="close">x</a>
       Bildene har blitt lastet opp! Fyll ut skjemaet til høyre, og klikk "Lagre bildeinformasjon".
     </div>
   </div>
 
-  <div class="span6">
+  <div class="col-md-6">
     {% include 'common/admin/images/util/licencing.html' %}
 
-    <div class="image-details hide">
+    <div class="image-details jq-hide">
       <h2>Fyll inn bildeinformasjon</h2>
 
       <form class="upload-image-details form-horizontal" method="post" action="{% url 'admin.images.views.update_images' %}">
@@ -53,35 +53,39 @@
         <input type="hidden" name="ids">
         <input type="hidden" name="origin" value="{{ origin }}">
 
-        <label class="image-description" for="image-description">Beskrivelse:</label>
-        <textarea name="description" rows="4" id="image-description"></textarea>
-
-        <div class="control-group">
-          <label class="control-label" for="image-photographer">Fotograf:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="photographer" placeholder="Fullt navn..." id="image-photographer" data-source-url="{% url 'admin.images.views.photographer' %}">
+        <div class="form-group">
+          <label class="col-sm-2 image-description" for="image-description">Beskrivelse:</label>
+          <div class="col-sm-10">
+            <textarea name="description" rows="4" id="image-description" class="form-control"></textarea>
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-credits">Kreditering:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="credits" placeholder="Navn på person, forening e.l..." id="image-credits">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-photographer">Fotograf:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." id="image-photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-licence">Bruksrett:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="licence" placeholder="Kun ved behov..." id="image-licence">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-credits">Kreditering:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="credits" placeholder="Navn på person, forening e.l..." id="image-credits">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-tags">Nøkkelord:</label>
-          <div class="controls">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-licence">Bruksrett:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="licence" placeholder="Kun ved behov..." id="image-licence">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-tags">Nøkkelord:</label>
+          <div class="col-sm-10">
             <input type="hidden" name="tags-serialized">
-            <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
+            <input type="text" class="form-control" name="tags" style="margin-bottom: 10px" id="image-tags">
             <div class="tag-box">
               {% for tag in image.tags.all %}
                 <div class="tag">
@@ -93,9 +97,9 @@
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label" for="image-album">Album:</label>
-          <div class="controls">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="image-album">Album:</label>
+          <div class="col-sm-10">
             <input type="hidden" name="album" value="{{ current_album.id }}">
             <p class="chosen-album">
               <span class="display-name">{{ current_album.name|default:"(Legges ikke i album)" }}</span> (<a href="javascript:undefined" class="albumpicker-trigger" data-albumpicker-id="{{ current_album.id }}">endre</a>)
@@ -105,8 +109,8 @@
 
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre bildeinformasjon</button>
-            <p class="waiting hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
+            <button type="submit" class="btn btn-large btn-success"><i class="fa fa-check"></i> Lagre bildeinformasjon</button>
+            <p class="waiting jq-hide">Bildene lastes fremdeles opp. Vennligst vent, så vil du bli videresendt når de er ferdig opplastet...</p>
           </div>
         </div>
       </form>

@@ -10,7 +10,7 @@
 {% block imagebody %}
 
 <div class="row">
-  <div class="span6">
+  <div class="col-md-6">
 
     <form class="update-image form-horizontal" action="{% url 'admin.images.views.update_images' %}" method="post">
       {% csrf_token %}
@@ -18,55 +18,59 @@
       <input type="hidden" name="origin" value="{{ origin }}">
       <input type="hidden" name="replace-tags" value="true">
 
-      <label class="image-description" for="image-description">Beskrivelse:</label>
-      <textarea name="description" rows="4" id="image-description">{{ image.description }}</textarea>
-
-      <div class="control-group">
-        <label class="control-label" for="image-photographer">Fotograf:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer" data-source-url="{% url 'admin.images.views.photographer' %}">
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="image-description">Beskrivelse:</label>
+        <div class="col-md-10">
+          <textarea name="description" rows="4" class="form-control" id="image-description">{{ image.description }}</textarea>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label" for="image-credits">Kreditering:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="credits" value="{{ image.credits }}" placeholder="Navn på person, forening e.l..." id="image-credits">
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="image-photographer">Fotograf:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label" for="image-licence">Bruksrett:</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov..." id="image-licence">
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="image-credits">Kreditering:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="credits" value="{{ image.credits }}" placeholder="Navn på person, forening e.l..." id="image-credits">
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label" for="image-tags">Nøkkelord:</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="image-licence">Bruksrett:</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="licence" value="{{ image.licence }}" placeholder="Kun ved behov..." id="image-licence">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="image-tags">Nøkkelord:</label>
+        <div class="col-md-10">
           <input type="hidden" name="tags-serialized">
-          <input type="text" class="input-xlarge" name="tags" style="margin-bottom: 10px" id="image-tags">
+          <input type="text" class="form-control" name="tags" style="margin-bottom: 10px" id="image-tags">
           <div class="tag-box" data-predefined-tags="{{ image.tags.all|taglist }}"></div>
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-large btn-success"><i class="icon-ok"></i> Lagre endringer</button>
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+          <button type="submit" class="btn btn-large btn-success"><i class="fa fa-check"></i> Lagre endringer</button>
         </div>
       </div>
     </form>
 
   </div>
 
-  <div class="span6">
+  <div class="col-md-6">
     <p>
       <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">
         <img src="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
       </a>
     </p>
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
       <strong>Lisensiering</strong><br>
       Alle bilder som lastes opp i bildearkivet kan brukes vederlagsfritt (med fotokredit) av alle medlemsforeninger i DNT med mindre annet er tydelig spesifisert under "bruksrett" tilknyttet bildet.
     </div>

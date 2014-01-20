@@ -15,7 +15,7 @@ def zipcode(request, zipcode):
         return HttpResponse(json.dumps({'error': 'does_not_exist'}))
 
 def filter_tags(request):
-    tag_objects = Tag.objects.filter(name__icontains=request.POST['name'])
+    tag_objects = Tag.objects.filter(name__icontains=request.GET['q'].strip())
     tags = [tag.name for tag in tag_objects]
     return HttpResponse(json.dumps(tags))
 

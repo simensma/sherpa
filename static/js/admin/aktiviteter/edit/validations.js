@@ -46,10 +46,10 @@ $(document).ready(function() {
 
     function TitleValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.title");
-        var input = control_group.find("input[name='title']");
-        var error = control_group.find("div.error");
-        this.scrollTo = control_group.parents("div.section");
+        var form_group = form.find("div.form-group.title");
+        var input = form_group.find("input[name='title']");
+        var error = form_group.find("div.error");
+        this.scrollTo = form_group.parents("div.section");
 
         this.validate = function() {
             var valid = input.val().trim() !== '';
@@ -60,12 +60,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -75,10 +75,10 @@ $(document).ready(function() {
 
     function DescriptionValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.description");
-        var input = control_group.find("textarea[name='description']");
-        var error = control_group.find("div.error");
-        this.scrollTo = control_group.parents("div.section");
+        var form_group = form.find("div.form-group.description");
+        var input = form_group.find("textarea[name='description']");
+        var error = form_group.find("div.error");
+        this.scrollTo = form_group.parents("div.section");
 
         this.validate = function() {
             var valid = input.val().trim() !== '';
@@ -89,12 +89,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -104,10 +104,10 @@ $(document).ready(function() {
 
     function DifficultyValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.difficulty");
-        var select = control_group.find("select[name='difficulty']");
-        var error = control_group.find("div.error");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.difficulty");
+        var select = form_group.find("select[name='difficulty']");
+        var error = form_group.find("div.error");
+        this.scrollTo = form_group;
 
         this.validate = function() {
             var valid = select.find("option:selected").val() !== '';
@@ -118,12 +118,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -132,10 +132,10 @@ $(document).ready(function() {
 
     function AudienceValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.audiences");
-        var select = control_group.find("select[name='audiences']");
-        var error = control_group.find("div.error");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.audiences");
+        var select = form_group.find("select[name='audiences']");
+        var error = form_group.find("div.error");
+        this.scrollTo = form_group;
 
         this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
@@ -146,12 +146,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -165,14 +165,14 @@ $(document).ready(function() {
 
     function CategoryValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.category, div.control-group.subcategories");
-        var error = control_group.find("div.error");
-        var category_buttons = control_group.find("button[data-category]");
-        var subcategory_buttons = control_group.find("button.subcategory");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.category, div.form-group.subcategories");
+        var error = form_group.find("div.error");
+        var category_inputs = form_group.find("input[type='radio']");
+        var subcategory_buttons = form_group.find("button.subcategory");
+        this.scrollTo = form_group;
 
         this.validate = function() {
-            var category = category_buttons.filter(".active").attr('data-category');
+            var category = category_inputs.filter(":checked").val();
             var valid = subcategory_buttons.is("." + category + ".btn-danger");
             if(!valid) {
                 that.markError();
@@ -181,25 +181,25 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
-        category_buttons.click(this.clearError);
+        category_inputs.click(this.clearError);
         subcategory_buttons.click(this.clearError);
     }
 
     function CountyValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.counties");
-        var error = control_group.find("div.error");
-        var select = control_group.find("select[name='counties']");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.counties");
+        var error = form_group.find("div.error");
+        var select = form_group.find("select[name='counties']");
+        this.scrollTo = form_group;
 
         this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
@@ -210,12 +210,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -228,10 +228,10 @@ $(document).ready(function() {
 
     function MunicipalityValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.municipalities");
-        var error = control_group.find("div.error");
-        var select = control_group.find("select[name='municipalities']");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.municipalities");
+        var error = form_group.find("div.error");
+        var select = form_group.find("select[name='municipalities']");
+        this.scrollTo = form_group;
 
         this.validate = function() {
             var valid = select.find("option:selected").length !== 0;
@@ -242,12 +242,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -260,11 +260,11 @@ $(document).ready(function() {
 
     function PublicationDateValidator() {
         var that = this;
-        var control_group = form.find("div.control-group.pub_date");
-        var error = control_group.find("div.error");
-        var date = control_group.find("div.date");
-        var input = control_group.find("input[name='pub_date']");
-        this.scrollTo = control_group;
+        var form_group = form.find("div.form-group.pub_date");
+        var error = form_group.find("div.error");
+        var date = form_group.find("div.date");
+        var input = form_group.find("input[name='pub_date']");
+        this.scrollTo = form_group;
 
         this.validate = function() {
             var valid = input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
@@ -275,12 +275,12 @@ $(document).ready(function() {
         };
 
         this.markError = function() {
-            control_group.addClass('error');
+            form_group.addClass('has-error');
             error.show();
         };
 
         this.clearError = function() {
-            control_group.removeClass('error');
+            form_group.removeClass('has-error');
             error.hide();
         };
 
@@ -301,7 +301,7 @@ $(document).ready(function() {
 
         this.validate = function() {
             var valid = true;
-            dates.find("div.date-root:not(.hide)").each(function() {
+            dates.find("div.date-root:not(.jq-hide)").each(function() {
                 var view = $(this).data('view');
 
                 var validators = [
@@ -332,11 +332,11 @@ $(document).ready(function() {
         // Start datetime format
         function StartTimeValidator(root) {
 
-            var control_group = root.find("div.control-group.start_date");
-            var error = control_group.find("div.error");
-            var date_control = control_group.find("div.date");
-            var date_input = control_group.find("input[name='start_date']");
-            var time_input = control_group.find("input[name='start_time']");
+            var form_group = root.find("div.form-group.start_date");
+            var error = form_group.find("div.error");
+            var date_control = form_group.find("div.date");
+            var date_input = form_group.find("input[name='start_date']");
+            var time_input = form_group.find("input[name='start_time']");
             this.scrollTo = root;
 
             this.validate = function() {
@@ -356,12 +356,12 @@ $(document).ready(function() {
             time_input.focusout(this.validate);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
@@ -369,11 +369,11 @@ $(document).ready(function() {
         // End datetime format
         function EndTimeValidator(root) {
 
-            var control_group = root.find("div.control-group.end_date");
-            var error = control_group.find("div.error");
-            var date_control = control_group.find("div.date");
-            var date_input = control_group.find("input[name='end_date']");
-            var time_input = control_group.find("input[name='end_time']");
+            var form_group = root.find("div.form-group.end_date");
+            var error = form_group.find("div.error");
+            var date_control = form_group.find("div.date");
+            var date_input = form_group.find("input[name='end_date']");
+            var time_input = form_group.find("input[name='end_time']");
             this.scrollTo = root;
 
             this.validate = function() {
@@ -393,12 +393,12 @@ $(document).ready(function() {
             time_input.focusout(this.validate);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
@@ -406,16 +406,16 @@ $(document).ready(function() {
         // End datetime format
         function SignupStartValidator(root) {
 
-            var control_group_signup = root.find("div.control-group.signup");
-            var control_group = root.find("div.control-group.signup_start");
-            var error = control_group.find("div.error");
-            var signup_start = control_group.find("div.date");
-            var signup_start_input = control_group.find("input[name='signup_start']");
+            var form_group_signup = root.find("div.form-group.signup");
+            var form_group = root.find("div.form-group.signup_start");
+            var error = form_group.find("div.error");
+            var signup_start = form_group.find("div.date");
+            var signup_start_input = form_group.find("input[name='signup_start']");
             this.scrollTo = root;
 
             this.validate = function() {
 
-                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                if(form_group_signup.find("input:checked").is("[value='none']")) {
                     return true;
                 }
 
@@ -432,12 +432,12 @@ $(document).ready(function() {
             signup_start.on('changeDate', this.validate);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
@@ -445,17 +445,17 @@ $(document).ready(function() {
         // End datetime format
         function SignupDeadlineValidator(root) {
 
-            var control_group_signup = root.find("div.control-group.signup");
-            var control_group = root.find("div.control-group.signup_deadline");
-            var error = control_group.find("div.error");
-            var signup_deadline_until_start = control_group.find("input[name='signup_deadline_until_start']");
-            var signup_deadline = control_group.find("div.date");
-            var signup_deadline_input = control_group.find("input[name='signup_deadline']");
+            var form_group_signup = root.find("div.form-group.signup");
+            var form_group = root.find("div.form-group.signup_deadline");
+            var error = form_group.find("div.error");
+            var signup_deadline_until_start = form_group.find("input[name='signup_deadline_until_start']");
+            var signup_deadline = form_group.find("div.date");
+            var signup_deadline_input = form_group.find("input[name='signup_deadline']");
             this.scrollTo = root;
 
             this.validate = function() {
 
-                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                if(form_group_signup.find("input:checked").is("[value='none']")) {
                     return true;
                 }
 
@@ -477,12 +477,12 @@ $(document).ready(function() {
             signup_deadline.on('changeDate', this.validate);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
@@ -490,17 +490,17 @@ $(document).ready(function() {
         // End datetime format
         function SignupCancelDeadlineValidator(root) {
 
-            var control_group_signup = root.find("div.control-group.signup");
-            var control_group = root.find("div.control-group.signup_cancel_deadline");
-            var error = control_group.find("div.error");
-            var signup_cancel_deadline_until_start = control_group.find("input[name='signup_cancel_deadline_until_start']");
-            var signup_cancel_deadline = control_group.find("div.date");
-            var signup_cancel_deadline_input = control_group.find("input[name='signup_cancel_deadline']");
+            var form_group_signup = root.find("div.form-group.signup");
+            var form_group = root.find("div.form-group.signup_cancel_deadline");
+            var error = form_group.find("div.error");
+            var signup_cancel_deadline_until_start = form_group.find("input[name='signup_cancel_deadline_until_start']");
+            var signup_cancel_deadline = form_group.find("div.date");
+            var signup_cancel_deadline_input = form_group.find("input[name='signup_cancel_deadline']");
             this.scrollTo = root;
 
             this.validate = function() {
 
-                if(control_group_signup.find("input:checked").is("[value='none']")) {
+                if(form_group_signup.find("input:checked").is("[value='none']")) {
                     return true;
                 }
 
@@ -522,21 +522,21 @@ $(document).ready(function() {
             signup_cancel_deadline.on('changeDate', this.validate);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
 
         function MeetingPlaceValidator(root) {
 
-            var control_group = root.find("div.control-group.meeting_place");
-            var input = control_group.find("textarea[name='meeting_place']");
-            var error = control_group.find("div.error");
+            var form_group = root.find("div.form-group.meeting_place");
+            var input = form_group.find("textarea[name='meeting_place']");
+            var error = form_group.find("div.error");
             this.scrollTo = root;
 
             this.validate = function() {
@@ -559,26 +559,26 @@ $(document).ready(function() {
             input.focus(clearError);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }
 
         function ContactValidator(root) {
 
-            var control_group = root.find("div.control-group.contact_type");
-            var error = control_group.find("div.error");
+            var form_group = root.find("div.form-group.contact_type");
+            var error = form_group.find("div.error");
             var custom_group = root.find("div.contact-custom");
-            var radios = control_group.find("input[type='radio']");
+            var radios = form_group.find("input[type='radio']");
             var name_input = custom_group.find("input[name='contact_custom_name']");
             var phone_input = custom_group.find("input[name='contact_custom_phone']");
             var email_input = custom_group.find("input[name='contact_custom_email']");
-            this.scrollTo = control_group;
+            this.scrollTo = form_group;
 
             this.validate = function() {
                 if(!radios.filter(":checked").is("[value='custom']")) {
@@ -602,12 +602,12 @@ $(document).ready(function() {
             email_input.focus(clearError);
 
             function markError() {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
                 error.show();
             }
 
             function clearError() {
-                control_group.removeClass('error');
+                form_group.removeClass('has-error');
                 error.hide();
             }
         }

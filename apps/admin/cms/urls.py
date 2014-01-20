@@ -15,9 +15,9 @@ urlpatterns = patterns('admin.cms.views',
 
     # Menus
     url(r'^meny/ny/$', 'menu.new'),
-    url(r'^meny/rediger/(?P<menu>\d+)/$', 'menu.edit'),
+    url(r'^meny/rediger/$', 'menu.edit'),
     url(r'^meny/sorter/$', 'menu.reorder'),
-    url(r'^meny/slett/(?P<menu>\d+)/$', 'menu.delete'),
+    url(r'^meny/slett/$', 'menu.delete'),
 
     # Rows
     url(r'^kolonner/ny/$', 'row.add_columns'),

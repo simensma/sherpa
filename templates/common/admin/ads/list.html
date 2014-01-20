@@ -1,6 +1,8 @@
 {% extends 'common/admin/layout.html' %}
-{% block title %}Annonser &mdash; {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.ads.views.list' %}">Annonser</a>{% endblock %}
+
+{% block title %}Annonser — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'ads' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/ads.js"></script>
@@ -8,18 +10,28 @@
 
 {% block body %}
 
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Annonser <small>legg ut annonser som vises på websidene</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.ads.views.list' %}">Annonser</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
 <div class="advertisement-management">
 
   <div class="row">
-    <div class="span12">
+    <div class="col-lg-12">
       {% for message in messages %}
         {% if message.message == 'invalid_date' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>Ugyldig datoformat, vennligst prøv igjen!</strong>
           </div>
         {% elif message.message == 'unparseable_script' %}
-          <div class="alert alert-error">
+          <div class="alert alert-danger">
             <a class="close">x</a>
             <strong>Klarte ikke å hente ut nødvendig informasjon fra adform-scriptet.</strong><br>
             Kanskje har formatet endret seg, eller så tok du ikke med riktig del av scriptet?<br>
@@ -49,7 +61,7 @@
             <th>Status</th>
           </tr>
           {% for placement in time_placements %}
-            <tr class="placement {{ placement.time_state }}{% if placement.is_old %} hide{% endif %}"
+            <tr class="placement {{ placement.time_state }}{% if placement.is_old %} jq-hide{% endif %}"
               data-id="{{ placement.id }}"
               data-ad="{{ placement.ad.id }}"
               data-start-date="{{ placement.start_date|date:"d.m.Y" }}"
@@ -68,7 +80,9 @@
           {% endfor %}
           <tr>
             <td colspan="6">
-              <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul gamle visninger</a>
+              <a class="btn btn-default toggle-old-placements" href="javascript:undefined">
+                <i class="fa fa-search"></i> Vis/skjul gamle visninger
+              </a>
             </td>
           </tr>
         </table>
@@ -86,7 +100,7 @@
             <th>Status</th>
           </tr>
           {% for placement in view_placements %}
-            <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} hide{% endif %}"
+            <tr class="placement {{ placement.view_state }}{% if placement.view_state == 'inactive' %} jq-hide{% endif %}"
               data-id="{{ placement.id }}"
               data-ad="{{ placement.ad.id }}"
               data-view-limit="{{ placement.view_limit }}">
@@ -101,51 +115,58 @@
           {% endfor %}
           <tr>
             <td colspan="6">
-              <a class="btn toggle-old-placements" href="javascript:undefined"><i class="icon-search"></i> Vis/skjul inaktive visninger</a>
+              <a class="btn toggle-old-placements" href="javascript:undefined"><i class="fa fa-search"></i> Vis/skjul inaktive visninger</a>
             </td>
           </tr>
         </table>
       {% endif %}
 
-      <form class="placement" method="post" action="{% url 'admin.ads.views.create_placement' %}">
+      <form class="placement form-horizontal" method="post" action="{% url 'admin.ads.views.create_placement' %}">
         {% csrf_token %}
-        <table>
-          <tr>
-            <td colspan="2">Annonse</td>
-            <td>
-              <select name="ad" data-chosen>
-                {% for ad in ads %}
-                  <option value="{{ ad.id }}">{{ ad.name }}</option>
-                {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr class="time">
-            <td><input type="radio" name="adplacement_type" value="time"></td>
-            <td>Start/stopp visning:</td>
-            <td>
-              <div class="input-append date">
-                <input type="text" name="start_date" class="input-medium">
-                <span class="add-on"><i class="icon-th"></i></span>
-              </div>
-              <div class="input-append date">
-                <input type="text" name="end_date" class="input-medium">
-                <span class="add-on"><i class="icon-th"></i></span>
-              </div>
-            </td>
-          </tr>
-          <tr class="view">
-            <td><input type="radio" name="adplacement_type" value="views"></td>
-            <td>Antall visninger:</td>
-            <td>
-              <input type="text" name="view_limit">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2"></td>
-            <td><button type="submit" class="btn">Legg til annonsevisning</button></td>
-          </tr>
-        </table>
+
+        <div class="form-group">
+          <label class="col-lg-2 control-label">Annonse</label>
+          <div class="col-lg-4">
+            <select name="ad" data-chosen>
+              {% for ad in ads %}
+                <option value="{{ ad.id }}">{{ ad.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group time">
+          <label class="col-lg-2 control-label">
+            <input type="radio" name="adplacement_type" value="time">
+            Start/stopp visning
+          </label>
+          <div class="col-lg-4">
+            <div class="input-group date">
+              <input type="text" name="start_date" class="form-control">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+            <div class="input-group date">
+              <input type="text" name="end_date" class="form-control">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group view">
+          <label class="col-lg-2 control-label">
+            <input type="radio" name="adplacement_type" value="views">
+            Antall visninger
+          </label>
+          <div class="col-lg-4">
+            <input type="text" name="view_limit" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-4">
+            <button type="submit" class="btn btn-default">Legg til annonsevisning</button>
+          </div>
+        </div>
       </form>
 
       <h2>Last opp ny annonse</h2>
@@ -162,52 +183,53 @@
             {% csrf_token %}
             <input type="hidden" name="type" value="file">
 
-            <div class="control-group">
-              <label class="control-label">Navn:</label>
-              <div class="controls">
-                <input type="text" class="input-xlarge" name="name">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Navn</label>
+              <div class="col-md-10">
+                <input type="text" name="name" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Lenker til (URL):</label>
-              <div class="controls">
-                <input type="text" name="destination" value="http://" class="input-xxlarge">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Lenker til (URL)</label>
+              <div class="col-md-10">
+                <input type="text" name="destination" value="http://" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Last opp fil:</label>
-              <div class="controls">
-                <input type="file" name="ad">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Last opp fil</label>
+              <div class="col-md-10">
+                <input type="file" name="ad" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Bilde-fallback for flash:</label>
-              <div class="controls">
-                <input type="file" name="ad_fallback" class="input-xlarge">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Bilde-fallback for flash</label>
+              <div class="col-md-10">
+                <input type="file" name="ad_fallback" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Visningsteller-bilde (valgfritt):</label>
-              <div class="controls">
-                <input type="text" name="viewcounter" class="input-xxlarge">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Visningsteller-bilde (valgfritt)</label>
+              <div class="col-md-10">
+                <input type="text" name="viewcounter" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Bredde x Høyde (kun hvis Flash):</label>
-              <div class="controls">
-                <input type="text" name="width" class="input-small"> x
-                <input type="text" name="height" class="input-small"> (typisk 940 x 300)
+            <div class="form-group">
+              <label class="col-md-2 control-label">Bredde x Høyde (kun hvis Flash):</label>
+              <div class="col-md-10">
+                <input type="text" name="width" class="form-control" value="940" style="max-width: 60px; display: inline;">
+                x
+                <input type="text" name="height" class="form-control" value="300" style="max-width: 60px; display: inline;">
               </div>
             </div>
 
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn">Last opp</button>
+            <div class="form-group">
+              <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Last opp</button>
               </div>
             </div>
 
@@ -220,33 +242,32 @@
             {% csrf_token %}
             <input type="hidden" name="type" value="adform-script">
 
-            <div class="control-group">
-              <label class="control-label">Navn:</label>
-              <div class="controls">
-                <input type="text" class="input-xlarge" name="name">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Navn</label>
+              <div class="col-md-10">
+                <input type="text" name="name" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Lim inn script-kode:</label>
-              <div class="controls">
-                <textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea>
+            <div class="form-group">
+              <label class="col-md-2 control-label">Lim inn script-kode</label>
+              <div class="col-md-10">
+                <textarea name="script" cols="70" rows="7" class="form-control"></textarea>
               </div>
             </div>
 
-            <div class="control-group">
-              <label class="control-label">Visningsteller-bilde (valgfritt):</label>
-              <div class="controls">
-                <input type="text" name="viewcounter" class="input-xxlarge">
+            <div class="form-group">
+              <label class="col-md-2 control-label">Visningsteller-bilde (valgfritt)</label>
+              <div class="col-md-10">
+                <input type="text" name="viewcounter" class="form-control">
               </div>
             </div>
 
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn">Lagre</button>
+            <div class="form-group">
+              <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Lagre</button>
               </div>
             </div>
-
           </form>
 
         </div>
@@ -298,7 +319,7 @@
   </div>
 
   {# Modals #}
-  <div class="modal hide placement time" data-width="auto">
+  <div class="modal jq-hide placement time">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsevisning</h3>
@@ -307,40 +328,48 @@
       <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
-        <table>
-          <tr>
-            <td>Annonse</td>
-            <td>
+
+        <div class="form-group">
+          <label class="control-label">Annonse</label>
+          <div class="row">
+            <div class="col-md-12">
               <select name="ad" data-chosen>
                 {% for ad in ads %}
                   <option value="{{ ad.id }}">{{ ad.name }}</option>
                 {% endfor %}
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Start/stopp visning:</td>
-            <td>
-              <div class="input-append date">
-                <input type="text" name="start_date" class="input-medium date">
-                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Start/stopp visning</label>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group date">
+                <input type="text" name="start_date" class="form-control date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
               </div>
-              <div class="input-append date">
-                <input type="text" name="end_date" class="input-medium date">
-                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group date">
+                <input type="text" name="end_date" class="form-control date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
               </div>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><button type="submit" class="btn">Oppdater visning</button></td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Oppdater visning</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="modal hide placement view" data-width="auto">
+  <div class="modal jq-hide placement view" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsevisning</h3>
@@ -349,33 +378,33 @@
       <form class="placement" method="post" action="{% url 'admin.ads.views.update_placement' %}">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
-        <table>
-          <tr>
-            <td>Annonse</td>
-            <td>
+
+        <div class="form-group">
+          <label class="control-label">Annonse</label>
+          <div class="row">
+            <div class="col-md-12">
               <select name="ad" data-chosen>
                 {% for ad in ads %}
                   <option value="{{ ad.id }}">{{ ad.name }}</option>
                 {% endfor %}
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Antall visninger:</td>
-            <td>
-              <input type="text" name="view_limit" class="input-medium">
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><button type="submit" class="btn">Oppdater visning</button></td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Antall visninger</label>
+          <input type="text" name="view_limit" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Oppdater visning</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="modal hide ad file" data-width="auto">
+  <div class="modal jq-hide ad file">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsedetaljer</h3>
@@ -384,44 +413,50 @@
       <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
-        <table>
-          <tr>
-            <td>Navn</td>
-            <td><input type="text" name="name" class="input-xlarge"></td>
-          </tr>
-          <tr>
-            <td>Lenker til (URL):</td>
-            <td><input type="text" name="destination" class="input-xxlarge"></td>
-          </tr>
-          <tr>
-            <td>Ny fil</td>
-            <td><input type="file" name="ad"></td>
-          </tr>
-          <tr>
-            <td>Ny fallback</td>
-            <td><input type="file" name="ad_fallback"></td>
-          </tr>
-          <tr>
-            <td>Visningsteller-bilde</td>
-            <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
-          </tr>
-          <tr>
-            <td>Bredde x Høyde (kun hvis Flash)</td>
-            <td>
-              <input type="text" name="width" class="input-small"> x
-              <input type="text" name="height" class="input-small">
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><button type="submit" class="btn">Last opp</button></td>
-          </tr>
-        </table>
+
+        <div class="form-group">
+          <label class="control-label">Navn</label>
+          <input type="text" name="name" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Lenker til (URL)</label>
+          <input type="text" name="destination" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Ny fil</label>
+          <input type="file" name="ad" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Ny fallback</label>
+          <input type="file" name="ad_fallback" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Visningsteller-bilde</label>
+          <input type="text" name="viewcounter" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Bredde x Høyde (kun hvis Flash)</label>
+          <div class="row">
+            <div class="col-md-12">
+              <input type="text" name="width" class="form-control" style="max-width: 60px; display: inline;"> x
+              <input type="text" name="height" class="form-control" style="max-width: 60px; display: inline;">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Last opp</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="modal hide ad adform-script" data-width="auto">
+  <div class="modal jq-hide ad adform-script" data-width="auto">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Annonsedetaljer</h3>
@@ -430,24 +465,25 @@
       <form method="post" action="{% url 'admin.ads.views.update_ad' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
-        <table>
-          <tr>
-            <td>Navn</td>
-            <td><input type="text" name="name" class="input-xlarge"></td>
-          </tr>
-          <tr>
-            <td>Lim inn script-kode:</td>
-            <td><textarea name="script" class="input-xxlarge" cols="70" rows="7"></textarea></td>
-          </tr>
-          <tr>
-            <td>Visningsteller-bilde</td>
-            <td><input type="text" name="viewcounter" class="input-xxlarge"></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><button type="submit" class="btn">Lagre</button></td>
-          </tr>
-        </table>
+
+        <div class="form-group">
+          <label class="control-label">Navn</label>
+          <input type="text" name="name" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Lim inn script-kode</label>
+          <textarea name="script" cols="70" rows="7" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Visningsteller-bilde</label>
+          <input type="text" name="viewcounter" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Lagre</button>
+        </div>
       </form>
     </div>
   </div>

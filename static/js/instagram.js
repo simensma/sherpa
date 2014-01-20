@@ -28,7 +28,7 @@ $(document).ready(function() {
                         instagram = skeleton.clone();
                         instagram.removeClass('instagram-skeleton hide').addClass('instagram').appendTo(items);
                     }
-                    var item = $(result.items[i]).addClass('hide');
+                    var item = $(result.items[i]).addClass('jq-hide');
                     var children = instagram.children();
                     if(iteration < 5) {
                        item.appendTo(children.first());

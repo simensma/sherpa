@@ -33,7 +33,7 @@ $(document).ready(function() {
             }
         });
 
-        $(this).find("div.input-append.date").datepicker({
+        $(this).find("div.input-group.date").datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
             autoclose: true,

@@ -1,16 +1,11 @@
 $(document).ready(function() {
-    var exif = false;
-    $("#image-display div.exif").hide();
-    $("#image-display a.toggle-exif").click(function() {
-        if(exif) {
-            $(this).text("Vis...");
-            $("#image-display div.exif").hide();
-            exif = false;
-        } else {
-            $(this).text("Skjul...");
-            $("#image-display div.exif").show();
-            exif = true;
-        }
+    var image_details = $("div.image-details");
+    var exif = image_details.find("div.exif");
+    image_details.find("a.toggle-exif").click(function() {
+        var alt = $(this).attr('data-alt');
+        $(this).attr('data-alt', $(this).text());
+        $(this).text(alt);
+        exif.toggle();
     });
 
     $("form.delete-image").submit(function(e) {
