@@ -1,13 +1,16 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter — {{ block.super }}{% endblock %}
-{% block header %}<a href="{% url 'admin.articles.views.list' %}">Nyheter</a>{% endblock %}
+
+{% block admin_menu %}{% with 'cms' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/editor/article-delete.js"></script>
 {% endblock %}
+
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-lg-12">
     <h1>
       Slett artikkel?
     </h1>
@@ -17,22 +20,21 @@
     <p>
       Hvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.
     </p>
-    <div class="alert alert-danger final-confirm jq-hide" style="text-align: center">
+    <div class="alert alert-danger final-confirm jq-hide">
       <strong>
         Du kan ikke angre dette.
       </strong>
       <p>
-        <a class="btn btn-danger" href="{% url 'admin.articles.views.delete' version.variant.article.id %}"><i class="icon-warning-sign"></i> Jeg forstår, slett den likevel!</a>
+        <a class="btn btn-danger" href="{% url 'admin.articles.views.delete' version.variant.article.id %}"><i class="fa fa-warning"></i> Jeg forstår, slett den likevel!</a>
       </p>
     </div>
-    <p style="text-align: center">
-      <button class="btn btn-large btn-danger confirm-delete"><i class="icon-warning-sign"></i> Ja, slett artikkelen for evig og alltid</button>
+    <p>
+      <button class="btn btn-large btn-danger confirm-delete"><i class="fa fa-warning"></i> Ja, slett artikkelen for evig og alltid</button>
     </p>
-    <p style="text-align: center">
-      <a class="btn btn-large btn-success" href="{% url 'admin.articles.views.edit_version' version.id %}"><i class="icon-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
+    <p>
+      <a class="btn btn-large btn-success" href="{% url 'admin.articles.views.edit_version' version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
     </p>
   </div>
 </div>
 
 {% endblock %}
-
