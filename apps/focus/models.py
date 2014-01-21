@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import datetime, date
 import logging
 
-from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES
+from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES, MEMBERSHIP_TYPES
 
 logger = logging.getLogger('sherpa')
 
@@ -465,8 +465,16 @@ class Actor(models.Model):
 
     @staticmethod
     def all_members():
-        # TODO: This is probably not sufficient, verify with memberservice
-        return Actor.objects.filter(type='P', balance__current_year__gte=0)
+        return Actor.objects.filter(
+            Q(end_date=date(year=2014, month=12, day=31)) |
+            Q(end_date__isnull=True),
+            # Balance should actually check for 0, but checks 1 because apparently there are some
+            # payments where some øre are left (although I personally suspect it to be caused by using
+            # the float datatype incorrectly)
+            balance__current_year__lte=1,
+            services__code__in=[t['code'] for t in MEMBERSHIP_TYPES],
+            main_association_id__in=range(10, 100) # Valid focus-association ids are in this range
+        )
 
     class Meta:
         db_table = u'Actor'
