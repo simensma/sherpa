@@ -15,7 +15,7 @@ from user.models import User
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
-    local_membership_count = cache.get('admin.local_membership_count')
+    local_membership_count = cache.get('admin.local_membership_count.%s' % request.session['active_association'].id)
     if total_membership_count is None or local_membership_count is None:
         all_members = Actor.all_members()
         total_membership_count = all_members.count()
@@ -23,7 +23,7 @@ def index(request):
             main_association_id=request.session['active_association'].get_main_association().focus_id
         ).count()
         cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
-        cache.set('admin.local_membership_count', local_membership_count, 60 * 60 * 12)
+        cache.set('admin.local_membership_count.%s' % request.session['active_association'].id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.objects.filter(turledere__isnull=False).distinct().count()
     pages = Page.objects.filter(
