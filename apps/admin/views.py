@@ -26,11 +26,13 @@ def index(request):
         cache.set('admin.local_membership_count.%s' % request.session['active_association'].id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.objects.filter(turledere__isnull=False).distinct().count()
-    pages = Page.objects.filter(
-        pub_date__lte=datetime.now(),
-        published=True
-    ).count()
-    print(pages)
+    if request.session['active_association'].site is not None:
+        pages = Page.on(request.session['active_association'].site).filter(
+            pub_date__lte=datetime.now(),
+            published=True
+        ).count()
+    else:
+        pages = None
     aktiviteter = Aktivitet.objects.filter(
         pub_date__lte=date.today(),
         published=True,
