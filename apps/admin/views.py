@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.cache import cache
+from django.db.models import Q
 
 from datetime import datetime, date
 from lxml import etree
@@ -34,6 +35,8 @@ def index(request):
     else:
         pages = None
     aktiviteter = Aktivitet.objects.filter(
+        Q(association=request.session['active_association']) |
+        Q(co_association=request.session['active_association']),
         pub_date__lte=date.today(),
         published=True,
         private=False,
