@@ -87,13 +87,18 @@ table.tablesorter thead tr th:hover {
   color: #fff;
   font-size: 20px;
   font-weight: 100;
-  padding-top: 14px;
-  padding-bottom: 14px;
   min-height: 50px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
 }
 
 .navbar-header .navbar-brand:hover {
   background-color: #444;
+  text-decoration: none;
+}
+
+.navbar-header .navbar-brand:hover span.title {
   text-decoration: underline;
 }
 
