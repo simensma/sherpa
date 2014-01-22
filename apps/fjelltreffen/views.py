@@ -83,12 +83,13 @@ def show(request, id):
                 email_context = RequestContext(request, {
                     'annonse': annonse,
                     'reply': {
-                        'name': request.POST['name'],
-                        'email': request.POST['email'],
-                        'text': request.POST['text']}
-                    })
+                        'name': form.cleaned_data['name'],
+                        'email': form.cleaned_data['email'],
+                        'text': form.cleaned_data['text']
+                    }
+                })
                 content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
-                send_mail('DNT Fjelltreffen - Svar fra %s' % request.POST['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
+                send_mail('DNT Fjelltreffen - Svar fra %s' % form.cleaned_data['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
                 librato.increment('sherpa.fjelltreffen_svar')
                 request.session['fjelltreffen.reply'] = {
                     'name': form.cleaned_data['name'],
