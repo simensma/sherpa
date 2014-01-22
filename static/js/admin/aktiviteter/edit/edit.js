@@ -79,9 +79,11 @@ $(document).ready(function() {
         }
 
         if($(this).is(".btn-danger")) {
+            $(this).addClass("btn-default");
             $(this).removeClass("btn-danger");
         } else {
             $(this).addClass("btn-danger");
+            $(this).removeClass("btn-default");
         }
     }
 

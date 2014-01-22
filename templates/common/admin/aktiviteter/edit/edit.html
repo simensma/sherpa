@@ -287,7 +287,7 @@
 
                 <div class="main-buttons">
                   {% for sub in aktivitet.get_main_subcategories %}
-                    <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
+                    <button class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }}">{{ sub.name }}</button>
                   {% endfor %}
                 </div>
 
@@ -301,7 +301,7 @@
                   <h4>Flere kategoriforslag</h4>
                   <div class="other-buttons">
                     {% for sub in aktivitet.get_other_subcategories %}
-                      <button class="btn subcategory {{ sub.category }}{% if sub.active %} btn-danger{% endif %}">{{ sub.name }}</button>
+                      <button class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }}">{{ sub.name }}</button>
                     {% endfor %}
                   </div>
                 </div>
