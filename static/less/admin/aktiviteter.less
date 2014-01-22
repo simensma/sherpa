@@ -124,10 +124,20 @@ div.admin-aktivitet-edit {
         padding-bottom: 30px;
         margin-bottom: 30px;
 
-        table.turledere {
-          th, td, td label {
-            font-family: "DTL Nobel" !important;
-            vertical-align: middle;
+        div.signup {
+          div.popover-wrapper {
+            // We want this to have the width of its children, so the popover-hover is placed correctly when centered horizontally
+            display: inline-block;
+            width: auto;
+          }
+        }
+
+        div.turledere {
+          table.turledere {
+            th, td, td label {
+              font-family: "DTL Nobel" !important;
+              vertical-align: middle;
+            }
           }
         }
 

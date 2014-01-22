@@ -65,23 +65,29 @@
     <div class="form-group signup">
       <label class="col-md-2 control-label">Påmelding</label>
       <div class="col-md-10">
-        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Krever Min side-bruker" data-content="En må logge på Min side for å kunne melde seg på turen.<br><br>Da får vi tilgang til all medlemsinformasjon om deltakerne, samt at de får opp turhistorikken sin på Min side.">
-          <label>
-            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}>
-            Vanlig påmelding
-          </label>
+        <div class="radio">
+          <div class="popover-wrapper" data-popover data-trigger="hover" data-placement="right" data-html="true" data-title="Krever Min side-bruker" data-content="En må logge på Min side for å kunne melde seg på turen.<br><br>Da får vi tilgang til all medlemsinformasjon om deltakerne, samt at de får opp turhistorikken sin på Min side.">
+            <label>
+              <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="minside"{% if date.signup_enabled and not date.signup_simple_allowed %} checked{% endif %}>
+              Vanlig påmelding
+            </label>
+          </div>
         </div>
-        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="Kun navn og kontaktinfo" data-content="En får melde seg på ved å kun oppgi navn, og telefonnummer eller e-post.<br><br>Da har vi mindre informasjon om deltakerne, men det er enklere for dem å melde seg på.">
-          <label>
-            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}>
-            Enkel påmelding
-          </label>
+        <div class="radio">
+          <div class="popover-wrapper" data-popover data-trigger="hover" data-placement="right" data-html="true" data-title="Kun navn og kontaktinfo" data-content="En får melde seg på ved å kun oppgi navn, og telefonnummer eller e-post.<br><br>Da har vi mindre informasjon om deltakerne, men det er enklere for dem å melde seg på.">
+            <label>
+              <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="simple"{% if date.signup_enabled and date.signup_simple_allowed %} checked{% endif %}>
+              Enkel påmelding
+            </label>
+          </div>
         </div>
-        <div class="radio" data-popover data-trigger="hover" data-placement="left" data-title="Ingen påmelding" data-content="Ingen påmelding er tilgjengelig på nett. Du kan eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det i det hele tatt er behov for det.">
-          <label>
-            <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}>
-            Ingen påmelding
-          </label>
+        <div class="radio">
+          <div class="popover-wrapper" data-popover data-trigger="hover" data-placement="right" data-title="Ingen påmelding" data-content="Ingen påmelding er tilgjengelig på nett. Du kan eventuelt nevne i beskrivelsen hvordan deltakerne skal melde ifra deltakelse, hvis det i det hele tatt er behov for det.">
+            <label>
+              <input type="radio" name="enrollment{% if date %}-date-{{ date.id }}{% endif %}" value="none"{% if not date or not date.signup_enabled %} checked{% endif %}>
+              Ingen påmelding
+            </label>
+          </div>
         </div>
       </div>
     </div>
