@@ -154,6 +154,13 @@ $(document).ready(function() {
         }
     }
 
+    // Don't submit the form when pressing enter searching for turforslag
+    turforslag_input.keydown(function(e) {
+        if(e.which == 13) { // Enter
+            e.preventDefault();
+        }
+    });
+
     turforslag_input.typeahead({
         minLength: 5,
         limit: 12,
