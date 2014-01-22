@@ -21,7 +21,7 @@ EMAIL_MEMBERSERVICE_RECIPIENT = "DNT medlemsservice <medlem@turistforeningen.no>
 EMAIL_MEMBERSERVICE_SUBJECT = u"Bestilling av gavemedlemskap"
 EMAIL_GIVER_SUBJECT = u"Kvittering på bestilling av gavemedlemskap"
 
-# Automatically remove the christmas warning at this date. Remove all related code after that.
+# You might want to re-use this for the following years, however it's not set to automatically display (yet)!
 CHRISTMAS_WARNING_END = date(2013, 12, 24)
 
 def index(request):
