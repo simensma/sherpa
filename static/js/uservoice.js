@@ -25,3 +25,6 @@ UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-right
 
 // Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
 UserVoice.push(['autoprompt', {}]);
+
+// Language
+UserVoice.push(["set", "locale", "nb"]);
