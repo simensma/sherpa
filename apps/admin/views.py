@@ -82,6 +82,3 @@ def index(request):
         'dashboard_stats': dashboard_stats,
     }
     return render(request, 'common/admin/dashboard.html', context)
-
-def intro(request):
-    return render(request, 'common/admin/intro.html')
