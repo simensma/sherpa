@@ -10,14 +10,14 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
 from core.models import Zipcode, FocusCountry
-from sherpa2.models import Association
+from sherpa2.models import Forening
 from focus.models import FocusZipcode, Enrollment as FocusEnrollment, Actor, ActorAddress
 from focus.util import get_membership_type_by_codename
 from enrollment.models import State, User as EnrollmentUser, Transaction
 from enrollment.util import current_template_layout, get_or_create_enrollment, prepare_and_send_email, polite_title, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
 from enrollment.validation import validate, validate_location
 from user.models import User
-from association.models import DNT_OSLO_ID
+from foreninger.models import DNT_OSLO_ID
 
 from datetime import datetime, timedelta
 import requests
@@ -162,7 +162,7 @@ def household(request):
             else:
                 try:
                     focus_zipcode = FocusZipcode.objects.get(zipcode=enrollment.zipcode)
-                    Association.objects.get(focus_id=focus_zipcode.main_association_id) # Verify that the Association exists
+                    Forening.objects.get(focus_id=focus_zipcode.main_forening_id) # Verify that the Forening exists
                     return redirect('enrollment.views.verification')
                 except FocusZipcode.DoesNotExist:
                     # We know that this zipcode exists in Zipcode, because validate_location validated, and it checks for that
@@ -174,7 +174,7 @@ def household(request):
                         }
                     )
                     messages.error(request, 'focus_zipcode_missing')
-                except Association.DoesNotExist:
+                except Forening.DoesNotExist:
                     logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
                         exc_info=sys.exc_info(),
                         extra={'request': request}
@@ -275,31 +275,31 @@ def verification(request):
     if enrollment.country == 'NO':
         enrollment.area = Zipcode.objects.get(zipcode=enrollment.zipcode).area
 
-    # Figure out which association this member/these members will belong to
+    # Figure out which forening this member/these members will belong to
     if enrollment.existing_memberid != '':
-        # Use main members' association if applicable
-        focus_association_id = Actor.objects.get(memberid=enrollment.existing_memberid).main_association_id
-        association = cache.get('association_sherpa2.focus.%s' % focus_association_id)
-        if association is None:
-            association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+        # Use main members' forening if applicable
+        focus_forening_id = Actor.objects.get(memberid=enrollment.existing_memberid).main_forening_id
+        forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
+        if forening is None:
+            forening = Forening.objects.get(focus_id=focus_forening_id)
+            cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
     else:
         if enrollment.country == 'NO':
-            focus_association_id = cache.get('focus.zipcode_association.%s' % enrollment.zipcode)
-            if focus_association_id is None:
-                focus_association_id = FocusZipcode.objects.get(zipcode=enrollment.zipcode).main_association_id
-                cache.set('focus.zipcode_association.%s' % enrollment.zipcode, focus_association_id, 60 * 60 * 24 * 7)
-            association = cache.get('association_sherpa2.focus.%s' % focus_association_id)
-            if association is None:
-                association = Association.objects.get(focus_id=focus_association_id)
-                cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+            focus_forening_id = cache.get('focus.zipcode_forening.%s' % enrollment.zipcode)
+            if focus_forening_id is None:
+                focus_forening_id = FocusZipcode.objects.get(zipcode=enrollment.zipcode).main_forening_id
+                cache.set('focus.zipcode_forening.%s' % enrollment.zipcode, focus_forening_id, 60 * 60 * 24 * 7)
+            forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
+            if forening is None:
+                forening = Forening.objects.get(focus_id=focus_forening_id)
+                cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
-            association = cache.get('association_sherpa2.%s' % DNT_OSLO_ID)
-            if association is None:
-                association = Association.objects.get(id=DNT_OSLO_ID)
-                cache.set('association_sherpa2.%s' % DNT_OSLO_ID, association, 60 * 60 * 24 * 7)
-    enrollment.association = association.id
+            forening = cache.get('forening_sherpa2.%s' % DNT_OSLO_ID)
+            if forening is None:
+                forening = Forening.objects.get(id=DNT_OSLO_ID)
+                cache.set('forening_sherpa2.%s' % DNT_OSLO_ID, forening, 60 * 60 * 24 * 7)
+    enrollment.forening = forening.id
     enrollment.save()
 
     keycount = 0

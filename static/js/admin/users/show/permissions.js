@@ -25,43 +25,43 @@ $(document).ready(function() {
         admin_revoke_wrapper.hide();
     });
 
-    var association_permission = $("div.association-permission");
-    var association_select = association_permission.find("select[name='association-permission']");
-    var association_revoke = $("div.association-permission-revoke");
-    var association_revoke_select = association_revoke.find("select[name='association-permission-revoke']");
-    var association_revoke_verify = association_revoke.find("div.association-permission-revoke-verify");
-    var association_role = $("div.association-role");
-    var user_role_button = association_role.find("button.user");
-    var admin_role_button = association_role.find("button.admin");
-    var verifier = $("div.verify-association-permission");
+    var forening_permission = $("div.forening-permission");
+    var forening_select = forening_permission.find("select[name='forening-permission']");
+    var forening_revoke = $("div.forening-permission-revoke");
+    var forening_revoke_select = forening_revoke.find("select[name='forening-permission-revoke']");
+    var forening_revoke_verify = forening_revoke.find("div.forening-permission-revoke-verify");
+    var forening_role = $("div.forening-role");
+    var user_role_button = forening_role.find("button.user");
+    var admin_role_button = forening_role.find("button.admin");
+    var verifier = $("div.verify-forening-permission");
 
-    association_select.chosen().change(function() {
-        association_role.show();
-        var selected = association_select.find("option:selected");
+    forening_select.chosen().change(function() {
+        forening_role.show();
+        var selected = forening_select.find("option:selected");
         if(selected.attr('data-role') == 'admin') {
-            association_role.find("div.admin").show();
+            forening_role.find("div.admin").show();
         } else if(selected.attr('data-role') == 'user') {
-            association_role.find("div.admin").hide();
+            forening_role.find("div.admin").hide();
         }
     });
 
-    association_revoke_select.chosen({
+    forening_revoke_select.chosen({
         'allow_single_deselect': true
     }).change(function() {
-        var selected = association_revoke_select.find("option:selected");
+        var selected = forening_revoke_select.find("option:selected");
         if(selected.val() === "") {
-            association_revoke_verify.hide();
+            forening_revoke_verify.hide();
         } else {
-            association_revoke_verify.show();
-            association_revoke_verify.find("span.association").text(selected.text());
-            association_revoke_verify.find("form input[name='association']").val(selected.val());
+            forening_revoke_verify.show();
+            forening_revoke_verify.find("span.forening").text(selected.text());
+            forening_revoke_verify.find("form input[name='forening']").val(selected.val());
         }
     });
 
-    association_revoke_verify.find("a.cancel").click(function() {
-        association_revoke_verify.hide();
-        association_revoke_select.val('');
-        association_revoke_select.trigger('liszt:updated');
+    forening_revoke_verify.find("a.cancel").click(function() {
+        forening_revoke_verify.hide();
+        forening_revoke_select.val('');
+        forening_revoke_select.trigger('liszt:updated');
     });
 
     var role;
@@ -69,21 +69,21 @@ $(document).ready(function() {
     admin_role_button.click(function() { role = 'admin'; verifyRole('administratortilgang'); });
 
     function verifyRole(role) {
-        association_permission.hide();
-        association_role.hide();
+        forening_permission.hide();
+        forening_role.hide();
         verifier.show();
         verifier.find("span.role").text(role);
-        verifier.find("span.association").text(association_select.find("option:selected").text());
+        verifier.find("span.forening").text(forening_select.find("option:selected").text());
     }
 
     verifier.find("a.cancel").click(function() {
-        association_permission.show();
-        association_role.show();
+        forening_permission.show();
+        forening_role.show();
         verifier.hide();
     });
 
     verifier.find("form").submit(function() {
-        $(this).find("input[name='association']").val(association_select.find("option:selected").val());
+        $(this).find("input[name='forening']").val(forening_select.find("option:selected").val());
         $(this).find("input[name='role']").val(role);
     });
 

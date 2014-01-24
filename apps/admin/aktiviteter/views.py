@@ -14,7 +14,7 @@ from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag
 from user.models import User
 from focus.models import Actor
-from association.models import Association
+from foreninger.models import Forening
 
 from datetime import datetime
 import json
@@ -25,8 +25,8 @@ def index(request):
 
     if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
         aktiviteter = aktiviteter.filter(
-            Q(association=request.session['active_association']) |
-            Q(co_association=request.session['active_association'])
+            Q(forening=request.session['active_forening']) |
+            Q(co_forening=request.session['active_forening'])
         )
         exclude_filter = False
     else:
@@ -42,7 +42,7 @@ def index(request):
 
 def new(request):
     aktivitet = Aktivitet(
-        association=request.session['active_association'],
+        forening=request.session['active_forening'],
         pub_date=datetime.now(),
         category=Aktivitet.CATEGORY_CHOICES[0][0],
         audiences=json.dumps([]),
@@ -60,7 +60,7 @@ def edit(request, aktivitet):
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
             'subcategories': Aktivitet.SUBCATEGORIES,
-            'all_associations': Association.sort(Association.objects.all()),
+            'all_foreninger': Forening.sort(Forening.objects.all()),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
@@ -96,16 +96,16 @@ def edit(request, aktivitet):
                 errors = True
                 messages.error(request, 'invalid_date_format')
 
-        association = Association.objects.get(id=request.POST['association'])
-        if not association in request.user.children_associations():
+        forening = Forening.objects.get(id=request.POST['forening'])
+        if not forening in request.user.children_foreninger():
             raise PermissionDenied
-        if request.POST['co_association'] == '':
-            co_association = None
+        if request.POST['co_forening'] == '':
+            co_forening = None
         else:
-            co_association = Association.objects.get(id=request.POST['co_association'])
+            co_forening = Forening.objects.get(id=request.POST['co_forening'])
 
-        aktivitet.association = association
-        aktivitet.co_association = co_association
+        aktivitet.forening = forening
+        aktivitet.co_forening = co_forening
 
         if request.POST['position_lat'] != '' and request.POST['position_lng'] != '':
             aktivitet.start_point = Point(float(request.POST['position_lat']), float(request.POST['position_lng']))

@@ -200,18 +200,18 @@
 
         </div>
 
-        <p class="association-info">
-          {% blocktrans with association=enrollment.get_actual_association_if_all.name count users=enrollment.users.count %}
-            Du blir medlem i DNT og {{ association }}.
+        <p class="forening-info">
+          {% blocktrans with forening=enrollment.get_actual_forening_if_all.name count users=enrollment.users.count %}
+            Du blir medlem i DNT og {{ forening }}.
           {% plural %}
-            Dere blir medlemmer i DNT og {{ association }}.
+            Dere blir medlemmer i DNT og {{ forening }}.
           {% endblocktrans %}
           <br>
 
           {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
 
-            {% blocktrans with association=enrollment.get_actual_association_if_any.name %}
-              Ungdomsmedlemmer blir medlem i DNT og {{ association }}.
+            {% blocktrans with forening=enrollment.get_actual_forening_if_any.name %}
+              Ungdomsmedlemmer blir medlem i DNT og {{ forening }}.
             {% endblocktrans %}
             <br>
 

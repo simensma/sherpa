@@ -57,11 +57,11 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">Turledere som er aktive i en av</label>
               <div class="col-sm-10">
-                <select name="association_active" data-chosen multiple data-placeholder="følgende forening(er)...">
+                <select name="forening_active" data-chosen multiple data-placeholder="følgende forening(er)...">
                   <option value=""></option>
                   <optgroup label="Medlemsforeninger">
-                    {% for association in user.all_associations_sorted.associations %}
-                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                      <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 </select>
@@ -100,16 +100,16 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">Ett av sertifikatene må være godkjent av</label>
               <div class="col-sm-10">
-                <select name="association_approved" class="chosen" data-placeholder="følgende forening...">
+                <select name="forening_approved" class="chosen" data-placeholder="følgende forening...">
                   <option value=""></option>
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for association in user.all_associations_sorted.central %}
-                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% for forening in user.all_foreninger_sorted.central %}
+                      <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                   <optgroup label="Medlemsforeninger">
-                    {% for association in user.all_associations_sorted.associations %}
-                      <option value="{{ association.id }}">{{ association.name }}</option>
+                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                      <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 </select>

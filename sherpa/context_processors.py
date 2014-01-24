@@ -31,9 +31,9 @@ def current_site(request):
 def old_site(request):
     return {'old_site': settings.OLD_SITE}
 
-def admin_active_association(request):
+def admin_active_forening(request):
     if request.user.is_authenticated() and request.user.has_perm('sherpa') and request.path.startswith('/sherpa/'):
-        return {'active_association': request.session.get('active_association', '')}
+        return {'active_forening': request.session.get('active_forening', '')}
     return {}
 
 def focus_downtime(request):

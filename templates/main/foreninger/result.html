@@ -1,0 +1,47 @@
+<tr>
+  <td>
+    <div class="forening-logo right">
+      {% if forening.url %}<a class="logo-url" href="{{ forening.url }}">{% else %}<span>{% endif %}
+
+        {{ forening.name }}
+
+      {% if forening.url %}</a>{% else %}</span>{% endif %}
+    </div>
+    <h2>{{ forening.name }}</h2>
+    {% if forening.url %}
+      <p><a href="{{ forening.url }}">{{ forening.url }}</a></p>
+    {% endif %}
+    {% if forening.email %}
+      <p>E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a></p>
+    {% endif %}
+    {% if forening.phone %}
+      <p>Tlf: {{ forening.phone }}</p>
+    {% endif %}
+    {% if forening.facebook %}
+      <p><a href="{{ forening.facebook }}">Besøk oss på Facebook</a></p>
+    {% endif %}
+    {% if forening.post_address %}
+      <p>Postadresse: {{ forening.post_address }}, {{ forening.zipcode }} {{ forening.ziparea }}</p>
+      {% endif %}
+    {% if forening.visit_address %}
+      <p>
+        Besøksadresse: {{ forening.visit_address }}
+        {% if forening.map %}
+          <a href="javascript:undefined" class="open-map" data-id="{{ forening.id }}">Se kart <i class="icon-arrow-down"></i></a>
+          <a href="javascript:undefined" class="close-map" data-id="{{ forening.id }}">Skjul kart <i class="icon-arrow-up"></i></a>
+        {% endif %}
+      </p>
+    {% endif %}
+    {% if parents and parents|length > 0 %}
+      <p>
+        <br>
+        <em>Tilknyttet <a href="{{ parents.0.url }}">{{ parents.0.name }}</a>.</em>
+      </p>
+    {% endif %}
+    {% if forening.map %}
+      <div class="map" data-id="{{ forening.id }}">
+        <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="" data-src="{{ forening.map }}"></iframe>
+      </div>
+    {% endif %}
+  </td>
+</tr>

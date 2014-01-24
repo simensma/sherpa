@@ -5,7 +5,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.contrib import messages
 
-from association.models import Association
+from foreninger.models import Forening
 from admin.models import Publication, Release
 from core.models import Tag
 
@@ -15,26 +15,26 @@ import hashlib
 import simples3
 
 def index(request):
-    publications = Publication.objects.filter(association__in=request.user.all_associations()).order_by('title')
+    publications = Publication.objects.filter(forening__in=request.user.all_foreninger()).order_by('title')
     context = {
         'publications': publications,
-        'association_main_mappings': json.dumps(get_association_main_mappings())
+        'forening_main_mappings': json.dumps(get_forening_main_mappings())
     }
     return render(request, 'common/admin/publications/index.html', context)
 
 def edit_publication(request, publication):
     if publication is None:
-        publication = Publication(association=request.session['active_association'])
+        publication = Publication(forening=request.session['active_forening'])
     else:
         publication = Publication.objects.get(id=publication)
 
-    if publication.association not in request.user.all_associations():
+    if publication.forening not in request.user.all_foreninger():
         raise PermissionDenied
 
     if request.method == 'GET':
         context = {
             'publication': publication,
-            'association_main_mappings': json.dumps(get_association_main_mappings()),
+            'forening_main_mappings': json.dumps(get_forening_main_mappings()),
             'now': datetime.now()
         }
         return render(request, 'common/admin/publications/edit_publication.html', context)
@@ -43,9 +43,9 @@ def edit_publication(request, publication):
         publication.description = request.POST['description']
         if publication.title == '':
             publication.title = '(Uten navn)'
-        association = Association.objects.get(id=request.POST['association'])
-        if association in request.user.all_associations():
-            publication.association = association
+        forening = Forening.objects.get(id=request.POST['forening'])
+        if forening in request.user.all_foreninger():
+            publication.forening = forening
         if 'access' in request.POST and request.POST['access'] in [l[0] for l in Publication.ACCESS_CHOICES]:
                 publication.access = request.POST['access']
         if 'license' in request.POST and request.POST['license'] in [l[0] for l in Publication.LICENSE_CHOICES]:
@@ -56,7 +56,7 @@ def edit_publication(request, publication):
 
 def edit_release(request, publication, release):
     publication = Publication.objects.get(id=publication)
-    if publication.association not in request.user.all_associations():
+    if publication.forening not in request.user.all_foreninger():
         raise PermissionDenied
 
     if request.method == 'GET':
@@ -132,7 +132,7 @@ def edit_release(request, publication, release):
 
 def delete_release(request, release):
     release = Release.objects.get(id=release)
-    if release.publication.association not in request.user.all_associations():
+    if release.publication.forening not in request.user.all_foreninger():
         raise PermissionDenied
 
     release.delete()
@@ -140,15 +140,15 @@ def delete_release(request, release):
 
 def delete_publication(request, publication):
     publication = Publication.objects.get(id=publication)
-    if publication.association not in request.user.all_associations():
+    if publication.forening not in request.user.all_foreninger():
         raise PermissionDenied
 
     publication.delete()
     return redirect('admin.publications.views.index')
 
-def get_association_main_mappings():
-    association_main_mappings = cache.get('association_main_mappings')
-    if association_main_mappings is None:
-        association_main_mappings = {a.id: a.get_main_association().name for a in Association.objects.all()}
-        cache.set('association_main_mappings', association_main_mappings, 60 * 60 * 24)
-    return association_main_mappings
+def get_forening_main_mappings():
+    forening_main_mappings = cache.get('forening_main_mappings')
+    if forening_main_mappings is None:
+        forening_main_mappings = {a.id: a.get_main_forening().name for a in Forening.objects.all()}
+        cache.set('forening_main_mappings', forening_main_mappings, 60 * 60 * 24)
+    return forening_main_mappings

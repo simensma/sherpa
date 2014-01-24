@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.cache import cache
 
-from sherpa2.models import Association
+from sherpa2.models import Forening
 from sherpa2.util import COUNTIES_SHERPA2_SET1 as COUNTIES_SHERPA2
 from core.models import County
 
@@ -35,9 +35,9 @@ def index(request):
         elif request.GET.get('kategori', '').lower() == category['db'].lower():
             category['chosen'] = True
 
-    full_list = cache.get('associations.full_list')
+    full_list = cache.get('foreninger.full_list')
     if full_list is None:
-        full_list = Association.objects.filter(
+        full_list = Forening.objects.filter(
                 Q(type="|Hovedforening") |
                 Q(type="|Underforening") |
                 Q(type="|Barn") |
@@ -46,31 +46,31 @@ def index(request):
                 Q(type="|Senior") |
                 Q(type="|Annen")
             ).order_by('name')
-        for association in full_list:
-            parent = association
-            while association.url == '':
+        for forening in full_list:
+            parent = forening
+            while forening.url == '':
                 try:
-                    parent = Association.objects.get(id=parent.parent)
-                    association.url = parent.url
-                except Association.DoesNotExist:
-                    association.url = 'ukjent'
-        cache.set('associations.full_list', full_list, 60 * 60 * 24)
+                    parent = Forening.objects.get(id=parent.parent)
+                    forening.url = parent.url
+                except Forening.DoesNotExist:
+                    forening.url = 'ukjent'
+        cache.set('foreninger.full_list', full_list, 60 * 60 * 24)
 
     context = {'categories': categories, 'counties': counties,
         'chosen_county': request.GET.get('fylke', ''),
         'full_list': full_list,
     }
-    return render(request, 'main/associations/list.html', context)
+    return render(request, 'main/foreninger/list.html', context)
 
 def visit(request):
-    associations = Association.objects.filter(type="|Hovedforening").exclude(visit_address='').order_by('name')
-    context = {'associations': associations}
-    return render(request, 'main/associations/visit.html', context)
+    foreninger = Forening.objects.filter(type="|Hovedforening").exclude(visit_address='').order_by('name')
+    context = {'foreninger': foreninger}
+    return render(request, 'main/foreninger/visit.html', context)
 
 def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
-        return redirect('association.views.index')
-    result = cache.get('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
+        return redirect('foreninger.views.index')
+    result = cache.get('foreninger.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']))
     if result is None:
         exists = False
         for category in get_categories():
@@ -82,44 +82,44 @@ def filter(request):
             return HttpResponse('{}')
         if request.POST['category'].title() == 'Foreninger':
             # Special case, include both of the following:
-            associations = Association.objects.filter(Q(type="|Hovedforening") | Q(type="|Underforening"))
+            foreninger = Forening.objects.filter(Q(type="|Hovedforening") | Q(type="|Underforening"))
         else:
-            associations = Association.objects.filter(type="|%s" % request.POST['category'].title())
+            foreninger = Forening.objects.filter(type="|%s" % request.POST['category'].title())
         if request.POST['county'] != 'all':
-            # Sherpa stores associations with multiple counties as text with '|' as separator :(
+            # Sherpa stores foreninger with multiple counties as text with '|' as separator :(
             # So we'll have to pick all of them and programatically check the county
             filter_ids = []
-            for association in associations.exclude(county=None):
-                if request.POST['county'] in association.county.split('|'):
-                    filter_ids.append(association.id)
-            associations = associations.filter(id__in=filter_ids)
+            for forening in foreninger.exclude(county=None):
+                if request.POST['county'] in forening.county.split('|'):
+                    filter_ids.append(forening.id)
+            foreninger = foreninger.filter(id__in=filter_ids)
 
-        associations = associations.order_by('name')
+        foreninger = foreninger.order_by('name')
         result = []
 
-        for association in associations:
+        for forening in foreninger:
             # Assign parents
             parents = []
             try:
-                parent = Association.objects.get(id=association.parent)
+                parent = Forening.objects.get(id=forening.parent)
                 while parent is not None:
                     parents.append(parent)
-                    parent = Association.objects.get(id=parent.parent)
-            except Association.DoesNotExist:
+                    parent = Forening.objects.get(id=parent.parent)
+            except Forening.DoesNotExist:
                 pass
 
-            # If the association has no address, use the parents address
-            if association.post_address == '':
+            # If the forening has no address, use the parents address
+            if forening.post_address == '':
                 for parent in parents:
                     if parent.post_address != '':
-                        association.post_address = parent.post_address
-                        association.visit_address = parent.visit_address
-                        association.zipcode = parent.zipcode
-                        association.ziparea = parent.ziparea
+                        forening.post_address = parent.post_address
+                        forening.visit_address = parent.visit_address
+                        forening.zipcode = parent.zipcode
+                        forening.ziparea = parent.ziparea
                         break
 
-            # Render the association result
-            context = RequestContext(request, {'association': association, 'parents': parents})
-            result.append(render_to_string('main/associations/result.html', context))
-        cache.set('associations.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)
+            # Render the forening result
+            context = RequestContext(request, {'forening': forening, 'parents': parents})
+            result.append(render_to_string('main/foreninger/result.html', context))
+        cache.set('foreninger.filter.%s.%s' % (request.POST['category'].title(), request.POST['county']), result, 60 * 60 * 24)
     return HttpResponse(json.dumps(result))

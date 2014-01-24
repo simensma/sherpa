@@ -46,7 +46,7 @@
           <span class="icon-bar"></span>
         </button>
         <a href="{% url 'admin.views.index' %}" class="navbar-brand">
-          <img src="{{ STATIC_URL }}img/dnt_logo.png" alt="{{ active_association.name }}">
+          <img src="{{ STATIC_URL }}img/dnt_logo.png" alt="{{ active_forening.name }}">
           <span class="title">Sherpa</span>
         </a>
       </div>
@@ -59,36 +59,36 @@
 
             <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 
-            {% if active_association.site %}
+            {% if active_forening.site %}
               <li{% if active_entry == 'cms' %} class="active"{% endif %}><a href="{% url 'admin.cms.views.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
               <li{% if active_entry == 'articles' %} class="active"{% endif %}><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
             {% endif %}
 
             <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
 
-            {% if active_association.site %}
+            {% if active_forening.site %}
               <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
               <li{% if active_entry == 'ads' %} class="active"{% endif %}><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
             {% endif %}
 
             {# Explicitly hide images for non-central users for now #}
-            {% if active_association.id == 56 %}{# DNT Central #}
+            {% if active_forening.id == 56 %}{# DNT Central #}
               <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
             {% endif %}
 
-            {% if active_association.site %}
+            {% if active_forening.site %}
               <li{% if active_entry == 'analytics' %} class="active"{% endif %}><a href="{% url 'admin.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse og statistikk</a></li>
             {% endif %}
 
             <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
             <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
-            {% if active_association.site %}
+            {% if active_forening.site %}
               <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
             {% endif %}
 
             {# Applies only to DNT Central #}
-            {% if active_association.id == 56 %}
+            {% if active_forening.id == 56 %}
               <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
             {% endif %}
 
@@ -130,8 +130,8 @@
               {% endif %}
             </a>
             <ul class="dropdown-menu">
-              {% if active_association.site %}
-                <li><a href="http://{{ active_association.site.domain }}/"><i class="fa fa-home"></i> {{ active_association.name }}</a></li>
+              {% if active_forening.site %}
+                <li><a href="http://{{ active_forening.site.domain }}/"><i class="fa fa-home"></i> {{ active_forening.name }}</a></li>
               {% endif %}
               <li><a href="{% url 'user.views.home' %}"><i class="fa fa-user"></i> Min side</a></li>
               <li><a href="{% url 'user.views.account' %}"><i class="fa fa-pencil-square-o"></i> Dine opplysninger</a></li>
@@ -141,36 +141,36 @@
             </ul>
           </li>
 
-          {# Choose active association. Those users who have 1 association don't need to choose manually. #}
-          {% if user.all_associations|length > 1 %}
-            <li class="dropdown association-dropdown">
-              <select name="user_association" data-placeholder="Velg aktiv forening...">
+          {# Choose active forening. Those users who have 1 forening don't need to choose manually. #}
+          {% if user.all_foreninger|length > 1 %}
+            <li class="dropdown forening-dropdown">
+              <select name="user_forening" data-placeholder="Velg aktiv forening...">
                 <option value=""></option>
-                {% if user.all_associations_sorted.central|length > 0 %}
+                {% if user.all_foreninger_sorted.central|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for association in user.all_associations_sorted.central %}
-                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.all_foreninger_sorted.central %}
+                      <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.all_associations_sorted.associations|length > 0 %}
+                {% if user.all_foreninger_sorted.foreninger|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for association in user.all_associations_sorted.associations %}
-                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                      <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.all_associations_sorted.small_associations|length > 0 %}
+                {% if user.all_foreninger_sorted.turlag|length > 0 %}
                   <optgroup label="Lokale turlag">
-                  {% for association in user.all_associations_sorted.small_associations %}
-                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% for forening in user.all_foreninger_sorted.turlag %}
+                      <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.all_associations_sorted.hike_groups|length > 0 %}
+                {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
                   <optgroup label="Turgrupper">
-                  {% for association in user.all_associations_sorted.hike_groups %}
-                      <option value="{{ association.id }}" data-href="/sherpa/aktiv-forening/{{ association.id }}/"{% if active_association == association %} selected{% endif %}>{{ association.name }}</option>
+                  {% for forening in user.all_foreninger_sorted.turgrupper %}
+                      <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}

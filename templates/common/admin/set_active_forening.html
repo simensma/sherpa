@@ -5,9 +5,9 @@
 
 {% block body %}
 
-{% if user.all_associations|length == 0 %}
+{% if user.all_foreninger|length == 0 %}
 
-  {# Has sherpa access, but no associations #}
+  {# Has sherpa access, but no foreninger #}
 
   <div class="row">
     <div class="col-lg-12">
@@ -41,35 +41,35 @@
         Du kan endre aktiv forening når som helst i lista oppe til høyre.
       </p>
 
-      {% if user.all_associations_sorted.central|length > 0 %}
+      {% if user.all_foreninger_sorted.central|length > 0 %}
         <h2>Sentralt/nasjonalt</h2>
-        <ul class="active-association-list">
-        {% for association in user.all_associations_sorted.central %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
+        <ul class="active-forening-list">
+        {% for forening in user.all_foreninger_sorted.central %}
+          <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user.all_associations_sorted.associations|length > 0 %}
+      {% if user.all_foreninger_sorted.foreninger|length > 0 %}
         <h2>Medlemsforeninger</h2>
-        <ul class="active-association-list">
-        {% for association in user.all_associations_sorted.associations %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
+        <ul class="active-forening-list">
+        {% for forening in user.all_foreninger_sorted.foreninger %}
+          <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user.all_associations_sorted.small_associations|length > 0 %}
+      {% if user.all_foreninger_sorted.turlag|length > 0 %}
         <h2>Lokale turlag</h2>
-        <ul class="active-association-list">
-        {% for association in user.all_associations_sorted.small_associations %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
+        <ul class="active-forening-list">
+        {% for forening in user.all_foreninger_sorted.turlag %}
+          <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user.all_associations_sorted.hike_groups|length > 0 %}
+      {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
         <h2>Turgrupper</h2>
-        <ul class="active-association-list">
-        {% for association in user.all_associations_sorted.hike_groups %}
-          <li><a href="/sherpa/aktiv-forening/{{ association.id }}/?next={{ next }}">{{ association.name }}</a></li>
+        <ul class="active-forening-list">
+        {% for forening in user.all_foreninger_sorted.turgrupper %}
+          <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}

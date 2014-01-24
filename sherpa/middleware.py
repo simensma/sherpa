@@ -14,7 +14,7 @@ import sys
 
 from core.models import Site
 from core.util import focus_is_down
-from association.models import Association
+from foreninger.models import Forening
 from focus.models import Actor, Enrollment
 from enrollment.util import current_template_layout
 
@@ -72,18 +72,18 @@ class DecodeQueryString(object):
         # Unable to decode the query string. Just leave it as it is, and if any later usage
         # of it leads to a decoding error, let it happen and be logged for further inspection.
 
-class SetActiveAssociation(object):
+class SetActiveForening(object):
     def process_request(self, request):
-        # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_association'.
+        # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_forening'.
         if request.user.is_authenticated() and request.user.has_perm('sherpa'):
-            m = re.match(r'/sherpa/aktiv-forening/(?P<association>\d+)/', request.path)
+            m = re.match(r'/sherpa/aktiv-forening/(?P<forening>\d+)/', request.path)
             if m is not None:
                 # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
-                association = Association.objects.get(id=m.groupdict()['association'])
-                if not association in request.user.all_associations():
+                forening = Forening.objects.get(id=m.groupdict()['forening'])
+                if not forening in request.user.all_foreninger():
                     raise PermissionDenied
 
-                request.session['active_association'] = association
+                request.session['active_forening'] = forening
                 if request.GET.get('next', '') != '':
                     return redirect(request.GET['next'])
                 else:
@@ -100,18 +100,18 @@ class CheckSherpaPermissions(object):
             if not request.user.has_perm('sherpa'):
                 raise PermissionDenied
 
-            # No active association set
-            if not 'active_association' in request.session:
-                if len(request.user.all_associations()) == 1:
-                    # The user has only access to 1 association, set it automatically
-                    return redirect('/sherpa/aktiv-forening/%s/' % request.user.all_associations()[0].id)
+            # No active forening set
+            if not 'active_forening' in request.session:
+                if len(request.user.all_foreninger()) == 1:
+                    # The user has only access to 1 forening, set it automatically
+                    return redirect('/sherpa/aktiv-forening/%s/' % request.user.all_foreninger()[0].id)
                 else:
                     # Let the user choose
                     context = {'next': request.get_full_path()}
-                    return render(request, 'common/admin/set_active_association.html', context)
+                    return render(request, 'common/admin/set_active_forening.html', context)
 
             # Accessing CMS-functionality, but no site set
-            if request.session['active_association'].site is None:
+            if request.session['active_forening'].site is None:
                 site_required_paths = [
                     u'/sherpa/cms/',
                     u'/sherpa/nyheter/',
@@ -120,7 +120,7 @@ class CheckSherpaPermissions(object):
                 ]
                 for path in site_required_paths:
                     if request.path.startswith(path):
-                        return render(request, 'common/admin/no_association_site.html')
+                        return render(request, 'common/admin/no_forening_site.html')
 
 class DeactivatedEnrollment():
     def process_request(self, request):

@@ -1,10 +1,10 @@
 $(document).ready(function() {
     var register = $("div.turlederregister-edit");
     var table = register.find("table.edit");
-    var active_associations = register.find("select[name='active_associations']");
-    var active_associations_all_checkbox = register.find("input[name='active_associations_all_checkbox']");
-    var form_active_associations = register.find("form.active-associations");
-    var active_associations_all_form = form_active_associations.find("input[name='active_associations_all']");
+    var active_foreninger = register.find("select[name='active_foreninger']");
+    var active_foreninger_all_checkbox = register.find("input[name='active_foreninger_all_checkbox']");
+    var form_active_foreninger = register.find("form.active-foreninger");
+    var active_foreninger_all_form = form_active_foreninger.find("input[name='active_foreninger_all']");
 
     register.find("div.role").each(function() {
 
@@ -41,7 +41,7 @@ $(document).ready(function() {
         });
 
         form.submit(function(e) {
-            if($(this).find("select[name='association_approved'] option:selected").val() === '') {
+            if($(this).find("select[name='forening_approved'] option:selected").val() === '') {
                 alert("Du må angi hvilken forening som godkjente turledersertifikatet.");
                 e.preventDefault();
             }
@@ -59,21 +59,21 @@ $(document).ready(function() {
 
     });
 
-    form_active_associations.submit(function(e) {
-        var active_association_ids = [];
-        active_associations.find("option:selected").each(function() {
-            active_association_ids.push($(this).val());
+    form_active_foreninger.submit(function(e) {
+        var active_forening_ids = [];
+        active_foreninger.find("option:selected").each(function() {
+            active_forening_ids.push($(this).val());
         });
-        form_active_associations.find("input[name='active_association_ids']").val(JSON.stringify(active_association_ids));
-        active_associations_all_form.val(JSON.stringify(active_associations_all_checkbox.is(":checked")));
+        form_active_foreninger.find("input[name='active_forening_ids']").val(JSON.stringify(active_forening_ids));
+        active_foreninger_all_form.val(JSON.stringify(active_foreninger_all_checkbox.is(":checked")));
     });
 
-    active_associations_all_checkbox.change(function() {
-        var disabled = active_associations_all_checkbox.is(":checked");
-        active_associations.prop("disabled", disabled);
-        active_associations.find("option").prop("disabled", disabled);
-        active_associations.trigger('liszt:updated');
+    active_foreninger_all_checkbox.change(function() {
+        var disabled = active_foreninger_all_checkbox.is(":checked");
+        active_foreninger.prop("disabled", disabled);
+        active_foreninger.find("option").prop("disabled", disabled);
+        active_foreninger.trigger('liszt:updated');
     });
-    active_associations_all_checkbox.change();
+    active_foreninger_all_checkbox.change();
 
 });

@@ -1,11 +1,11 @@
 {% extends 'main/layout.html' %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/associations/common.js"></script>
-  <script src="{{ STATIC_URL }}js/associations/visit.js"></script>
+  <script src="{{ STATIC_URL }}js/foreninger/common.js"></script>
+  <script src="{{ STATIC_URL }}js/foreninger/visit.js"></script>
 {% endblock %}
 
 {% block title %}DNT der du bor{% endblock %}
-{% block breadcrumb %}<a href="{% url 'association.views.index' %}">DNT der du bor</a> / <em><a href="{% url 'association.views.visit' %}">Utsalgssteder</a></em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'foreninger.views.index' %}">DNT der du bor</a> / <em><a href="{% url 'foreninger.views.visit' %}">Utsalgssteder</a></em>{% endblock %}
 
 {% block body %}
 
@@ -18,8 +18,8 @@
 </div>
 
 <table id="results" class="table visits">
-  {% for association in associations %}
-    {% include 'main/associations/result.html' with association=association parents="" %}
+  {% for forening in foreninger %}
+    {% include 'main/foreninger/result.html' with forening=forening parents="" %}
   {% endfor %}
 </table>
 

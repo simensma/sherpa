@@ -6,7 +6,7 @@
   <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
 {% elif other_user.perms.sherpa %}
 
-  {% if other_user.all_associations|length == 0 %}
+  {% if other_user.all_foreninger|length == 0 %}
     <div class="alert alert-danger">
       <strong>{{ other_user.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>
       Gi ham/henne tilgang til minst én forening, ellers gir det ikke mening at han/henne har tilgang til Sherpa.
@@ -14,65 +14,65 @@
   {% else %}
 
     <table class="table user-permissions">
-      {% if other_user.all_associations_sorted.central|length > 0 %}
+      {% if other_user.all_foreninger_sorted.central|length > 0 %}
         <tr>
           <td colspan="2" class="group">Sentralt</td>
         </tr>
-        {% for association in other_user.all_associations_sorted.central %}
+        {% for forening in other_user.all_foreninger_sorted.central %}
           <tr>
-            <td>{{ association.name }}</td>
+            <td>{{ forening.name }}</td>
             <td>
-              {% if association.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
-              {% if association.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
-              {{ association.role|friendlyrole }}
+              {% if forening.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
+              {% if forening.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
+              {{ forening.role|friendlyrole }}
             </td>
           </tr>
         {% endfor %}
       {% endif %}
 
-      {% if other_user.all_associations_sorted.associations|length > 0 %}
+      {% if other_user.all_foreninger_sorted.foreninger|length > 0 %}
         <tr>
           <td colspan="2" class="group">Foreninger</td>
         </tr>
-        {% for association in other_user.all_associations_sorted.associations %}
+        {% for forening in other_user.all_foreninger_sorted.foreninger %}
           <tr>
-            <td>{{ association.name }}</td>
+            <td>{{ forening.name }}</td>
             <td>
-              {% if association.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
-              {% if association.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
-              {{ association.role|friendlyrole }}
+              {% if forening.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
+              {% if forening.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
+              {{ forening.role|friendlyrole }}
             </td>
           </tr>
         {% endfor %}
       {% endif %}
 
-      {% if other_user.all_associations_sorted.small_associations|length > 0 %}
+      {% if other_user.all_foreninger_sorted.turlag|length > 0 %}
         <tr>
           <td colspan="2" class="group">Turlag</td>
         </tr>
-        {% for association in other_user.all_associations_sorted.small_associations %}
+        {% for forening in other_user.all_foreninger_sorted.turlag %}
           <tr>
-            <td>{{ association.name }}</td>
+            <td>{{ forening.name }}</td>
             <td>
-              {% if association.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
-              {% if association.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
-              {{ association.role|friendlyrole }}
+              {% if forening.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
+              {% if forening.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
+              {{ forening.role|friendlyrole }}
             </td>
           </tr>
         {% endfor %}
       {% endif %}
 
-      {% if other_user.all_associations_sorted.hike_groups|length > 0 %}
+      {% if other_user.all_foreninger_sorted.turgrupper|length > 0 %}
         <tr>
           <td colspan="2" class="group">Turgrupper</td>
         </tr>
-        {% for association in other_user.all_associations_sorted.hike_groups %}
+        {% for forening in other_user.all_foreninger_sorted.turgrupper %}
           <tr>
-            <td>{{ association.name }}</td>
+            <td>{{ forening.name }}</td>
             <td>
-              {% if association.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
-              {% if association.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
-              {{ association.role|friendlyrole }}
+              {% if forening.role == 'user' %}<i class="fa fa-user"></i>{% endif %}
+              {% if forening.role == 'admin' %}<i class="fa fa-star"></i>{% endif %}
+              {{ forening.role|friendlyrole }}
             </td>
           </tr>
         {% endfor %}
@@ -131,41 +131,41 @@
 
   {% endif %}
 
-  <div class="association-permission">
-    <select name="association-permission" class="chosen" data-placeholder="Gi tilgang til en forening...">
+  <div class="forening-permission">
+    <select name="forening-permission" class="chosen" data-placeholder="Gi tilgang til en forening...">
       <option value=""></option>
-      {% if assignable_associations.central|length > 0 %}
+      {% if assignable_foreninger.central|length > 0 %}
         <optgroup label="Sentralt/nasjonalt">
-          {% for association in assignable_associations.central %}
-            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% for forening in assignable_foreninger.central %}
+            <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if assignable_associations.associations|length > 0 %}
+      {% if assignable_foreninger.foreninger|length > 0 %}
         <optgroup label="Medlemsforeninger">
-          {% for association in assignable_associations.associations %}
-            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% for forening in assignable_foreninger.foreninger %}
+            <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if assignable_associations.small_associations|length > 0 %}
+      {% if assignable_foreninger.turlag|length > 0 %}
         <optgroup label="Lokale turlag">
-          {% for association in assignable_associations.small_associations %}
-            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% for forening in assignable_foreninger.turlag %}
+            <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if assignable_associations.hike_groups|length > 0 %}
+      {% if assignable_foreninger.turgrupper|length > 0 %}
         <optgroup label="Turgrupper">
-          {% for association in assignable_associations.hike_groups %}
-            <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+          {% for forening in assignable_foreninger.turgrupper %}
+            <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
     </select>
   </div>
 
-  <div class="row association-role jq-hide">
+  <div class="row forening-role jq-hide">
     <div class="col-sm-6 user">
       <p class="button"><button class="btn btn-default btn-lg user"><i class="fa fa-user"></i> Vanlig bruker</button></p>
       <p class="permission-description">
@@ -181,61 +181,61 @@
     </div>
   </div>
 
-  <div class="alert alert-danger verify-association-permission jq-hide">
-    <form action="{% url 'admin.users.views.add_association_permission' %}" method="post">
+  <div class="alert alert-danger verify-forening-permission jq-hide">
+    <form action="{% url 'admin.users.views.add_forening_permission' %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="user" value="{{ other_user.id }}">
-      <input type="hidden" name="association" value="">
+      <input type="hidden" name="forening" value="">
       <input type="hidden" name="role" value="">
       <p>
-        <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="association"></span>?</strong>
+        <strong>Gi {{ other_user.get_full_name }} <span class="role"></span> til <span class="forening"></span>?</strong>
       </p>
       <p><button type="submit" class="btn btn-success">Ja, gi tilgang</button></p>
       <p><a href="javascript:undefined" class="btn btn-default cancel">Nei, avbryt</a></p>
     </form>
   </div>
 
-  {% if revokable_associations.central|length > 0 or revokable_associations.associations|length > 0 or revokable_associations.small_associations|length > 0 or revokable_associations.hike_groups|length > 0 %}
-    <div class="association-permission-revoke">
-      <select name="association-permission-revoke" class="chosen" data-placeholder="Ta bort tilgangen til en forening...">
+  {% if revokable_foreninger.central|length > 0 or revokable_foreninger.foreninger|length > 0 or revokable_foreninger.turlag|length > 0 or revokable_foreninger.turgrupper|length > 0 %}
+    <div class="forening-permission-revoke">
+      <select name="forening-permission-revoke" class="chosen" data-placeholder="Ta bort tilgangen til en forening...">
         <option value=""></option>
-        {% if revokable_associations.central|length > 0 %}
+        {% if revokable_foreninger.central|length > 0 %}
           <optgroup label="Sentralt/nasjonalt">
-            {% for association in revokable_associations.central %}
-              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% for forening in revokable_foreninger.central %}
+              <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if revokable_associations.associations|length > 0 %}
+        {% if revokable_foreninger.foreninger|length > 0 %}
           <optgroup label="Medlemsforeninger">
-            {% for association in revokable_associations.associations %}
-              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% for forening in revokable_foreninger.foreninger %}
+              <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if revokable_associations.small_associations|length > 0 %}
+        {% if revokable_foreninger.turlag|length > 0 %}
           <optgroup label="Lokale turlag">
-            {% for association in revokable_associations.small_associations %}
-              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% for forening in revokable_foreninger.turlag %}
+              <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if revokable_associations.hike_groups|length > 0 %}
+        {% if revokable_foreninger.turgrupper|length > 0 %}
           <optgroup label="Turgrupper">
-            {% for association in revokable_associations.hike_groups %}
-              <option value="{{ association.id }}" data-role="{{ association.role }}">{{ association.name }}</option>
+            {% for forening in revokable_foreninger.turgrupper %}
+              <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
       </select>
 
-      <div class="association-permission-revoke-verify jq-hide alert alert-danger">
-        <form action="{% url 'admin.users.views.revoke_association_permission' %}" method="post">
+      <div class="forening-permission-revoke-verify jq-hide alert alert-danger">
+        <form action="{% url 'admin.users.views.revoke_forening_permission' %}" method="post">
           {% csrf_token %}
           <input type="hidden" name="user" value="{{ other_user.id }}">
-          <input type="hidden" name="association" value="">
+          <input type="hidden" name="forening" value="">
           <p>
-            <strong>Ta bort {{ other_user.get_full_name }}s tilgang til <span class="association"></span>?</strong>
+            <strong>Ta bort {{ other_user.get_full_name }}s tilgang til <span class="forening"></span>?</strong>
           </p>
           <p><button type="submit" class="btn btn-success">Ja, ta bort tilgangen</button></p>
           <p><a href="javascript:undefined" class="btn btn-default cancel">Nei, avbryt</a></p>

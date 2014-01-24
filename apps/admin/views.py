@@ -16,27 +16,27 @@ from user.models import User
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
-    local_membership_count = cache.get('admin.local_membership_count.%s' % request.session['active_association'].id)
+    local_membership_count = cache.get('admin.local_membership_count.%s' % request.session['active_forening'].id)
     if total_membership_count is None or local_membership_count is None:
         all_members = Actor.all_members()
         total_membership_count = all_members.count()
         local_membership_count = all_members.filter(
-            main_association_id=request.session['active_association'].get_main_association().focus_id
+            main_forening_id=request.session['active_forening'].get_main_forening().focus_id
         ).count()
         cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
-        cache.set('admin.local_membership_count.%s' % request.session['active_association'].id, local_membership_count, 60 * 60 * 12)
+        cache.set('admin.local_membership_count.%s' % request.session['active_forening'].id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.objects.filter(turledere__isnull=False).distinct().count()
-    if request.session['active_association'].site is not None:
-        pages = Page.on(request.session['active_association'].site).filter(
+    if request.session['active_forening'].site is not None:
+        pages = Page.on(request.session['active_forening'].site).filter(
             pub_date__lte=datetime.now(),
             published=True
         ).count()
     else:
         pages = None
     aktiviteter = Aktivitet.objects.filter(
-        Q(association=request.session['active_association']) |
-        Q(co_association=request.session['active_association']),
+        Q(forening=request.session['active_forening']) |
+        Q(co_forening=request.session['active_forening']),
         pub_date__lte=date.today(),
         published=True,
         private=False,

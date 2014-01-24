@@ -6,8 +6,8 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from association.models import Association, DNT_OSLO_ID, DNT_UNG_OSLO_ID
-from sherpa2.models import Association as Sherpa2Association, DNT_OSLO_ID as DNT_OSLO_ID_SHERPA2, DNT_UNG_OSLO_ID as DNT_UNG_OSLO_ID_SHERPA2
+from foreninger.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
+from sherpa2.models import Forening as Sherpa2Forening, DNT_OSLO_ID as DNT_OSLO_ID_SHERPA2, DNT_UNG_OSLO_ID as DNT_UNG_OSLO_ID_SHERPA2
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -51,13 +51,13 @@ class User(AbstractBaseUser):
     password_restore_key = models.CharField(max_length=settings.RESTORE_PASSWORD_KEY_LENGTH, null=True)
     password_restore_date = models.DateTimeField(null=True)
 
-    # Used in the admin-interface for association-permissions
-    associations = models.ManyToManyField('association.Association', related_name='+', through='AssociationRole')
+    # Used in the admin-interface for forening-permissions
+    foreninger = models.ManyToManyField('foreninger.Forening', related_name='+', through='ForeningRole')
     permissions = models.ManyToManyField('user.Permission', related_name='+')
 
     # If turleder, where this turleder is active. The user.Turleder model defines certificates.
     # It's possible, but not correct, that this field has references when there are none in user.Turleder.
-    turleder_active_associations = models.ManyToManyField('association.Association', related_name='active_turledere')
+    turleder_active_foreninger = models.ManyToManyField('foreninger.Forening', related_name='active_turledere')
 
 
     #
@@ -314,57 +314,57 @@ class User(AbstractBaseUser):
         actor.reserved_against_partneroffers = reserved
         actor.save()
 
-    def main_association(self, convert_dnt_oslo_for_youth=True):
+    def main_forening(self, convert_dnt_oslo_for_youth=True):
         """
         We have an interesting special case where we want youth members of DNT Oslo og Omegn
         to actually be a member of DNT ung Oslo og Omegn, but our member system can't handle that,
         so we'll have to check for that and change it here. Note that this applies only to Oslo
-        and no other member associations. We'll do that by default and let callers override that
+        and no other foreninger. We'll do that by default and let callers override that
         with the convert_dnt_oslo_for_youth parameter.
         """
-        association = cache.get('user.%s.%s.association' % (self.identifier, convert_dnt_oslo_for_youth))
-        if association is None:
-            association = Association.objects.get(focus_id=self.get_actor().main_association_id)
+        forening = cache.get('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth))
+        if forening is None:
+            forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
 
-            if convert_dnt_oslo_for_youth and association.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
-                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
+            if convert_dnt_oslo_for_youth and forening.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
 
-            cache.set('user.%s.%s.association' % (self.identifier, convert_dnt_oslo_for_youth), association, 60 * 60 * 24)
-        return association
+            cache.set('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth), forening, 60 * 60 * 24)
+        return forening
 
-    def main_association_actual(self):
+    def main_forening_actual(self):
         """
-        Shortcut method to main_association() with parameter for use in templates.
+        Shortcut method to main_forening() with parameter for use in templates.
         """
-        return self.main_association(convert_dnt_oslo_for_youth=False)
+        return self.main_forening(convert_dnt_oslo_for_youth=False)
 
-    def main_association_old(self):
+    def main_forening_old(self):
         """
-        This sad method returns the association object from the old sherpa2 model.
+        This sad method returns the forening object from the old sherpa2 model.
         For now it's mostly used to get the site url because most of the new objects
         don't have an assigned site. Cache heavily since this hits the old DB.
         """
 
-        # Users' association cache
-        association = cache.get('user.%s.association_sherpa2' % self.identifier)
-        if association is None:
+        # Users' forening cache
+        forening = cache.get('user.%s.forening_sherpa2' % self.identifier)
+        if forening is None:
 
-            # The actual association cache
-            association = cache.get('association_sherpa2.focus.%s' % self.get_actor().main_association_id)
-            if association is None:
-                association = Sherpa2Association.objects.get(focus_id=self.get_actor().main_association_id)
-                cache.set('association_sherpa2.focus.%s' % self.get_actor().main_association_id, association, 60 * 60 * 24 * 7)
+            # The actual forening cache
+            forening = cache.get('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id)
+            if forening is None:
+                forening = Sherpa2Forening.objects.get(focus_id=self.get_actor().main_forening_id)
+                cache.set('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id, forening, 60 * 60 * 24 * 7)
 
-            # Special case, just like in main_association()
-            if association.id == DNT_OSLO_ID_SHERPA2 and self.membership_type()['codename'] == 'youth':
-                # Get the DNT ung Oslo association, use the association cache
-                association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2)
-                if association is None:
-                    association = Sherpa2Association.objects.get(id=DNT_UNG_OSLO_ID_SHERPA2)
-                    cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2, association, 60 * 60 * 24 * 7)
+            # Special case, just like in main_forening()
+            if forening.id == DNT_OSLO_ID_SHERPA2 and self.membership_type()['codename'] == 'youth':
+                # Get the DNT ung Oslo forening, use the forening cache
+                forening = cache.get('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2)
+                if forening is None:
+                    forening = Sherpa2Forening.objects.get(id=DNT_UNG_OSLO_ID_SHERPA2)
+                    cache.set('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2, forening, 60 * 60 * 24 * 7)
 
-            cache.set('user.%s.association_sherpa2' % self.identifier, association, 60 * 60 * 24 * 7)
-        return association
+            cache.set('user.%s.forening_sherpa2' % self.identifier, forening, 60 * 60 * 24 * 7)
+        return forening
 
     def is_eligible_for_norway_bus_tickets(self):
         if NorwayBusTicket.objects.filter(user=self).exists():
@@ -423,7 +423,7 @@ class User(AbstractBaseUser):
             actor.address.save()
 
     #
-    # Permissions and association permissions, for Sherpa users
+    # Permissions and forening permissions, for Sherpa users
     #
 
     def has_perm(self, perm):
@@ -437,102 +437,102 @@ class User(AbstractBaseUser):
 
     def can_modify_user_memberid(self):
         """
-        Users who have access to DNT's central association can modify memberids
+        Users who have access to DNT's central forening can modify memberids
         in Sherpa.
         """
         # It's okay to look this up by name, right?
-        dnt_central = Association.objects.get(name='Den Norske Turistforening')
-        return dnt_central in self.all_associations()
+        dnt_central = Forening.objects.get(name='Den Norske Turistforening')
+        return dnt_central in self.all_foreninger()
 
     def can_modify_kursleder_status(self):
         """
-        Users who have access to DNT's central association can assign kursleder-status
+        Users who have access to DNT's central forening can assign kursleder-status
         """
-        dnt_central = Association.objects.get(name='Den Norske Turistforening')
-        return dnt_central in self.all_associations()
+        dnt_central = Forening.objects.get(name='Den Norske Turistforening')
+        return dnt_central in self.all_foreninger()
 
-    def all_associations(self):
+    def all_foreninger(self):
         """
-        Returns associations this user has access to.
+        Returns foreninger this user has access to.
         Note that this also takes permissions into account, e.g. sherpa admins will
-        have access to all associations
+        have access to all foreninger
         """
-        associations = cache.get('user.%s.all_associations' % self.id)
-        if associations is None:
+        foreninger = cache.get('user.%s.all_foreninger' % self.id)
+        if foreninger is None:
             if self.has_perm('sherpa_admin'):
-                # Sherpa admins have access to all associations
-                associations = Association.objects.all()
-                for association in associations:
-                    association.role = 'admin'
+                # Sherpa admins have access to all foreninger
+                foreninger = Forening.objects.all()
+                for forening in foreninger:
+                    forening.role = 'admin'
             else:
-                # A normal user, return all connected associations, including
-                # children-associations where role is admin.
-                associations = []
-                for association in self.associations.all():
-                    role = AssociationRole.objects.get(association=association, user=self).role
+                # A normal user, return all connected foreninger, including
+                # children-foreninger where role is admin.
+                foreninger = []
+                for forening in self.foreninger.all():
+                    role = ForeningRole.objects.get(forening=forening, user=self).role
                     if role == 'admin':
                         # Add this one and all its children
-                        for association in association.get_with_children():
-                            association.role = 'admin'
-                            associations.append(association)
+                        for forening in forening.get_with_children():
+                            forening.role = 'admin'
+                            foreninger.append(forening)
                     elif role == 'user':
                         # Just add this one
-                        association.role = 'user'
-                        associations.append(association)
+                        forening.role = 'user'
+                        foreninger.append(forening)
 
-                # Since this will add duplicates if any of the related associations
+                # Since this will add duplicates if any of the related foreninger
                 # are child/parent-related with each other, remove the one with lowest role
-                def pick_dupe(associations):
+                def pick_dupe(foreninger):
                     # This defines role priority
                     # Pick the dupe with role admin if existing, if not, just pick any dupe.
-                    admins = [a for a in associations if a.role == 'admin']
+                    admins = [a for a in foreninger if a.role == 'admin']
                     if len(admins) > 0:
                         return admins[0]
                     else:
-                        return associations[0]
+                        return foreninger[0]
 
-                ## Sort and group by association id, and remove dupes
-                sorted_associations = sorted(associations, key=lambda a: a.id)
-                grouped_associations = groupby(sorted_associations, key=lambda a: a.id)
-                associations = [pick_dupe(list(group)) for key, group in grouped_associations]
-            cache.set('user.%s.all_associations' % self.id, associations, 60 * 60 * 24)
-        return associations
+                ## Sort and group by forening id, and remove dupes
+                sorted_foreninger = sorted(foreninger, key=lambda a: a.id)
+                grouped_foreninger = groupby(sorted_foreninger, key=lambda a: a.id)
+                foreninger = [pick_dupe(list(group)) for key, group in grouped_foreninger]
+            cache.set('user.%s.all_foreninger' % self.id, foreninger, 60 * 60 * 24)
+        return foreninger
 
-    def all_associations_sorted(self):
-        return Association.sort(self.all_associations())
+    def all_foreninger_sorted(self):
+        return Forening.sort(self.all_foreninger())
 
-    def children_associations(self):
+    def children_foreninger(self):
         """
-        Returns this users' associations, with all their children, regardless of role.
-        Used with aktiviteter where users can list their associations' children if desired
-        and set aktivitet-association to those too.
+        Returns this users' foreninger, with all their children, regardless of role.
+        Used with aktiviteter where users can list their foreninger' children if desired
+        and set aktivitet-forening to those too.
         """
-        associations = cache.get('user.%s.children_associations' % self.id)
-        if associations is None:
+        foreninger = cache.get('user.%s.children_foreninger' % self.id)
+        if foreninger is None:
             if self.has_perm('sherpa_admin'):
-                # Sherpa admins have access to all associations
-                associations = Association.objects.all()
-                #for association in associations:
-                #    association.role = 'admin'
+                # Sherpa admins have access to all foreninger
+                foreninger = Forening.objects.all()
+                #for forening in foreninger:
+                #    forening.role = 'admin'
             else:
-                # A normal user, return all connected associations with their children
-                associations = []
-                for association in self.associations.all():
-                    for association in association.get_with_children():
-                        # association.role = 'admin'
-                        associations.append(association)
+                # A normal user, return all connected foreninger with their children
+                foreninger = []
+                for forening in self.foreninger.all():
+                    for forening in forening.get_with_children():
+                        # forening.role = 'admin'
+                        foreninger.append(forening)
 
-                # Since this will add duplicates if any of the related associations
-                # are child/parent-related with each other, sort and group by association
+                # Since this will add duplicates if any of the related foreninger
+                # are child/parent-related with each other, sort and group by forening
                 # id and remove dupes.
-                sorted_associations = sorted(associations, key=lambda a: a.id)
-                grouped_associations = groupby(sorted_associations, key=lambda a: a.id)
-                associations = [list(group)[0] for key, group in grouped_associations]
-            cache.set('user.%s.children_associations' % self.id, associations, 60 * 60 * 24)
-        return associations
+                sorted_foreninger = sorted(foreninger, key=lambda a: a.id)
+                grouped_foreninger = groupby(sorted_foreninger, key=lambda a: a.id)
+                foreninger = [list(group)[0] for key, group in grouped_foreninger]
+            cache.set('user.%s.children_foreninger' % self.id, foreninger, 60 * 60 * 24)
+        return foreninger
 
-    def children_associations_sorted(self):
-        return Association.sort(self.children_associations())
+    def children_foreninger_sorted(self):
+        return Forening.sort(self.children_foreninger())
 
     def merge_with(self, other_user, move_password=False):
         """
@@ -574,8 +574,8 @@ class User(AbstractBaseUser):
         Article.objects.filter(created_by=other_user).update(created_by=self)
         Article.objects.filter(modified_by=other_user).update(modified_by=self)
 
-        # user.AssociationRole:
-        AssociationRole.objects.filter(user=other_user).update(user=self)
+        # user.ForeningRole:
+        ForeningRole.objects.filter(user=other_user).update(user=self)
 
         # admin.Image:
         Image.objects.filter(uploader=other_user).update(uploader=self)
@@ -612,7 +612,7 @@ class User(AbstractBaseUser):
         SMSServiceRequest.objects.filter(user=other_user).update(user=self)
 
         # user.User:
-        # The 'associations' relation is already handled through AssociationRole
+        # The 'foreninger' relation is already handled through ForeningRole
         self.permissions = other_user.permissions.all()
 
         # page.Variant:
@@ -730,12 +730,12 @@ class Permission(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
 
-class AssociationRole(models.Model):
+class ForeningRole(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Administrator'),
         ('user', 'Vanlig bruker'),)
     user = models.ForeignKey('user.User')
-    association = models.ForeignKey('association.Association')
+    forening = models.ForeignKey('foreninger.Forening')
     role = models.CharField(max_length=255, choices=ROLE_CHOICES)
 
     def __unicode__(self):
@@ -744,7 +744,7 @@ class AssociationRole(models.Model):
     @staticmethod
     def friendly_role(role):
         # Assumes that 'role' exists in the tuple and is unique
-        return [c[1] for c in AssociationRole.ROLE_CHOICES if c[0] == role][0]
+        return [c[1] for c in ForeningRole.ROLE_CHOICES if c[0] == role][0]
 
 class NorwayBusTicket(models.Model):
     user = models.OneToOneField(User, related_name='norway_bus_ticket')
@@ -767,7 +767,7 @@ class Turleder(models.Model):
         (u'ambassadør', u'DNT Ambassadør'),)
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
-    association_approved = models.ForeignKey('association.Association', related_name='turledere_approved')
+    forening_approved = models.ForeignKey('foreninger.Forening', related_name='turledere_approved')
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
 

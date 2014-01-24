@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from core import validator
 from core.models import FocusCountry
-from sherpa2.models import Association, DNT_OSLO_ID, DNT_UNG_OSLO_ID
+from sherpa2.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
 
 from focus.models import Price, Enrollment as FocusEnrollment
 
@@ -43,9 +43,9 @@ class Enrollment(models.Model):
     )
     result = models.CharField(max_length=255)
 
-    # Cross-DB relationship to sherpa2.models.Association
-    # When we get rid of the old model, change this to a OneToOneField to association.models.Association
-    association = models.IntegerField(null=True)
+    # Cross-DB relationship to sherpa2.models.Forening
+    # When we get rid of the old model, change this to a OneToOneField to foreninger.models.Forening
+    forening = models.IntegerField(null=True)
 
     # Address information
     country = models.CharField(max_length=2)
@@ -102,25 +102,25 @@ class Enrollment(models.Model):
     def get_country(self):
         return FocusCountry.objects.get(code=self.country)
 
-    def get_association(self):
+    def get_forening(self):
         """
-        Get the association defined in Focus for this zipcode. This *should* be the actual
-        Association, but other rules may dictate that it isn't, see the below methods.
+        Get the forening defined in Focus for this zipcode. This *should* be the actual
+        Forening, but other rules may dictate that it isn't, see the below methods.
         """
-        association = cache.get('association_sherpa2.%s' % self.association)
-        if association is None:
-            association = Association.objects.get(id=self.association)
-            cache.set('association_sherpa2.%s' % self.association, association, 60 * 60 * 24 * 7)
-        return association
+        forening = cache.get('forening_sherpa2.%s' % self.forening)
+        if forening is None:
+            forening = Forening.objects.get(id=self.forening)
+            cache.set('forening_sherpa2.%s' % self.forening, forening, 60 * 60 * 24 * 7)
+        return forening
 
     def is_applicable_for_dnt_ung_oslo(self):
         """
         Youth members of DNT Oslo og Omegn should be displayed as members of DNT ung Oslo. See
-        user.models.User.main_association() for more information of why we have to create that
+        user.models.User.main_forening() for more information of why we have to create that
         logic here. Use this method to find out how applicable this is for these users
         (applicable for none of them, some, or all).
         """
-        if self.get_association().id != DNT_OSLO_ID:
+        if self.get_forening().id != DNT_OSLO_ID:
             # Not DNT Oslo og Omegn, applicable for none
             return 'none'
         else:
@@ -131,27 +131,27 @@ class Enrollment(models.Model):
             else:
                 return 'none'
 
-    def get_actual_association_if_any(self):
-        return self.get_actual_association(any)
+    def get_actual_forening_if_any(self):
+        return self.get_actual_forening(any)
 
-    def get_actual_association_if_all(self):
-        return self.get_actual_association(all)
+    def get_actual_forening_if_all(self):
+        return self.get_actual_forening(all)
 
-    def get_actual_association(self, desired_count):
-        if self.get_association().id == DNT_OSLO_ID and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
-            association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID)
-            if association is None:
-                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
-                cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID, association, 60 * 60 * 24 * 7)
-            return association
+    def get_actual_forening(self, desired_count):
+        if self.get_forening().id == DNT_OSLO_ID and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
+            forening = cache.get('forening_sherpa2.%s' % DNT_UNG_OSLO_ID)
+            if forening is None:
+                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
+                cache.set('forening_sherpa2.%s' % DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
+            return forening
         else:
-            return self.get_association()
+            return self.get_forening()
 
     def get_prices(self):
-        price = cache.get('association.price.%s' % self.get_association().focus_id)
+        price = cache.get('forening.price.%s' % self.get_forening().focus_id)
         if price is None:
-            price = Price.objects.get(association_id=self.get_association().focus_id)
-            cache.set('association.price.%s' % self.get_association().focus_id, price, 60 * 60 * 24 * 7)
+            price = Price.objects.get(forening_id=self.get_forening().focus_id)
+            cache.set('forening.price.%s' % self.get_forening().focus_id, price, 60 * 60 * 24 * 7)
         return price
 
     def get_total_price(self):
@@ -255,18 +255,18 @@ class User(models.Model):
         # All tests passed!
         return True
 
-    def get_actual_association(self):
+    def get_actual_forening(self):
         """
-        Return the applicable association for this user. Which means the default association in most
+        Return the applicable forening for this user. Which means the default forening in most
         cases, but DNT ung Oslo if the default is DNT Oslo og Omegn and this is a youth member.
         """
-        association = self.enrollment.get_association()
-        if association.id == DNT_OSLO_ID and self.applicable_for_dnt_ung_oslo():
-            association = cache.get('association_sherpa2.%s' % DNT_UNG_OSLO_ID)
-            if association is None:
-                association = Association.objects.get(id=DNT_UNG_OSLO_ID)
-                cache.set('association_sherpa2.%s' % DNT_UNG_OSLO_ID, association, 60 * 60 * 24 * 7)
-        return association
+        forening = self.enrollment.get_forening()
+        if forening.id == DNT_OSLO_ID and self.applicable_for_dnt_ung_oslo():
+            forening = cache.get('forening_sherpa2.%s' % DNT_UNG_OSLO_ID)
+            if forening is None:
+                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
+                cache.set('forening_sherpa2.%s' % DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
+        return forening
 
     def applicable_for_dnt_ung_oslo(self):
         return self.get_age() < AGE_MAIN and self.get_age() >= AGE_YOUTH

@@ -6,7 +6,7 @@
     <div class="more jq-hide">
       {% if user.is_member %}
         <strong>Født:</strong> {{ user.get_birth_date|date:"d.m.y" }}<br>
-        <strong>Medlemsforening:</strong> {{ user.main_association.name }}<br>
+        <strong>Medlemsforening:</strong> {{ user.main_forening.name }}<br>
         <strong>Medlemsnr:</strong> {{ user.memberid }}<br>
         <strong>Adresse:</strong><br>
         {{ user.get_address.format_with_newlines|linebreaksbr }}

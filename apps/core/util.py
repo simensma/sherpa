@@ -2,7 +2,7 @@
 
 from django.conf import settings
 
-from user.models import AssociationRole
+from user.models import ForeningRole
 
 from datetime import datetime, date
 import re
@@ -27,21 +27,21 @@ def use_image_thumb(url, preferred_size):
         appropriate_size = min(larger_than_preferred)
     return "%s-%s.%s" % (pre, appropriate_size, post)
 
-def association_user_role(association, user):
+def forening_user_role(forening, user):
     try:
-        return AssociationRole.objects.get(association=association, user=user).role
-    except AssociationRole.DoesNotExist:
-        # This might be a related association where we're admin beacuse we're admin for a parent. Check it
-        role = AssociationRole.objects.filter(association=association, user=user)
+        return ForeningRole.objects.get(forening=forening, user=user).role
+    except ForeningRole.DoesNotExist:
+        # This might be a related forening where we're admin beacuse we're admin for a parent. Check it
+        role = ForeningRole.objects.filter(forening=forening, user=user)
         while not role.exists() or role[0].role != 'admin':
-            association = association.parent
-            if association is None:
+            forening = forening.parent
+            if forening is None:
                 raise NoRoleRelationException
-            role = AssociationRole.objects.filter(association=association, user=user)
+            role = ForeningRole.objects.filter(forening=forening, user=user)
         return role[0].role
 
 class NoRoleRelationException(Exception):
-    """Raised when the Association does not have a related role"""
+    """Raised when the Forening does not have a related role"""
 
 def membership_year_start(year=None):
     """

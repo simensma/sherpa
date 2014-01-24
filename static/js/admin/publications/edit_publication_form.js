@@ -1,17 +1,17 @@
 $(document).ready(function() {
     var form = $("form.edit-publication");
-    var association_select = form.find("select[name='association']");
+    var forening_select = form.find("select[name='forening']");
     var access = form.find("div.form-group.access");
-    var access_association_name = access.find("span.association-name");
+    var access_forening_name = access.find("span.forening-name");
 
-    association_select.change(function() {
+    forening_select.change(function() {
         var selected = $(this).find("option:selected");
         if(selected.attr("data-type") == "sentral") {
             access.hide();
         } else {
             access.show();
-            var name = Turistforeningen.association_main_mappings[selected.val()];
-            access_association_name.text(name);
+            var name = Turistforeningen.forening_main_mappings[selected.val()];
+            access_forening_name.text(name);
         }
     });
 

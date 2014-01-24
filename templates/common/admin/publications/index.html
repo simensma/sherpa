@@ -7,7 +7,7 @@
 {% block js_globals %}
   <script>
     window.Turistforeningen = {
-      association_main_mappings: JSON.parse("{{ association_main_mappings|escapejs }}")
+      forening_main_mappings: JSON.parse("{{ forening_main_mappings|escapejs }}")
     };
   </script>
 {% endblock %}
@@ -49,7 +49,7 @@
                 Ingen!
               {% endif %}
             </td>
-            <td>{{ publication.association.name }}</td>
+            <td>{{ publication.forening.name }}</td>
           </tr>
         {% endfor %}
       </table>

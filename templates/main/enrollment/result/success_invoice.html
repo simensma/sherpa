@@ -21,17 +21,17 @@
     <div id="result" class="span8">
 
       <p>
-        {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url count users=enrollment.users.count %}
-          Du blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+        {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.url count users=enrollment.users.count %}
+          Du blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
         {% plural %}
-          Dere blir medlemmer i DNT og <a href="{{ url }}">{{ association }}</a>.
+          Dere blir medlemmer i DNT og <a href="{{ url }}">{{ forening }}</a>.
         {% endblocktrans %}
         <br>
 
         {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
 
-          {% blocktrans with association=enrollment.get_actual_association_if_any.name url=enrollment.get_actual_association_if_any.url %}
-            Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ association }}</a>.
+          {% blocktrans with forening=enrollment.get_actual_forening_if_any.name url=enrollment.get_actual_forening_if_any.url %}
+            Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
           {% endblocktrans %}
           <br>
 
@@ -78,8 +78,8 @@
         {% if enrollment.country == 'NO' %}
           <h3>{% trans "Hva skjer der du bor" %}</h3>
           <p>
-            {% blocktrans with association=enrollment.get_actual_association_if_all.name url=enrollment.get_actual_association_if_all.url %}
-              <a href="{{ url }}">{{ association }}</a> arrangerer fellesturer og aktiviteter hele året.
+            {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.url %}
+              <a href="{{ url }}">{{ forening }}</a> arrangerer fellesturer og aktiviteter hele året.
             {% endblocktrans %}
           </p>
         {% endif %}

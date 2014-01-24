@@ -24,7 +24,7 @@ from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
-from association.models import Association
+from foreninger.models import Forening
 
 from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from user.util import memberid_lookups_exceeded
@@ -46,7 +46,7 @@ def home(request):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def account(request):
     context = {
-        'association_count': Association.objects.filter(type='forening').count()
+        'forening_count': Forening.objects.filter(type='forening').count()
     }
     return render(request, 'common/user/account/account.html', context)
 
@@ -321,13 +321,13 @@ def turleder_aktivitet_date(request, aktivitet_date):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
-    accessible_associations = request.user.main_association().get_with_children()
-    publications_user_central = Publication.objects.filter(association__type='sentral')
-    publications_user_accessible = Publication.objects.filter(association__in=accessible_associations)
+    accessible_foreninger = request.user.main_forening().get_with_children()
+    publications_user_central = Publication.objects.filter(forening__type='sentral')
+    publications_user_accessible = Publication.objects.filter(forening__in=accessible_foreninger)
     publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
     publications_other = Publication.objects.exclude(
-        Q(association__in=accessible_associations) |
-        Q(association__type='sentral')
+        Q(forening__in=accessible_foreninger) |
+        Q(forening__type='sentral')
     ).filter(access='all').order_by('title')
     context = {
         'publications_user': publications_user,
@@ -339,12 +339,12 @@ def publications(request):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
-    accessible_associations = request.user.main_association().get_with_children()
+    accessible_foreninger = request.user.main_forening().get_with_children()
     publication = Publication.objects.filter(
         # Verify that the user has access to this publication
-        Q(association__type='sentral') |
+        Q(forening__type='sentral') |
         Q(access='all') |
-        Q(association__in=accessible_associations)
+        Q(forening__in=accessible_foreninger)
     ).get(id=publication)
     context = {'publication': publication}
     return render(request, 'common/user/account/publication.html', context)

@@ -8,8 +8,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 
-from association.models import Association
-from user.models import User, Permission, AssociationRole, Turleder
+from foreninger.models import Forening
+from user.models import User, Permission, ForeningRole, Turleder
 from focus.models import Actor, Enrollment
 
 from datetime import date
@@ -25,18 +25,18 @@ def show(request, other_user):
     other_user = User.objects.get(id=other_user)
 
     # Admins can assign user/admin, users can assign users
-    assignable_admin = [a for a in request.user.all_associations() if a.role == 'admin']
-    assignable_user = [a for a in request.user.all_associations() if a.role == 'user']
+    assignable_admin = [a for a in request.user.all_foreninger() if a.role == 'admin']
+    assignable_user = [a for a in request.user.all_foreninger() if a.role == 'user']
     # Don't let users assign new permissions for those that already have user status
-    # Use AssociationRole for other_user, because we can't set permissions for associations that are
-    # based on parent associations (to remove access to a child, you have to remove admin-permission
+    # Use ForeningRole for other_user, because we can't set permissions for foreninger that are
+    # based on parent foreninger (to remove access to a child, you have to remove admin-permission
     # to the parent)
-    other_user_associations = Association.objects.filter(associationrole__user=other_user)
-    assignable_user = [a for a in assignable_user if not a in other_user_associations]
-    assignable_associations = assignable_admin + assignable_user
+    other_user_foreninger = Forening.objects.filter(foreningrole__user=other_user)
+    assignable_user = [a for a in assignable_user if not a in other_user_foreninger]
+    assignable_foreninger = assignable_admin + assignable_user
 
-    # Only admins can revoke association relation
-    revokable_associations = [a for a in assignable_admin if a in other_user_associations]
+    # Only admins can revoke forening relation
+    revokable_foreninger = [a for a in assignable_admin if a in other_user_foreninger]
 
     today = date.today()
 
@@ -50,9 +50,9 @@ def show(request, other_user):
 
     context = {
         'other_user': other_user,
-        'revokable_associations': Association.sort(revokable_associations),
-        'assignable_associations': Association.sort(assignable_associations),
-        'all_associations': Association.sort(Association.objects.all()),
+        'revokable_foreninger': Forening.sort(revokable_foreninger),
+        'assignable_foreninger': Forening.sort(assignable_foreninger),
+        'all_foreninger': Forening.sort(Forening.objects.all()),
         'turleder_roles': Turleder.TURLEDER_CHOICES,
         'today': today,
         'five_years_from_now': five_years_from_now,
@@ -190,51 +190,51 @@ def make_sherpa_admin(request, user):
     user = User.objects.get(id=user)
     permission = Permission.objects.get(name='sherpa_admin')
     user.permissions.add(permission)
-    cache.delete('user.%s.all_associations' % user.id)
-    cache.delete('user.%s.children_associations' % user.id)
+    cache.delete('user.%s.all_foreninger' % user.id)
+    cache.delete('user.%s.children_foreninger' % user.id)
     return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))
 
-def add_association_permission(request):
+def add_forening_permission(request):
     user = User.objects.get(id=request.POST['user'])
-    association = Association.objects.get(id=request.POST['association'])
+    forening = Forening.objects.get(id=request.POST['forening'])
 
-    if not request.POST['role'] in [role[0] for role in AssociationRole.ROLE_CHOICES]:
+    if not request.POST['role'] in [role[0] for role in ForeningRole.ROLE_CHOICES]:
         raise PermissionDenied
 
     # Verify that the user performing this action has the required permissions
-    all_associations = request.user.all_associations()
+    all_foreninger = request.user.all_foreninger()
     if role == 'admin':
         # Setting admin requires admin
-        if not association in [a for a in all_associations if a.role == 'admin']:
+        if not forening in [a for a in all_foreninger if a.role == 'admin']:
             raise PermissionDenied
     elif role == 'user':
         # Any role can set user
-        if not association in all_associations:
+        if not forening in all_foreninger:
             raise PermissionDenied
 
     try:
-        role = AssociationRole.objects.get(user=user, association=association)
+        role = ForeningRole.objects.get(user=user, forening=forening)
         role.role = request.POST['role']
         role.save()
-    except AssociationRole.DoesNotExist:
-        role = AssociationRole(user=user, association=association, role=request.POST['role'])
+    except ForeningRole.DoesNotExist:
+        role = ForeningRole(user=user, forening=forening, role=request.POST['role'])
         role.save()
 
-    cache.delete('user.%s.all_associations' % user.id)
-    cache.delete('user.%s.children_associations' % user.id)
+    cache.delete('user.%s.all_foreninger' % user.id)
+    cache.delete('user.%s.children_foreninger' % user.id)
     return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))
 
-def revoke_association_permission(request):
+def revoke_forening_permission(request):
     user = User.objects.get(id=request.POST['user'])
-    association = Association.objects.get(id=request.POST['association'])
+    forening = Forening.objects.get(id=request.POST['forening'])
 
     # Verify that the user performing this action has the required permissions
-    admin_associations = [a for a in request.user.all_associations() if a.role == 'admin']
-    if not association in admin_associations:
+    admin_foreninger = [a for a in request.user.all_foreninger() if a.role == 'admin']
+    if not forening in admin_foreninger:
         raise PermissionDenied
 
-    role = AssociationRole.objects.get(user=user, association=association)
+    role = ForeningRole.objects.get(user=user, forening=forening)
     role.delete()
-    cache.delete('user.%s.all_associations' % user.id)
-    cache.delete('user.%s.children_associations' % user.id)
+    cache.delete('user.%s.all_foreninger' % user.id)
+    cache.delete('user.%s.children_foreninger' % user.id)
     return redirect('%s#tilganger' % reverse('admin.users.views.show', args=[user.id]))

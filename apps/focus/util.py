@@ -6,7 +6,7 @@ YEARBOOK_SERVICE_CODES = [152, 153, 154]
 FOREIGN_POSTAGE_SERVICE_CODES = [155, 156, 157]
 HOUSEHOLD_MEMBER_SERVICE_CODES = [107, 108, 109] # Note that the services do not define the entire set of household members
 
-# Association IDs we need to know
+# Forening IDs we need to know
 DNT_OSLO_ID = 10
 
 # Actor endcodes (reasons for terminating membership).

@@ -69,7 +69,7 @@
         {% for publication in publications_other %}
           <tr>
             <td><a href="{% url 'user.views.publication' publication.id %}">{{ publication.title }}</a></td>
-            <td>{{ publication.association.name }}</td>
+            <td>{{ publication.forening.name }}</td>
           </tr>
         {% endfor %}
       </table>

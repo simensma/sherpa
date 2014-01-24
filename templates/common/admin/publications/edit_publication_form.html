@@ -23,37 +23,37 @@
     <textarea name="description" id="publication_description" rows="5" class="form-control">{{ publication.description }}</textarea>
   </div>
 
-  <div class="form-group association">
-    <label class="control-label" for="publication_association">Tilhører</label>
+  <div class="form-group forening">
+    <label class="control-label" for="publication_forening">Tilhører</label>
     <div class="row">
       <div class="col-lg-12">
-        <select name="association" id="publication_association" data-chosen data-placeholder="Velg tilhørende forening...">
+        <select name="forening" id="publication_forening" data-chosen data-placeholder="Velg tilhørende forening...">
           <option value=""></option>
-          {% if user.all_associations_sorted.central|length > 0 %}
+          {% if user.all_foreninger_sorted.central|length > 0 %}
             <optgroup label="Sentralt/nasjonalt">
-              {% for association in user.all_associations_sorted.central %}
-                <option value="{{ association.id }}" data-type="sentral"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+              {% for forening in user.all_foreninger_sorted.central %}
+                <option value="{{ forening.id }}" data-type="sentral"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if user.all_associations_sorted.associations|length > 0 %}
+          {% if user.all_foreninger_sorted.foreninger|length > 0 %}
             <optgroup label="Medlemsforeninger">
-              {% for association in user.all_associations_sorted.associations %}
-                <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+              {% for forening in user.all_foreninger_sorted.foreninger %}
+                <option value="{{ forening.id }}"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if user.all_associations_sorted.small_associations|length > 0 %}
+          {% if user.all_foreninger_sorted.turlag|length > 0 %}
             <optgroup label="Lokale turlag">
-              {% for association in user.all_associations_sorted.small_associations %}
-                <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+              {% for forening in user.all_foreninger_sorted.turlag %}
+                <option value="{{ forening.id }}"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if user.all_associations_sorted.hike_groups|length > 0 %}
+          {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
             <optgroup label="Turgrupper">
-              {% for association in user.all_associations_sorted.hike_groups %}
-                <option value="{{ association.id }}"{% if publication.association == association %} selected{% endif %}{% if not publication and active_association == association %} selected{% endif %}>{{ association.name }}</option>
+              {% for forening in user.all_foreninger_sorted.turgrupper %}
+                <option value="{{ forening.id }}"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div class="form-group access{% if publication and publication.association.type == 'sentral' or not publication and active_association.type == 'sentral' %} jq-hide{% endif %}">
+  <div class="form-group access{% if publication and publication.forening.type == 'sentral' or not publication and active_forening.type == 'sentral' %} jq-hide{% endif %}">
     <label class="control-label">Tilgjengelig for</label>
 
     <div class="radio">
@@ -73,9 +73,9 @@
     </div>
 
     <div class="radio">
-      <label for="publication_access_association">
-        <input type="radio" name="access" id="publication_access_association" value="association" {% if publication.access == 'association' %} checked{% endif %}>
-        Kun medlemmer i <span class="association-name">{% firstof publication.association.get_main_association.name active_association.get_main_association.name %}</span>
+      <label for="publication_access_forening">
+        <input type="radio" name="access" id="publication_access_forening" value="forening" {% if publication.access == 'forening' %} checked{% endif %}>
+        Kun medlemmer i <span class="forening-name">{% firstof publication.forening.get_main_forening.name active_forening.get_main_forening.name %}</span>
       </label>
     </div>
   </div>

@@ -51,11 +51,11 @@
       {% endfor %}
     </td>
     <td>
-      {% if user.turleder_active_associations.count == association_count %}
+      {% if user.turleder_active_foreninger.count == forening_count %}
         <em>Aktiv i <strong>alle</strong> medlemsforeninger</em>
       {% else %}
-        {% for association in user.turleder_active_associations.all %}
-          {{ association.name }}{% if not forloop.last %}<br>{% endif %}
+        {% for forening in user.turleder_active_foreninger.all %}
+          {{ forening.name }}{% if not forloop.last %}<br>{% endif %}
         {% empty %}
           <em>Ikke aktiv i noen foreninger.</em>
         {% endfor %}

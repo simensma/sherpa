@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^', include('sherpa.urls_common_pre')),
 
     url(r'^', include('core.urls')),
-    url(r'^foreninger/', include('association.urls')),
+    url(r'^foreninger/', include('foreninger.urls')),
 
     # Note: This slug-prefix is duplicated in the DeactivatedEnrollment middleware
     url(r'^innmelding/', include('enrollment.urls')),

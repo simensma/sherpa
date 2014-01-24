@@ -2,10 +2,10 @@
 
 {% if aktivitet_date.contact_type == 'arrangør' %}
 
-  {% with association=aktivitet_date.aktivitet.association %}
-    {{ association.name }}<br>
-    Tlf. {{ association.phone }}<br>
-    E-post: <a href="mailto:{{ association.email }}">{{ association.email }}</a>
+  {% with forening=aktivitet_date.aktivitet.forening %}
+    {{ forening.name }}<br>
+    Tlf. {{ forening.phone }}<br>
+    E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a>
   {% endwith %}
 
 {% elif aktivitet_date.contact_type == 'turleder' %}

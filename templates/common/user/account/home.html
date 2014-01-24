@@ -57,9 +57,9 @@
           <tr>
             <th>Din medlemsforening:</th>
             <td>
-              {% if user.main_association.site %}<a href="http://{{ user.main_association.site.domain }}/">{% endif %}
-                {{ user.main_association.name }}
-              {% if user.main_association.site %}</a>{% endif %}
+              {% if user.main_forening.site %}<a href="http://{{ user.main_forening.site.domain }}/">{% endif %}
+                {{ user.main_forening.name }}
+              {% if user.main_forening.site %}</a>{% endif %}
             </td>
           </tr>
           {% if user.turledere.count > 0 %}
@@ -160,7 +160,7 @@
 
     {% if user.is_member %}
       {% column %}
-        <a href="{% url 'membership.views.benefits' user.main_association_actual.id %}" class="element">
+        <a href="{% url 'membership.views.benefits' user.main_forening_actual.id %}" class="element">
           <p class="title">Dine medlemsfordeler</p>
           <p>
             Se oversikt over alle fordelene du får gjennom ditt DNT-medlemskap.

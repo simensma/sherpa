@@ -96,7 +96,7 @@
           </div>
         </div>
 
-        <div class="section association">
+        <div class="section forening">
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -104,36 +104,36 @@
             </div>
           </div>
 
-          <div class="form-group association">
-            <label class="col-md-2 control-label" for="association">Arrangør</label>
+          <div class="form-group forening">
+            <label class="col-md-2 control-label" for="forening">Arrangør</label>
             <div class="col-md-10">
-              <select name="association" id="association" class="chosen" data-placeholder="Velg arrangør...">
+              <select name="forening" id="forening" class="chosen" data-placeholder="Velg arrangør...">
                 <option value=""></option>
-                {% if user.children_associations_sorted.central|length > 0 %}
+                {% if user.children_foreninger_sorted.central|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for association in user.children_associations_sorted.central %}
-                      <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.children_foreninger_sorted.central %}
+                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.children_associations_sorted.associations|length > 0 %}
+                {% if user.children_foreninger_sorted.foreninger|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for association in user.children_associations_sorted.associations %}
-                      <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.children_foreninger_sorted.foreninger %}
+                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.children_associations_sorted.small_associations|length > 0 %}
+                {% if user.children_foreninger_sorted.turlag|length > 0 %}
                   <optgroup label="Lokale turlag">
-                    {% for association in user.children_associations_sorted.small_associations %}
-                      <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.children_foreninger_sorted.turlag %}
+                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.children_associations_sorted.hike_groups|length > 0 %}
+                {% if user.children_foreninger_sorted.turgrupper|length > 0 %}
                   <optgroup label="Turgrupper">
-                    {% for association in user.children_associations_sorted.hike_groups %}
-                      <option value="{{ association.id }}"{% if aktivitet.association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in user.children_foreninger_sorted.turgrupper %}
+                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
@@ -141,36 +141,36 @@
             </div>
           </div>
 
-          <div class="form-group co_association">
-            <label class="col-md-2 control-label" for="co_association">Medarrangør</label>
+          <div class="form-group co_forening">
+            <label class="col-md-2 control-label" for="co_forening">Medarrangør</label>
             <div class="col-md-10">
-              <select name="co_association" id="co_association" class="chosen" data-placeholder="Ingen medarrangør">
+              <select name="co_forening" id="co_forening" class="chosen" data-placeholder="Ingen medarrangør">
                 <option value=""></option>
-                {% if all_associations.central|length > 0 %}
+                {% if all_foreninger.central|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for association in all_associations.central %}
-                      <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in all_foreninger.central %}
+                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if all_associations.associations|length > 0 %}
+                {% if all_foreninger.foreninger|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for association in all_associations.associations %}
-                      <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in all_foreninger.foreninger %}
+                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if all_associations.small_associations|length > 0 %}
+                {% if all_foreninger.turlag|length > 0 %}
                   <optgroup label="Lokale turlag">
-                    {% for association in all_associations.small_associations %}
-                      <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in all_foreninger.turlag %}
+                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if all_associations.hike_groups|length > 0 %}
+                {% if all_foreninger.turgrupper|length > 0 %}
                   <optgroup label="Turgrupper">
-                    {% for association in all_associations.hike_groups %}
-                      <option value="{{ association.id }}"{% if aktivitet.co_association == association %} selected{% endif %}>{{ association.name }}</option>
+                    {% for forening in all_foreninger.turgrupper %}
+                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}

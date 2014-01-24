@@ -22,7 +22,7 @@ def index(request):
         variant__article__published=True,
         active=True,
         variant__article__pub_date__lt=datetime.now(),
-        variant__article__site=request.session['active_association'].site
+        variant__article__site=request.session['active_forening'].site
         ).order_by('-variant__article__pub_date')
 
     for version in article_versions:
@@ -43,7 +43,7 @@ def delete(request):
             active=True,
             variant__segment__isnull=True,
             variant__page__slug='',
-            variant__page__site=request.session['active_association'].site
+            variant__page__site=request.session['active_forening'].site
             ).id
         cache.delete('content.version.%s' % id)
     elif request.POST['key'] == 'page':

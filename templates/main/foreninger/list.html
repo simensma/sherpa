@@ -1,17 +1,17 @@
 {% extends 'main/layout.html' %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/associations/common.js"></script>
-  <script src="{{ STATIC_URL }}js/associations/list.js"></script>
+  <script src="{{ STATIC_URL }}js/foreninger/common.js"></script>
+  <script src="{{ STATIC_URL }}js/foreninger/list.js"></script>
 {% endblock %}
 
 {% block title %}DNT der du bor{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'association.views.index' %}">DNT der du bor</a></em>{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'foreninger.views.index' %}">DNT der du bor</a></em>{% endblock %}
 
 {% block body %}
 
 <h1>DNT der du bor</h1>
 
-<div id="searchbox" data-filter-url="{% url 'association.views.filter' %}">
+<div id="searchbox" data-filter-url="{% url 'foreninger.views.filter' %}">
   <div id="content">
     <table>
       <tr>
@@ -79,8 +79,8 @@
   <div class="span6">
     <select name="full-list" data-placeholder="Vet du hva du leter etter?">
       <option value=""></option>
-      {% for association in full_list %}
-        <option value="{{ association.url }}">{{ association.name }}</option>
+      {% for forening in full_list %}
+        <option value="{{ forening.url }}">{{ forening.name }}</option>
       {% endfor %}
     </select>
   </div>

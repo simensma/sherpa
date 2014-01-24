@@ -31,7 +31,7 @@ def list_bulk(request, bulk):
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
-        variant__article__site=request.session['active_association'].site
+        variant__article__site=request.session['active_forening'].site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
     for version in versions:
         version.load_preview()
@@ -44,7 +44,7 @@ def new(request):
         published=False,
         pub_date=None,
         created_by=request.user,
-        site=request.session['active_association'].site)
+        site=request.session['active_forening'].site)
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user)
     variant.save()

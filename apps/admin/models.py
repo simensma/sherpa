@@ -54,12 +54,12 @@ def delete_album(sender, **kwargs):
     Image.objects.filter(album=kwargs['instance']).delete()
 
 class Publication(models.Model):
-    association = models.ForeignKey('association.Association')
+    forening = models.ForeignKey('foreninger.Forening')
     title = models.CharField(max_length=255)
     description = models.TextField()
     ACCESS_CHOICES = (
         ('all', 'Alle medlemmer'),
-        ('association', 'Medlemmer i foreningen eller underforeninger'),)
+        ('forening', 'Medlemmer i foreningen eller underforeninger'),)
     access = models.CharField(max_length=255, choices=ACCESS_CHOICES, default=ACCESS_CHOICES[0][0])
     LICENSE_CHOICES = (
         ('all_rights_reserved', 'Alle rettigheter reservert'),

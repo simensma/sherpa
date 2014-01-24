@@ -91,7 +91,7 @@ def save(request, version):
         if request.POST['parent'] == '':
             new_parent = None
         else:
-            new_parent = Page.on(request.session['active_association'].site).get(id=request.POST['parent'])
+            new_parent = Page.on(request.session['active_forening'].site).get(id=request.POST['parent'])
             parent = new_parent
             while parent is not None:
                 if parent.id == page.id:

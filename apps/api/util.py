@@ -35,12 +35,12 @@ def get_member_data(user):
             dob = dob.strftime("%Y-%m-%d")
 
         if not user.has_perm('sherpa'):
-            association_permissions = []
+            forening_permissions = []
         else:
-            association_permissions = [{
+            forening_permissions = [{
                 'sherpa_id': a.id,
                 # TODO: NTB object_id
-            } for a in user.all_associations()]
+            } for a in user.all_foreninger()]
 
         return {
             'sherpa_id': user.id,
@@ -64,7 +64,7 @@ def get_member_data(user):
                     'navn': address.country.name
                 }
             },
-            'foreningstilganger': association_permissions,
+            'foreningstilganger': forening_permissions,
         }
 
 def authenticate(request):

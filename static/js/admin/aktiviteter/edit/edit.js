@@ -12,8 +12,8 @@ $(document).ready(function() {
     var subcategory_other_buttons_trigger = subcategories.find("a.show-other-buttons");
     var custom_subcategory = subcategories.find("input[name='custom-category']");
     var subcategory_input = subcategories.find("input[name='subcategories']");
-    var association_select = form.find("select[name='association']");
-    var co_association_select = form.find("select[name='co_association']");
+    var forening_select = form.find("select[name='forening']");
+    var co_forening_select = form.find("select[name='co_forening']");
     var images_input = form.find("input[name='images']");
     var turforslag = form.find("div.form-group.turforslag");
     var turforslag_input = turforslag.find("input[name='turforslag']");
@@ -34,8 +34,8 @@ $(document).ready(function() {
         images_container.slideDown();
     });
 
-    association_select.chosen();
-    co_association_select.chosen({
+    forening_select.chosen();
+    co_forening_select.chosen({
         'allow_single_deselect': true
     });
 

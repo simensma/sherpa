@@ -121,9 +121,9 @@
           <tr>
             <th>Medlemsforening</th>
             <td>
-              {% if user.main_association.site %}<a href="http://{{ user.main_association.site.domain }}/">{% endif %}
-                {{ user.main_association.name }}
-              {% if user.main_association.site %}</a>{% endif %}
+              {% if user.main_forening.site %}<a href="http://{{ user.main_forening.site.domain }}/">{% endif %}
+                {{ user.main_forening.name }}
+              {% if user.main_forening.site %}</a>{% endif %}
             </td>
           </tr>
           <tr>
@@ -287,12 +287,12 @@
           <h2>Turledersertifikat</h2>
 
           <p>
-            {% if user.turleder_active_associations.count == association_count %}
+            {% if user.turleder_active_foreninger.count == forening_count %}
               <em>Du er registrert som aktiv turleder i <strong>alle</strong> DNTs medlemsforeninger.</em>
-            {% elif user.turleder_active_associations.count > 0 %}
+            {% elif user.turleder_active_foreninger.count > 0 %}
               <em>Du er registrert som aktiv turleder i:</em>
-              {% for association in user.turleder_active_associations.all %}
-                <strong>{{ association.name }}</strong>{% if not forloop.last %}, {% endif %}
+              {% for forening in user.turleder_active_foreninger.all %}
+                <strong>{{ forening.name }}</strong>{% if not forloop.last %}, {% endif %}
               {% endfor %}
             {% else %}
               <em>Du er ikke registrert som aktiv turleder i noen medlemsforeninger.</em>
@@ -334,7 +334,7 @@
                 </td>
                 <td>
                   {% if turleder.is_expired %}<s>{% endif %}
-                    {{ turleder.association_approved.name }}
+                    {{ turleder.forening_approved.name }}
                   {% if turleder.is_expired %}</s>{% endif %}
                 </td>
                 <td>

@@ -8,12 +8,12 @@ $(document).ready(function() {
     var toggle_create = register.find("a.toggle-create");
     var turleder_search_input = filters.find("input[name='turleder']");
     var turleder_search_button = filters.find("button.turleder-search");
-    var turleder_association_active = filters.find("select[name='association_active']");
+    var turleder_forening_active = filters.find("select[name='forening_active']");
     var turleder_roles = filters.find("select[name='turleder_roles']");
     var instruktor_roles = filters.find("select[name='instruktor_roles']");
     var turleder_include_all_roles_label = filters.find("label.include-all-certificates");
     var turleder_include_all_roles = filters.find("input[name='include_all_certificates']");
-    var turleder_association_approved = filters.find("select[name='association_approved']");
+    var turleder_forening_approved = filters.find("select[name='forening_approved']");
 
 
     register.find("div.tab-pane").each(function() {
@@ -29,7 +29,7 @@ $(document).ready(function() {
         register.find("ul.nav a[href='#create']").tab('show');
     });
 
-    turleder_association_approved.chosen({
+    turleder_forening_approved.chosen({
         'allow_single_deselect': true
     });
 
@@ -83,11 +83,11 @@ $(document).ready(function() {
             return {
                 bulk: bulk,
                 query: turleder_search_input.val(),
-                turleder_associations_active: JSON.stringify(get_selected_active_associations()),
+                turleder_foreninger_active: JSON.stringify(get_selected_active_foreninger()),
                 turleder_role: turleder_roles.find("option:selected").val(),
                 instruktor_roles: JSON.stringify(get_selected_instruktor_roles()),
                 turleder_role_include: JSON.stringify(turleder_include_all_roles.prop("checked")),
-                turleder_association_approved: turleder_association_approved.find("option:selected").val()
+                turleder_forening_approved: turleder_forening_approved.find("option:selected").val()
             };
         },
         beforeLoad: function() {
@@ -106,9 +106,9 @@ $(document).ready(function() {
     });
     InfiniteScroller.trigger();
 
-    function get_selected_active_associations() {
+    function get_selected_active_foreninger() {
         var active = [];
-        turleder_association_active.find("option:selected").each(function() {
+        turleder_forening_active.find("option:selected").each(function() {
             active.push($(this).val());
         });
         return active;

@@ -28,8 +28,8 @@
     </div>
   {% endif %}
 
-  {% if association %}
-    Din lokale medlemsforening blir <strong>{{ association.name }}</strong>. Her er dine medlemsfordeler og priser på medlemskap.
+  {% if forening %}
+    Din lokale medlemsforening blir <strong>{{ forening.name }}</strong>. Her er dine medlemsfordeler og priser på medlemskap.
   {% else %}
     Her er alle medlemsfordelene og priser på medlemskap.
   {% endif %}
@@ -224,12 +224,12 @@
             <dd>
               Som DNT-medlem får du 20% rabatt på dagskort på <a href="http://www.strynsommerski.no/">Stryn Sommerski</a>. Husk medlemsbeviset!
             </dd>
-            {% if association %}
+            {% if forening %}
               <dt>
                 Lokale tilbud der du bor
               </dt>
               <dd>
-                {{ association.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ association.url }}">nettsidene til {{ association.name }}</a>.
+                {{ forening.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ forening.url }}">nettsidene til {{ forening.name }}</a>.
               </dd>
             {% endif %}
           </dl>
@@ -331,8 +331,8 @@
           <strong>Merk:</strong>
         </p>
         <ul>
-          {% if association %}
-            <li>Prisene gjelder for medlemskap i {{ association.name }}. Andre medlemsforeninger kan ha andre priser.</li>
+          {% if forening %}
+            <li>Prisene gjelder for medlemskap i {{ forening.name }}. Andre medlemsforeninger kan ha andre priser.</li>
           {% else %}
             <li>Prisene er kun veiledende da enkelte medlemsforeninger kan ha andre priser.</li>
           {% endif %}
@@ -354,31 +354,31 @@
     </div>
   </div>
 
-  {% if association %}
-  <div class="row association-data">
+  {% if forening %}
+  <div class="row forening-data">
     <div class="span8">
       <div class="well">
-        <h2>{{ association.name }}</h2>
-        {% if association.url %}
-          <p><a href="{{ association.url }}">{{ association.url }}</a></p>
+        <h2>{{ forening.name }}</h2>
+        {% if forening.url %}
+          <p><a href="{{ forening.url }}">{{ forening.url }}</a></p>
         {% endif %}
-        {% if association.email %}
-          <p>E-post: <a href="{{ association.email }}">{{ association.email }}</a></p>
+        {% if forening.email %}
+          <p>E-post: <a href="{{ forening.email }}">{{ forening.email }}</a></p>
         {% endif %}
-        {% if association.phone %}
-          <p>Tlf: {{ association.phone }}</p>
+        {% if forening.phone %}
+          <p>Tlf: {{ forening.phone }}</p>
         {% endif %}
-        {% if association.facebook %}
-          <p><a href="{{ association.facebook }}">Besøk oss på Facebook</a></p>
+        {% if forening.facebook %}
+          <p><a href="{{ forening.facebook }}">Besøk oss på Facebook</a></p>
         {% endif %}
-        {% if association.post_address %}
-          <p>Postadresse: {{ association.post_address }}, {{ association.zipcode }} {{ association.ziparea }}</p>
+        {% if forening.post_address %}
+          <p>Postadresse: {{ forening.post_address }}, {{ forening.zipcode }} {{ forening.ziparea }}</p>
           {% endif %}
-        {% if association.visit_address %}
-          <p>Besøksadresse: {{ association.visit_address }}</p>
+        {% if forening.visit_address %}
+          <p>Besøksadresse: {{ forening.visit_address }}</p>
         {% endif %}
-        {% if association.map %}
-          <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ association.map }}"></iframe>
+        {% if forening.map %}
+          <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ forening.map }}"></iframe>
         {% endif %}
       </div>
     </div>

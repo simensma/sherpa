@@ -7,8 +7,8 @@ import json
 from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
-    association = models.ForeignKey('association.Association', related_name='+')
-    co_association = models.ForeignKey('association.Association', null=True, related_name='+')
+    forening = models.ForeignKey('foreninger.Forening', related_name='+')
+    co_forening = models.ForeignKey('foreninger.Forening', null=True, related_name='+')
     code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()

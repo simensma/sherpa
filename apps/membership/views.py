@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 from sherpa.decorators import user_requires_login
-from sherpa2.models import Association
+from sherpa2.models import Forening
 from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_OSLO_ID as DNT_OSLO_ID_FOCUS
 from core.models import Zipcode
@@ -28,25 +28,25 @@ def index(request):
     context = {'gift_membership_prices': membership_price_by_code}
     return render(request, 'main/membership/index.html', context)
 
-def benefits(request, association_id):
-    if association_id is None:
-        # No association-attachment provided, use default prices (DNT Oslo og Omegn).
-        association_focus_id = DNT_OSLO_ID_FOCUS
-        association = None
+def benefits(request, forening_id):
+    if forening_id is None:
+        # No forening-attachment provided, use default prices (DNT Oslo og Omegn).
+        forening_focus_id = DNT_OSLO_ID_FOCUS
+        forening = None
     else:
-        association = cache.get('association_sherpa2.%s' % association_id)
-        if association is None:
-            association = Association.objects.get(id=association_id)
-            cache.set('association_sherpa2.%s' % association_id, association, 60 * 60 * 24 * 7)
-        association_focus_id = association.focus_id
+        forening = cache.get('forening_sherpa2.%s' % forening_id)
+        if forening is None:
+            forening = Forening.objects.get(id=forening_id)
+            cache.set('forening_sherpa2.%s' % forening_id, forening, 60 * 60 * 24 * 7)
+        forening_focus_id = forening.focus_id
 
-    price = cache.get('association.price.%s' % association_focus_id)
+    price = cache.get('forening.price.%s' % forening_focus_id)
     if price is None:
-        price = Price.objects.get(association_id=association_focus_id)
-        cache.set('association.price.%s' % association_focus_id, price, 60 * 60 * 24 * 7)
+        price = Price.objects.get(forening_id=forening_focus_id)
+        cache.set('forening.price.%s' % forening_focus_id, price, 60 * 60 * 24 * 7)
 
     context = {
-        'association': association,
+        'forening': forening,
         'price': price,
         'enrollment_active': State.objects.all()[0].active,
     }
@@ -57,20 +57,20 @@ def zipcode_search(request):
         return HttpResponse(json.dumps({'error': 'missing_zipcode'}))
 
     try:
-        # Get focus zipcode-association ID
-        focus_association_id = cache.get('focus.zipcode_association.%s' % request.POST['zipcode'])
-        if focus_association_id is None:
-            focus_association_id = FocusZipcode.objects.get(zipcode=request.POST['zipcode']).main_association_id
-            cache.set('focus.zipcode_association.%s' % request.POST['zipcode'], focus_association_id, 60 * 60 * 24 * 7)
+        # Get focus zipcode-forening ID
+        focus_forening_id = cache.get('focus.zipcode_forening.%s' % request.POST['zipcode'])
+        if focus_forening_id is None:
+            focus_forening_id = FocusZipcode.objects.get(zipcode=request.POST['zipcode']).main_forening_id
+            cache.set('focus.zipcode_forening.%s' % request.POST['zipcode'], focus_forening_id, 60 * 60 * 24 * 7)
 
-        # Get association based on zipcode-ID
-        association = cache.get('association_sherpa2.focus.%s' % focus_association_id)
-        if association is None:
-            association = Association.objects.get(focus_id=focus_association_id)
-            cache.set('association_sherpa2.focus.%s' % focus_association_id, association, 60 * 60 * 24 * 7)
+        # Get forening based on zipcode-ID
+        forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
+        if forening is None:
+            forening = Forening.objects.get(focus_id=focus_forening_id)
+            cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
 
         # Success, redirect user
-        url = "%s-%s/" % (reverse('membership.views.benefits', args=[association.id])[:-1], slugify(association.name))
+        url = "%s-%s/" % (reverse('membership.views.benefits', args=[forening.id])[:-1], slugify(forening.name))
         return HttpResponse(json.dumps({'url': url}))
 
     except FocusZipcode.DoesNotExist:
@@ -88,7 +88,7 @@ def zipcode_search(request):
             # This *could* be an entirely new Zipcode, or just an invalid one.
             return HttpResponse(json.dumps({'error': 'invalid_zipcode', 'zipcode': request.POST['zipcode']}))
 
-    except Association.DoesNotExist:
+    except Forening.DoesNotExist:
         logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
             exc_info=sys.exc_info(),
             extra={'request': request}

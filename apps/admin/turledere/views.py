@@ -13,7 +13,7 @@ from django.core.cache import cache
 from datetime import datetime
 import json
 
-from association.models import Association
+from foreninger.models import Forening
 from user.models import User, Turleder, Kursleder, Instruktor
 from focus.models import Actor
 
@@ -43,7 +43,7 @@ def edit_turleder_certificate(request, user):
             role=request.POST['role'],
         )
 
-    turleder.association_approved = Association.objects.get(id=request.POST['association_approved'])
+    turleder.forening_approved = Forening.objects.get(id=request.POST['forening_approved'])
     try:
         turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
         if turleder.role == u'ambassadør':
@@ -88,15 +88,15 @@ def edit_instruktor_roles(request, user):
     messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
-def edit_active_associations(request, user):
+def edit_active_foreninger(request, user):
     user = User.get_users().get(id=user)
 
-    user.turleder_active_associations.clear()
-    if json.loads(request.POST['active_associations_all']):
-        user.turleder_active_associations = Association.objects.filter(type='forening')
+    user.turleder_active_foreninger.clear()
+    if json.loads(request.POST['active_foreninger_all']):
+        user.turleder_active_foreninger = Forening.objects.filter(type='forening')
     else:
-        for association_id in json.loads(request.POST['active_association_ids']):
-            user.turleder_active_associations.add(Association.objects.get(id=association_id))
+        for forening_id in json.loads(request.POST['active_forening_ids']):
+            user.turleder_active_foreninger.add(Forening.objects.get(id=forening_id))
 
     messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
@@ -132,10 +132,10 @@ def turleder_search(request):
 
         turledere = turledere.filter(memberid__in=[a.memberid for a in actors])
 
-    # Filter on associations where the turleder is active
-    active_associations = json.loads(request.POST['turleder_associations_active'])
-    if len(active_associations) > 0:
-        turledere = turledere.filter(turleder_active_associations__in=active_associations)
+    # Filter on foreninger where the turleder is active
+    active_foreninger = json.loads(request.POST['turleder_foreninger_active'])
+    if len(active_foreninger) > 0:
+        turledere = turledere.filter(turleder_active_foreninger__in=active_foreninger)
 
     turleder_role = request.POST['turleder_role']
     if turleder_role != '':
@@ -154,18 +154,18 @@ def turleder_search(request):
     for role in json.loads(request.POST['instruktor_roles']):
         turledere = turledere.filter(instruktor__role=role)
 
-    # Filter on certificates approved by some association
-    association_approved = None
-    if request.POST['turleder_association_approved'] != '':
-        association_approved = Association.objects.get(id=request.POST['turleder_association_approved'])
-        turledere = turledere.filter(turledere__association_approved=association_approved)
+    # Filter on certificates approved by some forening
+    forening_approved = None
+    if request.POST['turleder_forening_approved'] != '':
+        forening_approved = Forening.objects.get(id=request.POST['turleder_forening_approved'])
+        turledere = turledere.filter(turledere__forening_approved=forening_approved)
 
     # Clean up, prefetch and sort by name. Names must be fetched from Focus for each hit,
     # hence slow. Actors are cached, so it will only be slow once.
     BULK_COUNT = 40
     start = int(request.POST['bulk']) * BULK_COUNT
     end = start + BULK_COUNT
-    turledere = turledere.distinct().prefetch_related('turledere', 'turledere__association_approved')
+    turledere = turledere.distinct().prefetch_related('turledere', 'turledere__forening_approved')
     total_count = turledere.count()
 
     # To sort them by name, we'll need the Actor data - prefetch the hits in one query, and cache them
@@ -185,7 +185,7 @@ def turleder_search(request):
         'users': turledere,
         'first_bulk': request.POST['bulk'] == '0',
         'total_count': total_count,
-        'association_count': Association.objects.filter(type='forening').count()
+        'forening_count': Forening.objects.filter(type='forening').count()
     })
     return HttpResponse(json.dumps({
         'complete': len(turledere) == 0,

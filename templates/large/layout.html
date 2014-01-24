@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
-  <title>{% block title %}Forsiden{% endblock %} &mdash; {{ site.association.name }}</title>
+  <title>{% block title %}Forsiden{% endblock %} &mdash; {{ site.forening.name }}</title>
   <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
 
   {% include 'global_layout/css.html' %}
@@ -22,8 +22,8 @@
   <div class="row">
     <div class="span6">
       <a href="{% url 'page.views.page' %}">
-        <div class="association-logo left">
-          {{ site.association.name }}
+        <div class="forening-logo left">
+          {{ site.forening.name }}
         </div>
       </a>
       <div style="clear: both;"></div>
@@ -148,51 +148,51 @@
       <div class="span6 contact-information">
         {# TODO - Preliminary IP-URL (to avoid local hosts-manipulation) #}
         {# TODO - Disse logoene må gjøres transparante #}
-        <img src="http://77.40.236.233/share/img/profil/{{ site.association.id }}-logo.png" alt="{{ site.association.name }} logo" class="local-logo">
+        <img src="http://77.40.236.233/share/img/profil/{{ site.forening.id }}-logo.png" alt="{{ site.forening.name }} logo" class="local-logo">
         <h2>
-          {{ site.association.name }}
+          {{ site.forening.name }}
         </h2>
 
         <div style="clear: both;"></div>
 
-        {# TODO - hide fields for associations that don't have them #}
+        {# TODO - hide fields for foreninger that don't have them #}
         <table>
-          {% if site.association.visit_address == site.association.post_address %}
+          {% if site.forening.visit_address == site.forening.post_address %}
             <tr>
               <th>Post/besøksadresse</th>
               <td>
-                {{ site.association.visit_address }}<br>
-                {{ site.association.zipcode.zipcode }} {{ site.association.zipcode.area }}
+                {{ site.forening.visit_address }}<br>
+                {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
               </td>
             </tr>
           {% else %}
             <tr>
               <th>Besøksadresse</th>
-              <td>{{ site.association.visit_address }}</td>
+              <td>{{ site.forening.visit_address }}</td>
             </tr>
             <tr>
               <th>Postadresse</th>
               <td>
-                {{ site.association.post_address }}<br>
-                {{ site.association.zipcode.zipcode }} {{ site.association.zipcode.area }}
+                {{ site.forening.post_address }}<br>
+                {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
               </td>
             </tr>
           {% endif %}
           <tr>
             <th>Telefon:</th>
-            <td>{{ site.association.phone }}</td>
+            <td>{{ site.forening.phone }}</td>
           </tr>
           <tr>
             <th>E-post:</th>
-            <td><a href="mailto:{{ site.association.email }}">{{ site.association.email }}</a></td>
+            <td><a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a></td>
           </tr>
           <tr>
             <th>Org. nr.:</th>
-            <td>{{ site.association.organization_no }}</td>
+            <td>{{ site.forening.organization_no }}</td>
           </tr>
           <tr>
             <th>Facebook:</th>
-            <td><a href="{{ site.association.facebook_url }}">{{ site.association.facebook_url }}</a></td>
+            <td><a href="{{ site.forening.facebook_url }}">{{ site.forening.facebook_url }}</a></td>
           </tr>
         </table>
       </div>

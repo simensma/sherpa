@@ -83,8 +83,8 @@ class Actor(models.Model):
     # Membership information
     memberid = models.IntegerField(unique=True, db_column=u'ActNo')
     parent = models.IntegerField(db_column=u'ActRel6')
-    main_association_id = models.IntegerField(db_column=u'ActRel4')
-    local_association_id = models.IntegerField(db_column=u'ActRel5')
+    main_forening_id = models.IntegerField(db_column=u'ActRel4')
+    local_forening_id = models.IntegerField(db_column=u'ActRel5')
 
     # Enrollment/resignation date and reason
     start_date = models.DateTimeField(null=True, db_column=u'StartDt')
@@ -473,7 +473,7 @@ class Actor(models.Model):
             # the float datatype incorrectly)
             balance__current_year__lte=1,
             services__code__in=[t['code'] for t in MEMBERSHIP_TYPES],
-            main_association_id__in=range(10, 100) # Valid focus-association ids are in this range
+            main_forening_id__in=range(10, 100) # Valid focus-forening ids are in this range
         )
 
     class Meta:
@@ -570,7 +570,7 @@ class ActorText(models.Model):
     class Meta:
         db_table = u'ActText'
 
-# The Zipcode table connects zipcodes to counties and associations.
+# The Zipcode table connects zipcodes to counties and foreninger.
 class FocusZipcode(models.Model):
 
     # Zipcode + Area
@@ -586,11 +586,11 @@ class FocusZipcode(models.Model):
     county_code = models.CharField(max_length=10, db_column=u'County1No')
     county_name = models.CharField(max_length=40, db_column=u'County1Name')
 
-    # Conncetions to associations.
-    # The main id corresponds to the 'focus_id' field in the Association model.
-    # The local id is in practice not (yet) used/connected to their associations.
-    main_association_id = models.IntegerField(null=True, db_column=u'District1')
-    local_association_id = models.IntegerField(null=True, db_column=u'District2')
+    # Conncetions to foreninger.
+    # The main id corresponds to the 'focus_id' field in the Forening model.
+    # The local id is in practice not (yet) used/connected to their foreninger.
+    main_forening_id = models.IntegerField(null=True, db_column=u'District1')
+    local_forening_id = models.IntegerField(null=True, db_column=u'District2')
 
     # Other stuff
     crby = models.CharField(max_length=25, db_column=u'CrBy')
@@ -605,7 +605,7 @@ class FocusZipcode(models.Model):
         db_table = u'PostalCode'
 
 class Price(models.Model):
-    association_id = models.IntegerField(primary_key=True, db_column=u'Region')
+    forening_id = models.IntegerField(primary_key=True, db_column=u'Region')
     main = models.IntegerField(null=True, db_column=u'C101')
     youth = models.IntegerField(null=True, db_column=u'C102')
     senior = models.IntegerField(null=True, db_column=u'C103')

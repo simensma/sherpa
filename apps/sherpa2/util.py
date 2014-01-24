@@ -6,7 +6,7 @@
 
 # This first set is defined in $lang['activity']['counties'] and known usages are:
 # - Activities
-# - Associations
+# - Foreninger
 # - Probably more, add them here if you find any.
 SHERPA2_COUNTIES_SET1 = {
      1: '01',

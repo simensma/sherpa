@@ -50,14 +50,14 @@
       <em>
         {% if not exclude_filter %}
 
-          Viser aktiviteter tilhørende {{ active_association.name }}.<br>
+          Viser aktiviteter tilhørende {{ active_forening.name }}.<br>
           {% if user.perms.sherpa_admin %}
             <a href="{% url 'admin.aktiviteter.views.index' %}?forening=alle">Vis alle aktiviteter</a> (kun Sherpa-administratorer har tilgang til dette)
           {% endif %}
 
         {% else %}
 
-          Viser alle aktiviteter. <a href="{% url 'admin.aktiviteter.views.index' %}">Vis kun for {{ active_association.name }}</a>
+          Viser alle aktiviteter. <a href="{% url 'admin.aktiviteter.views.index' %}">Vis kun for {{ active_forening.name }}</a>
 
         {% endif %}
       </em>
