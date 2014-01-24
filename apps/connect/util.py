@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import base64
 import json
 import time
+import os
 
 def get_request_data(request):
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
@@ -17,7 +18,7 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    request_data = json.loads(try_keys(client['shared_secrets'], request.GET['data'], decrypt))
+    request_data = json.loads(try_keys(client['auths'], request.GET['data'], decrypt))
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
@@ -35,36 +36,50 @@ def prepare_response(client, response_data, redirect_url):
 
     # Encrypt the complete data package
     json_string = json.dumps(response_data)
-    encrypted_data = try_keys(client['shared_secrets'], json_string, encrypt)
+    encrypted_data = try_keys(client['auths'], json_string, encrypt)
     url_safe = quote_plus(encrypted_data)
 
     return redirect("%s?data=%s" % (redirect_url, url_safe))
 
-def try_keys(keys, data, method):
+def try_keys(auths, data, method):
     """
     Encryption and decryption is run through this method which tries all the specified keys, and if one succeeds, uses
     that, if not, raises the exception of the last attempted key.
     """
     last_exception = None
-    for key in keys:
+    for auth in auths:
         try:
-            return method(key, data)
+            return method(auth, data)
         except Exception as e:
             last_exception = e
     # None of the keys worked, raise the last exception
     raise last_exception
 
-def encrypt(key, plaintext):
+def encrypt(auth, plaintext):
     padded_text = pkcs7.encode(plaintext, settings.DNT_CONNECT_BLOCK_SIZE)
-    cipher = AES.new(key, AES.MODE_ECB)
-    msg = cipher.encrypt(padded_text)
-    encoded = base64.b64encode(msg)
+
+    if auth['iv']:
+        iv = os.urandom(settings.DNT_CONNECT_BLOCK_SIZE)
+        cipher = AES.new(auth['key'], auth['cipher'], iv)
+        ciphertext = iv + cipher.encrypt(padded_text)
+    else:
+        cipher = AES.new(auth['key'], auth['cipher'])
+        ciphertext = cipher.encrypt(padded_text)
+
+    encoded = base64.b64encode(ciphertext)
     return encoded
 
-def decrypt(key, encoded):
+def decrypt(auth, encoded):
     try:
-        cipher = AES.new(key, AES.MODE_ECB)
-        ciphertext = base64.b64decode(encoded)
+        decoded = base64.b64decode(encoded)
+
+        if auth['iv']:
+            iv, ciphertext = decoded[:settings.DNT_CONNECT_BLOCK_SIZE], decoded[settings.DNT_CONNECT_BLOCK_SIZE:]
+            cipher = AES.new(auth['key'], auth['cipher'], iv)
+        else:
+            ciphertext = decoded
+            cipher = AES.new(auth['key'], auth['cipher'])
+
         msg_padded = cipher.decrypt(ciphertext)
         msg = pkcs7.decode(msg_padded, settings.DNT_CONNECT_BLOCK_SIZE)
         return msg

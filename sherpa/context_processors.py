@@ -50,7 +50,7 @@ def focus_downtime(request):
 
 def dntconnect(request):
     if 'dntconnect' in request.session:
-        # Note that this sends the shared_secrets to all templates, maybe that isn't such a good idea
+        # Note that this sends the auth data to all templates, maybe that isn't such a good idea
         return {'dntconnect': request.session['dntconnect']}
     else:
         return {}
