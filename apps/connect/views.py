@@ -18,7 +18,7 @@ import logging
 logger = logging.getLogger('sherpa')
 
 def bounce(request):
-    client, client_id, request_data, redirect_url = get_request_data(request)
+    client, client_id, auth_index, request_data, redirect_url = get_request_data(request)
 
     # For now, if Focus is down, just say that they're not authenticated.
     # This might not be the best approach, reconsider this.
@@ -26,13 +26,14 @@ def bounce(request):
     if request.user.is_authenticated() and not focus_is_down():
         response_data.update(get_member_data(request.user))
 
-    return prepare_response(client, response_data, redirect_url)
+    return prepare_response(client, auth_index, response_data, redirect_url)
 
 def signon(request):
-    client, client_id, request_data, redirect_url = get_request_data(request)
+    client, client_id, auth_index, request_data, redirect_url = get_request_data(request)
 
     request.session['dntconnect'] = {
         'client_id': client_id,
+        'auth_index': auth_index, # Use this to encrypt the response to the client with the same key/method as the request
         'redirect_url': redirect_url
     }
     if not request.user.is_authenticated():
@@ -184,12 +185,15 @@ def signon_complete(request):
     }
     if request.user.is_authenticated():
         response_data.update(get_member_data(request.user))
+    # Soft get auth_index to support older sessions, can likely be removed after a couple of weeks
+    auth_index = request.session['dntconnect'].get('auth_index')
     redirect_url = request.session['dntconnect']['redirect_url']
     del request.session['dntconnect']
     if 'innmelding.aktivitet' in request.session:
         del request.session['innmelding.aktivitet']
     return prepare_response(
         client,
+        auth_index,
         response_data,
         redirect_url
     )

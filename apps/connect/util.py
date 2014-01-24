@@ -22,7 +22,8 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    request_data = json.loads(try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hash')))
+    request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hash'))
+    request_data = json.loads(request_data)
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
@@ -32,15 +33,20 @@ def get_request_data(request):
     # Redirect to provided url, or the default if none provided
     redirect_url = request_data['redirect_url'] if 'redirect_url' in request_data else client['default_redirect_url']
 
-    return client, request.GET['client'], request_data, redirect_url
+    return client, request.GET['client'], auth_index, request_data, redirect_url
 
-def prepare_response(client, response_data, redirect_url):
+def prepare_response(client, auth_index, response_data, redirect_url):
     # Add the current timestamp
     response_data['timestamp'] = int(time.time())
 
     # Encrypt the complete data package
     json_string = json.dumps(response_data)
-    encrypted_data, hash = try_keys(encrypt, client['auths'], json_string)
+    if auth_index is not None:
+        # Use the authentication method which worked when decrypting
+        encrypted_data, hash = encrypt(client['auths'][auth_index], json_string)
+    else:
+        # This special case handles old sessions and can likely be removed after a couple of weeks
+        encrypted_data, hash = try_keys(encrypt, client['auths'], json_string)[0]
     url_safe_data = quote_plus(encrypted_data)
 
     if hash is None:
@@ -55,9 +61,9 @@ def try_keys(method, auths, *args, **kwargs):
     that, if not, raises the exception of the last attempted key.
     """
     last_exception = None
-    for auth in auths:
+    for auth_index, auth in enumerate(auths):
         try:
-            return method(auth, *args, **kwargs)
+            return method(auth, *args, **kwargs), auth_index
         except Exception as e:
             last_exception = e
     # None of the keys worked, raise the last exception
