@@ -18,7 +18,7 @@ import logging
 logger = logging.getLogger('sherpa')
 
 def bounce(request):
-    client, request_data, redirect_url = get_request_data(request)
+    client, client_id, request_data, redirect_url = get_request_data(request)
 
     # For now, if Focus is down, just say that they're not authenticated.
     # This might not be the best approach, reconsider this.
@@ -29,10 +29,10 @@ def bounce(request):
     return prepare_response(client, response_data, redirect_url)
 
 def signon(request):
-    client, request_data, redirect_url = get_request_data(request)
+    client, client_id, request_data, redirect_url = get_request_data(request)
 
     request.session['dntconnect'] = {
-        'client': client,
+        'client_id': client_id,
         'redirect_url': redirect_url
     }
     if not request.user.is_authenticated():
@@ -176,7 +176,7 @@ def signon_complete(request):
             }
         )
 
-    client = request.session['dntconnect']['client']
+    client = settings.DNT_CONNECT[request.session['dntconnect']['client_id']]
     response_data = {
         'er_autentisert': request.user.is_authenticated(),
         'signon': request.session['dntconnect'].get('signon', u'ukjent'),

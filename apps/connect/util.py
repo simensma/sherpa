@@ -28,7 +28,7 @@ def get_request_data(request):
     # Redirect to provided url, or the default if none provided
     redirect_url = request_data['redirect_url'] if 'redirect_url' in request_data else client['default_redirect_url']
 
-    return client, request_data, redirect_url
+    return client, request.GET['client'], request_data, redirect_url
 
 def prepare_response(client, response_data, redirect_url):
     # Add the current timestamp

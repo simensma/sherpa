@@ -50,8 +50,10 @@ def focus_downtime(request):
 
 def dntconnect(request):
     if 'dntconnect' in request.session:
-        # Note that this sends the auth data to all templates, maybe that isn't such a good idea
-        return {'dntconnect': request.session['dntconnect']}
+        client = settings.DNT_CONNECT[request.session['dntconnect']['client_id']]
+        return {'dntconnect': {
+            'client_name': client['friendly_name']
+        }}
     else:
         return {}
 
