@@ -181,7 +181,6 @@ INSTALLED_APPS = (
     'articles',
     'user',
     'enrollment',
-    'association', # To be removed
     'foreninger',
     'membership',
     'instagram',
