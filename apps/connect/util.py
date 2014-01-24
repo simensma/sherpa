@@ -11,6 +11,10 @@ import base64
 import json
 import time
 import os
+import hashlib
+import logging
+
+logger = logging.getLogger('sherpa')
 
 def get_request_data(request):
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
@@ -18,7 +22,7 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    request_data = json.loads(try_keys(client['auths'], request.GET['data'], decrypt))
+    request_data = json.loads(try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hash')))
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
@@ -36,12 +40,16 @@ def prepare_response(client, response_data, redirect_url):
 
     # Encrypt the complete data package
     json_string = json.dumps(response_data)
-    encrypted_data = try_keys(client['auths'], json_string, encrypt)
-    url_safe = quote_plus(encrypted_data)
+    encrypted_data, hash = try_keys(encrypt, client['auths'], json_string)
+    url_safe_data = quote_plus(encrypted_data)
 
-    return redirect("%s?data=%s" % (redirect_url, url_safe))
+    if hash is None:
+        return redirect("%s?data=%s" % (redirect_url, url_safe_data))
+    else:
+        url_safe_hash = quote_plus(hash)
+        return redirect("%s?data=%s&hash=%s" % (redirect_url, url_safe_data, url_safe_hash))
 
-def try_keys(auths, data, method):
+def try_keys(method, auths, *args, **kwargs):
     """
     Encryption and decryption is run through this method which tries all the specified keys, and if one succeeds, uses
     that, if not, raises the exception of the last attempted key.
@@ -49,7 +57,7 @@ def try_keys(auths, data, method):
     last_exception = None
     for auth in auths:
         try:
-            return method(auth, data)
+            return method(auth, *args, **kwargs)
         except Exception as e:
             last_exception = e
     # None of the keys worked, raise the last exception
@@ -62,14 +70,16 @@ def encrypt(auth, plaintext):
         iv = os.urandom(settings.DNT_CONNECT_BLOCK_SIZE)
         cipher = AES.new(auth['key'], auth['cipher'], iv)
         ciphertext = iv + cipher.encrypt(padded_text)
+        hash = calc_hash(auth['key'], iv + plaintext)
     else:
         cipher = AES.new(auth['key'], auth['cipher'])
         ciphertext = cipher.encrypt(padded_text)
+        hash = None
 
     encoded = base64.b64encode(ciphertext)
-    return encoded
+    return encoded, hash
 
-def decrypt(auth, encoded):
+def decrypt(auth, encoded, hash):
     try:
         decoded = base64.b64decode(encoded)
 
@@ -80,12 +90,30 @@ def decrypt(auth, encoded):
             ciphertext = decoded
             cipher = AES.new(auth['key'], auth['cipher'])
 
-        msg_padded = cipher.decrypt(ciphertext)
-        msg = pkcs7.decode(msg_padded, settings.DNT_CONNECT_BLOCK_SIZE)
-        return msg
+        plaintext_padded = cipher.decrypt(ciphertext)
+        plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
+
+        if auth['iv'] and calc_hash(auth['key'], iv + plaintext) != hash:
+            logger.warning(u"Forespurt hash matchet ikke egenkalkulert hash",
+                extra={
+                    'our_hash': calc_hash(auth['key'], iv + plaintext),
+                    'their_hash': hash,
+                    'encoded': encoded,
+                    'plaintext': plaintext,
+                    'auth': auth,
+                }
+            )
+            raise PermissionDenied
+
+        return plaintext
     except TypeError:
         # Can e.g. be incorrect padding if they forgot to URLEncode the data
         raise PermissionDenied
+
+def calc_hash(key, data):
+    h = hashlib.sha512(key)
+    h.update(data)
+    return base64.b64encode(h.hexdigest())
 
 def add_signon_session_value(request, value):
     request.session['dntconnect']['signon'] = value
