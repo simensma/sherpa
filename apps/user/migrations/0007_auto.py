@@ -6,10 +6,6 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
-    depends_on = (
-        ('association', '0002_import_associations'),
-    )
-
     def forwards(self, orm):
         
         # Adding M2M table for field associations on 'Profile'
