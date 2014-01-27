@@ -952,10 +952,34 @@ div.widget.promo {
       color: white;
       text-align: left;
 
+      p.credits {
+        color: black;
+        position: absolute;
+        bottom: 4px;
+        left: 6px;
+        margin-bottom: 0 !important;
+        .font();
+
+        .font() {
+          font-size: 13px !important;
+          font-weight: normal !important;
+        }
+
+        a {
+          .font();
+        }
+      }
+
       p:not(.double-button-hack) {
         font-size: 26px;
         font-weight: bold;
         margin-bottom: 20px;
+      }
+
+      @media(max-width: 767px) {
+        p.credits {
+          display: none;
+        }
       }
     }
   }
