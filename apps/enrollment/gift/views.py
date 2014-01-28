@@ -68,6 +68,7 @@ def form(request):
     return render(request, 'main/enrollment/gift/form.html', context)
 
 def validate(request):
+    # TODO: Use the django form API
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
     if 'order_sent' in request.session['gift_membership']:
@@ -76,24 +77,24 @@ def validate(request):
         return redirect('enrollment.gift.views.form')
 
     giver = Giver(
-        request.POST['giver_name'],
-        request.POST['giver_address'],
-        request.POST['giver_zipcode'],
-        request.POST['giver_memberid'],
-        request.POST['giver_phone'],
-        request.POST['giver_email'])
+        request.POST['giver_name'].strip(),
+        request.POST['giver_address'].strip(),
+        request.POST['giver_zipcode'].strip(),
+        request.POST['giver_memberid'].strip(),
+        request.POST['giver_phone'].strip(),
+        request.POST['giver_email'].strip())
 
     receivers = []
     try:
         for r in json.loads(request.POST['receivers']):
             receivers.append(Receiver(
-                r['type'],
-                r['name'],
-                r['dob'],
-                r['address'],
-                r['zipcode'],
-                r['phone'],
-                r['email']
+                r['type'].strip(),
+                r['name'].strip(),
+                r['dob'].strip(),
+                r['address'].strip(),
+                r['zipcode'].strip(),
+                r['phone'].strip(),
+                r['email'].strip(),
             ))
     except ValueError:
         # Something wrong with the json-formatted POST value. Not quite sure how this can happen, see:
