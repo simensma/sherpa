@@ -175,7 +175,6 @@ def send(request):
     return redirect('enrollment.gift.views.receipt')
 
 def receipt(request):
-    messages.error(request, 'email_receipt_fail')
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
     if not 'giver' in request.session['gift_membership']:
