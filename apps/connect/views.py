@@ -6,8 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as log_user_in
 
-from connect.util import get_request_data, prepare_response, add_signon_session_value
-from api.util import get_member_data
+from connect.util import get_request_data, prepare_response, add_signon_session_value, get_member_data
 from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from user.models import User
 from core.models import FocusCountry

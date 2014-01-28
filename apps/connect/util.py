@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
@@ -124,3 +126,58 @@ def calc_hash(key, data):
 def add_signon_session_value(request, value):
     request.session['dntconnect']['signon'] = value
     request.session.modified = True
+
+def get_member_data(user):
+    if not user.is_member():
+        return {
+            'sherpa_id': user.id,
+            'er_medlem': False,
+            'fornavn': user.get_first_name(),
+            'etternavn': user.get_last_name(),
+            'epost': user.get_email()
+        }
+    else:
+        # The gender definition is in norwegian
+        def api_gender_output(gender):
+            if gender == 'm':
+                return 'M'
+            elif gender == 'f':
+                return 'K'
+
+        address = user.get_address()
+        dob = user.get_birth_date()
+        if dob is not None:
+            dob = dob.strftime("%Y-%m-%d")
+
+        if not user.has_perm('sherpa'):
+            forening_permissions = []
+        else:
+            forening_permissions = [{
+                'sherpa_id': a.id,
+                # TODO: NTB object_id
+            } for a in user.all_foreninger()]
+
+        return {
+            'sherpa_id': user.id,
+            'er_medlem': True,
+            'medlemsnummer': user.memberid,
+            'aktivt_medlemskap': user.has_paid(),
+            'fornavn': user.get_first_name(),
+            'etternavn': user.get_last_name(),
+            'født': dob,
+            'kjønn': api_gender_output(user.get_gender()),
+            'epost': user.get_email(),
+            'mobil': user.get_phone_mobile(),
+            'adresse': {
+                'adresse1': address.field1,
+                'adresse2': address.field2,
+                'adresse3': address.field3,
+                'postnummer': address.zipcode.zipcode if address.country.code == 'NO' else None,
+                'poststed': address.zipcode.area.title() if address.country.code == 'NO' else None,
+                'land': {
+                    'kode': address.country.code,
+                    'navn': address.country.name
+                }
+            },
+            'foreningstilganger': forening_permissions,
+        }
