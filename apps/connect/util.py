@@ -149,14 +149,6 @@ def get_member_data(user):
         if dob is not None:
             dob = dob.strftime("%Y-%m-%d")
 
-        if not user.has_perm('sherpa'):
-            forening_permissions = []
-        else:
-            forening_permissions = [{
-                'sherpa_id': a.id,
-                # TODO: NTB object_id
-            } for a in user.all_foreninger()]
-
         return {
             'sherpa_id': user.id,
             'er_medlem': True,
@@ -179,5 +171,4 @@ def get_member_data(user):
                     'navn': address.country.name
                 }
             },
-            'foreningstilganger': forening_permissions,
         }
