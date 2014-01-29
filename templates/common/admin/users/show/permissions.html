@@ -16,7 +16,7 @@
     <table class="table user-permissions">
       {% if other_user.all_foreninger_sorted.central|length > 0 %}
         <tr>
-          <td colspan="2" class="group">Sentralt</td>
+          <th colspan="2" class="group">Sentralt</th>
         </tr>
         {% for forening in other_user.all_foreninger_sorted.central %}
           <tr>
@@ -32,7 +32,7 @@
 
       {% if other_user.all_foreninger_sorted.foreninger|length > 0 %}
         <tr>
-          <td colspan="2" class="group">Foreninger</td>
+          <th colspan="2" class="group">Foreninger</th>
         </tr>
         {% for forening in other_user.all_foreninger_sorted.foreninger %}
           <tr>
@@ -48,7 +48,7 @@
 
       {% if other_user.all_foreninger_sorted.turlag|length > 0 %}
         <tr>
-          <td colspan="2" class="group">Turlag</td>
+          <th colspan="2" class="group">Turlag</th>
         </tr>
         {% for forening in other_user.all_foreninger_sorted.turlag %}
           <tr>
@@ -64,7 +64,7 @@
 
       {% if other_user.all_foreninger_sorted.turgrupper|length > 0 %}
         <tr>
-          <td colspan="2" class="group">Turgrupper</td>
+          <th colspan="2" class="group">Turgrupper</th>
         </tr>
         {% for forening in other_user.all_foreninger_sorted.turgrupper %}
           <tr>
