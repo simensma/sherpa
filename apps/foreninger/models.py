@@ -61,5 +61,5 @@ class Forening(models.Model):
             'central': [f for f in foreninger if f.type == 'sentral'],
             'foreninger': [f for f in foreninger if f.type == 'forening'],
             'turlag': [f for f in foreninger if f.type == 'turlag'],
-            'turgrupper': [f for af in foreninger if f.type == 'turgruppe'],
+            'turgrupper': [f for f in foreninger if f.type == 'turgruppe'],
         }
