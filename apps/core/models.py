@@ -1,6 +1,12 @@
 from django.contrib.gis.db import models
 
 class Tag(models.Model):
+    """
+    Any model can have a M2M-relation to this table in order to connect "tags", which are keywords, or labels,
+    that can later be used for searching, filtering in all kinds of use cases.
+    Note that ghost tags may remain when all related objects are deleted - this is by design as these tags
+    will still appear as suggestions in autocomplete lists.
+    """
     name = models.CharField(max_length=200)
 
     def __unicode__(self):
