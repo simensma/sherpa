@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from articles.models import Article, OldArticle
-from page.models import AdPlacement, Variant, Version, Row, Column, Content
+from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 
 from datetime import datetime
