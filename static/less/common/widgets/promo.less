@@ -935,6 +935,75 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-vintereventyr {
+    background-image: url('/static/img/widgets/promo/Vinterbanner2014_bilde.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      a.giant-anchor {
+        display: block;
+        height: 480px;
+      }
+
+      p.lede {
+        color: white;
+        position: absolute;
+        top: 60px;
+        right: 60px;
+        font-size: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        color: white;
+        position: absolute;
+        top: 80px;
+        right: 60px;
+        font-size: 44px;
+        text-transform: none;
+        font-weight: normal;
+      }
+
+      p.credits {
+        color: white;
+        position: absolute;
+        bottom: 4px;
+        left: 6px;
+        margin-bottom: 0 !important;
+        font-size: 13px !important;
+        font-weight: normal !important;
+      }
+
+
+      @media(max-width: 767px) {
+        h1, p.lede {
+          position: static;
+          color: white !important;
+        }
+
+        a.giant-anchor {
+          height: auto;
+        }
+
+        a.giant-anchor:hover {
+          text-decoration: none;
+        }
+
+        p.credits {
+          display: none;
+        }
+      }
+    }
+  }
+
   /* Other cover-promos */
 
   div.cover.ung {

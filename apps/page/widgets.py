@@ -213,7 +213,13 @@ def get_static_promo_context(path):
             'id': 'kom-deg-ut-feb',
             'name': 'Kom deg ut',
             'start_date': date(year=2014, month=1, day=13),
-            'end_date': date(year=2014, month=1, day=13),
+            'end_date': date(year=2014, month=2, day=2),
+        },
+        {
+            'id': 'vintereventyr',
+            'name': 'Vintereventyr',
+            'start_date': date(year=2014, month=2, day=3),
+            'end_date': date(year=2014, month=2, day=3),
         },
     ]
 
