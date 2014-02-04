@@ -1,0 +1,13 @@
+{% extends site.template.name|add:"/layout.html" %}
+
+{% load advertisement %}
+
+{% block title %}Test annonse — {{ advertisement.ad.name }}{% endblock %}
+
+{% block body %}
+
+  <h1>Test annonse</h1>
+  <h2>{{ advertisement.ad.name }}</h2>
+  {% advertisement ad_placement=advertisement %}
+
+{% endblock %}
