@@ -12,7 +12,7 @@ from django.core.cache import cache
 from datetime import datetime
 import json
 
-from page.models import AdPlacement, Page, Variant, Version, Row, Column, Content
+from page.models import AdPlacement, Ad, Page, Variant, Version, Row, Column, Content
 from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from page.widgets import parse_widget, get_static_promo_context
@@ -159,6 +159,18 @@ def ad(request, ad):
         return redirect(ad.ad.destination)
     except AdPlacement.DoesNotExist:
         raise Http404
+
+def test_ad(request, ad):
+    mock_ad_placement = AdPlacement(
+        ad=Ad.objects.get(id=ad),
+        view_limit=None,
+        start_date=None,
+        end_date=None,
+        views=0,
+        clicks=0,
+    )
+    context = {'advertisement': mock_ad_placement}
+    return render(request, 'common/page/advertisement_test.html', context)
 
 def match_user(request, page):
     variants = Variant.objects.filter(page=page, segment__isnull=False).order_by('priority')

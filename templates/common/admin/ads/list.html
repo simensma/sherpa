@@ -278,6 +278,7 @@
           <th>Navn</th>
           <th>Lenker til</th>
           <th>Innhold</th>
+          <th>Test annonsen</th>
         </tr>
         {% for ad in ads %}
           <tr>
@@ -312,6 +313,11 @@
               </td>
 
             {% endif %}
+
+            <td>
+              <a href="{% url 'page.views.test_ad' ad.id %}">Test annonsen</a>
+            </td>
+
           </tr>
         {% endfor %}
       </table>
