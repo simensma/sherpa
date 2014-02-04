@@ -218,9 +218,8 @@ class Ad(models.Model):
         script = self.content_script
 
         # Change the URL to go via our counter
-        url = reverse('page.views.ad', args=[placement.id])
         pat = r'(\<a href=\")(.+?)(\")'
-        rep = r'\1%s\3' % url
+        rep = r'\1%s\3' % placement.redirect_url()
         script = re.sub(pat, rep, script)
 
         # Set timestamp to current unix time
@@ -257,6 +256,9 @@ class AdPlacement(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def redirect_url(self):
+        return reverse('page.views.ad', args=[self.id])
 
     def is_old(self): return self.end_date < date.today()
     def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()
