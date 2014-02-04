@@ -9,13 +9,10 @@
         var flashvars = {
           // Account for some unfortunate variations in clicktag capitalization
           clickTAG: "{{ advertisement.redirect_url }}",
-          clickTag: "{{ advertisement.redirect_url }}",
-        };
-        var params = {
-          allowscriptaccess: "always",
+          clickTag: "{{ advertisement.redirect_url }}"
         };
         {# Require flash version 9, not sure if this is reasonable? #}
-        swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars, params);
+        swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
       </script>
       <div id="ad">
         {% if advertisement.ad.has_fallback %}
