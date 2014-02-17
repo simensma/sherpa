@@ -7,6 +7,11 @@ import logging
 
 logger = logging.getLogger('sherpa')
 
+#
+# NOTE that we recently changed the payment_method column datatype from float to int, and suspect that
+# will fix this bug. We'll let the command run in crontab for some time, but if you're checking out this
+# file in year 2016 or something and no bugs have been reported it's probably safe to delete this command.
+#
 class Command(BaseCommand):
     args = u""
     help = u"Sjekker for heisenbugs med focus.Enrollment.payment_method"

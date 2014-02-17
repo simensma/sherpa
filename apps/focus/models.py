@@ -31,7 +31,7 @@ class Enrollment(models.Model):
     area = models.CharField(db_column=u'Poststed', max_length=255)
     country_code = models.CharField(max_length=255, db_column=u'Country')
 
-    payment_method = models.FloatField(db_column=u'Paymethod')
+    payment_method = models.IntegerField(db_column=u'Paymethod')
     paid = models.BooleanField(db_column=u'Payed', default=False)
     totalprice = models.FloatField(db_column=u'TotalPrice')
 
