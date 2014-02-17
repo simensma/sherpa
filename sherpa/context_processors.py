@@ -70,9 +70,3 @@ def membership_year_start(request):
 
 def do_not_track(request):
     return {'donottrack': 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1'}
-
-def new_sponsors_footer(request):
-    """
-    Remove this method after 01.01.2014
-    """
-    return {'new_sponsors': date.today() >= date(year=2014, month=1, day=1)}

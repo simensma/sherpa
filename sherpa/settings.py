@@ -211,7 +211,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.dntconnect",
     "sherpa.context_processors.membership_year_start",
     "sherpa.context_processors.do_not_track",
-    "sherpa.context_processors.new_sponsors_footer",
 )
 
 MIDDLEWARE_CLASSES = (
