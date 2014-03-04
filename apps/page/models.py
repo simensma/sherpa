@@ -258,12 +258,7 @@ class AdPlacement(models.Model):
         return u'%s' % self.pk
 
     def redirect_url(self):
-        if self.id is None:
-            # Accounts for unsaved mock-objects - used when testing ads
-            # Give the direct destination, without any redirect
-            return self.ad.destination
-        else:
-            return reverse('page.views.ad', args=[self.id])
+        return self.ad.destination
 
     def is_old(self): return self.end_date < date.today()
     def is_current(self): return self.start_date <= date.today() and self.end_date >= date.today()
