@@ -38,7 +38,7 @@ def current_template_layout(request):
     - DNT Connect (should differentiate between clients, but for now uses DNT Oslos template)
     """
     if 'dntconnect' in request.session:
-        return {'current_layout': 'main/connect/layouts/columbus.html'}
+        return {'current_layout': 'main/connect/layouts/dntoslo.html'}
     else:
         return {'current_layout': 'main/layout.html'}
 

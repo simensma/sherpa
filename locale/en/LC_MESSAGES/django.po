@@ -176,7 +176,7 @@ msgstr ""
 "registration."
 
 #: templates/common/user/login/util/registration_form.html:59
-#: templates/main/connect/layouts/columbus.html:124
+#: templates/main/connect/layouts/dntoslo.html:124
 msgid "E-post:"
 msgstr "E-mail:"
 
@@ -496,39 +496,39 @@ msgstr ""
 "back when the maintenance period is over. Meanwhile, we'll have to send you "
 "<a href=\"%(previous_url)s\">back where you came from</a>."
 
-#: templates/main/connect/layouts/columbus.html:51
+#: templates/main/connect/layouts/dntoslo.html:51
 msgid "Avbryt og gå tilbake"
 msgstr "Cancel and return"
 
-#: templates/main/connect/layouts/columbus.html:119
+#: templates/main/connect/layouts/dntoslo.html:119
 msgid "Åpningstider tlf."
 msgstr "Calling hours"
 
-#: templates/main/connect/layouts/columbus.html:121
+#: templates/main/connect/layouts/dntoslo.html:121
 msgid "Man-fre."
 msgstr "Mon-fri."
 
-#: templates/main/connect/layouts/columbus.html:122
+#: templates/main/connect/layouts/dntoslo.html:122
 msgid "Sentralbord"
 msgstr "Operator"
 
-#: templates/main/connect/layouts/columbus.html:123
+#: templates/main/connect/layouts/dntoslo.html:123
 msgid "Turinfo"
 msgstr "Tour information"
 
-#: templates/main/connect/layouts/columbus.html:128
+#: templates/main/connect/layouts/dntoslo.html:128
 msgid "Åpningstider turinfo"
 msgstr "Opening hours"
 
-#: templates/main/connect/layouts/columbus.html:130
+#: templates/main/connect/layouts/dntoslo.html:130
 msgid "Mandag-fredag"
 msgstr "Monday-friday"
 
-#: templates/main/connect/layouts/columbus.html:131
+#: templates/main/connect/layouts/dntoslo.html:131
 msgid "Torsdag"
 msgstr "Thursday"
 
-#: templates/main/connect/layouts/columbus.html:132
+#: templates/main/connect/layouts/dntoslo.html:132
 msgid "Lørdag"
 msgstr "Saturday"
 
