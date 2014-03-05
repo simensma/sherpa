@@ -14,12 +14,12 @@ def members(request, version, format):
 
         try:
             if 'sherpa_id' in request.GET and 'medlemsnummer' in request.GET:
-                user = User.get_users().get(id=request.GET['sherpa_id'], memberid=request.GET['medlemsnummer'])
+                user = User.get_users(include_pending=True).get(id=request.GET['sherpa_id'], memberid=request.GET['medlemsnummer'])
             elif 'sherpa_id' in request.GET:
-                user = User.get_users().get(id=request.GET['sherpa_id'])
+                user = User.get_users(include_pending=True).get(id=request.GET['sherpa_id'])
             elif 'medlemsnummer' in request.GET:
                 try:
-                    user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'])
+                    user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'], include_pending=True)
                 except (Actor.DoesNotExist, ValueError):
                     # No such member
                     raise User.DoesNotExist

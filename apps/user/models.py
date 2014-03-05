@@ -656,9 +656,11 @@ class User(AbstractBaseUser):
         return User.get_users().filter(permissions=permission, is_inactive=False)
 
     @staticmethod
-    def get_or_create_inactive(memberid):
+    def get_or_create_inactive(memberid, **kwargs):
+        """Get or create an inactive user with the specified memberid.
+        Note that further kwargs are passed to User.get_users()"""
         try:
-            return User.get_users().get(memberid=memberid)
+            return User.get_users(**kwargs).get(memberid=memberid)
         except User.DoesNotExist:
             return User.create_inactive_user(memberid)
 
