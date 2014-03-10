@@ -199,6 +199,7 @@ INSTALLED_APPS = (
     'aktiviteter',
     'connect',
     'api',
+    'fotokonkurranse',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
