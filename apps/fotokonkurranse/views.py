@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
+from django.template import RequestContext, loader
+from django.core.mail import send_mail
 
 import json
 import sys
@@ -10,6 +12,8 @@ import logging
 from cStringIO import StringIO
 from hashlib import sha1
 from datetime import datetime
+from smtplib import SMTPException
+from ssl import SSLError
 
 import boto
 from PIL import Image as pil
@@ -22,6 +26,7 @@ from core import xmp, validator
 logger = logging.getLogger('sherpa')
 
 MIN_SIZE = 800 # pixlors
+EMAIL_CONFIRMATION_SUBJECT = "Takk for ditt bidrag til DNTs fotokonkurranse!"
 
 def default(request):
     context = {
@@ -106,6 +111,19 @@ def upload(request):
         for tag in [tag.lower() for tag in image_file_tags]:
             obj, created = Tag.objects.get_or_create(name=tag)
             image.tags.add(obj)
+
+        try:
+            t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
+            c = RequestContext(request, {
+                'user_name': post_name,
+                'image_name': image_file.name,
+            })
+            send_mail(EMAIL_CONFIRMATION_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [post_email])
+        except (SMTPException, SSLError):
+            logger.warning(u"Kvitteringsepost for fotokonkurranse feilet",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
 
         return HttpResponse(json.dumps({
             'files': [{
