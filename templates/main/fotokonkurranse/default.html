@@ -1,5 +1,25 @@
 {% extends 'main/layout.html' %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/load-image/load-image.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/load-image/canvas-to-blob.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+
+  <script src="{{ STATIC_URL }}js/fotokonkurranse.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-file-upload/css/jquery.fileupload.css">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-file-upload/css/jquery.fileupload-ui.css">
+  <!-- CSS adjustments for browsers with JavaScript disabled -->
+  <noscript><link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-file-upload/css/jquery.fileupload-noscript.css"></noscript>
+  <noscript><link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-file-upload/css/jquery.fileupload-ui-noscript.css"></noscript>
+{% endblock %}
+
 {% block body %}
 
 <div class="fotokonkurranse-root">
@@ -9,8 +29,88 @@
       <h1>KNIPS DEG TIL FLAX!</h1>
       <p class="lede">Grip stemningen i DNTs fotokonkurranse 2014</p>
 
+      <div class="uploader form-default form-horizontal" data-url="{% url 'fotokonkurranse.views.upload' %}">
+
+        <div class="control-group">
+          <label class="control-label" for="name">Ditt navn</label>
+          <div class="controls">
+            <input type="text" id="name" name="name" value="{{ user.get_full_name }}" class="input-xlarge">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="phone">Telefonnummer</label>
+          <div class="controls">
+            <input type="text" id="phone" name="phone" value="{{ user.get_phone_mobile }}" class="input-medium">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="email">E-postadresse</label>
+          <div class="controls">
+            <input type="text" id="email" name="email" value="{{ user.get_email }}" class="input-xlarge">
+          </div>
+        </div>
+
+        <div class="images" data-max-images-warning="Du kan ikke delta med flere enn 3 bilder." data-canvas-error="Beklager, klarte ikke å legge til bildet du valgte. Er du sikker på at det er en ordentlig bildefil? Feilmeldingen var: ">
+          <div class="control-group image hide clone">
+            <label class="control-label"></label>
+            <div class="controls">
+              <div class="control-as-text cancel">
+                <button class="btn btn-warning cancel">
+                  <i class="icon-white icon-ban-circle"></i> Ta bort bilde
+                </button>
+              </div>
+              <div class="preview hide"></div>
+              <textarea name="description" class="input-xxlarge" cols="160" rows="6" placeholder="Beskriv sted, motiv og andre relevante opplysninger om bildet..."></textarea>
+              <div class="description control-as-text hide"></div>
+              <div class="loader hide">
+                <div class="progress progress-striped active">
+                  <div class="bar"></div>
+                </div>
+              </div>
+              <div class="upload-success control-as-text hide">
+                Bildet har blitt lastet opp - takk for ditt bidrag!
+              </div>
+              <div class="upload-fail alert alert-error hide">
+                Beklager - noe gikk galt under opplastingen av dette bildet! Du kan prøve å sende inn bildet igjen, eller ta det bort og legg til et annet.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group image-adder">
+          <div class="controls">
+            <span class="btn btn-default fileinput-button">
+              <i class="icon-plus"></i>
+              <span>Legg til bilde...</span>
+              <input type="file" name="file" multiple>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-success hide" data-confirm="Er du sikker på at du vil sende inn disse bildene til konkurransen?">Send inn bildene!</button>
+          </div>
+        </div>
+
+        <div class="upload-success-generic hide">
+          <p>
+            Dine bilder er sendt til DNTs fotokonkurranse {{ now|date:"Y" }}. Du vil også motta en bekreftelse på e-post.
+          </p>
+          <p>
+            Vinnerbildet vil bli plukket ut av en jury, og vinneren vil bli kontaktet av Den Norske Turistforening.
+          </p>
+          <p>
+            Har du spørsmål om konkurransen kan du kontakte Den Norske Turistforening på <a href="mailto:info@turistforening.no">info@turistforening.no</a> eller 4000 1868
+          </p>
+        </div>
+
+      </div>
+
       <p>
-        Del dine naturopplevelser i 2013 med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner Norsk Tipping . Finalistene er med i konkurransen om flotte premier - førstpremien er 10 000 kr og 100 Flax-lodd fra Norsk Tipping, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
+        Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner Norsk Tipping . Finalistene er med i konkurransen om flotte premier - førstpremien er 10 000 kr og 100 Flax-lodd fra Norsk Tipping, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
       </p>
 
       <p>
@@ -54,7 +154,7 @@
         <li>Frist for innsending av foto til første runde er 31. mai, andre runde er 31. august og den tredje runden avsluttes den 30. november</li>
         <li>Bilder som sendes inn etter innleveringsfrist blir ikke med i konkurransen</li>
         <li>Hver deltager kan sende inn <strong>maksimalt 3 bilder</strong> per konkurranse.</li>
-        <li>Bildene må være i <strong>så stor oppløsning som mulig</strong> (minimum 1MB/800px) og i <strong>jpg-format</strong>.</li>
+        <li>Bildene må være i <strong>så stor oppløsning som mulig</strong> (minimum 1MB/800px) og i <strong>jpg-, gif- eller png-format</strong>.</li>
         <li>Bildene må være tatt i <strong>Norge</strong>.</li>
         <li>Du kan kun delta med <strong>bilder du selv har fotografert</strong>.</li>
         <li>Det er innsenders ansvar å sørge for å få <strong>tillatelse til offentliggjøring</strong> av eventuelt andre personer på bildet.</li>
