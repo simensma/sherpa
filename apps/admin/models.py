@@ -53,6 +53,9 @@ def delete_album(sender, **kwargs):
     Album.objects.filter(parent=kwargs['instance']).delete()
     Image.objects.filter(album=kwargs['instance']).delete()
 
+class Fotokonkurranse(models.Model):
+    album = models.ForeignKey(Album, null=True)
+
 class Publication(models.Model):
     forening = models.ForeignKey('foreninger.Forening')
     title = models.CharField(max_length=255)

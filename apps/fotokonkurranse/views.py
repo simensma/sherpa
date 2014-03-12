@@ -14,7 +14,7 @@ from datetime import datetime
 import boto
 from PIL import Image as pil
 
-from admin.models import Image, Album
+from admin.models import Image, Fotokonkurranse
 from core.models import Tag
 from admin.images.util import generate_unique_random_image_key, get_exif_tags, create_thumb
 from core import xmp, validator
@@ -22,7 +22,10 @@ from core import xmp, validator
 logger = logging.getLogger('sherpa')
 
 def default(request):
-    context = {'now': datetime.now()}
+    context = {
+        'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
+        'now': datetime.now(),
+    }
     return render(request, 'main/fotokonkurranse/default.html', context)
 
 def upload(request):
@@ -71,9 +74,7 @@ def upload(request):
             key.set_contents_from_string(thumb['data'])
             key.set_acl('public-read')
 
-        # Confirm dest. album with photo people, might need rename
-        destination_album = Album.objects.get(name='Fotokonkurranse', parent=None)
-
+        destination_album = Fotokonkurranse.objects.get().album
         licence_text = "Kan brukes i DNTs egne kommunikasjonskanaler som magasiner, nettsider og sosiale medier, i PR og for bruk av DNTs sponsorer."
 
         image = Image(
