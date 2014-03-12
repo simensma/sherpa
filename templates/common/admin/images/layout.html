@@ -23,11 +23,11 @@
           <li>
             <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
           </li>
-          <li>
-            {% for album in albumpath %}
+          {% for album in albumpath %}
+            <li>
               <a href="{% url 'admin.images.views.list_albums' album.id %}">{{ album.name }}</a>
-            {% endfor %}
-          </li>
+            </li>
+          {% endfor %}
         {% endif %}
 
       </ol>
