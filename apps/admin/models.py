@@ -19,7 +19,7 @@ class Image(models.Model):
     licence = models.CharField(max_length=1023)
     exif = models.TextField()
     uploaded = models.DateTimeField(auto_now_add=True)
-    uploader = models.ForeignKey('user.User')
+    uploader = models.ForeignKey('user.User', null=True)
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
@@ -52,6 +52,9 @@ class Album(models.Model):
 def delete_album(sender, **kwargs):
     Album.objects.filter(parent=kwargs['instance']).delete()
     Image.objects.filter(album=kwargs['instance']).delete()
+
+class Fotokonkurranse(models.Model):
+    album = models.ForeignKey(Album, null=True)
 
 class Publication(models.Model):
     forening = models.ForeignKey('foreninger.Forening')

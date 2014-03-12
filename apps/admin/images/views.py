@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 
 from core.models import Tag
-from admin.models import Image, Album
+from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
 
 from core import xmp
@@ -56,6 +56,8 @@ def list_albums(request, album):
         current_album = Album.objects.get(id=album)
         images = Image.objects.filter(album=album)
         parents = list_parents(current_album)
+
+    fotokonkurranse_album = Fotokonkurranse.objects.get().album
     context = {
         'album': album,
         'albums': albums,
@@ -66,7 +68,8 @@ def list_albums(request, album):
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums',
-        'image_search_length': settings.IMAGE_SEARCH_LENGTH
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH,
+        'fotokonkurranse_album': fotokonkurranse_album,
     }
     return render(request, 'common/admin/images/list_albums.html', context)
 
@@ -339,3 +342,15 @@ def photographer(request):
     images = images.distinct('photographer')
     photographers = [image.photographer for image in images]
     return HttpResponse(json.dumps(photographers))
+
+def set_fotokonkurranse_album(request, new_album):
+    fotokonk = Fotokonkurranse.objects.get()
+    if new_album is None:
+        prev_album = fotokonk.album
+        fotokonk.album = None
+        fotokonk.save()
+        return redirect('admin.images.views.list_albums', prev_album.id)
+    else:
+        fotokonk.album = Album.objects.get(id=new_album)
+        fotokonk.save()
+        return redirect('admin.images.views.list_albums', new_album)

@@ -23,11 +23,25 @@
           <li>
             <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
           </li>
-          <li>
-            {% for album in albumpath %}
+          {% for album in albumpath %}
+            <li>
               <a href="{% url 'admin.images.views.list_albums' album.id %}">{{ album.name }}</a>
-            {% endfor %}
-          </li>
+            </li>
+          {% endfor %}
+
+          {# This is currently where DNT central-admins can choose the active fotokonkurranse destination album. #}
+          {% if album and active_forening.site.domain == 'www.turistforeningen.no' %}
+            —
+            {% if album == fotokonkurranse_album.id|stringformat:"s" %}
+              Dette er aktivt fotokonkurranse-album. <a href="{% url 'admin.images.views.set_fotokonkurranse_album' %}">Avslutt konkurransen</a>
+            {% else %}
+              <a href="{% url 'admin.images.views.set_fotokonkurranse_album' album %}">Velg som fotokonkurranse-album</a>
+              {% if fotokonkurranse_album %}
+                eller <a href="{% url 'admin.images.views.list_albums' fotokonkurranse_album.id %}">gå til albumet: {{ fotokonkurranse_album.name }}</a>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+
         {% endif %}
 
       </ol>
