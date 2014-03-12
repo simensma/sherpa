@@ -21,6 +21,8 @@ from core import xmp, validator
 
 logger = logging.getLogger('sherpa')
 
+MIN_SIZE = 800 # pixlors
+
 def default(request):
     context = {
         'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
@@ -62,6 +64,15 @@ def upload(request):
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
+
+        if pil_image.size[0] < MIN_SIZE or pil_image.size[1] < MIN_SIZE:
+            return HttpResponseBadRequest(json.dumps({
+                'files': [{
+                    'name': image_file.name,
+                    'size': image_file.size,
+                    'error': u"Bildet må være minst 800x800 piksler",
+                }]
+            }))
 
         key = boto.s3.key.Key(bucket, '%s%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
         key.content_type = image_file.content_type
