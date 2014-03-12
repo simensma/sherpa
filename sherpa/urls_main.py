@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^instagram/', include('instagram.urls')),
     url(r'^fjelltreffen/', include('fjelltreffen.urls')),
     url(r'^foremeldinger/', include('conditions.urls')),
-    url(r'^fotokonkurranse/', include('fotokonkurranse.urls')),
+    url(r'^fotokonkurranse-beta/', include('fotokonkurranse.urls')),
 
     url(r'^connect/', include('connect.urls')),
     url(r'^api/', include('api.urls')),
