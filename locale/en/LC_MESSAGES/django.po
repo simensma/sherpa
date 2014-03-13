@@ -17,6 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: apps/enrollment/util.py:24 templates/main/enrollment/result/sms.txt:1
+msgid "Velkommen som medlem!"
+msgstr "Welcome as a member!"
+
+#: apps/enrollment/util.py:25
+#: templates/main/enrollment/result/success_card.html:21
+#: templates/main/enrollment/result/success_invoice.html:17
+msgid "Velkommen som medlemmer!"
+msgstr "Welcome as members!"
+
 #: templates/common/user/login/util/login_form.html:6
 #: templates/common/user/login/util/login_form.html:11
 msgid "Feil e-postadresse eller passord"

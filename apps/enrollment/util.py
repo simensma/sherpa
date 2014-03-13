@@ -2,6 +2,7 @@
 from django.core.mail import send_mail
 from django.template import Context
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 from datetime import datetime, timedelta
 import sys
@@ -20,8 +21,8 @@ invalid_location = 'ugyldig-adresse'
 invalid_existing = 'ugyldig-eksiserende-hovedmedlem'
 
 EMAIL_FROM = "Den Norske Turistforening <medlem@turistforeningen.no>"
-EMAIL_SUBJECT_SINGLE = "Velkommen som medlem!"
-EMAIL_SUBJECT_MULTIPLE = "Velkommen som medlemmer!"
+EMAIL_SUBJECT_SINGLE = _("Velkommen som medlem!")
+EMAIL_SUBJECT_MULTIPLE = _("Velkommen som medlemmer!")
 
 # Hardcoded ages
 AGE_SENIOR = 67
