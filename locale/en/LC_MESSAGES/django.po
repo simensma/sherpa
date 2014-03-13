@@ -1337,7 +1337,7 @@ msgid "Totalt"
 msgstr "Total"
 
 #: templates/main/enrollment/verification.html:204
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "            Du blir medlem i DNT og %(forening)s.\n"
@@ -1348,20 +1348,20 @@ msgid_plural ""
 "          "
 msgstr[0] ""
 "\n"
-"You will be member of DNT and %(association)s."
+"You will be member of DNT and %(forening)s."
 msgstr[1] ""
 "\n"
-"You will be members of DNT and %(association)s."
+"You will be members of DNT and %(forening)s."
 
 #: templates/main/enrollment/verification.html:213
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "              Ungdomsmedlemmer blir medlem i DNT og %(forening)s.\n"
 "            "
 msgstr ""
 "\n"
-"Youth members will be members of DNT and %(association)s."
+"Youth members will be members of DNT and %(forening)s."
 
 #: templates/main/enrollment/verification.html:220
 msgid "Medlemskapet gjelder for"
@@ -1459,7 +1459,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/main/enrollment/result/success_card.html:28
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "          Du er nå medlem i DNT og <a href=\"%(url)s\">%(forening)s</a>.\n"
@@ -1471,13 +1471,13 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"You are now a member of DNT and <a href=\"%(url)s\">%(association)s</a>."
+"You are now a member of DNT and <a href=\"%(url)s\">%(forening)s</a>."
 msgstr[1] ""
 "\n"
-"You are now members of DNT and <a href=\"%(url)s\">%(association)s</a>."
+"You are now members of DNT and <a href=\"%(url)s\">%(forening)s</a>."
 
 #: templates/main/enrollment/result/success_card.html:37
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "            Ungdomsmedlemmer er medlem i DNT og <a href=\"%(url)s\">"
@@ -1485,7 +1485,7 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-"Youth members are members of DNT and <a href=\"%(url)s\">%(association)s</a>."
+"Youth members are members of DNT and <a href=\"%(url)s\">%(forening)s</a>."
 
 #: templates/main/enrollment/result/success_card.html:47
 msgid "Navn"
@@ -1634,7 +1634,7 @@ msgid "Hva skjer der du bor"
 msgstr "What's happening in your area"
 
 #: templates/main/enrollment/result/success_card.html:179
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                <a href=\"%(url)s\">%(forening)s</a> arrangerer fellesturer "
@@ -1642,11 +1642,11 @@ msgid ""
 "              "
 msgstr ""
 "\n"
-"<a href=\"%(url)s\">%(association)s</a> arranges guided tours and activities "
+"<a href=\"%(url)s\">%(forening)s</a> arranges guided tours and activities "
 "all year."
 
 #: templates/main/enrollment/result/success_invoice.html:24
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "          Du blir medlem i DNT og <a href=\"%(url)s\">%(forening)s</a>.\n"
@@ -1658,13 +1658,13 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"You will become member in DNT and <a href=\"%(url)s\">%(association)s</a>."
+"You will become member in DNT and <a href=\"%(url)s\">%(forening)s</a>."
 msgstr[1] ""
 "\n"
-"You will become members in DNT and <a href=\"%(url)s\">%(association)s</a>."
+"You will become members in DNT and <a href=\"%(url)s\">%(forening)s</a>."
 
 #: templates/main/enrollment/result/success_invoice.html:33
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "            Ungdomsmedlemmer blir medlem i DNT og <a href=\"%(url)s\">"
@@ -1673,7 +1673,7 @@ msgid ""
 msgstr ""
 "\n"
 "Youth members will be members of DNT and <a href=\"%(url)s\">"
-"%(association)s</a>."
+"%(forening)s</a>."
 
 #: templates/main/enrollment/result/success_invoice.html:47
 #, python-format
@@ -1720,7 +1720,7 @@ msgstr ""
 "entire Norway."
 
 #: templates/main/enrollment/result/success_invoice.html:81
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "              <a href=\"%(url)s\">%(forening)s</a> arrangerer fellesturer og "
