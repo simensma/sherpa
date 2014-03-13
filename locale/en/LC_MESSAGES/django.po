@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-13 11:25+0100\n"
+"POT-Creation-Date: 2014-03-13 11:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1424,10 +1424,6 @@ msgstr ""
 msgid "for å forsøke på nytt eller ta kontakt med banken din"
 msgstr "to retry, or contact your bank"
 
-#: templates/main/enrollment/result/sms.txt:1
-msgid "Velkommen som medlem!"
-msgstr "Welcome as a member!"
-
 #: templates/main/enrollment/result/sms.txt:3
 msgid "Medlemskontingent"
 msgstr "Membership"
@@ -1464,11 +1460,6 @@ msgid ""
 msgstr ""
 "\n"
 "Welcome as a member, %(name)s!"
-
-#: templates/main/enrollment/result/success_card.html:21
-#: templates/main/enrollment/result/success_invoice.html:17
-msgid "Velkommen som medlemmer!"
-msgstr "Welcome as members!"
 
 #: templates/main/enrollment/result/success_card.html:31
 #, python-format
@@ -1701,12 +1692,14 @@ msgid_plural ""
 "%(total_price)s i posten. Medlemskapet er gyldig når betalingen er "
 "registrert i vårt system.\n"
 "        "
-msgstr[0] "\n"
+msgstr[0] ""
+"\n"
 "You will shortly receive your membership card and an invoice of kr. "
 "%(total_price)s\n"
 "by postage. Your membership is valid from when the payment is registered in "
 "our systems."
-msgstr[1] "\n"
+msgstr[1] ""
+"\n"
 "You will shortly receive your membership card and an invoice of kr. "
 "%(total_price)s\n"
 "by postage. Your membership is valid from when the payment is registered in "
@@ -1768,15 +1761,93 @@ msgstr ""
 "<a href=\"%(url)s\">%(forening)s</a> arranges guided tours and activities "
 "all year."
 
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:1
 #: templates/main/enrollment/result/emails/invoice-single.txt:1
 #, python-format
 msgid "Hei %(name)s!"
 msgstr "Hello %(name)s!"
 
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:3
 #: templates/main/enrollment/result/emails/invoice-single.txt:3
 #, python-format
 msgid "Velkommen som medlem i DNT og %(forening)s."
 msgstr "Welcome as a member in DNT and %(forening)s."
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:5
+#, python-format
+msgid ""
+"Dere vil i løpet av kort tid motta medlemskort og faktura på kr. "
+"%(total_price)s\n"
+"i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system."
+msgstr ""
+"You will shortly receive your membership card and an invoice of kr. "
+"%(total_price)s\n"
+"by mail. Your membership is valid from when the payment is registered in our "
+"systems."
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:8
+msgid ""
+"Mer informasjon om medlemskapet og medlemsfordelene deres finner dere på:"
+msgstr ""
+"You'll find more information about the membership and your benefits on:"
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:11
+msgid ""
+"Hvis dere har spørsmål om deres medlemskap, kan dere kontakte DNTs\n"
+"medlemsservice på telefon 40001870 eller medlem@turistforeningen.no"
+msgstr ""
+"If you have any questions about your membership, please contact "
+"memberservice by phone no. +47 4000 1870 or e-mail medlem@turistforeningen.no"
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:14
+msgid ""
+"Få mer ut av medlemskapet med Min side:\n"
+"Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få\n"
+"tilgang til Fjelltreffen. Merk at deres innmelding må være behandlet i vårt\n"
+"medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres\n"
+"påfølgende virkedag. Registrer deg her:"
+msgstr ""
+"Get more out of your membership with Min side:\n"
+"Here you can change your address, read our magazines, and access "
+"Fjelltreffen. Note that your enrollment needs to be processed before you can "
+"access thesemembership services, this is usually processed the following "
+"business day. Register here:"
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:21
+msgid ""
+"Planlegg turen på UT.no:\n"
+"På http://ut.no/ finner dere hytter og turer over hele landet."
+msgstr ""
+"Plan your trip with UT.no:\n"
+"On http://ut.no/ you'll find cabins and trails for entire Norway."
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:24
+#: templates/main/enrollment/result/emails/invoice-single.txt:24
+#, python-format
+msgid ""
+"Bli med på tur:\n"
+"%(forening)s arrangerer en rekke fellesturer og aktiviteter\n"
+"hele året. Sjekk tilbudet på %(forening_url)s"
+msgstr ""
+"Join us hiking:\n"
+"%(forening)s has a number of guided tours and activities all year.\n"
+"Check out their offers at %(forening_url)s"
+
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:28
+#: templates/main/enrollment/result/emails/invoice-single.txt:28
+msgid ""
+"God tur!\n"
+"\n"
+"Med vennlig hilsen\n"
+"Den Norske Turistforening\n"
+"www.turistforeningen.no"
+msgstr ""
+"Have a good trip!\n"
+"\n"
+"Best regards,\n"
+"Den Norske Turistforening\n"
+"The Norwegian Trekking Association\n"
+"www.turistforeningen.no"
 
 #: templates/main/enrollment/result/emails/invoice-single.txt:5
 #, python-format
@@ -1825,32 +1896,6 @@ msgid ""
 msgstr ""
 "Plan your trip with UT.no:\n"
 "On http://ut.no/ you'll find cabins and trails for entire Norway."
-
-#: templates/main/enrollment/result/emails/invoice-single.txt:24
-#, python-format
-msgid ""
-"Bli med på tur:\n"
-"%(forening)s arrangerer en rekke fellesturer og aktiviteter\n"
-"hele året. Sjekk tilbudet på %(forening_url)s"
-msgstr ""
-"Join us hiking:\n"
-"%(forening)s has a number of guided tours and activities all year.\n"
-"Check out their offers at %(forening_url)s"
-
-#: templates/main/enrollment/result/emails/invoice-single.txt:28
-msgid ""
-"God tur!\n"
-"\n"
-"Med vennlig hilsen\n"
-"Den Norske Turistforening\n"
-"www.turistforeningen.no"
-msgstr ""
-"Have a good trip!\n"
-"\n"
-"Best regards,\n"
-"Den Norske Turistforening\n"
-"The Norwegian Trekking Association\n"
-"www.turistforeningen.no"
 
 #: templates/main/membership/infobox.html:4
 msgid "Spørsmål?"
