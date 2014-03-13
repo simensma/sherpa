@@ -90,6 +90,7 @@ def prepare_and_send_email(request, enrollment):
             context = Context({
                 'user': user,
                 'users': enrollment.users.all(),
+                'enrollment': enrollment,
                 'proof_validity_end': proof_validity_end,
             })
             message = render_to_string('main/enrollment/result/emails/%s.txt' % template, context)
