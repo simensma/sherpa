@@ -9,6 +9,10 @@ env.hosts = ['sherpa_container']
 env.gateway = 'ubuntu@sherpa'
 env.key_filename = fabfile_settings.GW_KEY_FILENAME
 
+# This makes ssh substantially faster.
+# See https://github.com/paramiko/paramiko/pull/192
+env.disable_known_hosts = True
+
 setenv = '. /etc/container_environment.sh && . /sherpa/env/bin/activate'
 
 def deploy_soft():
