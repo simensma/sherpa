@@ -12,11 +12,14 @@
   <div class="row">
     <div class="span12">
       <h2>
-        {% blocktrans with name=enrollment.users.all.0.name count users=enrollment.users.count %}
-          Velkommen som medlem, {{ name }}!
-        {% plural %}
-          Velkommen som medlemmer!
-        {% endblocktrans %}
+        {# Can't use plural blocktrans when a variable is only used in one of the forms #}
+        {% if enrollment.users.count == 1 %}
+          {% blocktrans with name=enrollment.users.all.0.name %}
+            Velkommen som medlem, {{ name }}!
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Velkommen som medlemmer!" %}
+        {% endif %}
       </h2>
     </div>
   </div>
