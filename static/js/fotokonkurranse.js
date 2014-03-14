@@ -83,8 +83,7 @@ $(function () {
         autoUpload: false,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 20000000, // 20 MB
-        // Enable image resizing, except for Android and Opera, which actually support image resizing, but fail to send Blob objects via XHR requests:
-        disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
+        disableImageResize: true,
         previewMaxWidth: 400,
         previewMaxHeight: 150,
     }).on('fileuploadadd', function(e, data) {
