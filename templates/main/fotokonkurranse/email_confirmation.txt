@@ -4,7 +4,7 @@ Dette er en automatisk bekreftelse på at ditt bilde, "{{ image_name }}", er sen
 
 En jury kårer de beste bildene ved hver av de tre sesongkonkurransene. Alle vinnere vil bli kontaktet av Den Norske Turistforening.
 
-Har du spørsmål om konkurransen kan du kontakte Den Norske Turistforening på info@turistforeningen.no eller 4000 1868.
+Har du spørsmål om konkurransen kan du kontakte Den Norske Turistforening på foto@turistforeningen.no eller 4000 1868.
 
 Med vennlig hilsen,
 Den Norske Turistforening
