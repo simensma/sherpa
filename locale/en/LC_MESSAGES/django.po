@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-13 11:55+0100\n"
+"POT-Creation-Date: 2014-03-14 10:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1761,17 +1761,146 @@ msgstr ""
 "<a href=\"%(url)s\">%(forening)s</a> arranges guided tours and activities "
 "all year."
 
+#: templates/main/enrollment/result/emails/card-multiple.txt:1
+#: templates/main/enrollment/result/emails/card-single.txt:1
 #: templates/main/enrollment/result/emails/invoice-multiple.txt:1
 #: templates/main/enrollment/result/emails/invoice-single.txt:1
 #, python-format
 msgid "Hei %(name)s!"
 msgstr "Hello %(name)s!"
 
+#: templates/main/enrollment/result/emails/card-multiple.txt:3
+#: templates/main/enrollment/result/emails/card-single.txt:3
 #: templates/main/enrollment/result/emails/invoice-multiple.txt:3
 #: templates/main/enrollment/result/emails/invoice-single.txt:3
 #, python-format
 msgid "Velkommen som medlem i DNT og %(forening)s."
 msgstr "Welcome as a member in DNT and %(forening)s."
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:5
+#: templates/main/enrollment/result/emails/card-single.txt:5
+msgid "medlemsnr:"
+msgstr "member id:"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:6
+msgid "Totalsum:"
+msgstr "Total:"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:8
+msgid "Dere vil i løpet av kort tid motta medlemskort i posten."
+msgstr ""
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:10
+msgid "Mer informasjon om medlemskapet og medlemsfordelene finner dere på"
+msgstr ""
+"You'll find more information about the membership and your benefits on:"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:13
+msgid ""
+"Hvis dere har spørsmål om medlemskapet, kan dere kontakte DNTs "
+"medlemsservice\n"
+"på telefon 40001870 eller medlem@turistforeningen.no"
+msgstr ""
+"If you have any questions about your membership, please contact "
+"memberservice by phone no. +47 4000 1870 or e-mail medlem@turistforeningen.no"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:16
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:14
+msgid ""
+"Få mer ut av medlemskapet med Min side:\n"
+"Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få\n"
+"tilgang til Fjelltreffen. Merk at deres innmelding må være behandlet i vårt\n"
+"medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres\n"
+"påfølgende virkedag. Registrer deg her:"
+msgstr ""
+"Get more out of your membership with Min side:\n"
+"Here you can change your address, read our magazines, and access "
+"Fjelltreffen. Note that your enrollment needs to be processed before you can "
+"access thesemembership services, this is usually processed the following "
+"business day. Register here:"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:23
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:21
+msgid ""
+"Planlegg turen på UT.no:\n"
+"På http://ut.no/ finner dere hytter og turer over hele landet."
+msgstr ""
+"Plan your trip with UT.no:\n"
+"On http://ut.no/ you'll find cabins and trails for entire Norway."
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:26
+#: templates/main/enrollment/result/emails/card-single.txt:25
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:24
+#: templates/main/enrollment/result/emails/invoice-single.txt:24
+#, python-format
+msgid ""
+"Bli med på tur:\n"
+"%(forening)s arrangerer en rekke fellesturer og aktiviteter\n"
+"hele året. Sjekk tilbudet på %(forening_url)s"
+msgstr ""
+"Join us hiking:\n"
+"%(forening)s has a number of guided tours and activities all year.\n"
+"Check out their offers at %(forening_url)s"
+
+#: templates/main/enrollment/result/emails/card-multiple.txt:30
+#: templates/main/enrollment/result/emails/card-single.txt:29
+#: templates/main/enrollment/result/emails/invoice-multiple.txt:28
+#: templates/main/enrollment/result/emails/invoice-single.txt:28
+msgid ""
+"God tur!\n"
+"\n"
+"Med vennlig hilsen\n"
+"Den Norske Turistforening\n"
+"www.turistforeningen.no"
+msgstr ""
+"Have a good trip!\n"
+"\n"
+"Best regards,\n"
+"Den Norske Turistforening\n"
+"The Norwegian Trekking Association\n"
+"www.turistforeningen.no"
+
+#: templates/main/enrollment/result/emails/card-single.txt:7
+msgid "Du vil i løpet av kort tid motta ditt medlemskort i posten."
+msgstr ""
+
+#: templates/main/enrollment/result/emails/card-single.txt:9
+msgid "Mer informasjon om medlemskapet og medlemsfordelene dine finner du på"
+msgstr "You'll find more information about the membership and your benefits on"
+
+#: templates/main/enrollment/result/emails/card-single.txt:12
+#: templates/main/enrollment/result/emails/invoice-single.txt:11
+msgid ""
+"Hvis du har spørsmål om ditt medlemskap, kan du kontakte DNTs "
+"medlemsservice\n"
+"på telefon 40001870 eller medlem@turistforeningen.no"
+msgstr ""
+"If you have any questions about your membership, please contact "
+"memberservice by phone no. 4000 1870 or e-mail medlem@turistforeningen.no"
+
+#: templates/main/enrollment/result/emails/card-single.txt:15
+#: templates/main/enrollment/result/emails/invoice-single.txt:14
+msgid ""
+"Få mer ut av medlemskapet med Min side:\n"
+"Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få\n"
+"tilgang til Fjelltreffen. Merk at din innmelding må være behandlet i vårt\n"
+"medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres\n"
+"påfølgende virkedag. Registrer deg her:"
+msgstr ""
+"Get more out of your membership with Min side:\n"
+"Here you can change your address, read our magazines, and access "
+"Fjelltreffen. Note that your enrollment needs to be processed before you can "
+"access thesemembership services, this is usually processed the following "
+"business day. Register here:"
+
+#: templates/main/enrollment/result/emails/card-single.txt:22
+#: templates/main/enrollment/result/emails/invoice-single.txt:21
+msgid ""
+"Planlegg turen på UT.no:\n"
+"På http://ut.no/ finner du hytter og turer over hele landet."
+msgstr ""
+"Plan your trip with UT.no:\n"
+"On http://ut.no/ you'll find cabins and trails for entire Norway."
 
 #: templates/main/enrollment/result/emails/invoice-multiple.txt:5
 #, python-format
@@ -1799,56 +1928,6 @@ msgstr ""
 "If you have any questions about your membership, please contact "
 "memberservice by phone no. +47 4000 1870 or e-mail medlem@turistforeningen.no"
 
-#: templates/main/enrollment/result/emails/invoice-multiple.txt:14
-msgid ""
-"Få mer ut av medlemskapet med Min side:\n"
-"Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få\n"
-"tilgang til Fjelltreffen. Merk at deres innmelding må være behandlet i vårt\n"
-"medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres\n"
-"påfølgende virkedag. Registrer deg her:"
-msgstr ""
-"Get more out of your membership with Min side:\n"
-"Here you can change your address, read our magazines, and access "
-"Fjelltreffen. Note that your enrollment needs to be processed before you can "
-"access thesemembership services, this is usually processed the following "
-"business day. Register here:"
-
-#: templates/main/enrollment/result/emails/invoice-multiple.txt:21
-msgid ""
-"Planlegg turen på UT.no:\n"
-"På http://ut.no/ finner dere hytter og turer over hele landet."
-msgstr ""
-"Plan your trip with UT.no:\n"
-"On http://ut.no/ you'll find cabins and trails for entire Norway."
-
-#: templates/main/enrollment/result/emails/invoice-multiple.txt:24
-#: templates/main/enrollment/result/emails/invoice-single.txt:24
-#, python-format
-msgid ""
-"Bli med på tur:\n"
-"%(forening)s arrangerer en rekke fellesturer og aktiviteter\n"
-"hele året. Sjekk tilbudet på %(forening_url)s"
-msgstr ""
-"Join us hiking:\n"
-"%(forening)s has a number of guided tours and activities all year.\n"
-"Check out their offers at %(forening_url)s"
-
-#: templates/main/enrollment/result/emails/invoice-multiple.txt:28
-#: templates/main/enrollment/result/emails/invoice-single.txt:28
-msgid ""
-"God tur!\n"
-"\n"
-"Med vennlig hilsen\n"
-"Den Norske Turistforening\n"
-"www.turistforeningen.no"
-msgstr ""
-"Have a good trip!\n"
-"\n"
-"Best regards,\n"
-"Den Norske Turistforening\n"
-"The Norwegian Trekking Association\n"
-"www.turistforeningen.no"
-
 #: templates/main/enrollment/result/emails/invoice-single.txt:5
 #, python-format
 msgid ""
@@ -1865,37 +1944,6 @@ msgstr ""
 msgid "Mer informasjon om medlemskapet og medlemsfordelene dine finner du på:"
 msgstr ""
 "You'll find more information about the membership and your benefits on:"
-
-#: templates/main/enrollment/result/emails/invoice-single.txt:11
-msgid ""
-"Hvis du har spørsmål om ditt medlemskap, kan du kontakte DNTs "
-"medlemsservice\n"
-"på telefon 40001870 eller medlem@turistforeningen.no"
-msgstr ""
-"If you have any questions about your membership, please contact "
-"memberservice by phone no. 4000 1870 or e-mail medlem@turistforeningen.no"
-
-#: templates/main/enrollment/result/emails/invoice-single.txt:14
-msgid ""
-"Få mer ut av medlemskapet med Min side:\n"
-"Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få\n"
-"tilgang til Fjelltreffen. Merk at din innmelding må være behandlet i vårt\n"
-"medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres\n"
-"påfølgende virkedag. Registrer deg her:"
-msgstr ""
-"Get more out of your membership with Min side:\n"
-"Here you can change your address, read our magazines, and access "
-"Fjelltreffen. Note that your enrollment needs to be processed before you can "
-"access thesemembership services, this is usually processed the following "
-"business day. Register here:"
-
-#: templates/main/enrollment/result/emails/invoice-single.txt:21
-msgid ""
-"Planlegg turen på UT.no:\n"
-"På http://ut.no/ finner du hytter og turer over hele landet."
-msgstr ""
-"Plan your trip with UT.no:\n"
-"On http://ut.no/ you'll find cabins and trails for entire Norway."
 
 #: templates/main/membership/infobox.html:4
 msgid "Spørsmål?"
