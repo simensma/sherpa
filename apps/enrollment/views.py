@@ -34,6 +34,10 @@ logger = logging.getLogger('sherpa')
 # These are used in most views to know where the user came from and where
 # they should be headed.
 
+def english(request):
+    request.session['activated_english_enrollment'] = True
+    return redirect('enrollment.views.index')
+
 def index(request):
     return redirect("enrollment.views.registration")
 
