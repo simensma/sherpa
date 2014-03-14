@@ -1,5 +1,7 @@
 {% extends 'main/layout.html' %}
 
+{% block title %}Fotokonkurranse{% endblock %}
+
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/load-image/load-image.min.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/load-image/canvas-to-blob.min.js"></script>
@@ -26,8 +28,24 @@
   <div class="row">
     <div class="span12">
 
-      <h1>KNIPS DEG TIL FLAX!</h1>
-      <p class="lede">Grip stemningen i DNTs fotokonkurranse 2014</p>
+      <div class="intro-image">
+        <h1>KNIPS DEG TIL FLAX!</h1>
+        <p>Grip stemningen i DNTs fotokonkurranse {{ now|date:"Y" }}</p>
+      </div>
+
+      <p>
+        Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>. Finalistene er med i konkurransen om flotte premier - førstpremien er 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
+      </p>
+
+      <p>
+        <strong>Last opp dine fineste bilder med tema: «Vinterglede» innen 31. mai. Bruk opplastingsskjemaet nedenfor.</strong>
+      </p>
+
+      <p>
+        Husk å ta med kamera når du er på tur. Lykke til!
+      </p>
+
+      <hr>
 
       {% if destination_album_exists %}
 
@@ -93,7 +111,15 @@
 
           <div class="control-group">
             <div class="controls">
-              <button type="submit" class="btn btn-success hide" data-confirm="Er du sikker på at du vil sende inn disse bildene til konkurransen?">Send inn bildene!</button>
+              <div class="control-as-text">
+                Du kan laste opp inntil 3 bilder. Når du sender inn bilde(r) samtykker du samtidig til <a href="#regler">vilkårene i konkurransereglene</a>.
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-success btn-large hide" data-confirm="Er du sikker på at du vil sende inn disse bildene til konkurransen? Ved å sende inn bildene samtykker du samtidig til vilkårene i konkurransereglene.">Send inn bildene!</button>
             </div>
           </div>
 
@@ -105,7 +131,7 @@
               Vinnerbildet vil bli plukket ut av en jury, og vinneren vil bli kontaktet av Den Norske Turistforening.
             </p>
             <p>
-              Har du spørsmål om konkurransen kan du kontakte Den Norske Turistforening på <a href="mailto:info@turistforening.no">info@turistforening.no</a> eller 4000 1868
+              Har du spørsmål om konkurransen kan du kontakte Den Norske Turistforening på <a href="mailto:foto@turistforening.no">foto@turistforening.no</a> eller 4000 1868
             </p>
           </div>
 
@@ -120,45 +146,47 @@
 
       {% endif %}
 
-      <p>
-        Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner Norsk Tipping . Finalistene er med i konkurransen om flotte premier - førstpremien er 10 000 kr og 100 Flax-lodd fra Norsk Tipping, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
-      </p>
+      <hr>
 
-      <p>
-        <strong>Last opp dine fineste bilder med tema: «Turglede – høst» innen 30. november. Bruk opplastingsskjemaet nedenfor.</strong>
-      </p>
+      <div class="prizes">
 
-      <p>
-        Husk å ta med kamera når du er på tur. Lykke til!
-      </p>
+        <div class="row-fluid">
+          <div class="span4">
+            <p class="prize-header">1. premie</p>
+            <p class="prize">
+              10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
+            </p>
+          </div>
+          <div class="span4">
+            <p class="prize-header">2. premie</p>
+            <p class="prize">
+              Tursekk og 8 overnattinger på DNT-hytte
+            </p>
+          </div>
+          <div class="span4">
+            <p class="prize-header">3. premie</p>
+            <p class="prize">
+              Dagstursekk og 4 overnattinger på DNT-hytte
+            </p>
+          </div>
+        </div>
 
-      <h3>Premier</h3>
+      </div>
 
-      <p>
+      <hr>
+
+      <div class="norsk-tipping">
+        <a href="https://www.norsk-tipping.no/">
+          <img src="{{ STATIC_URL }}img/fotokonkurranse/norsk-tipping.png" alt="Norsk Tipping">
+        </a>
         <p>
-          <strong>Turglede – vinter/vår (mars-mai)</strong><br>
-          1. premie: 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a><br>
-          2. premie: Tursekk og 8 overnattinger på DNT-hytte<br>
-          3. premie: Dagstursekk og 4 overnattinger på DNT-hytte
+          Fotokonkurransen arrangeres i samarbeid med vår turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
         </p>
+      </div>
 
-        <p>
-          <strong>Turglede – sommer (juni-august)</strong><br>
-          1. premie: 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a><br>
-          2. premie: Tursekk og 8 overnattinger på DNT-hytte<br>
-          3. premie: Dagstursekk og 4 overnattinger på DNT-hytte
-        </p>
+      <hr>
 
-        <p>
-          <strong>Turglede – høst (september-november)</strong><br>
-          1. premie: 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a><br>
-          2. premie: Tursekk og 8 overnattinger på DNT-hytte<br>
-          3. premie: Dagstursekk og 4 overnattinger på DNT-hytte
-        </p>
-
-      </p>
-
-      <h3>Regler</h3>
+      <h2 id="regler">Regler</h2>
 
       <ul>
         <li>Det er til sammen 3 konkurranser: Det overordnede temaet i hver konkurranse er «Turglede» og vi kårer beste vinter-/vårbilde, beste sommerbilde og beste høstbilde.</li>
@@ -186,8 +214,14 @@
       </ul>
 
       <p>
-        <a href="http://ut.no/artikkel/1.7654872">10 tips til bedre turbilder (UT.no)</a>
+        <strong>Fototips:</strong>
       </p>
+
+      <ul>
+        <li><a href="http://ut.no/artikkel/1.7654872">10 tips til bedre turbilder (UT.no)</a></li>
+        <li><a href="http://ut.no/artikkel/1.7926733">Slik tar du bedre vinterbilder (UT.no)</a></li>
+        <li><a href="http://ut.no/artikkel/1.7847895">Slik tar du fartsfylte bilder (UT.no)</a></li>
+      </ul>
 
     </div>
   </div>
