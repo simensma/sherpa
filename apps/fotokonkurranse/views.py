@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.conf import settings
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
+from django.core.cache import cache
 
 import json
 import sys
@@ -112,18 +113,25 @@ def upload(request):
             obj, created = Tag.objects.get_or_create(name=tag)
             image.tags.add(obj)
 
-        try:
-            t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
-            c = RequestContext(request, {
-                'user_name': post_name,
-                'image_name': image_file.name,
-            })
-            send_mail(EMAIL_CONFIRMATION_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [post_email])
-        except (SMTPException, SSLError):
-            logger.warning(u"Kvitteringsepost for fotokonkurranse feilet",
-                exc_info=sys.exc_info(),
-                extra={'request': request}
-            )
+        # Note that we're caching the email address for one hour and not resending the email receipt
+        # for further uploads from that address during this period.
+        if cache.get('fotokonkurranse.emails.%s' % post_email) is None:
+            # Set the cache quickly when we know we're going to send an email. Don't wait until after
+            # it's sent, because other upload requests may try to send meanwhile and we don't want them to.
+            cache.set('fotokonkurranse.emails.%s' % post_email, True, 60 * 60)
+            try:
+                t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
+                c = RequestContext(request, {
+                    'user_name': post_name,
+                    'image_name': image_file.name,
+                })
+                send_mail(EMAIL_CONFIRMATION_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [post_email])
+            except (SMTPException, SSLError):
+                cache.delete('fotokonkurranse.emails.%s' % post_email)
+                logger.warning(u"Kvitteringsepost for fotokonkurranse feilet",
+                    exc_info=sys.exc_info(),
+                    extra={'request': request}
+                )
 
         return HttpResponse(json.dumps({
             'files': [{
