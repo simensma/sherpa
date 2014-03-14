@@ -37,6 +37,13 @@ class DefaultLanguage():
         if 'dntconnect' in request.session:
             return
 
+        # English enrollment form is activated through a unique URL which sets this session var.
+        # Note that this will also translate other unrelated pages (like user page registration).
+        if 'activated_english_enrollment' in request.session:
+            if request.LANGUAGE_CODE != 'en':
+                translation.activate('en')
+            return
+
         # Force norwegian for all requests.
         if request.LANGUAGE_CODE != settings.LANGUAGE_CODE:
             translation.activate(settings.LANGUAGE_CODE)
