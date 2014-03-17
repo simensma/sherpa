@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django import forms
 from django.forms.widgets import Textarea
-from captcha.fields import CaptchaField
+from captcha.fields import ReCaptchaField
 
 class ReplyForm(forms.Form):
 
@@ -41,10 +41,11 @@ class ReplyForm(forms.Form):
 # Anonymous users must also fill a Captcha
 class ReplyAnonForm(ReplyForm):
 
-    captcha = CaptchaField()
+    captcha = ReCaptchaField()
 
     def __init__(self, *args, **kwargs):
         super(ReplyAnonForm, self).__init__(*args, **kwargs)
         self.fields['captcha'].error_messages = {
             'required': 'Du må fylle inn bokstavene i bildet.',
-            'invalid': 'Du skrev ikke bokstavene som stod i bildet riktig, vennligst prøv igjen.'}
+            'captcha_invalid': 'Du skrev ikke bokstavene som stod i bildet riktig, vennligst prøv igjen.'
+        }

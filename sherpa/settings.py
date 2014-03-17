@@ -49,9 +49,6 @@ FJELLTREFFEN_AGE_LIMIT = min(FJELLTREFFEN_AGE_LIMITS)
 FJELLTREFFEN_REPORT_EMAIL = 'DNT medlemsservice <medlem@turistforeningen.no>'
 FJELLTREFFEN_BULK_COUNT = 20 # Annonser to load when a user requests more
 FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
-CAPTCHA_FLITE_PATH = '/usr/bin/flite'
-CAPTCHA_FONT_SIZE = 50
-CAPTCHA_OUTPUT_FORMAT = '<p>%(image)s %(hidden_field)s</p><p>%(text_field)s</p>'
 ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
 MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
@@ -179,7 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis', # GeoDjango
     'raven.contrib.django', # Error logging
-    'captcha', # django-simple-captcha
+    'captcha', # django-recaptcha
     'south', # Database migrations
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
