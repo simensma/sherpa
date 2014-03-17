@@ -93,7 +93,6 @@ def show(request, id):
                 librato.increment('sherpa.fjelltreffen_svar')
                 # Log temporary for details of how SPAM is getting through.
                 logger.info(u"Fjelltreffen-svar (logges midlertidig for opplysninger om rapportert spam)",
-                    exc_info=sys.exc_info(),
                     extra={'request': request}
                 )
                 request.session['fjelltreffen.reply'] = {
