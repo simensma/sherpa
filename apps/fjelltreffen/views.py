@@ -110,6 +110,12 @@ def show(request, id):
                     exc_info=sys.exc_info(),
                     extra={'request': request}
                 )
+        else:
+            # Log temporary for spam details
+            if len(form['captcha'].errors) > 0:
+                logger.info(u"Fjelltreffen-svar - ugyldig captcha",
+                    extra={'request': request}
+                )
     else:
         if request.user.is_authenticated():
             form = ReplyForm(initial={
