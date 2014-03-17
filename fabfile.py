@@ -37,3 +37,14 @@ def deploy_hard():
             'sv start sherpa'
         ])
         run(setenv + ' && ' + commands)
+
+def deploy_with_requirements():
+    with cd('/sherpa'):
+        commands = ' && '.join([
+            'git pull --tags github master',
+            'pip install -r requirements.txt',
+            './manage.py migrate',
+            'DJANGO_SETTINGS_MODULE="" django-admin.py compilemessages',
+            'sv hup sherpa',
+        ])
+        run(setenv + ' && ' + commands)
