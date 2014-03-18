@@ -1,20 +1,16 @@
 from __future__ import absolute_import
 
-from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.core.cache import cache
 
 from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
 
-from datetime import datetime
 import json
-import requests
 
 def list(request):
     versions = Version.objects.filter(
