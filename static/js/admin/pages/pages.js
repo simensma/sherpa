@@ -19,7 +19,7 @@ $(function() {
         lookupVal = $(this).val().replace(/[^-_a-z0-9\s]+/gi, '')
                                  .replace(/\s+/g, "-")
                                  .toLowerCase();
-        updateSlash(lookupVal.length == 0);
+        updateSlash(lookupVal.length === 0);
         newPage.find("span.slug").text(lookupVal);
         initiateLookup();
         clearTimeout(lookupTimer);
@@ -82,7 +82,7 @@ $(function() {
         var input = newPage.find("input[name='slug-input']");
         var val = input.val();
         val = val.replace(/\/+$/, '');
-        updateSlash(val.length == 0);
+        updateSlash(val.length === 0);
         var span = $('<span class="slug">' + encodeURIComponent(val).replace('%2F', '/') + '</span>');
         input.before(span);
         input.remove();
@@ -110,7 +110,7 @@ $(function() {
             alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
             return;
         }
-        if(newPage.find("input[name='title']").val().length == 0) {
+        if(newPage.find("input[name='title']").val().length === 0) {
             alert("Du må skrive inn en tittel på siden før du oppretter den!");
             return;
         }
