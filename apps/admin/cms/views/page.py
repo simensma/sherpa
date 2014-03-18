@@ -6,9 +6,11 @@ from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.contrib import messages
 
 from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
 from page.models import Menu, Page, Variant, Version, Row, Column, Content
+from .page_util import verify_domain
 
 import json
 
@@ -24,6 +26,22 @@ def list(request):
     menus = Menu.on(request.session['active_forening'].site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'common/admin/pages/list.html', context)
+
+def edit_domain(request):
+    result = verify_domain(request.POST['domain'])
+    if not result['valid']:
+        messages.error(request, result['error'])
+        context = {'domain': request.POST['domain'].strip()}
+        if result['error'] == 'site_exists':
+            context['existing_forening'] = result['existing_forening']
+        return render(request, 'common/admin/pages/list.html', context)
+    else:
+        site = request.session['active_forening'].site
+        site.domain = result['domain']
+        site.prefix = result['prefix']
+        site.save()
+        request.session.modified = True
+        return redirect('admin.cms.views.page.list')
 
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')

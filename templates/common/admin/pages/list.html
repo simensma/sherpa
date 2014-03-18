@@ -5,6 +5,7 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/pages/pages.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/pages/domain.js"></script>
   <script src="{{ STATIC_URL }}js/admin/pages/menu.js"></script>
 {% endblock %}
 
@@ -23,6 +24,30 @@
 <div class="row">
   <div class="col-md-12">
 
+    <h2>Domene</h2>
+
+    {% for message in messages %}
+      {% if message.message == 'malformed' %}
+        <div class="alert alert-danger">
+          Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
+        </div>
+      {% elif message.message == 'more_than_one_subdir' %}
+        <div class="alert alert-danger">
+          Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'prefix_for_disallowed_domain' %}
+        <div class="alert alert-danger">
+          Kun domener direkte under <strong>www.turistforeningen.no</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'site_exists' %}
+        <div class="alert alert-danger">
+          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.site.domain }}</strong>. Du kan <a href="javascript:undefined" class="edit-domain">endre denne</a> hvis du vet hva du gjør.
+
     <h2>Hovedmeny <small>dra for å sortere, klikk for å endre</small></h2>
     <nav id="menus" data-reorder-url="{% url 'admin.cms.views.menu.reorder' %}">
       <ul class="sortable horizontal">
@@ -36,7 +61,6 @@
     <p>
       <a class="add-menu-element" href="javascript:undefined">Nytt menyelement</a>
     </p>
-
 
     <h2>Websider</h2>
     <p style="text-align: center;">
@@ -150,6 +174,41 @@
     </button>
     <button class="btn btn-danger delete-menu">
       Slett lenken
+    </button>
+
+  </div>
+</div>
+
+<div class="modal domain" data-save-url="">
+  <div class="modal-header">
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Endre domeneadresse</h3>
+
+  </div>
+  <div class="modal-body">
+
+    <div class="alert alert-warning">
+      <strong>Er du helt sikker på at du vil dette?</strong><br>
+      Hvis du endrer domenet, vil den gamle adressen slutte å fungere. Man endrer veldig sjeldent domenet for en hjemmeside.
+    </div>
+
+    <form action="{% url 'admin.cms.views.page.edit_domain' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Ny domeneadresse:</label>
+        <input type="text" name="domain" class="form-control" value="http://{{ active_forening.site.domain }}">
+      </div>
+      <button class="btn btn-success save-menu">
+        Lagre nytt domene
+      </button>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+
+    <button class="btn btn-default" data-dismiss="modal">
+      Lukk vindu
     </button>
 
   </div>
