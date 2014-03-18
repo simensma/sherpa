@@ -15,7 +15,7 @@ from focus.models import Actor
 from page.models import Page
 from user.models import User
 from core.models import Site, SiteTemplate
-from foreninger.models import Forening
+from admin.cms.views.page_util import verify_domain
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -93,58 +93,23 @@ def setup_site(request):
     if request.method == 'GET':
         return render(request, 'common/admin/setup_site.html')
     elif request.method == 'POST':
-        # Very simple syntax verification
-        domain = request.POST['domain'].strip()
-        if domain == '' or domain == 'http://' or not domain.startswith('http://') or not '.' in domain:
-            messages.error(request, 'malformed')
-            return render(request, 'common/admin/setup_site.html', {'domain': domain})
-
-        domain = domain[len('http://'):]
-        if domain.endswith('/'):
-            domain = domain[:-1]
-
-        if '/' not in domain:
-            prefix = ''
+        result = verify_domain(request.POST['domain'])
+        if not result['valid']:
+            messages.error(request, result['error'])
+            context = {'domain': request.POST['domain'].strip()}
+            if result['error'] == 'site_exists':
+                context['existing_forening'] = result['existing_forening']
+            return render(request, 'common/admin/setup_site.html', context)
         else:
-            try:
-                # Prefix folder specified
-                domain, prefix = domain.split('/')
-                # Only allowed for turistforeningen.no
-                if domain != 'turistforeningen.no' and domain != 'www.turistforeningen.no':
-                    messages.error(request, 'prefix_for_disallowed_domain')
-                    return render(request, 'common/admin/setup_site.html', {
-                        'domain': "http://%s/%s" % (domain, prefix)
-                    })
-            except ValueError:
-                # More than one subdir specified
-                messages.error(request, 'more_than_one_subdir')
-                return render(request, 'common/admin/setup_site.html', {
-                    'domain': "http://%s/%s" % (domain, prefix)
-                })
-
-        if domain.count('.') == 1 and not domain.startswith('www'):
-            domain = "www.%s" % domain
-
-        try:
-            existing_site = Site.objects.get(domain=domain, prefix=prefix)
-            existing_forening = Forening.objects.get(site=existing_site)
-            messages.error(request, 'site_exists')
-            return render(request, 'common/admin/setup_site.html', {
-                'domain': "http://%s/%s" % (domain, prefix),
-                'existing_forening': existing_forening
-            })
-        except Site.DoesNotExist:
-            pass
-
-        # TODO let creator choose template?
-        large_template = SiteTemplate.objects.get(name='large')
-        site = Site(
-            domain=domain,
-            prefix=prefix,
-            template=large_template
-        )
-        site.save()
-        request.session['active_forening'].site = site
-        request.session['active_forening'].save()
-        request.session.modified = True
-        return redirect('admin.cms.views.page.list')
+            # TODO let creator choose template?
+            large_template = SiteTemplate.objects.get(name='large')
+            site = Site(
+                domain=result['domain'],
+                prefix=result['prefix'],
+                template=large_template
+            )
+            site.save()
+            request.session['active_forening'].site = site
+            request.session['active_forening'].save()
+            request.session.modified = True
+            return redirect('admin.cms.views.page.list')
