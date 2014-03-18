@@ -136,6 +136,38 @@
 
 </div><!-- /.row -->
 
+{# Operator precedence is not supported in Django templates, use two if-tags #}
+{% if not active_forening.site %}
+  {% if active_forening.type == 'sentral' or active_forening.type == 'forening' %}
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h2 class="panel-title">Sett opp {{ active_forening.name }}s hjemmeside</h2>
+          </div>
+
+          <div class="panel-body">
+            <p>
+              Deres forening har ingen hjemmeside. For å sette denne opp må dere skaffe et domene. Dette kan DNT sentralt hjelpe dere med. Når dere har fått en, fyll den inn her:
+            </p>
+            <form action="{% url 'admin.views.setup_site' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="domain">Domene:</label>
+                <input type="text" class="form-control" id="domain" name="domain" value="http://">
+              </div>
+              <button type="submit" class="btn btn-primary">Opprett hjemmeside for {{ active_forening.name }}!</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+
 <div class="row">
   <div class="col-md-6">
 
