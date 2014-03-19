@@ -1,5 +1,4 @@
 from django.db.models.signals import pre_delete, post_delete
-from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db import models
 from django.db.models import Q, F
