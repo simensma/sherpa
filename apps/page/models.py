@@ -197,6 +197,7 @@ class Ad(models.Model):
     fallback_extension = models.CharField(max_length=4, null=True)
     fallback_sha1_hash = models.CharField(max_length=40, null=True)
     fallback_content_type = models.CharField(max_length=200, null=True)
+    site = models.ForeignKey('core.Site')
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -239,6 +240,10 @@ class Ad(models.Model):
                 settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
             s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
+    @staticmethod
+    def on(site):
+        return Ad.objects.filter(site=site)
+
 # Upon ad delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Ad, dispatch_uid="page.models")
 def delete_ad(sender, **kwargs):
@@ -252,6 +257,7 @@ class AdPlacement(models.Model):
     end_date = models.DateField(null=True)
     views = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
+    site = models.ForeignKey('core.Site')
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -276,8 +282,12 @@ class AdPlacement(models.Model):
         return self.ad.render_adform_script(self)
 
     @staticmethod
-    def get_active_ad(count_view=True):
-        ads = AdPlacement.objects.filter(
+    def on(site):
+        return AdPlacement.objects.filter(site=site)
+
+    @staticmethod
+    def get_active_ad(site, count_view=True):
+        ads = AdPlacement.on(site).filter(
             Q(start_date__lte=date.today(), end_date__gte=date.today(), view_limit__isnull=True) |
             Q(views__lt=F('view_limit'), start_date__isnull=True)
         )

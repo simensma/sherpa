@@ -11,9 +11,9 @@ from admin.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement
 
 def list(request):
-    ads = Ad.objects.all().order_by('name')
-    time_placements = AdPlacement.objects.filter(start_date__isnull=False).order_by('start_date', 'end_date')
-    view_placements = AdPlacement.objects.filter(view_limit__isnull=False).order_by('views')
+    ads = Ad.on(request.session['active_forening'].site).all().order_by('name')
+    time_placements = AdPlacement.on(request.session['active_forening'].site).filter(start_date__isnull=False).order_by('start_date', 'end_date')
+    view_placements = AdPlacement.on(request.session['active_forening'].site).filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
     return render(request, 'common/admin/ads/list.html', context)
 
@@ -45,7 +45,8 @@ def create_ad(request):
             content_type=content_type,
             fallback_extension=fallback_extension,
             fallback_sha1_hash=fallback_hash,
-            fallback_content_type=fallback_content_type
+            fallback_content_type=fallback_content_type,
+            site=request.session['active_forening'].site,
         )
         ad.save()
 
@@ -67,7 +68,8 @@ def create_ad(request):
                 content_type=Ad.ADFORM_SCRIPT_CONTENT_TYPE,
                 fallback_extension=None,
                 fallback_sha1_hash=None,
-                fallback_content_type=None
+                fallback_content_type=None,
+                site=request.session['active_forening'].site,
             )
             ad.save()
         except IndexError:
@@ -77,7 +79,7 @@ def create_ad(request):
 
 def update_ad(request):
     try:
-        ad = Ad.objects.get(id=request.POST['id'])
+        ad = Ad.on(request.session['active_forening'].site).get(id=request.POST['id'])
         ad.name = request.POST['name']
         ad.viewcounter = request.POST['viewcounter']
 
@@ -104,7 +106,7 @@ def update_ad(request):
 
 def create_placement(request):
     try:
-        ad = Ad.objects.get(id=request.POST['ad'])
+        ad = Ad.on(request.session['active_forening'].site).get(id=request.POST['ad'])
         if request.POST['adplacement_type'] == 'time':
             start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
             end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
@@ -113,7 +115,13 @@ def create_placement(request):
             start_date = None
             end_date = None
             view_limit = request.POST['view_limit']
-        ap = AdPlacement(ad=ad, start_date=start_date, end_date=end_date, view_limit=view_limit)
+        ap = AdPlacement(
+            ad=ad,
+            start_date=start_date,
+            end_date=end_date,
+            view_limit=view_limit,
+            site=request.session['active_forening'].site,
+        )
         ap.save()
     except ValueError:
         messages.error(request, 'invalid_date')
@@ -121,8 +129,8 @@ def create_placement(request):
 
 def update_placement(request):
     try:
-        placement = AdPlacement.objects.get(id=request.POST['id'])
-        placement.ad = Ad.objects.get(id=request.POST['ad'])
+        placement = AdPlacement.on(request.session['active_forening'].site).get(id=request.POST['id'])
+        placement.ad = Ad.on(request.session['active_forening'].site).get(id=request.POST['ad'])
         if placement.start_date is not None:
             placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
             placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
