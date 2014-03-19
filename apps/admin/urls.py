@@ -3,6 +3,7 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('admin.views',
     # Note: Many paths here are harcoded in CheckSherpaPermissions middleware
     url(r'^$', 'index'),
+    url(r'^sett-opp-site/', 'setup_site'),
     url(r'^cms/', include('admin.cms.urls')),
     url(r'^nyheter/', include('admin.articles.urls')),
     url(r'^analyse/', include('admin.analytics.urls')),

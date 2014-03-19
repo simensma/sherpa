@@ -1,34 +1,36 @@
-<div class="row ad">
-  <div class="span12">
-    <p class="ad-label">Annonse</p>
-    {% if advertisement.ad.is_adform_script %}
-      {{ advertisement.render_adform_script|safe }}
-    {% elif advertisement.ad.content_type == 'application/x-shockwave-flash' %}
-      <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
-      <script>
-        var flashvars = {
-          // Account for some unfortunate variations in clicktag capitalization
-          {# Also account for unsaved mock-objects - used when testing ads. If no ID, give the direct destination, without any redirect #}
-          clickTAG: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}",
-          clickTag: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}"
-        };
-        {# Require flash version 9, not sure if this is reasonable? #}
-        swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
-      </script>
-      <div id="ad">
-        {% if advertisement.ad.has_fallback %}
-          <a href="{{ advertisement.redirect_url }}">
-            <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
-          </a>
-        {% endif %}
-      </div>
-    {% else %}
-      <a href="{{ advertisement.redirect_url }}">
-        <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
-      </a>
-    {% endif %}
-    {% if advertisement.ad.viewcounter %}
-      <img class="viewcounter" src="{{ advertisement.ad.viewcounter }}" alt="Annonseteller">
-    {% endif %}
+{% if advertisement %}
+  <div class="row ad">
+    <div class="span12">
+      <p class="ad-label">Annonse</p>
+      {% if advertisement.ad.is_adform_script %}
+        {{ advertisement.render_adform_script|safe }}
+      {% elif advertisement.ad.content_type == 'application/x-shockwave-flash' %}
+        <script src="{{ STATIC_URL }}lib/swfobject/swfobject-2.2.js"></script>
+        <script>
+          var flashvars = {
+            // Account for some unfortunate variations in clicktag capitalization
+            {# Also account for unsaved mock-objects - used when testing ads. If no ID, give the direct destination, without any redirect #}
+            clickTAG: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}",
+            clickTag: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}"
+          };
+          {# Require flash version 9, not sure if this is reasonable? #}
+          swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
+        </script>
+        <div id="ad">
+          {% if advertisement.ad.has_fallback %}
+            <a href="{{ advertisement.redirect_url }}">
+              <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
+            </a>
+          {% endif %}
+        </div>
+      {% else %}
+        <a href="{{ advertisement.redirect_url }}">
+          <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
+        </a>
+      {% endif %}
+      {% if advertisement.ad.viewcounter %}
+        <img class="viewcounter" src="{{ advertisement.ad.viewcounter }}" alt="Annonseteller">
+      {% endif %}
+    </div>
   </div>
-</div>
+{% endif %}

@@ -1,0 +1,50 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block admin_menu %}{% with 'setup_site' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Sett opp hjemmeside for {{ active_forening.name}}</h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.views.setup_site' %}">Sett opp hjemmeside</a></li>
+    </ol>
+
+    <p>
+      Deres forening har ingen hjemmeside. For å sette denne opp må dere skaffe et domene. Dette kan DNT sentralt hjelpe dere med. Når dere har fått en, fyll den inn her:
+    </p>
+
+    {% for message in messages %}
+      {% if message.message == 'malformed' %}
+        <div class="alert alert-danger">
+          Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
+        </div>
+      {% elif message.message == 'more_than_one_subdir' %}
+        <div class="alert alert-danger">
+          Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'prefix_for_disallowed_domain' %}
+        <div class="alert alert-danger">
+          Kun domener direkte under <strong>www.turistforeningen.no</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'site_exists' %}
+        <div class="alert alert-danger">
+          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <form action="{% url 'admin.views.setup_site' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="domain">Domene:</label>
+        <input type="text" class="form-control" id="domain" name="domain" value="{% firstof domain 'http://' %}">
+      </div>
+      <button type="submit" class="btn btn-primary">Opprett hjemmeside for {{ active_forening.name }}!</button>
+    </form>
+  </div>
+</div><!-- /.row -->
+
+{% endblock %}
