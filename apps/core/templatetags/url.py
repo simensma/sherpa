@@ -2,8 +2,6 @@ from django import template
 from django.template.defaulttags import url as django_url
 from django.template.base import Node
 
-import md5
-
 register = template.Library()
 
 class PathURLNode(Node):
