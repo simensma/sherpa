@@ -145,56 +145,53 @@
   <div class="container">
 
     <div class="row">
-      <div class="span6 contact-information">
-        {# TODO - Preliminary IP-URL (to avoid local hosts-manipulation) #}
-        {# TODO - Disse logoene må gjøres transparante #}
-        <img src="http://77.40.236.233/share/img/profil/{{ site.forening.id }}-logo.png" alt="{{ site.forening.name }} logo" class="local-logo">
-        <h2>
-          {{ site.forening.name }}
-        </h2>
+      <div class="span6">
+        <div class="contact-information">
+          <h2>
+            {{ site.forening.name }}
+          </h2>
 
-        <div style="clear: both;"></div>
-
-        {# TODO - hide fields for foreninger that don't have them #}
-        <table>
-          {% if site.forening.visit_address == site.forening.post_address %}
+          {# TODO - hide fields for foreninger that don't have them #}
+          <table>
+            {% if site.forening.visit_address == site.forening.post_address %}
+              <tr>
+                <th>Post/besøksadresse</th>
+                <td>
+                  {{ site.forening.visit_address }}<br>
+                  {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <th>Besøksadresse</th>
+                <td>{{ site.forening.visit_address }}</td>
+              </tr>
+              <tr>
+                <th>Postadresse</th>
+                <td>
+                  {{ site.forening.post_address }}<br>
+                  {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
+                </td>
+              </tr>
+            {% endif %}
             <tr>
-              <th>Post/besøksadresse</th>
-              <td>
-                {{ site.forening.visit_address }}<br>
-                {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
-              </td>
-            </tr>
-          {% else %}
-            <tr>
-              <th>Besøksadresse</th>
-              <td>{{ site.forening.visit_address }}</td>
+              <th>Telefon:</th>
+              <td>{{ site.forening.phone }}</td>
             </tr>
             <tr>
-              <th>Postadresse</th>
-              <td>
-                {{ site.forening.post_address }}<br>
-                {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
-              </td>
+              <th>E-post:</th>
+              <td><a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a></td>
             </tr>
-          {% endif %}
-          <tr>
-            <th>Telefon:</th>
-            <td>{{ site.forening.phone }}</td>
-          </tr>
-          <tr>
-            <th>E-post:</th>
-            <td><a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a></td>
-          </tr>
-          <tr>
-            <th>Org. nr.:</th>
-            <td>{{ site.forening.organization_no }}</td>
-          </tr>
-          <tr>
-            <th>Facebook:</th>
-            <td><a href="{{ site.forening.facebook_url }}">{{ site.forening.facebook_url }}</a></td>
-          </tr>
-        </table>
+            <tr>
+              <th>Org. nr.:</th>
+              <td>{{ site.forening.organization_no }}</td>
+            </tr>
+            <tr>
+              <th>Facebook:</th>
+              <td><a href="{{ site.forening.facebook_url }}">{{ site.forening.facebook_url }}</a></td>
+            </tr>
+          </table>
+        </div>
       </div>
 
       <div class="span6">
