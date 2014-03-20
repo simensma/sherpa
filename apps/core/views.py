@@ -6,10 +6,10 @@ from core.models import Tag, Zipcode, County, Municipality
 
 import json
 
-def zipcode(request, zipcode):
+def zipcode(request):
     try:
         # Django serializers can only serialize lists
-        zipcode = serializers.serialize("python", [Zipcode.objects.get(zipcode=zipcode)])[0]['fields']
+        zipcode = serializers.serialize("python", [Zipcode.objects.get(zipcode=request.POST['zipcode'])])[0]['fields']
         return HttpResponse(json.dumps(zipcode))
     except Zipcode.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'does_not_exist'}))

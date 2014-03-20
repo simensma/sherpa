@@ -112,23 +112,18 @@
                 return zipcode;
             }
             loader.show();
-            $.ajaxQueue({
-                url: '/postnummer/' + encodeURIComponent(zipcode.val()) + '/',
-                type: 'POST'
-            }).done(function(result) {
-                result = JSON.parse(result);
-                if(result.area !== undefined) {
+            LookupZipcode(zipcode.val(), function(result) {
+                if(result.success) {
                     area.val(result.area);
                     control_group.addClass('success');
                     control_group.data('valid', true);
-                } else if(result.error == "does_not_exist") {
+                } else if(result.error == 'does_not_exist') {
                     area.val("Ukjent postnummer");
                     control_group.addClass('error');
+                } else if(result.error == 'technical_failure') {
+                    area.val("Teknisk feil");
+                    control_group.addClass('error');
                 }
-            }).fail(function(result) {
-                area.val("Teknisk feil");
-                control_group.addClass('error');
-            }).always(function(result) {
                 loader.hide();
                 end();
             });
