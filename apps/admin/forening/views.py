@@ -40,7 +40,7 @@ def index(request, forening):
             messages.info(request, 'forening_save_success')
             # Not sure why "request.session.modified = True" doesn't work here, so just update the var
             request.session['active_forening'] = forening
-            return redirect('admin.forening.views.index', forening.id)
+            return redirect('admin.forening.views.index')
         else:
             context = {'form': form}
             return render(request, 'common/admin/forening/index.html', context)
