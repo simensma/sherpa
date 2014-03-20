@@ -1,13 +1,27 @@
 div.foreningsadmin {
   form.edit-forening {
-    input[name='zipcode'] {
-      display: inline;
-      width: 80px;
+    div.section {
+      border-bottom: 1px solid rgb(200, 200, 200);
+      padding-bottom: 20px;
+
+      h2 {
+        margin-top: 30px;
+      }
+
+      input[name='zipcode'] {
+        display: inline;
+        width: 80px;
+      }
+
+      input[name='area'] {
+        display: inline;
+        width: 200px;
+      }
     }
 
-    input[name='area'] {
-      display: inline;
-      width: 200px;
+    div.section.skip-border {
+      border-bottom: none !important;
     }
+
   }
 }
