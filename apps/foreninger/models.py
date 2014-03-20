@@ -1,6 +1,8 @@
 # encoding: utf-8
 from django.db import models
 
+from sherpa2.models import Forening as Sherpa2Forening
+
 # Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
 DNT_OSLO_ID = 2
 DNT_UNG_OSLO_ID = 152
@@ -53,6 +55,13 @@ class Forening(models.Model):
             return self
         else:
             return self.parent.get_main_forening()
+
+    def get_old_url(self):
+        """Temporary method! Retrieves the site URL from sherpa2"""
+        try:
+            return Sherpa2Forening.objects.get(id=self.id).url
+        except Sherpa2Forening.DoesNotExist:
+            return ''
 
     @staticmethod
     def sort(foreninger):
