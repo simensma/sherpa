@@ -27,14 +27,18 @@
       <ul class="nav nav-tabs">
         <li class="active"><a href="#metadata" data-toggle="tab">Foreningsinformasjon</a></li>
         <li><a href="#struktur" data-toggle="tab">Struktur</a></li>
+        <li><a href="#ansatte" data-toggle="tab">Ansatte</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible main-nav-tabs">
         <div class="tab-pane active metadata" id="metadata">
           {% include 'common/admin/forening/metadata.html' %}
         </div>
-        <div class="tab-pane struktur" id="struktur">
+        <div class="tab-pane structure" id="struktur">
           Todo
+        </div>
+        <div class="tab-pane users" id="ansatte">
+          {% include 'common/admin/forening/users.html' %}
         </div>
       </div>
 

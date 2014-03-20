@@ -4,8 +4,23 @@ from django.contrib import messages
 
 from foreninger.models import Forening
 from .forms import ForeningDataForm
+from user.models import User
 
 def index(request, forening):
+    forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
+
+    forening_users_by_parent = []
+    forening = request.session['active_forening']
+    while forening.parent is not None:
+        forening = forening.parent
+        for user in User.objects.filter(foreninger=forening):
+            forening_users_by_parent.append(user)
+
+    context = {
+        'forening_users': forening_users,
+        'forening_users_by_parent': forening_users_by_parent,
+    }
+
     if request.method == 'GET':
 
         zipcode = request.session['active_forening'].zipcode
@@ -24,10 +39,10 @@ def index(request, forening):
             'gmap_url': request.session['active_forening'].gmap_url,
             'facebook_url': request.session['active_forening'].facebook_url,
         })
-        context = {
+        context.update({
             'form': form,
             'form_zipcode_area': form_zipcode_area,
-        }
+        })
         return render(request, 'common/admin/forening/index.html', context)
 
     elif request.method == 'POST':
@@ -56,5 +71,5 @@ def index(request, forening):
             request.session['active_forening'] = forening
             return redirect('admin.forening.views.index')
         else:
-            context = {'form': form}
+            context.update({'form': form})
             return render(request, 'common/admin/forening/index.html', context)
