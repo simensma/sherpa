@@ -75,7 +75,7 @@
 
         </div><!-- /.section -->
 
-        <div class="section skip-border">
+        <div class="section">
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -127,6 +127,76 @@
               {{ form.counties }}
               {% if form.counties.errors %}
                 {% for error in form.counties.errors %}
+                  <span class="help-block error">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+        </div><!-- /.section -->
+
+        <div class="section contact skip-border">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>Kontakinformasjon</h2>
+            </div>
+          </div>
+
+          <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
+            <label class="col-md-2 control-label" for="id_phone">Telefonnummer</label>
+            <div class="col-md-10">
+              {{ form.phone }}
+              {% if form.phone.errors %}
+                {% for error in form.phone.errors %}
+                  <span class="help-block error">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+            <label class="col-md-2 control-label" for="id_email">E-postadresse</label>
+            <div class="col-md-10">
+              {{ form.email }}
+              {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                  <span class="help-block error">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group{% if form.organization_no.errors %} has-error{% endif %}">
+            <label class="col-md-2 control-label" for="id_organization_no">Organisasjonsnr.</label>
+            <div class="col-md-10">
+              {{ form.organization_no }}
+              {% if form.organization_no.errors %}
+                {% for error in form.organization_no.errors %}
+                  <span class="help-block error">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group{% if form.gmap_url.errors %} has-error{% endif %}">
+            <label class="col-md-2 control-label" for="id_gmap_url">Google Maps URL</label>
+            <div class="col-md-10">
+              {{ form.gmap_url }}
+              {% if form.gmap_url.errors %}
+                {% for error in form.gmap_url.errors %}
+                  <span class="help-block error">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group{% if form.facebook_url.errors %} has-error{% endif %}">
+            <label class="col-md-2 control-label" for="id_facebook_url">Facebook URL</label>
+            <div class="col-md-10">
+              {{ form.facebook_url }}
+              {% if form.facebook_url.errors %}
+                {% for error in form.facebook_url.errors %}
                   <span class="help-block error">{{ error }}</span>
                 {% endfor %}
               {% endif %}

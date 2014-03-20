@@ -18,6 +18,11 @@ def index(request, forening):
             'visit_address': request.session['active_forening'].visit_address,
             'zipcode': zipcode.zipcode if zipcode is not None else '',
             'counties': request.session['active_forening'].counties.all(),
+            'phone': request.session['active_forening'].phone,
+            'email': request.session['active_forening'].email,
+            'organization_no': request.session['active_forening'].organization_no,
+            'gmap_url': request.session['active_forening'].gmap_url,
+            'facebook_url': request.session['active_forening'].facebook_url,
         })
         context = {
             'form': form,
@@ -40,6 +45,11 @@ def index(request, forening):
             forening.visit_address = form.cleaned_data['visit_address']
             forening.zipcode = form.cleaned_data['zipcode']
             forening.counties = form.cleaned_data['counties']
+            forening.phone = form.cleaned_data['phone']
+            forening.email = form.cleaned_data['email']
+            forening.organization_no = form.cleaned_data['organization_no']
+            forening.gmap_url = form.cleaned_data['gmap_url']
+            forening.facebook_url = form.cleaned_data['facebook_url']
             forening.save()
             messages.info(request, 'forening_save_success')
             # Not sure why "request.session.modified = True" doesn't work here, so just update the var

@@ -65,6 +65,36 @@ class ForeningDataForm(forms.Form):
         'data-placeholder': 'Velg tilhørende fylke(r)...',
     })
 
+    phone = forms.CharField()
+
+    phone.widget.attrs.update({
+        'class': 'form-control',
+    })
+
+    email = forms.CharField()
+
+    email.widget.attrs.update({
+        'class': 'form-control',
+    })
+
+    organization_no = forms.CharField()
+
+    organization_no.widget.attrs.update({
+        'class': 'form-control',
+    })
+
+    gmap_url = forms.CharField()
+
+    gmap_url.widget.attrs.update({
+        'class': 'form-control',
+    })
+
+    facebook_url = forms.CharField()
+
+    facebook_url.widget.attrs.update({
+        'class': 'form-control',
+    })
+
     def clean_name(self):
         return self.cleaned_data['name'].strip()
 
