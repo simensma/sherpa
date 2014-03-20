@@ -13,22 +13,28 @@
           <tr>
             <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
           </tr>
+        {% empty %}
+          <tr>
+            <td><em>Ingen brukere er registrert i {{ active_forening.name }}.</em></td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Administrator i en moderforening</th>
-        </tr>
-        {% for forening_user in forening_users_by_parent %}
+    {% if forening_users_by_parent|length > 0 %}
+      <table class="table">
+        <thead>
           <tr>
-            <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
+            <th>Administrator i en moderforening</th>
           </tr>
-        {% endfor %}
-      </thead>
-    </table>
+          {% for forening_user in forening_users_by_parent %}
+            <tr>
+              <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
+            </tr>
+          {% endfor %}
+        </thead>
+      </table>
+    {% endif %}
 
   </div>
 </div>
