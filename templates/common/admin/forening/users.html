@@ -11,7 +11,7 @@
       <tbody>
         {% for forening_user in forening_users %}
           <tr>
-            <td>{{ forening_user.get_full_name }}</td>
+            <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -24,7 +24,7 @@
         </tr>
         {% for forening_user in forening_users_by_parent %}
           <tr>
-            <td>{{ forening_user.get_full_name }}</td>
+            <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
           </tr>
         {% endfor %}
       </thead>
