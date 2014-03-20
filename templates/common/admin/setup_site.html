@@ -12,9 +12,10 @@
       <li><a href="{% url 'admin.views.setup_site' %}">Sett opp hjemmeside</a></li>
     </ol>
 
-    <p>
-      Deres forening har ingen hjemmeside. For å sette denne opp må dere skaffe et domene. Dette kan DNT sentralt hjelpe dere med. Når dere har fått en, fyll den inn her:
-    </p>
+    <div class="alert alert-warning">
+      <strong>Vi har åpnet for testing av hjemmesider i nye Sherpa.</strong><br>
+      Dere kan registrere <strong>&lt;forening&gt;.test.turistforeningen.no</strong> som domeneadresse (endre "forening" til et passende kort ord for deres forening, for eksempel: <strong>http://aust-agder.test.turistforeningen.no</strong>).
+    </div>
 
     {% for message in messages %}
       {% if message.message == 'malformed' %}
@@ -37,6 +38,10 @@
         <div class="alert alert-danger">
           Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>www.turistforeningen.no/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
         </div>
+      {% elif message.message == 'test_period_requires_test_domain' %}
+        <div class="alert alert-danger">
+          I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
+        </div>
       {% endif %}
     {% endfor %}
 
@@ -44,7 +49,7 @@
       {% csrf_token %}
       <div class="form-group">
         <label for="domain">Domene:</label>
-        <input type="text" class="form-control" id="domain" name="domain" value="{% firstof domain 'http://' %}">
+        <input type="text" class="form-control" id="domain" name="domain" value="{% firstof domain 'http://forening.test.turistforeningen.no' %}">
       </div>
       <button type="submit" class="btn btn-primary">Opprett hjemmeside for {{ active_forening.name }}!</button>
     </form>

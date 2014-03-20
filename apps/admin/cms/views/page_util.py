@@ -39,6 +39,12 @@ def verify_domain(domain):
             'error': 'prefix_not_supported_yet',
         }
 
+    if not domain.endswith('.test.turistforeningen.no'):
+        return {
+            'valid': False,
+            'error': 'test_period_requires_test_domain',
+        }
+
     if domain.count('.') == 1 and not domain.startswith('www'):
         domain = "www.%s" % domain
 

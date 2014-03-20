@@ -149,16 +149,7 @@
 
           <div class="panel-body">
             <p>
-              Deres forening har ingen hjemmeside. For å sette denne opp må dere skaffe et domene. Dette kan DNT sentralt hjelpe dere med. Når dere har fått en, fyll den inn her:
-            </p>
-            <form action="{% url 'admin.views.setup_site' %}" method="post">
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="domain">Domene:</label>
-                <input type="text" class="form-control" id="domain" name="domain" value="http://">
-              </div>
-              <button type="submit" class="btn btn-primary">Opprett hjemmeside for {{ active_forening.name }}!</button>
-            </form>
+              Deres forening har ingen hjemmeside i nye Sherpa. <a href="{% url 'admin.views.setup_site' %}">Sett opp en testside!</a>
           </div>
         </div>
 
