@@ -13,6 +13,7 @@ def index(request, forening):
 
         form = ForeningDataForm(initial={
             'name': request.session['active_forening'].name,
+            'type': request.session['active_forening'].type,
             'post_address': request.session['active_forening'].post_address,
             'visit_address': request.session['active_forening'].visit_address,
             'zipcode': zipcode.zipcode if zipcode is not None else '',
@@ -30,6 +31,7 @@ def index(request, forening):
         if form.is_valid():
             forening = Forening.objects.get(id=forening)
             forening.name = form.cleaned_data['name']
+            forening.type = form.cleaned_data['type']
             forening.post_address = form.cleaned_data['post_address']
             forening.visit_address = form.cleaned_data['visit_address']
             forening.zipcode = form.cleaned_data['zipcode']

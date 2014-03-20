@@ -47,6 +47,18 @@
           </div>
         </div>
 
+        <div class="form-group{% if form.type.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_type">Type</label>
+          <div class="col-md-10">
+            {{ form.type }}
+            {% if form.type.errors %}
+              {% for error in form.type.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
         <div class="form-group{% if form.post_address.errors %} has-error{% endif %}">
           <label class="col-md-2 control-label" for="id_post_address">Postadresse</label>
           <div class="col-md-10">

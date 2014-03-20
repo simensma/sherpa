@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django import forms
 
+from foreninger.models import Forening
 from core.models import County, Zipcode
 
 class ForeningDataForm(forms.Form):
@@ -10,7 +11,20 @@ class ForeningDataForm(forms.Form):
     })
 
     name.widget.attrs.update({
-        'class': 'form-control'
+        'class': 'form-control',
+    })
+
+    type = forms.ChoiceField(
+        required=True,
+        choices=Forening.TYPES,
+        error_messages={
+            'required': "Du må velge hva slags forening dette er!",
+        }
+    )
+
+    type.widget.attrs.update({
+        'class': 'form-control',
+        'data-chosen': '',
     })
 
     post_address = forms.CharField(required=False)
@@ -25,7 +39,7 @@ class ForeningDataForm(forms.Form):
         'class': 'form-control'
     })
 
-    zipcode = forms.CharField()
+    zipcode = forms.CharField(required=False) # Let clean_zipcode() handle missing zipcode too
 
     counties = forms.ModelMultipleChoiceField(
         required=False,
