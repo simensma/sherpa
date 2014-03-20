@@ -27,6 +27,19 @@ class ForeningDataForm(forms.Form):
         'data-chosen': '',
     })
 
+    group_type = forms.ChoiceField(
+        required=True,
+        choices=Forening.GROUP_TYPES,
+        error_messages={
+            'required': "Du må velge hva slags turgruppe dette er!",
+        }
+    )
+
+    group_type.widget.attrs.update({
+        'class': 'form-control',
+        'data-chosen': '',
+    })
+
     post_address = forms.CharField(required=False)
 
     post_address.widget.attrs.update({

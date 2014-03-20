@@ -32,6 +32,10 @@ def index(request, forening):
             forening = Forening.objects.get(id=forening)
             forening.name = form.cleaned_data['name']
             forening.type = form.cleaned_data['type']
+            if forening.type == 'turgruppe':
+                forening.group_type = form.cleaned_data['group_type']
+            else:
+                forening.group_type = ''
             forening.post_address = form.cleaned_data['post_address']
             forening.visit_address = form.cleaned_data['visit_address']
             forening.zipcode = form.cleaned_data['zipcode']

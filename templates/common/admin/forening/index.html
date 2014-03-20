@@ -59,6 +59,18 @@
           </div>
         </div>
 
+        <div class="form-group group_type{% if form.group_type.errors %} has-error{% endif %}{% if active_forening.type != 'turgruppe' %} jq-hide{% endif %}">
+          <label class="col-md-2 control-label" for="id_group_type">Turgruppe</label>
+          <div class="col-md-10">
+            {{ form.group_type }}
+            {% if form.group_type.errors %}
+              {% for error in form.group_type.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
         <div class="form-group{% if form.post_address.errors %} has-error{% endif %}">
           <label class="col-md-2 control-label" for="id_post_address">Postadresse</label>
           <div class="col-md-10">
