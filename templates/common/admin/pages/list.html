@@ -43,6 +43,10 @@
         <div class="alert alert-danger">
           <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
         </div>
+      {% elif message.message == 'prefix_not_supported_yet' %}
+        <div class="alert alert-danger">
+          Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>www.turistforeningen.no/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
+        </div>
       {% endif %}
     {% endfor %}
 

@@ -33,6 +33,12 @@ def verify_domain(domain):
                 'error': 'more_than_one_subdir',
             }
 
+    if prefix != '':
+        return {
+            'valid': False,
+            'error': 'prefix_not_supported_yet',
+        }
+
     if domain.count('.') == 1 and not domain.startswith('www'):
         domain = "www.%s" % domain
 
