@@ -6,7 +6,6 @@
 
 {% block body %}
 
-
   <div class="row">
     <div class="col-lg-12">
       <h1>{{ active_forening.name }} <small>endre informasjon om foreningen og se registrerte Sherpabrukere</small></h1>
@@ -20,6 +19,37 @@
 <div class="foreningsadmin">
   <div class="row">
     <div class="col-lg-12">
+
+      {% for message in messages %}
+        {% if message.message == 'forening_save_success' %}
+          <div class="alert alert-success">
+            <strong>Endringene har blitt lagret!</strong><br>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <form action="{% url 'admin.forening.views.index' active_forening.id %}" method="post" class="edit-forening form-default form-horizontal">
+        {% csrf_token %}
+
+        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_name">Forening</label>
+          <div class="col-md-10">
+            {{ form.name }}
+            {% if form.name.errors %}
+              {% for error in form.name.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group submit">
+          <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-large">Lagre foreningsdata</button>
+          </div>
+        </div>
+
+      </form>
 
     </div>
   </div>

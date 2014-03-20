@@ -2,5 +2,6 @@
 from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.forening.views',
-    url(r'^$', 'index'),
+    url(r'^$', 'index', kwargs={'forening': None}),
+    url(r'^rediger/(?P<forening>\d+)/$', 'index'),
 )
