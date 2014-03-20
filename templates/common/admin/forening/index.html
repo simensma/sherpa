@@ -4,6 +4,10 @@
 
 {% block admin_menu %}{% with 'forening' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/forening.js"></script>
+{% endblock %}
+
 {% block body %}
 
   <div class="row">
@@ -37,6 +41,56 @@
             {{ form.name }}
             {% if form.name.errors %}
               {% for error in form.name.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group{% if form.post_address.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_post_address">Postadresse</label>
+          <div class="col-md-10">
+            {{ form.post_address }}
+            {% if form.post_address.errors %}
+              {% for error in form.post_address.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group{% if form.visit_address.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_visit_address">Besøksadresse</label>
+          <div class="col-md-10">
+            {{ form.visit_address }}
+            {% if form.visit_address.errors %}
+              {% for error in form.visit_address.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group{% if form.zipcode.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_zipcode">Postnummer / Poststed</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" maxlength="10">
+            <input type="text" class="form-control" id="id_area" name="area" value="{{ form_zipcode_area }}" disabled>
+            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zipcode ajaxloader jq-hide" alt="Laster poststed...">
+            {% if form.zipcode.errors %}
+              {% for error in form.zipcode.errors %}
+                <span class="help-block error">{{ error }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group{% if form.counties.errors %} has-error{% endif %}">
+          <label class="col-md-2 control-label" for="id_counties">Fylke(r)</label>
+          <div class="col-md-10">
+            {{ form.counties }}
+            {% if form.counties.errors %}
+              {% for error in form.counties.errors %}
                 <span class="help-block error">{{ error }}</span>
               {% endfor %}
             {% endif %}
