@@ -1,0 +1,188 @@
+{% for message in messages %}
+  {% if message.message == 'forening_save_success' %}
+    <div class="alert alert-success">
+      <strong>Endringene har blitt lagret!</strong><br>
+    </div>
+  {% endif %}
+{% endfor %}
+
+<form action="{% url 'admin.forening.views.index' active_forening.id %}" method="post" class="edit-forening form-default form-horizontal">
+  {% csrf_token %}
+
+  <div class="section">
+
+    <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_name">Forening</label>
+      <div class="col-md-10">
+        {{ form.name }}
+        {% if form.name.errors %}
+          {% for error in form.name.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.type.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_type">Type</label>
+      <div class="col-md-10">
+        {{ form.type }}
+        {% if form.type.errors %}
+          {% for error in form.type.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group group_type{% if form.group_type.errors %} has-error{% endif %}{% if active_forening.type != 'turgruppe' %} jq-hide{% endif %}">
+      <label class="col-md-2 control-label" for="id_group_type">Turgruppe</label>
+      <div class="col-md-10">
+        {{ form.group_type }}
+        {% if form.group_type.errors %}
+          {% for error in form.group_type.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="section">
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <h2>Adresse</h2>
+      </div>
+    </div>
+
+    <div class="form-group{% if form.post_address.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_post_address">Postadresse</label>
+      <div class="col-md-10">
+        {{ form.post_address }}
+        {% if form.post_address.errors %}
+          {% for error in form.post_address.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.visit_address.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_visit_address">Besøksadresse</label>
+      <div class="col-md-10">
+        {{ form.visit_address }}
+        {% if form.visit_address.errors %}
+          {% for error in form.visit_address.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.zipcode.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_zipcode">Postnummer / Poststed</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" maxlength="10">
+        <input type="text" class="form-control" id="id_area" name="area" value="{{ form_zipcode_area }}" disabled>
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zipcode ajaxloader jq-hide" alt="Laster poststed...">
+        {% if form.zipcode.errors %}
+          {% for error in form.zipcode.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.counties.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_counties">Fylke(r)</label>
+      <div class="col-md-10">
+        {{ form.counties }}
+        {% if form.counties.errors %}
+          {% for error in form.counties.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="section contact skip-border">
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <h2>Kontakinformasjon</h2>
+      </div>
+    </div>
+
+    <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_phone">Telefonnummer</label>
+      <div class="col-md-10">
+        {{ form.phone }}
+        {% if form.phone.errors %}
+          {% for error in form.phone.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_email">E-postadresse</label>
+      <div class="col-md-10">
+        {{ form.email }}
+        {% if form.email.errors %}
+          {% for error in form.email.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.organization_no.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_organization_no">Organisasjonsnr.</label>
+      <div class="col-md-10">
+        {{ form.organization_no }}
+        {% if form.organization_no.errors %}
+          {% for error in form.organization_no.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.gmap_url.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_gmap_url">Google Maps URL</label>
+      <div class="col-md-10">
+        {{ form.gmap_url }}
+        {% if form.gmap_url.errors %}
+          {% for error in form.gmap_url.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if form.facebook_url.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_facebook_url">Facebook URL</label>
+      <div class="col-md-10">
+        {{ form.facebook_url }}
+        {% if form.facebook_url.errors %}
+          {% for error in form.facebook_url.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="form-group submit">
+    <div class="col-md-offset-2 col-md-10">
+      <button type="submit" class="btn btn-large">Lagre foreningsdata</button>
+    </div>
+  </div>
+
+</form>
