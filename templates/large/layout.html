@@ -133,6 +133,19 @@
   </div>
 </header>
 
+<div class="row">
+  <div class="span12">
+    <div class="alert alert-error">
+      <strong>
+        Dette er en test-side!
+        {% if site.forening.get_old_url %}
+          Besøk <a href="{{ site.forening.get_old_url }}">{{ site.forening.name }}s offisielle sider</a>
+        {% endif %}
+      </strong>
+    </div>
+  </div>
+</div>
+
 {% block body %}{% endblock %}
 
 {% if version.ads %}
