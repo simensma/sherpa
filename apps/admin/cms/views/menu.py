@@ -18,7 +18,7 @@ def new(request):
         max_order = 0
     menu = Menu(name=request.POST['name'], url=request.POST['url'], order=(max_order + 1), site=request.session['active_forening'].site)
     menu.save()
-    cache.delete('main.menu')
+    cache.delete('main.menu.%s' % request.session['active_forening'].site.id)
     return HttpResponse(json.dumps({'id': menu.id}))
 
 def edit(request):
@@ -29,12 +29,12 @@ def edit(request):
     menu.name = request.POST['name']
     menu.url = request.POST['url']
     menu.save()
-    cache.delete('main.menu')
+    cache.delete('main.menu.%s' % request.session['active_forening'].site.id)
     return HttpResponse()
 
 def delete(request):
     Menu.on(request.session['active_forening'].site).get(id=request.POST['menu']).delete()
-    cache.delete('main.menu')
+    cache.delete('main.menu.%s' % request.session['active_forening'].site.id)
     return redirect('admin.cms.views.page.list')
 
 def reorder(request):
@@ -42,5 +42,5 @@ def reorder(request):
         obj = Menu.on(request.session['active_forening'].site).get(id=menu['id'])
         obj.order = menu['order']
         obj.save()
-    cache.delete('main.menu')
+    cache.delete('main.menu.%s' % request.session['active_forening'].site.id)
     return HttpResponse()
