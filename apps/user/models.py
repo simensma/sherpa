@@ -472,7 +472,7 @@ class User(AbstractBaseUser):
                     role = ForeningRole.objects.get(forening=forening, user=self).role
                     if role == 'admin':
                         # Add this one and all its children
-                        for forening in forening.get_with_children():
+                        for forening in forening.get_with_children_deep():
                             forening.role = 'admin'
                             foreninger.append(forening)
                     elif role == 'user':
@@ -518,7 +518,7 @@ class User(AbstractBaseUser):
                 # A normal user, return all connected foreninger with their children
                 foreninger = []
                 for forening in self.foreninger.all():
-                    for forening in forening.get_with_children():
+                    for forening in forening.get_with_children_deep():
                         # forening.role = 'admin'
                         foreninger.append(forening)
 

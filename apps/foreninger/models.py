@@ -44,10 +44,10 @@ class Forening(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
 
-    def get_with_children(self):
+    def get_with_children_deep(self):
         foreninger = [self]
         for children in self.children.all():
-            foreninger += children.get_with_children()
+            foreninger += children.get_with_children_deep()
         return foreninger
 
     def get_main_forening(self):

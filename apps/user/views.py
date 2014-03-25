@@ -321,7 +321,7 @@ def turleder_aktivitet_date(request, aktivitet_date):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publications(request):
-    accessible_foreninger = request.user.main_forening().get_with_children()
+    accessible_foreninger = request.user.main_forening().get_with_children_deep()
     publications_user_central = Publication.objects.filter(forening__type='sentral')
     publications_user_accessible = Publication.objects.filter(forening__in=accessible_foreninger)
     publications_user = sorted(list(publications_user_central) + list(publications_user_accessible), key=lambda p: p.title)
@@ -339,7 +339,7 @@ def publications(request):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def publication(request, publication):
-    accessible_foreninger = request.user.main_forening().get_with_children()
+    accessible_foreninger = request.user.main_forening().get_with_children_deep()
     publication = Publication.objects.filter(
         # Verify that the user has access to this publication
         Q(forening__type='sentral') |
