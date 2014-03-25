@@ -14,10 +14,10 @@ def index(request, forening):
     forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
 
     forening_users_by_parent = []
-    forening = request.session['active_forening']
-    while forening.parent is not None:
-        forening = forening.parent
-        for user in User.objects.filter(foreninger=forening):
+    active_forening = request.session['active_forening']
+    while active_forening.parent is not None:
+        active_forening = active_forening.parent
+        for user in User.objects.filter(foreninger=active_forening):
             forening_users_by_parent.append(user)
 
     # Prefetch and cache the actors
