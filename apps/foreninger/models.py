@@ -42,7 +42,11 @@ class Forening(models.Model):
     facebook_url = models.CharField(max_length=2048, default='')
 
     def __unicode__(self):
+        return self.name
+
+    def __repr__(self):
         return u'%s: %s' % (self.pk, self.name)
+
 
     def get_children_sorted(self):
         children = self.children.all()

@@ -114,3 +114,15 @@ class ForeningDataForm(forms.Form):
                 code='invalid'
             )
         return zipcode
+
+class CreateForeningForm(ForeningDataForm):
+    parent = forms.ModelChoiceField(
+        required=False,
+        queryset=Forening.objects.order_by('name'),
+        empty_label='',
+    )
+
+    parent.widget.attrs.update({
+        'class': 'form-control chosen',
+        'data-placeholder': 'Velg moderforening...',
+    })

@@ -3,8 +3,8 @@ div.foreningsadmin {
   div.tab-pane {
     padding-top: 30px;
 
-    /* Metadata */
-    form.edit-forening {
+    /* Metadata and create-forening */
+    form.edit-forening, form.create-forening {
       div.section {
         border-bottom: 1px solid rgb(200, 200, 200);
         padding-bottom: 20px;
@@ -13,12 +13,12 @@ div.foreningsadmin {
           margin-top: 30px;
         }
 
-        input[name='zipcode'] {
+        input[name$='zipcode'] {
           display: inline;
           width: 80px;
         }
 
-        input[name='area'] {
+        input[name$='area'] {
           display: inline;
           width: 200px;
         }

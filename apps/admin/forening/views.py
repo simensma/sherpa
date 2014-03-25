@@ -1,12 +1,13 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.cache import cache
 from django.conf import settings
 
 from foreninger.models import Forening
-from .forms import ForeningDataForm
-from user.models import User
+from .forms import ForeningDataForm, CreateForeningForm
+from user.models import User, ForeningRole
 from focus.models import Actor
 
 def index(request, forening):
@@ -33,55 +34,106 @@ def index(request, forening):
         'forening_users_by_parent': forening_users_by_parent,
     }
 
+    zipcode = request.session['active_forening'].zipcode
+    edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
+
+    edit_form = ForeningDataForm(prefix='edit', initial={
+        'name': request.session['active_forening'].name,
+        'type': request.session['active_forening'].type,
+        'post_address': request.session['active_forening'].post_address,
+        'visit_address': request.session['active_forening'].visit_address,
+        'zipcode': zipcode.zipcode if zipcode is not None else '',
+        'counties': request.session['active_forening'].counties.all(),
+        'phone': request.session['active_forening'].phone,
+        'email': request.session['active_forening'].email,
+        'organization_no': request.session['active_forening'].organization_no,
+        'gmap_url': request.session['active_forening'].gmap_url,
+        'facebook_url': request.session['active_forening'].facebook_url,
+    })
+
+    create_form = CreateForeningForm(prefix='create', initial={
+        'zipcode': '',
+    })
+
+    context.update({
+        'edit_form': edit_form,
+        'create_form': create_form,
+        'edit_form_zipcode_area': edit_form_zipcode_area,
+    })
+
     if request.method == 'GET':
-
-        zipcode = request.session['active_forening'].zipcode
-        form_zipcode_area = zipcode.area if zipcode is not None else ''
-
-        form = ForeningDataForm(initial={
-            'name': request.session['active_forening'].name,
-            'type': request.session['active_forening'].type,
-            'post_address': request.session['active_forening'].post_address,
-            'visit_address': request.session['active_forening'].visit_address,
-            'zipcode': zipcode.zipcode if zipcode is not None else '',
-            'counties': request.session['active_forening'].counties.all(),
-            'phone': request.session['active_forening'].phone,
-            'email': request.session['active_forening'].email,
-            'organization_no': request.session['active_forening'].organization_no,
-            'gmap_url': request.session['active_forening'].gmap_url,
-            'facebook_url': request.session['active_forening'].facebook_url,
-        })
-        context.update({
-            'form': form,
-            'form_zipcode_area': form_zipcode_area,
-        })
         return render(request, 'common/admin/forening/index.html', context)
 
     elif request.method == 'POST':
 
-        form = ForeningDataForm(request.POST)
-        if form.is_valid():
-            forening = Forening.objects.get(id=forening)
-            forening.name = form.cleaned_data['name']
-            forening.type = form.cleaned_data['type']
-            if forening.type == 'turgruppe':
-                forening.group_type = form.cleaned_data['group_type']
+        if request.POST.get('form') == 'edit':
+            edit_form = ForeningDataForm(request.POST, prefix='edit')
+            if edit_form.is_valid():
+                forening = Forening.objects.get(id=forening)
+                forening.name = edit_form.cleaned_data['name']
+                forening.type = edit_form.cleaned_data['type']
+                if forening.type == 'turgruppe':
+                    forening.group_type = edit_form.cleaned_data['group_type']
+                else:
+                    forening.group_type = ''
+                forening.post_address = edit_form.cleaned_data['post_address']
+                forening.visit_address = edit_form.cleaned_data['visit_address']
+                forening.zipcode = edit_form.cleaned_data['zipcode']
+                forening.counties = edit_form.cleaned_data['counties']
+                forening.phone = edit_form.cleaned_data['phone']
+                forening.email = edit_form.cleaned_data['email']
+                forening.organization_no = edit_form.cleaned_data['organization_no']
+                forening.gmap_url = edit_form.cleaned_data['gmap_url']
+                forening.facebook_url = edit_form.cleaned_data['facebook_url']
+                forening.save()
+                messages.info(request, 'forening_save_success')
+                # Not sure why "request.session.modified = True" doesn't work here, so just update the var
+                request.session['active_forening'] = forening
+                return redirect('admin.forening.views.index')
             else:
-                forening.group_type = ''
-            forening.post_address = form.cleaned_data['post_address']
-            forening.visit_address = form.cleaned_data['visit_address']
-            forening.zipcode = form.cleaned_data['zipcode']
-            forening.counties = form.cleaned_data['counties']
-            forening.phone = form.cleaned_data['phone']
-            forening.email = form.cleaned_data['email']
-            forening.organization_no = form.cleaned_data['organization_no']
-            forening.gmap_url = form.cleaned_data['gmap_url']
-            forening.facebook_url = form.cleaned_data['facebook_url']
-            forening.save()
-            messages.info(request, 'forening_save_success')
-            # Not sure why "request.session.modified = True" doesn't work here, so just update the var
-            request.session['active_forening'] = forening
-            return redirect('admin.forening.views.index')
+                context.update({'edit_form': edit_form})
+                return render(request, 'common/admin/forening/index.html', context)
+
+        elif request.POST.get('form') == 'create':
+            create_form = CreateForeningForm(request.POST, prefix='create')
+            if create_form.is_valid():
+                forening = Forening()
+                forening.parent = create_form.cleaned_data['parent']
+                forening.name = create_form.cleaned_data['name']
+                forening.type = create_form.cleaned_data['type']
+                if forening.type == 'turgruppe':
+                    forening.group_type = create_form.cleaned_data['group_type']
+                else:
+                    forening.group_type = ''
+                forening.post_address = create_form.cleaned_data['post_address']
+                forening.visit_address = create_form.cleaned_data['visit_address']
+                forening.zipcode = create_form.cleaned_data['zipcode']
+                forening.phone = create_form.cleaned_data['phone']
+                forening.email = create_form.cleaned_data['email']
+                forening.organization_no = create_form.cleaned_data['organization_no']
+                forening.gmap_url = create_form.cleaned_data['gmap_url']
+                forening.facebook_url = create_form.cleaned_data['facebook_url']
+                forening.save()
+
+                # Set M2M-fields after the initial db-save
+                forening.counties = create_form.cleaned_data['counties']
+
+                # Add the current user as admin on the new forening
+                role = ForeningRole(
+                    user=request.user,
+                    forening=forening,
+                    role='admin',
+                )
+                role.save()
+
+                messages.info(request, 'forening_create_success')
+                request.session['active_forening'] = forening
+                # Since GET url == POST url, we need to specifically set the tab hashtag we want, or the existing
+                # one (create) will be kept
+                return redirect('%s#metadata' % reverse('admin.forening.views.index'))
+            else:
+                context.update({'create_form': create_form})
+                return render(request, 'common/admin/forening/index.html', context)
+
         else:
-            context.update({'form': form})
-            return render(request, 'common/admin/forening/index.html', context)
+            return redirect('admin.forening.views.index')
