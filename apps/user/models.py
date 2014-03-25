@@ -451,6 +451,14 @@ class User(AbstractBaseUser):
         dnt_central = Forening.objects.get(name='Den Norske Turistforening')
         return dnt_central in self.all_foreninger()
 
+    def is_admin_in_main_central(self):
+        """True if the user has the admin role for DNT central."""
+        dnt_central = Forening.objects.get(id=56)
+        for forening in self.all_foreninger():
+            if forening == dnt_central and forening.role == 'admin':
+                return True
+        return False
+
     def all_foreninger(self):
         """
         Returns foreninger this user has access to.
