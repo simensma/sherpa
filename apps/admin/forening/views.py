@@ -1,10 +1,13 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.core.cache import cache
+from django.conf import settings
 
 from foreninger.models import Forening
 from .forms import ForeningDataForm
 from user.models import User
+from focus.models import Actor
 
 def index(request, forening):
     forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
@@ -15,6 +18,15 @@ def index(request, forening):
         forening = forening.parent
         for user in User.objects.filter(foreninger=forening):
             forening_users_by_parent.append(user)
+
+    # Prefetch and cache the actors
+    memberids = [u.memberid for u in (forening_users + forening_users_by_parent)]
+    for actor in Actor.objects.filter(memberid__in=memberids):
+        cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
+
+    # Safe to iterate without having n+1 issues
+    forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
+    forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
 
     context = {
         'forening_users': forening_users,
