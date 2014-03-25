@@ -72,3 +72,6 @@ class Forening(models.Model):
             'turlag': [f for f in foreninger if f.type == 'turlag'],
             'turgrupper': [f for f in foreninger if f.type == 'turgruppe'],
         }
+
+    class Meta:
+        ordering = ['name']
