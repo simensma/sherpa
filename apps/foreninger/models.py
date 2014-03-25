@@ -58,7 +58,10 @@ class Forening(models.Model):
         }
 
     def get_with_children_deep(self):
-        foreninger = [self]
+        return [self] + self.get_children_deep()
+
+    def get_children_deep(self):
+        foreninger = []
         for children in self.children.all():
             foreninger += children.get_with_children_deep()
         return foreninger
