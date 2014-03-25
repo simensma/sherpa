@@ -29,7 +29,7 @@ def index(request):
         cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
         cache.set('admin.local_membership_count.%s' % request.session['active_forening'].id, local_membership_count, 60 * 60 * 12)
 
-    turledere = User.objects.filter(turledere__isnull=False).distinct().count()
+    turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
     if request.session['active_forening'].site is not None:
         pages = Page.on(request.session['active_forening'].site).filter(
             pub_date__lte=datetime.now(),
