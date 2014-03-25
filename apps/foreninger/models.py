@@ -44,6 +44,15 @@ class Forening(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
 
+    def get_children_sorted(self):
+        children = self.children.all()
+        return {
+            'sentral': children.filter(type='sentral'),
+            'forening': children.filter(type='forening'),
+            'turlag': children.filter(type='turlag'),
+            'turgruppe': children.filter(type='turgruppe'),
+        }
+
     def get_with_children_deep(self):
         foreninger = [self]
         for children in self.children.all():

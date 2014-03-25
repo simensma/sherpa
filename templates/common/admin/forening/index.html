@@ -5,6 +5,7 @@
 {% block admin_menu %}{% with 'forening' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/forening/index.js"></script>
   <script src="{{ STATIC_URL }}js/admin/forening/metadata.js"></script>
 {% endblock %}
 
@@ -35,7 +36,7 @@
           {% include 'common/admin/forening/metadata.html' %}
         </div>
         <div class="tab-pane structure" id="grupper">
-          Todo
+          {% include 'common/admin/forening/structure.html' %}
         </div>
         <div class="tab-pane users" id="brukere">
           {% include 'common/admin/forening/users.html' %}
