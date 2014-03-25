@@ -58,7 +58,7 @@
           {% block admin_menu %}
 
             <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' %}"><i class="fa fa-bookmark-o"></i> Din forening</a></li>
+            <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' %}"><i class="fa fa-bookmark-o"></i> Foreninger og turgrupper</a></li>
 
             {% if not active_forening.site %}
               <li{% if active_entry == 'setup_site' %} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Sett opp hjemmeside</a></li>
