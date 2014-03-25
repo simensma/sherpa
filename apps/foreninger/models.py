@@ -45,7 +45,7 @@ class Forening(models.Model):
         return self.name
 
     def __repr__(self):
-        return u'%s: %s' % (self.pk, self.name)
+        return '%s: %s' % (self.pk, self.name.encode('utf-8'))
 
 
     def get_children_sorted(self):
