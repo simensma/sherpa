@@ -6,11 +6,11 @@ from django.core.cache import cache
 from django.conf import settings
 
 from foreninger.models import Forening
-from .forms import ForeningDataForm, CreateForeningForm
+from .forms import ForeningDataForm, ExistingForeningDataForm
 from user.models import User, ForeningRole
 from focus.models import Actor
 
-def index(request, forening):
+def index(request):
     forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
 
     forening_users_by_parent = []
@@ -37,7 +37,9 @@ def index(request, forening):
     zipcode = request.session['active_forening'].zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
 
-    edit_form = ForeningDataForm(prefix='edit', initial={
+    edit_form = ExistingForeningDataForm(prefix='edit', initial={
+        'forening': request.session['active_forening'].id,
+        'parent': request.session['active_forening'].parent,
         'name': request.session['active_forening'].name,
         'type': request.session['active_forening'].type,
         'post_address': request.session['active_forening'].post_address,
@@ -51,7 +53,7 @@ def index(request, forening):
         'facebook_url': request.session['active_forening'].facebook_url,
     })
 
-    create_form = CreateForeningForm(prefix='create', initial={
+    create_form = ForeningDataForm(prefix='create', initial={
         'zipcode': '',
     })
 
@@ -67,9 +69,10 @@ def index(request, forening):
     elif request.method == 'POST':
 
         if request.POST.get('form') == 'edit':
-            edit_form = ForeningDataForm(request.POST, prefix='edit')
+            edit_form = ExistingForeningDataForm(request.POST, prefix='edit')
             if edit_form.is_valid():
-                forening = Forening.objects.get(id=forening)
+                forening = edit_form.cleaned_data['forening']
+                forening.parent = edit_form.cleaned_data['parent']
                 forening.name = edit_form.cleaned_data['name']
                 forening.type = edit_form.cleaned_data['type']
                 if forening.type == 'turgruppe':
@@ -95,7 +98,7 @@ def index(request, forening):
                 return render(request, 'common/admin/forening/index.html', context)
 
         elif request.POST.get('form') == 'create':
-            create_form = CreateForeningForm(request.POST, prefix='create')
+            create_form = ForeningDataForm(request.POST, prefix='create')
             if create_form.is_valid():
                 forening = Forening()
                 forening.parent = create_form.cleaned_data['parent']

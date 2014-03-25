@@ -6,6 +6,17 @@ from core.models import County, Zipcode
 
 class ForeningDataForm(forms.Form):
 
+    parent = forms.ModelChoiceField(
+        required=False,
+        queryset=Forening.objects.order_by('name'),
+        empty_label='',
+    )
+
+    parent.widget.attrs.update({
+        'class': 'form-control chosen',
+        'data-placeholder': 'Velg moderforening...',
+    })
+
     name = forms.CharField(required=True, error_messages={
         'required': "Foreningen må ha et navn!",
     })
@@ -115,14 +126,38 @@ class ForeningDataForm(forms.Form):
             )
         return zipcode
 
-class CreateForeningForm(ForeningDataForm):
-    parent = forms.ModelChoiceField(
-        required=False,
-        queryset=Forening.objects.order_by('name'),
-        empty_label='',
-    )
+class ExistingForeningDataForm(ForeningDataForm):
+    def __init__(self, *args, **kwargs):
+        """Exclude the current forening from the parent-choices"""
+        super(ExistingForeningDataForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(id=self.initial['forening'])
 
-    parent.widget.attrs.update({
-        'class': 'form-control chosen',
-        'data-placeholder': 'Velg moderforening...',
-    })
+    forening = forms.IntegerField(required=False, widget=forms.HiddenInput())
+
+    def clean_forening(self):
+        return Forening.objects.get(id=self.cleaned_data['forening'])
+
+    def clean(self):
+        cleaned_data = super(ExistingForeningDataForm, self).clean()
+
+        forening = cleaned_data.get('forening')
+        parent = cleaned_data.get('parent')
+
+        if forening == parent:
+            # Shouldn't be possible, we're excluding this forening from the parent choices
+            self._errors['parent'] = self.error_class([
+                "%s er allerede en underforening av %s. Da kan du ikke sette %s under %s." % (
+                    parent.name, forening.name, forening.name, parent.name
+                )
+            ])
+            del cleaned_data['parent']
+
+        elif parent in forening.get_children_deep():
+            self._errors['parent'] = self.error_class([
+                "%s er allerede en underforening av %s. Da kan du ikke sette %s under %s." % (
+                    parent.name, forening.name, forening.name, parent.name
+                )
+            ])
+            del cleaned_data['parent']
+
+        return self.cleaned_data

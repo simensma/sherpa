@@ -11,11 +11,26 @@
   {% endif %}
 {% endfor %}
 
-<form action="{% url 'admin.forening.views.index' active_forening.id %}" method="post" class="edit-forening form-default form-horizontal">
+<form action="{% url 'admin.forening.views.index' %}" method="post" class="edit-forening form-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="edit">
+  {{ edit_form.forening }}
 
   <div class="section">
+
+    <div class="form-group{% if edit_form.parent.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_create_parent">Moderforening</label>
+      <div class="col-md-10">
+
+        {{ edit_form.parent }}
+
+        {% if edit_form.parent.errors %}
+          {% for error in edit_form.parent.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
 
     <div class="form-group{% if edit_form.name.errors %} has-error{% endif %}">
       <label class="col-md-2 control-label" for="id_edit_name">Forening</label>
