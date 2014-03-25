@@ -65,31 +65,31 @@ class ForeningDataForm(forms.Form):
         'data-placeholder': 'Velg tilhørende fylke(r)...',
     })
 
-    phone = forms.CharField()
+    phone = forms.CharField(required=False)
 
     phone.widget.attrs.update({
         'class': 'form-control',
     })
 
-    email = forms.CharField()
+    email = forms.CharField(required=False)
 
     email.widget.attrs.update({
         'class': 'form-control',
     })
 
-    organization_no = forms.CharField()
+    organization_no = forms.CharField(required=False)
 
     organization_no.widget.attrs.update({
         'class': 'form-control',
     })
 
-    gmap_url = forms.CharField()
+    gmap_url = forms.CharField(required=False)
 
     gmap_url.widget.attrs.update({
         'class': 'form-control',
     })
 
-    facebook_url = forms.CharField()
+    facebook_url = forms.CharField(required=False)
 
     facebook_url.widget.attrs.update({
         'class': 'form-control',
