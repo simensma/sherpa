@@ -9,10 +9,10 @@ DNT_UNG_OSLO_ID = 152
 
 class Forening(models.Model):
     TYPES = [
-        (u'sentral', u'Sentral/nasjonal'), # Sentral/nasjonal side - DNT Sentralt, DNT Ung, DNT Fjellsport
-        (u'forening', u'Medlemsforening'), # Medlemsforeninger
-        (u'turlag', u'Lokalt turlag'),     # Turlag, parent er forening
-        (u'turgruppe', u'Turgruppe')]      # Turgruppe (har ikke medlemmer). Parent er forening _eller_ turlag
+        (u'sentral', u'Sentral/nasjonal'), # Central/national - only a handful; DNT, DNT ung, DNT Fjellsport
+        (u'forening', u'Medlemsforening'), # Member associations (foreninger)
+        (u'turlag', u'Lokalt turlag'),     # Local groups, must belong to a member association
+        (u'turgruppe', u'Turgruppe')]      # Tourgroup (has no members), must belong to a member association OR local group
 
     # Applies only to 'turgruppe'-types
     GROUP_TYPES = [
