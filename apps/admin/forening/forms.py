@@ -5,6 +5,9 @@ from foreninger.models import Forening
 from core.models import County, Zipcode
 
 class ForeningDataForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        super(ForeningDataForm, self).__init__(*args, **kwargs)
+        self._user = user
 
     parent = forms.ModelChoiceField(
         required=False,
@@ -148,6 +151,28 @@ class ExistingForeningDataForm(ForeningDataForm):
         if new_type == 'sentral' or new_type == 'forening':
             cleaned_data['parent'] = None
             parent = None
+
+        # Non DNT admins cannot *change* the type to forening/sentral
+        if not self._user.is_admin_in_main_central():
+            # Cannot change an existing sentral/forening at all
+            if forening.type in ['sentral', 'forening'] and forening.type != new_type:
+                self._errors['type'] = self.error_class([
+                    u"Du har ikke tillatelse til å endre gruppetypen for %s - vennligst ta kontakt med DNT sentralt." % (
+                        forening.name,
+                    )
+                ])
+                del cleaned_data['type']
+                return cleaned_data
+
+            # Cannot change turlag/turgruppe to sentral/forening
+            elif forening.type in ['turlag', 'turgruppe'] and new_type in ['sentral', 'forening']:
+                self._errors['type'] = self.error_class([
+                    u"Du har ikke tillatelse til å endre gruppetypen for %s til denne typen forening - vennligst ta kontakt med DNT sentralt." % (
+                        forening.name,
+                    )
+                ])
+                del cleaned_data['type']
+                return cleaned_data
 
         #
         # Relationship rules between forening/parent based on type

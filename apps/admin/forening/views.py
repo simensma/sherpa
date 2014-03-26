@@ -37,7 +37,7 @@ def index(request):
     zipcode = request.session['active_forening'].zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
 
-    edit_form = ExistingForeningDataForm(prefix='edit', initial={
+    edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
         'forening': request.session['active_forening'].id,
         'parent': request.session['active_forening'].parent,
         'name': request.session['active_forening'].name,
@@ -53,7 +53,7 @@ def index(request):
         'facebook_url': request.session['active_forening'].facebook_url,
     })
 
-    create_form = ForeningDataForm(prefix='create', initial={
+    create_form = ForeningDataForm(request.user, prefix='create', initial={
         'zipcode': '',
     })
 
@@ -69,7 +69,7 @@ def index(request):
     elif request.method == 'POST':
 
         if request.POST.get('form') == 'edit':
-            edit_form = ExistingForeningDataForm(request.POST, prefix='edit')
+            edit_form = ExistingForeningDataForm(request.user, request.POST, prefix='edit')
             if edit_form.is_valid():
                 forening = edit_form.cleaned_data['forening']
                 forening.parent = edit_form.cleaned_data['parent']
@@ -98,7 +98,7 @@ def index(request):
                 return render(request, 'common/admin/forening/index.html', context)
 
         elif request.POST.get('form') == 'create':
-            create_form = ForeningDataForm(request.POST, prefix='create')
+            create_form = ForeningDataForm(request.user, request.POST, prefix='create')
             if create_form.is_valid():
                 forening = Forening()
                 forening.parent = create_form.cleaned_data['parent']
