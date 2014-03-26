@@ -143,6 +143,7 @@ class ExistingForeningDataForm(ForeningDataForm):
 
         forening = cleaned_data.get('forening')
         parent = cleaned_data.get('parent')
+        new_type = cleaned_data.get('type')
 
         #
         # Relationship rules between forening/parent based on type
@@ -151,11 +152,11 @@ class ExistingForeningDataForm(ForeningDataForm):
         if parent is None:
             # No parent defined
 
-            if forening.type in ['turlag', 'turgruppe']:
+            if new_type in ['turlag', 'turgruppe']:
                 # These types need a parent
                 self._errors['parent'] = self.error_class([
                     u"%s må ha en moderforening!" % (
-                        'Et turlag' if forening.type == 'turlag' else 'En turgruppe',
+                        'Et turlag' if new_type == 'turlag' else 'En turgruppe',
                     )
                 ])
                 del cleaned_data['parent']
@@ -171,7 +172,7 @@ class ExistingForeningDataForm(ForeningDataForm):
                 ])
                 del cleaned_data['parent']
 
-            elif forening.type == 'sentral' or parent.type == 'sentral':
+            elif new_type == 'sentral' or parent.type == 'sentral':
                 # Central can't have relationships
                 # Shouldn't be possible without a manual POST
                 self._errors['parent'] = self.error_class([
@@ -179,21 +180,21 @@ class ExistingForeningDataForm(ForeningDataForm):
                 ])
                 del cleaned_data['parent']
 
-            elif forening.type == 'forening' and parent.type == 'forening':
+            elif new_type == 'forening' and parent.type == 'forening':
                 # Forening can't be child of other forening
                 self._errors['parent'] = self.error_class([
                     u"En forening kan ikke være underlagt en annen forening."
                 ])
                 del cleaned_data['parent']
 
-            elif forening.type == 'forening' and parent.type in ['turlag', 'turgruppe']:
+            elif new_type == 'forening' and parent.type in ['turlag', 'turgruppe']:
                 # Forening can't be child of turlag/turgruppe
                 self._errors['parent'] = self.error_class([
                     u"Foreninger kan ikke være underlagt turlag/turgrupper."
                 ])
                 del cleaned_data['parent']
 
-            elif forening.type == 'turlag' and parent.type == 'turgruppe':
+            elif new_type == 'turlag' and parent.type == 'turgruppe':
                 # Turlag can't be child of turgruppe
                 self._errors['parent'] = self.error_class([
                     u"Et turlag kan ikke være underlagt en turgruppe."
