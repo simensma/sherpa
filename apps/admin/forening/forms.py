@@ -152,7 +152,17 @@ class ExistingForeningDataForm(ForeningDataForm):
         if parent is None:
             # No parent defined
 
-            if new_type in ['turlag', 'turgruppe']:
+            if new_type == 'sentral' and forening.children.count() > 0:
+                # You can make a group central, but not if it has any children
+                self._errors['type'] = self.error_class([
+                    u"Hvis du vil gjøre %s til en sentral gruppe, kan den ikke ha noen underforeninger. (Gruppen har %s underforeninger i dag)" % (
+                        forening.name,
+                        forening.children.count(),
+                    )
+                ])
+                del cleaned_data['type']
+
+            elif new_type in ['turlag', 'turgruppe']:
                 # These types need a parent
                 self._errors['parent'] = self.error_class([
                     u"%s må ha en moderforening!" % (
