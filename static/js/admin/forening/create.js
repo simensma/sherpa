@@ -28,6 +28,9 @@ $(function() {
             group_type.hide();
         }
     });
+    // Trigger type-dependent logic - covers the case where the form was posted, but invalid,
+    // and the input values are retained - since the template show/hide logic can't account for that
+    type_input.change();
 
     zipcode.keyup(function() {
         if($(this).val().length === 4) {
