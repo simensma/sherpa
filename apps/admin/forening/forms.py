@@ -145,6 +145,10 @@ class ExistingForeningDataForm(ForeningDataForm):
         parent = cleaned_data.get('parent')
         new_type = cleaned_data.get('type')
 
+        if new_type == 'sentral' or new_type == 'forening':
+            cleaned_data['parent'] = None
+            parent = None
+
         #
         # Relationship rules between forening/parent based on type
         #

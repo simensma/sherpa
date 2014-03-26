@@ -18,7 +18,7 @@
 
   <div class="section">
 
-    <div class="form-group{% if edit_form.parent.errors %} has-error{% endif %}">
+    <div class="form-group parent{% if edit_form.parent.errors %} has-error{% endif %}{% if active_forening.type == 'sentral' or active_forening.type == 'forening' %} jq-hide{% endif %}">
       <label class="col-md-2 control-label" for="id_create_parent">Moderforening</label>
       <div class="col-md-10">
 

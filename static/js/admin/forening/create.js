@@ -4,17 +4,24 @@ $(function() {
 
     var type_input = form.find("select[name='create-type']");
     var group_type = form.find("div.group_type");
-    var parent = form.find("select[name='create-parent']");
+    var parent = form.find("div.parent");
+    var parent_select = form.find("select[name='create-parent']");
 
     var zipcode = form.find("input[name='create-zipcode']");
     var area = form.find("input[name='create-area']");
     var loader = form.find("img.ajaxloader.zipcode");
 
-    parent.chosen({
+    parent_select.chosen({
         'allow_single_deselect': true
     });
 
     type_input.change(function() {
+        if($(this).val() == 'sentral' || $(this).val() == 'forening') {
+            parent.hide();
+        } else {
+            parent.show();
+        }
+
         if($(this).val() == 'turgruppe') {
             group_type.show();
         } else {
