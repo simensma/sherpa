@@ -8,7 +8,7 @@ class ForeningDataForm(forms.Form):
 
     parent = forms.ModelChoiceField(
         required=False,
-        queryset=Forening.objects.order_by('name'),
+        queryset=Forening.objects.exclude(type='sentral').order_by('name'),
         empty_label='',
     )
 
