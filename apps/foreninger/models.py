@@ -22,6 +22,7 @@ class Forening(models.Model):
         (u'senior', u'DNT Senior')]
 
     name = models.CharField(max_length=255)
+    # The child/parent rules are dependent on type; this is defined in admin.forening.forms.ExistingForeningDataForm
     parent = models.ForeignKey('foreninger.Forening', null=True, related_name='children')
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
