@@ -130,7 +130,8 @@ class ExistingForeningDataForm(ForeningDataForm):
     def __init__(self, *args, **kwargs):
         """Exclude the current forening from the parent-choices"""
         super(ExistingForeningDataForm, self).__init__(*args, **kwargs)
-        self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(id=self.initial['forening'])
+        if 'forening' in self.initial:
+            self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(id=self.initial['forening'])
 
     forening = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
