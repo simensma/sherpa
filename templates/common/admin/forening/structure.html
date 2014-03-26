@@ -18,15 +18,23 @@
   </table>
 {% endif %}
 
+{# The with statement helps us save the underlying query in a var and avoid excessive lookups #}
 {% with children=active_forening.get_children_sorted %}
   {% include 'common/admin/forening/structure_table_forening.html' with header="Sentral/nasjonal forening" foreninger=children.sentral %}
   {% include 'common/admin/forening/structure_table_forening.html' with header="Foreninger" foreninger=children.forening %}
   {% include 'common/admin/forening/structure_table_forening.html' with header="Turlag" foreninger=children.turlag %}
-  {% include 'common/admin/forening/structure_table_forening.html' with header="Turgrupper" foreninger=children.turgruppe %}
-{% endwith %}
 
-{% if active_forening.children.count == 0 %}
-  <p>
-    <em>{{ active_forening.name }} har ingen underliggende turlag/turgrupper.</em>
-  </p>
-{% endif %}
+  {% with turgrupper=active_forening.get_turgrupper_deep_sorted_by_group %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="Barnas Turlag" foreninger=turgrupper.barn %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT ung" foreninger=turgrupper.ungdom %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT Fjellsport" foreninger=turgrupper.fjellsport %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT senior" foreninger=turgrupper.senior %}
+
+    {% if children|length == 0 and turgrupper.barn|length == 0 and turgrupper.ung|length == 0 and turgrupper.fjellsport|length == 0 and turgrupper.senior|length == 0 %}
+      <p>
+        <em>{{ active_forening.name }} har ingen underliggende turlag/turgrupper.</em>
+      </p>
+    {% endif %}
+
+  {% endwith %}
+{% endwith %}

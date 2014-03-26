@@ -3,6 +3,9 @@
     <thead>
       <tr>
         <th>{{ header }}</th>
+        {% if display_parent %}
+          <th>Underlagt</th>
+        {% endif %}
       </tr>
     </thead>
 
@@ -20,6 +23,20 @@
               </a>
             {% endif %}
           </td>
+
+          {% if display_parent %}
+            <td>
+              {% if forening.parent in user.all_foreninger %}
+                <a href="/sherpa/aktiv-forening/{{ forening.parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">
+              {% endif %}
+
+              {{ forening.parent.name }}
+
+              {% if forening.parent in user.all_foreninger %}
+                </a>
+              {% endif %}
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

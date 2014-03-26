@@ -71,6 +71,24 @@ class Forening(models.Model):
             foreninger += children.get_with_children_deep()
         return foreninger
 
+    def get_turgrupper_deep(self):
+        """Return all turgrupper that are children of this, or of any children of this, forening"""
+        turgrupper = []
+        for child in self.children.all():
+            if child.type == 'turgruppe':
+                turgrupper.append(child)
+            turgrupper += child.get_turgrupper_deep()
+        return turgrupper
+
+    def get_turgrupper_deep_sorted_by_group(self):
+        turgrupper = sorted(self.get_turgrupper_deep(), key=lambda g: g.name)
+        return {
+            'barn': [g for g in turgrupper if g.group_type == 'barn'],
+            'ung': [g for g in turgrupper if g.group_type == 'ung'],
+            'fjellsport': [g for g in turgrupper if g.group_type == 'fjellsport'],
+            'senior': [g for g in turgrupper if g.group_type == 'senior'],
+        }
+
     def get_main_forening(self):
         if self.type == 'sentral' or self.type == 'forening':
             return self
