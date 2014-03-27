@@ -67,7 +67,7 @@ class ForeningDataForm(forms.Form):
         'class': 'form-control'
     })
 
-    zipcode = forms.CharField(required=False) # Let clean_zipcode() handle missing zipcode too
+    zipcode = forms.CharField(required=False)
 
     counties = forms.ModelMultipleChoiceField(
         required=False,
@@ -121,6 +121,8 @@ class ForeningDataForm(forms.Form):
 
     def clean_zipcode(self):
         zipcode = self.cleaned_data['zipcode'].strip()
+        if zipcode == '':
+            return None
         try:
             zipcode = Zipcode.objects.get(zipcode=zipcode)
         except Zipcode.DoesNotExist:
