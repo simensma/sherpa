@@ -564,7 +564,6 @@ def process_card(request):
                 # Crap, we didn't get the expected response from Nets.
                 # This has happened a few times before. We'll have to handle it ourselves.
                 logger.error(u"Mangler 'ResponseCode' element fra Nets",
-                    exc_info=sys.exc_info(),
                     extra={
                         'request': request,
                         'nets_response': response,
@@ -595,7 +594,6 @@ def process_card(request):
                     payment_verified = True
 
                 logger.warning(u"Transaction already processed - sjekker Query istedet",
-                    exc_info=sys.exc_info(),
                     extra={
                         'request': request,
                         'enrollment': enrollment,
@@ -704,7 +702,6 @@ def sms(request):
         # we sometimes receive GET requests, but since it is reoccuring AND I can't recreate
         # it locally, just account for it so the user actually gets their SMS.
         logger.warning(u"Fikk GET-request på innmeldings-SMS, forventet POST",
-            exc_info=sys.exc_info(),
             extra={'request': request}
         )
         user = int(request.GET['user'])
@@ -732,7 +729,6 @@ def sms(request):
         r = requests.get(settings.SMS_URL % (quote_plus(user.phone), quote_plus(sms_message)))
         if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Klarte ikke sende SMS-kvittering for innmelding: Ukjent status",
-                exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'enrollment': enrollment,

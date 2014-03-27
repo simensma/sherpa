@@ -475,7 +475,6 @@ def fotobok_eurofoto_request(request):
             return redirect(reply['url'])
         else:
             logger.error(u"Ukjent svar fra Eurofoto-API",
-                exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'reply': reply

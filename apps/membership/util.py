@@ -37,7 +37,6 @@ def send_sms_receipt(request, user):
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Kunne ikke sende medlemsnummer på SMS: Ukjent status",
-                exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'number': number,

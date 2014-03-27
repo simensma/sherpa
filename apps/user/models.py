@@ -710,7 +710,6 @@ class User(AbstractBaseUser):
             # ~238 bits of entropy which means that this will never ever happen, ever.
             # You will win the lottery before this happens. And I want to know if it does, so log it.
             logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
-                exc_info=sys.exc_info(),
                 extra={
                     'request': request,
                     'should_you_play_the_lottery': True,
