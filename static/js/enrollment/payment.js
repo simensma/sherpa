@@ -23,7 +23,8 @@ $(document).ready(function() {
     });
 
     form.submit(function() {
-        payment_button.prop('disabled', true);
+        payment_button_card.prop('disabled', true);
+        payment_button_invoice.prop('disabled', true);
         ajaxloader.show();
     });
 
