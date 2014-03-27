@@ -263,4 +263,4 @@ class ExistingForeningDataForm(ForeningDataForm):
             forening.type = original_type
             forening.parent = original_parent
 
-        return self.cleaned_data
+        return cleaned_data
