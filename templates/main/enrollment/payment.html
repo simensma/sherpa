@@ -27,6 +27,12 @@
             <strong>{% trans "Teknisk feil ved nettbetaling" %}</strong><br>
             {% trans "Beklager, det oppstod en feil når vi forsøkte å koble til vår betalingsleverandør. Du kan prøve igjen, eller velge å få tilsendt faktura i stedet." %}
           </div>
+        {% elif message.message == 'invalid_transaction_id' %}
+          <div class="alert alert-error">
+            <a class="close">x</a>
+            <strong>{% trans "Teknisk feil ved nettbetaling" %}</strong><br>
+            {% trans "Beklager, du ble sendt tilbake fra banken med en transaksjonsID som vi ikke gjenkjenner. Det kan ha oppstått en feil ved kommunikasjonen med vår betalingsleverandør. Vennligst prøv igjen, eller kontakt medlemsservice dersom du mener at du nå egentlig skal ha betalt." %}
+          </div>
         {% endif %}
       {% endfor %}
 

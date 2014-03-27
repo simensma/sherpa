@@ -548,6 +548,19 @@ def process_card(request):
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
 
+    # The client's transaction id CAN differ from the one we think is active. Let them override it,
+    # given that the transaction id is already registered. Note that the transaction id from the
+    # GET parameter is obviously untrusted input.
+    try:
+        enrollment.set_active_transaction(transaction_id=request.GET['transactionId'])
+    except Transaction.DoesNotExist:
+        # They returned with a transaction id which we haven't registered on them - cannot see this happen
+        # without them tampering with the GET parameter, we'll have to send them back with an error message.
+        messages.error(request, 'invalid_transaction_id')
+        enrollment.state = 'payment'
+        enrollment.save()
+        return redirect('enrollment.views.payment_method')
+
     if request.GET['responseCode'] == 'OK':
         try:
             r = requests.get(settings.NETS_PROCESS_URL, params={
