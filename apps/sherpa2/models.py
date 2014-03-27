@@ -42,6 +42,16 @@ class Forening(models.Model):
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
     map = models.TextField(db_column='gr_map', blank=True)
 
+    # Categories and their order
+    CATEGORIES = [
+        {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
+        {'name': 'Barnas Turlag', 'db': 'Barn'},
+        {'name': 'DNT ung', 'db': 'Ungdom'},
+        {'name': 'DNT fjellsport', 'db': 'Fjellsport'},
+        {'name': 'DNT senior', 'db': 'Senior'},
+        {'name': 'Andre turgrupper', 'db': 'Annen'},
+    ]
+
     def __unicode__(self):
         return u'%s' % self.pk
 
