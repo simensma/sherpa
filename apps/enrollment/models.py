@@ -169,12 +169,13 @@ class Enrollment(models.Model):
         return total_price
 
     def get_active_transaction(self):
-        active_transactions = self.transactions.filter(state='register').order_by('-initiated')
-        if len(active_transactions) == 0:
-            return None
-        else:
-            # Will return the newest active transaction if there are several, since the filter is ordered
-            return active_transactions[0]
+        return self.transactions.get(state='register', active=True)
+
+    def set_active_transaction(self, transaction_id):
+        self.transactions.filter(state='register').update(active=False)
+        active_transaction = self.transactions.get(state='register', transaction_id=transaction_id)
+        active_transaction.active = True
+        active_transaction.save()
 
     @staticmethod
     def get_active():
@@ -398,6 +399,11 @@ class Transaction(models.Model):
     enrollment = models.ForeignKey(Enrollment, related_name='transactions')
     transaction_id = models.CharField(max_length=32)
     order_number = models.CharField(max_length=32)
+
+    # active=True for the active transaction of a set of transactions - where state='register' -
+    # in an enrollment. Only one transaction in such a set should be True at any time
+    active = models.BooleanField(default=False)
+
     STATE_CHOICES = (
         ('register', 'Startet, men ikke gjennomført'),
         ('cancel', 'Avbrutt av kunden'),

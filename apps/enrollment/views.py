@@ -429,12 +429,13 @@ def payment(request):
             return redirect('enrollment.views.process_invoice')
         elif enrollment.payment_method == 'card':
             # Let's check for an existing transaction first
-            if enrollment.get_active_transaction() is not None:
+            try:
+                active_transaction = enrollment.get_active_transaction()
                 # Yeah, it's there. Skip payment and redirect forwards to processing
                 return redirect("%s?merchantId=%s&transactionId=%s" % (
-                    settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, enrollment.get_active_transaction().transaction_id
+                    settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, active_transaction.transaction_id
                 ))
-            else:
+            except Transaction.DoesNotExist:
                 # No active transactions - maybe a problem occured during payment.
                 # Assume payment failed and just redo it - if something failed, we'll know
                 # through logs and hopefully discover any double-payments
@@ -490,11 +491,13 @@ def payment(request):
     # Consider handling errors here (unexpected XML response or connection error)
     # We recieved a random "Unable to create setup string" message once, ignoring it for now
     response = r.text.encode('utf-8')
+    enrollment.transactions.filter(state='register').update(active=False)
     transaction = Transaction(
         enrollment=enrollment,
         transaction_id=etree.fromstring(response).find("TransactionId").text,
         order_number=order_number,
-        state='register'
+        state='register',
+        active=True,
     )
     transaction.save()
 
