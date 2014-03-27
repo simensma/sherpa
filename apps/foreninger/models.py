@@ -1,5 +1,7 @@
 # encoding: utf-8
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from sherpa2.models import Forening as Sherpa2Forening
@@ -162,3 +164,9 @@ class Forening(models.Model):
 
     class Meta:
         ordering = ['name']
+
+@receiver(pre_save, sender=Forening, dispatch_uid="foreninger.models")
+def validate_forening_save(sender, **kwargs):
+    # The following call will raise bubbled exception on error. It would have been the view's responsibility
+    # to avoid this error before saving (like a db-enforced DatabaseError)
+    kwargs['instance'].validate_relationships()
