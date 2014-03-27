@@ -30,4 +30,13 @@
 {% endif %}
 
 {% block enrollment %}{% endblock %}
+
+{% if LANGUAGE_CODE == 'en' %}
+  <div class="row">
+    <div class="span12">
+      <a href="{% url 'enrollment.views.norwegian' %}">Use the Norwegian form</a>
+    </div>
+  </div>
+{% endif %}
+
 {% endblock %}
