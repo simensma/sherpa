@@ -8,7 +8,6 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.utils import translation
 
 from core.models import Zipcode, FocusCountry
 from sherpa2.models import Forening
