@@ -134,20 +134,93 @@ class ForeningDataForm(forms.Form):
     def clean(self):
         cleaned_data = super(ForeningDataForm, self).clean()
 
-        new_type = cleaned_data.get('type')
+        type_ = cleaned_data.get('type')
+        parent = cleaned_data.get('parent')
 
-        if new_type in ['sentral', 'forening']:
+        if type_ in ['sentral', 'forening']:
             # In this case, the UI will have hidden the parent input, but it might still have a value, so
             # force it to None. The hiding of the field should make this behavior intuitive.
             cleaned_data['parent'] = None
+            parent = None
 
         # Non DNT admins cannot *create* forening with type forening/sentral
+        # Note that this might be legal in derived classes, so check this only for the base class
         # Shouldn't be possible without a manual POST
-        if not self._user.is_admin_in_main_central() and new_type in ['sentral', 'forening']:
+        if type(self) == ForeningDataForm and not self._user.is_admin_in_main_central() and type_ in ['sentral', 'forening']:
             self._errors['type'] = self.error_class([
                 u"Du har ikke tillatelse til å opprette sentrale grupper eller medlemsforeninger. Vennligst ta kontakt med DNT sentralt."
             ])
-            del cleaned_data['type']
+            if 'type' in cleaned_data:
+                del cleaned_data['type']
+
+        # Validate the new forening type and parent relationship
+        try:
+            forening = Forening(
+                parent=parent,
+                type=type_,
+            )
+
+            forening.validate_relationships()
+
+        except ForeningTypeNeedsParent:
+            self._errors['parent'] = self.error_class([
+                u"%s må ha en moderforening!" % (
+                    'Et turlag' if type_ == 'turlag' else 'En turgruppe',
+                )
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except ForeningWithItselfAsParent:
+            # Shouldn't be possible without a manual POST
+            self._errors['parent'] = self.error_class([
+                u"%s kan ikke være underlagt seg selv." % forening.name
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except SentralForeningWithRelation:
+            # Shouldn't be possible without a manual POST
+            self._errors['parent'] = self.error_class([
+                u"En sentral forening kan ikke ha noen koblinger til andre foreningstyper."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except ForeningWithForeningParent:
+            self._errors['parent'] = self.error_class([
+                u"En forening kan ikke være underlagt en annen forening."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except TurlagWithTurlagParent:
+            self._errors['parent'] = self.error_class([
+                u"Et turlag kan ikke være underlagt et annet turlag."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except TurgruppeWithTurgruppeParent:
+            self._errors['parent'] = self.error_class([
+                u"En turgruppe kan ikke være underlagt en annen turgruppe."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except ForeningWithTurlagParent:
+            self._errors['parent'] = self.error_class([
+                u"Foreninger kan ikke være underlagt turlag/turgrupper."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
+
+        except TurlagWithTurgruppeParent:
+            self._errors['parent'] = self.error_class([
+                u"Et turlag kan ikke være underlagt en turgruppe."
+            ])
+            if 'parent' in cleaned_data:
+                del cleaned_data['parent']
 
         return cleaned_data
 
@@ -165,6 +238,12 @@ class ExistingForeningDataForm(ForeningDataForm):
         parent = cleaned_data.get('parent')
         new_type = cleaned_data.get('type')
 
+        # If the previous form threw some errors, let those propagate without our derived logic cluttering
+        # Ideally, we should carefully check each case and provide as many errors as possible, but can't
+        # spend time on that right now
+        if not 'forening' in cleaned_data or not 'parent' in cleaned_data or not 'type' in cleaned_data:
+            return cleaned_data
+
         # Non DNT admins cannot *change* the type to forening/sentral
         if not self._user.is_admin_in_main_central():
             # Cannot change an existing sentral/forening at all
@@ -174,8 +253,8 @@ class ExistingForeningDataForm(ForeningDataForm):
                         forening.name,
                     )
                 ])
-                del cleaned_data['type']
-                return cleaned_data
+                if 'type' in cleaned_data:
+                    del cleaned_data['type']
 
             # Cannot change turlag/turgruppe to sentral/forening
             elif forening.type in ['turlag', 'turgruppe'] and new_type in ['sentral', 'forening']:
@@ -184,10 +263,12 @@ class ExistingForeningDataForm(ForeningDataForm):
                         forening.name,
                     )
                 ])
-                del cleaned_data['type']
-                return cleaned_data
+                if 'type' in cleaned_data:
+                    del cleaned_data['type']
 
-        # Try to validate the new forening type and relationship
+        # This validation was performed in our parent for a new forening, but recheck for the chosen existing
+        # forening. We only need to catch the relevant new types; this forening may have children, and it
+        # may have the parent as a child - the rest would've been catched in our base check.
         try:
             original_type = forening.type
             original_parent = forening.parent
@@ -205,58 +286,6 @@ class ExistingForeningDataForm(ForeningDataForm):
                 )
             ])
             del cleaned_data['type']
-
-        except ForeningTypeNeedsParent:
-            self._errors['parent'] = self.error_class([
-                u"%s må ha en moderforening!" % (
-                    'Et turlag' if new_type == 'turlag' else 'En turgruppe',
-                )
-            ])
-            del cleaned_data['parent']
-
-        except ForeningWithItselfAsParent:
-            # Shouldn't be possible without a manual POST
-            self._errors['parent'] = self.error_class([
-                u"%s kan ikke være underlagt seg selv." % forening.name
-            ])
-            del cleaned_data['parent']
-
-        except SentralForeningWithRelation:
-            # Shouldn't be possible without a manual POST
-            self._errors['parent'] = self.error_class([
-                u"En sentral forening kan ikke ha noen koblinger til andre foreningstyper."
-            ])
-            del cleaned_data['parent']
-
-        except ForeningWithForeningParent:
-            self._errors['parent'] = self.error_class([
-                u"En forening kan ikke være underlagt en annen forening."
-            ])
-            del cleaned_data['parent']
-
-        except TurlagWithTurlagParent:
-            self._errors['parent'] = self.error_class([
-                u"Et turlag kan ikke være underlagt et annet turlag."
-            ])
-            del cleaned_data['parent']
-
-        except TurgruppeWithTurgruppeParent:
-            self._errors['parent'] = self.error_class([
-                u"En turgruppe kan ikke være underlagt en annen turgruppe."
-            ])
-            del cleaned_data['parent']
-
-        except ForeningWithTurlagParent:
-            self._errors['parent'] = self.error_class([
-                u"Foreninger kan ikke være underlagt turlag/turgrupper."
-            ])
-            del cleaned_data['parent']
-
-        except TurlagWithTurgruppeParent:
-            self._errors['parent'] = self.error_class([
-                u"Et turlag kan ikke være underlagt en turgruppe."
-            ])
-            del cleaned_data['parent']
 
         except ForeningParentIsChild:
             self._errors['parent'] = self.error_class([
