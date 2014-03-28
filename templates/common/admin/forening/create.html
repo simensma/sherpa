@@ -20,7 +20,23 @@
       <label class="col-md-2 control-label" for="id_create_parent">Moderforening</label>
       <div class="col-md-10">
 
-        {{ create_form.parent }}
+        <select id="id_create-parent" name="create-parent" data-chosen data-placeholder="Velg moderforening...">
+          <option value=""></option>
+          {% if parent_choices.foreninger|length > 0 %}
+            <optgroup label="Foreninger">
+              {% for forening in parent_choices.foreninger %}
+                <option value="{{ forening.id }}"{% if create_form.parent.value|stringformat:"s" == forening.id|stringformat:"s" %} selected{% endif %}>{{ forening.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+          {% if parent_choices.turlag|length > 0 %}
+            <optgroup label="Turlag">
+              {% for forening in parent_choices.turlag %}
+                <option value="{{ forening.id }}"{% if create_form.parent.value|stringformat:"s" == forening.id|stringformat:"s" %} selected{% endif %}>{{ forening.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+        </select>
 
         {% if create_form.parent.errors %}
           {% for error in create_form.parent.errors %}

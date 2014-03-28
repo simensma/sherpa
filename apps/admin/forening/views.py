@@ -29,9 +29,17 @@ def index(request):
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
     forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
 
+    # The parent choices are tricky to define in the forms API, so do it here
+    all_sorted = request.user.all_foreninger_sorted()
+    parent_choices = {
+        'foreninger': all_sorted['foreninger'],
+        'turlag': all_sorted['turlag'],
+    }
+
     context = {
         'forening_users': forening_users,
         'forening_users_by_parent': forening_users_by_parent,
+        'parent_choices': parent_choices,
     }
 
     zipcode = request.session['active_forening'].zipcode

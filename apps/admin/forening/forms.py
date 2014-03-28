@@ -10,16 +10,11 @@ class ForeningDataForm(forms.Form):
         super(ForeningDataForm, self).__init__(*args, **kwargs)
         self._user = user
 
+    # Note that we're rendering parent manually, and not with the provided (or a custom) widget
     parent = forms.ModelChoiceField(
         required=False,
-        queryset=Forening.objects.exclude(type='sentral').order_by('name'),
-        empty_label='',
+        queryset=Forening.objects.all(), # Not really the entire set, but that will be enforced in the model
     )
-
-    parent.widget.attrs.update({
-        'class': 'form-control chosen',
-        'data-placeholder': 'Velg moderforening...',
-    })
 
     name = forms.CharField(required=True, error_messages={
         'required': "Foreningen må ha et navn!",
@@ -133,11 +128,6 @@ class ForeningDataForm(forms.Form):
         return zipcode
 
 class ExistingForeningDataForm(ForeningDataForm):
-    def __init__(self, *args, **kwargs):
-        """Exclude the current forening from the parent-choices"""
-        super(ExistingForeningDataForm, self).__init__(*args, **kwargs)
-        if 'forening' in self.initial:
-            self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(id=self.initial['forening'])
 
     forening = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
