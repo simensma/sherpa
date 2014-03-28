@@ -6,10 +6,6 @@
   {% endif %}
 {% endfor %}
 
-<div class="alert alert-info">
-  <strong>Kun administratorer i Den Norske Turistforening har tilgang til dette.</strong>
-</div>
-
 <form action="{% url 'admin.forening.views.index' %}#opprett" method="post" class="create-forening form-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="create">

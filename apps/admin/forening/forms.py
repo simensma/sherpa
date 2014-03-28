@@ -10,6 +10,10 @@ class ForeningDataForm(forms.Form):
         super(ForeningDataForm, self).__init__(*args, **kwargs)
         self._user = user
 
+        # If this is the create-form, and the user is not an admin, then they can only create turlag and turgrupper
+        if type(self) == ForeningDataForm and not self._user.is_admin_in_main_central():
+            self.fields['type'].choices = [t for t in Forening.TYPES if t[0] in ['turlag', 'turgruppe']]
+
     # Note that we're rendering parent manually, and not with the provided (or a custom) widget
     parent = forms.ModelChoiceField(
         required=False,
@@ -26,7 +30,7 @@ class ForeningDataForm(forms.Form):
 
     type = forms.ChoiceField(
         required=True,
-        choices=Forening.TYPES,
+        choices=Forening.TYPES, # May be overridden in __init__!
         error_messages={
             'required': "Du må velge hva slags forening dette er!",
         }

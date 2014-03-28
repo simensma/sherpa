@@ -30,9 +30,7 @@
         <li class="active"><a href="#metadata" data-toggle="tab">Foreningsinformasjon</a></li>
         <li><a href="#grupper" data-toggle="tab">Turlag og turgrupper</a></li>
         <li><a href="#brukere" data-toggle="tab">Brukere</a></li>
-        {% if user.is_admin_in_main_central %}
-          <li><a href="#opprett" data-toggle="tab">Opprett forening/turgruppe</a></li>
-        {% endif %}
+        <li><a href="#opprett" data-toggle="tab">Opprett ny turgruppe</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible main-nav-tabs">
@@ -45,11 +43,9 @@
         <div class="tab-pane users" id="brukere">
           {% include 'common/admin/forening/users.html' %}
         </div>
-        {% if user.is_admin_in_main_central %}
-          <div class="tab-pane create" id="opprett">
-            {% include 'common/admin/forening/create.html' %}
-          </div>
-        {% endif %}
+        <div class="tab-pane create" id="opprett">
+          {% include 'common/admin/forening/create.html' %}
+        </div>
       </div>
 
     </div>
