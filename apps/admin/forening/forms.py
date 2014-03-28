@@ -141,6 +141,14 @@ class ForeningDataForm(forms.Form):
             # force it to None. The hiding of the field should make this behavior intuitive.
             cleaned_data['parent'] = None
 
+        # Non DNT admins cannot *create* forening with type forening/sentral
+        # Shouldn't be possible without a manual POST
+        if not self._user.is_admin_in_main_central() and new_type in ['sentral', 'forening']:
+            self._errors['type'] = self.error_class([
+                u"Du har ikke tillatelse til å opprette sentrale grupper eller medlemsforeninger. Vennligst ta kontakt med DNT sentralt."
+            ])
+            del cleaned_data['type']
+
         return cleaned_data
 
 class ExistingForeningDataForm(ForeningDataForm):
