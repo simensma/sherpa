@@ -131,6 +131,18 @@ class ForeningDataForm(forms.Form):
             )
         return zipcode
 
+    def clean(self):
+        cleaned_data = super(ForeningDataForm, self).clean()
+
+        new_type = cleaned_data.get('type')
+
+        if new_type in ['sentral', 'forening']:
+            # In this case, the UI will have hidden the parent input, but it might still have a value, so
+            # force it to None. The hiding of the field should make this behavior intuitive.
+            cleaned_data['parent'] = None
+
+        return cleaned_data
+
 class ExistingForeningDataForm(ForeningDataForm):
 
     forening = forms.IntegerField(required=False, widget=forms.HiddenInput())
@@ -144,12 +156,6 @@ class ExistingForeningDataForm(ForeningDataForm):
         forening = cleaned_data.get('forening')
         parent = cleaned_data.get('parent')
         new_type = cleaned_data.get('type')
-
-        if new_type == 'sentral' or new_type == 'forening':
-            # In this case, the UI will have hidden the parent input, but it might still have a value, so
-            # force it to None. The hiding of the field should make this behavior intuitive.
-            cleaned_data['parent'] = None
-            parent = None
 
         # Non DNT admins cannot *change* the type to forening/sentral
         if not self._user.is_admin_in_main_central():
