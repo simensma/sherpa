@@ -1,8 +1,10 @@
 $(function() {
 
-    var search_input = $("input[name='user-search']");
+    var user_search = $("div.user-search");
+
+    var search_input = user_search.find("input[name='user-search']");
     var search_button = search_input.siblings("button");
-    var table = $("table.user-search-list");
+    var table = user_search.find("table.user-search-list");
     var loader = table.find("tr.loader");
     var initial = table.find("tr.initial");
     var no_hits = table.find("tr.no-hits");
