@@ -3,7 +3,7 @@ $(function() {
     var user_search = $("div.user-search");
 
     var search_input = user_search.find("input[name='user-search']");
-    var search_button = search_input.siblings("button");
+    var search_button = user_search.find("button.user-search");
     var table = user_search.find("table.user-search-list");
     var loader = table.find("tr.loader");
     var initial = table.find("tr.initial");
