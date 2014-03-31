@@ -1,6 +1,6 @@
 Hei {{ user_name }}!
 
-Dette er en automatisk bekreftelse på at ditt bilde, "{{ image_name }}", er sendt til DNTs fotokonkurranse.
+Dette er en automatisk bekreftelse på at dine bilder er sendt til DNTs fotokonkurranse.
 
 En jury kårer de beste bildene ved hver av de tre sesongkonkurransene. Alle vinnere vil bli kontaktet av Den Norske Turistforening.
 

@@ -123,7 +123,6 @@ def upload(request):
                 t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
                 c = RequestContext(request, {
                     'user_name': post_name,
-                    'image_name': image_file.name,
                 })
                 send_mail(EMAIL_CONFIRMATION_SUBJECT, t.render(c), settings.DEFAULT_FROM_EMAIL, [post_email])
             except (SMTPException, SSLError):
