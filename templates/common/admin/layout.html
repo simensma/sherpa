@@ -29,36 +29,6 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/print.css" media="print">
   {% block extra_css %}{% endblock %}
-
-  {% if april_fools %}
-    <style type="text/css">
-      {% if april_fools == 1 %}
-        img {
-          -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
-          filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
-        }
-      {% elif april_fools == 2 %}
-        img {
-          -webkit-filter: blur(4px);
-          filter: blur(4px);
-        }
-      {% elif april_fools == 3 %}
-        html body * {
-          font-family: "Comic Sans MS" !important;
-        }
-      {% elif april_fools == 4 %}
-        h1, h2, h3 {
-          background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
-          background-image: gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
-          color:transparent;
-          -webkit-background-clip: text;
-          background-clip: text;
-        }
-      {% endif %}
-    </style>
-  {% endif %}
-
 </head>
 
 <body>

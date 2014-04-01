@@ -6,7 +6,6 @@ from core.util import membership_year_start as membership_year_start_date_set
 
 from datetime import datetime, date
 import re
-import random
 
 def menus(request):
     if request.is_ajax():
@@ -71,10 +70,3 @@ def membership_year_start(request):
 
 def do_not_track(request):
     return {'donottrack': 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1'}
-
-def april_fools(request):
-    today = date.today()
-    if today.day == 1 and today.month == 4 and random.randint(1, 10) <= 4: # 40% chance
-        return {'april_fools': random.randint(1, 5)}
-    else:
-        return {}
