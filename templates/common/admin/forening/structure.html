@@ -26,7 +26,7 @@
 
   {% with turgrupper=active_forening.get_turgrupper_deep_sorted_by_group %}
     {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="Barnas Turlag" foreninger=turgrupper.barn %}
-    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT ung" foreninger=turgrupper.ungdom %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT ung" foreninger=turgrupper.ung %}
     {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT Fjellsport" foreninger=turgrupper.fjellsport %}
     {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT senior" foreninger=turgrupper.senior %}
 
